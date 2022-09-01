@@ -43,7 +43,7 @@ public class MISCTools {
         double b;
         double c;
         ArrayList<Vec3> line = new ArrayList<>();
-        int vector = (int) Math.floor(yaw / 90);
+        int vector = (int) Math.ceil(yaw / 90);
         double relativeYaw = yaw % 90;
         relativeYaw = relativeYaw < 0 ? relativeYaw * -1 : relativeYaw;
         while (range >= dist) {
