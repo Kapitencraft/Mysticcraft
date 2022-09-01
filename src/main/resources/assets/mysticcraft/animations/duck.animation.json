@@ -1,0 +1,94 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.duck.walk": {
+			"loop": true,
+			"animation_length": 0.66667,
+			"bones": {
+				"leg0": {
+					"rotation": {
+						"0.0": {
+							"vector": [17.5, 0, 0]
+						},
+						"0.1667": {
+							"vector": [0, 0, 0]
+						},
+						"0.3333": {
+							"vector": [-17.5, 0, 0]
+						},
+						"0.5": {
+							"vector": [0, 0, 0]
+						},
+						"0.6667": {
+							"vector": [17.5, 0, 0]
+						}
+					}
+				},
+				"leg1": {
+					"rotation": {
+						"0.0": {
+							"vector": [-17.5, 0, 0]
+						},
+						"0.1667": {
+							"vector": [0, 0, 0]
+						},
+						"0.3333": {
+							"vector": [17.5, 0, 0]
+						},
+						"0.5": {
+							"vector": [0, 0, 0]
+						},
+						"0.6667": {
+							"vector": [-17.5, 0, 0]
+						}
+					}
+				}
+			}
+		},
+		"animation.duck.fly": {
+			"loop": true,
+			"animation_length": 1,
+			"bones": {
+				"wing0": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 90]
+						},
+						"0.25": {
+							"vector": [0, 0, 65]
+						},
+						"0.5": {
+							"vector": [0, 0, 90]
+						},
+						"0.75": {
+							"vector": [0, 0, 115]
+						},
+						"1.0": {
+							"vector": [0, 0, 90]
+						}
+					}
+				},
+				"wing1": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, -90]
+						},
+						"0.25": {
+							"vector": [0, 0, -65]
+						},
+						"0.5": {
+							"vector": [0, 0, -90]
+						},
+						"0.75": {
+							"vector": [0, 0, -115]
+						},
+						"1.0": {
+							"vector": [0, 0, -90]
+						}
+					}
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}
