@@ -50,15 +50,14 @@ public class SlivyraItem extends ModdedSwordItem{
                 if (user.level instanceof ServerLevel serverLevel) {
                 serverLevel.sendParticles(ParticleTypes.ASH, (user.getX()), (user.getY()), (user.getZ()), 50, 4, 4, 3, 0.2);
                 }
-                final Vec3 _center = new Vec3((user.getX()), (user.getY()), (user.getZ()));
-                List<Entity> _entfound = user.level.getEntitiesOfClass(Entity.class, new AABB(_center, _center).inflate(6 / 2d), e -> true).stream()
-                        .sorted(Comparator.comparingDouble(_entcnd -> _entcnd.distanceToSqr(_center))).collect(Collectors.toList());
-                for (Entity entityiterator : _entfound) {
+                final Vec3 center = new Vec3((user.getX()), (user.getY()), (user.getZ()));
+                List<Entity> entfound = user.level.getEntitiesOfClass(Entity.class, new AABB(center, center).inflate(6 / 2d), e -> true).stream()
+                        .sorted(Comparator.comparingDouble(entcnd -> entcnd.distanceToSqr(center))).collect(Collectors.toList());
+                for (Entity entityiterator : entfound) {
                     if (!(entityiterator == user)) {
                         entityiterator.hurt(DamageSource.FLY_INTO_WALL, 15);
-                        entityiterator.setDeltaMovement(new Vec3((7 - (entityiterator.getX() - user.getX())),
-                                (7 - (entityiterator.getY() - user.getY())), (7 - (entityiterator.getZ() - user.getZ()))));
                     }
+                user.getAttribute(ModAttributes.MANA.get()).setBaseValue(mana);
                 }
             }
         }
