@@ -21,6 +21,7 @@ public class AttributeAdder {
         event.add(EntityType.PLAYER, ModAttributes.STRENGHT.get());
         event.add(EntityType.PLAYER, ModAttributes.MANA_COST.get());
         event.add(EntityType.PLAYER, ModAttributes.MANA_REGEN.get());
+        event.add(EntityType.PLAYER, ModAttributes.ABILLITY_DAMAGE.get());
 
     }
 }

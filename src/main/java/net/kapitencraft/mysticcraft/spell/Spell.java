@@ -1,7 +1,10 @@
 package net.kapitencraft.mysticcraft.spell;
 
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
+
+import java.util.List;
 
 public class Spell {
 
@@ -13,7 +16,7 @@ public class Spell {
         this.NAME = name;
     }
 
-    public void execute(Entity entity, ItemStack stack) {
+    public void execute(Entity entity, ItemStack stack, List<Component> description) {
 
     }
 }
