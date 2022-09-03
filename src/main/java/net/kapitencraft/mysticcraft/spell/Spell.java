@@ -6,17 +6,20 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
-public class Spell {
+public abstract class Spell {
 
     public final int MANA_COST;
     public final String NAME;
+    public final Spells.SpellType TYPE;
 
-    public Spell(int mana_cost, String name) {
+    private List<Component> description;
+
+    public Spell(int mana_cost, String name, Spells.SpellType type) {
         this.MANA_COST = mana_cost;
         this.NAME = name;
+        this.TYPE = type;
     }
 
-    public void execute(Entity entity, ItemStack stack, List<Component> description) {
+    public abstract void execute(Entity user, ItemStack stack);
 
-    }
 }

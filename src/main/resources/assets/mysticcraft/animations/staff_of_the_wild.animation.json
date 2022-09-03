@@ -1,0 +1,64 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.staff_of_the_wild.idle": {
+			"loop": true,
+			"animation_length": 2,
+			"bones": {
+				"particle1": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, -180, 0]
+						},
+						"1.0": {
+							"vector": [0, 0, 0]
+						},
+						"2.0": {
+							"vector": [0, 180, 0]
+						}
+					}
+				},
+				"particle2": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, -180, 0]
+						},
+						"1.0": {
+							"vector": [0, 0, 0]
+						},
+						"2.0": {
+							"vector": [0, 180, 0]
+						}
+					}
+				},
+				"particle4": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, -180, 0]
+						},
+						"1.0": {
+							"vector": [0, 0, 0]
+						},
+						"2.0": {
+							"vector": [0, 180, 0]
+						}
+					}
+				},
+				"particle3": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, -180, 0]
+						},
+						"1.0": {
+							"vector": [0, 0, 0]
+						},
+						"2.0": {
+							"vector": [0, 180, 0]
+						}
+					}
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}
