@@ -16,7 +16,7 @@ public class AttributeGeneration {
     @SubscribeEvent
     public static void onAttributesCreated(ItemAttributeModifierEvent event) {
         if (event.getSlotType() == EquipmentSlot.MAINHAND) {
-            if (event.getItemStack().getItem() == ModItems.SLIVYRA.get()) {
+            if (false) {
                 event.addModifier(ModAttributes.MANA_COST.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD, "Modded Attribute Modifier", 300, AttributeModifier.Operation.ADDITION));
                 event.addModifier(ModAttributes.INTELLIGENCE.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD, "Modded Attribute Modifier", 500, AttributeModifier.Operation.ADDITION));
             }

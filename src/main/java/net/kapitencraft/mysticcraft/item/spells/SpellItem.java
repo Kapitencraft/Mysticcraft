@@ -46,4 +46,9 @@ public abstract class SpellItem extends Item {
         }
 
     }
+
+    @Override
+    public void onUsingTick(ItemStack stack, LivingEntity player, int count) {
+        super.onUsingTick(stack, player, count);
+    }
 }
