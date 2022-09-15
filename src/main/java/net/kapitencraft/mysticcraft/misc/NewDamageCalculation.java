@@ -15,16 +15,12 @@ public class NewDamageCalculation {
     @SubscribeEvent
     public static void onEntityDamage(LivingDamageEvent event) {
         MysticcraftMod.LOGGER.info("Launching the new Damage Calculation");
-        if (event.getSource() instanceof EntityDamageSource) {
-            EntityDamageSource source = (EntityDamageSource) event.getSource();
-            if (source.getEntity() instanceof Player) {
-                Player attacker = (Player) source.getEntity();
+        if (event.getSource() instanceof EntityDamageSource source) {
+            if (source.getEntity() instanceof Player attacker) {
                 double Strenght = attacker.getAttributeValue(ModAttributes.STRENGHT.get());
                 event.setAmount((float) (event.getAmount() * (1 + Strenght / 100)));
-            } else if (source.getEntity() instanceof Projectile) {
-                Projectile projectile = (Projectile) source.getEntity();
-                if (projectile.getOwner() instanceof Player) {
-                    Player attacker = (Player) projectile.getOwner();
+            } else if (source.getEntity() instanceof Projectile projectile) {
+                if (projectile.getOwner() instanceof Player attacker) {
                     double Strenght = attacker.getAttributeValue(ModAttributes.STRENGHT.get());
                     event.setAmount((float) (event.getAmount() * (1 + Strenght / 100)));
                 }

@@ -18,4 +18,12 @@ public class FormattingCodes {
     public static final Color YELLOW = new Color("yellow", "\u00A7e");
     public static final Color WHITE = new Color("white", "\u00A7f");
     public static final Color GOLD = new Color("gold", "\u00A7g");
+    public static final String OBFUSCATED = "\u00A7k";
+    public static final String BOLD = "\u00A7l";
+    public static final String STRIKETHROUGH = "\u00A7m";
+    public static final String UNDERLINE = "\u00A7n";
+    public static final String ITALIC = "\u00A7o";
+    public static final String RESET = "\u00A7r";
+
+    public static final String CITATION = FormattingCodes.GRAY.UNICODE + FormattingCodes.ITALIC;
 }

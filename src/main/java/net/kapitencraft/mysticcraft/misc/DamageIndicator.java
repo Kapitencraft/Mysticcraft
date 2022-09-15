@@ -18,20 +18,20 @@ public class DamageIndicator {
     public static void EntityDamaged(LivingDamageEvent event) {
         MysticcraftMod.LOGGER.info("Launching Damage Indication");
         LivingEntity attacked = event.getEntity();
-        ArmorStand dmginc = new ArmorStand(attacked.level, attacked.getX() + Math.random() - 0.5, attacked.getY() - 1, attacked.getZ() + Math.random() - 0.5);
-        dmginc.setNoGravity(true);
-        dmginc.setInvisible(true);
-        dmginc.setInvulnerable(true);
-        dmginc.setBoundingBox(new AABB(0,0,0,0,0,0));
-        dmginc.setCustomNameVisible(true);
-        dmginc.setCustomName(Component.Serializer.fromJson(String.valueOf(event.getAmount())));
-        attacked.level.addFreshEntity(dmginc);
+        ArmorStand dmgInc = new ArmorStand(attacked.level, attacked.getX() + Math.random() - 0.5, attacked.getY() - 1, attacked.getZ() + Math.random() - 0.5);
+        dmgInc.setNoGravity(true);
+        dmgInc.setInvisible(true);
+        dmgInc.setInvulnerable(true);
+        dmgInc.setBoundingBox(new AABB(0,0,0,0,0,0));
+        dmgInc.setCustomNameVisible(true);
+        dmgInc.setCustomName(Component.Serializer.fromJson(String.valueOf(event.getAmount())));
+        attacked.level.addFreshEntity(dmgInc);
         new Object() {
             private int ticks = 0;
-            private int waitticks;
+            private int waitTicks;
 
-            public void Start(int waitticks) {
-                this.waitticks = waitticks;
+            public void Start(int waitTicks) {
+                this.waitTicks = waitTicks;
                 MinecraftForge.EVENT_BUS.register(this);
             }
 
@@ -39,14 +39,14 @@ public class DamageIndicator {
             public void tick(TickEvent.ServerTickEvent event) {
                 if (event.phase == TickEvent.Phase.END) {
                     this.ticks++;
-                    if (this.ticks >= this.waitticks) {
+                    if (this.ticks >= this.waitTicks) {
                         run();
                     }
                 }
             }
 
             private void run() {
-                dmginc.kill();
+                dmgInc.kill();
             }
         }.Start(20);
 

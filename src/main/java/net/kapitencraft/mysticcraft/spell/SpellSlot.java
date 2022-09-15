@@ -7,7 +7,7 @@ public class SpellSlot {
     private Spell spell;
     private double mana_cost;
 
-    public SpellSlot(Spell spell, SpellModdifier moddifier) {
+    public SpellSlot(Spell spell) {
         this.spell = spell;
         this.calculateManaCost();
     }

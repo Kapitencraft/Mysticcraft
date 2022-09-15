@@ -12,13 +12,13 @@ import net.minecraftforge.fml.common.Mod;
 public class CustomEnchantRegister {
 
     @SubscribeEvent
-    public static void DamageRegistrys(LivingDamageEvent event) {
+    public static void DamageRegistries(LivingDamageEvent event) {
         if(event.getSource() instanceof EntityDamageSource source && source.getEntity() instanceof LivingEntity attacker) {
-            ItemStack mainhand = attacker.getMainHandItem();
-            int giantkillerlvl = mainhand.getEnchantmentLevel(ModEnchantments.GIANT_KILLER.get());
+            ItemStack mainHandItem = attacker.getMainHandItem();
+            int giantKillerLvl = mainHandItem.getEnchantmentLevel(ModEnchantments.GIANT_KILLER.get());
             LivingEntity attacked = event.getEntity();
            double MoreHpPercent = attacked.getHealth() - attacker.getHealth() / attacked.getMaxHealth() - attacker.getMaxHealth();
-           event.setAmount((float) (event.getAmount() * (1 + MoreHpPercent * giantkillerlvl * 0.01)));
+           event.setAmount((float) (event.getAmount() * (1 + MoreHpPercent * giantKillerLvl * 0.01)));
 
 
         }

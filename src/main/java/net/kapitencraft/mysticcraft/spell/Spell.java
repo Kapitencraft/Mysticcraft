@@ -12,8 +12,6 @@ public abstract class Spell {
     public final String NAME;
     public final Spells.SpellType TYPE;
 
-    private List<Component> description;
-
     public Spell(int mana_cost, String name, Spells.SpellType type) {
         this.MANA_COST = mana_cost;
         this.NAME = name;
@@ -21,5 +19,8 @@ public abstract class Spell {
     }
 
     public abstract void execute(Entity user, ItemStack stack);
+
+    public abstract List<Component> getDescription();
+
 
 }

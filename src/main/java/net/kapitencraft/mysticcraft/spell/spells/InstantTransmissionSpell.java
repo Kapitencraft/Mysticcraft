@@ -4,13 +4,16 @@ import net.kapitencraft.mysticcraft.misc.MISCTools;
 import net.kapitencraft.mysticcraft.spell.Spell;
 import net.kapitencraft.mysticcraft.spell.Spells;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class InstantTransmissionSpell extends Spell {
+    private final Component[] description = null;
 
 
     public InstantTransmissionSpell() {
@@ -35,5 +38,10 @@ public class InstantTransmissionSpell extends Spell {
             }
         }
 
+    }
+
+    @Override
+    public List<Component> getDescription() {
+        return null;
     }
 }

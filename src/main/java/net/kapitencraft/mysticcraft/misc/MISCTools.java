@@ -11,12 +11,12 @@ import static java.lang.Math.sin;
 public class MISCTools {
     static class Rotation {
         public final String relative;
-        public final int vecrot;
-        public final int vecnum;
-        public Rotation(String relative, int vecrot, int vecnum) {
+        public final int vecRot;
+        public final int vecNum;
+        public Rotation(String relative, int vecRot, int vecNum) {
             this.relative = relative;
-            this.vecrot = vecrot;
-            this.vecnum = vecnum;
+            this.vecRot = vecRot;
+            this.vecNum = vecNum;
 
 
         }
