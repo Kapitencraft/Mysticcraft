@@ -22,7 +22,7 @@ public class AttributeGeneration {
             }
 
         } else if (event.getSlotType() == EquipmentSlot.HEAD) {
-            if (false) {
+            if (event.getItemStack().getItem() == ModItems.WIZARD_HAT.get()) {
                 event.addModifier(ModAttributes.MANA_COST.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_MUL, "Modded Attribute Modifier", -0.05, AttributeModifier.Operation.MULTIPLY_TOTAL));
                 event.addModifier(ModAttributes.ABILITY_DAMAGE.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_MUL, "Modded Attribute Modifier", 0.2, AttributeModifier.Operation.MULTIPLY_TOTAL));
             }

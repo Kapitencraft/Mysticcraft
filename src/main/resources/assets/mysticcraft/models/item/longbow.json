@@ -1,7 +1,7 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "mysticcraft:items/longbow"
+    "layer0": "mysticcraft:item/longbow"
   },
   "display": {
     "thirdperson_righthand": {
