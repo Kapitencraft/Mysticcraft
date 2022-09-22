@@ -20,7 +20,7 @@ import java.util.List;
 public abstract class SpellItem extends Item {
     public final int spellSlotAmount = 1;
     public SpellSlot[] spellSlots = new SpellSlot[spellSlotAmount];
-    private int activeSpell = 0;
+    private final int activeSpell = 0;
 
     @Override
     public void appendHoverText(ItemStack itemStack, @Nullable Level level, @Nonnull List<Component> list, @Nullable TooltipFlag flag) {

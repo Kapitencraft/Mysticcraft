@@ -5,8 +5,8 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
 
 public class ElvishMasteryEnchant extends Enchantment {
-    public ElvishMasteryEnchant(Rarity p_44676_, EnchantmentCategory p_44677_, EquipmentSlot... p_44678_) {
-        super(p_44676_, p_44677_, p_44678_);
+    public ElvishMasteryEnchant() {
+        super(Enchantment.Rarity.RARE, EnchantmentCategory.BOW, new EquipmentSlot[]{EquipmentSlot.MAINHAND});
     }
 
     @Override

@@ -6,8 +6,8 @@ import net.minecraft.world.item.enchantment.EnchantmentCategory;
 
 public class FastArrowsEnchant extends Enchantment {
 
-    public FastArrowsEnchant(Rarity p_44676_, EnchantmentCategory p_44677_, EquipmentSlot... p_44678_) {
-        super(p_44676_, p_44677_, p_44678_);
+    public FastArrowsEnchant() {
+        super(Enchantment.Rarity.RARE, EnchantmentCategory.BOW, new EquipmentSlot[]{EquipmentSlot.MAINHAND});
     }
 
     @Override

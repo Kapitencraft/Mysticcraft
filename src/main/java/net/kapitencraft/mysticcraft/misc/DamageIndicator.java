@@ -14,7 +14,6 @@ import net.minecraftforge.fml.common.Mod;
 public class DamageIndicator {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void EntityDamaged(LivingDamageEvent event) {
-        MysticcraftMod.LOGGER.info("Launching Damage Indication");
         LivingEntity attacked = event.getEntity();
         MISCTools.createDamageIndicator(attacked, (double)event.getAmount(), "damage");
     }

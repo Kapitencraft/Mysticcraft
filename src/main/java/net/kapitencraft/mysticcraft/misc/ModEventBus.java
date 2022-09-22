@@ -12,7 +12,7 @@ import software.bernie.geckolib3.renderers.geo.GeoArmorRenderer;
 @Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD, modid = MysticcraftMod.MOD_ID)
 public class ModEventBus {
     @SubscribeEvent
-    public static void registerArmorRenderer(final EntityRenderersEvent.AddLayers event) {
+    public static void registerArmorRenderer(final EntityRenderersEvent.AddLayers ignoredEvent) {
         GeoArmorRenderer.registerArmorRenderer(WizardHatItem.class, WizardHatRenderer::new);
     }
 }

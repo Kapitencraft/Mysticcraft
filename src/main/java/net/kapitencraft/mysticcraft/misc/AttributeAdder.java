@@ -15,7 +15,7 @@ public class AttributeAdder {
         event.add(EntityType.PLAYER, ModAttributes.ABILITY_DAMAGE.get());
         event.add(EntityType.PLAYER, ModAttributes.MANA_COST.get());
         event.add(EntityType.PLAYER, ModAttributes.INTELLIGENCE.get());
-        event.add(EntityType.PLAYER, ModAttributes.STRENGHT.get());
+        event.add(EntityType.PLAYER, ModAttributes.STRENGTH.get());
         event.add(EntityType.PLAYER, ModAttributes.MAGIC_FIND.get());
         event.add(EntityType.PLAYER, ModAttributes.FEROCITY.get());
         event.add(EntityType.PLAYER, ModAttributes.MAX_MANA.get());

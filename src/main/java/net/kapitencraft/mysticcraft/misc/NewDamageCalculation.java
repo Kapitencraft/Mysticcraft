@@ -1,7 +1,6 @@
 package net.kapitencraft.mysticcraft.misc;
 
 
-import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.entity.player.Player;
@@ -14,15 +13,14 @@ import net.minecraftforge.fml.common.Mod;
 public class NewDamageCalculation {
     @SubscribeEvent
     public static void onEntityDamage(LivingDamageEvent event) {
-        MysticcraftMod.LOGGER.info("Launching the new Damage Calculation");
         if (event.getSource() instanceof EntityDamageSource source) {
             if (source.getEntity() instanceof Player attacker) {
-                double Strenght = attacker.getAttributeValue(ModAttributes.STRENGHT.get());
-                event.setAmount((float) (event.getAmount() * (1 + Strenght / 100)));
+                double Strength = attacker.getAttributeValue(ModAttributes.STRENGTH.get());
+                event.setAmount((float) (event.getAmount() * (1 + Strength / 100)));
             } else if (source.getEntity() instanceof Projectile projectile) {
                 if (projectile.getOwner() instanceof Player attacker) {
-                    double Strenght = attacker.getAttributeValue(ModAttributes.STRENGHT.get());
-                    event.setAmount((float) (event.getAmount() * (1 + Strenght / 100)));
+                    double Strength = attacker.getAttributeValue(ModAttributes.STRENGTH.get());
+                    event.setAmount((float) (event.getAmount() * (1 + Strength / 100)));
                 }
             }
         }

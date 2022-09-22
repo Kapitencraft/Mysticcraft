@@ -24,9 +24,9 @@ public class MiscRegister {
             return;
         }
         float amount = event.getAmount();
-        if (attacker.getAttribute(ModAttributes.STRENGHT.get()) != null) {
-            double StrenghtMul = 1 + (attacker.getAttributeValue(ModAttributes.STRENGHT.get()));
-            event.setAmount(amount * (float) StrenghtMul);
+        if (attacker.getAttribute(ModAttributes.STRENGTH.get()) != null) {
+            double StrengthMul = 1 + (attacker.getAttributeValue(ModAttributes.STRENGTH.get()));
+            event.setAmount(amount * (float) StrengthMul);
         }
     }
 
@@ -59,7 +59,6 @@ public class MiscRegister {
                     }
                     private void run() {
                         MinecraftForge.EVENT_BUS.unregister(this);
-                        MysticcraftMod.LOGGER.info("hitting");
                         attacked.hurt(new FerociousDamageSource("ferocity", attacker, (ferocity - 100)), (float) attacker.getAttributeValue(Attributes.ATTACK_DAMAGE));
                     }
                 }.start(40);
@@ -85,6 +84,11 @@ public class MiscRegister {
         double health_regen = event.getEntity().getAttributeValue(ModAttributes.HEALTH_REGEN.get());
         event.setAmount(event.getAmount() * (float) health_regen / 100);
         MISCTools.createDamageIndicator(event.getEntity(), event.getAmount(), "heal");
+
+    }
+
+    @SubscribeEvent
+    public static void ArrowEnchantmentEvent() {
 
     }
 }

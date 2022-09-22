@@ -12,7 +12,7 @@ public class MiscEvents {
     @Mod.EventBusSubscriber(modid = MysticcraftMod.MOD_ID, value = Dist.CLIENT)
     public static class ClientForgeEvents {
         @SubscribeEvent
-        public static void onKeyInput(InputEvent.Key event) {
+        public static void onKeyInput(InputEvent.Key ignoredEvent) {
         }
     }
 
