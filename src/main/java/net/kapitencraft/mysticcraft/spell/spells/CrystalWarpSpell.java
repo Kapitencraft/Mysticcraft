@@ -4,6 +4,7 @@ import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.kapitencraft.mysticcraft.misc.MISCTools;
 import net.kapitencraft.mysticcraft.spell.Spell;
 import net.kapitencraft.mysticcraft.spell.Spells;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
@@ -19,8 +20,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class CrystalWarpSpell extends Spell {
+    public final Component ABILITY_NAME = Component.literal("Crystal Warp");
 
-    private Component[] description = {Component.Serializer.fromJson(FormattingCodes.BOLD + FormattingCodes.ORANGE.UNICODE + "Ability: Crystal Warp"), Component.Serializer.fromJson("Teleports you 10 blocks ahead"), Component.Serializer.fromJson("and deals damage to all entities around")};
+    private Component[] description = {Component.translatable("spells.crystal_warp.desc1").withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.GOLD), Component.Serializer.fromJson("Teleports you 10 blocks ahead"), Component.Serializer.fromJson("and deals damage to all entities around")};
 
     public CrystalWarpSpell() {
         super(300, "crystal_warp", Spells.RELEASE);

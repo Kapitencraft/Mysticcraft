@@ -20,5 +20,6 @@ public abstract class ModAttributes {
     public static final RegistryObject<Attribute> MANA_COST = REGISTRY.register("generic.mana_cost", () -> new RangedAttribute(FormattingCodes.DARK_PURPLE.UNICODE + "Mana Cost", 0D, 0D, 1000.0D).setSyncable(true));
     public static final RegistryObject<Attribute> ABILITY_DAMAGE = REGISTRY.register("generic.ability_damage", () -> new RangedAttribute(FormattingCodes.RED.UNICODE + "Ability Damage", 0D, 0D, 1000.0D).setSyncable(true));
     public static final RegistryObject<Attribute> MANA_REGEN = REGISTRY.register("generic.mana_regen", () -> new RangedAttribute(FormattingCodes.LIGHT_PURPLE.UNICODE + "Mana Regen", 0D, 0D, 1000.0D).setSyncable(true));
+    public static final RegistryObject<Attribute> HEALTH_REGEN = REGISTRY.register("generic.health_regen", () -> new RangedAttribute(FormattingCodes.DARK_RED.UNICODE + "Health Regen", 100D, 0D, 1000.0D).setSyncable(true));
 }
 

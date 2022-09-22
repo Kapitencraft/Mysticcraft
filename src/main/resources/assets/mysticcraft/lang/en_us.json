@@ -5,6 +5,10 @@
   "enchantment.mysticcraft.giant_killer": "Giant Killer",
   "item.mysticcraft.slivyra": "Slivyra",
   "item.mysticcraft.wizard_hat": "Wizard Hat",
+  "spells.crystal_warp.desc1": "Ability: Crystal Warp",
+  "key.category.mysticcraft.spell": "Spell Misc",
+  "key.mysticcraft.next_spell": "Next Spell",
+  "key.mysticcraft.previous_spell": "Previous Spell",
 
   "enchantment.level.11": "XI",
   "enchantment.level.12": "XII",

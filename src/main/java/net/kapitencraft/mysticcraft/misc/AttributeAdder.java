@@ -22,6 +22,7 @@ public class AttributeAdder {
         event.add(EntityType.PLAYER, ModAttributes.MANA_REGEN.get());
         event.add(EntityType.PLAYER, ModAttributes.CRIT_DAMAGE.get());
         event.add(EntityType.PLAYER, ModAttributes.MANA.get());
+        event.add(EntityType.PLAYER, ModAttributes.HEALTH_REGEN.get());
 
     }
 }
