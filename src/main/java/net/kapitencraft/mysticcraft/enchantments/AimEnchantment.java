@@ -8,4 +8,9 @@ public class AimEnchantment extends Enchantment {
     public AimEnchantment() {
         super(Rarity.VERY_RARE, EnchantmentCategory.BOW, new EquipmentSlot[]{EquipmentSlot.MAINHAND});
     }
+
+    @Override
+    public int getMaxLevel() {
+        return 1;
+    }
 }

@@ -2,20 +2,35 @@ package net.kapitencraft.mysticcraft.misc;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
+import net.kapitencraft.mysticcraft.init.ModEnchantments;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.Arrow;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHealEvent;
+import net.minecraftforge.event.entity.player.ArrowLooseEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Mod.EventBusSubscriber
 public class MiscRegister {
+    private static List<Arrow> arrowUpdater = new ArrayList<Arrow>();
 
     @SubscribeEvent
     public static void DamageEnchantRegister(LivingDamageEvent event) {
@@ -88,7 +103,25 @@ public class MiscRegister {
     }
 
     @SubscribeEvent
-    public static void ArrowEnchantmentEvent() {
+    public static void ArrowEnchantmentEvent(TickEvent.LevelTickEvent event) {
+        for (Arrow abstractArrow : arrowUpdater) {
+            if (abstractArrow.isInWall()) {
+                arrowUpdater.remove(abstractArrow);
+            }
+        }
+    }
 
+    @SubscribeEvent
+    public static void ArrowEnchantRegister(EntityEvent.EntityConstructing event) {
+        if (event.getEntity() instanceof Arrow arrow) {
+            if (arrow.getOwner() instanceof LivingEntity owner) {
+                MysticcraftMod.LOGGER.info("gen");
+                CompoundTag tag = arrow.getPersistentData();
+                ItemStack handItem = owner.getMainHandItem();
+                tag.putBoolean("AimEnchant", (handItem.getEnchantmentLevel(ModEnchantments.AIM.get()) > 0));
+                tag.putInt("SnipeEnchant", handItem.getEnchantmentLevel(ModEnchantments.SNIPE.get()));
+                arrowUpdater.add(arrow);
+            }
+        }
     }
 }
