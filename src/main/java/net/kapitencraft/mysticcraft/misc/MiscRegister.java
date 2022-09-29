@@ -3,41 +3,50 @@ package net.kapitencraft.mysticcraft.misc;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModEnchantments;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.decoration.ArmorStand;
-import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityEvent;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHealEvent;
-import net.minecraftforge.event.entity.player.ArrowLooseEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import java.util.ArrayList;
+import javax.annotation.Nullable;
 import java.util.List;
 
 @Mod.EventBusSubscriber
 public class MiscRegister {
-    private static List<Arrow> arrowUpdater = new ArrayList<Arrow>();
 
     @SubscribeEvent
     public static void DamageEnchantRegister(LivingDamageEvent event) {
-        LivingEntity attacker = MISCTools.getAttacker(event);
-        if (attacker == null) {
+        if (event.getSource().getEntity() instanceof ArrowEnchanted arrow) {
+            CompoundTag tag = arrow.getPersistentData();
+            tag.putBoolean("isUsed", true);
+            if (tag.contains("ticks") && tag.getInt("SnipeEnchant") > 0) {
+                Vec3 launchLoc = new Vec3(tag.getDouble("LaunchX"), tag.getDouble("LaunchY"), tag.getDouble("LaunchZ"));
+                Vec3 hitLoc = arrow.position();
+                double distance = launchLoc.distanceTo(hitLoc);
+                event.setAmount((float) (event.getAmount() * (1 + (float) Math.floor(distance / 10) * 0.05 * tag.getInt("SnipeEnchant"))));
+            }
             return;
         }
+        @Nullable LivingEntity attacker = MISCTools.getAttacker(event);
+        if (attacker == null) { return; }
         float amount = event.getAmount();
         if (attacker.getAttribute(ModAttributes.STRENGTH.get()) != null) {
             double StrengthMul = 1 + (attacker.getAttributeValue(ModAttributes.STRENGTH.get()));
@@ -96,32 +105,18 @@ public class MiscRegister {
 
     @SubscribeEvent
     public static void healthRegenRegister(LivingHealEvent event) {
-        double health_regen = event.getEntity().getAttributeValue(ModAttributes.HEALTH_REGEN.get());
-        event.setAmount(event.getAmount() * (float) health_regen / 100);
+        if (event.getEntity().getAttribute(ModAttributes.HEALTH_REGEN.get()) != null) {
+            double health_regen = event.getEntity().getAttributeValue(ModAttributes.HEALTH_REGEN.get());
+            event.setAmount(event.getAmount() * (float) health_regen / 100);
+        }
         MISCTools.createDamageIndicator(event.getEntity(), event.getAmount(), "heal");
 
     }
 
     @SubscribeEvent
-    public static void ArrowEnchantmentEvent(TickEvent.LevelTickEvent event) {
-        for (Arrow abstractArrow : arrowUpdater) {
-            if (abstractArrow.isInWall()) {
-                arrowUpdater.remove(abstractArrow);
-            }
-        }
-    }
-
-    @SubscribeEvent
-    public static void ArrowEnchantRegister(EntityEvent.EntityConstructing event) {
+    public static void ArrowRegisterEvent(EntityJoinLevelEvent event) {
         if (event.getEntity() instanceof Arrow arrow) {
-            if (arrow.getOwner() instanceof LivingEntity owner) {
-                MysticcraftMod.LOGGER.info("gen");
-                CompoundTag tag = arrow.getPersistentData();
-                ItemStack handItem = owner.getMainHandItem();
-                tag.putBoolean("AimEnchant", (handItem.getEnchantmentLevel(ModEnchantments.AIM.get()) > 0));
-                tag.putInt("SnipeEnchant", handItem.getEnchantmentLevel(ModEnchantments.SNIPE.get()));
-                arrowUpdater.add(arrow);
-            }
+            new ArrowTickSchedule(arrow);
         }
     }
 }

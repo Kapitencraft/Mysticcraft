@@ -1,5 +1,6 @@
 package net.kapitencraft.mysticcraft.misc;
 
+import net.kapitencraft.mysticcraft.api.APITools;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
@@ -13,6 +14,7 @@ import net.minecraftforge.event.entity.living.LivingDamageEvent;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.List;
 
 import static java.lang.Math.sin;
 
@@ -114,5 +116,39 @@ public class MISCTools {
         dmgInc.getPersistentData().putInt("time", 0);
         entity.level.addFreshEntity(dmgInc);
         return dmgInc;
+    }
+
+    public static @Nullable LivingEntity[] sortLowestDistance(Entity source, List<LivingEntity> list) {
+        if (list.isEmpty()) {
+            return null;
+        }
+        LivingEntity[] ret = APITools.entityListToArray(list);
+        if (ret.length == 1) {
+            return ret;
+        }
+        boolean isDone = false;
+        LivingEntity temp;
+        double distance1;
+        double distance2;
+        int i = 0;
+        while (!isDone) {
+            do {
+                distance1 = source.distanceTo(list.get(i));
+                distance2 = source.distanceTo(list.get(i + 1));
+                i++;
+            } while (distance1 < distance2 && i < list.size() - 1);
+            i--;
+            temp = list.get(i);
+            ret[i] = list.get(i + 1);
+            ret[i + 1] = temp;
+            for (int j = 0; j <= ret.length - 2; j++) {
+                if (source.distanceTo(list.get(j)) > source.distanceTo(list.get(j + 1))) {
+                    break;
+                } else if (j == ret.length - 1) {
+                    isDone = true;
+                }
+            }
+        }
+        return ret;
     }
 }
