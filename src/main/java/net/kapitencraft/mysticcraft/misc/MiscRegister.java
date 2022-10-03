@@ -3,22 +3,16 @@ package net.kapitencraft.mysticcraft.misc;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModEnchantments;
-import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.decoration.ArmorStand;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -27,7 +21,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import javax.annotation.Nullable;
-import java.util.List;
 
 @Mod.EventBusSubscriber
 public class MiscRegister {
@@ -51,6 +44,17 @@ public class MiscRegister {
         if (attacker.getAttribute(ModAttributes.STRENGTH.get()) != null) {
             double StrengthMul = 1 + (attacker.getAttributeValue(ModAttributes.STRENGTH.get()));
             event.setAmount(amount * (float) StrengthMul);
+        }
+    }
+
+    @SubscribeEvent
+    public static void HitEnchantmentRegister(LivingDamageEvent event) {
+        if (event.getSource().getEntity() != null && event.getSource().getEntity() instanceof LivingEntity living) {
+            ItemStack stack = living.getMainHandItem();
+            int nec_touch_lvl = stack.getEnchantmentLevel(ModEnchantments.NECROTIC_TOUCH.get());
+            if (nec_touch_lvl > 0) {
+                living.heal(event.getAmount() > nec_touch_lvl ? nec_touch_lvl : event.getAmount());
+            }
         }
     }
 
@@ -83,7 +87,8 @@ public class MiscRegister {
                     }
                     private void run() {
                         MinecraftForge.EVENT_BUS.unregister(this);
-                        attacked.hurt(new FerociousDamageSource("ferocity", attacker, (ferocity - 100)), (float) attacker.getAttributeValue(Attributes.ATTACK_DAMAGE));
+                        float ferocity_damage = (float) (event.getSource() instanceof FerociousDamageSource ferociousDamageSource ? ferociousDamageSource.damage : event.getSource().getEntity() instanceof AbstractArrow arrow ? arrow.getBaseDamage() : event.getSource().getEntity() instanceof LivingEntity living ? living.getAttributeValue(Attributes.ATTACK_DAMAGE) : 0.0f);
+                        attacked.hurt(new FerociousDamageSource("ferocity", attacker, (ferocity - 100), ferocity_damage), ferocity_damage);
                     }
                 }.start(40);
             }

@@ -5,7 +5,9 @@ import net.kapitencraft.mysticcraft.item.gemstone_slot.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.spell.Spell;
 import net.kapitencraft.mysticcraft.spell.SpellSlot;
 import net.kapitencraft.mysticcraft.spell.Spells;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -18,30 +20,41 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public abstract class SpellItem extends Item {
+
     public final int spellSlotAmount = 1;
     public SpellSlot[] spellSlots = new SpellSlot[spellSlotAmount];
-    private final int activeSpell = 0;
-
     @Override
     public void appendHoverText(ItemStack itemStack, @Nullable Level level, @Nonnull List<Component> list, @Nullable TooltipFlag flag) {
+        @Nullable SpellSlot activeSpellSlot = this.getSpellSlots()[this.getActiveSpell()];
+        Spell spell;
+        if (activeSpellSlot == null) {
+            spell = Spells.EMPTY_SPELL;
+        } else {
+            spell = activeSpellSlot.getSpell();
+        }
         StringBuilder gemstoneText = new StringBuilder();
-        if (itemStack.getItem() instanceof IGemstoneApplicable) {
-            for (GemstoneSlot slot : ((IGemstoneApplicable) itemStack.getItem()).getGemstoneSlots()) {
-                gemstoneText.append(slot.getDisplay());
+        if (itemStack.getItem() instanceof IGemstoneApplicable gemstoneApplicable) {
+            for (@Nullable GemstoneSlot slot : gemstoneApplicable.getGemstoneSlots()) {
+                if (slot != null) {
+                    gemstoneText.append(slot.getDisplay());
+                }
             }
         }
         if (!gemstoneText.toString().equals("")) {
-            list.add(Component.Serializer.fromJson(gemstoneText.toString()));
+            list.add(Component.literal(gemstoneText.toString()));
         }
         list.addAll(this.getItemDescription());
-        list.add(Component.Serializer.fromJson(""));
-        list.addAll(this.spellSlots[this.getActiveSpell()].getSpell().getDescription());
-        list.add(Component.Serializer.fromJson(""));
-        list.addAll(this.getPostDescription());
+        list.add(Component.literal(""));
+        list.add(Component.literal("Ability: " + spell.getName()).withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.GOLD));
+        list.addAll(spell.getDescription());
+        list.add(Component.literal(""));
+        if (this.getPostDescription() != null) {
+            list.addAll(this.getPostDescription());
+        }
     }
 
     public SpellItem(Properties p_41383_) {
-        super(p_41383_);
+        super(p_41383_.stacksTo(1));
     }
 
     public abstract List<Component> getItemDescription();
@@ -60,7 +73,7 @@ public abstract class SpellItem extends Item {
     }
 
     @Override
-    public void onUsingTick(ItemStack stack, LivingEntity player, int count) {
+    public void onUsingTick(ItemStack stack, LivingEntity player, @Nullable int count) {
         Spell spell = this.spellSlots[this.getActiveSpell()].getSpell();
         if (spell.TYPE == Spells.CYCLE) {
             spell.execute(player, stack);

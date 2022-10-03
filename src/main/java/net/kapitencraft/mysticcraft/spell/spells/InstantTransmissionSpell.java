@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InstantTransmissionSpell extends Spell {
-    private final Component[] description = null;
+    private final Component[] description = new Component[]{Component.literal("teleports you 8 blocks ahead")};
 
 
     public InstantTransmissionSpell() {
@@ -27,11 +27,11 @@ public class InstantTransmissionSpell extends Spell {
             BlockPos pos = new BlockPos(vec3);
             if (!user.level.getBlockState(pos).canOcclude()) {
                 int loc = sight.indexOf(vec3);
-                ArrayList<Vec3> invsight = MISCTools.invertList(sight);
-                for (int i = 0; i < invsight.indexOf(vec3); i++) {
-                    Vec3 mem = new Vec3(invsight.get(i).x, invsight.get(i).y + 1, invsight.get(i).z);
+                ArrayList<Vec3> inv_sight = MISCTools.invertList(sight);
+                for (int i = 0; i < inv_sight.indexOf(vec3); i++) {
+                    Vec3 mem = new Vec3(inv_sight.get(i).x, inv_sight.get(i).y + 1, inv_sight.get(i).z);
                     if (user.level.getBlockState(new BlockPos(mem)).canOcclude()) {
-                        user.teleportTo(invsight.get(i).x, invsight.get(i).y, invsight.get(i).z);
+                        user.teleportTo(inv_sight.get(i).x, inv_sight.get(i).y, inv_sight.get(i).z);
                     }
 
                 }
@@ -42,6 +42,11 @@ public class InstantTransmissionSpell extends Spell {
 
     @Override
     public List<Component> getDescription() {
-        return null;
+        return List.of(description);
+    }
+
+    @Override
+    public String getName() {
+        return "Instant Transmission";
     }
 }

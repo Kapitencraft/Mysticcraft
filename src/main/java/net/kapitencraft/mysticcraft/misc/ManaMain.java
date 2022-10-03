@@ -10,7 +10,7 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber
 public class ManaMain {
 
-    @SubscribeEvent
+    //@SubscribeEvent
     public static void ManaChange(TickEvent.PlayerTickEvent event) {
         Player player = event.player;
         double mana = player.getAttributeValue(ModAttributes.MANA.get());

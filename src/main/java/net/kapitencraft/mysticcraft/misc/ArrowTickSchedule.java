@@ -33,7 +33,7 @@ public class ArrowTickSchedule {
         }
     }
 
-    @SubscribeEvent
+    //@SubscribeEvent
     public void tick(TickEvent.LevelTickEvent ignoredEvent) {
         CompoundTag tag = this.arrow.getPersistentData();
         if (tag.contains("isUnregistered") && tag.getBoolean("isUnregistered")) {
@@ -51,23 +51,20 @@ public class ArrowTickSchedule {
         @Nullable LivingEntity[] livingEntities = MISCTools.sortLowestDistance(this.arrow, list);
         if (livingEntities != null) {
             @Nullable LivingEntity target = null;
+            LivingEntity living;
+            boolean flag = tag.contains("AimEnchant") && tag.getInt("AimEnchant") > 0;
+            boolean flag2;
             for (int i = 0; i < livingEntities.length; i++) {
-
-        }
-                LivingEntity living;
-                for (int i = 0; i< livingEntities.length; i++) {
-                    living = livingEntities[i];
-                    if (!(living.is(this.arrow.getOwner()) && living.getItemBySlot(EquipmentSlot.CHEST).getEnchantmentLevel(ModEnchantments.PROTECTIVE_COVER.get()) > 0)) {
-                        target = living;
+                living = livingEntities[i];
+                flag2 = living.getItemBySlot(EquipmentSlot.CHEST).getEnchantmentLevel(ModEnchantments.FIRM_STAND.get()) > 0;
+                if (!(living.is(this.arrow.getOwner()))) {
+                    if (flag2 && !flag) {
+                        this.arrow.setDeltaMovement(this.arrow.position().subtract(living.position()));
                         break;
-                    } else if (i == livingEntities.length - 1) {
-                        return;
+                    } else if (flag && !flag2) {
+                        this.arrow.setDeltaMovement(living.position().subtract(this.arrow.position()));
+                        break;
                     }
-                }
-                if (target != null) {
-                    this.TargetUUID = target.getUUID();
-                    tag.putUUID("targetUUID", this.TargetUUID);
-                    this.arrow.setDeltaMovement(target.position().subtract(arrow.position().scale(0.1)));
                 }
             }
         }

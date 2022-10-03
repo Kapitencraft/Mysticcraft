@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ExplosiveSightSpell extends Spell {
+
+    private static final Component[] description = new Component[] {Component.literal("Explodes in a range of 150")};
     public ExplosiveSightSpell() {
         super(150, "explosive_sight", Spells.RELEASE);
     }
@@ -34,6 +36,11 @@ public class ExplosiveSightSpell extends Spell {
 
     @Override
     public List<Component> getDescription() {
-        return null;
+        return List.of(description);
+    }
+
+    @Override
+    public String getName() {
+        return "Explosive Sight";
     }
 }

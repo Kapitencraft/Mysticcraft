@@ -27,8 +27,8 @@ public class StaffOfTheWildItem extends SpellItem implements IAnimatable, IGemst
     private final int GEMSTONE_SLOT_AMOUNT = 5;
     private GemstoneSlot[] gemstoneSlots = new GemstoneSlot[GEMSTONE_SLOT_AMOUNT];
     public AnimationFactory factory = new AnimationFactory(this);
-    public static final Component[] description = {Component.Serializer.fromJson("As it is one of the most powerful"), Component.Serializer.fromJson("Magical Artifacts, it is used for much greatness")};
-    public static final Component[] post_description = {Component.Serializer.fromJson(FormattingCodes.CITATION + "It`s a kind of magic! - Queen")};
+    public static final Component[] description = {Component.literal("As it is one of the most powerful"), Component.literal("Magical Artifacts, it is used for much greatness")};
+    public static final Component[] post_description = {Component.literal(FormattingCodes.CITATION + "It`s a kind of magic! - Queen")};
 
     private SpellSlot[] spellSlots = new SpellSlot[SPELL_SLOT_AMOUNT];
 
@@ -81,7 +81,7 @@ public class StaffOfTheWildItem extends SpellItem implements IAnimatable, IGemst
     }
 
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> animationEvent) {
-        animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("idle", true));
+        animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.staff_of_the_wild.idle", true));
         return PlayState.CONTINUE;
     }
 

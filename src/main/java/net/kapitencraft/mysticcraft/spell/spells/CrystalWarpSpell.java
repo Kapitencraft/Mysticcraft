@@ -20,9 +20,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class CrystalWarpSpell extends Spell {
-    public final Component ABILITY_NAME = Component.literal("Crystal Warp");
+    public final String ABILITY_NAME = "Crystal Warp";
 
-    private Component[] description = {Component.translatable("spells.crystal_warp.desc1").withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.GOLD), Component.Serializer.fromJson("Teleports you 10 blocks ahead"), Component.Serializer.fromJson("and deals damage to all entities around")};
+    private Component[] description = {Component.literal("Teleports you 10 blocks ahead"), Component.literal("and deals damage to all entities around")};
 
     public CrystalWarpSpell() {
         super(300, "crystal_warp", Spells.RELEASE);
@@ -60,5 +60,10 @@ public class CrystalWarpSpell extends Spell {
     @Override
     public List<Component> getDescription() {
         return List.of(this.description);
+    }
+
+    @Override
+    public String getName() {
+        return ABILITY_NAME;
     }
 }

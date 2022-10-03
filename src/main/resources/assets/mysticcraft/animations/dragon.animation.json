@@ -1,0 +1,64 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.dragon.fly": {
+			"loop": true,
+			"animation_length": 3,
+			"bones": {
+				"wing": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 40]
+						},
+						"1.5": {
+							"vector": [0, 0, -40]
+						},
+						"3.0": {
+							"vector": [0, 0, 40]
+						}
+					}
+				},
+				"wingtip": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, -90]
+						},
+						"1.5": {
+							"vector": [0, 0, 0]
+						},
+						"3.0": {
+							"vector": [0, 0, -90]
+						}
+					}
+				},
+				"wing1": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, -40]
+						},
+						"1.5": {
+							"vector": [0, 0, 40]
+						},
+						"3.0": {
+							"vector": [0, 0, -40]
+						}
+					}
+				},
+				"wingtip1": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 90]
+						},
+						"1.5": {
+							"vector": [0, 0, 0]
+						},
+						"3.0": {
+							"vector": [0, 0, 90]
+						}
+					}
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}

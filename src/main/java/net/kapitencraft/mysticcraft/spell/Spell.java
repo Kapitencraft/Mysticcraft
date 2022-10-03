@@ -22,5 +22,7 @@ public abstract class Spell {
 
     public abstract List<Component> getDescription();
 
+    public abstract String getName();
+
 
 }

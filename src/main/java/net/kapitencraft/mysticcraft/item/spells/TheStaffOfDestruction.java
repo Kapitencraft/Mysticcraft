@@ -6,13 +6,14 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Rarity;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class TheStaffOfDestruction extends SpellItem {
-    private final Component[] description = {Component.literal("An very explosive tool")};
+    private final Component[] description = {Component.literal("A very explosive tool")};
     private SpellSlot[] spellSlots = {new SpellSlot(Spells.EXPLOSIVE_SIGHT)};
     public TheStaffOfDestruction() {
-        super(new Properties().tab(CreativeModeTab.TAB_COMBAT).stacksTo(1).rarity(Rarity.RARE));
+        super(new Properties().tab(CreativeModeTab.TAB_COMBAT).rarity(Rarity.RARE));
     }
 
     @Override
@@ -21,13 +22,13 @@ public class TheStaffOfDestruction extends SpellItem {
     }
 
     @Override
-    public List<Component> getPostDescription() {
+    public @Nullable List<Component> getPostDescription() {
         return null;
     }
 
     @Override
     public SpellSlot[] getSpellSlots() {
-        return new SpellSlot[0];
+        return spellSlots;
     }
 
     @Override
