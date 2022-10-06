@@ -67,7 +67,6 @@ public class MiscRegister {
         }
         if (attacker.getAttribute(ModAttributes.FEROCITY.get()) != null) {
             final double ferocity = event.getSource() instanceof FerociousDamageSource damageSource ? damageSource.ferocity : attacker.getAttributeValue(ModAttributes.FEROCITY.get());
-            MysticcraftMod.LOGGER.info(String.valueOf(ferocity >= (Math.random() * 100)));
             if (ferocity >= (Math.random() * 100)) {
                 new Object() {
                     private int ticks = 0;

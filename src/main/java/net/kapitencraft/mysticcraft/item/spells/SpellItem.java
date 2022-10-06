@@ -64,7 +64,7 @@ public abstract class SpellItem extends Item {
 
     @Override
     public void releaseUsing(@NotNull ItemStack stack, @Nullable Level level, @NotNull LivingEntity user, int p_41415_) {
-        Spell spell = this.spellSlots[this.getActiveSpell()].getSpell();
+        Spell spell = this.getSpellSlots()[this.getActiveSpell()].getSpell();
         if (spell.TYPE == Spells.RELEASE) {
             spell.execute(user, stack);
         }
@@ -73,7 +73,7 @@ public abstract class SpellItem extends Item {
 
     @Override
     public void onUsingTick(ItemStack stack, LivingEntity player, @Nullable int count) {
-        Spell spell = this.spellSlots[this.getActiveSpell()].getSpell();
+        Spell spell = this.getSpellSlots()[this.getActiveSpell()].getSpell();
         if (spell.TYPE == Spells.CYCLE) {
             spell.execute(player, stack);
         }

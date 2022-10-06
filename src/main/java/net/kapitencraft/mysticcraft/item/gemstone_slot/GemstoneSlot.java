@@ -15,7 +15,7 @@ public class GemstoneSlot {
     public static final GemstoneSlot DEFENCE = new GemstoneSlot(Type.DEFENCE, new Gemstone[]{new RubyGemstone()}, null);
     public static final GemstoneSlot MAGIC = new GemstoneSlot(Type.MAGIC, new Gemstone[]{new SapphireGemstone(), new AlmandineGemstone()}, null);
     public static final GemstoneSlot INTELLIGENCE = new GemstoneSlot(Type.INTELLIGENCE, new Gemstone[]{new SapphireGemstone()}, null);
-    public static final GemstoneSlot STRENGHT = new GemstoneSlot(Type.STRENGHT, new Gemstone[]{new JasperGemstone()}, null);
+    public static final GemstoneSlot STRENGHT = new GemstoneSlot(Type.STRENGTH, new Gemstone[]{new JasperGemstone()}, null);
     public static final GemstoneSlot HEALTH = new GemstoneSlot(Type.HEALTH, new Gemstone[]{new RubyGemstone()}, null);
     public static final GemstoneSlot ABILITY_DAMAGE = new GemstoneSlot(Type.ABILITY_DAMAGE, new Gemstone[]{new AlmandineGemstone()}, null);
 
@@ -79,9 +79,9 @@ public class GemstoneSlot {
         public static final Type COMBAT = new Type("");
         public static final Type OFFENCE = new Type("");
         public static final Type DEFENCE = new Type("");
-        public static final Type MAGIC = new Type("\uffff");
+        public static final Type MAGIC = new Type("\uF000");
         public static final Type INTELLIGENCE = new Type("");
-        public static final Type STRENGHT = new Type("");
+        public static final Type STRENGTH = new Type("");
         public static final Type HEALTH = new Type("");
         public static final Type ABILITY_DAMAGE = new Type("");
 
