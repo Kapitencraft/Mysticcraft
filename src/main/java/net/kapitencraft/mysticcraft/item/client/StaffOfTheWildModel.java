@@ -17,7 +17,7 @@ public class StaffOfTheWildModel extends AnimatedGeoModel<StaffOfTheWildItem> {
     }
 
     @Override
-    public ResourceLocation getAnimationResource(StaffOfTheWildItem animatable) {
+    public ResourceLocation getAnimationResource(StaffOfTheWildItem animateAble) {
         return new ResourceLocation(MysticcraftMod.MOD_ID, "animations/staff_of_the_wild.animation.json");
     }
 }

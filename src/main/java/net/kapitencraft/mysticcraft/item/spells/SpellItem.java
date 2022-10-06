@@ -7,7 +7,6 @@ import net.kapitencraft.mysticcraft.spell.SpellSlot;
 import net.kapitencraft.mysticcraft.spell.Spells;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -24,7 +23,7 @@ public abstract class SpellItem extends Item {
     public final int spellSlotAmount = 1;
     public SpellSlot[] spellSlots = new SpellSlot[spellSlotAmount];
     @Override
-    public void appendHoverText(ItemStack itemStack, @Nullable Level level, @Nonnull List<Component> list, @Nullable TooltipFlag flag) {
+    public void appendHoverText(@Nonnull ItemStack itemStack, @Nullable Level level, @Nonnull List<Component> list, @Nullable TooltipFlag flag) {
         @Nullable SpellSlot activeSpellSlot = this.getSpellSlots()[this.getActiveSpell()];
         Spell spell;
         if (activeSpellSlot == null) {
@@ -45,7 +44,7 @@ public abstract class SpellItem extends Item {
         }
         list.addAll(this.getItemDescription());
         list.add(Component.literal(""));
-        list.add(Component.literal("Ability: " + spell.getName()).withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.GOLD));
+        list.add(Component.literal("Ability: " + spell.getName() + (this.getSpellSlots().length > 1 ? (" " + (this.getActiveSpell() + 1) + "/" + this.getSpellSlots().length) : "")).withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.GOLD));
         list.addAll(spell.getDescription());
         list.add(Component.literal(""));
         if (this.getPostDescription() != null) {

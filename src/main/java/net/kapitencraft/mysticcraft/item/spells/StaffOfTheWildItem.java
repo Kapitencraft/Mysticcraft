@@ -25,7 +25,7 @@ public class StaffOfTheWildItem extends SpellItem implements IAnimatable, IGemst
     public final int SPELL_SLOT_AMOUNT = 5;
 
     private final int GEMSTONE_SLOT_AMOUNT = 5;
-    private GemstoneSlot[] gemstoneSlots = new GemstoneSlot[GEMSTONE_SLOT_AMOUNT];
+    private GemstoneSlot[] gemstoneSlots = new GemstoneSlot[] {GemstoneSlot.MAGIC, GemstoneSlot.INTELLIGENCE, GemstoneSlot.INTELLIGENCE, GemstoneSlot.ABILITY_DAMAGE, GemstoneSlot.ABILITY_DAMAGE};
     public AnimationFactory factory = new AnimationFactory(this);
     public static final Component[] description = {Component.literal("As it is one of the most powerful"), Component.literal("Magical Artifacts, it is used for much greatness")};
     public static final Component[] post_description = {Component.literal(FormattingCodes.CITATION + "It`s a kind of magic! - Queen")};

@@ -17,7 +17,7 @@ public class WizardHatModel extends AnimatedGeoModel<WizardHatItem> {
     }
 
     @Override
-    public ResourceLocation getAnimationResource(WizardHatItem animatable) {
+    public ResourceLocation getAnimationResource(WizardHatItem animateAble) {
         return new ResourceLocation(MysticcraftMod.MOD_ID, "animations/empty_animation.json");
     }
 }
