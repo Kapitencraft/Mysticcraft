@@ -19,11 +19,8 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public abstract class SpellItem extends Item {
-
-    public final int spellSlotAmount = 1;
-    public SpellSlot[] spellSlots = new SpellSlot[spellSlotAmount];
     @Override
-    public void appendHoverText(@Nonnull ItemStack itemStack, @Nullable Level level, @Nonnull List<Component> list, @Nullable TooltipFlag flag) {
+    public void appendHoverText(@Nonnull ItemStack itemStack, @Nullable Level level, @Nonnull List<Component> list, @Nonnull TooltipFlag flag) {
         @Nullable SpellSlot activeSpellSlot = this.getSpellSlots()[this.getActiveSpell()];
         Spell spell;
         if (activeSpellSlot == null) {
@@ -44,11 +41,14 @@ public abstract class SpellItem extends Item {
         }
         list.addAll(this.getItemDescription());
         list.add(Component.literal(""));
-        list.add(Component.literal("Ability: " + spell.getName() + (this.getSpellSlots().length > 1 ? (" " + (this.getActiveSpell() + 1) + "/" + this.getSpellSlots().length) : "")).withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.GOLD));
-        list.addAll(spell.getDescription());
+        list.addAll(spell.createDescription(this));
         list.add(Component.literal(""));
-        if (this.getPostDescription() != null) {
+            if (this.getPostDescription() != null) {
             list.addAll(this.getPostDescription());
+        }
+        if (flag.isAdvanced() && !gemstoneText.toString().equals("")) {
+            list.add(Component.literal("Gemstone Modifications:").withStyle(ChatFormatting.GREEN));
+
         }
     }
 

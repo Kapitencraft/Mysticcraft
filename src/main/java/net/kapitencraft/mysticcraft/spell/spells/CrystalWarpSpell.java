@@ -12,6 +12,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ public class CrystalWarpSpell extends Spell {
     private Component[] description = {Component.literal("Teleports you 10 blocks ahead"), Component.literal("and deals damage to all entities around")};
 
     public CrystalWarpSpell() {
-        super(300, "crystal_warp", Spells.RELEASE);
+        super(300, "crystal_warp", Spells.RELEASE, Rarity.RARE);
     }
 
     @Override

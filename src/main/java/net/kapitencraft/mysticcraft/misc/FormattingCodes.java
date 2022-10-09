@@ -1,5 +1,8 @@
 package net.kapitencraft.mysticcraft.misc;
 
+import net.minecraft.ChatFormatting;
+import net.minecraft.world.item.Rarity;
+
 public class FormattingCodes {
     public static final Color BLACK = new Color("black","\u00A70");
     public static final Color DARK_BLUE = new Color("dark_blue", "\u00A71");
@@ -26,4 +29,6 @@ public class FormattingCodes {
     public static final String RESET = "\u00A7r";
 
     public static final String CITATION = FormattingCodes.GRAY.UNICODE + FormattingCodes.ITALIC;
+
+    public static final Rarity LEGENDARY = Rarity.create("LEGENDARY", ChatFormatting.GOLD);
 }

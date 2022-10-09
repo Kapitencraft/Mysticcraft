@@ -2,11 +2,18 @@ package net.kapitencraft.mysticcraft.misc;
 
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+
+import javax.annotation.Nullable;
 
 public class MiscEvents {
     @Mod.EventBusSubscriber(modid = MysticcraftMod.MOD_ID, value = Dist.CLIENT)
@@ -14,6 +21,24 @@ public class MiscEvents {
         @SubscribeEvent
         public static void onKeyInput(InputEvent.Key ignoredEvent) {
         }
+
+        @SubscribeEvent
+        public static void DescriptionRegister(ItemTooltipEvent event) {
+            ItemStack stack = event.getItemStack();
+            Rarity rarity = stack.getItem().getRarity(stack);
+            @Nullable CompoundTag tag = stack.getTag();
+            boolean flag = false;
+            if (tag != null && tag.contains("Rarity")) {
+                flag = !rarity.toString().equals(tag.getString("Rarity"));
+            } else if (!stack.isEnchanted()){
+                tag = tag != null ? tag : new CompoundTag();
+                tag.putString("Rarity", rarity.toString());
+            }
+            String NameMod = FormattingCodes.OBFUSCATED + "A" + FormattingCodes.RESET;
+            event.getToolTip().add(Component.literal(""));
+            event.getToolTip().add(Component.literal((flag ? NameMod : "") + " " + rarity + " " + MISCTools.getNameModifier(stack) + " " + (flag ? NameMod : "")).withStyle(rarity.getStyleModifier()));
+        }
+
     }
 
     @Mod.EventBusSubscriber(modid = MysticcraftMod.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)

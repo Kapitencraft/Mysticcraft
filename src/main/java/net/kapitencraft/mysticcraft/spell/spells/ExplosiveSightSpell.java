@@ -7,6 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.phys.Vec3;
 
@@ -17,7 +18,7 @@ public class ExplosiveSightSpell extends Spell {
 
     private static final Component[] description = new Component[] {Component.literal("Explodes in a range of 150")};
     public ExplosiveSightSpell() {
-        super(150, "explosive_sight", Spells.RELEASE);
+        super(150, "explosive_sight", Spells.RELEASE, Rarity.UNCOMMON);
     }
 
     @Override

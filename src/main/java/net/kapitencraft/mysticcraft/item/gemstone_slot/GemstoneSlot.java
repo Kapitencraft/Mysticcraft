@@ -79,11 +79,11 @@ public class GemstoneSlot {
         public static final Type COMBAT = new Type("");
         public static final Type OFFENCE = new Type("");
         public static final Type DEFENCE = new Type("");
-        public static final Type MAGIC = new Type("\uF000");
-        public static final Type INTELLIGENCE = new Type("");
-        public static final Type STRENGTH = new Type("");
+        public static final Type MAGIC = new Type("");
+        public static final Type INTELLIGENCE = new Type("\uF000");
+        public static final Type STRENGTH = new Type("\uF002");
         public static final Type HEALTH = new Type("");
-        public static final Type ABILITY_DAMAGE = new Type("");
+        public static final Type ABILITY_DAMAGE = new Type("\uF001");
 
         public final String UNICODE;
 

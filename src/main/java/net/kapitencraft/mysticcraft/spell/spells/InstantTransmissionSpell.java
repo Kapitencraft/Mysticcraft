@@ -7,6 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ public class InstantTransmissionSpell extends Spell {
 
 
     public InstantTransmissionSpell() {
-        super(50, "instant_transmission", Spells.RELEASE);
+        super(50, "instant_transmission", Spells.RELEASE, Rarity.COMMON);
     }
 
     @Override

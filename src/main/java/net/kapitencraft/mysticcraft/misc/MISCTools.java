@@ -1,12 +1,16 @@
 package net.kapitencraft.mysticcraft.misc;
 
 import net.kapitencraft.mysticcraft.api.APITools;
+import net.kapitencraft.mysticcraft.item.spells.SpellItem;
+import net.kapitencraft.mysticcraft.item.spells.SpellScrollItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.item.*;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
@@ -35,7 +39,7 @@ public class MISCTools {
         boolean flag = vec2.x < 0;
         double B = flag ? vec2.x * -1 : vec2.x;
         double A = 90;
-        double yaw = (double) vec2.y;
+        double yaw = vec2.y;
         yaw += 180;
         double C = 180 - A - B;
         double dist = scaling;
@@ -111,7 +115,7 @@ public class MISCTools {
         dmgInc.setInvulnerable(true);
         dmgInc.setBoundingBox(new AABB(0,0,0,0,0,0));
         dmgInc.setCustomNameVisible(true);
-        dmgInc.setCustomName(Component.literal(String.valueOf(amount)).withStyle(type.equals("heal") ? ChatFormatting.GREEN : ChatFormatting.RED));
+        dmgInc.setCustomName(Component.literal(String.valueOf(amount)).withStyle(damageIndicatorColorGenerator(type)));
         dmgInc.getPersistentData().putBoolean("isDamageIndicator", true);
         dmgInc.getPersistentData().putInt("time", 0);
         entity.level.addFreshEntity(dmgInc);
@@ -150,5 +154,58 @@ public class MISCTools {
             }
         }
         return ret;
+    }
+
+    public static String getNameModifier(ItemStack stack) {
+        Item item = stack.getItem();
+        if (item instanceof SpellItem) {
+            return "SPELL ITEM";
+        } else if (item instanceof SwordItem) {
+            return "SWORD";
+        } else if (item instanceof PickaxeItem) {
+            return "PICKAXE";
+        } else if (item instanceof AxeItem) {
+            return "AXE";
+        } else if (item instanceof ShovelItem) {
+            return "SHOVEL";
+        } else if (item instanceof HoeItem) {
+            return "HOE";
+        } else if (item instanceof BowItem) {
+            return "BOW";
+        } else if (item instanceof CrossbowItem) {
+            return "CROSSBOW";
+        } else if (item instanceof SpellScrollItem) {
+            return "SPELL SCROLL";
+        } else if (item instanceof EnchantedBookItem) {
+            return "ENCHANTED BOOK";
+        } else if (item instanceof ArmorItem armorItem) {
+            if (armorItem.getSlot() == EquipmentSlot.FEET) {
+                return "BOOTS";
+            } else if (armorItem.getSlot() == EquipmentSlot.LEGS) {
+                return "LEGGINGS";
+            } else if (armorItem.getSlot() == EquipmentSlot.CHEST) {
+                return "CHEST PLATE";
+            } else if (armorItem.getSlot() == EquipmentSlot.HEAD) {
+                return "HELMET";
+            }
+        } else if (item instanceof BlockItem) {
+            return "BLOCK";
+        } else if (item instanceof BoatItem) {
+            return "BOAT";
+        } else if (item instanceof FishingRodItem) {
+            return "FISHING ROD";
+        }
+        return "ITEM";
+    }
+
+    private static ChatFormatting damageIndicatorColorGenerator(String type) {
+        switch (type) {
+            case "heal": return ChatFormatting.GREEN;
+            case "wither": return ChatFormatting.BLACK;
+            case "ferocity": return ChatFormatting.GOLD;
+            case "damage_generic": return ChatFormatting.RED;
+            case "drowning": return ChatFormatting.AQUA;
+            default: return ChatFormatting.WHITE;
+        }
     }
 }

@@ -1,6 +1,9 @@
 package net.kapitencraft.mysticcraft.item;
 
 import net.kapitencraft.mysticcraft.init.ModEnchantments;
+import net.kapitencraft.mysticcraft.item.gemstone_slot.GemstoneSlot;
+import net.kapitencraft.mysticcraft.item.gemstone_slot.IGemstoneApplicable;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
@@ -11,6 +14,10 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
+
 public abstract class ModdedBows extends BowItem {
 
     public final double DIVIDER = 20;
@@ -19,6 +26,21 @@ public abstract class ModdedBows extends BowItem {
         super(p_40660_);
     }
 
+    @Override
+    public void appendHoverText(@Nonnull ItemStack itemStack, @Nullable Level level, @Nonnull List<Component> list, @Nullable TooltipFlag flag) {
+        StringBuilder gemstoneText = new StringBuilder();
+        if (itemStack.getItem() instanceof IGemstoneApplicable gemstoneApplicable) {
+            for (@Nullable GemstoneSlot slot : gemstoneApplicable.getGemstoneSlots()) {
+                if (slot != null) {
+                    gemstoneText.append(slot.getDisplay());
+                }
+            }
+        }
+        if (!gemstoneText.toString().equals("")) {
+            list.add(Component.literal(gemstoneText.toString()));
+        }
+
+    }
     @Override
     public void releaseUsing(ItemStack bow, Level world, LivingEntity archer, int timeleft) {
         if (archer instanceof Player player) {

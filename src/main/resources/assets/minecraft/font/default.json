@@ -1,0 +1,32 @@
+{
+  "providers": [
+    {
+      "type": "bitmap",
+      "file": "mysticcraft:font/intelligence.png",
+      "height": 8,
+      "ascent": 7,
+      "chars": ["\uF000"]
+    },
+    {
+      "type": "bitmap",
+      "file": "mysticcraft:font/ability_damage.png",
+      "height": 8,
+      "ascent": 7,
+      "chars": ["\uF001"]
+    },
+    {
+      "type": "bitmap",
+      "file": "mysticcraft:font/strenght.png",
+      "height": 16,
+      "ascent": 15,
+      "chars": ["\uF002"]
+    },
+    {
+      "type": "bitmap",
+      "file": "mysticcraft:font/defensive.png",
+      "height": 16,
+      "ascent": 15,
+      "chars": ["\uF003"]
+    }
+  ]
+}
