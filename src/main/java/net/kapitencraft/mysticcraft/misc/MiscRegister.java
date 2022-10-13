@@ -27,9 +27,8 @@ public class MiscRegister {
 
     @SubscribeEvent
     public static void DamageEnchantRegister(LivingDamageEvent event) {
-        if (event.getSource().getEntity() instanceof ArrowEnchanted arrow) {
+        if (event.getSource().getEntity() instanceof Arrow arrow) {
             CompoundTag tag = arrow.getPersistentData();
-            tag.putBoolean("isUsed", true);
             if (tag.contains("ticks") && tag.getInt("SnipeEnchant") > 0) {
                 Vec3 launchLoc = new Vec3(tag.getDouble("LaunchX"), tag.getDouble("LaunchY"), tag.getDouble("LaunchZ"));
                 Vec3 hitLoc = arrow.position();

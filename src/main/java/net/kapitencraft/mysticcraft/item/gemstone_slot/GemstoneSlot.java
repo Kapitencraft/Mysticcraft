@@ -64,6 +64,10 @@ public class GemstoneSlot {
             return false;
         }
     }
+
+    public @Nullable Gemstone getAppliedGemstone() {
+        return this.appliedGemstone;
+    }
     public void setGemRarity(Gemstone.Rarity rarity) {
         this.gem_rarity = rarity;
     }
@@ -78,8 +82,8 @@ public class GemstoneSlot {
     public static class Type {
         public static final Type COMBAT = new Type("");
         public static final Type OFFENCE = new Type("");
-        public static final Type DEFENCE = new Type("");
-        public static final Type MAGIC = new Type("");
+        public static final Type DEFENCE = new Type("\uF003");
+        public static final Type MAGIC = new Type("\uF004");
         public static final Type INTELLIGENCE = new Type("\uF000");
         public static final Type STRENGTH = new Type("\uF002");
         public static final Type HEALTH = new Type("");
