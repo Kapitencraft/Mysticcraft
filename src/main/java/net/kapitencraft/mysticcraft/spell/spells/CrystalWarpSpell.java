@@ -26,7 +26,7 @@ public class CrystalWarpSpell extends Spell {
     private Component[] description = {Component.literal("Teleports you 10 blocks ahead"), Component.literal("and deals damage to all entities around")};
 
     public CrystalWarpSpell() {
-        super(300, "crystal_warp", Spells.RELEASE, Rarity.RARE);
+        super(300, "crystal_warp", Spells.RELEASE, Rarity.RARE, "crystal_warp");
     }
 
     @Override

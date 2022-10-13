@@ -18,7 +18,7 @@ public class ExplosiveSightSpell extends Spell {
 
     private static final Component[] description = new Component[] {Component.literal("Explodes in a range of 150")};
     public ExplosiveSightSpell() {
-        super(150, "explosive_sight", Spells.RELEASE, Rarity.UNCOMMON);
+        super(150, "explosive_sight", Spells.RELEASE, Rarity.UNCOMMON, "explosive_sight");
     }
 
     @Override

@@ -4,6 +4,8 @@ import net.kapitencraft.mysticcraft.spell.spells.CrystalWarpSpell;
 import net.kapitencraft.mysticcraft.spell.spells.EmptySpell;
 import net.kapitencraft.mysticcraft.spell.spells.ExplosiveSightSpell;
 import net.kapitencraft.mysticcraft.spell.spells.InstantTransmissionSpell;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.registries.DeferredRegister;
 
 public class Spells {
 
@@ -14,11 +16,7 @@ public class Spells {
 
     public static final SpellType RELEASE = new SpellType("release");
     public static final SpellType CYCLE = new SpellType("cycle");
-    public static class SpellType {
-        public final String name;
 
-        public SpellType(String name) {
-            this.name = name;
-        }
+    public record SpellType(String name) {
     }
 }

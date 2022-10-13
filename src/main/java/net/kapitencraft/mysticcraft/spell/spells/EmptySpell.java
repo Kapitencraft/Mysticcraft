@@ -12,7 +12,7 @@ import java.util.List;
 public class EmptySpell extends Spell {
     Component[] description = new Component[]{Component.literal("No Spell assigned to this Item"), Component.literal("Use the Spellment-Table to apply Spells"), Component.literal("to this Item")};
     public EmptySpell() {
-        super(0, "empty", Spells.CYCLE, Rarity.COMMON);
+        super(0, "empty", Spells.CYCLE, Rarity.COMMON, "empty");
     }
 
     @Override

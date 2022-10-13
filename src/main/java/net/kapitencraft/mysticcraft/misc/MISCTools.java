@@ -2,7 +2,6 @@ package net.kapitencraft.mysticcraft.misc;
 
 import net.kapitencraft.mysticcraft.api.APITools;
 import net.kapitencraft.mysticcraft.item.spells.SpellItem;
-import net.kapitencraft.mysticcraft.item.spells.SpellScrollItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
@@ -11,6 +10,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.enchantment.EnchantmentCategory;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
@@ -19,6 +19,7 @@ import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 import static java.lang.Math.sin;
 
@@ -174,8 +175,6 @@ public class MISCTools {
             return "BOW";
         } else if (item instanceof CrossbowItem) {
             return "CROSSBOW";
-        } else if (item instanceof SpellScrollItem) {
-            return "SPELL SCROLL";
         } else if (item instanceof EnchantedBookItem) {
             return "ENCHANTED BOOK";
         } else if (item instanceof ArmorItem armorItem) {
@@ -204,8 +203,19 @@ public class MISCTools {
             case "wither": return ChatFormatting.BLACK;
             case "ferocity": return ChatFormatting.GOLD;
             case "damage_generic": return ChatFormatting.RED;
-            case "drowning": return ChatFormatting.AQUA;
+            case "drown": return ChatFormatting.AQUA;
             default: return ChatFormatting.WHITE;
         }
     }
+
+    public static Rarity getItemRarity(Item item) {
+        return item.getRarity(new ItemStack(item));
+    }
+
+    public static EnchantmentCategory SPELL_ITEM = EnchantmentCategory.create("SPELL_ITEM", new Predicate<Item>() {
+        @Override
+        public boolean test(Item item) {
+            return item instanceof SpellItem;
+        }
+    });
 }

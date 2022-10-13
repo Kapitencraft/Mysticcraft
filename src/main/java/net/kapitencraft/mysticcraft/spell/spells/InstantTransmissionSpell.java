@@ -18,7 +18,7 @@ public class InstantTransmissionSpell extends Spell {
 
 
     public InstantTransmissionSpell() {
-        super(50, "instant_transmission", Spells.RELEASE, Rarity.COMMON);
+        super(50, "instant_transmission", Spells.RELEASE, Rarity.COMMON, "instant_transmission");
     }
 
     @Override

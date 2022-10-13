@@ -9,22 +9,18 @@ public class SpellSlot {
 
     public SpellSlot(Spell spell) {
         this.spell = spell;
-        this.calculateManaCost();
+        this.mana_cost = this.getManaCost();
     }
 
     public Spell getSpell() {
         return this.spell;
     }
     public double getManaCost() {
-        return this.mana_cost;
+        return this.spell.MANA_COST;
     }
 
     private void setManaCost(double mana_cost) {
         this.mana_cost = mana_cost;
     }
 
-    public double calculateManaCost() {
-        this.mana_cost = this.spell.MANA_COST;
-        return this.spell.MANA_COST;
-    }
 }
