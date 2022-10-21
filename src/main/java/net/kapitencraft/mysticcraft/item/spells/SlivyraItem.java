@@ -1,5 +1,6 @@
 package net.kapitencraft.mysticcraft.item.spells;
 
+import net.kapitencraft.mysticcraft.init.ModCreativeModeTabs;
 import net.kapitencraft.mysticcraft.spell.SpellSlot;
 import net.kapitencraft.mysticcraft.spell.Spells;
 import net.minecraft.network.chat.Component;
@@ -16,7 +17,7 @@ public class SlivyraItem extends SpellItem {
     Component[] description = {Component.literal("Some say, it might be the most"), Component.literal("powerful Magic Weapon in the world")};
 
     public SlivyraItem() {
-        super(new Properties().tab(CreativeModeTab.TAB_COMBAT).rarity(Rarity.RARE));
+        super(new Properties().tab(ModCreativeModeTabs.SPELL_AND_GEMSTONE).rarity(Rarity.RARE));
     }
 
     @Override

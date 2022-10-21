@@ -2,7 +2,6 @@ package net.kapitencraft.mysticcraft.init;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.enchantments.*;
-import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -22,5 +21,6 @@ public abstract class ModEnchantments {
     //public static final RegistryObject<Enchantment> PROTECTIVE_COVER = REGISTRY.register("protective_cover", ProtectiveCoverEnchantment::new);
     public static final RegistryObject<Enchantment> NECROTIC_TOUCH = REGISTRY.register("necrotic_touch", NecroticTouchEnchantment::new);
     public static final RegistryObject<Enchantment> ULTIMATE_WISE = REGISTRY.register("ultimate_wise", UltimateWiseEnchantment::new);
+    public static final RegistryObject<Enchantment> EFFICIENT_JEWELLING = REGISTRY.register("efficient_jewelling", EfficientJewelling::new);
 
 }

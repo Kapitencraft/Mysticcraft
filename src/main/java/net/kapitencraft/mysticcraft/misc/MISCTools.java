@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.misc;
 
 import net.kapitencraft.mysticcraft.api.APITools;
+import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.item.spells.SpellItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -198,24 +199,44 @@ public class MISCTools {
     }
 
     private static ChatFormatting damageIndicatorColorGenerator(String type) {
-        switch (type) {
-            case "heal": return ChatFormatting.GREEN;
-            case "wither": return ChatFormatting.BLACK;
-            case "ferocity": return ChatFormatting.GOLD;
-            case "damage_generic": return ChatFormatting.RED;
-            case "drown": return ChatFormatting.AQUA;
-            default: return ChatFormatting.WHITE;
-        }
+        return switch (type) {
+            case "heal" -> ChatFormatting.GREEN;
+            case "wither" -> ChatFormatting.BLACK;
+            case "ferocity" -> ChatFormatting.GOLD;
+            case "damage_generic" -> ChatFormatting.RED;
+            case "drown" -> ChatFormatting.AQUA;
+            default -> ChatFormatting.WHITE;
+        };
     }
 
     public static Rarity getItemRarity(Item item) {
         return item.getRarity(new ItemStack(item));
     }
 
+    public static final EquipmentSlot[] allEquipmentSlots = new EquipmentSlot[]{EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND, EquipmentSlot.LEGS, EquipmentSlot.CHEST, EquipmentSlot.HEAD, EquipmentSlot.FEET};
+
+    public static int createCustomIndex(EquipmentSlot slot) {
+        return switch (slot) {
+            case LEGS -> 2;
+            case FEET -> 3;
+            case HEAD -> 0;
+            case CHEST -> 1;
+            case MAINHAND -> 5;
+            case OFFHAND -> 4;
+        };
+    }
     public static EnchantmentCategory SPELL_ITEM = EnchantmentCategory.create("SPELL_ITEM", new Predicate<Item>() {
         @Override
         public boolean test(Item item) {
             return item instanceof SpellItem;
         }
     });
+
+    public static EnchantmentCategory GEMSTONE_ITEM = EnchantmentCategory.create("GEMSTONE_ITEM", new Predicate<Item>() {
+        @Override
+        public boolean test(Item item) {
+            return item instanceof IGemstoneApplicable;
+        }
+    });
+
 }

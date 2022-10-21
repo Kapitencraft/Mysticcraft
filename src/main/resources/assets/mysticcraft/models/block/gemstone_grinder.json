@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "down": "mysticcraft:block/gemstone_infusion_station_bottom",
+    "up": "mysticcraft:block/gemstone_infusion_station_top",
+    "north": "mysticcraft:block/gemstone_infusion_station_west_east",
+    "east": "mysticcraft:block/gemstone_infusion_station_north_south",
+    "south": "mysticcraft:block/gemstone_infusion_station_west_east",
+    "west": "mysticcraft:block/gemstone_infusion_station_north_south",
+    "particle": "mysticcraft:block/gemstone_infusion_station_bottom"
+  }
+}

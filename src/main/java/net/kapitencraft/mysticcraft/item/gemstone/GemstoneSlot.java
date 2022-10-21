@@ -1,9 +1,10 @@
-package net.kapitencraft.mysticcraft.item.gemstone_slot;
+package net.kapitencraft.mysticcraft.item.gemstone;
 
-import net.kapitencraft.mysticcraft.item.gemstone_slot.gemstones.AlmandineGemstone;
-import net.kapitencraft.mysticcraft.item.gemstone_slot.gemstones.JasperGemstone;
-import net.kapitencraft.mysticcraft.item.gemstone_slot.gemstones.RubyGemstone;
-import net.kapitencraft.mysticcraft.item.gemstone_slot.gemstones.SapphireGemstone;
+import net.kapitencraft.mysticcraft.event.ModEventFactory;
+import net.kapitencraft.mysticcraft.item.gemstone.gemstones.AlmandineGemstone;
+import net.kapitencraft.mysticcraft.item.gemstone.gemstones.JasperGemstone;
+import net.kapitencraft.mysticcraft.item.gemstone.gemstones.RubyGemstone;
+import net.kapitencraft.mysticcraft.item.gemstone.gemstones.SapphireGemstone;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 
 import javax.annotation.Nullable;
@@ -59,6 +60,7 @@ public class GemstoneSlot {
         if (this.isValidGemstone(gemstone)) {
             this.appliedGemstone = gemstone;
             this.gem_rarity = gemstone.getRarity();
+            ModEventFactory.onGemstoneApplied(gemstone, this);
             return true;
         } else {
             return false;

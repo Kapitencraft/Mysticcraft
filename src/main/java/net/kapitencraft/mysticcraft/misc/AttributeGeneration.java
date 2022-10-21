@@ -63,7 +63,7 @@ public class AttributeGeneration {
         } else if (event.getSlotType() == EquipmentSlot.FEET) {
             if (stack.getItem() instanceof ArmorItem armorItem && armorItem.getSlot() == EquipmentSlot.FEET) {
                 if (stack.getEnchantmentLevel(ModEnchantments.FIRM_STAND.get()) > 0) {
-                    event.addModifier(Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[2], ModifierName, stack.getEnchantmentLevel(ModEnchantments.FIRM_STAND.get()) * 0.01, AttributeModifier.Operation.ADDITION));
+                    event.addModifier(Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[3], ModifierName, stack.getEnchantmentLevel(ModEnchantments.FIRM_STAND.get()) * 0.01, AttributeModifier.Operation.ADDITION));
                 }
                 if (stack.getEnchantmentLevel(ModEnchantments.REJUVENATE.get()) > 0) {
                     event.addModifier(ModAttributes.HEALTH_REGEN.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[3], ModifierName, stack.getEnchantmentLevel(ModEnchantments.REJUVENATE.get()) * 2, AttributeModifier.Operation.ADDITION));

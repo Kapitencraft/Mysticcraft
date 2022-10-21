@@ -3,15 +3,21 @@ package net.kapitencraft.mysticcraft.misc;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModEnchantments;
+import net.kapitencraft.mysticcraft.init.ModMobEffects;
+import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Arrow;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.*;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.ItemAttributeModifierEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
@@ -29,7 +35,7 @@ public class MiscRegister {
     public static void DamageEnchantRegister(LivingDamageEvent event) {
         if (event.getSource().getEntity() instanceof Arrow arrow) {
             CompoundTag tag = arrow.getPersistentData();
-            if (tag.contains("ticks") && tag.getInt("SnipeEnchant") > 0) {
+            if (tag.contains("SnipeEnchant", 3) && tag.getInt("SnipeEnchant") > 0) {
                 Vec3 launchLoc = new Vec3(tag.getDouble("LaunchX"), tag.getDouble("LaunchY"), tag.getDouble("LaunchZ"));
                 Vec3 hitLoc = arrow.position();
                 double distance = launchLoc.distanceTo(hitLoc);
@@ -43,6 +49,14 @@ public class MiscRegister {
         if (attacker.getAttribute(ModAttributes.STRENGTH.get()) != null) {
             double StrengthMul = 1 + (attacker.getAttributeValue(ModAttributes.STRENGTH.get()));
             event.setAmount(amount * (float) StrengthMul);
+        }
+    }
+
+    @SubscribeEvent
+    public static void HitEffectRegister(LivingDamageEvent event) {
+        LivingEntity living = event.getEntity();
+        if (living.hasEffect(ModMobEffects.VULNERABILITY.get())) {
+            event.setAmount((float) (event.getAmount() * (1 + living.getEffect(ModMobEffects.VULNERABILITY.get()).getAmplifier() * 0.05)));
         }
     }
 
@@ -120,6 +134,24 @@ public class MiscRegister {
     public static void ArrowRegisterEvent(EntityJoinLevelEvent event) {
         if (event.getEntity() instanceof Arrow arrow) {
             new ArrowTickSchedule(arrow);
+        }
+    }
+
+    @SubscribeEvent
+    public static void gemstoneAttributeModifications(ItemAttributeModifierEvent event) {
+        Item item = event.getItemStack().getItem();
+        if (item instanceof IGemstoneApplicable applicable) {
+            if (item instanceof ArmorItem armorItem) {
+                if (event.getSlotType() == armorItem.getSlot()) {
+                    for (Attribute attribute : applicable.getAttributesModified()) {
+                        event.addModifier(attribute, new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[MISCTools.createCustomIndex(armorItem.getSlot())], "Gemstone Modification", applicable.getAttributeModifiers().get(attribute), AttributeModifier.Operation.ADDITION));
+                    }
+                }
+            } else if (item instanceof TieredItem tiered && event.getSlotType() == EquipmentSlot.MAINHAND) {
+                for (Attribute attribute : applicable.getAttributesModified()) {
+                    event.addModifier(attribute, new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[MISCTools.createCustomIndex(EquipmentSlot.MAINHAND)], "Gemstone Modification", applicable.getAttributeModifiers().get(attribute), AttributeModifier.Operation.ADDITION));
+                }
+            }
         }
     }
 }

@@ -2,6 +2,7 @@ package net.kapitencraft.mysticcraft.misc;
 
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
@@ -22,7 +23,7 @@ public class MiscEvents {
             boolean flag = rarity != MISCTools.getItemRarity(stack.getItem());
             String NameMod = FormattingCodes.OBFUSCATED + "A" + FormattingCodes.RESET;
             event.getToolTip().add(Component.literal(""));
-            event.getToolTip().add(Component.literal((flag ? NameMod + " " : "") + rarity + " " + MISCTools.getNameModifier(stack) + (flag ? " " + NameMod : "")).withStyle(rarity.getStyleModifier()));
+            event.getToolTip().add(Component.literal((flag ? NameMod + " " : "") + rarity + " " + MISCTools.getNameModifier(stack) + (flag ? " " + NameMod : "")).withStyle(rarity.getStyleModifier()).withStyle(ChatFormatting.BOLD));
         }
 
     }

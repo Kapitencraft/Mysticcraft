@@ -1,16 +1,17 @@
 package net.kapitencraft.mysticcraft.item;
 
-import net.kapitencraft.mysticcraft.item.gemstone_slot.GemstoneSlot;
-import net.kapitencraft.mysticcraft.item.gemstone_slot.IGemstoneApplicable;
-import net.minecraft.network.chat.Component;
+import net.kapitencraft.mysticcraft.item.gemstone.GemstoneSlot;
+import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
+import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.item.*;
-import net.minecraft.world.level.Level;
 
-import javax.annotation.Nullable;
-import java.util.List;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class LongBowItem extends ModdedBows implements IGemstoneApplicable {
     public final double DIVIDER = 40;
+    private HashMap<Attribute, Double> attributeModifiers;
+    private ArrayList<Attribute> attributesModified;
     private GemstoneSlot[] gemstoneSlots = new GemstoneSlot[]{GemstoneSlot.OFFENSIVE};
     public static final double ARROW_SPEED_MUL = 5;
 
@@ -31,5 +32,15 @@ public class LongBowItem extends ModdedBows implements IGemstoneApplicable {
     @Override
     public GemstoneSlot[] getGemstoneSlots() {
         return this.gemstoneSlots;
+    }
+
+    @Override
+    public HashMap<Attribute, Double> getAttributeModifiers() {
+        return attributeModifiers;
+    }
+
+    @Override
+    public ArrayList<Attribute> getAttributesModified() {
+        return attributesModified;
     }
 }

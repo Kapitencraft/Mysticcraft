@@ -1,8 +1,8 @@
 package net.kapitencraft.mysticcraft.item;
 
 import net.kapitencraft.mysticcraft.init.ModEnchantments;
-import net.kapitencraft.mysticcraft.item.gemstone_slot.GemstoneSlot;
-import net.kapitencraft.mysticcraft.item.gemstone_slot.IGemstoneApplicable;
+import net.kapitencraft.mysticcraft.item.gemstone.GemstoneSlot;
+import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
