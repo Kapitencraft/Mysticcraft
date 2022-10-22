@@ -38,7 +38,7 @@ public abstract class Spell {
         list.add(Component.literal("Ability: " + this.getName() + (item.getSpellSlots().length > 1 ? (" " + (item.getActiveSpell() + 1) + "/" + item.getSpellSlots().length) : "")).withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.GOLD));
         list.addAll(this.getDescription());
         if (this.MANA_COST > 0) {
-            list.add(Component.literal(FormattingCodes.GRAY.UNICODE + "Mana-Cost: " + FormattingCodes.DARK_RED.UNICODE + item.calculateManaCost(stack)));
+            list.add(Component.literal(FormattingCodes.GRAY.UNICODE + "Mana-Cost: " + FormattingCodes.DARK_RED.UNICODE));
         }
         return list;
     }

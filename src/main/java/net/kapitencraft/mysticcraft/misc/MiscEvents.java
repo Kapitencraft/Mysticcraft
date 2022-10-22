@@ -2,8 +2,15 @@ package net.kapitencraft.mysticcraft.misc;
 
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.init.ModAttributes;
+import net.kapitencraft.mysticcraft.init.ModEnchantments;
+import net.kapitencraft.mysticcraft.item.spells.SpellItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraftforge.api.distmarker.Dist;
@@ -12,6 +19,8 @@ import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.List;
+
 public class MiscEvents {
     @Mod.EventBusSubscriber(modid = MysticcraftMod.MOD_ID, value = Dist.CLIENT)
     public static class ClientForgeEvents {
@@ -19,11 +28,29 @@ public class MiscEvents {
         @SubscribeEvent
         public static void DescriptionRegister(ItemTooltipEvent event) {
             ItemStack stack = event.getItemStack();
+            List<Component> toolTip = event.getToolTip();
+            Player player = event.getEntity();
+            Component searched = Component.literal(FormattingCodes.GRAY.UNICODE + "Mana-Cost: " + FormattingCodes.DARK_RED.UNICODE);
+            if (toolTip.contains(searched) && stack.getItem() instanceof SpellItem spellItem) {
+                if (player != null && stack != player.getMainHandItem()) {
+                    AttributeInstance cost_instance = player.getAttribute(ModAttributes.MANA_COST.get());
+                    cost_instance.removeModifier(SpellItem.MANA_COST_MOD);
+                    cost_instance.removeModifier(SpellItem.ULTIMATE_WISE_MOD);
+                    if (stack.getEnchantmentLevel(ModEnchantments.ULTIMATE_WISE.get()) > 0) {
+                        cost_instance.addTransientModifier(AttributeGeneration.UltimateWiseMod(stack));
+                    }
+                    cost_instance.addTransientModifier(new AttributeModifier(SpellItem.MANA_COST_MOD, "Tooltip", spellItem.getManaCost(), AttributeModifier.Operation.ADDITION));
+                    Component found = toolTip.get(toolTip.lastIndexOf(searched));
+                    if (found instanceof MutableComponent mutable) {
+                        mutable.append(FormattingCodes.DARK_RED.UNICODE + player.getAttributeValue(ModAttributes.MANA_COST.get()));
+                    }
+                }
+            }
             Rarity rarity = stack.getItem().getRarity(stack);
             boolean flag = rarity != MISCTools.getItemRarity(stack.getItem());
             String NameMod = FormattingCodes.OBFUSCATED + "A" + FormattingCodes.RESET;
-            event.getToolTip().add(Component.literal(""));
-            event.getToolTip().add(Component.literal((flag ? NameMod + " " : "") + rarity + " " + MISCTools.getNameModifier(stack) + (flag ? " " + NameMod : "")).withStyle(rarity.getStyleModifier()).withStyle(ChatFormatting.BOLD));
+            toolTip.add(Component.literal(""));
+            toolTip.add(Component.literal((flag ? NameMod + " " : "") + rarity + " " + MISCTools.getNameModifier(stack) + (flag ? " " + NameMod : "")).withStyle(rarity.getStyleModifier()).withStyle(ChatFormatting.BOLD));
         }
 
     }

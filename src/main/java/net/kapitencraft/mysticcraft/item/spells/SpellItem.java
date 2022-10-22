@@ -11,10 +11,8 @@ import net.kapitencraft.mysticcraft.spell.Spells;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Rarity;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,8 +21,9 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
-public abstract class SpellItem extends Item {
+public abstract class SpellItem extends TieredItem {
 
     protected @Nullable HashMap<Attribute, Double> attributeModifiers = null;
     protected @Nullable ArrayList<Attribute> modifiedAttributes = null;
@@ -85,7 +84,7 @@ public abstract class SpellItem extends Item {
 
 
     public SpellItem(Properties p_41383_) {
-        super(p_41383_.stacksTo(1));
+        super(ModTiers.SPELL_TIER, p_41383_.stacksTo(1));
     }
 
     public abstract List<Component> getItemDescription();
@@ -94,13 +93,15 @@ public abstract class SpellItem extends Item {
     public abstract int getSpellSlotAmount();
     public abstract int getActiveSpell();
 
+    public static final UUID MANA_COST_MOD = UUID.fromString("95c53029-8493-4e05-9e7b-a0c0530dae83");
+    public static final UUID ULTIMATE_WISE_MOD = UUID.fromString("88572caa-0070-4e33-a82b-dadb48658c80");
+
     @Override
     public void releaseUsing(@NotNull ItemStack stack, @Nullable Level level, @NotNull LivingEntity user, int p_41415_) {
         Spell spell = this.getSpellSlots()[this.getActiveSpell()].getSpell();
         if (spell.TYPE == Spells.RELEASE) {
             spell.execute(user, stack);
         }
-
     }
 
     @Override
@@ -111,7 +112,7 @@ public abstract class SpellItem extends Item {
         }
     }
 
-    public double calculateManaCost(ItemStack stack) {
-        return this.getSpellSlots()[this.getActiveSpell()].getManaCost() * (1 - (this.getEnchantmentLevel(stack, ModEnchantments.ULTIMATE_WISE.get())) * 0.1);
+    public double getManaCost() {
+        return this.getSpellSlots()[this.getActiveSpell()].getManaCost();
     }
 }

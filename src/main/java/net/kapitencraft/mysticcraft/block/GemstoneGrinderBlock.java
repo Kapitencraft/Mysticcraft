@@ -58,16 +58,16 @@ public class GemstoneGrinderBlock extends BaseEntityBlock {
 
     @Override
     public InteractionResult use(BlockState p_49432_, Level p_49433_, BlockPos p_49434_, Player p_49435_, InteractionHand p_49436_, BlockHitResult p_49437_) {
-        if (p_49433_.isClientSide) {
+        if (p_49433_.isClientSide()) {
             return InteractionResult.SUCCESS;
         } else {
             BlockEntity blockentity = p_49433_.getBlockEntity(p_49434_);
             if (blockentity instanceof GemstoneGrinderBlockEntity) {
-                p_49435_.openMenu((GemstoneGrinderBlockEntity)blockentity);
+                NetworkHooks.openScreen((ServerPlayer) p_49435_,  (GemstoneGrinderBlockEntity)blockentity);
                 p_49435_.awardStat(Stats.INTERACT_WITH_BEACON);
             }
 
-            return InteractionResult.CONSUME;
+            return InteractionResult.sidedSuccess(true);
         }
     }
 

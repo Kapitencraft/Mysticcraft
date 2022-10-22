@@ -4,29 +4,43 @@ import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModEnchantments;
 import net.kapitencraft.mysticcraft.init.ModMobEffects;
+import net.kapitencraft.mysticcraft.item.DropRarity;
+import net.kapitencraft.mysticcraft.item.IRNGDrop;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
+import net.kapitencraft.mysticcraft.item.spells.SpellItem;
+import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
-import net.minecraft.world.entity.projectile.Arrow;
+import net.minecraft.world.entity.projectile.Arrow  ;
 import net.minecraft.world.item.*;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.WitherSkullBlock;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ItemAttributeModifierEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
+import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHealEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import javax.annotation.Nullable;
+import java.util.Collection;
 
 @Mod.EventBusSubscriber
 public class MiscRegister {
@@ -147,11 +161,39 @@ public class MiscRegister {
                         event.addModifier(attribute, new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[MISCTools.createCustomIndex(armorItem.getSlot())], "Gemstone Modification", applicable.getAttributeModifiers().get(attribute), AttributeModifier.Operation.ADDITION));
                     }
                 }
-            } else if (item instanceof TieredItem tiered && event.getSlotType() == EquipmentSlot.MAINHAND) {
+            } else if (item instanceof TieredItem && event.getSlotType() == EquipmentSlot.MAINHAND) {
                 for (Attribute attribute : applicable.getAttributesModified()) {
                     event.addModifier(attribute, new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[MISCTools.createCustomIndex(EquipmentSlot.MAINHAND)], "Gemstone Modification", applicable.getAttributeModifiers().get(attribute), AttributeModifier.Operation.ADDITION));
                 }
             }
+        }
+    }
+
+    @SubscribeEvent
+    public static void rareDropMessage(LivingDropsEvent event) {
+        Collection<ItemEntity> entities = event.getDrops();
+        for (ItemEntity entity : entities) {
+            Item item = entity.getItem().getItem();
+            DropRarity dropRarity = item instanceof IRNGDrop drop ? drop.getRarity() : (item instanceof BlockItem block && block.getBlock() instanceof WitherSkullBlock skull) ? DropRarity.LEGENDARY : DropRarity.COMMON;
+            if (dropRarity.getID() > 1) {
+                if (event.getSource().getEntity() instanceof Player attacker) {
+                    attacker.sendSystemMessage(Component.literal(dropRarity.getColor().UNICODE + dropRarity.getDisplayName() + "DROP!" + FormattingCodes.RESET + "(").append(item.getName(entity.getItem())).append(") ("+ FormattingCodes.BLUE.UNICODE + "+" + attacker.getAttributeValue(ModAttributes.MAGIC_FIND.get()) + "% Magic Find)"));
+                }
+            }
+        }
+
+    }
+
+    @SubscribeEvent(priority = EventPriority.NORMAL)
+    public static void manaRegister(RenderGuiOverlayEvent.Pre event) {
+        int w = event.getWindow().getGuiScaledWidth();
+        int h = event.getWindow().getGuiScaledHeight();
+        int posX = w / 2;
+        int posY = h / 2;
+        Player entity = Minecraft.getInstance().player;
+        if (entity != null) {
+            String builder = FormattingCodes.BLUE.UNICODE + MISCTools.round(entity.getAttributeValue(ModAttributes.MANA.get()), 1) + FormattingCodes.RESET + " / " + FormattingCodes.DARK_BLUE.UNICODE + entity.getAttributeValue(ModAttributes.MAX_MANA.get());
+            Minecraft.getInstance().font.draw(event.getPoseStack(), builder , posX + -203, posY + 93, -1);
         }
     }
 }

@@ -239,4 +239,7 @@ public class MISCTools {
         }
     });
 
+    public static double round(double no, int num) {
+        return Math.floor(no * (num * 10)) / (num * 10);
+    }
 }

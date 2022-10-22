@@ -23,7 +23,7 @@ public class GemstoneGrinderScreen extends AbstractContainerScreen<GemGrinderMen
         super.init();
     }
 
-        @Override
+    @Override
     protected void renderBg(PoseStack pose, float partialTick, int mouseX, int mouseY) {
         menu.player.sendSystemMessage(Component.literal("Rendering Screen"));
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
