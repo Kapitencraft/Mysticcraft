@@ -1,9 +1,11 @@
-package net.kapitencraft.mysticcraft.item;
+package net.kapitencraft.mysticcraft.item.bow;
 
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneSlot;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Rarity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,7 +28,7 @@ public class LongBowItem extends ModdedBows implements IGemstoneApplicable {
 
     @Override
     public GemstoneSlot getGemstoneSlot(int slotLoc) {
-        return this.gemstoneSlots[slotLoc];
+        return this.getGemstoneSlots()[slotLoc];
     }
 
     @Override
@@ -42,5 +44,15 @@ public class LongBowItem extends ModdedBows implements IGemstoneApplicable {
     @Override
     public ArrayList<Attribute> getAttributesModified() {
         return attributesModified;
+    }
+
+    @Override
+    public int getKB() {
+        return 3;
+    }
+
+    @Override
+    public double getDamage() {
+        return 9;
     }
 }

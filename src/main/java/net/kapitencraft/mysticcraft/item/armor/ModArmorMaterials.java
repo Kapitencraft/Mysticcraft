@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.item;
+package net.kapitencraft.mysticcraft.item.armor;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.minecraft.sounds.SoundEvent;
@@ -12,9 +12,9 @@ import net.minecraft.world.item.crafting.Ingredient;
 import java.util.function.Supplier;
 
 public enum ModArmorMaterials implements ArmorMaterial {
-    WIZARD_HAT("wizard_hat", 5, new int[]{1, 2, 3, 1}, 15, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0F, 0.0F, () -> {
-    return Ingredient.of(Items.LEATHER);
-    });
+
+    WIZARD_HAT("wizard_hat", 5, new int[]{0, 0, 0, 7}, 15, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0F, 0.0F, () -> Ingredient.of(Items.LEATHER)),
+    ENDER_KNIGHT("ender_knight", 9, new int[]{8, 12, 19, 9}, 12, SoundEvents.ARMOR_EQUIP_NETHERITE, 1.2f, 2.7f, () -> Ingredient.of(Items.NETHERITE_INGOT));
 
     private static final int[] HEALTH_PER_SLOT = new int[]{13, 15, 16, 11};
     private final String name;
@@ -23,7 +23,7 @@ public enum ModArmorMaterials implements ArmorMaterial {
     private final int enchantmentValue;
     private final SoundEvent sound;
     private final float toughness;
-    private final float knockbackResistance;
+    private final float knockBackResistance;
     private final LazyLoadedValue<Ingredient> repairIngredient;
 
     private ModArmorMaterials(String p_40474_, int p_40475_, int[] p_40476_, int p_40477_, SoundEvent p_40478_, float p_40479_, float p_40480_, Supplier<Ingredient> p_40481_) {
@@ -33,7 +33,7 @@ public enum ModArmorMaterials implements ArmorMaterial {
         this.enchantmentValue = p_40477_;
         this.sound = p_40478_;
         this.toughness = p_40479_;
-        this.knockbackResistance = p_40480_;
+        this.knockBackResistance = p_40480_;
         this.repairIngredient = new LazyLoadedValue<>(p_40481_);
     }
 
@@ -66,7 +66,6 @@ public enum ModArmorMaterials implements ArmorMaterial {
     }
 
     public float getKnockbackResistance() {
-        return this.knockbackResistance;
+        return this.knockBackResistance;
     }
-
 }

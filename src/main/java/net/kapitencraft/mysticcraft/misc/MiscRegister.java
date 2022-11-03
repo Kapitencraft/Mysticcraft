@@ -6,11 +6,15 @@ import net.kapitencraft.mysticcraft.init.ModEnchantments;
 import net.kapitencraft.mysticcraft.init.ModMobEffects;
 import net.kapitencraft.mysticcraft.item.DropRarity;
 import net.kapitencraft.mysticcraft.item.IRNGDrop;
+import net.kapitencraft.mysticcraft.item.bow.TallinBow;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
-import net.kapitencraft.mysticcraft.item.spells.SpellItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -20,11 +24,9 @@ import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
-import net.minecraft.world.entity.projectile.Arrow  ;
+import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.item.*;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.WitherSkullBlock;
-import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -41,6 +43,7 @@ import net.minecraftforge.fml.common.Mod;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.Objects;
 
 @Mod.EventBusSubscriber
 public class MiscRegister {
@@ -70,17 +73,25 @@ public class MiscRegister {
     public static void HitEffectRegister(LivingDamageEvent event) {
         LivingEntity living = event.getEntity();
         if (living.hasEffect(ModMobEffects.VULNERABILITY.get())) {
-            event.setAmount((float) (event.getAmount() * (1 + living.getEffect(ModMobEffects.VULNERABILITY.get()).getAmplifier() * 0.05)));
+            event.setAmount((float) (event.getAmount() * (1 + Objects.requireNonNull(living.getEffect(ModMobEffects.VULNERABILITY.get())).getAmplifier() * 0.05)));
         }
     }
 
     @SubscribeEvent
     public static void HitEnchantmentRegister(LivingDamageEvent event) {
-        if (event.getSource().getEntity() != null && event.getSource().getEntity() instanceof LivingEntity living) {
-            ItemStack stack = living.getMainHandItem();
+        Entity entity = event.getSource().getEntity();
+        if (entity instanceof LivingEntity attacker) {
+            LivingEntity attacked = event.getEntity();
+            ItemStack stack = attacker.getMainHandItem();
             int nec_touch_lvl = stack.getEnchantmentLevel(ModEnchantments.NECROTIC_TOUCH.get());
+            int poison_blade = stack.getEnchantmentLevel(ModEnchantments.POISONOUS_BLADE.get());
             if (nec_touch_lvl > 0) {
-                living.heal(event.getAmount() > nec_touch_lvl ? nec_touch_lvl : event.getAmount());
+                attacker.heal(event.getAmount() > nec_touch_lvl ? nec_touch_lvl : event.getAmount());
+            }
+            if (poison_blade > 0) {
+                if (!MISCTools.increaseEffectDuration(attacked, MobEffects.POISON, poison_blade * 5)) {
+                    attacked.addEffect(new MobEffectInstance(MobEffects.POISON, 20, 1));
+                }
             }
         }
     }
@@ -127,7 +138,8 @@ public class MiscRegister {
             CompoundTag persistentData = armorStand.getPersistentData();
             if (persistentData.contains("isDamageIndicator") && persistentData.getBoolean("isDamageIndicator")) {
                 persistentData.putInt("time", (persistentData.getInt("time") + 1));
-                if (persistentData.getInt("time") >= 20) {
+                @Nullable Entity target = armorStand.level instanceof ServerLevel serverLevel && persistentData.contains("targetUUID") ? serverLevel.getEntity(persistentData.getUUID("targetUUID")) : null;
+                if (persistentData.getInt("time") >= 20 || (target != null && !target.isAlive())) {
                     armorStand.kill();
                 }
             }
@@ -148,6 +160,11 @@ public class MiscRegister {
     public static void ArrowRegisterEvent(EntityJoinLevelEvent event) {
         if (event.getEntity() instanceof Arrow arrow) {
             new ArrowTickSchedule(arrow);
+            if (arrow.getOwner() instanceof LivingEntity living) {
+                if (living.getMainHandItem().getItem() instanceof TallinBow) {
+                    arrow.getPersistentData().putBoolean("CanHitEnderman", true);
+                }
+            }
         }
     }
 
@@ -162,8 +179,10 @@ public class MiscRegister {
                     }
                 }
             } else if (item instanceof TieredItem && event.getSlotType() == EquipmentSlot.MAINHAND) {
-                for (Attribute attribute : applicable.getAttributesModified()) {
-                    event.addModifier(attribute, new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[MISCTools.createCustomIndex(EquipmentSlot.MAINHAND)], "Gemstone Modification", applicable.getAttributeModifiers().get(attribute), AttributeModifier.Operation.ADDITION));
+                if (applicable.getAttributesModified() != null) {
+                    for (Attribute attribute : applicable.getAttributesModified()) {
+                        event.addModifier(attribute, new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[MISCTools.createCustomIndex(EquipmentSlot.MAINHAND)], "Gemstone Modification", applicable.getAttributeModifiers().get(attribute), AttributeModifier.Operation.ADDITION));
+                    }
                 }
             }
         }
@@ -174,14 +193,13 @@ public class MiscRegister {
         Collection<ItemEntity> entities = event.getDrops();
         for (ItemEntity entity : entities) {
             Item item = entity.getItem().getItem();
-            DropRarity dropRarity = item instanceof IRNGDrop drop ? drop.getRarity() : (item instanceof BlockItem block && block.getBlock() instanceof WitherSkullBlock skull) ? DropRarity.LEGENDARY : DropRarity.COMMON;
+            DropRarity dropRarity = item instanceof IRNGDrop drop ? drop.getRarity() : (item instanceof BlockItem block && block.getBlock() instanceof WitherSkullBlock) ? DropRarity.LEGENDARY : DropRarity.COMMON;
             if (dropRarity.getID() > 1) {
                 if (event.getSource().getEntity() instanceof Player attacker) {
                     attacker.sendSystemMessage(Component.literal(dropRarity.getColor().UNICODE + dropRarity.getDisplayName() + "DROP!" + FormattingCodes.RESET + "(").append(item.getName(entity.getItem())).append(") ("+ FormattingCodes.BLUE.UNICODE + "+" + attacker.getAttributeValue(ModAttributes.MAGIC_FIND.get()) + "% Magic Find)"));
                 }
             }
         }
-
     }
 
     @SubscribeEvent(priority = EventPriority.NORMAL)
@@ -193,7 +211,7 @@ public class MiscRegister {
         Player entity = Minecraft.getInstance().player;
         if (entity != null) {
             String builder = FormattingCodes.BLUE.UNICODE + MISCTools.round(entity.getAttributeValue(ModAttributes.MANA.get()), 1) + FormattingCodes.RESET + " / " + FormattingCodes.DARK_BLUE.UNICODE + entity.getAttributeValue(ModAttributes.MAX_MANA.get());
-            Minecraft.getInstance().font.draw(event.getPoseStack(), builder , posX + -203, posY + 93, -1);
+            Minecraft.getInstance().font.draw(event.getPoseStack(), builder , posX - 203, posY + 93, -1);
         }
     }
 }

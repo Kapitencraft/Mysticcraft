@@ -1,25 +1,24 @@
 package net.kapitencraft.mysticcraft.misc;
 
 
-import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModEnchantments;
 import net.kapitencraft.mysticcraft.init.ModItems;
-import net.kapitencraft.mysticcraft.item.spells.SlivyraItem;
+import net.kapitencraft.mysticcraft.item.armor.ModArmorItem;
+import net.kapitencraft.mysticcraft.item.bow.ModdedBows;
 import net.kapitencraft.mysticcraft.item.spells.SpellItem;
+import net.kapitencraft.mysticcraft.item.sword.LongSwordItem;
+import net.kapitencraft.mysticcraft.item.sword.ModdedSword;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.event.ItemAttributeModifierEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-
-import java.util.Map;
-import java.util.UUID;
 
 @Mod.EventBusSubscriber
 public class AttributeGeneration {
@@ -29,8 +28,18 @@ public class AttributeGeneration {
     public static void onAttributesCreated(ItemAttributeModifierEvent event) {
         ItemStack stack = event.getItemStack();
         if (event.getSlotType() == EquipmentSlot.MAINHAND) {
-            if (stack.getItem() instanceof SlivyraItem slivyraItem) {
-                MakeSpellItem(slivyraItem, 500, event);
+            if (stack.getItem() instanceof SpellItem spellItem) {
+                makeSpellItem(spellItem, spellItem.getManaCost(), event);
+            }
+            if (stack.getItem() instanceof ModdedBows moddedBows) {
+                event.addModifier(Attributes.ATTACK_DAMAGE, new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[5], ModifierName, moddedBows.getDamage(), AttributeModifier.Operation.ADDITION));
+            }
+            if (stack.getItem() instanceof ModdedSword swordItem) {
+                if (stack.getItem() instanceof LongSwordItem longSwordItem) {
+                    makeLongSword(longSwordItem, event);
+                } else {
+                    makeSword(swordItem, event);
+                }
             }
             AttributeModifier ultWiseMod = UltimateWiseMod(stack);
             if (ultWiseMod != null) {
@@ -66,6 +75,9 @@ public class AttributeGeneration {
     }
 
     private static void InsertEnchantmentRegister(int id, ItemStack stack, ItemAttributeModifierEvent event) {
+        if (!(stack.getItem() instanceof ArmorItem) || stack.getItem() instanceof ModArmorItem) {
+            return;
+        }
         if (stack.getEnchantmentLevel(ModEnchantments.REJUVENATE.get()) > 0) {
             event.addModifier(ModAttributes.HEALTH_REGEN.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[id], ModifierName, stack.getEnchantmentLevel(ModEnchantments.REJUVENATE.get()) * 2, AttributeModifier.Operation.ADDITION));
         }
@@ -74,7 +86,7 @@ public class AttributeGeneration {
         }
     }
 
-    private static void MakeSpellItem(SpellItem spellItem, double intelligence, ItemAttributeModifierEvent event) {
+    private static void makeSpellItem(SpellItem spellItem, double intelligence, ItemAttributeModifierEvent event) {
         event.addModifier(ModAttributes.MANA_COST.get(), new AttributeModifier(SpellItem.MANA_COST_MOD, ModifierName, spellItem.getManaCost(), AttributeModifier.Operation.ADDITION));
         event.addModifier(ModAttributes.INTELLIGENCE.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[5], ModifierName, intelligence, AttributeModifier.Operation.ADDITION));
     }
@@ -85,5 +97,15 @@ public class AttributeGeneration {
         } else {
             return null;
         }
+    }
+
+    private static void makeSword(ModdedSword swordItem, ItemAttributeModifierEvent event) {
+        event.addModifier(ModAttributes.STRENGTH.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[5], ModifierName, swordItem.getStrenght(), AttributeModifier.Operation.ADDITION));
+        event.addModifier(ModAttributes.CRIT_DAMAGE.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[5], ModifierName, swordItem.getCritDamage(), AttributeModifier.Operation.ADDITION));
+    }
+
+    private static void makeLongSword(LongSwordItem longSword, ItemAttributeModifierEvent event) {
+        makeSword(longSword, event);
+        event.addModifier(ForgeMod.ATTACK_RANGE.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[5], ModifierName, longSword.getReachMod(), AttributeModifier.Operation.ADDITION));
     }
 }

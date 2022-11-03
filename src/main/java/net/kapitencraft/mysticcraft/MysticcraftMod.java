@@ -28,6 +28,7 @@ import java.util.function.Supplier;
 @Mod(MysticcraftMod.MOD_ID)
 public class MysticcraftMod {
     public static final String MOD_ID = "mysticcraft";
+    public static final float TIME_PER_TICK = 0.05f;
     private static int messageID = 0;
     public static final Logger LOGGER = LogUtils.getLogger();
     private static final String PROTOCOL_VERSION = "1";

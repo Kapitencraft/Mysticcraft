@@ -104,6 +104,7 @@ public class GemstoneGrinderBlockEntity extends BlockEntity implements MenuProvi
         for (int i = 0; i < itemHandler.getSlots(); i++) {
             container.setItem(i, itemHandler.getStackInSlot(i));
         }
+        assert this.level != null;
         Containers.dropContents(this.level, this.worldPosition, container);
     }
 
