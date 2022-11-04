@@ -16,9 +16,11 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Objects;
 
 public class EnderKnightArmorItem extends ModArmorItem{
     public EnderKnightArmorItem(EquipmentSlot p_40387_) {
@@ -30,8 +32,7 @@ public class EnderKnightArmorItem extends ModArmorItem{
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
         ImmutableMultimap<Attribute, AttributeModifier> modifierMultimap = (ImmutableMultimap<Attribute, AttributeModifier>) super.getAttributeModifiers(slot, stack);
-        if (this.dimension == MISCTools.getDimensionRegistries().get(Level.END)) {
-            MysticcraftMod.LOGGER.info("Doubling Attributes");
+        if (Objects.equals(this.dimension, MISCTools.getDimensionRegistries().get(Level.END))) {
             modifierMultimap = MISCTools.increaseByPercent(modifierMultimap, 1, new AttributeModifier.Operation[]{AttributeModifier.Operation.ADDITION, AttributeModifier.Operation.MULTIPLY_BASE, AttributeModifier.Operation.MULTIPLY_TOTAL}, null);
         }
         return modifierMultimap;
@@ -53,7 +54,7 @@ public class EnderKnightArmorItem extends ModArmorItem{
     }
 
     @Override
-    public void appendHoverText(ItemStack p_41421_, @Nullable Level p_41422_, List<Component> list, TooltipFlag p_41424_) {
+    public void appendHoverText(@NotNull ItemStack p_41421_, @Nullable Level p_41422_, @NotNull List<Component> list, @NotNull TooltipFlag p_41424_) {
         super.appendHoverText(p_41421_, p_41422_, list, p_41424_);
         list.add(Component.literal("This Armor get`s double stats in the End"));
         list.add(Component.literal(""));

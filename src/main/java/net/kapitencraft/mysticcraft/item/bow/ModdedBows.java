@@ -65,14 +65,14 @@ public abstract class ModdedBows extends BowItem {
                 if (!(f < 0.1f)) {
                     boolean flag1 = player.getAbilities().instabuild || (itemstack.getItem() instanceof ArrowItem && ((ArrowItem)itemstack.getItem()).isInfinite(itemstack, bow, player));
                     if (!world.isClientSide) {
+                        final int mul = 3;
                         ArrowItem arrowitem = (ArrowItem)(itemstack.getItem() instanceof ArrowItem ? itemstack.getItem() : Items.ARROW);
                         AbstractArrow abstractarrow = arrowitem.createArrow(world, itemstack, player);
-                        abstractarrow.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, f * 3, 1.0F);
+                        double fbSpeedMul = LongBowItem.ARROW_SPEED_MUL / mul;
+                        int speedMul = bow.getEnchantmentLevel(ModEnchantments.FAST_ARROWS.get());
+                        abstractarrow.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, (float) (f * mul * (1+ getSpeedMul(abstractarrow, fbSpeedMul, speedMul))), 1.0F);
                         abstractarrow.setBaseDamage(player.getAttributeValue(Attributes.ATTACK_DAMAGE));
                         abstractarrow.setKnockback(2);
-                        double fbSpeedMul = LongBowItem.ARROW_SPEED_MUL / 3;
-                        int speedMul = bow.getEnchantmentLevel(ModEnchantments.FAST_ARROWS.get());
-                        abstractarrow.setDeltaMovement(getSpeedMul(abstractarrow, fbSpeedMul, speedMul), getSpeedMul(abstractarrow, fbSpeedMul, speedMul), getSpeedMul(abstractarrow, fbSpeedMul, speedMul));
                         if (f == 1.0F) {
                             abstractarrow.setCritArrow(true);
                         }
