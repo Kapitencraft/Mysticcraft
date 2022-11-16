@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
+import net.kapitencraft.mysticcraft.item.gemstone.GemstoneSlot;
+import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.kapitencraft.mysticcraft.misc.MISCTools;
 import net.minecraft.network.chat.Component;
@@ -19,14 +21,17 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-public class EnderKnightArmorItem extends ModArmorItem{
+public class EnderKnightArmorItem extends ModArmorItem implements IGemstoneApplicable {
     public EnderKnightArmorItem(EquipmentSlot p_40387_) {
         super(ModArmorMaterials.ENDER_KNIGHT, p_40387_, new Properties().tab(CreativeModeTab.TAB_COMBAT).rarity(FormattingCodes.LEGENDARY).fireResistant());
     }
 
+    private GemstoneSlot[] slots = new GemstoneSlot[] {GemstoneSlot.DEFENCE, GemstoneSlot.OFFENSIVE, GemstoneSlot.COMBAT, GemstoneSlot.COMBAT, GemstoneSlot.STRENGHT};
 
 
     @Override
@@ -40,7 +45,6 @@ public class EnderKnightArmorItem extends ModArmorItem{
 
     @Override
     public void armorTick(ItemStack stack, Level level, LivingEntity living) {
-
     }
 
     public ImmutableMultimap<Attribute, AttributeModifier> getAttributeMods(EquipmentSlot slot) {
@@ -58,5 +62,30 @@ public class EnderKnightArmorItem extends ModArmorItem{
         super.appendHoverText(p_41421_, p_41422_, list, p_41424_);
         list.add(Component.literal("This Armor get`s double stats in the End"));
         list.add(Component.literal(""));
+    }
+
+    @Override
+    public int getGemstoneSlotAmount() {
+        return 5;
+    }
+
+    @Override
+    public GemstoneSlot getGemstoneSlot(int slotLoc) {
+        return this.slots[slotLoc];
+    }
+
+    @Override
+    public GemstoneSlot[] getGemstoneSlots() {
+        return this.slots;
+    }
+
+    @Override
+    public HashMap<Attribute, Double> getAttributeModifiers() {
+        return null;
+    }
+
+    @Override
+    public ArrayList<Attribute> getAttributesModified() {
+        return null;
     }
 }

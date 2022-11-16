@@ -1,22 +1,24 @@
 package net.kapitencraft.mysticcraft.init;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.item.armor.EnderKnightArmorItem;
-import net.kapitencraft.mysticcraft.item.armor.ModArmorMaterials;
-import net.kapitencraft.mysticcraft.item.bow.LongBowItem;
 import net.kapitencraft.mysticcraft.item.WizardHatItem;
+import net.kapitencraft.mysticcraft.item.armor.EnderKnightArmorItem;
+import net.kapitencraft.mysticcraft.item.bow.LongBowItem;
 import net.kapitencraft.mysticcraft.item.bow.TallinBow;
 import net.kapitencraft.mysticcraft.item.gemstone.Gemstone;
 import net.kapitencraft.mysticcraft.item.gemstone.gemstones.AlmandineGemstone;
 import net.kapitencraft.mysticcraft.item.gemstone.gemstones.JasperGemstone;
 import net.kapitencraft.mysticcraft.item.gemstone.gemstones.RubyGemstone;
 import net.kapitencraft.mysticcraft.item.gemstone.gemstones.SapphireGemstone;
-import net.kapitencraft.mysticcraft.item.spells.*;
+import net.kapitencraft.mysticcraft.item.spells.SlivyraItem;
+import net.kapitencraft.mysticcraft.item.spells.StaffOfTheWildItem;
+import net.kapitencraft.mysticcraft.item.spells.TheStaffOfDestruction;
 import net.kapitencraft.mysticcraft.item.sword.ManaSteelSword;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
+import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -45,4 +47,6 @@ public abstract class ModItems {
     public static final RegistryObject<Item> ENDER_KNIGHT_ARMOR_CHESTPLATE = REGISTRY.register("ender_knight_armor_chestplate", ()-> new EnderKnightArmorItem(EquipmentSlot.CHEST));
     public static final RegistryObject<Item> ENDER_KNIGHT_ARMOR_LEGGINGS = REGISTRY.register("ender_knight_armor_leggings", ()-> new EnderKnightArmorItem(EquipmentSlot.LEGS));
     public static final RegistryObject<Item> ENDER_KNIGHT_ARMOR_BOOTS = REGISTRY.register("ender_knight_armor_boots", ()-> new EnderKnightArmorItem(EquipmentSlot.FEET));
+
+    public static final RegistryObject<Item> FROZEN_BLAZE_SPAWN_EGG = REGISTRY.register("frozen_blaze_spawn_egg", ()-> new ForgeSpawnEggItem(ModEntityTypes.FROZEN_BLAZE, -16711681, -16763956, new Item.Properties().tab(CreativeModeTab.TAB_MISC)));
 }

@@ -1,8 +1,7 @@
 package net.kapitencraft.mysticcraft.block.entity;
 
-import net.kapitencraft.mysticcraft.gui.gemstone_grinder.GemGrinderMenu;
+import net.kapitencraft.mysticcraft.gui.gemstone_grinder.GemstoneGrinderMenu;
 import net.kapitencraft.mysticcraft.init.ModBlockEntities;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -14,6 +13,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -26,16 +26,18 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class GemstoneGrinderBlockEntity extends BlockEntity implements MenuProvider {
-    public static final int INVENTORY_SIZE = 6;
-    private final ItemStackHandler itemHandler = new ItemStackHandler(INVENTORY_SIZE) {
+    private final ItemStackHandler itemHandler = new ItemStackHandler(3) {
         @Override
         protected void onContentsChanged(int slot) {
             setChanged();
         }
     };
 
-    protected final ContainerData data;
     private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
+
+    protected final ContainerData data;
+    private int progress = 0;
+    private int maxProgress = 78;
 
     public GemstoneGrinderBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.GEMSTONE_GRINDER.get(), pos, state);
@@ -46,29 +48,30 @@ public class GemstoneGrinderBlockEntity extends BlockEntity implements MenuProvi
             }
 
             @Override
-            public void set(int p_39285_, int p_39286_) {
+            public void set(int index, int value) {
             }
 
             @Override
             public int getCount() {
-                return 0;
+                return 2;
             }
         };
     }
 
     @Override
-    public @NotNull Component getDisplayName() {
-        return Component.literal("Gemstone Grinder").withStyle(ChatFormatting.DARK_AQUA);
+    public Component getDisplayName() {
+        return Component.literal("Gem Infusing Station");
     }
 
+    @Nullable
     @Override
-    public AbstractContainerMenu createMenu(int id, @NotNull Inventory inventory, @NotNull Player player) {
-        return new GemGrinderMenu(id, inventory, this, this.data, player.level, player);
+    public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
+        return new GemstoneGrinderMenu(id, inventory, this, this.data);
     }
 
     @Override
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        if (cap == ForgeCapabilities.ITEM_HANDLER) {
+        if(cap == ForgeCapabilities.ITEM_HANDLER) {
             return lazyItemHandler.cast();
         }
 
@@ -90,28 +93,43 @@ public class GemstoneGrinderBlockEntity extends BlockEntity implements MenuProvi
     @Override
     protected void saveAdditional(CompoundTag nbt) {
         nbt.put("inventory", itemHandler.serializeNBT());
+        nbt.putInt("gem_infusing_station.progress", this.progress);
+
         super.saveAdditional(nbt);
     }
 
     @Override
     public void load(CompoundTag nbt) {
-        itemHandler.deserializeNBT(nbt.getCompound("inventory"));
         super.load(nbt);
+        itemHandler.deserializeNBT(nbt.getCompound("inventory"));
+        progress = nbt.getInt("gem_infusing_station.progress");
     }
 
     public void drops() {
-        SimpleContainer container = new SimpleContainer(itemHandler.getSlots());
+        SimpleContainer inventory = new SimpleContainer(itemHandler.getSlots());
         for (int i = 0; i < itemHandler.getSlots(); i++) {
-            container.setItem(i, itemHandler.getStackInSlot(i));
+            inventory.setItem(i, itemHandler.getStackInSlot(i));
         }
-        assert this.level != null;
-        Containers.dropContents(this.level, this.worldPosition, container);
+
+        Containers.dropContents(this.level, this.worldPosition, inventory);
     }
 
-    public static void tick(Level level, BlockPos pos, BlockState state, GemstoneGrinderBlockEntity grinderBlockEntity) {
+
+
+    private void resetProgress() {
+        this.progress = 0;
     }
 
-    public ItemStackHandler getItemHandler() {
-        return this.itemHandler;
+
+    private static boolean canInsertItemIntoOutputSlot(SimpleContainer inventory, ItemStack stack) {
+        return inventory.getItem(2).getItem() == stack.getItem() || inventory.getItem(2).isEmpty();
+    }
+
+    private static boolean canInsertAmountIntoOutputSlot(SimpleContainer inventory) {
+        return inventory.getItem(2).getMaxStackSize() > inventory.getItem(2).getCount();
+    }
+
+    public static <E extends BlockEntity> void tick(Level level, BlockPos pos, BlockState state, E e) {
+
     }
 }

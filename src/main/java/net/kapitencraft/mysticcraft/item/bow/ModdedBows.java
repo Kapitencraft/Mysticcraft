@@ -1,7 +1,6 @@
 package net.kapitencraft.mysticcraft.item.bow;
 
 import net.kapitencraft.mysticcraft.init.ModEnchantments;
-import net.kapitencraft.mysticcraft.item.gemstone.GemstoneSlot;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.kapitencraft.mysticcraft.misc.MISCTools;
@@ -34,18 +33,9 @@ public abstract class ModdedBows extends BowItem {
 
     @Override
     public void appendHoverText(@Nonnull ItemStack itemStack, @Nullable Level level, @Nonnull List<Component> list, @Nullable TooltipFlag flag) {
-        StringBuilder gemstoneText = new StringBuilder();
         if (itemStack.getItem() instanceof IGemstoneApplicable gemstoneApplicable) {
-            for (@Nullable GemstoneSlot slot : gemstoneApplicable.getGemstoneSlots()) {
-                if (slot != null) {
-                    gemstoneText.append(slot.getDisplay());
-                }
-            }
+            gemstoneApplicable.getDisplay(itemStack, list);
         }
-        if (!gemstoneText.toString().equals("")) {
-            list.add(Component.literal(gemstoneText.toString()));
-        }
-
     }
     @Override
     public void releaseUsing(@NotNull ItemStack bow, @NotNull Level world, @NotNull LivingEntity archer, int timeLeft) {

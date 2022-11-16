@@ -5,14 +5,9 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
 
-public class AimEnchantment extends ModEnchantment {
-    public AimEnchantment() {
-        super(Rarity.VERY_RARE, EnchantmentCategory.BOW, new EquipmentSlot[]{EquipmentSlot.MAINHAND}, Type.DAMAGE_CALC);
-    }
-
-    @Override
-    public int getMaxLevel() {
-        return 5;
+public class VenomousEnchantment extends ModEnchantment{
+    public VenomousEnchantment() {
+        super(Rarity.VERY_RARE, EnchantmentCategory.WEAPON, new EquipmentSlot[]{EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND}, Type.STAT_MOD);
     }
 
     @Override

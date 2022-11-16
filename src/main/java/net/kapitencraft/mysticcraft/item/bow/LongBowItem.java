@@ -38,7 +38,7 @@ public class LongBowItem extends ModdedBows implements IGemstoneApplicable {
 
     @Override
     public HashMap<Attribute, Double> getAttributeModifiers() {
-        return attributeModifiers;
+        return this.attributeModifiers;
     }
 
     @Override

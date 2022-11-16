@@ -4,7 +4,9 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModEnchantments;
+import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.misc.MISCTools;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -14,6 +16,9 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public abstract class ModArmorItem extends ArmorItem {
     protected String dimension;
@@ -85,5 +90,12 @@ public abstract class ModArmorItem extends ArmorItem {
 
     protected void updateDimension(Level level) {
         this.dimension = MISCTools.getDimension(level);
+    }
+
+    @Override
+    public void appendHoverText(ItemStack itemStack, @Nullable Level p_41422_, List<Component> list, TooltipFlag p_41424_) {
+        if (itemStack.getItem() instanceof IGemstoneApplicable gemstoneApplicable) {
+            gemstoneApplicable.getDisplay(itemStack, list);
+        }
     }
 }

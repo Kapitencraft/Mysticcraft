@@ -1,8 +1,11 @@
 package net.kapitencraft.mysticcraft.misc;
 
+import net.kapitencraft.mysticcraft.entity.FrozenBlazeEntity;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.init.ModEntityTypes;
 import net.minecraft.world.entity.EntityType;
+import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.EntityAttributeModificationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -24,5 +27,10 @@ public class AttributeAdder {
         event.add(EntityType.PLAYER, ModAttributes.MANA.get());
         event.add(EntityType.PLAYER, ModAttributes.HEALTH_REGEN.get());
 
+    }
+
+    @SubscribeEvent
+    public static void AttributeCreating(EntityAttributeCreationEvent event) {
+        event.put(ModEntityTypes.FROZEN_BLAZE.get(), FrozenBlazeEntity.createAttributes().build());
     }
 }

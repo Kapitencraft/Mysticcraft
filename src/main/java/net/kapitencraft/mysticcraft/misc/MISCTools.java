@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.misc;
 
 import com.google.common.collect.ImmutableMultimap;
+import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.api.APITools;
 import net.kapitencraft.mysticcraft.item.bow.ShortBowItem;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
@@ -263,7 +264,7 @@ public class MISCTools {
         return level.dimension().toString();
     }
 
-    public static final HashMap<ResourceKey<Level>, String> getDimensionRegistries() {
+    public static HashMap<ResourceKey<Level>, String> getDimensionRegistries() {
         HashMap<ResourceKey<Level>, String> Registries = new HashMap<>();
         Registries.put(Level.END, Level.END.toString());
         Registries.put(Level.NETHER, Level.NETHER.toString());
@@ -330,5 +331,54 @@ public class MISCTools {
         }
         multimap = toReturn.build();
         return multimap;
+    }
+
+    public static CompoundTag putHashMapTag(HashMap<UUID, Integer> hashMap) {
+        CompoundTag mapTag = new CompoundTag();
+        UUID[] UuidArray = hashMap.keySet().toArray(new UUID[0]);
+        List<Integer> IntArray = collectionToList(hashMap.values());
+        mapTag.put("Uuids", putUuidArray(UuidArray));
+        mapTag.putIntArray("Ints", IntArray);
+        return mapTag;
+    }
+
+    public static HashMap<UUID, Integer> getHashMapTag(CompoundTag tag) {
+        HashMap<UUID, Integer> hashMap = new HashMap<>();
+        if (tag == null) {
+            return hashMap;
+        }
+        int[] intArray = tag.getIntArray("Ints");
+        UUID[] UuidArray = getUuidArray((CompoundTag) Objects.requireNonNull(tag.get("Uuids")));
+        for (int i = 0; i < (intArray.length == Objects.requireNonNull(UuidArray).length ? intArray.length : 0); i++) {
+            hashMap.put(UuidArray[i], intArray[i]);
+        }
+        return hashMap;
+    }
+
+    public static CompoundTag putUuidArray(UUID[] array) {
+        CompoundTag arrayTag = new CompoundTag();
+        for (int i = 0; i < array.length; i++) {
+            arrayTag.putUUID(String.valueOf(i), array[i]);
+            arrayTag.putInt("Length", array.length);
+        }
+        return arrayTag;
+    }
+
+    public static UUID[] getUuidArray(CompoundTag arrayTag) {
+        if (!arrayTag.contains("Length")) {
+            MysticcraftMod.LOGGER.warn("tried to load UUID Array from Tag but Tag isn`t Array Tag");
+        } else {
+            int length = arrayTag.getInt("Length");
+            UUID[] array = new UUID[length];
+            for (int i = 0; i < length; i++) {
+                array[i] = arrayTag.getUUID(String.valueOf(i));
+            }
+            return array;
+        }
+        return null;
+    }
+    
+    public static <T> List<T> collectionToList(Collection<T> collection) {
+        return new ArrayList<>(collection);
     }
 }

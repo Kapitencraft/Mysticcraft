@@ -1,6 +1,8 @@
 package net.kapitencraft.mysticcraft.misc;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.enchantments.ModEnchantment;
+import net.kapitencraft.mysticcraft.entity.FrozenBlazeEntity;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModEnchantments;
 import net.kapitencraft.mysticcraft.init.ModMobEffects;
@@ -25,7 +27,9 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Arrow;
+import net.minecraft.world.entity.projectile.SmallFireball;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.WitherSkullBlock;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
@@ -43,13 +47,14 @@ import net.minecraftforge.fml.common.Mod;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.Map;
 import java.util.Objects;
 
 @Mod.EventBusSubscriber
 public class MiscRegister {
-
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void DamageEnchantRegister(LivingDamageEvent event) {
+        LivingEntity attacked = event.getEntity();
         if (event.getSource().getEntity() instanceof Arrow arrow) {
             CompoundTag tag = arrow.getPersistentData();
             if (tag.contains("SnipeEnchant", 3) && tag.getInt("SnipeEnchant") > 0) {
@@ -62,10 +67,17 @@ public class MiscRegister {
         }
         @Nullable LivingEntity attacker = MISCTools.getAttacker(event);
         if (attacker == null) { return; }
+        ItemStack stack = attacker.getMainHandItem();
         float amount = event.getAmount();
         if (attacker.getAttribute(ModAttributes.STRENGTH.get()) != null) {
             double StrengthMul = 1 + (attacker.getAttributeValue(ModAttributes.STRENGTH.get()));
             event.setAmount(amount * (float) StrengthMul);
+        }
+        Map<Enchantment, Integer> enchantments = stack.getAllEnchantments();
+        for (Enchantment enchantment : enchantments.keySet()) {
+            if (enchantment instanceof ModEnchantment modEnchantment) {
+                event.setAmount((float) modEnchantment.execute(enchantments.get(enchantment), stack, attacker, attacked, event.getAmount()));
+            }
         }
     }
 
@@ -75,6 +87,12 @@ public class MiscRegister {
         if (living.hasEffect(ModMobEffects.VULNERABILITY.get())) {
             event.setAmount((float) (event.getAmount() * (1 + Objects.requireNonNull(living.getEffect(ModMobEffects.VULNERABILITY.get())).getAmplifier() * 0.05)));
         }
+        if (event.getSource().getDirectEntity() instanceof SmallFireball smallFireball) {
+            if (smallFireball.getOwner() instanceof FrozenBlazeEntity) {
+                living.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 60, 5));
+            }
+        }
+
     }
 
     @SubscribeEvent
@@ -85,6 +103,7 @@ public class MiscRegister {
             ItemStack stack = attacker.getMainHandItem();
             int nec_touch_lvl = stack.getEnchantmentLevel(ModEnchantments.NECROTIC_TOUCH.get());
             int poison_blade = stack.getEnchantmentLevel(ModEnchantments.POISONOUS_BLADE.get());
+            int venomous = stack.getEnchantmentLevel(ModEnchantments.VENOMOUS.get());
             if (nec_touch_lvl > 0) {
                 attacker.heal(event.getAmount() > nec_touch_lvl ? nec_touch_lvl : event.getAmount());
             }
@@ -92,6 +111,8 @@ public class MiscRegister {
                 if (!MISCTools.increaseEffectDuration(attacked, MobEffects.POISON, poison_blade * 5)) {
                     attacked.addEffect(new MobEffectInstance(MobEffects.POISON, 20, 1));
                 }
+            }
+            if (venomous > 0) {
             }
         }
     }
@@ -159,11 +180,19 @@ public class MiscRegister {
     @SubscribeEvent
     public static void ArrowRegisterEvent(EntityJoinLevelEvent event) {
         if (event.getEntity() instanceof Arrow arrow) {
-            new ArrowTickSchedule(arrow);
             if (arrow.getOwner() instanceof LivingEntity living) {
-                if (living.getMainHandItem().getItem() instanceof TallinBow) {
-                    arrow.getPersistentData().putBoolean("CanHitEnderman", true);
+                ItemStack mainHand = living.getMainHandItem();
+                CompoundTag arrowTag = arrow.getPersistentData();
+                if (mainHand.getItem() instanceof TallinBow) {
+                    arrowTag.putBoolean("CanHitEnderman", true);
                 }
+                arrowTag.putInt("SnipeEnchant", mainHand.getEnchantmentLevel(ModEnchantments.SNIPE.get()));
+                if (arrowTag.getInt("SnipeEnchant") > 0) {
+                    arrowTag.putDouble("LaunchX", arrow.getX());
+                    arrowTag.putDouble("LaunchY", arrow.getY());
+                    arrowTag.putDouble("LaunchZ", arrow.getZ());
+                }
+                arrowTag.putInt("AimEnchant", mainHand.getEnchantmentLevel(ModEnchantments.AIM.get()));
             }
         }
     }
@@ -173,7 +202,7 @@ public class MiscRegister {
         Item item = event.getItemStack().getItem();
         if (item instanceof IGemstoneApplicable applicable) {
             if (item instanceof ArmorItem armorItem) {
-                if (event.getSlotType() == armorItem.getSlot()) {
+                if (event.getSlotType() == armorItem.getSlot() && applicable.getAttributesModified() != null) {
                     for (Attribute attribute : applicable.getAttributesModified()) {
                         event.addModifier(attribute, new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[MISCTools.createCustomIndex(armorItem.getSlot())], "Gemstone Modification", applicable.getAttributeModifiers().get(attribute), AttributeModifier.Operation.ADDITION));
                     }
@@ -202,7 +231,7 @@ public class MiscRegister {
         }
     }
 
-    @SubscribeEvent(priority = EventPriority.NORMAL)
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void manaRegister(RenderGuiOverlayEvent.Pre event) {
         int w = event.getWindow().getGuiScaledWidth();
         int h = event.getWindow().getGuiScaledHeight();
