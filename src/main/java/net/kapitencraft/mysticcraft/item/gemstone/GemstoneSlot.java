@@ -62,9 +62,8 @@ public class GemstoneSlot {
             this.gem_rarity = gemstone.getRarity();
             ModEventFactory.onGemstoneApplied(gemstone, this);
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     public @Nullable Gemstone getAppliedGemstone() {

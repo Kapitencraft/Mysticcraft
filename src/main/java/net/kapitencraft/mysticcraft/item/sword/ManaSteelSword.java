@@ -1,11 +1,12 @@
 package net.kapitencraft.mysticcraft.item.sword;
 
 import net.kapitencraft.mysticcraft.item.ModTiers;
+import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.minecraft.world.item.CreativeModeTab;
 
 public class ManaSteelSword extends LongSwordItem {
     public ManaSteelSword() {
-        super(ModTiers.MANA_STEEL, 7, 0.8f, new Properties().durability(1800).tab(CreativeModeTab.TAB_COMBAT));
+        super(ModTiers.MANA_STEEL, 7, 0.8f, new Properties().durability(1800).tab(CreativeModeTab.TAB_COMBAT).rarity(FormattingCodes.MYTHIC));
     }
 
     @Override

@@ -13,7 +13,7 @@ public class ModTiers {
 
         @Override
         public float getSpeed() {
-            return 1.8f;
+            return 0.5f;
         }
 
         @Override

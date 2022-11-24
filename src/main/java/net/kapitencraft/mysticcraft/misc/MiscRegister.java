@@ -1,7 +1,8 @@
 package net.kapitencraft.mysticcraft.misc;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.enchantments.ModEnchantment;
+import net.kapitencraft.mysticcraft.enchantments.ExtendedCalculationEnchantment;
+import net.kapitencraft.mysticcraft.enchantments.StatBoostEnchantment;
 import net.kapitencraft.mysticcraft.entity.FrozenBlazeEntity;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModEnchantments;
@@ -75,8 +76,20 @@ public class MiscRegister {
         }
         Map<Enchantment, Integer> enchantments = stack.getAllEnchantments();
         for (Enchantment enchantment : enchantments.keySet()) {
-            if (enchantment instanceof ModEnchantment modEnchantment) {
+            if (enchantment instanceof ExtendedCalculationEnchantment modEnchantment) {
                 event.setAmount((float) modEnchantment.execute(enchantments.get(enchantment), stack, attacker, attacked, event.getAmount()));
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void StatModEnchantmentRegister(ItemAttributeModifierEvent event) {
+        ItemStack stack = event.getItemStack();
+        EquipmentSlot slot = event.getSlotType();
+        Map<Enchantment, Integer> enchantments = stack.getAllEnchantments();
+        for (Enchantment enchantment : enchantments.keySet()) {
+            if (enchantment instanceof StatBoostEnchantment statBoostEnchantment) {
+                event. MISCTools.increaseByAmount() statBoostEnchantment.getModifiers(enchantments.get(statBoostEnchantment), stack, slot);
             }
         }
     }

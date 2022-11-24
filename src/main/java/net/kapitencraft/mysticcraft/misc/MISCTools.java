@@ -1,9 +1,12 @@
 package net.kapitencraft.mysticcraft.misc;
 
 import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.api.APITools;
+import net.kapitencraft.mysticcraft.gui.IGuiHelper;
 import net.kapitencraft.mysticcraft.item.bow.ShortBowItem;
+import net.kapitencraft.mysticcraft.item.gemstone.GemstoneItem;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.item.spells.SpellItem;
 import net.kapitencraft.mysticcraft.item.sword.LongSwordItem;
@@ -11,6 +14,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
@@ -27,6 +31,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
+import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -230,6 +235,17 @@ public class MISCTools {
 
     public static final EquipmentSlot[] allEquipmentSlots = new EquipmentSlot[]{EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND, EquipmentSlot.LEGS, EquipmentSlot.CHEST, EquipmentSlot.HEAD, EquipmentSlot.FEET};
 
+    public static final EquipmentSlot[] ARMOR_EQUIPMENT = new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
+
+    public static <T> boolean ArrayContains(T[] array, T t) {
+        for (T t1 : array) {
+            if (t1 == t) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static int createCustomIndex(EquipmentSlot slot) {
         return switch (slot) {
             case LEGS -> 2;
@@ -240,6 +256,7 @@ public class MISCTools {
             case OFFHAND -> 4;
         };
     }
+
     public static EnchantmentCategory SPELL_ITEM = EnchantmentCategory.create("SPELL_ITEM", item -> item instanceof SpellItem);
 
     public static EnchantmentCategory GEMSTONE_ITEM = EnchantmentCategory.create("GEMSTONE_ITEM", item -> item instanceof IGemstoneApplicable);
@@ -304,7 +321,7 @@ public class MISCTools {
         return toReturn.build();
     }
 
-    public static ImmutableMultimap<Attribute, AttributeModifier> increaseByAmount(ImmutableMultimap<Attribute, AttributeModifier> multimap, double amount, AttributeModifier.Operation[] operations, @Nullable Attribute attributeReq) {
+    public static Multimap<Attribute, AttributeModifier> increaseByAmount(Multimap<Attribute, AttributeModifier> multimap, double amount, AttributeModifier.Operation[] operations, @Nullable Attribute attributeReq) {
         ImmutableMultimap.Builder<Attribute, AttributeModifier> toReturn = new ImmutableMultimap.Builder<>();
         boolean hasBeenAdded = attributeReq == null;
         Collection<AttributeModifier> attributeModifiers;
@@ -380,5 +397,15 @@ public class MISCTools {
     
     public static <T> List<T> collectionToList(Collection<T> collection) {
         return new ArrayList<>(collection);
+    }
+
+    public static SimpleContainer ContainerOf(ItemStackHandler handler) {
+        SimpleContainer inventory = new SimpleContainer(handler.getSlots());
+        for (int i = 0; i < handler.getSlots(); i++) {
+            if (!(handler.getStackInSlot(i).getItem() instanceof IGuiHelper || handler.getStackInSlot(i).getItem() instanceof GemstoneItem)) {
+                inventory.setItem(i, handler.getStackInSlot(i));
+            }
+        }
+        return inventory;
     }
 }

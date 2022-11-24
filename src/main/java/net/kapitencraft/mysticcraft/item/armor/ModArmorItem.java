@@ -42,7 +42,6 @@ public abstract class ModArmorItem extends ArmorItem {
             updateDimension(entity.level);
         }
     }
-
     public boolean isFullSetActive(LivingEntity living) {
         ArmorItem head = living.getItemBySlot(EquipmentSlot.HEAD).getItem() instanceof ArmorItem armorItem ? armorItem : null;
         ArmorItem chest;
@@ -66,7 +65,9 @@ public abstract class ModArmorItem extends ArmorItem {
     public @NotNull Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(@NotNull EquipmentSlot slot) {
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = new ImmutableMultimap.Builder<>();
         builder.putAll(super.getDefaultAttributeModifiers(slot));
-        builder.putAll(this.getAttributeMods(slot));
+        if (this.getAttributeMods(slot) != null) {
+            builder.putAll(this.getAttributeMods(slot));
+        }
         return builder.build();
     }
 

@@ -8,13 +8,15 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
 public enum ModArmorMaterials implements ArmorMaterial {
 
     WIZARD_HAT("wizard_hat", 5, new int[]{0, 0, 0, 7}, 15, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0F, 0.0F, () -> Ingredient.of(Items.LEATHER)),
-    ENDER_KNIGHT("ender_knight", 9, new int[]{8, 12, 19, 9}, 12, SoundEvents.ARMOR_EQUIP_NETHERITE, 1.2f, 2.7f, () -> Ingredient.of(Items.NETHERITE_INGOT));
+    FROZEN_BLAZE("frozen_blaze", 8, new int[]{6, 9, 13, 7}, 29, SoundEvents.ARMOR_EQUIP_ELYTRA, 0.9f, 0.1f, () -> Ingredient.of(Items.BLAZE_ROD)),
+    ENDER_KNIGHT("ender_knight", 9, new int[]{8, 12, 19, 9}, 12, SoundEvents.ARMOR_EQUIP_NETHERITE, 1.2f, 0.9f, () -> Ingredient.of(Items.NETHERITE_INGOT));
 
     private static final int[] HEALTH_PER_SLOT = new int[]{13, 15, 16, 11};
     private final String name;
@@ -26,15 +28,15 @@ public enum ModArmorMaterials implements ArmorMaterial {
     private final float knockBackResistance;
     private final LazyLoadedValue<Ingredient> repairIngredient;
 
-    private ModArmorMaterials(String p_40474_, int p_40475_, int[] p_40476_, int p_40477_, SoundEvent p_40478_, float p_40479_, float p_40480_, Supplier<Ingredient> p_40481_) {
-        this.name = p_40474_;
-        this.durabilityMultiplier = p_40475_;
-        this.slotProtections = p_40476_;
-        this.enchantmentValue = p_40477_;
+    ModArmorMaterials(String name, int durMul, int[] slotProtections, int enchantVal, SoundEvent p_40478_, float toughness, float kbResistance, Supplier<Ingredient> repairIngredient) {
+        this.name = name;
+        this.durabilityMultiplier = durMul;
+        this.slotProtections = slotProtections;
+        this.enchantmentValue = enchantVal;
         this.sound = p_40478_;
-        this.toughness = p_40479_;
-        this.knockBackResistance = p_40480_;
-        this.repairIngredient = new LazyLoadedValue<>(p_40481_);
+        this.toughness = toughness;
+        this.knockBackResistance = kbResistance;
+        this.repairIngredient = new LazyLoadedValue<>(repairIngredient);
     }
 
     public int getDurabilityForSlot(EquipmentSlot p_40484_) {
@@ -49,15 +51,15 @@ public enum ModArmorMaterials implements ArmorMaterial {
         return this.enchantmentValue;
     }
 
-    public SoundEvent getEquipSound() {
+    public @NotNull SoundEvent getEquipSound() {
         return this.sound;
     }
 
-    public Ingredient getRepairIngredient() {
+    public @NotNull Ingredient getRepairIngredient() {
         return this.repairIngredient.get();
     }
 
-    public String getName() {
+    public @NotNull String getName() {
         return MysticcraftMod.MOD_ID + ":" + this.name;
     }
 

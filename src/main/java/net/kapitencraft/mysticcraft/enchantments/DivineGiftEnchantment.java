@@ -1,29 +1,25 @@
 package net.kapitencraft.mysticcraft.enchantments;
 
 import com.google.common.collect.ImmutableMultimap;
-import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
-import net.kapitencraft.mysticcraft.misc.MISCTools;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
 
-public class RejuvenateEnchantment extends StatBoostEnchantment {
-    public RejuvenateEnchantment() {
-        super(Rarity.UNCOMMON, EnchantmentCategory.WEARABLE, new EquipmentSlot[] {EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET});
-    }
+import java.util.UUID;
 
-    public int getMaxLevel() {
-        return 10;
+public class DivineGiftEnchantment extends StatBoostEnchantment {
+    protected DivineGiftEnchantment(Rarity rarity, EnchantmentCategory category, EquipmentSlot[] slots) {
+        super(rarity, category, slots);
     }
 
     @Override
     public ImmutableMultimap<Attribute, AttributeModifier> getModifiers(int level, ItemStack enchanted, EquipmentSlot slot) {
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = new ImmutableMultimap.Builder<>();
-        if (MISCTools.ArrayContains(MISCTools.ARMOR_EQUIPMENT, slot)) {
-            builder.put(ModAttributes.HEALTH_REGEN.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[MISCTools.createCustomIndex(slot)], "rejuvenate", level * 2, AttributeModifier.Operation.ADDITION));
+        if (slot == EquipmentSlot.MAINHAND) {
+            builder.put(ModAttributes.MAGIC_FIND.get(), new AttributeModifier(UUID.randomUUID(), "divineGift", level * 2, AttributeModifier.Operation.ADDITION));
         }
         return builder.build();
     }

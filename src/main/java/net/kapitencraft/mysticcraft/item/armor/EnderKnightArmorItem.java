@@ -15,9 +15,12 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,6 +30,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class EnderKnightArmorItem extends ModArmorItem implements IGemstoneApplicable {
+    private final static String registryName = "ender_knight_";
     public EnderKnightArmorItem(EquipmentSlot p_40387_) {
         super(ModArmorMaterials.ENDER_KNIGHT, p_40387_, new Properties().tab(CreativeModeTab.TAB_COMBAT).rarity(FormattingCodes.LEGENDARY).fireResistant());
     }
@@ -45,6 +49,15 @@ public class EnderKnightArmorItem extends ModArmorItem implements IGemstoneAppli
 
     @Override
     public void armorTick(ItemStack stack, Level level, LivingEntity living) {
+    }
+
+    public static HashMap<EquipmentSlot, RegistryObject<Item>> createRegistry(DeferredRegister<Item> register) {
+        HashMap<EquipmentSlot, RegistryObject<Item>> registry = new HashMap<>();
+        registry.put(EquipmentSlot.HEAD, register.register(registryName + "helmet", ()-> new EnderKnightArmorItem(EquipmentSlot.HEAD)));
+        registry.put(EquipmentSlot.CHEST, register.register(registryName + "chestplate", ()-> new EnderKnightArmorItem(EquipmentSlot.CHEST)));
+        registry.put(EquipmentSlot.LEGS, register.register(registryName + "leggings", ()-> new EnderKnightArmorItem(EquipmentSlot.LEGS)));
+        registry.put(EquipmentSlot.FEET, register.register(registryName + "boots", ()-> new EnderKnightArmorItem(EquipmentSlot.FEET)));
+        return registry;
     }
 
     public ImmutableMultimap<Attribute, AttributeModifier> getAttributeMods(EquipmentSlot slot) {

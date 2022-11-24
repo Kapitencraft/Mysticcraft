@@ -60,7 +60,7 @@ public class MysticcraftMod {
         public static void onClientSetup(FMLClientSetupEvent event) {
             ModItemProperties.addCustomItemProperties();
             MysticcraftMod.LOGGER.info("Loading GUI for Gem Grinder");
-            MenuScreens.register(ModMenuTypes.GEM_GRINDER_MENU, GemstoneGrinderScreen::new);
+            MenuScreens.register(ModMenuTypes.GEM_GRINDER_MENU.get(), GemstoneGrinderScreen::new);
 
         }
     }

@@ -1,7 +1,11 @@
 package net.kapitencraft.mysticcraft.block.entity;
 
+import net.kapitencraft.mysticcraft.gui.GUISlotBlockItem;
 import net.kapitencraft.mysticcraft.gui.gemstone_grinder.GemstoneGrinderMenu;
 import net.kapitencraft.mysticcraft.init.ModBlockEntities;
+import net.kapitencraft.mysticcraft.init.ModItems;
+import net.kapitencraft.mysticcraft.misc.MISCTools;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -13,6 +17,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -25,19 +30,15 @@ import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class GemstoneGrinderBlockEntity extends BlockEntity implements MenuProvider {
-    private final ItemStackHandler itemHandler = new ItemStackHandler(3) {
-        @Override
-        protected void onContentsChanged(int slot) {
-            setChanged();
-        }
-    };
+import java.util.List;
 
+public class GemstoneGrinderBlockEntity extends BlockEntity implements MenuProvider {
+    public final ModItemStackHandler itemHandler = new ModItemStackHandler(6);
+
+    public static final Item GUI_SLOT_LOCK = ((GUISlotBlockItem) ModItems.GUI_SLOT_BLOCK_ITEM.get()).putTooltip(List.of(Component.literal("This slot is locked.").withStyle(ChatFormatting.RED)));
     private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
 
     protected final ContainerData data;
-    private int progress = 0;
-    private int maxProgress = 78;
 
     public GemstoneGrinderBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.GEMSTONE_GRINDER.get(), pos, state);
@@ -56,6 +57,12 @@ public class GemstoneGrinderBlockEntity extends BlockEntity implements MenuProvi
                 return 2;
             }
         };
+        this.itemHandler.setStackInSlot(1, new ItemStack(GUI_SLOT_LOCK));
+        this.itemHandler.setStackInSlot(2, new ItemStack(GUI_SLOT_LOCK));
+        this.itemHandler.setStackInSlot(3, new ItemStack(GUI_SLOT_LOCK));
+        this.itemHandler.setStackInSlot(4, new ItemStack(GUI_SLOT_LOCK));
+        this.itemHandler.setStackInSlot(5, new ItemStack(GUI_SLOT_LOCK));
+
     }
 
     @Override
@@ -93,7 +100,6 @@ public class GemstoneGrinderBlockEntity extends BlockEntity implements MenuProvi
     @Override
     protected void saveAdditional(CompoundTag nbt) {
         nbt.put("inventory", itemHandler.serializeNBT());
-        nbt.putInt("gem_infusing_station.progress", this.progress);
 
         super.saveAdditional(nbt);
     }
@@ -102,22 +108,12 @@ public class GemstoneGrinderBlockEntity extends BlockEntity implements MenuProvi
     public void load(CompoundTag nbt) {
         super.load(nbt);
         itemHandler.deserializeNBT(nbt.getCompound("inventory"));
-        progress = nbt.getInt("gem_infusing_station.progress");
     }
 
     public void drops() {
-        SimpleContainer inventory = new SimpleContainer(itemHandler.getSlots());
-        for (int i = 0; i < itemHandler.getSlots(); i++) {
-            inventory.setItem(i, itemHandler.getStackInSlot(i));
-        }
+        SimpleContainer inventory = MISCTools.ContainerOf(this.itemHandler);
 
         Containers.dropContents(this.level, this.worldPosition, inventory);
-    }
-
-
-
-    private void resetProgress() {
-        this.progress = 0;
     }
 
 
@@ -130,6 +126,18 @@ public class GemstoneGrinderBlockEntity extends BlockEntity implements MenuProvi
     }
 
     public static <E extends BlockEntity> void tick(Level level, BlockPos pos, BlockState state, E e) {
+
+    }
+
+    public class ModItemStackHandler extends ItemStackHandler {
+
+        public ModItemStackHandler(int amount) {
+            super(amount);
+        }
+        @Override
+        protected void onContentsChanged(int slot) {
+            setChanged();
+        }
 
     }
 }

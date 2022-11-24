@@ -3,6 +3,7 @@ package net.kapitencraft.mysticcraft.misc;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.entity.renderer.FrozenBlazeRenderer;
+import net.kapitencraft.mysticcraft.gui.IGuiHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModEnchantments;
 import net.kapitencraft.mysticcraft.init.ModEntityTypes;
@@ -68,8 +69,10 @@ public class MiscEvents {
                 toolTip.add(Component.literal(""));
                 toolTip.add(Component.literal("Short Bow: Instantly Shoots!").withStyle(ChatFormatting.DARK_PURPLE));
             }
-            toolTip.add(Component.literal(""));
-            toolTip.add(Component.literal((flag ? NameMod + " " : "") + rarity + " " + MISCTools.getNameModifier(stack) + (flag ? " " + NameMod : "")).withStyle(rarity.getStyleModifier()).withStyle(ChatFormatting.BOLD));
+            if (!(stack.getItem() instanceof IGuiHelper)) {
+                toolTip.add(Component.literal(""));
+                toolTip.add(Component.literal((flag ? NameMod + " " : "") + rarity + " " + MISCTools.getNameModifier(stack) + (flag ? " " + NameMod : "")).withStyle(rarity.getStyleModifier()).withStyle(ChatFormatting.BOLD));
+            }
         }
 
         @SubscribeEvent

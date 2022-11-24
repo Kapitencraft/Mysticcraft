@@ -1,8 +1,10 @@
 package net.kapitencraft.mysticcraft.init;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.gui.GUISlotBlockItem;
 import net.kapitencraft.mysticcraft.item.WizardHatItem;
 import net.kapitencraft.mysticcraft.item.armor.EnderKnightArmorItem;
+import net.kapitencraft.mysticcraft.item.armor.FrozenBlazeArmorItem;
 import net.kapitencraft.mysticcraft.item.bow.LongBowItem;
 import net.kapitencraft.mysticcraft.item.bow.TallinBow;
 import net.kapitencraft.mysticcraft.item.gemstone.Gemstone;
@@ -43,10 +45,9 @@ public abstract class ModItems {
     public static final RegistryObject<Item> TALLIN_BOW = REGISTRY.register("tallin_bow", TallinBow::new);
     public static final RegistryObject<Item> MANA_STEEL_SWORD = REGISTRY.register("mana_steel_sword", ManaSteelSword::new);
 
-    public static final RegistryObject<Item> ENDER_KNIGHT_ARMOR_HELMET = REGISTRY.register("ender_knight_armor_helmet", ()-> new EnderKnightArmorItem(EquipmentSlot.HEAD));
-    public static final RegistryObject<Item> ENDER_KNIGHT_ARMOR_CHESTPLATE = REGISTRY.register("ender_knight_armor_chestplate", ()-> new EnderKnightArmorItem(EquipmentSlot.CHEST));
-    public static final RegistryObject<Item> ENDER_KNIGHT_ARMOR_LEGGINGS = REGISTRY.register("ender_knight_armor_leggings", ()-> new EnderKnightArmorItem(EquipmentSlot.LEGS));
-    public static final RegistryObject<Item> ENDER_KNIGHT_ARMOR_BOOTS = REGISTRY.register("ender_knight_armor_boots", ()-> new EnderKnightArmorItem(EquipmentSlot.FEET));
+    public static final HashMap<EquipmentSlot, RegistryObject<Item>> ENDER_KNIGHT_ARMOR = EnderKnightArmorItem.createRegistry(REGISTRY);
+    public static final HashMap<EquipmentSlot, RegistryObject<Item>> FROZEN_BLAZE_ARMOR = FrozenBlazeArmorItem.createRegistry(REGISTRY);
 
     public static final RegistryObject<Item> FROZEN_BLAZE_SPAWN_EGG = REGISTRY.register("frozen_blaze_spawn_egg", ()-> new ForgeSpawnEggItem(ModEntityTypes.FROZEN_BLAZE, -16711681, -16763956, new Item.Properties().tab(CreativeModeTab.TAB_MISC)));
+    public static final RegistryObject<Item> GUI_SLOT_BLOCK_ITEM = REGISTRY.register("gui_slot_block", GUISlotBlockItem::new);
 }

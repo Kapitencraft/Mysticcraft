@@ -11,8 +11,7 @@ import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.NotNull;
 
 public class GemstoneGrinderScreen extends AbstractContainerScreen<GemstoneGrinderMenu> {
-    private static final ResourceLocation TEXTURE =
-            new ResourceLocation(MysticcraftMod.MOD_ID,"textures/gui/gem_infusing_station_gui.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(MysticcraftMod.MOD_ID,"textures/gui/gemstone_grinder_gui.png");
 
     public GemstoneGrinderScreen(GemstoneGrinderMenu menu, Inventory inventory, Component component) {
         super(menu, inventory, component);
