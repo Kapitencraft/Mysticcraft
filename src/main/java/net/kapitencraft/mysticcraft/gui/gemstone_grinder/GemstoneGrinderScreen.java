@@ -8,14 +8,13 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import org.jetbrains.annotations.NotNull;
 
-public class GemstoneGrinderScreen extends AbstractContainerScreen<GemGrinderMenu> {
-    private static final ResourceLocation TEXTURE = new ResourceLocation(MysticcraftMod.MOD_ID, "textures/gui/gemstone_grinder_gui.png");
+public class GemstoneGrinderScreen extends AbstractContainerScreen<GemstoneGrinderMenu> {
+    private static final ResourceLocation TEXTURE = new ResourceLocation(MysticcraftMod.MOD_ID,"textures/gui/gemstone_grinder_gui.png");
 
-    public GemstoneGrinderScreen(GemGrinderMenu menu, Inventory inventory, Component component) {
+    public GemstoneGrinderScreen(GemstoneGrinderMenu menu, Inventory inventory, Component component) {
         super(menu, inventory, component);
-        this.imageHeight = 166;
-        this.imageWidth = 176;
     }
 
     @Override
@@ -24,21 +23,21 @@ public class GemstoneGrinderScreen extends AbstractContainerScreen<GemGrinderMen
     }
 
     @Override
-    protected void renderBg(PoseStack pose, float partialTick, int mouseX, int mouseY) {
-        menu.player.sendSystemMessage(Component.literal("Rendering Screen"));
+    protected void renderBg(@NotNull PoseStack pPoseStack, float pPartialTick, int pMouseX, int pMouseY) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1, 1, 1, 1);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, TEXTURE);
         int x = (width - imageWidth) / 2;
         int y = (height - imageHeight) / 2;
 
-        this.blit(pose, x, y, 0, 0, imageWidth, imageHeight);
+        this.blit(pPoseStack, x, y, 0, 0, imageWidth, imageHeight);
+
     }
 
     @Override
-    public void render(PoseStack stack, int mouseX, int mouseY, float delta) {
-        renderBackground(stack);
-        super.render(stack, mouseX, mouseY, delta);
-        renderTooltip(stack, mouseX, mouseY);
+    public void render(@NotNull PoseStack pPoseStack, int mouseX, int mouseY, float delta) {
+        renderBackground(pPoseStack);
+        super.render(pPoseStack, mouseX, mouseY, delta);
+        renderTooltip(pPoseStack, mouseX, mouseY);
     }
 }

@@ -27,7 +27,6 @@ public class InstantTransmissionSpell extends Spell {
         for (Vec3 vec3 : sight) {
             BlockPos pos = new BlockPos(vec3);
             if (!user.level.getBlockState(pos).canOcclude()) {
-                int loc = sight.indexOf(vec3);
                 ArrayList<Vec3> inv_sight = MISCTools.invertList(sight);
                 for (int i = 0; i < inv_sight.indexOf(vec3); i++) {
                     Vec3 mem = new Vec3(inv_sight.get(i).x, inv_sight.get(i).y + 1, inv_sight.get(i).z);

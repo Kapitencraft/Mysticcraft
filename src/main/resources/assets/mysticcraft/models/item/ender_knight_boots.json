@@ -1,0 +1,13 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "mysticcraft:item/ender_knight_boots"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "minecraft:dimension": 2},
+        "model": "mysticcraft:item/ender_knight_boots_ani"
+    }
+  ]
+}

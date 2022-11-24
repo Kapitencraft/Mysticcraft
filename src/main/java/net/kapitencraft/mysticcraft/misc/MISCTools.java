@@ -1,26 +1,40 @@
 package net.kapitencraft.mysticcraft.misc;
 
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Multimap;
+import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.api.APITools;
+import net.kapitencraft.mysticcraft.gui.IGuiHelper;
+import net.kapitencraft.mysticcraft.item.bow.ShortBowItem;
+import net.kapitencraft.mysticcraft.item.gemstone.GemstoneItem;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.item.spells.SpellItem;
+import net.kapitencraft.mysticcraft.item.sword.LongSwordItem;
 import net.minecraft.ChatFormatting;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
+import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Predicate;
+import java.util.*;
 
 import static java.lang.Math.sin;
 
@@ -118,8 +132,10 @@ public class MISCTools {
         dmgInc.setBoundingBox(new AABB(0,0,0,0,0,0));
         dmgInc.setCustomNameVisible(true);
         dmgInc.setCustomName(Component.literal(String.valueOf(amount)).withStyle(damageIndicatorColorGenerator(type)));
-        dmgInc.getPersistentData().putBoolean("isDamageIndicator", true);
-        dmgInc.getPersistentData().putInt("time", 0);
+        CompoundTag persistentData = dmgInc.getPersistentData();
+        persistentData.putBoolean("isDamageIndicator", true);
+        persistentData.putInt("time", 0);
+        persistentData.putUUID("targetUUID", entity.getUUID());
         entity.level.addFreshEntity(dmgInc);
         return dmgInc;
     }
@@ -162,6 +178,10 @@ public class MISCTools {
         Item item = stack.getItem();
         if (item instanceof SpellItem) {
             return "SPELL ITEM";
+        } else if (item instanceof LongSwordItem) {
+            return "LONG SWORD";
+        } else if (item instanceof ShortBowItem) {
+            return "SHORT BOW";
         } else if (item instanceof SwordItem) {
             return "SWORD";
         } else if (item instanceof PickaxeItem) {
@@ -215,6 +235,17 @@ public class MISCTools {
 
     public static final EquipmentSlot[] allEquipmentSlots = new EquipmentSlot[]{EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND, EquipmentSlot.LEGS, EquipmentSlot.CHEST, EquipmentSlot.HEAD, EquipmentSlot.FEET};
 
+    public static final EquipmentSlot[] ARMOR_EQUIPMENT = new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
+
+    public static <T> boolean ArrayContains(T[] array, T t) {
+        for (T t1 : array) {
+            if (t1 == t) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static int createCustomIndex(EquipmentSlot slot) {
         return switch (slot) {
             case LEGS -> 2;
@@ -225,21 +256,156 @@ public class MISCTools {
             case OFFHAND -> 4;
         };
     }
-    public static EnchantmentCategory SPELL_ITEM = EnchantmentCategory.create("SPELL_ITEM", new Predicate<Item>() {
-        @Override
-        public boolean test(Item item) {
-            return item instanceof SpellItem;
-        }
-    });
 
-    public static EnchantmentCategory GEMSTONE_ITEM = EnchantmentCategory.create("GEMSTONE_ITEM", new Predicate<Item>() {
-        @Override
-        public boolean test(Item item) {
-            return item instanceof IGemstoneApplicable;
-        }
-    });
+    public static EnchantmentCategory SPELL_ITEM = EnchantmentCategory.create("SPELL_ITEM", item -> item instanceof SpellItem);
+
+    public static EnchantmentCategory GEMSTONE_ITEM = EnchantmentCategory.create("GEMSTONE_ITEM", item -> item instanceof IGemstoneApplicable);
 
     public static double round(double no, int num) {
         return Math.floor(no * (num * 10)) / (num * 10);
+    }
+    public static boolean increaseEffectDuration(LivingEntity living, MobEffect effect, int ticks) {
+        if (living.hasEffect(effect)) {
+            MobEffectInstance oldInstance = living.getEffect(effect);
+            assert oldInstance != null;
+            MobEffectInstance effectInstance = new MobEffectInstance(effect, oldInstance.getDuration() + ticks, oldInstance.getAmplifier(), oldInstance.isAmbient(), oldInstance.isVisible(), oldInstance.showIcon(), oldInstance, oldInstance.getFactorData());
+            living.removeEffect(effect);
+            living.addEffect(effectInstance);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static String getDimension(Level level) {
+        return level.dimension().toString();
+    }
+
+    public static HashMap<ResourceKey<Level>, String> getDimensionRegistries() {
+        HashMap<ResourceKey<Level>, String> Registries = new HashMap<>();
+        Registries.put(Level.END, Level.END.toString());
+        Registries.put(Level.NETHER, Level.NETHER.toString());
+        Registries.put(Level.OVERWORLD, Level.OVERWORLD.toString());
+        return Registries;
+    }
+
+    public static <T> boolean listHas(T[] collection, T obj) {
+        for (T t : collection) {
+            if (t == obj) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static ImmutableMultimap<Attribute, AttributeModifier> increaseByPercent(ImmutableMultimap<Attribute, AttributeModifier> multimap, double percent, AttributeModifier.Operation[] operations, @Nullable Attribute attributeReq) {
+        ImmutableMultimap.Builder<Attribute, AttributeModifier> toReturn = new ImmutableMultimap.Builder<>();
+        Collection<AttributeModifier> attributeModifiers;
+        for (Attribute attribute : multimap.keys()) {
+            if (attributeReq == null || attribute == attributeReq) {
+                attributeModifiers = multimap.get(attribute);
+                for (AttributeModifier modifier : attributeModifiers) {
+                    if (listHas(operations, modifier.getOperation())) {
+                        toReturn.put(attribute, new AttributeModifier(modifier.getId(), modifier.getName(), modifier.getAmount() * (1 + percent), modifier.getOperation()));
+                    } else {
+                        toReturn.put(attribute, modifier);
+                    }
+                }
+            } else {
+                attributeModifiers = multimap.get(attribute);
+                for (AttributeModifier modifier : attributeModifiers) {
+                    toReturn.put(attribute, modifier);
+                }
+            }
+        }
+        return toReturn.build();
+    }
+
+    public static Multimap<Attribute, AttributeModifier> increaseByAmount(Multimap<Attribute, AttributeModifier> multimap, double amount, AttributeModifier.Operation[] operations, @Nullable Attribute attributeReq) {
+        ImmutableMultimap.Builder<Attribute, AttributeModifier> toReturn = new ImmutableMultimap.Builder<>();
+        boolean hasBeenAdded = attributeReq == null;
+        Collection<AttributeModifier> attributeModifiers;
+        for (Attribute attribute : multimap.keys()) {
+            if (attributeReq == null || attribute == attributeReq) {
+                attributeModifiers = multimap.get(attribute);
+                for (AttributeModifier modifier : attributeModifiers) {
+                    if (listHas(operations, modifier.getOperation())) {
+                        toReturn.put(attribute, new AttributeModifier(modifier.getId(), modifier.getName(), modifier.getAmount() + amount, modifier.getOperation()));
+                        hasBeenAdded = true;
+                    } else {
+                        toReturn.put(attribute, modifier);
+                    }
+                }
+            } else {
+                attributeModifiers = multimap.get(attribute);
+                for (AttributeModifier modifier : attributeModifiers) {
+                    toReturn.put(attribute, modifier);
+                }
+            }
+        }
+        if (!hasBeenAdded) {
+            toReturn.put(attributeReq, new AttributeModifier(UUID.randomUUID(), "Custom Attribute", amount, AttributeModifier.Operation.ADDITION));
+        }
+        multimap = toReturn.build();
+        return multimap;
+    }
+
+    public static CompoundTag putHashMapTag(HashMap<UUID, Integer> hashMap) {
+        CompoundTag mapTag = new CompoundTag();
+        UUID[] UuidArray = hashMap.keySet().toArray(new UUID[0]);
+        List<Integer> IntArray = collectionToList(hashMap.values());
+        mapTag.put("Uuids", putUuidArray(UuidArray));
+        mapTag.putIntArray("Ints", IntArray);
+        return mapTag;
+    }
+
+    public static HashMap<UUID, Integer> getHashMapTag(CompoundTag tag) {
+        HashMap<UUID, Integer> hashMap = new HashMap<>();
+        if (tag == null) {
+            return hashMap;
+        }
+        int[] intArray = tag.getIntArray("Ints");
+        UUID[] UuidArray = getUuidArray((CompoundTag) Objects.requireNonNull(tag.get("Uuids")));
+        for (int i = 0; i < (intArray.length == Objects.requireNonNull(UuidArray).length ? intArray.length : 0); i++) {
+            hashMap.put(UuidArray[i], intArray[i]);
+        }
+        return hashMap;
+    }
+
+    public static CompoundTag putUuidArray(UUID[] array) {
+        CompoundTag arrayTag = new CompoundTag();
+        for (int i = 0; i < array.length; i++) {
+            arrayTag.putUUID(String.valueOf(i), array[i]);
+            arrayTag.putInt("Length", array.length);
+        }
+        return arrayTag;
+    }
+
+    public static UUID[] getUuidArray(CompoundTag arrayTag) {
+        if (!arrayTag.contains("Length")) {
+            MysticcraftMod.LOGGER.warn("tried to load UUID Array from Tag but Tag isn`t Array Tag");
+        } else {
+            int length = arrayTag.getInt("Length");
+            UUID[] array = new UUID[length];
+            for (int i = 0; i < length; i++) {
+                array[i] = arrayTag.getUUID(String.valueOf(i));
+            }
+            return array;
+        }
+        return null;
+    }
+    
+    public static <T> List<T> collectionToList(Collection<T> collection) {
+        return new ArrayList<>(collection);
+    }
+
+    public static SimpleContainer ContainerOf(ItemStackHandler handler) {
+        SimpleContainer inventory = new SimpleContainer(handler.getSlots());
+        for (int i = 0; i < handler.getSlots(); i++) {
+            if (!(handler.getStackInSlot(i).getItem() instanceof IGuiHelper || handler.getStackInSlot(i).getItem() instanceof GemstoneItem)) {
+                inventory.setItem(i, handler.getStackInSlot(i));
+            }
+        }
+        return inventory;
     }
 }

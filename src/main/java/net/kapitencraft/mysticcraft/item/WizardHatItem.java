@@ -1,5 +1,6 @@
 package net.kapitencraft.mysticcraft.item;
 
+import net.kapitencraft.mysticcraft.item.armor.ModArmorMaterials;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -26,7 +27,7 @@ public class WizardHatItem extends GeoArmorItem implements IAnimatable {
     }
     @Override
     public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController<WizardHatItem>(this, "controller", 20, this::predicate));
+        data.addAnimationController(new AnimationController<>(this, "controller", 20, this::predicate));
     }
 
     @Override

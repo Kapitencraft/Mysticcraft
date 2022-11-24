@@ -28,6 +28,7 @@ import java.util.function.Supplier;
 @Mod(MysticcraftMod.MOD_ID)
 public class MysticcraftMod {
     public static final String MOD_ID = "mysticcraft";
+    public static final float TIME_PER_TICK = 0.05f;
     private static int messageID = 0;
     public static final Logger LOGGER = LogUtils.getLogger();
     private static final String PROTOCOL_VERSION = "1";
@@ -47,7 +48,7 @@ public class MysticcraftMod {
         ModBlocks.REGISTRY.register(modEventBus);
         ModBlockEntities.REGISTRY.register(modEventBus);
         ModMenuTypes.REGISTRY.register(modEventBus);
-
+        ModEntityTypes.REGISTRY.register(modEventBus);
 
         MinecraftForge.EVENT_BUS.register(this);
         GeckoLib.initialize();
@@ -58,10 +59,9 @@ public class MysticcraftMod {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
             ModItemProperties.addCustomItemProperties();
-            event.enqueueWork(() -> {
-                MysticcraftMod.LOGGER.info("Loading GUI for Gem Grinder");
-                MenuScreens.register(ModMenuTypes.GEM_GRINDER_MENU.get(), GemstoneGrinderScreen::new);
-            });
+            MysticcraftMod.LOGGER.info("Loading GUI for Gem Grinder");
+            MenuScreens.register(ModMenuTypes.GEM_GRINDER_MENU.get(), GemstoneGrinderScreen::new);
+
         }
     }
 

@@ -1,0 +1,38 @@
+package net.kapitencraft.mysticcraft.enchantments;
+
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentCategory;
+
+public class TripleStrikeEnchantment extends CountEnchantment {
+    public TripleStrikeEnchantment() {
+        super(Rarity.UNCOMMON, EnchantmentCategory.WEAPON, new EquipmentSlot[]{EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND}, "TripleStrikeMap", countType.EXCEPT, Type.DAMAGE_CALC);
+    }
+
+    @Override
+    public int getMaxLevel() {
+        return 4;
+    }
+
+    @Override
+    public int getMinCost(int level) {
+        return 5 + level * 20;
+    }
+
+    @Override
+    public int getMaxCost(int p_44691_) {
+        return this.getMinCost(p_44691_) * 2;
+    }
+
+    @Override
+    protected int getCountAmount(int level) {
+        return 3;
+    }
+
+    @Override
+    protected double mainExecute(int level, ItemStack enchanted, LivingEntity attacker, LivingEntity attacked, double damageAmount) {
+        damageAmount *= (1 + 0.2 * level);
+        return damageAmount;
+    }
+}
