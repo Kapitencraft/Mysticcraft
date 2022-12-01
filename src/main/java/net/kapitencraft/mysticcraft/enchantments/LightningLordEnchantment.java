@@ -11,7 +11,7 @@ import net.minecraft.world.phys.Vec3;
 
 public class LightningLordEnchantment extends CountEnchantment {
     public LightningLordEnchantment() {
-        super(Rarity.RARE, EnchantmentCategory.WEAPON, new EquipmentSlot[]{EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND}, "lightningLordMap", countType.NORMAL, Type.DAMAGE_CALC);
+        super(Rarity.RARE, EnchantmentCategory.WEAPON, new EquipmentSlot[]{EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND}, "lightningLordMap", countType.NORMAL);
     }
 
     @Override

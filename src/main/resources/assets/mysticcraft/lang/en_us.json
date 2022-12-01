@@ -40,6 +40,11 @@
   "item.mysticcraft.ender_knight_leggings": "Ender Knight Leggings",
   "item.mysticcraft.ender_knight_boots": "Ender Knight Boots",
 
+  "item.mysticcraft.frozen_blaze_helmet": "Frozen Blaze Helmet",
+  "item.mysticcraft.frozen_blaze_chestplate": "Frozen Blaze Chestplate",
+  "item.mysticcraft.frozen_blaze_leggings": "Frozen Blaze Leggings",
+  "item.mysticcraft.frozen_blaze_boots": "Frozen Blaze Boots",
+
   "block.mysticcraft.gemstone_grinder": "Gemstone Grinder",
 
   "key.category.mysticcraft.spell": "Spell Misc",
@@ -62,6 +67,7 @@
   "enchantment.mysticcraft.efficient_jewelling": "Efficient Jewelling",
   "enchantment.mysticcraft.ultimate_wise": "\u00A7l\u00A7d Ultimate Wise",
   "enchantment.mysticcraft.lightning_lord": "Lightning Lord",
+  "enchantment.mysticcraft.growth": "Growth",
 
   "enchantment.level.11": "XI",
   "enchantment.level.12": "XII",

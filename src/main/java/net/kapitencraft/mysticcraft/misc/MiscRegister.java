@@ -1,5 +1,6 @@
 package net.kapitencraft.mysticcraft.misc;
 
+import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.enchantments.ExtendedCalculationEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.StatBoostEnchantment;
@@ -89,7 +90,23 @@ public class MiscRegister {
         Map<Enchantment, Integer> enchantments = stack.getAllEnchantments();
         for (Enchantment enchantment : enchantments.keySet()) {
             if (enchantment instanceof StatBoostEnchantment statBoostEnchantment) {
-                event. MISCTools.increaseByAmount() statBoostEnchantment.getModifiers(enchantments.get(statBoostEnchantment), stack, slot);
+                Multimap<Attribute, AttributeModifier> modifiableMap = event.getModifiers();
+                for (Attribute attribute : modifiableMap.keys()) {
+                    for (AttributeModifier modifier : modifiableMap.get(attribute)) {
+                        Multimap<Attribute, AttributeModifier> modifiersMultimap = statBoostEnchantment.getModifiers(enchantments.get(enchantment), stack, slot);
+                        for (Attribute attribute1 : modifiersMultimap.keys()) {
+                            if (attribute == attribute1) {
+                                for (AttributeModifier modifier1 : modifiersMultimap.get(attribute1)) {
+                                    if (modifier.getOperation() == modifier1.getOperation()) {
+                                        double amount = modifier.getAmount();
+                                        event.removeModifier(attribute, modifier);
+                                        event.addModifier(attribute, new AttributeModifier(modifier.getId(), modifier.getName(), amount + modifier1.getAmount(), modifier.getOperation()));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -107,29 +124,6 @@ public class MiscRegister {
         }
 
     }
-
-    @SubscribeEvent
-    public static void HitEnchantmentRegister(LivingDamageEvent event) {
-        Entity entity = event.getSource().getEntity();
-        if (entity instanceof LivingEntity attacker) {
-            LivingEntity attacked = event.getEntity();
-            ItemStack stack = attacker.getMainHandItem();
-            int nec_touch_lvl = stack.getEnchantmentLevel(ModEnchantments.NECROTIC_TOUCH.get());
-            int poison_blade = stack.getEnchantmentLevel(ModEnchantments.POISONOUS_BLADE.get());
-            int venomous = stack.getEnchantmentLevel(ModEnchantments.VENOMOUS.get());
-            if (nec_touch_lvl > 0) {
-                attacker.heal(event.getAmount() > nec_touch_lvl ? nec_touch_lvl : event.getAmount());
-            }
-            if (poison_blade > 0) {
-                if (!MISCTools.increaseEffectDuration(attacked, MobEffects.POISON, poison_blade * 5)) {
-                    attacked.addEffect(new MobEffectInstance(MobEffects.POISON, 20, 1));
-                }
-            }
-            if (venomous > 0) {
-            }
-        }
-    }
-
     @SubscribeEvent
     public static void FerocityRegister(LivingDamageEvent event) {
         LivingEntity attacked = event.getEntity();
@@ -164,6 +158,11 @@ public class MiscRegister {
                 }.start(40);
             }
         }
+    }
+
+    @SubscribeEvent
+    public static void MiscDamageEvents(LivingDamageEvent event) {
+
     }
 
     @SubscribeEvent
@@ -212,18 +211,19 @@ public class MiscRegister {
 
     @SubscribeEvent
     public static void gemstoneAttributeModifications(ItemAttributeModifierEvent event) {
-        Item item = event.getItemStack().getItem();
+        ItemStack stack =event.getItemStack();
+        Item item = stack.getItem();
         if (item instanceof IGemstoneApplicable applicable) {
             if (item instanceof ArmorItem armorItem) {
                 if (event.getSlotType() == armorItem.getSlot() && applicable.getAttributesModified() != null) {
                     for (Attribute attribute : applicable.getAttributesModified()) {
-                        event.addModifier(attribute, new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[MISCTools.createCustomIndex(armorItem.getSlot())], "Gemstone Modification", applicable.getAttributeModifiers().get(attribute), AttributeModifier.Operation.ADDITION));
+                        event.addModifier(attribute, new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[MISCTools.createCustomIndex(armorItem.getSlot())], "Gemstone Modification", applicable.getAttributeModifiers(stack).get(attribute), AttributeModifier.Operation.ADDITION));
                     }
                 }
             } else if (item instanceof TieredItem && event.getSlotType() == EquipmentSlot.MAINHAND) {
                 if (applicable.getAttributesModified() != null) {
                     for (Attribute attribute : applicable.getAttributesModified()) {
-                        event.addModifier(attribute, new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[MISCTools.createCustomIndex(EquipmentSlot.MAINHAND)], "Gemstone Modification", applicable.getAttributeModifiers().get(attribute), AttributeModifier.Operation.ADDITION));
+                        event.addModifier(attribute, new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[MISCTools.createCustomIndex(EquipmentSlot.MAINHAND)], "Gemstone Modification", applicable.getAttributeModifiers(stack).get(attribute), AttributeModifier.Operation.ADDITION));
                     }
                 }
             }

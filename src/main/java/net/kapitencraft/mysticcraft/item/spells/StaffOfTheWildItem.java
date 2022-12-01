@@ -1,14 +1,13 @@
 package net.kapitencraft.mysticcraft.item.spells;
 
 import net.kapitencraft.mysticcraft.init.ModCreativeModeTabs;
-import net.kapitencraft.mysticcraft.init.ModEnchantments;
 import net.kapitencraft.mysticcraft.item.client.StaffOfTheWildRenderer;
-import net.kapitencraft.mysticcraft.item.gemstone.Gemstone;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneSlot;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.kapitencraft.mysticcraft.spell.SpellSlot;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -38,29 +37,9 @@ public class StaffOfTheWildItem extends SpellItem implements IAnimatable, IGemst
     @Override
     public void appendHoverText(@NotNull ItemStack itemStack, @Nullable Level level, @NotNull List<Component> list, @NotNull TooltipFlag flag) {
         super.appendHoverText(itemStack, level, list, flag);
-        HashMap<Attribute, Double> attributeModifier = new HashMap<>();
-        ArrayList<Attribute> attributes = new ArrayList<>();
-        double gemstoneModifier;
-        @Nullable Attribute attribute;
-        @Nullable Gemstone gemstone;
-        for (@Nullable GemstoneSlot slot : gemstoneSlots) {
-            if (slot != null) {
-                gemstone = slot.getAppliedGemstone();
-                if (gemstone != null) {
-                    attribute = gemstone.modifiedAttribute;
-                    gemstoneModifier = gemstone.BASE_VALUE * gemstone.getRarity().modMul * (1 + itemStack.getEnchantmentLevel(ModEnchantments.EFFICIENT_JEWELLING.get()) * 0.02);
-                    if (attributeModifier.containsKey(attribute)) {
-                        attributeModifier.put(attribute, attributeModifier.get(attribute) + gemstoneModifier);
-                    } else {
-                        attributeModifier.put(attribute, gemstoneModifier);
-                        attributes.add(attribute);
-                    }
-                }
-            }
-        }
-        this.attributeModifiers = attributeModifier;
-        this.attributesModified = attributes;
-        if (flag.isAdvanced() && gemstoneSlots != null) {
+        this.attributeModifiers = this.getAttributeModifiers(itemStack);
+        this.attributesModified = this.getAttributesModified();
+        if (gemstoneSlots != null) {
             boolean flag1 = false;
             for (@Nullable GemstoneSlot slot : gemstoneSlots) {
                 flag1 = slot != null && slot.getAppliedGemstone() != null;
@@ -69,16 +48,19 @@ public class StaffOfTheWildItem extends SpellItem implements IAnimatable, IGemst
                 }
             }
             if (flag1) {
-                list.add(Component.literal("Gemstone Modifications:").withStyle(ChatFormatting.GREEN));
-                for (Attribute ignored : attributes) {
-                    list.add(Component.literal(ignored.toString() + ": " + attributeModifier.get(ignored)));
+                if (Screen.hasShiftDown()) {
+                    list.add(Component.literal("Gemstone Modifications:").withStyle(ChatFormatting.GREEN));
+                    for (Attribute ignored : this.attributesModified) {
+                        list.add(Component.literal(ignored.toString() + ": " + this.attributeModifiers.get(ignored)));
+                    }
+                } else {
+                    list.add(Component.literal("press [SHIFT] for Gemstone Information"));
                 }
             }
         }
 
     }
 
-    private final int GEMSTONE_SLOT_AMOUNT = 5;
     private HashMap<Attribute, Double> attributeModifiers;
     private GemstoneSlot[] gemstoneSlots = new GemstoneSlot[] {GemstoneSlot.MAGIC, GemstoneSlot.INTELLIGENCE, GemstoneSlot.INTELLIGENCE, GemstoneSlot.INTELLIGENCE, GemstoneSlot.ABILITY_DAMAGE};
     public AnimationFactory factory = new AnimationFactory(this);
@@ -117,7 +99,7 @@ public class StaffOfTheWildItem extends SpellItem implements IAnimatable, IGemst
     }
 
     @Override
-    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+    public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
         super.initializeClient(consumer);
         consumer.accept(new IClientItemExtensions() {
             private final BlockEntityWithoutLevelRenderer renderer = new StaffOfTheWildRenderer();
@@ -149,24 +131,8 @@ public class StaffOfTheWildItem extends SpellItem implements IAnimatable, IGemst
     public int getGemstoneSlotAmount() {
         return 5;
     }
-
-    @Override
-    public GemstoneSlot getGemstoneSlot(int slotLoc) {
-        return this.gemstoneSlots[slotLoc];
-    }
-
     @Override
     public GemstoneSlot[] getGemstoneSlots() {
         return this.gemstoneSlots;
-    }
-
-    @Override
-    public HashMap<Attribute, Double> getAttributeModifiers() {
-        return attributeModifiers;
-    }
-
-    @Override
-    public ArrayList<Attribute> getAttributesModified() {
-        return attributesModified;
     }
 }

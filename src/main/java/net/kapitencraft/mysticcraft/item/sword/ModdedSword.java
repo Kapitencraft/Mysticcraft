@@ -1,12 +1,15 @@
 package net.kapitencraft.mysticcraft.item.sword;
 
+import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.kapitencraft.mysticcraft.misc.MISCTools;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Rarity;
-import net.minecraft.world.item.SwordItem;
-import net.minecraft.world.item.Tier;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.*;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public abstract class ModdedSword extends SwordItem {
     public ModdedSword(Tier p_43269_, int p_43270_, float p_43271_, Properties p_43272_) {
@@ -38,6 +41,13 @@ public abstract class ModdedSword extends SwordItem {
                 return Rarity.COMMON;
             }
         }
+    }
 
+    @Override
+    public void appendHoverText(ItemStack stack, @Nullable Level level, @NotNull List<Component> list, @NotNull TooltipFlag flag) {
+        if (stack.getItem() instanceof IGemstoneApplicable applicable) {
+            applicable.getDisplay(stack, list);
+        }
+        list.add(Component.literal(""));
     }
 }

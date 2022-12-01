@@ -43,10 +43,10 @@ public abstract class ShortBowItem extends ModdedBows {
 
     public AbstractArrow createArrowProperties(LivingEntity archer, ItemStack bow, int kb, float rotX, float rotY) {
         Level world = archer.level;
-        ItemStack itemstack = archer.getProjectile(bow);
-        if (!itemstack.isEmpty() && itemstack.getItem() instanceof ArrowItem arrowItem) {
-            AbstractArrow arrow = arrowItem.createArrow(world, itemstack, archer);
-            arrow.shootFromRotation(archer, rotX, rotY, 0.0F, 4, 1.0F);
+        ItemStack arrowStack = archer.getProjectile(bow);
+        if (!arrowStack.isEmpty() && arrowStack.getItem() instanceof ArrowItem arrowItem) {
+            AbstractArrow arrow = arrowItem.createArrow(world, arrowStack, archer);
+            arrow.shootFromRotation(archer, rotX, rotY, 0.0F, (float) (1 + bow.getEnchantmentLevel(ModEnchantments.FAST_ARROWS.get()) * 0.2), 1.0F);
             arrow.setBaseDamage(archer.getAttributeValue(Attributes.ATTACK_DAMAGE));
             arrow.setKnockback(kb);
             arrow.setCritArrow(true);
@@ -54,7 +54,7 @@ public abstract class ShortBowItem extends ModdedBows {
             bow.hurtAndBreak(1, archer, (p_40665_) -> p_40665_.broadcastBreakEvent(archer.getUsedItemHand()));
             world.addFreshEntity(arrow);
             if (!(archer instanceof Player player && player.getAbilities().instabuild) || bow.getEnchantmentLevel(Enchantments.INFINITY_ARROWS) > 0) {
-                itemstack.shrink(1);
+                arrowStack.shrink(1);
             }
             world.playSound(null, archer.getX(), archer.getY(), archer.getZ(), SoundEvents.ARROW_SHOOT, SoundSource.PLAYERS, 1.0F, 1.0F / (world.getRandom().nextFloat() * 0.4F + 1.2F) + 0.5F);
             return arrow;
@@ -85,6 +85,8 @@ public abstract class ShortBowItem extends ModdedBows {
 
     @Override
     public void appendHoverText(@NotNull ItemStack itemStack, @Nullable Level level, @NotNull List<Component> list, @Nullable TooltipFlag flag) {
+        super.appendHoverText(itemStack, level, list, flag);
+        list.add(Component.literal(""));
         list.add(Component.literal("Shot Cooldown: " + this.createCooldown(itemStack) + "s").withStyle(ChatFormatting.GREEN));
     }
 

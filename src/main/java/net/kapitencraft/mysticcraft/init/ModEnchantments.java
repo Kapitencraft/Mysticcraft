@@ -23,8 +23,10 @@ public abstract class ModEnchantments {
     public static final RegistryObject<Enchantment> ULTIMATE_WISE = REGISTRY.register("ultimate_wise", UltimateWiseEnchantment::new);
     public static final RegistryObject<Enchantment> EFFICIENT_JEWELLING = REGISTRY.register("efficient_jewelling", EfficientJewellingEnchantment::new);
     public static final RegistryObject<Enchantment> POISONOUS_BLADE = REGISTRY.register("poisonous_blade", PoisonousBladeEnchantment::new);
+    public static final RegistryObject<Enchantment> GLACIAL_BLADE = REGISTRY.register("glacial_blade", GlacialTouchEnchantment::new);
     public static final RegistryObject<Enchantment> LIGHTNING_LORD = REGISTRY.register("lightning_lord", LightningLordEnchantment::new);
     public static final RegistryObject<Enchantment> TRIPLE_STRIKE = REGISTRY.register("triple_strike", TripleStrikeEnchantment::new);
     public static final RegistryObject<Enchantment> JUSTICE = REGISTRY.register("justice", JusticeEnchantment::new);
     public static final RegistryObject<Enchantment> VENOMOUS = REGISTRY.register("venomous", VenomousEnchantment::new);
+    public static final RegistryObject<Enchantment> CRITICAL = REGISTRY.register("critical", CriticalEnchantment::new);
 }

@@ -13,8 +13,8 @@ import java.util.UUID;
 public abstract class CountEnchantment extends ExtendedCalculationEnchantment {
     private final String mapName;
     private final countType type;
-    protected CountEnchantment(Rarity p_44676_, EnchantmentCategory p_44677_, EquipmentSlot[] p_44678_, String mapName, countType type, Type enchType) {
-        super(p_44676_, p_44677_, p_44678_, enchType);
+    protected CountEnchantment(Rarity p_44676_, EnchantmentCategory p_44677_, EquipmentSlot[] p_44678_, String mapName, countType type) {
+        super(p_44676_, p_44677_, p_44678_);
         this.mapName = mapName;
         this.type = type;
     }

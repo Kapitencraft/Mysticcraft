@@ -2,8 +2,6 @@ package net.kapitencraft.mysticcraft.item.armor;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import net.kapitencraft.mysticcraft.init.ModAttributes;
-import net.kapitencraft.mysticcraft.init.ModEnchantments;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.misc.MISCTools;
 import net.minecraft.network.chat.Component;
@@ -12,7 +10,6 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
@@ -32,7 +29,14 @@ public abstract class ModArmorItem extends ArmorItem {
     }
 
     @Override
-    public void inventoryTick(ItemStack stack, Level level, Entity entity, int p_41407_, boolean p_41408_) {
+    public void appendHoverText(ItemStack stack, @Nullable Level p_41422_, List<Component> toolTip, TooltipFlag p_41424_) {
+        if (stack.getItem() instanceof IGemstoneApplicable gemstoneApplicable) {
+            gemstoneApplicable.getDisplay(stack, toolTip);
+        }
+    }
+
+    @Override
+    public void inventoryTick(@NotNull ItemStack stack, Level level, @NotNull Entity entity, int p_41407_, boolean p_41408_) {
         if (!level.isClientSide() && entity instanceof LivingEntity living ) {
             if (this.isFullSetActive(living)) {
                 this.armorTick(stack, level, living);
@@ -73,30 +77,12 @@ public abstract class ModArmorItem extends ArmorItem {
 
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
-
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = new ImmutableMultimap.Builder<>();
         builder.putAll(this.getDefaultAttributeModifiers(slot));
-        ImmutableMultimap<Attribute, AttributeModifier> modifiers = builder.build();
-        if (stack.getEnchantmentLevel(ModEnchantments.GROWTH.get()) > 0 && slot == this.slot) {
-            modifiers = MISCTools.increaseByAmount(modifiers, stack.getEnchantmentLevel(ModEnchantments.GROWTH.get()), new AttributeModifier.Operation[]{AttributeModifier.Operation.ADDITION}, Attributes.MAX_HEALTH);
-        }
-        if (stack.getEnchantmentLevel(ModEnchantments.REJUVENATE.get()) > 0 && slot == this.slot) {
-            modifiers = MISCTools.increaseByAmount(modifiers, stack.getEnchantmentLevel(ModEnchantments.REJUVENATE.get()), new AttributeModifier.Operation[]{AttributeModifier.Operation.ADDITION}, ModAttributes.HEALTH_REGEN.get());
-        }
-        if (stack.getEnchantmentLevel(ModEnchantments.FIRM_STAND.get()) > 0 && slot == this.slot) {
-            modifiers = MISCTools.increaseByAmount(modifiers, stack.getEnchantmentLevel(ModEnchantments.FIRM_STAND.get()), new AttributeModifier.Operation[]{AttributeModifier.Operation.ADDITION}, Attributes.KNOCKBACK_RESISTANCE);
-        }
-        return modifiers;
+        return builder.build();
     }
 
     protected void updateDimension(Level level) {
         this.dimension = MISCTools.getDimension(level);
-    }
-
-    @Override
-    public void appendHoverText(ItemStack itemStack, @Nullable Level p_41422_, List<Component> list, TooltipFlag p_41424_) {
-        if (itemStack.getItem() instanceof IGemstoneApplicable gemstoneApplicable) {
-            gemstoneApplicable.getDisplay(itemStack, list);
-        }
     }
 }

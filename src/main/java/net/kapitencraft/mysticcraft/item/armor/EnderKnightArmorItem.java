@@ -24,7 +24,6 @@ import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -73,6 +72,7 @@ public class EnderKnightArmorItem extends ModArmorItem implements IGemstoneAppli
     @Override
     public void appendHoverText(@NotNull ItemStack p_41421_, @Nullable Level p_41422_, @NotNull List<Component> list, @NotNull TooltipFlag p_41424_) {
         super.appendHoverText(p_41421_, p_41422_, list, p_41424_);
+        list.add(Component.literal(""));
         list.add(Component.literal("This Armor get`s double stats in the End"));
         list.add(Component.literal(""));
     }
@@ -81,24 +81,8 @@ public class EnderKnightArmorItem extends ModArmorItem implements IGemstoneAppli
     public int getGemstoneSlotAmount() {
         return 5;
     }
-
-    @Override
-    public GemstoneSlot getGemstoneSlot(int slotLoc) {
-        return this.slots[slotLoc];
-    }
-
     @Override
     public GemstoneSlot[] getGemstoneSlots() {
         return this.slots;
-    }
-
-    @Override
-    public HashMap<Attribute, Double> getAttributeModifiers() {
-        return null;
-    }
-
-    @Override
-    public ArrayList<Attribute> getAttributesModified() {
-        return null;
     }
 }

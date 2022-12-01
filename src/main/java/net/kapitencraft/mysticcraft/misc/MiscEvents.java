@@ -8,6 +8,7 @@ import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModEnchantments;
 import net.kapitencraft.mysticcraft.init.ModEntityTypes;
 import net.kapitencraft.mysticcraft.item.bow.ShortBowItem;
+import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.item.spells.SpellItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -37,8 +38,8 @@ public class MiscEvents {
             ItemStack stack = event.getItemStack();
             List<Component> toolTip = event.getToolTip();
             Player player = event.getEntity();
-            Component searched = Component.literal(FormattingCodes.GRAY.UNICODE + "Mana-Cost: " + FormattingCodes.DARK_RED.UNICODE);
-            if (toolTip.contains(searched) && stack.getItem() instanceof SpellItem spellItem) {
+            final Component SEARCHED = Component.literal(FormattingCodes.GRAY.UNICODE + "Mana-Cost: " + FormattingCodes.DARK_RED.UNICODE);
+            if (toolTip.contains(SEARCHED) && stack.getItem() instanceof SpellItem spellItem) {
                 boolean flag = player != null && stack != player.getMainHandItem();
                 if (flag) {
                     AttributeInstance cost_instance = player.getAttribute(ModAttributes.MANA_COST.get());
@@ -51,7 +52,7 @@ public class MiscEvents {
                     cost_instance.addTransientModifier(new AttributeModifier(SpellItem.MANA_COST_MOD, "Tooltip", spellItem.getManaCost(), AttributeModifier.Operation.ADDITION));
 
                 }
-                Component found = toolTip.get(toolTip.lastIndexOf(searched));
+                Component found = toolTip.get(toolTip.lastIndexOf(SEARCHED));
                 if (found instanceof MutableComponent mutable && player != null) {
                     mutable.append(FormattingCodes.DARK_RED.UNICODE + player.getAttributeValue(ModAttributes.MANA_COST.get()));
                 }
@@ -64,14 +65,18 @@ public class MiscEvents {
             }
             Rarity rarity = stack.getItem().getRarity(stack);
             boolean flag = rarity != MISCTools.getItemRarity(stack.getItem());
-            String NameMod = FormattingCodes.OBFUSCATED + "A" + FormattingCodes.RESET;
+            String RarityMod = FormattingCodes.OBFUSCATED + "A" + FormattingCodes.RESET;
             if (stack.getItem() instanceof ShortBowItem) {
                 toolTip.add(Component.literal(""));
                 toolTip.add(Component.literal("Short Bow: Instantly Shoots!").withStyle(ChatFormatting.DARK_PURPLE));
             }
+            if (stack.getItem() instanceof IGemstoneApplicable gemstoneApplicable) {
+                gemstoneApplicable.getModInfo(stack, toolTip);
+                toolTip.add(Component.literal(""));
+            }
             if (!(stack.getItem() instanceof IGuiHelper)) {
                 toolTip.add(Component.literal(""));
-                toolTip.add(Component.literal((flag ? NameMod + " " : "") + rarity + " " + MISCTools.getNameModifier(stack) + (flag ? " " + NameMod : "")).withStyle(rarity.getStyleModifier()).withStyle(ChatFormatting.BOLD));
+                toolTip.add(Component.literal((flag ? RarityMod + " " : "") + rarity + " " + MISCTools.getNameModifier(stack) + (flag ? " " + RarityMod : "")).withStyle(rarity.getStyleModifier()).withStyle(ChatFormatting.BOLD));
             }
         }
 

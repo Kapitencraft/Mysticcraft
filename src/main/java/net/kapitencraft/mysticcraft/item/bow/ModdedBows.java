@@ -16,9 +16,8 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 
 public abstract class ModdedBows extends BowItem {
@@ -31,12 +30,6 @@ public abstract class ModdedBows extends BowItem {
         super(p_40660_);
     }
 
-    @Override
-    public void appendHoverText(@Nonnull ItemStack itemStack, @Nullable Level level, @Nonnull List<Component> list, @Nullable TooltipFlag flag) {
-        if (itemStack.getItem() instanceof IGemstoneApplicable gemstoneApplicable) {
-            gemstoneApplicable.getDisplay(itemStack, list);
-        }
-    }
     @Override
     public void releaseUsing(@NotNull ItemStack bow, @NotNull Level world, @NotNull LivingEntity archer, int timeLeft) {
         if (archer instanceof Player player) {
@@ -144,4 +137,11 @@ public abstract class ModdedBows extends BowItem {
     }
 
     public abstract double getDamage();
+
+    @Override
+    public void appendHoverText(ItemStack stack, @Nullable Level p_41422_, List<Component> toolTip, TooltipFlag p_41424_) {
+        if (stack.getItem() instanceof IGemstoneApplicable gemstoneApplicable) {
+            gemstoneApplicable.getDisplay(stack, toolTip);
+        }
+    }
 }

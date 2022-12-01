@@ -27,23 +27,8 @@ public class LongBowItem extends ModdedBows implements IGemstoneApplicable {
     }
 
     @Override
-    public GemstoneSlot getGemstoneSlot(int slotLoc) {
-        return this.getGemstoneSlots()[slotLoc];
-    }
-
-    @Override
     public GemstoneSlot[] getGemstoneSlots() {
         return this.gemstoneSlots;
-    }
-
-    @Override
-    public HashMap<Attribute, Double> getAttributeModifiers() {
-        return this.attributeModifiers;
-    }
-
-    @Override
-    public ArrayList<Attribute> getAttributesModified() {
-        return attributesModified;
     }
 
     @Override
