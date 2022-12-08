@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.item.bow;
 
 import net.kapitencraft.mysticcraft.init.ModEnchantments;
+import net.kapitencraft.mysticcraft.item.IModItem;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.kapitencraft.mysticcraft.misc.MISCTools;
@@ -20,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public abstract class ModdedBows extends BowItem {
+public abstract class ModdedBows extends BowItem implements IModItem {
 
     public final double DIVIDER = 20;
 
@@ -35,7 +36,6 @@ public abstract class ModdedBows extends BowItem {
         if (archer instanceof Player player) {
             boolean flag = player.getAbilities().instabuild || bow.getEnchantmentLevel(Enchantments.INFINITY_ARROWS) > 0;
             ItemStack itemstack = player.getProjectile(bow);
-
             int i = this.getUseDuration(bow) - timeLeft;
             i = net.minecraftforge.event.ForgeEventFactory.onArrowLoose(bow, world, player, i, !itemstack.isEmpty() || flag);
             if (i < 0) return;
@@ -43,7 +43,6 @@ public abstract class ModdedBows extends BowItem {
                 if (itemstack.isEmpty()) {
                     itemstack = new ItemStack(Items.ARROW);
                 }
-
                 float f = getPowerForTimeModded(i, bow.getEnchantmentLevel(ModEnchantments.ELVISH_MASTERY.get()));
                 if (!(f < 0.1f)) {
                     boolean flag1 = player.getAbilities().instabuild || (itemstack.getItem() instanceof ArrowItem && ((ArrowItem)itemstack.getItem()).isInfinite(itemstack, bow, player));
@@ -60,15 +59,12 @@ public abstract class ModdedBows extends BowItem {
                             abstractarrow.setCritArrow(true);
                         }
                         abstractarrow = registerEnchant(bow, abstractarrow);
-
                         bow.hurtAndBreak(1, player, (p_40665_) -> p_40665_.broadcastBreakEvent(player.getUsedItemHand()));
                         if (flag1 || player.getAbilities().instabuild && (itemstack.is(Items.SPECTRAL_ARROW) || itemstack.is(Items.TIPPED_ARROW))) {
                             abstractarrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
                         }
-
                         world.addFreshEntity(abstractarrow);
                     }
-
                     world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ARROW_SHOOT, SoundSource.PLAYERS, 1.0F, 1.0F / (world.getRandom().nextFloat() * 0.4F + 1.2F) + f * 0.5F);
                     if (!flag1 && !player.getAbilities().instabuild) {
                         itemstack.shrink(1);

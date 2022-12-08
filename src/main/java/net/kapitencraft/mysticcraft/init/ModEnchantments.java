@@ -2,6 +2,7 @@ package net.kapitencraft.mysticcraft.init;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.enchantments.*;
+import net.kapitencraft.mysticcraft.enchantments.ReplenishEnchantment;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -29,4 +30,7 @@ public abstract class ModEnchantments {
     public static final RegistryObject<Enchantment> JUSTICE = REGISTRY.register("justice", JusticeEnchantment::new);
     public static final RegistryObject<Enchantment> VENOMOUS = REGISTRY.register("venomous", VenomousEnchantment::new);
     public static final RegistryObject<Enchantment> CRITICAL = REGISTRY.register("critical", CriticalEnchantment::new);
+    public static final RegistryObject<Enchantment> DIVINE_GIFT = REGISTRY.register("divine_gift", DivineGiftEnchantment::new);
+    public static final RegistryObject<Enchantment> TELEKINESIS = REGISTRY.register("telekinesis", TelekinesisEnchantment::new);
+    public static final RegistryObject<Enchantment> REPLENISH = REGISTRY.register("replenish", ReplenishEnchantment::new);
 }

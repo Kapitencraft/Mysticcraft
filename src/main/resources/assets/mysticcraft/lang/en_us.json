@@ -9,6 +9,7 @@
   "item.mysticcraft.longbow": "Longbow",
   "item.mysticcraft.tallin_bow": "Tallin Short Bow",
   "item.mysticcraft.slivyra": "Slivyra",
+  "item.mysticcraft.mana_steel_sword": "Mana Steel Sword",
   "item.mysticcraft.wizard_hat": "Wizard Hat",
   "item.mysticcraft.spell_shard": "Spell Shard",
   "item.mysticcraft.mana_steel_ingot": "Mana Steel Ingot",
@@ -68,6 +69,8 @@
   "enchantment.mysticcraft.ultimate_wise": "\u00A7l\u00A7d Ultimate Wise",
   "enchantment.mysticcraft.lightning_lord": "Lightning Lord",
   "enchantment.mysticcraft.growth": "Growth",
+  "enchantment.mysticcraft.critical": "Critical",
+  "enchantment.mysticcraft.divine_gift": "Divine Gift",
 
   "enchantment.level.11": "XI",
   "enchantment.level.12": "XII",

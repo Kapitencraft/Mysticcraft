@@ -14,7 +14,7 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.item.GeoArmorItem;
 
-public class WizardHatItem extends GeoArmorItem implements IAnimatable {
+public class WizardHatItem extends GeoArmorItem implements IAnimatable, IModItem {
     private final AnimationFactory factory = new AnimationFactory(this);
 
     public WizardHatItem() {

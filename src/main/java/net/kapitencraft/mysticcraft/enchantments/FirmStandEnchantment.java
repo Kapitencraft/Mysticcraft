@@ -25,9 +25,12 @@ public class FirmStandEnchantment extends StatBoostEnchantment {
     @Override
     public Multimap<Attribute, AttributeModifier> getModifiers(int level, ItemStack enchanted, EquipmentSlot slot) {
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = new ImmutableMultimap.Builder<>();
-        if (MISCTools.ArrayContains(MISCTools.ARMOR_EQUIPMENT, slot)) {
-            builder.put(Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(UUID.randomUUID(), "firmStand", level * 0.1, AttributeModifier.Operation.ADDITION));
-        }
+        builder.put(Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(UUID.randomUUID(), "firmStand", level * 0.1, AttributeModifier.Operation.ADDITION));
         return builder.build();
+    }
+
+    @Override
+    public boolean hasModifiersForThatSlot(EquipmentSlot slot) {
+        return MISCTools.ArrayContains(MISCTools.ARMOR_EQUIPMENT, slot);
     }
 }

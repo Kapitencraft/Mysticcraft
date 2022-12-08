@@ -32,5 +32,5 @@ public class FormattingCodes {
 
     public static final Rarity LEGENDARY = Rarity.create("LEGENDARY", ChatFormatting.GOLD);
     public static final Rarity MYTHIC = Rarity.create("MYTHIC", ChatFormatting.DARK_PURPLE);
-    public static final Rarity DIVINE = Rarity.create("DIVINE", ChatFormatting.BLUE);
+    public static final Rarity DIVINE = Rarity.create("DIVINE", ChatFormatting.AQUA);
 }

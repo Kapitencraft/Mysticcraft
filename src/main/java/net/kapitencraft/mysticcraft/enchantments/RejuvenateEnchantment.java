@@ -22,9 +22,12 @@ public class RejuvenateEnchantment extends StatBoostEnchantment {
     @Override
     public ImmutableMultimap<Attribute, AttributeModifier> getModifiers(int level, ItemStack enchanted, EquipmentSlot slot) {
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = new ImmutableMultimap.Builder<>();
-        if (MISCTools.ArrayContains(MISCTools.ARMOR_EQUIPMENT, slot)) {
-            builder.put(ModAttributes.HEALTH_REGEN.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[MISCTools.createCustomIndex(slot)], "rejuvenate", level * 2, AttributeModifier.Operation.ADDITION));
-        }
+        builder.put(ModAttributes.HEALTH_REGEN.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[MISCTools.createCustomIndex(slot)], "rejuvenate", level * 2, AttributeModifier.Operation.ADDITION));
         return builder.build();
+    }
+
+    @Override
+    public boolean hasModifiersForThatSlot(EquipmentSlot slot) {
+        return MISCTools.ArrayContains(MISCTools.ARMOR_EQUIPMENT, slot);
     }
 }

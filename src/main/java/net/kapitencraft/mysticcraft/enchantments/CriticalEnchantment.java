@@ -20,10 +20,17 @@ public class CriticalEnchantment extends StatBoostEnchantment{
     @Override
     public Multimap<Attribute, AttributeModifier> getModifiers(int level, ItemStack enchanted, EquipmentSlot slot) {
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = new ImmutableMultimap.Builder<>();
-        if (slot == EquipmentSlot.MAINHAND) {
-            builder.put(ModAttributes.CRIT_DAMAGE.get(), new AttributeModifier(UUID.randomUUID(), "critical", level * 10, AttributeModifier.Operation.ADDITION));
-        }
+        builder.put(ModAttributes.CRIT_DAMAGE.get(), new AttributeModifier(UUID.randomUUID(), "critical", level * 10, AttributeModifier.Operation.ADDITION));
         return builder.build();
+    }
 
+    @Override
+    public boolean hasModifiersForThatSlot(EquipmentSlot slot) {
+        return slot == EquipmentSlot.MAINHAND;
+    }
+
+    @Override
+    public int getMaxLevel() {
+        return 5;
     }
 }

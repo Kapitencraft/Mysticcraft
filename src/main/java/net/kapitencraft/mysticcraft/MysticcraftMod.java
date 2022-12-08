@@ -30,7 +30,7 @@ public class MysticcraftMod {
     public static final String MOD_ID = "mysticcraft";
     public static final float TIME_PER_TICK = 0.05f;
     private static int messageID = 0;
-    public static final Logger LOGGER = LogUtils.getLogger();
+    private static final Logger LOGGER = LogUtils.getLogger();
     private static final String PROTOCOL_VERSION = "1";
     public static final SimpleChannel PACKET_HANDLER = NetworkRegistry.newSimpleChannel(new ResourceLocation(MOD_ID, MOD_ID), () -> PROTOCOL_VERSION,
             PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
@@ -41,13 +41,21 @@ public class MysticcraftMod {
     public MysticcraftMod()
     {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        sendInfo("Registering Items...");
         ModItems.REGISTRY.register(modEventBus);
+        sendInfo("Registering Enchantments...");
         ModEnchantments.REGISTRY.register(modEventBus);
+        sendInfo("Registering Attributes...");
         ModAttributes.REGISTRY.register(modEventBus);
+        sendInfo("Registering Effects...");
         ModMobEffects.REGISTRY.register(modEventBus);
+        sendInfo("Registering Blocks...");
         ModBlocks.REGISTRY.register(modEventBus);
+        sendInfo("Registering Block Entities...");
         ModBlockEntities.REGISTRY.register(modEventBus);
+        sendInfo("Registering Menus...");
         ModMenuTypes.REGISTRY.register(modEventBus);
+        sendInfo("Registering Entity Types...");
         ModEntityTypes.REGISTRY.register(modEventBus);
 
         MinecraftForge.EVENT_BUS.register(this);
@@ -58,8 +66,9 @@ public class MysticcraftMod {
     public static class ClientModEvents {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
+            sendInfo("Registering Item Properties...");
             ModItemProperties.addCustomItemProperties();
-            MysticcraftMod.LOGGER.info("Loading GUI for Gem Grinder");
+            sendInfo("Loading GUI for Gem Grinder");
             MenuScreens.register(ModMenuTypes.GEM_GRINDER_MENU.get(), GemstoneGrinderScreen::new);
 
         }
@@ -68,5 +77,13 @@ public class MysticcraftMod {
     public static <T> void addNetworkMessage(Class<T> messageType, BiConsumer<T, FriendlyByteBuf> encoder, Function<FriendlyByteBuf, T> decoder, BiConsumer<T, Supplier<NetworkEvent.Context>> messageConsumer) {
         PACKET_HANDLER.registerMessage(messageID, messageType, encoder, decoder, messageConsumer);
         messageID++;
+    }
+
+
+    public static void sendInfo(String info) {
+        LOGGER.info("[" + MOD_ID.toUpperCase() + "]: " + info);
+    }
+    public static void sendWarn(String warn) {
+        LOGGER.warn("[" + MOD_ID.toUpperCase() + "]: " + warn);
     }
 }

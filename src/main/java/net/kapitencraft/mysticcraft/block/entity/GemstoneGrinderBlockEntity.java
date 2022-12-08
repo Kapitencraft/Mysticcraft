@@ -32,7 +32,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class GemstoneGrinderBlockEntity extends BlockEntity implements MenuProvider {
+public class  GemstoneGrinderBlockEntity extends BlockEntity implements MenuProvider {
     public final ModItemStackHandler itemHandler = new ModItemStackHandler(6);
 
     public static final Item GUI_SLOT_LOCK = ((GUISlotBlockItem) ModItems.GUI_SLOT_BLOCK_ITEM.get()).putTooltip(List.of(Component.literal("This slot is locked.").withStyle(ChatFormatting.RED)));

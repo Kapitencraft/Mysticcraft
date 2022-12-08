@@ -2,6 +2,7 @@ package net.kapitencraft.mysticcraft.item.spells;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
+import net.kapitencraft.mysticcraft.item.IModItem;
 import net.kapitencraft.mysticcraft.item.ModTiers;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneSlot;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
@@ -22,7 +23,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
 
-public abstract class SpellItem extends TieredItem {
+public abstract class SpellItem extends TieredItem implements IModItem {
 
     @Override
     public void appendHoverText(@Nonnull ItemStack itemStack, @Nullable Level level, @Nonnull List<Component> list, @Nonnull TooltipFlag flag) {
@@ -83,7 +84,7 @@ public abstract class SpellItem extends TieredItem {
     /* EXECUTING SPELL */
     @Override
     public void releaseUsing(@NotNull ItemStack stack, @Nullable Level level, @NotNull LivingEntity user, int p_41415_) {
-        MysticcraftMod.LOGGER.info("Launching Spell");
+        MysticcraftMod.sendInfo("Launching Spell");
         Spell spell = this.getSpellSlots()[this.getActiveSpell()].getSpell();
         if (spell.TYPE == Spells.RELEASE && user.getAttributeBaseValue(ModAttributes.MANA.get()) >= this.getManaCost()) {
             user.getAttribute(ModAttributes.MANA.get()).setBaseValue(user.getAttributeBaseValue(ModAttributes.MANA.get()) - this.getManaCost());
@@ -96,7 +97,7 @@ public abstract class SpellItem extends TieredItem {
 
     @Override
     public void onUsingTick(ItemStack stack, LivingEntity user, @Nullable int count) {
-        MysticcraftMod.LOGGER.info("Launching Spell");
+        MysticcraftMod.sendInfo("Launching Spell");
         Spell spell = this.getSpellSlots()[this.getActiveSpell()].getSpell();
         if (spell.TYPE == Spells.CYCLE && user.getAttributeBaseValue(ModAttributes.MANA.get()) >= this.getManaCost()) {
             user.getAttribute(ModAttributes.MANA.get()).setBaseValue(user.getAttributeBaseValue(ModAttributes.MANA.get()));

@@ -7,13 +7,10 @@ import net.kapitencraft.mysticcraft.init.ModEnchantments;
 import net.kapitencraft.mysticcraft.init.ModItems;
 import net.kapitencraft.mysticcraft.item.bow.ModdedBows;
 import net.kapitencraft.mysticcraft.item.spells.SpellItem;
-import net.kapitencraft.mysticcraft.item.sword.LongSwordItem;
-import net.kapitencraft.mysticcraft.item.sword.ModdedSword;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.event.ItemAttributeModifierEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -31,13 +28,6 @@ public class AttributeGeneration {
             }
             if (stack.getItem() instanceof ModdedBows moddedBows) {
                 event.addModifier(Attributes.ATTACK_DAMAGE, new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[5], ModifierName, moddedBows.getDamage(), AttributeModifier.Operation.ADDITION));
-            }
-            if (stack.getItem() instanceof ModdedSword swordItem) {
-                if (stack.getItem() instanceof LongSwordItem longSwordItem) {
-                    makeLongSword(longSwordItem, event);
-                } else {
-                    makeSword(swordItem, event);
-                }
             }
             AttributeModifier ultWiseMod = UltimateWiseMod(stack);
             if (ultWiseMod != null) {
@@ -61,15 +51,5 @@ public class AttributeGeneration {
         } else {
             return null;
         }
-    }
-
-    private static void makeSword(ModdedSword swordItem, ItemAttributeModifierEvent event) {
-        event.addModifier(ModAttributes.STRENGTH.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[5], ModifierName, swordItem.getStrenght(), AttributeModifier.Operation.ADDITION));
-        event.addModifier(ModAttributes.CRIT_DAMAGE.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[5], ModifierName, swordItem.getCritDamage(), AttributeModifier.Operation.ADDITION));
-    }
-
-    private static void makeLongSword(LongSwordItem longSword, ItemAttributeModifierEvent event) {
-        makeSword(longSword, event);
-        event.addModifier(ForgeMod.ATTACK_RANGE.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[5], ModifierName, longSword.getReachMod(), AttributeModifier.Operation.ADDITION));
     }
 }

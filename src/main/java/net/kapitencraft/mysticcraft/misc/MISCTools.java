@@ -1,7 +1,6 @@
 package net.kapitencraft.mysticcraft.misc;
 
 import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.api.APITools;
 import net.kapitencraft.mysticcraft.gui.IGuiHelper;
@@ -15,6 +14,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
@@ -30,7 +30,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nullable;
@@ -113,12 +112,12 @@ public class MISCTools {
         return out;
     }
 
-    public static  @Nullable LivingEntity getAttacker(LivingDamageEvent event) {
-        if (event.getSource().getEntity() instanceof Projectile projectile) {
+    public static  @Nullable LivingEntity getAttacker(DamageSource source) {
+        if (source.getEntity() instanceof Projectile projectile) {
             if (projectile.getOwner() instanceof LivingEntity living) {
                 return living;
             }
-        } else if (event.getSource().getEntity() instanceof LivingEntity living) {
+        } else if (source.getEntity() instanceof LivingEntity living) {
             return living;
         }
         return null;
@@ -257,9 +256,9 @@ public class MISCTools {
         };
     }
 
-    public static EnchantmentCategory SPELL_ITEM = EnchantmentCategory.create("SPELL_ITEM", item -> item instanceof SpellItem);
-
-    public static EnchantmentCategory GEMSTONE_ITEM = EnchantmentCategory.create("GEMSTONE_ITEM", item -> item instanceof IGemstoneApplicable);
+    public static final EnchantmentCategory SPELL_ITEM = EnchantmentCategory.create("SPELL_ITEM", item -> item instanceof SpellItem);
+    public static final EnchantmentCategory TOOL = EnchantmentCategory.create("TOOL", item -> item instanceof DiggerItem || item instanceof SwordItem || item instanceof BowItem);
+    public static final EnchantmentCategory GEMSTONE_ITEM = EnchantmentCategory.create("GEMSTONE_ITEM", item -> item instanceof IGemstoneApplicable);
 
     public static double round(double no, int num) {
         return Math.floor(no * (num * 10)) / (num * 10);
@@ -321,24 +320,17 @@ public class MISCTools {
         return toReturn.build();
     }
 
-    public static Multimap<Attribute, AttributeModifier> increaseByAmount(Multimap<Attribute, AttributeModifier> multimap, double amount, AttributeModifier.Operation[] operations, @Nullable Attribute attributeReq) {
+    public static ImmutableMultimap<Attribute, AttributeModifier> increaseByAmount(ImmutableMultimap<Attribute, AttributeModifier> multimap, double amount, AttributeModifier.Operation operation, @Nullable Attribute attributeReq) {
         ImmutableMultimap.Builder<Attribute, AttributeModifier> toReturn = new ImmutableMultimap.Builder<>();
         boolean hasBeenAdded = attributeReq == null;
         Collection<AttributeModifier> attributeModifiers;
         for (Attribute attribute : multimap.keys()) {
-            if (attributeReq == null || attribute == attributeReq) {
-                attributeModifiers = multimap.get(attribute);
-                for (AttributeModifier modifier : attributeModifiers) {
-                    if (listHas(operations, modifier.getOperation())) {
+            attributeModifiers = multimap.get(attribute);
+            for (AttributeModifier modifier : attributeModifiers) {
+                if (!hasBeenAdded && attribute == attributeReq && operation == modifier.getOperation()) {
                         toReturn.put(attribute, new AttributeModifier(modifier.getId(), modifier.getName(), modifier.getAmount() + amount, modifier.getOperation()));
                         hasBeenAdded = true;
-                    } else {
-                        toReturn.put(attribute, modifier);
-                    }
-                }
-            } else {
-                attributeModifiers = multimap.get(attribute);
-                for (AttributeModifier modifier : attributeModifiers) {
+                } else {
                     toReturn.put(attribute, modifier);
                 }
             }
@@ -349,7 +341,6 @@ public class MISCTools {
         multimap = toReturn.build();
         return multimap;
     }
-
     public static CompoundTag putHashMapTag(HashMap<UUID, Integer> hashMap) {
         CompoundTag mapTag = new CompoundTag();
         UUID[] UuidArray = hashMap.keySet().toArray(new UUID[0]);
@@ -383,7 +374,7 @@ public class MISCTools {
 
     public static UUID[] getUuidArray(CompoundTag arrayTag) {
         if (!arrayTag.contains("Length")) {
-            MysticcraftMod.LOGGER.warn("tried to load UUID Array from Tag but Tag isn`t Array Tag");
+            MysticcraftMod.sendWarn("tried to load UUID Array from Tag but Tag isn`t Array Tag");
         } else {
             int length = arrayTag.getInt("Length");
             UUID[] array = new UUID[length];
@@ -407,5 +398,22 @@ public class MISCTools {
             }
         }
         return inventory;
+    }
+
+    public static List<ItemStack> shrinkDrops(List<ItemStack> drops, Item item, int amount) {
+        for (int i = 0; i < drops.size(); i++) {
+            ItemStack stack = drops.get(i);
+            if (stack.getItem() == item) {
+                while (amount > 0) {
+                    stack.shrink(1);
+                    amount--;
+                    if (stack.isEmpty()) {
+                        drops.remove(i);
+                        break;
+                    }
+                }
+            }
+        }
+        return drops;
     }
 }

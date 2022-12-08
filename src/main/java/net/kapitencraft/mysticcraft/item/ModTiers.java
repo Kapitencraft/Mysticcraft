@@ -8,17 +8,17 @@ public class ModTiers {
     public static final Tier MANA_STEEL = new Tier() {
         @Override
         public int getUses() {
-            return 700;
+            return 1890;
         }
 
         @Override
         public float getSpeed() {
-            return 0.5f;
+            return 0.1f;
         }
 
         @Override
         public float getAttackDamageBonus() {
-            return 13;
+            return 7;
         }
 
         @Override

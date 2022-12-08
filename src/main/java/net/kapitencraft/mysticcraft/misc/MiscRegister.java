@@ -9,13 +9,17 @@ import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModEnchantments;
 import net.kapitencraft.mysticcraft.init.ModMobEffects;
 import net.kapitencraft.mysticcraft.item.DropRarity;
+import net.kapitencraft.mysticcraft.item.IModItem;
 import net.kapitencraft.mysticcraft.item.IRNGDrop;
 import net.kapitencraft.mysticcraft.item.bow.TallinBow;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
+import net.kapitencraft.mysticcraft.item.sword.ManaSteelSword;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -32,7 +36,14 @@ import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.entity.projectile.SmallFireball;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.WitherSkullBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -43,18 +54,21 @@ import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHealEvent;
+import net.minecraftforge.event.entity.player.CriticalHitEvent;
+import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 @Mod.EventBusSubscriber
 public class MiscRegister {
-    @SubscribeEvent(priority = EventPriority.LOWEST)
+    @SubscribeEvent(priority = EventPriority.HIGH)
     public static void DamageEnchantRegister(LivingDamageEvent event) {
         LivingEntity attacked = event.getEntity();
         if (event.getSource().getEntity() instanceof Arrow arrow) {
@@ -65,31 +79,36 @@ public class MiscRegister {
                 double distance = launchLoc.distanceTo(hitLoc);
                 event.setAmount((float) (event.getAmount() * (1 + (float) Math.floor(distance / 10) * 0.05 * tag.getInt("SnipeEnchant"))));
             }
+            if (arrow.getOwner() instanceof Player player) {
+                double Strength = player.getAttributeValue(ModAttributes.STRENGTH.get());
+                event.setAmount((float) (event.getAmount() * (1 + Strength / 100)));
+            }
             return;
         }
-        @Nullable LivingEntity attacker = MISCTools.getAttacker(event);
+        @Nullable LivingEntity attacker = MISCTools.getAttacker(event.getSource());
         if (attacker == null) { return; }
         ItemStack stack = attacker.getMainHandItem();
-        float amount = event.getAmount();
-        if (attacker.getAttribute(ModAttributes.STRENGTH.get()) != null) {
-            double StrengthMul = 1 + (attacker.getAttributeValue(ModAttributes.STRENGTH.get()));
-            event.setAmount(amount * (float) StrengthMul);
-        }
         Map<Enchantment, Integer> enchantments = stack.getAllEnchantments();
-        for (Enchantment enchantment : enchantments.keySet()) {
-            if (enchantment instanceof ExtendedCalculationEnchantment modEnchantment) {
-                event.setAmount((float) modEnchantment.execute(enchantments.get(enchantment), stack, attacker, attacked, event.getAmount()));
+        if (attacker instanceof Player player) {
+            double Strength = player.getAttributeValue(ModAttributes.STRENGTH.get());
+            event.setAmount((float) (event.getAmount() * (1 + Strength / 100)));
+        }
+        if (enchantments != null) {
+            for (Enchantment enchantment : enchantments.keySet()) {
+                if (enchantment instanceof ExtendedCalculationEnchantment modEnchantment) {
+                    event.setAmount((float) modEnchantment.execute(enchantments.get(enchantment), stack, attacker, attacked, event.getAmount()));
+                }
             }
         }
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void StatModEnchantmentRegister(ItemAttributeModifierEvent event) {
         ItemStack stack = event.getItemStack();
         EquipmentSlot slot = event.getSlotType();
         Map<Enchantment, Integer> enchantments = stack.getAllEnchantments();
         for (Enchantment enchantment : enchantments.keySet()) {
-            if (enchantment instanceof StatBoostEnchantment statBoostEnchantment) {
+            if (enchantment instanceof StatBoostEnchantment statBoostEnchantment && statBoostEnchantment.hasModifiersForThatSlot(slot) && !(stack.getItem() instanceof IModItem)) {
                 Multimap<Attribute, AttributeModifier> modifiableMap = event.getModifiers();
                 for (Attribute attribute : modifiableMap.keys()) {
                     for (AttributeModifier modifier : modifiableMap.get(attribute)) {
@@ -111,7 +130,7 @@ public class MiscRegister {
         }
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void HitEffectRegister(LivingDamageEvent event) {
         LivingEntity living = event.getEntity();
         if (living.hasEffect(ModMobEffects.VULNERABILITY.get())) {
@@ -124,10 +143,17 @@ public class MiscRegister {
         }
 
     }
+
     @SubscribeEvent
+    public static void CritDamageRegister(CriticalHitEvent event) {
+        Player attacker = event.getEntity();
+        event.setDamageModifier((float) (1 + attacker.getAttributeValue(ModAttributes.CRIT_DAMAGE.get()) / 100));
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOW)
     public static void FerocityRegister(LivingDamageEvent event) {
         LivingEntity attacked = event.getEntity();
-        LivingEntity attacker = MISCTools.getAttacker(event);
+        LivingEntity attacker = MISCTools.getAttacker(event.getSource());
         if (attacker == null) {
             return;
         }
@@ -160,9 +186,16 @@ public class MiscRegister {
         }
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void MiscDamageEvents(LivingDamageEvent event) {
-
+        LivingEntity attacker = MISCTools.getAttacker(event.getSource());
+        if (attacker == null) {
+            return;
+        }
+        ItemStack mainHand = attacker.getMainHandItem();
+        if (mainHand.getItem() instanceof ManaSteelSword) {
+            attacker.heal(2f);
+        }
     }
 
     @SubscribeEvent
@@ -171,14 +204,25 @@ public class MiscRegister {
             CompoundTag persistentData = armorStand.getPersistentData();
             if (persistentData.contains("isDamageIndicator") && persistentData.getBoolean("isDamageIndicator")) {
                 persistentData.putInt("time", (persistentData.getInt("time") + 1));
-                @Nullable Entity target = armorStand.level instanceof ServerLevel serverLevel && persistentData.contains("targetUUID") ? serverLevel.getEntity(persistentData.getUUID("targetUUID")) : null;
-                if (persistentData.getInt("time") >= 20 || (target != null && !target.isAlive())) {
+                @Nullable Entity ignoredTarget = armorStand.level instanceof ServerLevel serverLevel && persistentData.contains("targetUUID") ? serverLevel.getEntity(persistentData.getUUID("targetUUID")) : null;
+                if (persistentData.getInt("time") >= 20) {
                     armorStand.kill();
                 }
             }
         }
     }
 
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void EntityDamaged(LivingDamageEvent event) {
+        LivingEntity attacked = event.getEntity();
+        MISCTools.createDamageIndicator(attacked, event.getAmount(), sourceToString(event.getSource()));
+    }
+    private static String sourceToString(DamageSource source) {
+        if (source == DamageSource.DROWN) { return "drown"; }
+        else if (source instanceof FerociousDamageSource) { return "ferocity"; }
+        else if (source == DamageSource.WITHER) { return "wither"; }
+        return "damage_generic";
+    }
     @SubscribeEvent
     public static void healthRegenRegister(LivingHealEvent event) {
         if (event.getEntity().getAttribute(ModAttributes.HEALTH_REGEN.get()) != null) {
@@ -233,14 +277,57 @@ public class MiscRegister {
     @SubscribeEvent
     public static void rareDropMessage(LivingDropsEvent event) {
         Collection<ItemEntity> entities = event.getDrops();
-        for (ItemEntity entity : entities) {
-            Item item = entity.getItem().getItem();
-            DropRarity dropRarity = item instanceof IRNGDrop drop ? drop.getRarity() : (item instanceof BlockItem block && block.getBlock() instanceof WitherSkullBlock) ? DropRarity.LEGENDARY : DropRarity.COMMON;
-            if (dropRarity.getID() > 1) {
-                if (event.getSource().getEntity() instanceof Player attacker) {
-                    attacker.sendSystemMessage(Component.literal(dropRarity.getColor().UNICODE + dropRarity.getDisplayName() + "DROP!" + FormattingCodes.RESET + "(").append(item.getName(entity.getItem())).append(") ("+ FormattingCodes.BLUE.UNICODE + "+" + attacker.getAttributeValue(ModAttributes.MAGIC_FIND.get()) + "% Magic Find)"));
+        if (event.getSource().getEntity() instanceof Player attacker) {
+            for (ItemEntity entity : entities) {
+                ItemStack stack = entity.getItem();
+                Item item = stack.getItem();
+                DropRarity dropRarity = item instanceof IRNGDrop drop ? drop.getRarity() : (item instanceof BlockItem block && block.getBlock() instanceof WitherSkullBlock) ? DropRarity.LEGENDARY : DropRarity.COMMON;
+                if (dropRarity.getID() > 1) {
+                    attacker.sendSystemMessage(Component.literal(dropRarity.getColor().UNICODE + dropRarity.getDisplayName() + "DROP!" + FormattingCodes.RESET + "(").append(item.getName(entity.getItem())).append(") (" + FormattingCodes.BLUE.UNICODE + "+" + attacker.getAttributeValue(ModAttributes.MAGIC_FIND.get()) + "% Magic Find)"));
+                }
+                //Telekinesis Register
+                if (attacker.getMainHandItem().getEnchantmentLevel(ModEnchantments.TELEKINESIS.get()) > 0) {
+                    attacker.getInventory().add(stack);
+                    entity.kill();
                 }
             }
+        }
+    }
+
+
+    @SubscribeEvent
+    public static void telekinesisRegister(BlockEvent.BreakEvent event) {
+        Player player = event.getPlayer();
+        ItemStack mainHandItem = player.getMainHandItem();
+        BlockState state = event.getState();
+        Block block = state.getBlock();
+        Level level = player.level;
+        BlockPos pos = event.getPos();
+        ServerLevel serverLevel = level instanceof ServerLevel serverLevel1 ? serverLevel1 : null;
+        LootContext.Builder context = (new LootContext.Builder(serverLevel)).withRandom(serverLevel.random).withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(pos)).withParameter(LootContextParams.TOOL, mainHandItem).withOptionalParameter(LootContextParams.THIS_ENTITY, player);
+        boolean hasTelekinesis = mainHandItem.getEnchantmentLevel(ModEnchantments.TELEKINESIS.get()) > 0;
+        boolean hasReplenish = mainHandItem.getEnchantmentLevel(ModEnchantments.REPLENISH.get()) > 0;
+        List<ItemStack> drops = state.getDrops(context);
+        if (hasReplenish) {
+            MISCTools.shrinkDrops(drops, Items.WHEAT_SEEDS, 1);
+        }
+        if (serverLevel != null && hasTelekinesis) {
+            for (ItemStack stack : drops) {
+                player.getInventory().add(stack);
+            }
+            event.setCanceled(true);
+            serverLevel.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+        }
+        if (hasReplenish && block instanceof CropBlock cropBlock) {
+            state.setValue(cropBlock.getAgeProperty(), 0);
+                if (!hasTelekinesis) {
+                for (ItemStack stack : drops) {
+                    level.addFreshEntity(new ItemEntity(level, pos.getX(), pos.getY(), pos.getZ(), stack));
+                }
+            }
+            BlockState newState = cropBlock.getStateForAge(0);
+            event.setCanceled(true);
+            level.setBlock(pos, newState, 3);
         }
     }
 

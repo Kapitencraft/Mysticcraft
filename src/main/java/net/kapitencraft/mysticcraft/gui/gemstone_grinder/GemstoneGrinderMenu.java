@@ -1,6 +1,5 @@
 package net.kapitencraft.mysticcraft.gui.gemstone_grinder;
 
-import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.block.entity.GemstoneGrinderBlockEntity;
 import net.kapitencraft.mysticcraft.gui.GUISlotBlockItem;
 import net.kapitencraft.mysticcraft.init.ModBlocks;
@@ -136,18 +135,11 @@ public class GemstoneGrinderMenu extends AbstractContainerMenu {
             slotChanged(this.getSlotIndex());
         }
 
-        @Override
-        public boolean mayPickup(Player playerIn) {
-            return this.getItem() == ItemStack.EMPTY || !(this.getItem().getItem() instanceof GUISlotBlockItem);
-        }
-
-        @Override
-        public boolean mayPlace(@NotNull ItemStack stack) {
-            return this.type == ModMenuType.GemstoneGrinderMenu && ((this.getSlotIndex() == 0 && stack.getItem() instanceof IGemstoneApplicable) || (this.getSlotIndex() >= 1 && this.getSlotIndex() <= 5 && stack.getItem() instanceof GemstoneItem) || stack == ItemStack.EMPTY);
-        }
     }
 
     public void slotChanged(int slotId) {
+        GemstoneGrinderBlockEntity.ModItemStackHandler handler = this.blockEntity.itemHandler;
+        verifySlots(this.player, handler);
         if (this.level != null && this.level.isClientSide()) {
             int x = this.blockEntity.getBlockPos().getX();
             int y = this.blockEntity.getBlockPos().getY();
@@ -157,7 +149,6 @@ public class GemstoneGrinderMenu extends AbstractContainerMenu {
             if (!(world.hasChunkAt(new BlockPos(x, y, z)))) {
                 return;
             }
-            GemstoneGrinderBlockEntity.ModItemStackHandler handler = this.blockEntity.itemHandler;
             ItemStack gemstoneSlot = handler.getStackInSlot(0);
             Inventory playerInventory = this.player.getInventory();
             boolean flag = gemstoneSlot != ItemStack.EMPTY;
@@ -169,14 +160,11 @@ public class GemstoneGrinderMenu extends AbstractContainerMenu {
                     throw new IllegalStateException("Why?????");
                 }
             } //Making the gemstoneApplicable
-            MysticcraftMod.LOGGER.info(String.valueOf(slotId));
-            if (slotId == 0) {
+             if (slotId == 0) {
                 if (flag) {
-                    MysticcraftMod.LOGGER.info("HAX");
                     int gemstoneSlotAmount = gemstoneApplicable.getGemstoneSlotAmount();
                     boolean[] unlockedSlots = getSlotUnlocked(gemstoneSlotAmount);
-                    MysticcraftMod.LOGGER.info(booleanArrayToString(unlockedSlots));
-                    for (int i = 0; i < 5; i++) {
+                      for (int i = 0; i < 5; i++) {
                         if (unlockedSlots[i]) {
                             handler.setStackInSlot(i + 1, ItemStack.EMPTY);
                         } else {
@@ -191,8 +179,8 @@ public class GemstoneGrinderMenu extends AbstractContainerMenu {
                         handler.setStackInSlot(i, new ItemStack(GemstoneGrinderBlockEntity.GUI_SLOT_LOCK));
                     }
                 }
-            } else if (slotId <= 5 && slotId >= 1) {
-                if (handler.getStackInSlot(slotId).getItem() instanceof GemstoneItem gemstoneItem && gemstoneApplicable != null) {
+             } else if (slotId <= 5 && slotId >= 1) {
+                 if (handler.getStackInSlot(slotId).getItem() instanceof GemstoneItem gemstoneItem && gemstoneApplicable != null) {
                     if (!gemstoneApplicable.getGemstoneSlots()[slotId].putGemstone(gemstoneItem.toGemstone())) {
                         playerInventory.add(handler.getStackInSlot(slotId));
                         handler.setStackInSlot(slotId, ItemStack.EMPTY);
@@ -200,6 +188,26 @@ public class GemstoneGrinderMenu extends AbstractContainerMenu {
                 }
             }
         }
+    }
+    private void verifySlots(Player player, ItemStackHandler handler) {
+        for (int i = 0; i < handler.getSlots(); i++) {
+            if (!isValidItemInSlot(handler, i)) {
+                player.getInventory().add(handler.getStackInSlot(i));
+                handler.setStackInSlot(i, ItemStack.EMPTY);
+            }
+        }
+    }
+
+    private boolean isValidItemInSlot(ItemStackHandler handler, int index) {
+        ItemStack stack = handler.getStackInSlot(index);
+        if (stack == ItemStack.EMPTY) {
+            return true;
+        } else if (index <= 5 && index >= 1 && (stack.getItem() instanceof GemstoneItem || stack.getItem() instanceof GUISlotBlockItem)) {
+            return true;
+        } else if (index == 0 && stack.getItem() instanceof IGemstoneApplicable) {
+            return true;
+        }
+        return false;
     }
 
     private static final Item BLOCKED_GEMSTONE_SLOT = ((GUISlotBlockItem) ModItems.GUI_SLOT_BLOCK_ITEM.get()).putTooltip(List.of(Component.literal("This Gemstone Applicable has no gemstone at that slot")));
@@ -213,17 +221,5 @@ public class GemstoneGrinderMenu extends AbstractContainerMenu {
             case 5 -> new boolean[]{true, true, true, true, true};
             default -> new boolean[]{false, false, false, false, false};
         };
-    }
-
-    private void clear(ItemStackHandler handler) {
-        MysticcraftMod.LOGGER.info("clearing");
-    }
-
-    private String booleanArrayToString(boolean[] array) {
-        String start = "";
-        for (boolean flag : array) {
-            start += flag;
-        }
-        return start;
     }
 }

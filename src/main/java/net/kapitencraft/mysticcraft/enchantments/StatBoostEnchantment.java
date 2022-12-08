@@ -14,5 +14,5 @@ public abstract class StatBoostEnchantment extends Enchantment {
     }
 
     public abstract Multimap<Attribute, AttributeModifier> getModifiers(int level, ItemStack enchanted, EquipmentSlot slot);
-
+    public abstract boolean hasModifiersForThatSlot(EquipmentSlot slot);
 }
