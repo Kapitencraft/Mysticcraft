@@ -5,19 +5,24 @@ import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.enchantments.ExtendedCalculationEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.StatBoostEnchantment;
 import net.kapitencraft.mysticcraft.entity.FrozenBlazeEntity;
+import net.kapitencraft.mysticcraft.gui.IGuiHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModEnchantments;
 import net.kapitencraft.mysticcraft.init.ModMobEffects;
 import net.kapitencraft.mysticcraft.item.DropRarity;
 import net.kapitencraft.mysticcraft.item.IModItem;
 import net.kapitencraft.mysticcraft.item.IRNGDrop;
+import net.kapitencraft.mysticcraft.item.bow.ShortBowItem;
 import net.kapitencraft.mysticcraft.item.bow.TallinBow;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
+import net.kapitencraft.mysticcraft.item.spells.SpellItem;
 import net.kapitencraft.mysticcraft.item.sword.ManaSteelSword;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -26,6 +31,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.decoration.ArmorStand;
@@ -55,6 +61,7 @@ import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHealEvent;
 import net.minecraftforge.event.entity.player.CriticalHitEvent;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -217,11 +224,59 @@ public class MiscRegister {
         LivingEntity attacked = event.getEntity();
         MISCTools.createDamageIndicator(attacked, event.getAmount(), sourceToString(event.getSource()));
     }
+
+    @SubscribeEvent
+    public static void DescriptionRegister(ItemTooltipEvent event) {
+        ItemStack stack = event.getItemStack();
+        List<Component> toolTip = event.getToolTip();
+        Player player = event.getEntity();
+        final Component SEARCHED = Component.literal(FormattingCodes.GRAY.UNICODE + "Mana-Cost: " + FormattingCodes.DARK_RED.UNICODE);
+        if (toolTip.contains(SEARCHED) && stack.getItem() instanceof SpellItem spellItem) {
+            boolean flag = player != null && stack != player.getMainHandItem();
+            if (flag) {
+                AttributeInstance cost_instance = player.getAttribute(ModAttributes.MANA_COST.get());
+                assert cost_instance != null;
+                cost_instance.removeModifier(SpellItem.MANA_COST_MOD);
+                cost_instance.removeModifier(SpellItem.ULTIMATE_WISE_MOD);
+                if (stack.getEnchantmentLevel(ModEnchantments.ULTIMATE_WISE.get()) > 0) {
+                    cost_instance.addTransientModifier(Objects.requireNonNull(AttributeGeneration.UltimateWiseMod(stack)));
+                }
+                cost_instance.addTransientModifier(new AttributeModifier(SpellItem.MANA_COST_MOD, "Tooltip", spellItem.getManaCost(), AttributeModifier.Operation.ADDITION));
+
+            }
+            Component found = toolTip.get(toolTip.lastIndexOf(SEARCHED));
+            if (found instanceof MutableComponent mutable && player != null) {
+                mutable.append(FormattingCodes.DARK_RED.UNICODE + player.getAttributeValue(ModAttributes.MANA_COST.get()));
+            }
+            if (flag) {
+                AttributeInstance cost_instance = player.getAttribute(ModAttributes.MANA_COST.get());
+                assert cost_instance != null;
+                cost_instance.removeModifier(SpellItem.MANA_COST_MOD);
+                cost_instance.removeModifier(SpellItem.ULTIMATE_WISE_MOD);
+            }
+        }
+        Rarity rarity = stack.getItem().getRarity(stack);
+        boolean flag = rarity != MISCTools.getItemRarity(stack.getItem());
+        String RarityMod = FormattingCodes.OBFUSCATED + "A" + FormattingCodes.RESET;
+        if (stack.getItem() instanceof ShortBowItem) {
+            toolTip.add(Component.literal(""));
+            toolTip.add(Component.literal("Short Bow: Instantly Shoots!").withStyle(ChatFormatting.DARK_PURPLE));
+        }
+        if (stack.getItem() instanceof IGemstoneApplicable gemstoneApplicable) {
+            gemstoneApplicable.getModInfo(stack, toolTip);
+            toolTip.add(Component.literal(""));
+        }
+        if (!(stack.getItem() instanceof IGuiHelper)) {
+            toolTip.add(Component.literal(""));
+            toolTip.add(Component.literal((flag ? RarityMod + " " : "") + rarity + " " + MISCTools.getNameModifier(stack) + (flag ? " " + RarityMod : "")).withStyle(rarity.getStyleModifier()).withStyle(ChatFormatting.BOLD));
+        }
+    }
+
     private static String sourceToString(DamageSource source) {
         if (source == DamageSource.DROWN) { return "drown"; }
         else if (source instanceof FerociousDamageSource) { return "ferocity"; }
         else if (source == DamageSource.WITHER) { return "wither"; }
-        return "damage_generic";
+        return source.getMsgId();
     }
     @SubscribeEvent
     public static void healthRegenRegister(LivingHealEvent event) {

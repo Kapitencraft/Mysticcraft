@@ -12,6 +12,7 @@ import net.kapitencraft.mysticcraft.item.gemstone.gemstones.AlmandineGemstone;
 import net.kapitencraft.mysticcraft.item.gemstone.gemstones.JasperGemstone;
 import net.kapitencraft.mysticcraft.item.gemstone.gemstones.RubyGemstone;
 import net.kapitencraft.mysticcraft.item.gemstone.gemstones.SapphireGemstone;
+import net.kapitencraft.mysticcraft.item.spells.HeatedScythe;
 import net.kapitencraft.mysticcraft.item.spells.SlivyraItem;
 import net.kapitencraft.mysticcraft.item.spells.StaffOfTheWildItem;
 import net.kapitencraft.mysticcraft.item.spells.TheStaffOfDestruction;
@@ -34,6 +35,7 @@ public abstract class ModItems {
     public static final RegistryObject<Item> THE_STAFF_DESTRUCTION = REGISTRY.register("staff_of_destruction", TheStaffOfDestruction::new);
     public static final RegistryObject<Item> SLIVYRA = REGISTRY.register("slivyra", SlivyraItem::new);
     public static final RegistryObject<Item> SPELL_SHARD = REGISTRY.register("spell_shard", () -> new Item(new Item.Properties().tab(ModCreativeModeTabs.SPELL_AND_GEMSTONE).rarity(Rarity.UNCOMMON)));
+    public static final RegistryObject<Item> HEATED_SCYTHE = REGISTRY.register("heated_scythe", HeatedScythe::new);
     public static final RegistryObject<Item> MANA_STEEL_INGOT = REGISTRY.register("mana_steel_ingot", () -> new Item(new Item.Properties().tab(CreativeModeTab.TAB_MISC).rarity(Rarity.RARE)));
 
     public static final HashMap<Gemstone.Rarity, RegistryObject<Item>> ALMANDINE_GEMSTONES = AlmandineGemstone.registerItems(REGISTRY, "almandine");

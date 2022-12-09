@@ -70,7 +70,7 @@ public class StaffOfTheWildItem extends SpellItem implements IAnimatable, IGemst
     private SpellSlot[] spellSlots = new SpellSlot[SPELL_SLOT_AMOUNT];
 
     public StaffOfTheWildItem() {
-        super(new Properties().tab(ModCreativeModeTabs.SPELL_AND_GEMSTONE).rarity(FormattingCodes.LEGENDARY).stacksTo(1));
+        super(new Properties().tab(ModCreativeModeTabs.SPELL_AND_GEMSTONE).rarity(FormattingCodes.LEGENDARY).stacksTo(1), 5);
     }
 
     @Override
@@ -84,18 +84,8 @@ public class StaffOfTheWildItem extends SpellItem implements IAnimatable, IGemst
     }
 
     @Override
-    public SpellSlot[] getSpellSlots() {
-        return spellSlots;
-    }
-
-    @Override
-    public int getActiveSpell() {
+    public int getActiveSpellIndex() {
         return 0;
-    }
-
-    @Override
-    public int getSpellSlotAmount() {
-        return SPELL_SLOT_AMOUNT;
     }
 
     @Override

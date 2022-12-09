@@ -57,6 +57,8 @@ public class MysticcraftMod {
         ModMenuTypes.REGISTRY.register(modEventBus);
         sendInfo("Registering Entity Types...");
         ModEntityTypes.REGISTRY.register(modEventBus);
+        sendInfo("Registering Particle Types...");
+        ModParticleTypes.REGISTRY.register(modEventBus);
 
         MinecraftForge.EVENT_BUS.register(this);
         GeckoLib.initialize();

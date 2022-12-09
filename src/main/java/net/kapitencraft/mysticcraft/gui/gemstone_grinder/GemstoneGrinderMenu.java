@@ -153,14 +153,10 @@ public class GemstoneGrinderMenu extends AbstractContainerMenu {
             Inventory playerInventory = this.player.getInventory();
             boolean flag = gemstoneSlot != ItemStack.EMPTY;
             IGemstoneApplicable gemstoneApplicable = null;
-            if (flag) {
-                if (gemstoneSlot.getItem() instanceof IGemstoneApplicable iGemstoneApplicable) {
+            if (flag && gemstoneSlot.getItem() instanceof IGemstoneApplicable iGemstoneApplicable) {
                     gemstoneApplicable = iGemstoneApplicable;
-                } else {
-                    throw new IllegalStateException("Why?????");
-                }
             } //Making the gemstoneApplicable
-             if (slotId == 0) {
+            if (slotId == 0) {
                 if (flag) {
                     int gemstoneSlotAmount = gemstoneApplicable.getGemstoneSlotAmount();
                     boolean[] unlockedSlots = getSlotUnlocked(gemstoneSlotAmount);

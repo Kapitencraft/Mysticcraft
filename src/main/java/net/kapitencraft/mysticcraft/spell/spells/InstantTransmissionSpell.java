@@ -5,7 +5,7 @@ import net.kapitencraft.mysticcraft.spell.Spell;
 import net.kapitencraft.mysticcraft.spell.Spells;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.phys.Vec3;
@@ -18,11 +18,11 @@ public class InstantTransmissionSpell extends Spell {
 
 
     public InstantTransmissionSpell() {
-        super(50, "instant_transmission", Spells.RELEASE, Rarity.COMMON, "instant_transmission");
+        super(50, "Instant Transmission", Spells.RELEASE, Rarity.COMMON, "instant_transmission");
     }
 
     @Override
-    public void execute(Entity user, ItemStack stack) {
+    public void execute(LivingEntity user, ItemStack stack) {
         ArrayList<Vec3> sight = MISCTools.LineOfSight(user, 8, 0.1);
         for (Vec3 vec3 : sight) {
             BlockPos pos = new BlockPos(vec3);
@@ -43,10 +43,5 @@ public class InstantTransmissionSpell extends Spell {
     @Override
     public List<Component> getDescription() {
         return List.of(description);
-    }
-
-    @Override
-    public String getName() {
-        return "Instant Transmission";
     }
 }

@@ -222,9 +222,9 @@ public class MISCTools {
             case "heal" -> ChatFormatting.GREEN;
             case "wither" -> ChatFormatting.BLACK;
             case "ferocity" -> ChatFormatting.GOLD;
-            case "damage_generic" -> ChatFormatting.RED;
             case "drown" -> ChatFormatting.AQUA;
-            default -> ChatFormatting.WHITE;
+            case "ability" -> ChatFormatting.DARK_RED;
+            default -> ChatFormatting.RED;
         };
     }
 
