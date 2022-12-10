@@ -86,19 +86,18 @@ public abstract class SpellItem extends TieredItem implements IModItem {
         return 0;
     }
 
-    private SpellSlot getActiveSpellSlot() {
-        if (this.spellSlots != null) {
+    public SpellSlot getActiveSpellSlot() {
+        if (this.spellSlots[this.getActiveSpellIndex()] != null) {
             return this.spellSlots[this.getActiveSpellIndex()];
-        } else {
-            return new SpellSlot(Spells.EMPTY_SPELL);
         }
+        return new SpellSlot(Spells.EMPTY_SPELL);
     }
 
     public Spell getActiveSpell() {
         if (this.getActiveSpellSlot() != null) {
             return this.getActiveSpellSlot().getSpell();
         }
-        return null;
+        return Spells.EMPTY_SPELL;
     }
 
     public static final UUID MANA_COST_MOD = UUID.fromString("95c53029-8493-4e05-9e7b-a0c0530dae83");
@@ -119,9 +118,9 @@ public abstract class SpellItem extends TieredItem implements IModItem {
     public int getUseDuration(@NotNull ItemStack stack) {
         if (this.spellSlots != null && this.getType() != null) {
             MysticcraftMod.sendInfo("?");
-
         }
-        return Integer.MAX_VALUE;
+        Spells.SpellType type = this.getType();
+        return type == Spells.RELEASE ? 1 : Integer.MAX_VALUE;
     }
 
 
