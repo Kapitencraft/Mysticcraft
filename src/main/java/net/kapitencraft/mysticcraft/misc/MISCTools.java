@@ -10,9 +10,12 @@ import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.item.spells.SpellItem;
 import net.kapitencraft.mysticcraft.item.sword.LongSwordItem;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
@@ -125,12 +128,13 @@ public class MISCTools {
 
     public static ArmorStand createDamageIndicator(LivingEntity entity, double amount, String type) {
         ArmorStand dmgInc = new ArmorStand(entity.level, entity.getX() + Math.random() - 0.5, entity.getY() - 1, entity.getZ() + Math.random() - 0.5);
+        boolean dodge = type == "dodge";
         dmgInc.setNoGravity(true);
         dmgInc.setInvisible(true);
         dmgInc.setInvulnerable(true);
         dmgInc.setBoundingBox(new AABB(0,0,0,0,0,0));
         dmgInc.setCustomNameVisible(true);
-        dmgInc.setCustomName(Component.literal(String.valueOf(amount)).withStyle(damageIndicatorColorGenerator(type)));
+        dmgInc.setCustomName(Component.literal(!dodge ? String.valueOf(amount) : "DODGE").withStyle(damageIndicatorColorGenerator(type)));
         CompoundTag persistentData = dmgInc.getPersistentData();
         persistentData.putBoolean("isDamageIndicator", true);
         persistentData.putInt("time", 0);
@@ -224,12 +228,32 @@ public class MISCTools {
             case "ferocity" -> ChatFormatting.GOLD;
             case "drown" -> ChatFormatting.AQUA;
             case "ability" -> ChatFormatting.DARK_RED;
+            case "dodge" -> ChatFormatting.DARK_GRAY;
             default -> ChatFormatting.RED;
         };
     }
 
     public static Rarity getItemRarity(Item item) {
         return item.getRarity(new ItemStack(item));
+    }
+
+    public static <T extends ParticleOptions> int sendParticles(ServerLevel serverLevel, T type, boolean force, double x, double y, double z, int amount, double deltaX, double deltaY, double deltaZ, double speed) {
+        List<ServerPlayer> players = serverLevel.getPlayers(serverPlayer -> true);
+        int i;
+        for (i = 0; i < players.size(); i++) {
+            ServerPlayer serverPlayer = players.get(i);
+            //MysticcraftMod.sendInfo("sending Particles to: " + serverPlayer.getGameProfile().getName() + "; Amount: " + amount + "; " + fromVec3(new Vec3(x, y, z)));
+            serverLevel.sendParticles(serverPlayer, type, force, x, y, z, amount, deltaX, deltaY, deltaZ, speed);
+        }
+        return i;
+    }
+
+    public static Vec3 getPosition(Entity entity) {
+        return new Vec3(entity.getX(), entity.getY(), entity.getZ());
+    }
+
+    public static String fromVec3(Vec3 vec3) {
+        return "Pos: [" + vec3.x + ", " + vec3.y + ", " + vec3.z + "]";
     }
 
     public static final EquipmentSlot[] allEquipmentSlots = new EquipmentSlot[]{EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND, EquipmentSlot.LEGS, EquipmentSlot.CHEST, EquipmentSlot.HEAD, EquipmentSlot.FEET};

@@ -2,6 +2,7 @@ package net.kapitencraft.mysticcraft.misc;
 
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.entity.renderer.FireBoldRenderer;
 import net.kapitencraft.mysticcraft.entity.renderer.FrozenBlazeRenderer;
 import net.kapitencraft.mysticcraft.init.ModEntityTypes;
 import net.kapitencraft.mysticcraft.init.ModParticleTypes;
@@ -35,6 +36,7 @@ public class MiscEvents {
         @SubscribeEvent
         public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
             event.registerEntityRenderer(ModEntityTypes.FROZEN_BLAZE.get(), FrozenBlazeRenderer::new);
+            event.registerEntityRenderer(ModEntityTypes.FIRE_BOLD.get(), FireBoldRenderer::new);
         }
     }
 

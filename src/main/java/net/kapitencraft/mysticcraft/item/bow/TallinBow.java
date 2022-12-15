@@ -2,14 +2,13 @@ package net.kapitencraft.mysticcraft.item.bow;
 
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 public class TallinBow extends ShortBowItem{
     public TallinBow() {
-        super(new Properties().tab(CreativeModeTab.TAB_COMBAT).rarity(FormattingCodes.LEGENDARY).durability(1500));
+        super(new Properties().rarity(FormattingCodes.LEGENDARY).durability(1500));
     }
 
     @Override

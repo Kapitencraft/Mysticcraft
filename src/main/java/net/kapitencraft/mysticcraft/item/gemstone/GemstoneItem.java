@@ -1,6 +1,5 @@
 package net.kapitencraft.mysticcraft.item.gemstone;
 
-import net.kapitencraft.mysticcraft.init.ModCreativeModeTabs;
 import net.kapitencraft.mysticcraft.item.gemstone.gemstones.AlmandineGemstone;
 import net.kapitencraft.mysticcraft.item.gemstone.gemstones.JasperGemstone;
 import net.kapitencraft.mysticcraft.item.gemstone.gemstones.RubyGemstone;
@@ -12,7 +11,7 @@ public  class  GemstoneItem extends Item {
     private final Gemstone.Rarity RARITY;
     public final String gemstoneName;
     public GemstoneItem(Gemstone.Rarity rarity, @Nullable Properties properties, String gemstoneName) {
-        super((properties != null ? properties : new Properties()).tab(ModCreativeModeTabs.SPELL_AND_GEMSTONE));
+        super((properties != null ? properties : new Properties()));
         this.RARITY = rarity;
         this.gemstoneName = gemstoneName;
     }

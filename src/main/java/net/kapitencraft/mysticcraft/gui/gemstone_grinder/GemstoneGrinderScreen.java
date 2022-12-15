@@ -33,11 +33,4 @@ public class GemstoneGrinderScreen extends AbstractContainerScreen<GemstoneGrind
         this.blit(pPoseStack, x, y, 0, 0, imageWidth, imageHeight);
 
     }
-
-    @Override
-    public void render(@NotNull PoseStack pPoseStack, int mouseX, int mouseY, float delta) {
-        renderBackground(pPoseStack);
-        super.render(pPoseStack, mouseX, mouseY, delta);
-        renderTooltip(pPoseStack, mouseX, mouseY);
-    }
 }

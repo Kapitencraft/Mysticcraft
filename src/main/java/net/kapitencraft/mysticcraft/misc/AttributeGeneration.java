@@ -23,9 +23,6 @@ public class AttributeGeneration {
     public static void onAttributesCreated(ItemAttributeModifierEvent event) {
         ItemStack stack = event.getItemStack();
         if (event.getSlotType() == EquipmentSlot.MAINHAND) {
-            if (stack.getItem() instanceof SpellItem spellItem) {
-                makeSpellItem(spellItem, spellItem.getManaCost(), event);
-            }
             if (stack.getItem() instanceof ModdedBows moddedBows) {
                 event.addModifier(Attributes.ATTACK_DAMAGE, new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[5], ModifierName, moddedBows.getDamage(), AttributeModifier.Operation.ADDITION));
             }
@@ -40,11 +37,6 @@ public class AttributeGeneration {
             }
         }
     }
-    private static void makeSpellItem(SpellItem spellItem, double intelligence, ItemAttributeModifierEvent event) {
-        event.addModifier(ModAttributes.MANA_COST.get(), new AttributeModifier(SpellItem.MANA_COST_MOD, ModifierName, spellItem.getManaCost(), AttributeModifier.Operation.ADDITION));
-        event.addModifier(ModAttributes.INTELLIGENCE.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[5], ModifierName, intelligence, AttributeModifier.Operation.ADDITION));
-    }
-
     public static AttributeModifier UltimateWiseMod(ItemStack stack) {
         if (stack.getEnchantmentLevel(ModEnchantments.ULTIMATE_WISE.get()) > 0) {
             return new AttributeModifier(SpellItem.ULTIMATE_WISE_MOD, ModifierName, stack.getEnchantmentLevel(ModEnchantments.ULTIMATE_WISE.get()) * -0.1, AttributeModifier.Operation.MULTIPLY_TOTAL);

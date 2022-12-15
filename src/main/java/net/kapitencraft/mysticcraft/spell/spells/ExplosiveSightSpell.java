@@ -8,7 +8,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
-import net.minecraft.world.level.Explosion;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
@@ -27,7 +26,6 @@ public class ExplosiveSightSpell extends Spell {
         for (Vec3 vec3 : sight) {
             if ((user.level.getBlockState(new BlockPos(vec3)).canOcclude())) {
                 if (user.level.isClientSide()) {
-                    user.level.explode(null, vec3.x, vec3.y, vec3.z, 10, Explosion.BlockInteraction.DESTROY);
                     break;
                 }
             }

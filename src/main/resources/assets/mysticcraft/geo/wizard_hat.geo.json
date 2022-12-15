@@ -30,7 +30,7 @@
 					"pivot": [0, 24, 0]
 				},
 				{
-					"name": "bone",
+					"name": "armorHead",
 					"parent": "bipedHead",
 					"pivot": [0, 24, 0],
 					"cubes": [

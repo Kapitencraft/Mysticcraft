@@ -7,7 +7,6 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -21,7 +20,7 @@ import java.util.function.Predicate;
 public class FrozenBlazeArmorItem extends ModArmorItem{
     private static final String registryName = "frozen_blaze_";
     public FrozenBlazeArmorItem(EquipmentSlot p_40387_) {
-        super(ModArmorMaterials.FROZEN_BLAZE, p_40387_, new Item.Properties().tab(CreativeModeTab.TAB_COMBAT).rarity(FormattingCodes.LEGENDARY).fireResistant());
+        super(ModArmorMaterials.FROZEN_BLAZE, p_40387_, new Item.Properties().rarity(FormattingCodes.LEGENDARY).fireResistant());
     }
 
     @Override

@@ -1,6 +1,5 @@
 package net.kapitencraft.mysticcraft.item.spells;
 
-import net.kapitencraft.mysticcraft.init.ModCreativeModeTabs;
 import net.kapitencraft.mysticcraft.item.client.StaffOfTheWildRenderer;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneSlot;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
@@ -17,20 +16,21 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib.animatable.GeoItem;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class StaffOfTheWildItem extends SpellItem implements IAnimatable, IGemstoneApplicable {
+public class StaffOfTheWildItem extends SpellItem implements GeoItem, IGemstoneApplicable {
+    private AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public final int SPELL_SLOT_AMOUNT = 5;
     private ArrayList<Attribute> attributesModified;
 
@@ -63,14 +63,13 @@ public class StaffOfTheWildItem extends SpellItem implements IAnimatable, IGemst
 
     private HashMap<Attribute, Double> attributeModifiers;
     private GemstoneSlot[] gemstoneSlots = new GemstoneSlot[] {GemstoneSlot.MAGIC, GemstoneSlot.INTELLIGENCE, GemstoneSlot.INTELLIGENCE, GemstoneSlot.INTELLIGENCE, GemstoneSlot.ABILITY_DAMAGE};
-    public AnimationFactory factory = new AnimationFactory(this);
     public static final Component[] description = {Component.literal("As it is one of the most powerful"), Component.literal("Magical Artifacts, it is used for much greatness")};
     public static final Component[] post_description = {Component.literal(FormattingCodes.CITATION + "It`s a kind of magic! - Queen")};
 
     private SpellSlot[] spellSlots = new SpellSlot[SPELL_SLOT_AMOUNT];
 
     public StaffOfTheWildItem() {
-        super(new Properties().tab(ModCreativeModeTabs.SPELL_AND_GEMSTONE).rarity(FormattingCodes.LEGENDARY).stacksTo(1), 5);
+        super(new Properties().rarity(FormattingCodes.LEGENDARY).stacksTo(1), 5, 100, 0);
     }
 
     @Override
@@ -92,30 +91,16 @@ public class StaffOfTheWildItem extends SpellItem implements IAnimatable, IGemst
     public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
         super.initializeClient(consumer);
         consumer.accept(new IClientItemExtensions() {
-            private final BlockEntityWithoutLevelRenderer renderer = new StaffOfTheWildRenderer();
-
+            private StaffOfTheWildRenderer renderer;
             public BlockEntityWithoutLevelRenderer getCustomRenderer() {
+                if (this.renderer == null) {
+                    this.renderer = new StaffOfTheWildRenderer();
+                }
                 return this.renderer;
             }
         });
     }
 
-
-    @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller", 0, this::predicate));
-
-    }
-
-    private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> animationEvent) {
-        animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.staff_of_the_wild.idle", true));
-        return PlayState.CONTINUE;
-    }
-
-    @Override
-    public AnimationFactory getFactory() {
-        return this.factory;
-    }
 
     @Override
     public int getGemstoneSlotAmount() {
@@ -124,5 +109,16 @@ public class StaffOfTheWildItem extends SpellItem implements IAnimatable, IGemst
     @Override
     public GemstoneSlot[] getGemstoneSlots() {
         return this.gemstoneSlots;
+    }
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController<>(this, "rotation_controller", state -> PlayState.CONTINUE).triggerableAnim("idle", RawAnimation.begin().thenLoop("idle")));
+    }
+
+
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return this.cache;
     }
 }

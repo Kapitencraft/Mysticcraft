@@ -3,7 +3,7 @@ package net.kapitencraft.mysticcraft.init;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.entity.FrozenBlazeEntity;
 import net.kapitencraft.mysticcraft.entity.WithermancerLordEntity;
-import net.kapitencraft.mysticcraft.item.spells.FireBoldProjectile;
+import net.kapitencraft.mysticcraft.spell.spells.FireBoldProjectile;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;

@@ -3,7 +3,6 @@ package net.kapitencraft.mysticcraft.item.bow;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneSlot;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 
@@ -18,7 +17,7 @@ public class LongBowItem extends ModdedBows implements IGemstoneApplicable {
     public static final double ARROW_SPEED_MUL = 5;
 
     public LongBowItem() {
-        super(new Item.Properties().tab(CreativeModeTab.TAB_COMBAT).durability(1320).rarity(Rarity.RARE));
+        super(new Item.Properties().durability(1320).rarity(Rarity.RARE));
     }
 
     @Override

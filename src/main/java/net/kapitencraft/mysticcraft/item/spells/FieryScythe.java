@@ -7,18 +7,15 @@ import net.minecraft.world.item.Rarity;
 
 import java.util.List;
 
-public class SlivyraItem extends SpellItem {
-
-    Component[] description = {Component.literal("Some say, it might be the most"), Component.literal("powerful Magic Weapon in the world")};
-
-    public SlivyraItem() {
-        super(new Properties().rarity(Rarity.RARE), 1, 200, 0);
-        this.addSlot(new SpellSlot(Spells.CRYSTAL_WARP));
+public class FieryScythe extends SpellItem implements IDamageSpellItem {
+    public FieryScythe() {
+        super(new Properties().rarity(Rarity.RARE).fireResistant(), 1, 50, 10);
+        this.addSlot(new SpellSlot(Spells.FIRE_BOLD_2));
     }
 
     @Override
     public List<Component> getItemDescription() {
-        return List.of(this.description);
+        return null;
     }
 
     @Override

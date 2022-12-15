@@ -4,7 +4,6 @@ import net.kapitencraft.mysticcraft.item.ModTiers;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -15,7 +14,7 @@ import java.util.List;
 
 public class ManaSteelSword extends LongSwordItem {
     public ManaSteelSword() {
-        super(ModTiers.MANA_STEEL, 3, 0.8f, new Properties().durability(1800).tab(CreativeModeTab.TAB_COMBAT).rarity(FormattingCodes.MYTHIC));
+        super(ModTiers.MANA_STEEL, 3, 0.8f, new Properties().durability(1800).rarity(FormattingCodes.MYTHIC));
     }
 
     @Override

@@ -1,6 +1,5 @@
 package net.kapitencraft.mysticcraft.item.spells;
 
-import net.kapitencraft.mysticcraft.init.ModCreativeModeTabs;
 import net.kapitencraft.mysticcraft.spell.SpellSlot;
 import net.kapitencraft.mysticcraft.spell.Spells;
 import net.minecraft.network.chat.Component;
@@ -12,8 +11,8 @@ import java.util.List;
 public class TheStaffOfDestruction extends SpellItem {
     private final Component[] description = {Component.literal("A very explosive tool")};
     public TheStaffOfDestruction() {
-        super(new Properties().tab(ModCreativeModeTabs.SPELL_AND_GEMSTONE).rarity(Rarity.RARE), 1);
-        this.addSlot(new SpellSlot(Spells.EXPLOSIVE_SIGHT), 0);
+        super(new Properties().rarity(Rarity.RARE), 1, 50, 20);
+        this.addSlot(new SpellSlot(Spells.EXPLOSIVE_SIGHT));
     }
 
     @Override

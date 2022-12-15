@@ -1,5 +1,6 @@
 package net.kapitencraft.mysticcraft.item.bow;
 
+import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.init.ModEnchantments;
 import net.kapitencraft.mysticcraft.item.IModItem;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
@@ -52,6 +53,7 @@ public abstract class ModdedBows extends BowItem implements IModItem {
                         AbstractArrow abstractarrow = arrowitem.createArrow(world, itemstack, player);
                         double fbSpeedMul = LongBowItem.ARROW_SPEED_MUL / mul;
                         int speedMul = bow.getEnchantmentLevel(ModEnchantments.FAST_ARROWS.get());
+                        MysticcraftMod.sendInfo(MISCTools.fromVec3(MISCTools.getPosition(abstractarrow)));
                         abstractarrow.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, (float) (f * mul * (1+ getSpeedMul(abstractarrow, fbSpeedMul, speedMul))), 1.0F);
                         abstractarrow.setBaseDamage(player.getAttributeValue(Attributes.ATTACK_DAMAGE));
                         abstractarrow.setKnockback(2);

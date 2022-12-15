@@ -96,9 +96,14 @@ public class MiscRegister {
         if (attacker == null) { return; }
         ItemStack stack = attacker.getMainHandItem();
         Map<Enchantment, Integer> enchantments = stack.getAllEnchantments();
-        if (attacker instanceof Player player) {
-            double Strength = player.getAttributeValue(ModAttributes.STRENGTH.get());
+        if (attacker.getAttributes().hasAttribute(ModAttributes.STRENGTH.get())) {
+            double Strength = attacker.getAttributeValue(ModAttributes.STRENGTH.get());
             event.setAmount((float) (event.getAmount() * (1 + Strength / 100)));
+        }
+        if (event.getSource().getMsgId().equals("ability")) {
+            double intel = attacker.getAttributeValue(ModAttributes.INTELLIGENCE.get());
+            double ability_damage = attacker.getAttributeValue(ModAttributes.ABILITY_DAMAGE.get());
+            event.setAmount((float) (event.getAmount() * (1 + (intel / 100)) * (1 + (ability_damage / 100))));
         }
         if (enchantments != null) {
             for (Enchantment enchantment : enchantments.keySet()) {
@@ -222,7 +227,16 @@ public class MiscRegister {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void EntityDamaged(LivingDamageEvent event) {
         LivingEntity attacked = event.getEntity();
-        MISCTools.createDamageIndicator(attacked, event.getAmount(), sourceToString(event.getSource()));
+        boolean dodge = false;
+        if (attacked.getAttributes().hasAttribute(ModAttributes.DODGE.get())) {
+            double Dodge = attacked.getAttributeValue(ModAttributes.DODGE.get());
+            DamageSource source = event.getSource();
+            if (Math.random() > Dodge / 100 && !source.getMsgId().contains("explosion")) {
+                dodge = true;
+                event.setAmount(0);
+            }
+        }
+        MISCTools.createDamageIndicator(attacked, event.getAmount(), !dodge ? sourceToString(event.getSource()) : "dodge");
     }
 
     @SubscribeEvent
@@ -238,10 +252,7 @@ public class MiscRegister {
                 assert cost_instance != null;
                 cost_instance.removeModifier(SpellItem.MANA_COST_MOD);
                 cost_instance.removeModifier(SpellItem.ULTIMATE_WISE_MOD);
-                if (stack.getEnchantmentLevel(ModEnchantments.ULTIMATE_WISE.get()) > 0) {
-                    cost_instance.addTransientModifier(Objects.requireNonNull(AttributeGeneration.UltimateWiseMod(stack)));
-                }
-                cost_instance.addTransientModifier(new AttributeModifier(SpellItem.MANA_COST_MOD, "Tooltip", spellItem.getManaCost(), AttributeModifier.Operation.ADDITION));
+                cost_instance.addTransientModifier(new AttributeModifier(SpellItem.MANA_COST_MOD, "Tooltip", spellItem.getManaCost(stack), AttributeModifier.Operation.ADDITION));
 
             }
             Component found = toolTip.get(toolTip.lastIndexOf(SEARCHED));
