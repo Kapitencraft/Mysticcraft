@@ -11,7 +11,7 @@ import net.minecraft.world.item.enchantment.EnchantmentCategory;
 
 import java.util.UUID;
 
-public class DivineGiftEnchantment extends StatBoostEnchantment {
+public class DivineGiftEnchantment extends StatBoostEnchantment implements IWeaponEnchantment {
     public DivineGiftEnchantment() {
         super(Rarity.VERY_RARE, EnchantmentCategory.WEAPON, MISCTools.WEAPON_SLOT);
     }

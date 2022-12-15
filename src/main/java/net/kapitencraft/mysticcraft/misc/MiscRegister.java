@@ -8,10 +8,9 @@ import net.kapitencraft.mysticcraft.entity.FrozenBlazeEntity;
 import net.kapitencraft.mysticcraft.gui.IGuiHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModEnchantments;
+import net.kapitencraft.mysticcraft.init.ModItems;
 import net.kapitencraft.mysticcraft.init.ModMobEffects;
-import net.kapitencraft.mysticcraft.item.DropRarity;
 import net.kapitencraft.mysticcraft.item.IModItem;
-import net.kapitencraft.mysticcraft.item.IRNGDrop;
 import net.kapitencraft.mysticcraft.item.bow.ShortBowItem;
 import net.kapitencraft.mysticcraft.item.bow.TallinBow;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
@@ -36,6 +35,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.monster.Blaze;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Arrow;
@@ -46,7 +46,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CropBlock;
-import net.minecraft.world.level.block.WitherSkullBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
@@ -231,13 +230,14 @@ public class MiscRegister {
         if (attacked.getAttributes().hasAttribute(ModAttributes.DODGE.get())) {
             double Dodge = attacked.getAttributeValue(ModAttributes.DODGE.get());
             DamageSource source = event.getSource();
-            if (Math.random() > Dodge / 100 && !source.getMsgId().contains("explosion")) {
+            if (Math.random() > Dodge / 100 && ((!source.isBypassArmor() && !source.isFall() && !source.isFire()) || source == DamageSource.STALAGMITE)) {
                 dodge = true;
                 event.setAmount(0);
             }
         }
         MISCTools.createDamageIndicator(attacked, event.getAmount(), !dodge ? sourceToString(event.getSource()) : "dodge");
     }
+
 
     @SubscribeEvent
     public static void DescriptionRegister(ItemTooltipEvent event) {
@@ -341,16 +341,11 @@ public class MiscRegister {
     }
 
     @SubscribeEvent
-    public static void rareDropMessage(LivingDropsEvent event) {
+    public static void telekinesis2Register(LivingDropsEvent event) {
         Collection<ItemEntity> entities = event.getDrops();
         if (event.getSource().getEntity() instanceof Player attacker) {
             for (ItemEntity entity : entities) {
                 ItemStack stack = entity.getItem();
-                Item item = stack.getItem();
-                DropRarity dropRarity = item instanceof IRNGDrop drop ? drop.getRarity() : (item instanceof BlockItem block && block.getBlock() instanceof WitherSkullBlock) ? DropRarity.LEGENDARY : DropRarity.COMMON;
-                if (dropRarity.getID() > 1) {
-                    attacker.sendSystemMessage(Component.literal(dropRarity.getColor().UNICODE + dropRarity.getDisplayName() + "DROP!" + FormattingCodes.RESET + "(").append(item.getName(entity.getItem())).append(") (" + FormattingCodes.BLUE.UNICODE + "+" + attacker.getAttributeValue(ModAttributes.MAGIC_FIND.get()) + "% Magic Find)"));
-                }
                 //Telekinesis Register
                 if (attacker.getMainHandItem().getEnchantmentLevel(ModEnchantments.TELEKINESIS.get()) > 0) {
                     attacker.getInventory().add(stack);
@@ -358,6 +353,28 @@ public class MiscRegister {
                 }
             }
         }
+    }
+
+    @SubscribeEvent
+    public static void rareDropsRegister(LivingDropsEvent event) {
+        LivingEntity attacker = MISCTools.getAttacker(event.getSource());
+        LivingEntity attacked = event.getEntity();
+        Vec3 pos = new Vec3(attacked.getX(), attacked.getY(), attacked.getZ());
+        if (attacker == null || attacker.getAttribute(ModAttributes.MAGIC_FIND.get()) == null) return;
+        double magicFind = attacker.getAttributeValue(ModAttributes.MAGIC_FIND.get());
+        if (Math.random() <= 0.00001 * (1 + magicFind / 100)) {
+            if (event.getEntity() instanceof Blaze && !(event.getEntity() instanceof FrozenBlazeEntity)) {
+                ItemStack toDrop = new ItemStack(ModItems.HEART_OF_THE_NETHER.get());
+                event.getDrops().add(new ItemEntity(attacked.level, pos.x, pos.y, pos.z, toDrop));
+                if (attacker instanceof Player player) {
+                    player.sendSystemMessage(createRareDropMessage(toDrop, magicFind));
+                }
+            }
+        }
+    }
+
+    private static Component createRareDropMessage(ItemStack drop, double magic_find) {
+        return Component.literal(FormattingCodes.BOLD + FormattingCodes.LIGHT_PURPLE + "VERY CRAZY RARE DROP" + FormattingCodes.RESET + FormattingCodes.BOLD + ": " + FormattingCodes.RESET).append(drop.getDisplayName()).append(Component.literal(FormattingCodes.AQUA.UNICODE + " (+" + magic_find + ")"));
     }
 
 
@@ -370,6 +387,7 @@ public class MiscRegister {
         Level level = player.level;
         BlockPos pos = event.getPos();
         ServerLevel serverLevel = level instanceof ServerLevel serverLevel1 ? serverLevel1 : null;
+        assert serverLevel != null;
         LootContext.Builder context = (new LootContext.Builder(serverLevel)).withRandom(serverLevel.random).withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(pos)).withParameter(LootContextParams.TOOL, mainHandItem).withOptionalParameter(LootContextParams.THIS_ENTITY, player);
         boolean hasTelekinesis = mainHandItem.getEnchantmentLevel(ModEnchantments.TELEKINESIS.get()) > 0;
         boolean hasReplenish = mainHandItem.getEnchantmentLevel(ModEnchantments.REPLENISH.get()) > 0;
@@ -377,7 +395,7 @@ public class MiscRegister {
         if (hasReplenish) {
             MISCTools.shrinkDrops(drops, Items.WHEAT_SEEDS, 1);
         }
-        if (serverLevel != null && hasTelekinesis) {
+        if (hasTelekinesis) {
             for (ItemStack stack : drops) {
                 player.getInventory().add(stack);
             }

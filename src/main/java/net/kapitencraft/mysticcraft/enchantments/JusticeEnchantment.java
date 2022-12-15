@@ -7,7 +7,7 @@ import net.minecraft.world.item.enchantment.DamageEnchantment;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
 
-public class JusticeEnchantment extends Enchantment {
+public class JusticeEnchantment extends Enchantment implements IWeaponEnchantment {
     public JusticeEnchantment() {
         super(Rarity.COMMON, EnchantmentCategory.WEAPON, new EquipmentSlot[] {EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND});
     }

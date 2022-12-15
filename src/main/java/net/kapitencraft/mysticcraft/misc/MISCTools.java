@@ -312,15 +312,6 @@ public class MISCTools {
         return Registries;
     }
 
-    public static <T> boolean listHas(T[] collection, T obj) {
-        for (T t : collection) {
-            if (t == obj) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public static ImmutableMultimap<Attribute, AttributeModifier> increaseByPercent(ImmutableMultimap<Attribute, AttributeModifier> multimap, double percent, AttributeModifier.Operation[] operations, @Nullable Attribute attributeReq) {
         ImmutableMultimap.Builder<Attribute, AttributeModifier> toReturn = new ImmutableMultimap.Builder<>();
         Collection<AttributeModifier> attributeModifiers;
@@ -328,7 +319,7 @@ public class MISCTools {
             if (attributeReq == null || attribute == attributeReq) {
                 attributeModifiers = multimap.get(attribute);
                 for (AttributeModifier modifier : attributeModifiers) {
-                    if (listHas(operations, modifier.getOperation())) {
+                    if (ArrayContains(operations, modifier.getOperation())) {
                         toReturn.put(attribute, new AttributeModifier(modifier.getId(), modifier.getName(), modifier.getAmount() * (1 + percent), modifier.getOperation()));
                     } else {
                         toReturn.put(attribute, modifier);

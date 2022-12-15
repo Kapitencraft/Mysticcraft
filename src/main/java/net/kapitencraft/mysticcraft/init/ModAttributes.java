@@ -13,7 +13,7 @@ public abstract class ModAttributes {
     public static final RegistryObject<Attribute> DODGE = REGISTRY.register("generic.dodge", () -> new RangedAttribute(FormattingCodes.BLACK.UNICODE + "Dodge", 0D, 0D, 100D).setSyncable(true));
     public static final RegistryObject<Attribute> INTELLIGENCE = REGISTRY.register("generic.intel", () -> new RangedAttribute(FormattingCodes.AQUA.UNICODE + "Intelligence", 0D, 0D, 1024.0D).setSyncable(true));
     public static final RegistryObject<Attribute> STRENGTH = REGISTRY.register("generic.strength", () -> new RangedAttribute(FormattingCodes.ORANGE.UNICODE + "Strength", 0D, 0D, 1024.0D).setSyncable(true));
-    public static final RegistryObject<Attribute> MAGIC_FIND = REGISTRY.register("generic.magic_find", () -> new RangedAttribute(FormattingCodes.GOLD.UNICODE + "Magic Find", 0D, 0D, 1024.0D).setSyncable(true));
+    public static final RegistryObject<Attribute> MAGIC_FIND = REGISTRY.register("generic.magic_find", () -> new RangedAttribute(FormattingCodes.GOLD.UNICODE + "Magic Find", 0D, 0D, Double.MAX_VALUE).setSyncable(true));
     public static final RegistryObject<Attribute> CRIT_DAMAGE = REGISTRY.register("generic.crit_damage", () -> new RangedAttribute(FormattingCodes.BLUE.UNICODE + "Crit Damage", 50D, 0D, 1024.0D).setSyncable(true));
     public static final RegistryObject<Attribute> FEROCITY = REGISTRY.register("generic.ferocity", () -> new RangedAttribute(FormattingCodes.ORANGE.UNICODE + "Ferocity", 0D, 0D, 1024.0D).setSyncable(true));
     public static final RegistryObject<Attribute> MAX_MANA = REGISTRY.register("generic.max_mana", () -> new RangedAttribute(FormattingCodes.DARK_BLUE.UNICODE + "Max Mana", 100D, 0D, 1024.0D).setSyncable(true));

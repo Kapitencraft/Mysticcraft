@@ -3,6 +3,7 @@ package net.kapitencraft.mysticcraft.enchantments;
 import com.google.common.collect.ImmutableMultimap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
+import net.kapitencraft.mysticcraft.item.armor.ModArmorItem;
 import net.kapitencraft.mysticcraft.misc.MISCTools;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -12,7 +13,7 @@ import net.minecraft.world.item.enchantment.EnchantmentCategory;
 
 public class RejuvenateEnchantment extends StatBoostEnchantment {
     public RejuvenateEnchantment() {
-        super(Rarity.UNCOMMON, EnchantmentCategory.WEARABLE, new EquipmentSlot[] {EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET});
+        super(Rarity.UNCOMMON, EnchantmentCategory.WEARABLE, MISCTools.ARMOR_EQUIPMENT);
     }
 
     public int getMaxLevel() {

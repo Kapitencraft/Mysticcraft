@@ -14,6 +14,8 @@ import net.kapitencraft.mysticcraft.item.gemstone.gemstones.RubyGemstone;
 import net.kapitencraft.mysticcraft.item.gemstone.gemstones.SapphireGemstone;
 import net.kapitencraft.mysticcraft.item.spells.*;
 import net.kapitencraft.mysticcraft.item.sword.ManaSteelSword;
+import net.kapitencraft.mysticcraft.misc.FormattingCodes;
+import net.kapitencraft.mysticcraft.misc.MISCTools;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
@@ -30,6 +32,7 @@ public abstract class ModItems {
     public static final RegistryObject<Item> WIZARD_HAT = REGISTRY.register("wizard_hat", WizardHatItem::new);
     public static final RegistryObject<Item> THE_STAFF_DESTRUCTION = REGISTRY.register("staff_of_destruction", TheStaffOfDestruction::new);
     public static final RegistryObject<Item> SLIVYRA = REGISTRY.register("slivyra", SlivyraItem::new);
+    public static final RegistryObject<Item> HEART_OF_THE_NETHER = REGISTRY.register("heart_of_the_nether", ()-> new Item(new Item.Properties().rarity(FormattingCodes.MYTHIC).stacksTo(1)));
     public static final RegistryObject<Item> SPELL_SHARD = REGISTRY.register("spell_shard", () -> new Item(new Item.Properties().rarity(Rarity.UNCOMMON)));
     public static final RegistryObject<Item> HEATED_SCYTHE = REGISTRY.register("heated_scythe", HeatedScythe::new);
     public static final RegistryObject<Item> FIERY_SCYTHE = REGISTRY.register("fiery_scythe", FieryScythe::new);

@@ -5,7 +5,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
 
-public class AimEnchantment extends ExtendedCalculationEnchantment {
+public class AimEnchantment extends ExtendedCalculationEnchantment implements IWeaponEnchantment {
     public AimEnchantment() {
         super(Rarity.VERY_RARE, EnchantmentCategory.BOW, new EquipmentSlot[]{EquipmentSlot.MAINHAND});
     }

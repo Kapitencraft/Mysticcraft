@@ -10,7 +10,7 @@ import net.minecraft.world.item.enchantment.EnchantmentCategory;
 import java.util.HashMap;
 import java.util.UUID;
 
-public abstract class CountEnchantment extends ExtendedCalculationEnchantment {
+public abstract class CountEnchantment extends ExtendedCalculationEnchantment implements IWeaponEnchantment {
     private final String mapName;
     private final countType type;
     protected CountEnchantment(Rarity p_44676_, EnchantmentCategory p_44677_, EquipmentSlot[] p_44678_, String mapName, countType type) {
