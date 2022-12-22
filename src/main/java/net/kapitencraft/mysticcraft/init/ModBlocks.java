@@ -6,6 +6,9 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -24,4 +27,6 @@ public class ModBlocks {
         return ModItems.REGISTRY.register(name, () -> new BlockItem(block.get(), properties));
     }
     public static final RegistryObject<Block> GEMSTONE_GRINDER = registerBlock("gemstone_grinder", GemstoneGrinderBlock::new, new Item.Properties().rarity(Rarity.RARE));
+
+    public static final RegistryObject<LiquidBlock> MANA_FLUID_BLOCK = REGISTRY.register("mana_fluid_block", ()-> new LiquidBlock(ModFluids.SOURCE_MANA_FLUID, BlockBehaviour.Properties.copy(Blocks.LAVA)));
 }

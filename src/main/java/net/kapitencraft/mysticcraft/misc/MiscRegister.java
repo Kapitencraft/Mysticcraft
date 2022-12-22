@@ -6,10 +6,7 @@ import net.kapitencraft.mysticcraft.enchantments.ExtendedCalculationEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.StatBoostEnchantment;
 import net.kapitencraft.mysticcraft.entity.FrozenBlazeEntity;
 import net.kapitencraft.mysticcraft.gui.IGuiHelper;
-import net.kapitencraft.mysticcraft.init.ModAttributes;
-import net.kapitencraft.mysticcraft.init.ModEnchantments;
-import net.kapitencraft.mysticcraft.init.ModItems;
-import net.kapitencraft.mysticcraft.init.ModMobEffects;
+import net.kapitencraft.mysticcraft.init.*;
 import net.kapitencraft.mysticcraft.item.IModItem;
 import net.kapitencraft.mysticcraft.item.bow.ShortBowItem;
 import net.kapitencraft.mysticcraft.item.bow.TallinBow;
@@ -19,11 +16,13 @@ import net.kapitencraft.mysticcraft.item.sword.ManaSteelSword;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -211,8 +210,10 @@ public class MiscRegister {
 
     @SubscribeEvent
     public static void damageIndicatorExecuting(LivingEvent.LivingTickEvent event) {
+        LivingEntity living = event.getEntity();
+        CompoundTag persistentData = living.getPersistentData();
+
         if (event.getEntity() instanceof ArmorStand armorStand) {
-            CompoundTag persistentData = armorStand.getPersistentData();
             if (persistentData.contains("isDamageIndicator") && persistentData.getBoolean("isDamageIndicator")) {
                 persistentData.putInt("time", (persistentData.getInt("time") + 1));
                 @Nullable Entity ignoredTarget = armorStand.level instanceof ServerLevel serverLevel && persistentData.contains("targetUUID") ? serverLevel.getEntity(persistentData.getUUID("targetUUID")) : null;
@@ -221,14 +222,31 @@ public class MiscRegister {
                 }
             }
         }
+
+        if (living.getAttribute(ModAttributes.MANA.get()) != null && living.level.getBlockState(new BlockPos(living.getX(), living.getY(), living.getZ())).getBlock() == ModBlocks.MANA_FLUID_BLOCK.get()) {
+            persistentData.putInt("overflowMana", (int) (persistentData.getInt("overflowMana") + persistentData.getDouble("manaRegen")));
+            if (persistentData.getInt("overflowMana") > living.getAttributeValue(ModAttributes.MAX_MANA.get()) * 1.9 && living instanceof Player player) {
+                player.sendSystemMessage(Component.literal("You are close to be killed by overflow Mana!").withStyle(ChatFormatting.DARK_RED));
+            }
+            if (persistentData.getInt("overflowMana") > living.getAttributeValue(ModAttributes.MAX_MANA.get()) * 2) {
+                living.hurt(new DamageSource("overflowMana").bypassArmor().bypassEnchantments().bypassMagic(), Float.MAX_VALUE);
+                List<LivingEntity> livingEntities = living.level.getEntitiesOfClass(LivingEntity.class, living.getBoundingBox().inflate(7));
+                for (LivingEntity living1 : livingEntities) {
+                    if (!living1.isDeadOrDying()) {
+                        living1.hurt(new EntityDamageSource("overflowMana", living).bypassArmor().bypassEnchantments().bypassMagic(), Float.MAX_VALUE);
+                    }
+                }
+                MISCTools.sendParticles(living.level, ParticleTypes.CRIT, false, living.getX(), living.getY(), living.getZ(), 200, 0.875, 0.875, 0.875, 0.125);
+            }
+        }
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void EntityDamaged(LivingDamageEvent event) {
         LivingEntity attacked = event.getEntity();
         boolean dodge = false;
-        if (attacked.getAttributes().hasAttribute(ModAttributes.DODGE.get())) {
-            double Dodge = attacked.getAttributeValue(ModAttributes.DODGE.get());
+        double Dodge = MISCTools.getSaveAttributeValue(ModAttributes.DODGE.get(), attacked);
+        if (Dodge != -1) {
             DamageSource source = event.getSource();
             if (Math.random() > Dodge / 100 && ((!source.isBypassArmor() && !source.isFall() && !source.isFire()) || source == DamageSource.STALAGMITE)) {
                 dodge = true;
@@ -421,10 +439,10 @@ public class MiscRegister {
         int h = event.getWindow().getGuiScaledHeight();
         int posX = w / 2;
         int posY = h / 2;
-        Player entity = Minecraft.getInstance().player;
+            Player entity = Minecraft.getInstance().player;
         if (entity != null) {
-            String builder = FormattingCodes.BLUE.UNICODE + MISCTools.round(entity.getAttributeValue(ModAttributes.MANA.get()), 1) + FormattingCodes.RESET + " / " + FormattingCodes.DARK_BLUE.UNICODE + entity.getAttributeValue(ModAttributes.MAX_MANA.get());
-            Minecraft.getInstance().font.draw(event.getPoseStack(), builder , posX - 203, posY + 93, -1);
+            String builder = FormattingCodes.BLUE.UNICODE + MISCTools.round(entity.getAttributeValue(ModAttributes.MANA.get()), 1) + " [+" + entity.getPersistentData().getInt("overflowMana") + " Overflow] " + FormattingCodes.RESET + " / " + FormattingCodes.DARK_BLUE.UNICODE + entity.getAttributeValue(ModAttributes.MAX_MANA.get()) + " (+" + MISCTools.round(entity.getPersistentData().getDouble("manaRegen") * 20, 2) + "/s)";
+            Minecraft.getInstance().font.draw(event.getPoseStack(), builder, posX - 203, posY + 93, -1);
         }
     }
 }

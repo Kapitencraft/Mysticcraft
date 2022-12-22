@@ -22,8 +22,10 @@ public class ManaMain {
         double mana = mana_instance.getBaseValue();
         double intel = player.getAttributeValue(ModAttributes.INTELLIGENCE.get());
         double mana_regen = player.getAttributeValue(ModAttributes.MANA_REGEN.get());
+        double manaRegen = max_mana / 500 * (1 + mana_regen / 100);
+        player.getPersistentData().putDouble("manaRegen", manaRegen);
         if (mana < max_mana) {
-            mana += max_mana / 500 * (1 + mana_regen);
+            mana += manaRegen;
 
         }
         if (mana > max_mana) {

@@ -232,9 +232,9 @@ public abstract class SpellItem extends TieredItem implements IModItem {
             Spell spell = this.getActiveSpell();
             if (spell.TYPE == Spells.RELEASE && this.handleMana(user, stack)) {
                 spell.execute(user, stack);
-                if (user instanceof Player player) {
-                    player.sendSystemMessage(Component.literal("Used " + spell.getName() + ": " + FormattingCodes.RED.UNICODE + "-" + this.getManaCost(stack) + " Mana"));
-                }
+            }
+            if (user instanceof Player player) {
+                player.displayClientMessage(Component.literal("Used " + spell.getName() + ": " + FormattingCodes.RED.UNICODE + "-" + this.getManaCost(stack) + " Mana"), true);
             }
         }
         return stack;

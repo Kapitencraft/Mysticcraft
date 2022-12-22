@@ -5,6 +5,8 @@ import net.kapitencraft.mysticcraft.gui.gemstone_grinder.GemstoneGrinderScreen;
 import net.kapitencraft.mysticcraft.init.*;
 import net.kapitencraft.mysticcraft.misc.ModItemProperties;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
@@ -59,6 +61,10 @@ public class MysticcraftMod {
         ModEntityTypes.REGISTRY.register(modEventBus);
         sendInfo("Registering Particle Types...");
         ModParticleTypes.REGISTRY.register(modEventBus);
+        sendInfo("Registering Fluid Types...");
+        ModFluidTypes.REGISTRY.register(modEventBus);
+        sendInfo("Registering Fluids...");
+        ModFluids.REGISTRY.register(modEventBus);
 
         MinecraftForge.EVENT_BUS.register(this);
         GeckoLib.initialize();
@@ -72,7 +78,8 @@ public class MysticcraftMod {
             ModItemProperties.addCustomItemProperties();
             sendInfo("Loading GUI for Gem Grinder");
             MenuScreens.register(ModMenuTypes.GEM_GRINDER_MENU.get(), GemstoneGrinderScreen::new);
-
+            ItemBlockRenderTypes.setRenderLayer(ModFluids.SOURCE_MANA_FLUID.get(), RenderType.translucent());
+            ItemBlockRenderTypes.setRenderLayer(ModFluids.FLOWING_MANA_FLUID.get(), RenderType.translucent());
         }
     }
 

@@ -8,7 +8,6 @@ import net.kapitencraft.mysticcraft.spell.Spells;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.IndirectEntityDamageSource;
@@ -64,10 +63,8 @@ public class FireBoldProjectile extends SpellProjectile {
     @Override
     public void tick() {
         super.tick();
-        if (this.level instanceof ServerLevel serverLevel) {
-            MISCTools.sendParticles(serverLevel, (SimpleParticleType) ModParticleTypes.FIRE_NORMAL.get(), true, this.getX() - this.getDeltaMovement().x / 5, this.getY() - this.getDeltaMovement().y / 5, this.getZ() - this.getDeltaMovement().z / 5, ParticleAmount, 0.125, 0.125, 0.125, 0);
-            MISCTools.sendParticles(serverLevel, (SimpleParticleType) ModParticleTypes.FIRE_NORMAL.get(), true, this.getX(), this.getY(), this.getZ(), ParticleAmount, 0.125, 0.125, 0.125, 0);
-        }
+            MISCTools.sendParticles(this.level, (SimpleParticleType) ModParticleTypes.FIRE_NORMAL.get(), true, this.getX() - this.getDeltaMovement().x / 5, this.getY() - this.getDeltaMovement().y / 5, this.getZ() - this.getDeltaMovement().z / 5, ParticleAmount, 0.125, 0.125, 0.125, 0);
+            MISCTools.sendParticles(this.level, (SimpleParticleType) ModParticleTypes.FIRE_NORMAL.get(), true, this.getX(), this.getY(), this.getZ(), ParticleAmount, 0.125, 0.125, 0.125, 0);
     }
 
     @Override
@@ -86,10 +83,8 @@ public class FireBoldProjectile extends SpellProjectile {
             for (LivingEntity living : livingEntities) {
                 damage(living);
             }
-            if (this.level instanceof ServerLevel serverLevel) {
-                MISCTools.sendParticles(serverLevel, (SimpleParticleType) ModParticleTypes.FIRE_NORMAL.get(), true, this.getX(), this.getY(), this.getZ(), ParticleAmount * 10, 0.125, 0.125, 0.125, 1.25);
-                MISCTools.sendParticles(serverLevel, ParticleTypes.EXPLOSION, true, this.getX(), this.getY(), this.getZ(), ParticleAmount / 2, 0.125, 0.125, 0.125, 0);
-            }
+            MISCTools.sendParticles(this.level, (SimpleParticleType) ModParticleTypes.FIRE_NORMAL.get(), true, this.getX(), this.getY(), this.getZ(), ParticleAmount * 10, 0.125, 0.125, 0.125, 1.25);
+            MISCTools.sendParticles(this.level, ParticleTypes.EXPLOSION, true, this.getX(), this.getY(), this.getZ(), ParticleAmount / 2, 0.125, 0.125, 0.125, 0);
             if (this.getOwner() instanceof Player player) {
                 this.level.playSound(player, hitResult.getBlockPos(), SoundEvents.GENERIC_EXPLODE, SoundSource.PLAYERS, 4.0F, (1.0F + (this.level.random.nextFloat() - this.level.random.nextFloat()) * 0.2F) * 0.7F);
             }

@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.item.armor;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.init.ModItems;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.LazyLoadedValue;
@@ -16,8 +17,8 @@ public enum ModArmorMaterials implements ArmorMaterial {
 
     WIZARD_HAT("wizard_hat", 5, new int[]{0, 0, 0, 7}, 15, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0F, 0.0F, () -> Ingredient.of(Items.LEATHER)),
     FROZEN_BLAZE("frozen_blaze", 8, new int[]{6, 9, 13, 7}, 29, SoundEvents.ARMOR_EQUIP_ELYTRA, 0.9f, 0.1f, () -> Ingredient.of(Items.BLAZE_ROD)),
-    ENDER_KNIGHT("ender_knight", 9, new int[]{8, 12, 19, 9}, 12, SoundEvents.ARMOR_EQUIP_NETHERITE, 1.2f, 0.9f, () -> Ingredient.of(Items.NETHERITE_INGOT));
-
+    ENDER_KNIGHT("ender_knight", 9, new int[]{8, 12, 19, 9}, 12, SoundEvents.ARMOR_EQUIP_NETHERITE, 1.2f, 0.9f, () -> Ingredient.of(Items.NETHERITE_INGOT)),
+    MANA_STEEL("mana_steel", 12, new int[]{12, 18, 27, 13}, 4, SoundEvents.ARMOR_EQUIP_DIAMOND, 0.1f, 0f, () -> Ingredient.of(ModItems.MANA_STEEL_INGOT.get()));
     private static final int[] HEALTH_PER_SLOT = new int[]{13, 15, 16, 11};
     private final String name;
     private final int durabilityMultiplier;

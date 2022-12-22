@@ -3,14 +3,11 @@ package net.kapitencraft.mysticcraft.spell.spells;
 import net.kapitencraft.mysticcraft.misc.MISCTools;
 import net.kapitencraft.mysticcraft.spell.Spell;
 import net.kapitencraft.mysticcraft.spell.Spells;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
-import net.minecraft.world.phys.Vec3;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class InstantTransmissionSpell extends Spell {
@@ -23,20 +20,7 @@ public class InstantTransmissionSpell extends Spell {
 
     @Override
     public void execute(LivingEntity user, ItemStack stack) {
-        ArrayList<Vec3> sight = MISCTools.LineOfSight(user, 8, 0.1);
-        for (Vec3 vec3 : sight) {
-            BlockPos pos = new BlockPos(vec3);
-            if (!user.level.getBlockState(pos).canOcclude()) {
-                ArrayList<Vec3> inv_sight = MISCTools.invertList(sight);
-                for (int i = 0; i < inv_sight.indexOf(vec3); i++) {
-                    Vec3 mem = new Vec3(inv_sight.get(i).x, inv_sight.get(i).y + 1, inv_sight.get(i).z);
-                    if (user.level.getBlockState(new BlockPos(mem)).canOcclude()) {
-                        user.teleportTo(inv_sight.get(i).x, inv_sight.get(i).y, inv_sight.get(i).z);
-                    }
-
-                }
-            }
-        }
+        MISCTools.saveTeleport(user, 8);
 
     }
 

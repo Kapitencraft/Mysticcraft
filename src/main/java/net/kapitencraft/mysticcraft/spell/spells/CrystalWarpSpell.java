@@ -1,21 +1,19 @@
 package net.kapitencraft.mysticcraft.spell.spells;
 
+import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.kapitencraft.mysticcraft.misc.MISCTools;
 import net.kapitencraft.mysticcraft.spell.Spell;
 import net.kapitencraft.mysticcraft.spell.Spells;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.EntityDamageSource;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,31 +27,26 @@ public class CrystalWarpSpell extends Spell {
 
     @Override
     public void execute(LivingEntity user, ItemStack stack) {
-        ArrayList<Vec3> sight = MISCTools.LineOfSight(user, 10, 0.1);
-        for (Vec3 vec3 : sight) {
-            BlockPos pos = new BlockPos(vec3);
-            if (!user.level.getBlockState(pos).canOcclude()) {
-                ArrayList<Vec3> invSight = MISCTools.invertList(sight);
-                for (int i = 0; i < invSight.indexOf(vec3); i++) {
-                    Vec3 mem = new Vec3(invSight.get(i).x, invSight.get(i).y + 1, invSight.get(i).z);
-                    if (user.level.getBlockState(new BlockPos(mem)).canOcclude()) {
-                        user.teleportTo(invSight.get(i).x, invSight.get(i).y, invSight.get(i).z);
-                    }
-
-                }
-            }
-        }
-        if (user.level instanceof ServerLevel serverLevel) {
-            serverLevel.sendParticles(ParticleTypes.ASH, (user.getX()), (user.getY()), (user.getZ()), 50, 4, 4, 3, 0.2);
-        }
+        user.heal(0.5F);
+        MISCTools.saveTeleport(user, 10);
         final Vec3 center = new Vec3((user.getX()), (user.getY()), (user.getZ()));
-        List<Entity> entFound = user.level.getEntitiesOfClass(Entity.class, new AABB(center, center).inflate(6 / 2d), e -> true).stream()
-                .sorted(Comparator.comparingDouble(entCnd -> entCnd.distanceToSqr(center))).collect(Collectors.toList());
-        for (Entity entityIterator : entFound) {
+        MISCTools.sendParticles(user.level, ParticleTypes.ASH, false, user.getX(), user.getY(), user.getZ(), 1000, 1, 1, 1, 0.01);
+        List<LivingEntity> entFound = user.level.getEntitiesOfClass(LivingEntity.class, new AABB(center, center).inflate(5), e -> true).stream().sorted(Comparator.comparingDouble(entCnd -> entCnd.distanceToSqr(center))).collect(Collectors.toList());
+        double damageInflicted = 0;
+        double EnemyHealth;
+        int damaged = 0;
+        for (LivingEntity entityIterator : entFound) {
             if (!(entityIterator == user)) {
-                entityIterator.hurt(new EntityDamageSource("magic", user), 5);
+                EnemyHealth = entityIterator.getHealth();
+                entityIterator.hurt(new EntityDamageSource("ability", user), 5);
+                damageInflicted += (EnemyHealth - entityIterator.getHealth());
+                damaged++;
             }
         }
+        if (!user.level.isClientSide() && user instanceof Player player) {
+            String red = FormattingCodes.RED.UNICODE;player.sendSystemMessage(Component.literal("Your Crystal Warp hit " + red + damaged + FormattingCodes.RESET + " Enemies for " + red + MISCTools.round(damageInflicted, 3) + " Damage"));
+        }
+
     }
 
     @Override

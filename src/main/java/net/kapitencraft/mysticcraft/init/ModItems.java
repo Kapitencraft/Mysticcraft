@@ -15,7 +15,6 @@ import net.kapitencraft.mysticcraft.item.gemstone.gemstones.SapphireGemstone;
 import net.kapitencraft.mysticcraft.item.spells.*;
 import net.kapitencraft.mysticcraft.item.sword.ManaSteelSword;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
-import net.kapitencraft.mysticcraft.misc.MISCTools;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
@@ -39,6 +38,9 @@ public abstract class ModItems {
     public static final RegistryObject<Item> BURNING_SCYTHE = REGISTRY.register("burning_scythe", BurningScythe::new);
     public static final RegistryObject<Item> INFERNAL_SCYTHE = REGISTRY.register("infernal_scythe", InfernalScythe::new);
     public static final RegistryObject<Item> MANA_STEEL_INGOT = REGISTRY.register("mana_steel_ingot", () -> new Item(new Item.Properties().rarity(Rarity.RARE)));
+    public static final RegistryObject<Item> UPPER_BlADE_MS = REGISTRY.register("upper_mana_steel_sword_blade_part", () -> new Item(new Item.Properties().rarity(Rarity.RARE).stacksTo(1)));
+    public static final RegistryObject<Item> DOWN_BlADE_MS = REGISTRY.register("lower_mana_steel_sword_blade_part", () -> new Item(new Item.Properties().rarity(Rarity.RARE).stacksTo(1)));
+    public static final RegistryObject<Item> MS_HANDLE = REGISTRY.register("mana_steel_sword_handle", () -> new Item(new Item.Properties().rarity(Rarity.RARE).stacksTo(1)));
 
     public static final HashMap<Gemstone.Rarity, RegistryObject<Item>> ALMANDINE_GEMSTONES = AlmandineGemstone.registerItems(REGISTRY, "almandine");
     public static final HashMap<Gemstone.Rarity, RegistryObject<Item>> JASPER_GEMSTONES = JasperGemstone.registerItems(REGISTRY, "jasper");

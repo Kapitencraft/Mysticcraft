@@ -1,16 +1,19 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "*",
-    "*",
-    "#"
+    "  +",
+    " * ",
+    "#  "
   ],
   "key": {
     "*": {
-      "item": "mysticcraft:mana_steel_ingot"
+      "item": "mysticcraft:down_mana_steel_sword_blade_part"
     },
     "#": {
-      "item": "minecraft:stick"
+      "item": "mysticcraft:mana_steel_sword_handle"
+    },
+    "+": {
+      "item": "mysticcraft:upper_mana_steel_sword_blade_part"
     }
   },
   "result": {

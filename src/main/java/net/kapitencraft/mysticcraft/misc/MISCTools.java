@@ -10,6 +10,7 @@ import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.item.spells.SpellItem;
 import net.kapitencraft.mysticcraft.item.sword.LongSwordItem;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -31,14 +32,11 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nullable;
 import java.util.*;
-
-import static java.lang.Math.sin;
 
 public class MISCTools {
     record Rotation(String relative, int vecRot, int vecNum) {
@@ -49,66 +47,46 @@ public class MISCTools {
     public final Rotation NORTH = new Rotation("z-", 360, 4);
 
     public static ArrayList<Vec3> LineOfSight(Entity entity, double range, double scaling) {
-        Vec3 vec3 = entity.position();
-        Vec2 vec2 = entity.getRotationVector();
-        double relativeX = 0;
-        double relativeY;
-        double relativeZ = 0;
-        boolean flag = vec2.x < 0;
-        double B = flag ? vec2.x * -1 : vec2.x;
-        double A = 90;
-        double yaw = vec2.y;
-        yaw += 180;
-        double C = 180 - A - B;
-        double dist = scaling;
-        double b;
-        double c;
         ArrayList<Vec3> line = new ArrayList<>();
-        int vector = (int) Math.ceil(yaw / 90);
-        double relativeYaw = yaw % 90;
-        relativeYaw = relativeYaw < 0 ? relativeYaw * -1 : relativeYaw;
-        while (range >= dist) {
-            b = dist * sin(B) / sin(A);
-            c = dist * sin(C) / sin(A);
-            relativeY = flag ? b * -1 : b;
-            C = 180 - A - relativeYaw;
-            b = c * sin(B) / sin(A);
-            c = c * sin(C) / sin(A);
-            switch (vector) {
-                case 1 : relativeX +=c;
-                    if (yaw < 90) {
-                        relativeZ -=b;
-                    } else {
-                        relativeZ +=b;
-                    }
-                case 2 : relativeZ +=c;
-                    if (yaw < 90) {
-                        relativeX +=b;
-                    } else {
-                        relativeX -=b;
-                    }
-                case 3 : relativeX -=c;
-                    if (yaw < 270) {
-                        relativeZ +=b;
-                    } else {
-                        relativeZ -=b;
-                    }
-                case 4 : relativeZ -=c;
-                    if (yaw < 90) {
-                        relativeX -=b;
-                    } else {
-                        relativeX +=b;
-                    }
-            }
-            line.add(new Vec3(vec3.x + relativeX, vec3.y + relativeY, vec3.z + relativeZ));
-            dist += scaling;
+        Vec3 vec3;
+        for (double i = 0; i <= range; i+=scaling) {
+            vec3 = entity.getLookAngle().scale(i).add(entity.getX(), entity.getY(), entity.getZ()).add(0, entity.getEyeHeight(), 0);
+            line.add(vec3);
         }
         return line;
     }
 
+
+    public static double getSaveAttributeValue(Attribute attribute, LivingEntity living) {
+        if (living.getAttribute(attribute) != null) {
+            return living.getAttributeValue(attribute);
+        }
+        return -1;
+    }
+
+
+
+    public static boolean saveTeleport(Entity entity, double maxRange) {
+        ArrayList<Vec3> lineOfSight = LineOfSight(entity, maxRange, 0.1);
+        Vec3 teleportPosition;
+        for (Vec3 vec3 : lineOfSight) {
+            BlockPos pos = new BlockPos(vec3);
+            if (entity.level.getBlockState(pos).canOcclude() && lineOfSight.indexOf(vec3) > 0) {
+                teleportPosition = lineOfSight.get(lineOfSight.indexOf(vec3) - 1);
+                entity.teleportTo(teleportPosition.x, teleportPosition.y, teleportPosition.z);
+                return true;
+            } else if (lineOfSight.indexOf(vec3) == lineOfSight.size() - 1) {
+                teleportPosition = lineOfSight.get(lineOfSight.indexOf(vec3) - 1);
+                entity.teleportTo(teleportPosition.x, teleportPosition.y, teleportPosition.z);
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static  <V> ArrayList<V> invertList(ArrayList<V> list) {
         ArrayList<V> out = new ArrayList<>();
-        for (int i = list.size(); i >= 0; i--) {
+        for (int i = list.size(); i > 0; i--) {
 
             out.add(list.get((i - 1)));
         }
@@ -128,7 +106,7 @@ public class MISCTools {
 
     public static ArmorStand createDamageIndicator(LivingEntity entity, double amount, String type) {
         ArmorStand dmgInc = new ArmorStand(entity.level, entity.getX() + Math.random() - 0.5, entity.getY() - 1, entity.getZ() + Math.random() - 0.5);
-        boolean dodge = type == "dodge";
+        boolean dodge = Objects.equals(type, "dodge");
         dmgInc.setNoGravity(true);
         dmgInc.setInvisible(true);
         dmgInc.setInvulnerable(true);
@@ -237,15 +215,17 @@ public class MISCTools {
         return item.getRarity(new ItemStack(item));
     }
 
-    public static <T extends ParticleOptions> int sendParticles(ServerLevel serverLevel, T type, boolean force, double x, double y, double z, int amount, double deltaX, double deltaY, double deltaZ, double speed) {
-        List<ServerPlayer> players = serverLevel.getPlayers(serverPlayer -> true);
-        int i;
-        for (i = 0; i < players.size(); i++) {
-            ServerPlayer serverPlayer = players.get(i);
-            //MysticcraftMod.sendInfo("sending Particles to: " + serverPlayer.getGameProfile().getName() + "; Amount: " + amount + "; " + fromVec3(new Vec3(x, y, z)));
-            serverLevel.sendParticles(serverPlayer, type, force, x, y, z, amount, deltaX, deltaY, deltaZ, speed);
+    public static <T extends ParticleOptions> int sendParticles(Level level, T type, boolean force, double x, double y, double z, int amount, double deltaX, double deltaY, double deltaZ, double speed) {
+        if (level instanceof ServerLevel serverLevel) {
+            List<ServerPlayer> players = serverLevel.getPlayers(serverPlayer -> true);
+            int i;
+            for (i = 0; i < players.size(); i++) {
+                ServerPlayer serverPlayer = players.get(i);
+                serverLevel.sendParticles(serverPlayer, type, force, x, y, z, amount, deltaX, deltaY, deltaZ, speed);
+            }
+            return i;
         }
-        return i;
+        return -1;
     }
 
     public static Vec3 getPosition(Entity entity) {
