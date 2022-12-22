@@ -7,7 +7,7 @@ import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 public class JasperGemstone extends Gemstone {
     protected static final String registryName = "jasper";
     public JasperGemstone() {
-        super("Jasper", FormattingCodes.ORANGE.UNICODE, ModAttributes.STRENGTH.get(), 2);
+        super("Jasper", FormattingCodes.ORANGE, ModAttributes.STRENGTH.get(), 2);
     }
     public JasperGemstone(Rarity rarity) {
         this();

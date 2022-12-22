@@ -44,7 +44,8 @@ public class CrystalWarpSpell extends Spell {
             }
         }
         if (!user.level.isClientSide() && user instanceof Player player) {
-            String red = FormattingCodes.RED.UNICODE;player.sendSystemMessage(Component.literal("Your Crystal Warp hit " + red + damaged + FormattingCodes.RESET + " Enemies for " + red + MISCTools.round(damageInflicted, 3) + " Damage"));
+            String red = FormattingCodes.RED;
+            player.sendSystemMessage(Component.literal("Your Crystal Warp hit " + red + damaged + FormattingCodes.RESET + " Enemies for " + red + MISCTools.round(damageInflicted, 3) + " Damage"));
         }
 
     }

@@ -71,12 +71,12 @@ public abstract class Gemstone {
 
     public static class Rarity {
 
-        public static final Rarity ROUGH = new Rarity(FormattingCodes.WHITE.UNICODE, 1);
-        public static final Rarity FLAWED = new Rarity(FormattingCodes.GREEN.UNICODE, 1.75);
-        public static final Rarity FINE = new Rarity(FormattingCodes.BLUE.UNICODE, 2.3);
-        public static final Rarity FLAWLESS = new Rarity(FormattingCodes.DARK_PURPLE.UNICODE, 3);
-        public static final Rarity PERFECT = new Rarity(FormattingCodes.ORANGE.UNICODE, 4.8);
-        public static final Rarity EMPTY = new Rarity(FormattingCodes.GRAY.UNICODE, 0);
+        public static final Rarity ROUGH = new Rarity(FormattingCodes.WHITE, 1);
+        public static final Rarity FLAWED = new Rarity(FormattingCodes.GREEN, 1.75);
+        public static final Rarity FINE = new Rarity(FormattingCodes.BLUE, 2.3);
+        public static final Rarity FLAWLESS = new Rarity(FormattingCodes.DARK_PURPLE, 3);
+        public static final Rarity PERFECT = new Rarity(FormattingCodes.ORANGE, 4.8);
+        public static final Rarity EMPTY = new Rarity(FormattingCodes.GRAY, 0);
         public final String COLOUR;
         public final double modMul;
 

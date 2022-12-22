@@ -16,6 +16,7 @@ import net.kapitencraft.mysticcraft.item.spells.*;
 import net.kapitencraft.mysticcraft.item.sword.ManaSteelSword;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.minecraftforge.common.ForgeSpawnEggItem;
@@ -56,4 +57,5 @@ public abstract class ModItems {
 
     public static final RegistryObject<Item> FROZEN_BLAZE_SPAWN_EGG = REGISTRY.register("frozen_blaze_spawn_egg", ()-> new ForgeSpawnEggItem(ModEntityTypes.FROZEN_BLAZE, -16711681, -16763956, new Item.Properties()));
     public static final RegistryObject<Item> GUI_SLOT_BLOCK_ITEM = REGISTRY.register("gui_slot_block", GUISlotBlockItem::new);
+    public static final RegistryObject<BucketItem> BUCKET_OF_MANA = REGISTRY.register("bucket_of_mana", ()-> new BucketItem(ModFluids.SOURCE_MANA_FLUID, new Item.Properties().rarity(Rarity.EPIC).stacksTo(1)));
 }

@@ -7,7 +7,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 public class RubyGemstone extends Gemstone {
     protected static final String registryName = "ruby";
     public RubyGemstone() {
-        super("Ruby", FormattingCodes.RED.UNICODE, Attributes.MAX_HEALTH, 5);
+        super("Ruby", FormattingCodes.RED, Attributes.MAX_HEALTH, 5);
     }
     public RubyGemstone(Rarity rarity) {
         this();

@@ -189,7 +189,7 @@ public class MiscRegister {
                     private void run() {
                         MinecraftForge.EVENT_BUS.unregister(this);
                         float ferocity_damage = (float) (event.getSource() instanceof FerociousDamageSource ferociousDamageSource ? ferociousDamageSource.damage : event.getSource().getEntity() instanceof AbstractArrow arrow ? arrow.getBaseDamage() : event.getSource().getEntity() instanceof LivingEntity living ? living.getAttributeValue(Attributes.ATTACK_DAMAGE) : 0.0f);
-                        attacked.hurt(new FerociousDamageSource("ferocity", attacker, (ferocity - 100), ferocity_damage), ferocity_damage);
+                        attacked.hurt(new FerociousDamageSource(attacker, (ferocity - 100), ferocity_damage), ferocity_damage);
                     }
                 }.start(40);
             }
@@ -222,13 +222,15 @@ public class MiscRegister {
                 }
             }
         }
-
         if (living.getAttribute(ModAttributes.MANA.get()) != null && living.level.getBlockState(new BlockPos(living.getX(), living.getY(), living.getZ())).getBlock() == ModBlocks.MANA_FLUID_BLOCK.get()) {
-            persistentData.putInt("overflowMana", (int) (persistentData.getInt("overflowMana") + persistentData.getDouble("manaRegen")));
+            MysticcraftMod.sendInfo("EXECUTING MEMES");
+            int overflowAfterIncrease = (int) (persistentData.getDouble("manaRegen"));
+            MysticcraftMod.sendInfo(String.valueOf(overflowAfterIncrease));
+            persistentData.putInt("overflowMana", overflowAfterIncrease);
             if (persistentData.getInt("overflowMana") > living.getAttributeValue(ModAttributes.MAX_MANA.get()) * 1.9 && living instanceof Player player) {
                 player.sendSystemMessage(Component.literal("You are close to be killed by overflow Mana!").withStyle(ChatFormatting.DARK_RED));
             }
-            if (persistentData.getInt("overflowMana") > living.getAttributeValue(ModAttributes.MAX_MANA.get()) * 2) {
+            if (persistentData.getInt("overflowMana") >= living.getAttributeValue(ModAttributes.MAX_MANA.get()) * 2) {
                 living.hurt(new DamageSource("overflowMana").bypassArmor().bypassEnchantments().bypassMagic(), Float.MAX_VALUE);
                 List<LivingEntity> livingEntities = living.level.getEntitiesOfClass(LivingEntity.class, living.getBoundingBox().inflate(7));
                 for (LivingEntity living1 : livingEntities) {
@@ -246,14 +248,14 @@ public class MiscRegister {
         LivingEntity attacked = event.getEntity();
         boolean dodge = false;
         double Dodge = MISCTools.getSaveAttributeValue(ModAttributes.DODGE.get(), attacked);
+        DamageSource source = event.getSource();
         if (Dodge != -1) {
-            DamageSource source = event.getSource();
             if (Math.random() > Dodge / 100 && ((!source.isBypassArmor() && !source.isFall() && !source.isFire()) || source == DamageSource.STALAGMITE)) {
                 dodge = true;
                 event.setAmount(0);
             }
         }
-        MISCTools.createDamageIndicator(attacked, event.getAmount(), !dodge ? sourceToString(event.getSource()) : "dodge");
+        MISCTools.createDamageIndicator(attacked, event.getAmount(), dodge ? "dodge" : source.msgId);
     }
 
 
@@ -262,7 +264,7 @@ public class MiscRegister {
         ItemStack stack = event.getItemStack();
         List<Component> toolTip = event.getToolTip();
         Player player = event.getEntity();
-        final Component SEARCHED = Component.literal(FormattingCodes.GRAY.UNICODE + "Mana-Cost: " + FormattingCodes.DARK_RED.UNICODE);
+        final Component SEARCHED = Component.literal(FormattingCodes.GRAY + "Mana-Cost: " + FormattingCodes.DARK_RED);
         if (toolTip.contains(SEARCHED) && stack.getItem() instanceof SpellItem spellItem) {
             boolean flag = player != null && stack != player.getMainHandItem();
             if (flag) {
@@ -275,7 +277,7 @@ public class MiscRegister {
             }
             Component found = toolTip.get(toolTip.lastIndexOf(SEARCHED));
             if (found instanceof MutableComponent mutable && player != null) {
-                mutable.append(FormattingCodes.DARK_RED.UNICODE + player.getAttributeValue(ModAttributes.MANA_COST.get()));
+                mutable.append(FormattingCodes.DARK_RED + player.getAttributeValue(ModAttributes.MANA_COST.get()));
             }
             if (flag) {
                 AttributeInstance cost_instance = player.getAttribute(ModAttributes.MANA_COST.get());
@@ -299,13 +301,6 @@ public class MiscRegister {
             toolTip.add(Component.literal(""));
             toolTip.add(Component.literal((flag ? RarityMod + " " : "") + rarity + " " + MISCTools.getNameModifier(stack) + (flag ? " " + RarityMod : "")).withStyle(rarity.getStyleModifier()).withStyle(ChatFormatting.BOLD));
         }
-    }
-
-    private static String sourceToString(DamageSource source) {
-        if (source == DamageSource.DROWN) { return "drown"; }
-        else if (source instanceof FerociousDamageSource) { return "ferocity"; }
-        else if (source == DamageSource.WITHER) { return "wither"; }
-        return source.getMsgId();
     }
     @SubscribeEvent
     public static void healthRegenRegister(LivingHealEvent event) {
@@ -339,7 +334,7 @@ public class MiscRegister {
 
     @SubscribeEvent
     public static void gemstoneAttributeModifications(ItemAttributeModifierEvent event) {
-        ItemStack stack =event.getItemStack();
+        ItemStack stack = event.getItemStack();
         Item item = stack.getItem();
         if (item instanceof IGemstoneApplicable applicable) {
             if (item instanceof ArmorItem armorItem) {
@@ -392,7 +387,7 @@ public class MiscRegister {
     }
 
     private static Component createRareDropMessage(ItemStack drop, double magic_find) {
-        return Component.literal(FormattingCodes.BOLD + FormattingCodes.LIGHT_PURPLE + "VERY CRAZY RARE DROP" + FormattingCodes.RESET + FormattingCodes.BOLD + ": " + FormattingCodes.RESET).append(drop.getDisplayName()).append(Component.literal(FormattingCodes.AQUA.UNICODE + " (+" + magic_find + ")"));
+        return Component.literal(FormattingCodes.BOLD + FormattingCodes.LIGHT_PURPLE + "VERY CRAZY RARE DROP" + FormattingCodes.RESET + FormattingCodes.BOLD + ": " + FormattingCodes.RESET).append(drop.getDisplayName()).append(Component.literal(FormattingCodes.AQUA + " (+" + magic_find + ")"));
     }
 
 
@@ -441,7 +436,7 @@ public class MiscRegister {
         int posY = h / 2;
             Player entity = Minecraft.getInstance().player;
         if (entity != null) {
-            String builder = FormattingCodes.BLUE.UNICODE + MISCTools.round(entity.getAttributeValue(ModAttributes.MANA.get()), 1) + " [+" + entity.getPersistentData().getInt("overflowMana") + " Overflow] " + FormattingCodes.RESET + " / " + FormattingCodes.DARK_BLUE.UNICODE + entity.getAttributeValue(ModAttributes.MAX_MANA.get()) + " (+" + MISCTools.round(entity.getPersistentData().getDouble("manaRegen") * 20, 2) + "/s)";
+            String builder = FormattingCodes.BLUE + MISCTools.round(entity.getAttributeValue(ModAttributes.MANA.get()), 1) + " [+" + entity.getPersistentData().getInt("overflowMana") + " Overflow] " + FormattingCodes.RESET + " / " + FormattingCodes.DARK_BLUE + entity.getAttributeValue(ModAttributes.MAX_MANA.get()) + " (+" + MISCTools.round(entity.getPersistentData().getDouble("manaRegen") * 20, 2) + "/s)";
             Minecraft.getInstance().font.draw(event.getPoseStack(), builder, posX - 203, posY + 93, -1);
         }
     }

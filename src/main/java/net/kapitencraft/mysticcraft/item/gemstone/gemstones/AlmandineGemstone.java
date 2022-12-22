@@ -7,7 +7,7 @@ import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 
 public class AlmandineGemstone extends Gemstone {
     public AlmandineGemstone() {
-        super("Almandine", FormattingCodes.LIGHT_PURPLE.UNICODE, ModAttributes.ABILITY_DAMAGE.get(), 0.3);
+        super("Almandine", FormattingCodes.LIGHT_PURPLE, ModAttributes.ABILITY_DAMAGE.get(), 0.3);
     }
 
     public AlmandineGemstone(Rarity rarity) {

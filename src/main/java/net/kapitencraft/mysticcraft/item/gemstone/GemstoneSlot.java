@@ -75,7 +75,7 @@ public class GemstoneSlot {
 
     public String getDisplay() {
         boolean flag = this.appliedGemstone == null;
-        return getColorForRarity() + "[" + FormattingCodes.RESET + (flag ? FormattingCodes.GRAY.UNICODE : appliedGemstone.getColour()) + this.TYPE.getUNICODE() + FormattingCodes.RESET + getColorForRarity() + "]";
+        return getColorForRarity() + "[" + FormattingCodes.RESET + (flag ? FormattingCodes.GRAY : appliedGemstone.getColour()) + this.TYPE.getUNICODE() + FormattingCodes.RESET + getColorForRarity() + "]";
     }
 
 

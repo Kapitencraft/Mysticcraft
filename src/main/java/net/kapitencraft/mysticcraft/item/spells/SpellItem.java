@@ -234,7 +234,7 @@ public abstract class SpellItem extends TieredItem implements IModItem {
                 spell.execute(user, stack);
             }
             if (user instanceof Player player) {
-                player.displayClientMessage(Component.literal("Used " + spell.getName() + ": " + FormattingCodes.RED.UNICODE + "-" + this.getManaCost(stack) + " Mana"), true);
+                player.displayClientMessage(Component.literal("Used " + spell.getName() + ": " + FormattingCodes.RED + "-" + this.getManaCost(stack) + " Mana"), true);
             }
         }
         return stack;
@@ -247,7 +247,7 @@ public abstract class SpellItem extends TieredItem implements IModItem {
             if (spell.TYPE == Spells.CYCLE && this.handleMana(user, stack)) {
                 spell.execute(user, stack);
                 if (count == 1 && user instanceof Player player) {
-                    player.sendSystemMessage(Component.literal("Started Using " + spell.getName() + ": " + FormattingCodes.RED.UNICODE + "-" + (this.getManaCost(stack) * 20) + " Mana" + "/s"));
+                    player.sendSystemMessage(Component.literal("Started Using " + spell.getName() + ": " + FormattingCodes.RED + "-" + (this.getManaCost(stack) * 20) + " Mana" + "/s"));
                 }
             }
         }

@@ -7,8 +7,8 @@ public class FerociousDamageSource extends EntityDamageSource {
     public final  double ferocity;
     public final float damage;
 
-    public FerociousDamageSource(String msg, Entity attacker, Double ferocity, float damage) {
-        super(msg, attacker);
+    public FerociousDamageSource(Entity attacker, Double ferocity, float damage) {
+        super("ferocity", attacker);
         this.ferocity = ferocity;
         this.damage = damage;
     }

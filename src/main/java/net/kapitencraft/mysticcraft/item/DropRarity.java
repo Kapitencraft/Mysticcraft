@@ -13,10 +13,10 @@ public class DropRarity {
     private final int Id;
     private static int genId;
     private final String name;
-    private final Color color;
+    private final String color;
     private final String displayName;
 
-    public DropRarity(int id, String name, Color color, String displayName) {
+    public DropRarity(int id, String name, String color, String displayName) {
         this.Id = id;
         this.name = name;
         this.color = color;
@@ -28,7 +28,7 @@ public class DropRarity {
         return this.Id;
     }
 
-    public Color getColor() {
+    public String getColor() {
         return color;
     }
 
@@ -40,7 +40,7 @@ public class DropRarity {
         return name;
     }
 
-    private static DropRarity create(String name, Color color, String displayName) {
+    private static DropRarity create(String name, String color, String displayName) {
         DropRarity rarity = new DropRarity(genId, name, color, displayName);
         genId++;
         return rarity;

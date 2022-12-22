@@ -18,7 +18,7 @@ public class FireBoldSpell extends Spell {
         super(50, "Fire Bold", Spells.RELEASE, Rarity.UNCOMMON, "fire_bold");
         this.damage = base_damage;
         this.explosive = explosive;
-        this.description = new Component[]{Component.literal("Fires a Fire Bold dealing"), Component.literal(FormattingCodes.RED.UNICODE + this.getDamage() + FormattingCodes.RESET + " Base Ability Damage")};
+        this.description = new Component[]{Component.literal("Fires a Fire Bold dealing"), Component.literal(FormattingCodes.RED + this.getDamage() + FormattingCodes.RESET + " Base Ability Damage")};
     }
 
     @Override
