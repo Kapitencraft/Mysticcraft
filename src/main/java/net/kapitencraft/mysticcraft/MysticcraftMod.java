@@ -79,7 +79,6 @@ public class MysticcraftMod {
     public static class ClientModEvents {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
-            sendInfo("Registering Entity World Generation");
             sendInfo("Registering Item Properties...");
             ModItemProperties.addCustomItemProperties();
             sendInfo("Loading GUI for Gem Grinder");
@@ -91,6 +90,7 @@ public class MysticcraftMod {
 
         @SubscribeEvent
         public static void onCommonSetup(FMLCommonSetupEvent event) {
+            sendInfo("Registering Entity World Generation");
             registerSpawnPlacements();
         }
 
@@ -98,7 +98,7 @@ public class MysticcraftMod {
             SpawnPlacements.register(ModEntityTypes.SCHNAUZEN_PLUESCH.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                     Mob::checkMobSpawnRules);
             SpawnPlacements.register(ModEntityTypes.FROZEN_BLAZE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                    Monster::checkMobSpawnRules);
+                    Monster::checkAnyLightMonsterSpawnRules);
         }
     }
 
