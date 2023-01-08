@@ -18,6 +18,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.NetworkRegistry;
@@ -79,10 +80,6 @@ public class MysticcraftMod {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
             sendInfo("Registering Entity World Generation");
-            SpawnPlacements.register(ModEntityTypes.SCHNAUZEN_PLUESCH.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                    Mob::checkMobSpawnRules);
-                SpawnPlacements.register(ModEntityTypes.FROZEN_BLAZE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                    Monster::checkMobSpawnRules);
             sendInfo("Registering Item Properties...");
             ModItemProperties.addCustomItemProperties();
             sendInfo("Loading GUI for Gem Grinder");
@@ -90,6 +87,18 @@ public class MysticcraftMod {
             sendInfo("rendering Mana Fluid");
             ItemBlockRenderTypes.setRenderLayer(ModFluids.SOURCE_MANA_FLUID.get(), RenderType.translucent());
             ItemBlockRenderTypes.setRenderLayer(ModFluids.FLOWING_MANA_FLUID.get(), RenderType.translucent());
+        }
+
+        @SubscribeEvent
+        public static void onCommonSetup(FMLCommonSetupEvent event) {
+            registerSpawnPlacements();
+        }
+
+        private static void registerSpawnPlacements() {
+            SpawnPlacements.register(ModEntityTypes.SCHNAUZEN_PLUESCH.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                    Mob::checkMobSpawnRules);
+            SpawnPlacements.register(ModEntityTypes.FROZEN_BLAZE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                    Monster::checkMobSpawnRules);
         }
     }
 

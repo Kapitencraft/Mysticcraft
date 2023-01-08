@@ -5,6 +5,7 @@
     "type": "mysticcraft:frozen_blaze",
     "weight": 80,
     "minCount": 2,
-    "maxCount": 5
+    "maxCount": 5,
+    "category": "monster"
   }
 }
