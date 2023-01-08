@@ -13,6 +13,11 @@ public class GlacialTouchEnchantment extends ExtendedCalculationEnchantment {
     }
 
     @Override
+    public Type getType() {
+        return Type.WEAPONS;
+    }
+
+    @Override
     public double execute(int level, ItemStack enchanted, LivingEntity attacker, LivingEntity attacked, double damage) {
         if (!MISCTools.increaseEffectDuration(attacked, MobEffects.MOVEMENT_SLOWDOWN, level * 5)) {
             attacked.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20, 1));

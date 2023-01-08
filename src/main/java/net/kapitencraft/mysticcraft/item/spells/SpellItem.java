@@ -5,8 +5,10 @@ import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModEnchantments;
+import net.kapitencraft.mysticcraft.init.ModItems;
 import net.kapitencraft.mysticcraft.item.IModItem;
 import net.kapitencraft.mysticcraft.item.ModTiers;
+import net.kapitencraft.mysticcraft.item.RNGDropHelper;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneSlot;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
@@ -27,6 +29,7 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TieredItem;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
@@ -114,10 +117,12 @@ public abstract class SpellItem extends TieredItem implements IModItem {
 
 
     //The actual logic for the SpellItem
-    protected void addSlot(SpellSlot slot) {
+    protected boolean addSlot(SpellSlot slot) {
         if (this.getFirstEmptySpellSlot() > -1) {
             this.setSlot(slot, this.getFirstEmptySpellSlot());
+            return true;
         }
+        return false;
     }
 
     private void setSlot(SpellSlot slot, int index) {
@@ -216,11 +221,20 @@ public abstract class SpellItem extends TieredItem implements IModItem {
     }
 
     private boolean handleMana(LivingEntity user, ItemStack stack) {
-        if (user.getAttributeBaseValue(ModAttributes.MANA.get()) == 0) {
-            return false;
-        }
-        if (user.getAttributes().hasAttribute(ModAttributes.MANA.get()) && user.getAttribute(ModAttributes.MANA.get()).getBaseValue() >= this.getManaCost(stack)) {
-            user.getAttribute(ModAttributes.MANA.get()).setBaseValue(user.getAttributeBaseValue(ModAttributes.MANA.get()) - this.getManaCost(stack));
+        double manaToUse = this.getManaCost(stack);
+        double overflowMana = user.getPersistentData().getDouble("overflowMana");
+        double currentMana = user.getAttribute(ModAttributes.MANA.get()).getBaseValue() + overflowMana;
+        if (currentMana == 0) { return false; }
+        if (currentMana >= manaToUse) {
+            if (overflowMana > 0) {
+                user.getPersistentData().putDouble("overflowMana", overflowMana > manaToUse ? overflowMana - manaToUse : 0);
+                manaToUse -=overflowMana;
+            }
+            if (manaToUse > 0) {
+                user.getAttribute(ModAttributes.MANA.get()).setBaseValue(user.getAttributeBaseValue(ModAttributes.MANA.get()) - manaToUse);
+            }
+            ItemStack spellShardRNG = new ItemStack(ModItems.SPELL_SHARD.get());
+            RNGDropHelper.calculateAndDrop(spellShardRNG, 0.00002f, user, new Vec3(user.getX(), user.getY(), user.getZ()));
             return true;
         }
         return false;

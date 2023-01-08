@@ -4,11 +4,11 @@ import com.google.common.collect.ImmutableMultimap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.api.APITools;
 import net.kapitencraft.mysticcraft.gui.IGuiHelper;
-import net.kapitencraft.mysticcraft.item.bow.ShortBowItem;
+import net.kapitencraft.mysticcraft.item.weapon.ranged.bow.ShortBowItem;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneItem;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.item.spells.SpellItem;
-import net.kapitencraft.mysticcraft.item.sword.LongSwordItem;
+import net.kapitencraft.mysticcraft.item.weapon.melee.sword.LongSwordItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
@@ -36,6 +36,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nullable;
+import java.text.DecimalFormat;
 import java.util.*;
 
 public class MISCTools {
@@ -104,6 +105,8 @@ public class MISCTools {
         return null;
     }
 
+
+    private static final DecimalFormat FORMAT = new DecimalFormat("#.##");
     public static ArmorStand createDamageIndicator(LivingEntity entity, double amount, String type) {
         ArmorStand dmgInc = new ArmorStand(entity.level, entity.getX() + Math.random() - 0.5, entity.getY() - 1, entity.getZ() + Math.random() - 0.5);
         boolean dodge = Objects.equals(type, "dodge");
@@ -112,11 +115,10 @@ public class MISCTools {
         dmgInc.setInvulnerable(true);
         dmgInc.setBoundingBox(new AABB(0,0,0,0,0,0));
         dmgInc.setCustomNameVisible(true);
-        dmgInc.setCustomName(Component.literal(!dodge ? String.valueOf(amount) : "DODGE").withStyle(damageIndicatorColorGenerator(type)));
+        dmgInc.setCustomName(Component.literal(!dodge ? String.valueOf(FORMAT.format(amount)) : "DODGE").withStyle(damageIndicatorColorGenerator(type)));
         CompoundTag persistentData = dmgInc.getPersistentData();
         persistentData.putBoolean("isDamageIndicator", true);
         persistentData.putInt("time", 0);
-        persistentData.putUUID("targetUUID", entity.getUUID());
         entity.level.addFreshEntity(dmgInc);
         return dmgInc;
     }
@@ -160,7 +162,7 @@ public class MISCTools {
         if (item instanceof SpellItem) {
             return "SPELL ITEM";
         } else if (item instanceof LongSwordItem) {
-            return "LONG SWORD";
+            return "LONGSWORD";
         } else if (item instanceof ShortBowItem) {
             return "SHORT BOW";
         } else if (item instanceof SwordItem) {
@@ -226,6 +228,10 @@ public class MISCTools {
             return i;
         }
         return -1;
+    }
+
+    public static <T extends ParticleOptions> int sendParticles(Level level, T type, boolean force, Vec3 loc, int amount, double deltaX, double deltaY, double deltaZ, double speed) {
+        return sendParticles(level, type, force, loc.x, loc.y, loc.z, amount, deltaX, deltaY, deltaZ, speed);
     }
 
     public static Vec3 getPosition(Entity entity) {

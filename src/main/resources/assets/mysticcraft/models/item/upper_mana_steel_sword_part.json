@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "mysticcraft:item/upper_mana_steel_sword_part"
+  }
+}

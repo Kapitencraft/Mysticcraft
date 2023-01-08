@@ -7,13 +7,13 @@
   ],
   "key": {
     "*": {
-      "item": "mysticcraft:down_mana_steel_sword_blade_part"
+      "item": "mysticcraft:lower_mana_steel_sword_part"
     },
     "#": {
       "item": "mysticcraft:mana_steel_sword_handle"
     },
     "+": {
-      "item": "mysticcraft:upper_mana_steel_sword_blade_part"
+      "item": "mysticcraft:upper_mana_steel_sword_part"
     }
   },
   "result": {

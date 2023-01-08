@@ -5,7 +5,7 @@ import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModEnchantments;
 import net.kapitencraft.mysticcraft.init.ModItems;
-import net.kapitencraft.mysticcraft.item.bow.ModdedBows;
+import net.kapitencraft.mysticcraft.item.weapon.ranged.bow.ModdedBows;
 import net.kapitencraft.mysticcraft.item.spells.SpellItem;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;

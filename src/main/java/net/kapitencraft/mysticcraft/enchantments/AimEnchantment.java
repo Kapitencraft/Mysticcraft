@@ -16,6 +16,11 @@ public class AimEnchantment extends ExtendedCalculationEnchantment implements IW
     }
 
     @Override
+    public Type getType() {
+        return Type.WEAPONS;
+    }
+
+    @Override
     public double execute(int level, ItemStack enchanted, LivingEntity attacker, LivingEntity attacked, double damage) {
         return 0;
     }

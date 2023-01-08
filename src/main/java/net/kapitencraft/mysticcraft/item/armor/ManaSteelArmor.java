@@ -10,13 +10,8 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.RegistryObject;
-
-import java.util.HashMap;
 
 public class ManaSteelArmor extends ModArmorItem{
     public ManaSteelArmor(EquipmentSlot p_40387_) {
@@ -37,13 +32,7 @@ public class ManaSteelArmor extends ModArmorItem{
         return builder.build();
     }
 
-    public static HashMap<EquipmentSlot, RegistryObject<Item>> createRegistry(DeferredRegister<Item> register) {
-        HashMap<EquipmentSlot, RegistryObject<Item>> registry = new HashMap<>();
-        registry.put(EquipmentSlot.HEAD, register.register("mana_steel_" + "helmet", ()-> new ManaSteelArmor(EquipmentSlot.HEAD)));
-        registry.put(EquipmentSlot.CHEST, register.register("mana_steel_" + "chestplate", ()-> new ManaSteelArmor(EquipmentSlot.CHEST)));
-        registry.put(EquipmentSlot.LEGS, register.register("mana_steel_" + "leggings", ()-> new ManaSteelArmor(EquipmentSlot.LEGS)));
-        registry.put(EquipmentSlot.FEET, register.register("mana_steel_" + "boots", ()-> new FrozenBlazeArmorItem(EquipmentSlot.FEET)));
-        return registry;
+    protected static ManaSteelArmor create(EquipmentSlot slot) {
+        return new ManaSteelArmor(slot);
     }
-
 }

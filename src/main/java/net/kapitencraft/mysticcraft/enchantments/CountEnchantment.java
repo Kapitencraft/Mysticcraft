@@ -19,6 +19,11 @@ public abstract class CountEnchantment extends ExtendedCalculationEnchantment im
         this.type = type;
     }
 
+    @Override
+    public Type getType() {
+        return Type.WEAPONS;
+    }
+
     protected abstract int getCountAmount(int level);
 
     @Override

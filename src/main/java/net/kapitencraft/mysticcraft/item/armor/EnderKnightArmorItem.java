@@ -35,6 +35,15 @@ public class EnderKnightArmorItem extends ModArmorItem implements IGemstoneAppli
 
     private GemstoneSlot[] slots = new GemstoneSlot[] {GemstoneSlot.DEFENCE, GemstoneSlot.OFFENSIVE, GemstoneSlot.COMBAT, GemstoneSlot.COMBAT, GemstoneSlot.STRENGHT};
 
+    public static HashMap<EquipmentSlot, RegistryObject<Item>> createRegistry(DeferredRegister<Item> register, String registryName) {
+        HashMap<EquipmentSlot, RegistryObject<Item>> registry = new HashMap<>();
+        registry.put(EquipmentSlot.HEAD, register.register(registryName + "_helmet", ()-> new EnderKnightArmorItem(EquipmentSlot.HEAD)));
+        registry.put(EquipmentSlot.CHEST, register.register(registryName + "_chestplate", ()-> new EnderKnightArmorItem(EquipmentSlot.CHEST)));
+        registry.put(EquipmentSlot.LEGS, register.register(registryName + "_leggings", ()-> new EnderKnightArmorItem(EquipmentSlot.LEGS)));
+        registry.put(EquipmentSlot.FEET, register.register(registryName + "_boots", ()-> new EnderKnightArmorItem(EquipmentSlot.FEET)));
+        return registry;
+    }
+
 
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
@@ -49,13 +58,8 @@ public class EnderKnightArmorItem extends ModArmorItem implements IGemstoneAppli
     public void armorTick(ItemStack stack, Level level, LivingEntity living) {
     }
 
-    public static HashMap<EquipmentSlot, RegistryObject<Item>> createRegistry(DeferredRegister<Item> register) {
-        HashMap<EquipmentSlot, RegistryObject<Item>> registry = new HashMap<>();
-        registry.put(EquipmentSlot.HEAD, register.register(registryName + "helmet", ()-> new EnderKnightArmorItem(EquipmentSlot.HEAD)));
-        registry.put(EquipmentSlot.CHEST, register.register(registryName + "chestplate", ()-> new EnderKnightArmorItem(EquipmentSlot.CHEST)));
-        registry.put(EquipmentSlot.LEGS, register.register(registryName + "leggings", ()-> new EnderKnightArmorItem(EquipmentSlot.LEGS)));
-        registry.put(EquipmentSlot.FEET, register.register(registryName + "boots", ()-> new EnderKnightArmorItem(EquipmentSlot.FEET)));
-        return registry;
+    protected static EnderKnightArmorItem create(EquipmentSlot slot) {
+        return new EnderKnightArmorItem(slot);
     }
 
     public ImmutableMultimap<Attribute, AttributeModifier> getAttributeMods(EquipmentSlot slot) {

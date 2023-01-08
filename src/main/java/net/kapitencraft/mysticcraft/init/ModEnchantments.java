@@ -22,6 +22,8 @@ public abstract class ModEnchantments {
     public static final RegistryObject<Enchantment> PROTECTIVE_COVER = REGISTRY.register("protective_cover", ProtectiveCoverEnchantment::new);
     public static final RegistryObject<Enchantment> NECROTIC_TOUCH = REGISTRY.register("necrotic_touch", NecroticTouchEnchantment::new);
     public static final RegistryObject<Enchantment> ULTIMATE_WISE = REGISTRY.register("ultimate_wise", UltimateWiseEnchantment::new);
+    public static final RegistryObject<Enchantment> LUMBERJACK = REGISTRY.register("lumberjack", LumberjackEnchantment::new);
+    public static final RegistryObject<Enchantment> VEIN_MINER = REGISTRY.register("vein_miner", VeinMinerEnchantment::new);
     public static final RegistryObject<Enchantment> EFFICIENT_JEWELLING = REGISTRY.register("efficient_jewelling", EfficientJewellingEnchantment::new);
     public static final RegistryObject<Enchantment> POISONOUS_BLADE = REGISTRY.register("poisonous_blade", PoisonousBladeEnchantment::new);
     public static final RegistryObject<Enchantment> GLACIAL_BLADE = REGISTRY.register("glacial_blade", GlacialTouchEnchantment::new);
@@ -31,6 +33,8 @@ public abstract class ModEnchantments {
     public static final RegistryObject<Enchantment> VENOMOUS = REGISTRY.register("venomous", VenomousEnchantment::new);
     public static final RegistryObject<Enchantment> CRITICAL = REGISTRY.register("critical", CriticalEnchantment::new);
     public static final RegistryObject<Enchantment> DIVINE_GIFT = REGISTRY.register("divine_gift", DivineGiftEnchantment::new);
+    public static final RegistryObject<Enchantment> ARMOR_SHREDDING = REGISTRY.register("armor_shredding", ArmorShreddingEnchantment::new);
     public static final RegistryObject<Enchantment> TELEKINESIS = REGISTRY.register("telekinesis", TelekinesisEnchantment::new);
     public static final RegistryObject<Enchantment> REPLENISH = REGISTRY.register("replenish", ReplenishEnchantment::new);
+    public static final RegistryObject<Enchantment> YEET_THORNS = REGISTRY.register("yeet_thorns", YeetThornsEnchantment::new);
 }

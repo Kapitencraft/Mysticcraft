@@ -18,6 +18,11 @@ public class GiantKillerEnchantment extends ExtendedCalculationEnchantment {
     }
 
     @Override
+    public Type getType() {
+        return Type.WEAPONS;
+    }
+
+    @Override
     public double execute(int level, ItemStack enchanted, LivingEntity attacker, LivingEntity attacked, double damage) {
         double MoreHpPercent = attacked.getHealth() - attacker.getHealth() / attacked.getMaxHealth() - attacker.getMaxHealth();
         return  (float) (damage * (1 + MoreHpPercent * level * 0.01));

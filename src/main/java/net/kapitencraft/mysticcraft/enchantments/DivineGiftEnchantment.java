@@ -2,18 +2,16 @@ package net.kapitencraft.mysticcraft.enchantments;
 
 import com.google.common.collect.ImmutableMultimap;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
-import net.kapitencraft.mysticcraft.misc.MISCTools;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.EnchantmentCategory;
 
 import java.util.UUID;
 
-public class DivineGiftEnchantment extends StatBoostEnchantment implements IWeaponEnchantment {
+public class DivineGiftEnchantment extends WeaponStatBoostEnchantment {
     public DivineGiftEnchantment() {
-        super(Rarity.VERY_RARE, EnchantmentCategory.WEAPON, MISCTools.WEAPON_SLOT);
+        super(Rarity.VERY_RARE);
     }
 
     @Override

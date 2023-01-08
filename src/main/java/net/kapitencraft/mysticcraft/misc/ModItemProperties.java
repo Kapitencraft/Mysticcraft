@@ -2,7 +2,7 @@ package net.kapitencraft.mysticcraft.misc;
 
 import net.kapitencraft.mysticcraft.init.ModEnchantments;
 import net.kapitencraft.mysticcraft.init.ModItems;
-import net.kapitencraft.mysticcraft.item.bow.ModdedBows;
+import net.kapitencraft.mysticcraft.item.weapon.ranged.bow.ModdedBows;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;

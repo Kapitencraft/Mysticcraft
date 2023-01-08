@@ -13,12 +13,12 @@ public class ModTiers {
 
         @Override
         public float getSpeed() {
-            return 0.1f;
+            return 4f;
         }
 
         @Override
         public float getAttackDamageBonus() {
-            return 7;
+            return 5;
         }
 
         @Override

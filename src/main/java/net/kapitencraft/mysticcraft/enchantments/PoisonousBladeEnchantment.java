@@ -14,6 +14,11 @@ public class PoisonousBladeEnchantment extends ExtendedCalculationEnchantment {
     }
 
     @Override
+    public Type getType() {
+        return Type.WEAPONS;
+    }
+
+    @Override
     public double execute(int level, ItemStack enchanted, LivingEntity attacker, LivingEntity attacked, double damage) {
         if (!MISCTools.increaseEffectDuration(attacked, MobEffects.POISON, level * 5)) {
             attacked.addEffect(new MobEffectInstance(MobEffects.POISON, 20, 1));

@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.misc;
 
 import net.kapitencraft.mysticcraft.entity.FrozenBlazeEntity;
+import net.kapitencraft.mysticcraft.entity.SchnauzenPluesch;
 import net.kapitencraft.mysticcraft.entity.WithermancerLordEntity;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
@@ -35,5 +36,6 @@ public class AttributeAdder {
     public static void AttributeCreating(EntityAttributeCreationEvent event) {
         event.put(ModEntityTypes.FROZEN_BLAZE.get(), FrozenBlazeEntity.createAttributes().build());
         event.put(ModEntityTypes.WITHERMANCER_LORD.get(), WithermancerLordEntity.createAttributes().build());
+        event.put(ModEntityTypes.SCHNAUZEN_PLUESCH.get(), SchnauzenPluesch.createAttributes().build());
     }
 }

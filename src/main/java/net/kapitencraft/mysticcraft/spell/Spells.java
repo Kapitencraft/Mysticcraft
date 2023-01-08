@@ -14,6 +14,7 @@ public class Spells {
     public static final Spell FIRE_BOLD_2 = new FireBoldSpell(1.4, false);
     public static final Spell FIRE_BOLD_3 = new FireBoldSpell(2.8, true);
     public static final Spell FIRE_BOLD_4 = new FireBoldSpell(5.2, true);
+    public static final Spell FIRE_LANCE = new FireLanceSpell();
 
     public record SpellType(String name) {
     }

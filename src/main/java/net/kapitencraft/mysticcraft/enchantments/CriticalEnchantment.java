@@ -2,25 +2,23 @@ package net.kapitencraft.mysticcraft.enchantments;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
+import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.misc.MISCTools;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.EnchantmentCategory;
 
-import java.util.UUID;
-
-public class CriticalEnchantment extends StatBoostEnchantment{
+public class CriticalEnchantment extends WeaponStatBoostEnchantment {
     public CriticalEnchantment() {
-        super(Rarity.COMMON, EnchantmentCategory.WEAPON, MISCTools.WEAPON_SLOT);
+        super(Rarity.COMMON);
     }
 
     @Override
     public Multimap<Attribute, AttributeModifier> getModifiers(int level, ItemStack enchanted, EquipmentSlot slot) {
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = new ImmutableMultimap.Builder<>();
-        builder.put(ModAttributes.CRIT_DAMAGE.get(), new AttributeModifier(UUID.randomUUID(), "critical", level * 10, AttributeModifier.Operation.ADDITION));
+        builder.put(ModAttributes.CRIT_DAMAGE.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[MISCTools.createCustomIndex(slot)], "critical", level * 10, AttributeModifier.Operation.ADDITION));
         return builder.build();
     }
 
