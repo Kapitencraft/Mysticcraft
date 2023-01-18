@@ -12,8 +12,9 @@ import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.item.item_bonus.IArmorBonusItem;
 import net.kapitencraft.mysticcraft.item.spells.SpellItem;
 import net.kapitencraft.mysticcraft.item.weapon.melee.sword.ManaSteelSwordItem;
-import net.kapitencraft.mysticcraft.item.weapon.ranged.bow.ShortBowItem;
 import net.kapitencraft.mysticcraft.item.weapon.ranged.bow.TallinBow;
+import net.kapitencraft.mysticcraft.misc.damage_source.FerociousDamageSource;
+import net.kapitencraft.mysticcraft.misc.damage_source.IAbilitySource;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -68,28 +69,29 @@ import java.util.*;
 
 @Mod.EventBusSubscriber
 public class MiscRegister {
-
-
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void DamageAttributeRegister(LivingDamageEvent event) {
         @Nullable LivingEntity attacker = MISCTools.getAttacker(event.getSource());
         if (attacker == null) { return; }
-        if (event.getSource().getMsgId().equals("ability")) {
+        if (event.getSource() instanceof IAbilitySource abilitySource) {
             double intel = attacker.getAttributeValue(ModAttributes.INTELLIGENCE.get());
             double ability_damage = attacker.getAttributeValue(ModAttributes.ABILITY_DAMAGE.get());
-            event.setAmount((float) (event.getAmount() * (1 + (intel / 100)) * (1 + (ability_damage / 100))));
+            event.setAmount((float) (event.getAmount() * (1 + (intel / 100) * abilitySource.getScaling()) * (1 + (ability_damage / 100))));
         } else if (MISCTools.getSaveAttributeValue(ModAttributes.STRENGTH.get(), attacker) != -1) {
             double Strength = MISCTools.getSaveAttributeValue(ModAttributes.STRENGTH.get(), attacker);
             event.setAmount((float) (event.getAmount() * (1 + Strength / 100)));
         }
-
+        LivingEntity attacked = event.getEntity();
         if (MISCTools.getSaveAttributeValue(ModAttributes.ARMOR_SHREDDER.get(), attacker) != -1) {
             double armorShredder = (int) MISCTools.getSaveAttributeValue(ModAttributes.ARMOR_SHREDDER.get(), attacker);
-            LivingEntity attacked = event.getEntity();
             for (int i = 0; i < 4; i++) {
                 ItemStack stack = attacked.getItemBySlot(MISCTools.ARMOR_EQUIPMENT[i]);
                 stack.hurt((int) armorShredder / 3, attacked.level.getRandom(), attacker instanceof ServerPlayer serverPlayer ? serverPlayer : null);
             }
+        }
+        if (MISCTools.getSaveAttributeValue(ModAttributes.LIVE_STEAL.get(), attacker) != -1) {
+            double live_steel = (int) MISCTools.getSaveAttributeValue(ModAttributes.LIVE_STEAL.get(), attacker);
+            attacker.heal(Math.min((float) live_steel, event.getAmount()));
         }
     }
     @SubscribeEvent(priority = EventPriority.HIGH)
@@ -213,7 +215,6 @@ public class MiscRegister {
                 living.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 60, 5));
             }
         }
-
     }
 
     @SubscribeEvent
@@ -271,7 +272,7 @@ public class MiscRegister {
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void EntityDamaged(LivingDamageEvent event) {
+    public static void EntityDamaged(LivingDamageEvent event)   {
         LivingEntity attacked = event.getEntity();
         boolean dodge = false;
         double Dodge = MISCTools.getSaveAttributeValue(ModAttributes.DODGE.get(), attacked);
@@ -316,39 +317,23 @@ public class MiscRegister {
         List<Component> toolTip = event.getToolTip();
         Player player = event.getEntity();
         final Component SEARCHED = Component.literal(FormattingCodes.GRAY + "Mana-Cost: " + FormattingCodes.DARK_RED);
-        if (toolTip.contains(SEARCHED) && stack.getItem() instanceof SpellItem spellItem) {
-            boolean flag = player != null && stack != player.getMainHandItem();
-            if (flag) {
-                AttributeInstance cost_instance = player.getAttribute(ModAttributes.MANA_COST.get());
-                assert cost_instance != null;
-                cost_instance.removeModifier(SpellItem.MANA_COST_MOD);
-                cost_instance.removeModifier(SpellItem.ULTIMATE_WISE_MOD);
-                cost_instance.addTransientModifier(new AttributeModifier(SpellItem.MANA_COST_MOD, "Tooltip", spellItem.getManaCost(stack), AttributeModifier.Operation.ADDITION));
-
-            }
+        if (toolTip.contains(SEARCHED) && stack.getItem() instanceof SpellItem spellItem && player != null) {
             Component found = toolTip.get(toolTip.lastIndexOf(SEARCHED));
-            if (found instanceof MutableComponent mutable && player != null) {
-                mutable.append(FormattingCodes.DARK_RED + player.getAttributeValue(ModAttributes.MANA_COST.get()));
-            }
-            if (flag) {
-                AttributeInstance cost_instance = player.getAttribute(ModAttributes.MANA_COST.get());
-                assert cost_instance != null;
-                cost_instance.removeModifier(SpellItem.MANA_COST_MOD);
-                cost_instance.removeModifier(SpellItem.ULTIMATE_WISE_MOD);
+            if (found instanceof MutableComponent mutable) {
+                AttributeInstance instance = player.getAttribute(ModAttributes.MANA_COST.get());
+                if (instance != null) {
+                    mutable.append(FormattingCodes.DARK_RED + MISCTools.getAttributeValue(instance, spellItem.getManaCost() - (instance.getModifier(SpellItem.MANA_COST_MOD) != null ? instance.getModifier(SpellItem.MANA_COST_MOD).getAmount() : 0)));
+                }
             }
         }
         Rarity rarity = stack.getItem().getRarity(stack);
         boolean flag = rarity != MISCTools.getItemRarity(stack.getItem());
-        String RarityMod = FormattingCodes.OBFUSCATED + "A" + FormattingCodes.RESET;
-        if (stack.getItem() instanceof ShortBowItem) {
-            toolTip.add(Component.literal(""));
-            toolTip.add(Component.literal("Short Bow: Instantly Shoots!").withStyle(ChatFormatting.DARK_PURPLE));
-        }
         if (stack.getItem() instanceof IGemstoneApplicable gemstoneApplicable) {
             gemstoneApplicable.getModInfo(stack, toolTip);
             toolTip.add(Component.literal(""));
         }
         if (!(stack.getItem() instanceof IGuiHelper)) {
+            String RarityMod = FormattingCodes.OBFUSCATED + "A" + FormattingCodes.RESET;
             toolTip.add(Component.literal(""));
             toolTip.add(Component.literal((flag ? RarityMod + " " : "") + rarity + " " + MISCTools.getNameModifier(stack) + (flag ? " " + RarityMod : "")).withStyle(rarity.getStyleModifier()).withStyle(ChatFormatting.BOLD));
         }
@@ -403,7 +388,7 @@ public class MiscRegister {
         }
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void telekinesis2Register(LivingDropsEvent event) {
         Collection<ItemEntity> entities = event.getDrops();
         if (event.getSource().getEntity() instanceof Player attacker) {
@@ -418,7 +403,7 @@ public class MiscRegister {
         }
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void rareDropsRegister(LivingDropsEvent event) {
         LivingEntity attacker = MISCTools.getAttacker(event.getSource());
         LivingEntity attacked = event.getEntity();

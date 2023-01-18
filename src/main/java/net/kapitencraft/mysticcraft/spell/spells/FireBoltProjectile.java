@@ -23,12 +23,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class FireBoldProjectile extends SpellProjectile {
+public class FireBoltProjectile extends SpellProjectile {
     private static final int ParticleAmount = 20;
     private int inGroundTime = 0;
     private final boolean explosive;
     private final double damage;
-    private FireBoldProjectile(Level level, LivingEntity living, boolean explosive, double damage, Spell spell) {
+    private FireBoltProjectile(Level level, LivingEntity living, boolean explosive, double damage, Spell spell) {
         super(ModEntityTypes.FIRE_BOLD.get(), living, level, spell);
         this.inGroundTime = 0;
         this.setInvisible(true);
@@ -49,8 +49,8 @@ public class FireBoldProjectile extends SpellProjectile {
         this.inGroundTime = tag.getInt("inGroundTime");
     }
 
-    public FireBoldProjectile(EntityType<? extends AbstractArrow> type, Level level) {
-        super(type, level, Spells.FIRE_BOLD_1);
+    public FireBoltProjectile(EntityType<? extends AbstractArrow> type, Level level) {
+        super(type, level, Spells.FIRE_BOLT_1);
         this.explosive = false;
         this.damage = 1;
     }
@@ -100,7 +100,7 @@ public class FireBoldProjectile extends SpellProjectile {
         living.setSecondsOnFire((int) Math.floor(this.damage));
     }
 
-    public static FireBoldProjectile createProjectile(Level level, LivingEntity owner, boolean explosive, double damage, Spell spell) {
-        return new FireBoldProjectile(level, owner, explosive, damage, spell);
+    public static FireBoltProjectile createProjectile(Level level, LivingEntity owner, boolean explosive, double damage, Spell spell) {
+        return new FireBoltProjectile(level, owner, explosive, damage, spell);
     }
 }

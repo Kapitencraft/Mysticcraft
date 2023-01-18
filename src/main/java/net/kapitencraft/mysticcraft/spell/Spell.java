@@ -5,6 +5,7 @@ import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 
@@ -27,6 +28,7 @@ public abstract class Spell {
     }
 
     public abstract void execute(LivingEntity user, ItemStack stack);
+    public abstract boolean canApply(Item stack);
 
     public abstract List<Component> getDescription();
 

@@ -29,7 +29,8 @@ public class AttributeAdder {
         event.add(EntityType.PLAYER, ModAttributes.MANA.get());
         event.add(EntityType.PLAYER, ModAttributes.HEALTH_REGEN.get());
         event.add(EntityType.PLAYER, ModAttributes.DODGE.get());
-
+        event.add(EntityType.PLAYER, ModAttributes.LIVE_STEAL.get());
+        event.add(EntityType.PLAYER, ModAttributes.RANGED_DAMAGE.get());
     }
 
     @SubscribeEvent

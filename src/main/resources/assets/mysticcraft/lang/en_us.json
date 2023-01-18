@@ -32,12 +32,17 @@
   "generic.arrow_speed": "Arrow Speed",
 
   "entity.mysticcraft.frozen_blaze": "Frozen Blaze",
+  "entity.mysticcraft.fire_bolt": "Fire Bolt",
 
   "item.mysticcraft.staff_of_destruction": "Staff of Destruction",
   "item.mysticcraft.staff_of_the_wild": "Staff of the Wild",
   "item.mysticcraft.longbow": "Longbow",
   "item.mysticcraft.tallin_bow": "Tallin Short Bow",
-  "item.mysticcraft.slivyra": "Slivyra",
+  "item.mysticcraft.hyperion": "Hyperion",
+  "item.mysticcraft.astrea": "Astrea",
+  "item.mysticcraft.scylla": "Scylla",
+  "item.mysticcraft.valkyrie": "Valkyrie",
+  "item.mysticcraft.necron_sword": "Necron's Blade",
   "item.mysticcraft.mana_steel_sword": "Mana Steel Sword",
   "item.mysticcraft.diamond_cleaver": "Diamond Cleaver",
   "item.mysticcraft.wizard_hat": "Wizard Hat",
@@ -45,6 +50,7 @@
   "item.mysticcraft.fiery_scythe": "Fiery Scythe",
   "item.mysticcraft.burning_scythe": "Burning Scythe",
   "item.mysticcraft.infernal_scythe": "Infernal Scythe",
+  "item.mysticcraft.aspect_of_the_end": "Aspect of the End",
 
 
   "item.mysticcraft.bucket_of_mana": "Bucket of Mana",
@@ -98,6 +104,7 @@
   "item.mysticcraft.shadow_assassin_boots": "Shadow Assassin Boots",
 
   "block.mysticcraft.gemstone_grinder": "Gemstone Grinder",
+  "block.mysticcraft.mangatic_stone": "Mangatic Stone",
 
   "key.category.mysticcraft.spell": "Spell Misc",
   "key.mysticcraft.next_spell": "Next Spell",

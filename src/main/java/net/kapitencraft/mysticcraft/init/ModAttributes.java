@@ -27,4 +27,6 @@ public abstract class ModAttributes {
     public static final RegistryObject<Attribute> HEALTH_REGEN = register("health_regen", 0, 0, Double.MAX_VALUE);
     public static final RegistryObject<Attribute> ARMOR_SHREDDER = register("armor_shredder", 0, 0, 100);
     public static final RegistryObject<Attribute> ARROW_SPEED = register("arrow_speed", 0, 0, 100);
+    public static final RegistryObject<Attribute> LIVE_STEAL = register("live_steal", 0, 0, 10);
+    public static final RegistryObject<Attribute> RANGED_DAMAGE = register("ranged_damage", 0, 0, 100);
 }

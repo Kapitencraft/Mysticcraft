@@ -7,17 +7,18 @@ import net.kapitencraft.mysticcraft.item.armor.EnderKnightArmorItem;
 import net.kapitencraft.mysticcraft.item.armor.FrozenBlazeArmorItem;
 import net.kapitencraft.mysticcraft.item.armor.ShadowAssassinArmorItem;
 import net.kapitencraft.mysticcraft.item.armor.SoulMageArmorItem;
+import net.kapitencraft.mysticcraft.item.gemstone.GemstoneType;
+import net.kapitencraft.mysticcraft.item.spells.*;
+import net.kapitencraft.mysticcraft.item.spells.necron_sword.Astraea;
+import net.kapitencraft.mysticcraft.item.spells.necron_sword.Hyperion;
+import net.kapitencraft.mysticcraft.item.spells.necron_sword.Scylla;
+import net.kapitencraft.mysticcraft.item.spells.necron_sword.Valkyrie;
 import net.kapitencraft.mysticcraft.item.weapon.melee.cleaver.CleaverItem;
+import net.kapitencraft.mysticcraft.item.weapon.melee.sword.ManaSteelSwordItem;
 import net.kapitencraft.mysticcraft.item.weapon.ranged.bow.LongBowItem;
 import net.kapitencraft.mysticcraft.item.weapon.ranged.bow.TallinBow;
-import net.kapitencraft.mysticcraft.item.gemstone.Gemstone;
-import net.kapitencraft.mysticcraft.item.gemstone.gemstones.AlmandineGemstone;
-import net.kapitencraft.mysticcraft.item.gemstone.gemstones.JasperGemstone;
-import net.kapitencraft.mysticcraft.item.gemstone.gemstones.RubyGemstone;
-import net.kapitencraft.mysticcraft.item.gemstone.gemstones.SapphireGemstone;
-import net.kapitencraft.mysticcraft.item.spells.*;
-import net.kapitencraft.mysticcraft.item.weapon.melee.sword.ManaSteelSwordItem;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
+import net.kapitencraft.mysticcraft.spell.Spells;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
@@ -35,7 +36,11 @@ public abstract class ModItems {
     public static final RegistryObject<Item> LONGBOW = REGISTRY.register("longbow", LongBowItem::new);
     public static final RegistryObject<Item> WIZARD_HAT = REGISTRY.register("wizard_hat", WizardHatItem::new);
     public static final RegistryObject<Item> THE_STAFF_DESTRUCTION = REGISTRY.register("staff_of_destruction", TheStaffOfDestruction::new);
-    public static final RegistryObject<Item> SLIVYRA = REGISTRY.register("slivyra", Slivyra::new);
+    public static final RegistryObject<Item> HYPERION = REGISTRY.register("hyperion", Hyperion::new);
+    public static final RegistryObject<Item> SCYLLA = REGISTRY.register("scylla", Scylla::new);
+    public static final RegistryObject<Item> ASTREA = REGISTRY.register("astrea", Astraea::new);
+    public static final RegistryObject<Item> VALKYRIE = REGISTRY.register("valkyrie", Valkyrie::new);
+    public static final RegistryObject<Item> AOTE = REGISTRY.register("aspect_of_the_end", AspectOfTheEndItem::new);
     public static final RegistryObject<Item> HEART_OF_THE_NETHER = REGISTRY.register("heart_of_the_nether", ()-> new Item(new Item.Properties().rarity(FormattingCodes.MYTHIC).stacksTo(1)));
     public static final RegistryObject<Item> SPELL_SHARD = REGISTRY.register("spell_shard", () -> new Item(new Item.Properties().rarity(Rarity.UNCOMMON)));
     public static final RegistryObject<Item> HEATED_SCYTHE = REGISTRY.register("heated_scythe", HeatedScythe::new);
@@ -43,17 +48,11 @@ public abstract class ModItems {
     public static final RegistryObject<Item> BURNING_SCYTHE = REGISTRY.register("burning_scythe", BurningScythe::new);
     public static final RegistryObject<Item> INFERNAL_SCYTHE = REGISTRY.register("infernal_scythe", InfernalScythe::new);
     public static final RegistryObject<Item> STAFF_OF_THE_WILD = REGISTRY.register("staff_of_the_wild", StaffOfTheWild::new);
-
+    public static final RegistryObject<Item> IMPLOSION_SCROLL = REGISTRY.register("implosion_scroll", ()-> new SpellScrollItem(Spells.IMPLOSION));
     public static final RegistryObject<Item> MANA_STEEL_INGOT = REGISTRY.register("mana_steel_ingot", () -> new Item(new Item.Properties().rarity(Rarity.RARE)));
     public static final RegistryObject<Item> UPPER_BlADE_MS = REGISTRY.register("upper_mana_steel_sword_part", () -> new Item(new Item.Properties().rarity(Rarity.RARE).stacksTo(1)));
     public static final RegistryObject<Item> DOWN_BlADE_MS = REGISTRY.register("lower_mana_steel_sword_part", () -> new Item(new Item.Properties().rarity(Rarity.RARE).stacksTo(1)));
     public static final RegistryObject<Item> MS_HANDLE = REGISTRY.register("mana_steel_sword_handle", () -> new Item(new Item.Properties().rarity(Rarity.RARE).stacksTo(1)));
-
-    public static final HashMap<Gemstone.Rarity, RegistryObject<Item>> ALMANDINE_GEMSTONES = AlmandineGemstone.registerItems(REGISTRY, "almandine");
-    public static final HashMap<Gemstone.Rarity, RegistryObject<Item>> JASPER_GEMSTONES = JasperGemstone.registerItems(REGISTRY, "jasper");
-    public static final HashMap<Gemstone.Rarity, RegistryObject<Item>> RUBY_GEMSTONES = RubyGemstone.registerItems(REGISTRY, "ruby");
-    public static final HashMap<Gemstone.Rarity, RegistryObject<Item>> SAPPHIRE_GEMSTONES = SapphireGemstone.registerItems(REGISTRY, "sapphire");
-
     public static final RegistryObject<Item> TALLIN_BOW = REGISTRY.register("tallin_bow", TallinBow::new);
     public static final RegistryObject<Item> MANA_STEEL_SWORD = REGISTRY.register("mana_steel_sword", ManaSteelSwordItem::new);
     public static final RegistryObject<Item> DIAMOND_CLEAVER = REGISTRY.register("diamond_cleaver", ()-> new CleaverItem(Tiers.DIAMOND, 5, new Item.Properties().rarity(Rarity.RARE)) {
@@ -72,13 +71,15 @@ public abstract class ModItems {
             return 20;
         }
     });
-
     public static final HashMap<EquipmentSlot, RegistryObject<Item>> ENDER_KNIGHT_ARMOR = EnderKnightArmorItem.createRegistry(REGISTRY, "ender_knight");
     public static final HashMap<EquipmentSlot, RegistryObject<Item>> FROZEN_BLAZE_ARMOR = FrozenBlazeArmorItem.createRegistry(REGISTRY, "frozen_blaze");
     public static final HashMap<EquipmentSlot, RegistryObject<Item>> SHADOW_ASSASSIN_ARMOR = ShadowAssassinArmorItem.createRegistry(REGISTRY, "shadow_assassin");
     public static final HashMap<EquipmentSlot, RegistryObject<Item>> SOUL_MAGE_ARMOR = SoulMageArmorItem.createRegistry(REGISTRY, "soul_mage");
-
     public static final RegistryObject<Item> FROZEN_BLAZE_SPAWN_EGG = REGISTRY.register("frozen_blaze_spawn_egg", ()-> new ForgeSpawnEggItem(ModEntityTypes.FROZEN_BLAZE, -16711681, -16763956, new Item.Properties()));
     public static final RegistryObject<Item> GUI_SLOT_BLOCK_ITEM = REGISTRY.register("gui_slot_block", GUISlotBlockItem::new);
     public static final RegistryObject<BucketItem> BUCKET_OF_MANA = REGISTRY.register("bucket_of_mana", ()-> new BucketItem(ModFluids.SOURCE_MANA_FLUID, new Item.Properties().rarity(Rarity.EPIC).stacksTo(1)));
+    public static final HashMap<GemstoneType.Rarity, RegistryObject<Item>> ALMANDINE_GEMSTONES = GemstoneType.ALMANDINE.registerItems(REGISTRY);
+    public static final HashMap<GemstoneType.Rarity, RegistryObject<Item>> JASPER_GEMSTONES = GemstoneType.JASPER.registerItems(REGISTRY);
+    public static final HashMap<GemstoneType.Rarity, RegistryObject<Item>> RUBY_GEMSTONES = GemstoneType.RUBY.registerItems(REGISTRY);
+    public static final HashMap<GemstoneType.Rarity, RegistryObject<Item>> SAPPHIRE_GEMSTONES = GemstoneType.SAPPHIRE.registerItems(REGISTRY);
 }

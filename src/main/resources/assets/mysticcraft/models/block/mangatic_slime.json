@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/slime_block",
+  "textures": {
+    "texture": "mysticcraft:block/mangatic_slime"
+  }
+}

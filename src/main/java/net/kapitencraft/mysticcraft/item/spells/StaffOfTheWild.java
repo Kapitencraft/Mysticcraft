@@ -29,16 +29,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class StaffOfTheWild extends SpellItem implements GeoItem, IGemstoneApplicable {
-    private AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+public class StaffOfTheWild extends NormalSpellItem implements GeoItem, IGemstoneApplicable {
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public final int SPELL_SLOT_AMOUNT = 5;
-    private ArrayList<Attribute> attributesModified;
 
     @Override
     public void appendHoverText(@NotNull ItemStack itemStack, @Nullable Level level, @NotNull List<Component> list, @NotNull TooltipFlag flag) {
         super.appendHoverText(itemStack, level, list, flag);
-        this.attributeModifiers = this.getAttributeModifiers(itemStack);
-        this.attributesModified = this.getAttributesModified();
+        HashMap<Attribute, Double> attributeModifiers = this.getAttributeModifiers(itemStack);
+        ArrayList<Attribute> attributesModified = this.getAttributesModified();
         if (gemstoneSlots != null) {
             boolean flag1 = false;
             for (@Nullable GemstoneSlot slot : gemstoneSlots) {
@@ -50,8 +49,8 @@ public class StaffOfTheWild extends SpellItem implements GeoItem, IGemstoneAppli
             if (flag1) {
                 if (Screen.hasShiftDown()) {
                     list.add(Component.literal("Gemstone Modifications:").withStyle(ChatFormatting.GREEN));
-                    for (Attribute ignored : this.attributesModified) {
-                        list.add(Component.literal(ignored.toString() + ": " + this.attributeModifiers.get(ignored)));
+                    for (Attribute ignored : attributesModified) {
+                        list.add(Component.literal(ignored.toString() + ": " + attributeModifiers.get(ignored)));
                     }
                 } else {
                     list.add(Component.literal("press [SHIFT] for Gemstone Information"));
@@ -61,7 +60,6 @@ public class StaffOfTheWild extends SpellItem implements GeoItem, IGemstoneAppli
 
     }
 
-    private HashMap<Attribute, Double> attributeModifiers;
     private GemstoneSlot[] gemstoneSlots = new GemstoneSlot[] {GemstoneSlot.MAGIC, GemstoneSlot.INTELLIGENCE, GemstoneSlot.INTELLIGENCE, GemstoneSlot.INTELLIGENCE, GemstoneSlot.ABILITY_DAMAGE};
     public static final Component[] description = {Component.literal("As it is one of the most powerful"), Component.literal("Magical Artifacts, it is used for much greatness")};
     public static final Component[] post_description = {Component.literal(FormattingCodes.CITATION + "It`s a kind of magic! - Queen")};
@@ -109,6 +107,11 @@ public class StaffOfTheWild extends SpellItem implements GeoItem, IGemstoneAppli
     @Override
     public GemstoneSlot[] getGemstoneSlots() {
         return this.gemstoneSlots;
+    }
+
+    @Override
+    public void setGemstoneSlots(GemstoneSlot[] slots) {
+        this.gemstoneSlots = slots;
     }
 
     @Override

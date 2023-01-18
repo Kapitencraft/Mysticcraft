@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
-import net.kapitencraft.mysticcraft.init.ModEnchantments;
 import net.kapitencraft.mysticcraft.init.ModItems;
 import net.kapitencraft.mysticcraft.item.IModItem;
 import net.kapitencraft.mysticcraft.item.ModTiers;
@@ -18,6 +17,7 @@ import net.kapitencraft.mysticcraft.spell.SpellSlot;
 import net.kapitencraft.mysticcraft.spell.Spells;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -26,8 +26,9 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
-import net.minecraft.world.item.TieredItem;
+import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -37,7 +38,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
 
-public abstract class SpellItem extends TieredItem implements IModItem {
+public abstract class SpellItem extends SwordItem implements IModItem {
     private SpellSlot[] spellSlots;
     private final int intelligence;
     private final int ability_damage;
@@ -49,7 +50,6 @@ public abstract class SpellItem extends TieredItem implements IModItem {
 
     @Override
     public void appendHoverText(@Nonnull ItemStack itemStack, @Nullable Level level, @Nonnull List<Component> list, @Nonnull TooltipFlag flag) {
-        @Nullable GemstoneSlot[] gemstoneSlots = itemStack.getItem() instanceof IGemstoneApplicable applicable ? applicable.getGemstoneSlots() : null;
         @Nullable SpellSlot activeSpellSlot = this.getActiveSpellSlot();
         Spell spell;
         if (activeSpellSlot == null) {
@@ -57,15 +57,18 @@ public abstract class SpellItem extends TieredItem implements IModItem {
         } else {
             spell = activeSpellSlot.getSpell();
         }
-        StringBuilder gemstoneText = new StringBuilder();
-        if (gemstoneSlots != null) {
-            for (@Nullable GemstoneSlot slot : gemstoneSlots) {
-                if (slot != null) {
-                    gemstoneText.append(slot.getDisplay());
+        if (itemStack.getItem() instanceof IGemstoneApplicable applicable) {
+            GemstoneSlot[] gemstoneSlots = applicable.getGemstoneSlots();
+            StringBuilder gemstoneText = new StringBuilder();
+            if (gemstoneSlots != null) {
+                for (@Nullable GemstoneSlot slot : gemstoneSlots) {
+                    if (slot != null) {
+                        gemstoneText.append(slot.getDisplay());
+                    }
                 }
-            }
-            if (!gemstoneText.toString().equals("")) {
-                list.add(Component.literal(gemstoneText.toString()));
+                if (!gemstoneText.toString().equals("")) {
+                    list.add(Component.literal(gemstoneText.toString()));
+                }
             }
         }
         if (this.getItemDescription() != null) {
@@ -81,8 +84,8 @@ public abstract class SpellItem extends TieredItem implements IModItem {
 
 
 
-    public SpellItem(Properties p_41383_, int spellSlots, int intelligence, int ability_damage) {
-        super(ModTiers.SPELL_TIER, p_41383_.stacksTo(1));
+    public SpellItem(Properties p_41383_, int damage, float speed,  int spellSlots, int intelligence, int ability_damage) {
+        super(ModTiers.SPELL_TIER, damage, speed,  p_41383_.stacksTo(1));
         this.spellSlots = new SpellSlot[spellSlots];
         this.intelligence = intelligence;
         this.ability_damage = ability_damage;
@@ -90,7 +93,7 @@ public abstract class SpellItem extends TieredItem implements IModItem {
 
     //Creating The Attribute Modifiers for this to work
     @Override
-    public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot slot) {
+    public @NotNull Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(@NotNull EquipmentSlot slot) {
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = new ImmutableMultimap.Builder<>();
         if (slot == EquipmentSlot.MAINHAND) {
             if (this.intelligence > 0) {
@@ -108,8 +111,9 @@ public abstract class SpellItem extends TieredItem implements IModItem {
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = new ImmutableMultimap.Builder<>();
         if (slot == EquipmentSlot.MAINHAND) {
-            if (this.getManaCost(stack) > 0)
-            builder.put(ModAttributes.MANA_COST.get(), new AttributeModifier(UUID.randomUUID(), "Attribute Modifier for Mana Cost", this.getManaCost(stack), AttributeModifier.Operation.ADDITION));
+            if (this.getManaCost() > 0) {
+                builder.put(ModAttributes.MANA_COST.get(), new AttributeModifier(SpellItem.MANA_COST_MOD, "Attribute Modifier for Mana Cost", this.getManaCost(), AttributeModifier.Operation.ADDITION));
+            }
         }
         builder.putAll(super.getAttributeModifiers(slot, stack));
         return builder.build();
@@ -117,10 +121,19 @@ public abstract class SpellItem extends TieredItem implements IModItem {
 
 
     //The actual logic for the SpellItem
-    protected boolean addSlot(SpellSlot slot) {
-        if (this.getFirstEmptySpellSlot() > -1) {
+    public boolean addSlot(SpellSlot slot) {
+        if (this.getFirstEmptySpellSlot() > -1 && !this.containsSpell(slot.getSpell()) && slot.getSpell().canApply(this)) {
             this.setSlot(slot, this.getFirstEmptySpellSlot());
             return true;
+        }
+        return false;
+    }
+
+    private boolean containsSpell(Spell spell) {
+        for (SpellSlot slot : this.spellSlots) {
+            if (slot != null && slot.getSpell() == spell) {
+                return true;
+            }
         }
         return false;
     }
@@ -137,7 +150,7 @@ public abstract class SpellItem extends TieredItem implements IModItem {
 
     private int getFirstEmptySpellSlot() {
         for (int i = 0; i < this.getSpellSlotAmount(); i++) {
-            if (this.spellSlots[i] == null) {
+            if (this.spellSlots[i] == null || this.spellSlots[i].getSpell() == Spells.EMPTY_SPELL) {
                 return i;
             }
         }
@@ -163,18 +176,12 @@ public abstract class SpellItem extends TieredItem implements IModItem {
     }
 
     public static final UUID MANA_COST_MOD = UUID.fromString("95c53029-8493-4e05-9e7b-a0c0530dae83");
-    public static final UUID ULTIMATE_WISE_MOD = UUID.fromString("88572caa-0070-4e33-a82b-dadb48658c80");
-
     private Spells.SpellType getType() {
         return this.getActiveSpell().TYPE;
     }
-    public double getManaCost(ItemStack stack) {
+    public double getManaCost() {
         if (this.getActiveSpell() != null) {
-            double manaCost = this.getActiveSpellSlot().getManaCost();
-            if (stack.getEnchantmentLevel(ModEnchantments.ULTIMATE_WISE.get()) > 0) {
-                manaCost *= 1 - (0.1 * stack.getEnchantmentLevel(ModEnchantments.ULTIMATE_WISE.get()));
-            }
-            return manaCost;
+            return this.getActiveSpellSlot().getManaCost();
         } else {
             return 0;
         }
@@ -220,8 +227,16 @@ public abstract class SpellItem extends TieredItem implements IModItem {
         return InteractionResultHolder.consume(itemstack);
     }
 
-    private boolean handleMana(LivingEntity user, ItemStack stack) {
-        double manaToUse = this.getManaCost(stack);
+    @Override
+    public @NotNull InteractionResult useOn(UseOnContext context) {
+        if (context.getPlayer() != null) {
+            use(context.getLevel(), context.getPlayer(), context.getHand());
+        }
+        return super.useOn(context);
+    }
+
+    private boolean handleMana(LivingEntity user) {
+        double manaToUse = user.getAttributeValue(ModAttributes.MANA_COST.get());
         double overflowMana = user.getPersistentData().getDouble("overflowMana");
         double currentMana = user.getAttribute(ModAttributes.MANA.get()).getBaseValue() + overflowMana;
         if (currentMana == 0) { return false; }
@@ -244,11 +259,11 @@ public abstract class SpellItem extends TieredItem implements IModItem {
     public @NotNull ItemStack finishUsingItem(@NotNull ItemStack stack, @NotNull Level level, @NotNull LivingEntity user) {
         if (!level.isClientSide()) {
             Spell spell = this.getActiveSpell();
-            if (spell.TYPE == Spells.RELEASE && this.handleMana(user, stack)) {
+            if (spell.TYPE == Spells.RELEASE && this.handleMana(user)) {
                 spell.execute(user, stack);
             }
             if (user instanceof Player player) {
-                player.displayClientMessage(Component.literal("Used " + spell.getName() + ": " + FormattingCodes.RED + "-" + this.getManaCost(stack) + " Mana"), true);
+                player.displayClientMessage(Component.literal("Used " + spell.getName() + ": " + FormattingCodes.RED + "-" + user.getAttributeValue(ModAttributes.MANA_COST.get()) + " Mana"), true);
             }
         }
         return stack;
@@ -258,10 +273,10 @@ public abstract class SpellItem extends TieredItem implements IModItem {
     public void onUseTick(@NotNull Level level, @NotNull LivingEntity user, @NotNull ItemStack stack, int count) {
         if (!level.isClientSide()) {
             Spell spell = this.getActiveSpell();
-            if (spell.TYPE == Spells.CYCLE && this.handleMana(user, stack)) {
+            if (spell.TYPE == Spells.CYCLE && this.handleMana(user)) {
                 spell.execute(user, stack);
                 if (count == 1 && user instanceof Player player) {
-                    player.sendSystemMessage(Component.literal("Started Using " + spell.getName() + ": " + FormattingCodes.RED + "-" + (this.getManaCost(stack) * 20) + " Mana" + "/s"));
+                    player.sendSystemMessage(Component.literal("Started Using " + spell.getName() + ": " + FormattingCodes.RED + "-" + (this.getManaCost() * 20) + " Mana" + "/s"));
                 }
             }
         }

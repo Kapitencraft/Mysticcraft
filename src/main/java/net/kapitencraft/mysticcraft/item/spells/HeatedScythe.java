@@ -7,11 +7,11 @@ import net.minecraft.world.item.Rarity;
 
 import java.util.List;
 
-public class HeatedScythe extends SpellItem implements IDamageSpellItem {
+public class HeatedScythe extends NormalSpellItem implements IDamageSpellItem, IFireScytheItem {
 
     public HeatedScythe() {
         super(new Properties().rarity(Rarity.UNCOMMON), 1, 50, 0);
-        this.addSlot(new SpellSlot(Spells.FIRE_BOLD_1));
+        this.addSlot(new SpellSlot(Spells.FIRE_BOLT_1));
     }
     @Override
     public List<Component> getItemDescription() {

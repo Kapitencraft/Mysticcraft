@@ -1,10 +1,12 @@
 package net.kapitencraft.mysticcraft.spell.spells;
 
+import net.kapitencraft.mysticcraft.item.spells.AspectOfTheEndItem;
 import net.kapitencraft.mysticcraft.misc.MISCTools;
 import net.kapitencraft.mysticcraft.spell.Spell;
 import net.kapitencraft.mysticcraft.spell.Spells;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 
@@ -22,6 +24,11 @@ public class InstantTransmissionSpell extends Spell {
     public void execute(LivingEntity user, ItemStack stack) {
         MISCTools.saveTeleport(user, 8);
 
+    }
+
+    @Override
+    public boolean canApply(Item item) {
+        return item instanceof AspectOfTheEndItem;
     }
 
     @Override

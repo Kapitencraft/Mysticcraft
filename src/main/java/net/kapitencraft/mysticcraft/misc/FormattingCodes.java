@@ -4,6 +4,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.world.item.Rarity;
 
 public class FormattingCodes {
+
     public static final Color BLACK = new Color("black","\u00A70");
     public static final String DARK_BLUE = "\u00A71";
     public static final String DARK_GREEN = "\u00A72";

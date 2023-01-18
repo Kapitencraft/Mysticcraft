@@ -1,8 +1,12 @@
 package net.kapitencraft.mysticcraft.item;
 
 import net.kapitencraft.mysticcraft.init.ModAttributes;
+import net.kapitencraft.mysticcraft.init.ModEnchantments;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -19,12 +23,27 @@ public class RNGDropHelper {
             if (source instanceof Player player) {
                 player.sendSystemMessage(createRareDropMessage(stack, magicFind));
             }
-            source.level.addFreshEntity(new ItemEntity(source.level, spawnPos.x, spawnPos.y, spawnPos.z, stack));
+            if (source instanceof Player player && player.getMainHandItem().getEnchantmentLevel(ModEnchantments.TELEKINESIS.get()) > 0){
+                player.getInventory().add(stack);
+            } else {
+                source.level.addFreshEntity(new ItemEntity(source.level, spawnPos.x, spawnPos.y, spawnPos.z, stack));
+            }
         }
     }
 
+    private static Component getStackNameWithoutBrackets(ItemStack stack) {
+        MutableComponent mutablecomponent = Component.empty().append(stack.getHoverName());
+        if (stack.hasCustomHoverName()) {
+            mutablecomponent.withStyle(ChatFormatting.ITALIC);
+        }
+
+        mutablecomponent.withStyle(stack.getRarity().getStyleModifier()).withStyle((p_220170_) ->
+                p_220170_.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ITEM, new HoverEvent.ItemStackInfo(stack))));
+        return mutablecomponent;
+    }
+
     private static Component createRareDropMessage(ItemStack drop, double magic_find) {
-        return Component.literal(FormattingCodes.BOLD + FormattingCodes.LIGHT_PURPLE + "VERY CRAZY RARE DROP" + FormattingCodes.RESET + FormattingCodes.BOLD + ": " + FormattingCodes.RESET).append(drop.getDisplayName()).append(Component.literal(FormattingCodes.AQUA + " (+" + magic_find + ")"));
+        return Component.literal(FormattingCodes.BOLD + FormattingCodes.LIGHT_PURPLE + "VERY CRAZY RARE DROP" + FormattingCodes.RESET + FormattingCodes.BOLD + ": " + FormattingCodes.RESET).append(getStackNameWithoutBrackets(drop)).append(FormattingCodes.AQUA + " (+" + magic_find + ")");
     }
 
 }

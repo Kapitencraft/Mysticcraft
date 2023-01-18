@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:blasting",
+  "cookingtime": 200,
+  "experience": 5,
+  "ingredient": {
+    "item": "mysticcraft:mangatic_stone"
+  },
+  "result": "mysticcraft:mana_steel_ingot"
+}

@@ -8,7 +8,7 @@ import net.minecraft.world.item.Rarity;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class TheStaffOfDestruction extends SpellItem {
+public class TheStaffOfDestruction extends NormalSpellItem {
     private final Component[] description = {Component.literal("A very explosive tool")};
     public TheStaffOfDestruction() {
         super(new Properties().rarity(Rarity.RARE), 1, 50, 20);

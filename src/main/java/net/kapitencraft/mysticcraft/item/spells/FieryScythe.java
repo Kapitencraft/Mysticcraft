@@ -7,10 +7,10 @@ import net.minecraft.world.item.Rarity;
 
 import java.util.List;
 
-public class FieryScythe extends SpellItem implements IDamageSpellItem {
+public class FieryScythe extends NormalSpellItem implements IDamageSpellItem, IFireScytheItem {
     public FieryScythe() {
         super(new Properties().rarity(Rarity.RARE).fireResistant(), 1, 50, 10);
-        this.addSlot(new SpellSlot(Spells.FIRE_BOLD_2));
+        this.addSlot(new SpellSlot(Spells.FIRE_BOLT_2));
     }
 
     @Override

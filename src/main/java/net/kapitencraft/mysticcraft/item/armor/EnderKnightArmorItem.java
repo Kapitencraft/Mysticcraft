@@ -88,4 +88,9 @@ public class EnderKnightArmorItem extends ModArmorItem implements IGemstoneAppli
     public GemstoneSlot[] getGemstoneSlots() {
         return this.slots;
     }
+
+    @Override
+    public void setGemstoneSlots(GemstoneSlot[] slots) {
+        this.slots = slots;
+    }
 }

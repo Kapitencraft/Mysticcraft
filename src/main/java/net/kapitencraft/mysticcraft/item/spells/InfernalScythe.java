@@ -7,10 +7,10 @@ import net.minecraft.network.chat.Component;
 
 import java.util.List;
 
-public class InfernalScythe extends SpellItem implements IDamageSpellItem {
+public class InfernalScythe extends NormalSpellItem implements IDamageSpellItem, IFireScytheItem {
     public InfernalScythe() {
         super(new Properties().rarity(FormattingCodes.LEGENDARY), 1, 350, 69);
-        this.addSlot(new SpellSlot(Spells.FIRE_BOLD_4));
+        this.addSlot(new SpellSlot(Spells.FIRE_BOLT_4));
     }
 
     @Override

@@ -105,7 +105,7 @@ public class GemstoneGrinderMenu extends AbstractContainerMenu {
     @Override
     public boolean stillValid(@NotNull Player player) {
         return stillValid(ContainerLevelAccess.create(level, blockEntity.getBlockPos()),
-                player, ModBlocks.GEMSTONE_GRINDER.get());
+                player, ModBlocks.GEMSTONE_GRINDER.getBlock());
     }
 
     private void addPlayerInventory(Inventory playerInventory) {
@@ -149,35 +149,22 @@ public class GemstoneGrinderMenu extends AbstractContainerMenu {
             if (!(world.hasChunkAt(new BlockPos(x, y, z)))) {
                 return;
             }
-            ItemStack gemstoneSlot = handler.getStackInSlot(0);
+            ItemStack gemstoneApplicableSlot = handler.getStackInSlot(0);
             Inventory playerInventory = this.player.getInventory();
-            boolean flag = gemstoneSlot != ItemStack.EMPTY;
+            boolean flag = gemstoneApplicableSlot != ItemStack.EMPTY;
             IGemstoneApplicable gemstoneApplicable = null;
-            if (flag && gemstoneSlot.getItem() instanceof IGemstoneApplicable iGemstoneApplicable) {
+            if (flag && gemstoneApplicableSlot.getItem() instanceof IGemstoneApplicable iGemstoneApplicable) {
                     gemstoneApplicable = iGemstoneApplicable;
             } //Making the gemstoneApplicable
             if (slotId == 0) {
-                if (flag) {
-                    int gemstoneSlotAmount = gemstoneApplicable.getGemstoneSlotAmount();
-                    boolean[] unlockedSlots = getSlotUnlocked(gemstoneSlotAmount);
-                      for (int i = 0; i < 5; i++) {
-                        if (unlockedSlots[i]) {
-                            handler.setStackInSlot(i + 1, ItemStack.EMPTY);
-                        } else {
-                            if (!handler.getStackInSlot(i + 1).equals(BLOCKED_GEMSTONE_STACK)) {
-                                handler.setStackInSlot(i + 1, BLOCKED_GEMSTONE_STACK);
-                            }
-                        }
-                    }
+                if (gemstoneApplicable == null) {
+                    GemstoneGrinderBlockEntity.emptyItemHandler(handler);
                 } else {
-                    for (int i = 1; i < handler.getSlots(); i++) {
-                        handler.setStackInSlot(i, ItemStack.EMPTY);
-                        handler.setStackInSlot(i, new ItemStack(GemstoneGrinderBlockEntity.GUI_SLOT_LOCK));
-                    }
+                    updateSlots(gemstoneApplicable, handler);
                 }
              } else if (slotId <= 5 && slotId >= 1) {
                  if (handler.getStackInSlot(slotId).getItem() instanceof GemstoneItem gemstoneItem && gemstoneApplicable != null) {
-                    if (!gemstoneApplicable.getGemstoneSlots()[slotId].putGemstone(gemstoneItem.toGemstone())) {
+                    if (!gemstoneApplicable.putGemstone(gemstoneItem.getGemstone(), gemstoneItem.getRarity(), slotId - 1, gemstoneApplicableSlot)) {
                         playerInventory.add(handler.getStackInSlot(slotId));
                         handler.setStackInSlot(slotId, ItemStack.EMPTY);
                     }
@@ -185,7 +172,29 @@ public class GemstoneGrinderMenu extends AbstractContainerMenu {
             }
         }
     }
-    private void verifySlots(Player player, ItemStackHandler handler) {
+
+    public static void updateSlots(IGemstoneApplicable applicable, ItemStackHandler handler) {
+        if (applicable != null) {
+            int gemstoneSlotAmount = applicable.getGemstoneSlotAmount();
+            boolean[] unlockedSlots = getSlotUnlocked(gemstoneSlotAmount);
+            for (int i = 0; i < 5; i++) {
+                if (unlockedSlots[i]) {
+                    handler.setStackInSlot(i + 1, ItemStack.EMPTY);
+                } else {
+                    if (!handler.getStackInSlot(i + 1).equals(BLOCKED_GEMSTONE_STACK)) {
+                        handler.setStackInSlot(i + 1, BLOCKED_GEMSTONE_STACK);
+                    }
+                }
+            }
+        } else {
+            for (int i = 1; i < handler.getSlots(); i++) {
+                handler.setStackInSlot(i, ItemStack.EMPTY);
+                handler.setStackInSlot(i, new ItemStack(GemstoneGrinderBlockEntity.GUI_SLOT_LOCK));
+            }
+        }
+
+    }
+    private static void verifySlots(Player player, ItemStackHandler handler) {
         for (int i = 0; i < handler.getSlots(); i++) {
             if (!isValidItemInSlot(handler, i)) {
                 player.getInventory().add(handler.getStackInSlot(i));
@@ -194,7 +203,7 @@ public class GemstoneGrinderMenu extends AbstractContainerMenu {
         }
     }
 
-    private boolean isValidItemInSlot(ItemStackHandler handler, int index) {
+    private static boolean isValidItemInSlot(ItemStackHandler handler, int index) {
         ItemStack stack = handler.getStackInSlot(index);
         if (stack == ItemStack.EMPTY) {
             return true;

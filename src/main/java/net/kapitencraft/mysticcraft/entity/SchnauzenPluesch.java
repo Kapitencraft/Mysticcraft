@@ -44,7 +44,7 @@ public class SchnauzenPluesch extends PathfinderMob implements GeoItem {
 
     public SchnauzenPluesch(EntityType<SchnauzenPluesch> type, Level world) {
         super(type, world);
-        this.color = "black";
+        this.color = "white";
         xpReward = 0;
         setNoAi(false);
     }

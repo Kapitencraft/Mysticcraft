@@ -1,31 +1,27 @@
 package net.kapitencraft.mysticcraft.item.gemstone;
 
-import net.kapitencraft.mysticcraft.item.gemstone.gemstones.AlmandineGemstone;
-import net.kapitencraft.mysticcraft.item.gemstone.gemstones.JasperGemstone;
-import net.kapitencraft.mysticcraft.item.gemstone.gemstones.RubyGemstone;
-import net.kapitencraft.mysticcraft.item.gemstone.gemstones.SapphireGemstone;
 import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.Nullable;
 
 public  class  GemstoneItem extends Item {
-    private final Gemstone.Rarity RARITY;
+    private final GemstoneType.Rarity RARITY;
     public final String gemstoneName;
-    public GemstoneItem(Gemstone.Rarity rarity, @Nullable Properties properties, String gemstoneName) {
+    public GemstoneItem(GemstoneType.Rarity rarity, @Nullable Properties properties, String gemstoneName) {
         super((properties != null ? properties : new Properties()));
         this.RARITY = rarity;
         this.gemstoneName = gemstoneName;
     }
 
-    public Gemstone.Rarity getRarity() {
+    public GemstoneType.Rarity getRarity() {
         return this.RARITY;
     }
 
-    public Gemstone toGemstone() {
+    public GemstoneType getGemstone() {
         return switch (this.gemstoneName) {
-            case "almandine" -> new AlmandineGemstone(this.RARITY);
-            case "jasper" -> new JasperGemstone(this.RARITY);
-            case "ruby" -> new RubyGemstone(this.RARITY);
-            case "sapphire" -> new SapphireGemstone(this.RARITY);
+            case "almandine" -> GemstoneType.ALMANDINE;
+            case "jasper" -> GemstoneType.JASPER;
+            case "ruby" -> GemstoneType.RUBY;
+            case "sapphire" -> GemstoneType.SAPPHIRE;
             default -> throw new IllegalStateException("There are no other Gemstones");
         };
     }

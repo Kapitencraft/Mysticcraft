@@ -6,16 +6,16 @@ public class Spells {
 
     public static final SpellType RELEASE = new SpellType("release");
     public static final SpellType CYCLE = new SpellType("cycle");
-    public static final Spell CRYSTAL_WARP = new CrystalWarpSpell();
+    public static final Spell WITHER_IMPACT = new WitherImpactSpell();
+    public static final Spell IMPLOSION = new ImplosionSpell();
     public static final Spell INSTANT_TRANSMISSION = new InstantTransmissionSpell();
     public static final Spell EXPLOSIVE_SIGHT = new ExplosiveSightSpell();
     public static final Spell EMPTY_SPELL = new EmptySpell();
-    public static final Spell FIRE_BOLD_1 = new FireBoldSpell(1, false);
-    public static final Spell FIRE_BOLD_2 = new FireBoldSpell(1.4, false);
-    public static final Spell FIRE_BOLD_3 = new FireBoldSpell(2.8, true);
-    public static final Spell FIRE_BOLD_4 = new FireBoldSpell(5.2, true);
+    public static final Spell FIRE_BOLT_1 = new FireBoltSpell(1, false);
+    public static final Spell FIRE_BOLT_2 = new FireBoltSpell(1.4, false);
+    public static final Spell FIRE_BOLT_3 = new FireBoltSpell(2.8, true);
+    public static final Spell FIRE_BOLT_4 = new FireBoltSpell(5.2, true);
     public static final Spell FIRE_LANCE = new FireLanceSpell();
-
     public record SpellType(String name) {
     }
 }

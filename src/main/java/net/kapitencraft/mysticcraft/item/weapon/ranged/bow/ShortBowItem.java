@@ -1,5 +1,6 @@
 package net.kapitencraft.mysticcraft.item.weapon.ranged.bow;
 
+import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModEnchantments;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
@@ -8,10 +9,11 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.ArrowItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
@@ -46,8 +48,8 @@ public abstract class ShortBowItem extends ModdedBows {
         ItemStack arrowStack = archer.getProjectile(bow);
         if (!arrowStack.isEmpty() && arrowStack.getItem() instanceof ArrowItem arrowItem) {
             AbstractArrow arrow = arrowItem.createArrow(world, arrowStack, archer);
-            arrow.shootFromRotation(archer, rotX, rotY, 0.0F, (float) (1 + bow.getEnchantmentLevel(ModEnchantments.FAST_ARROWS.get()) * 0.2), 1.0F);
-            arrow.setBaseDamage(archer.getAttributeValue(Attributes.ATTACK_DAMAGE));
+            arrow.shootFromRotation(archer, rotX, rotY, 0.0F, (float) (5 + bow.getEnchantmentLevel(ModEnchantments.FAST_ARROWS.get()) * 0.2), 1.0F);
+            arrow.setBaseDamage(archer.getAttributeValue(ModAttributes.RANGED_DAMAGE.get()));
             arrow.setKnockback(kb);
             arrow.setCritArrow(true);
             registerEnchant(bow, arrow);
@@ -88,6 +90,8 @@ public abstract class ShortBowItem extends ModdedBows {
         super.appendHoverText(itemStack, level, list, flag);
         list.add(Component.literal(""));
         list.add(Component.literal("Shot Cooldown: " + this.createCooldown(itemStack) + "s").withStyle(ChatFormatting.GREEN));
+        list.add(Component.literal(""));
+        list.add(Component.literal("Short Bow: Instantly Shoots!").withStyle(ChatFormatting.DARK_PURPLE));
     }
 
     protected void createArrows(@NotNull ItemStack bow, @NotNull Level world, @NotNull LivingEntity archer) {

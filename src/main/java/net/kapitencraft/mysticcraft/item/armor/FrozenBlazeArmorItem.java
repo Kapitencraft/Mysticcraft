@@ -2,7 +2,7 @@ package net.kapitencraft.mysticcraft.item.armor;
 
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
-import net.kapitencraft.mysticcraft.misc.FrozenDamageSource;
+import net.kapitencraft.mysticcraft.misc.damage_source.FrozenDamageSource;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;

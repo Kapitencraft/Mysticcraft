@@ -1,46 +1,55 @@
 package net.kapitencraft.mysticcraft.item.gemstone;
 
+import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.event.ModEventFactory;
-import net.kapitencraft.mysticcraft.item.gemstone.gemstones.AlmandineGemstone;
-import net.kapitencraft.mysticcraft.item.gemstone.gemstones.JasperGemstone;
-import net.kapitencraft.mysticcraft.item.gemstone.gemstones.RubyGemstone;
-import net.kapitencraft.mysticcraft.item.gemstone.gemstones.SapphireGemstone;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
+import net.minecraft.nbt.CompoundTag;
 
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 public class GemstoneSlot {
 
-    public static final GemstoneSlot COMBAT = new GemstoneSlot(Type.COMBAT, new Gemstone[]{new JasperGemstone(), new SapphireGemstone(), new RubyGemstone(), new AlmandineGemstone()}, null);
-    public static final GemstoneSlot OFFENSIVE = new GemstoneSlot(Type.OFFENCE, new Gemstone[]{new JasperGemstone(), new SapphireGemstone(), new AlmandineGemstone()}, null);
-    public static final GemstoneSlot DEFENCE = new GemstoneSlot(Type.DEFENCE, new Gemstone[]{new RubyGemstone()}, null);
-    public static final GemstoneSlot MAGIC = new GemstoneSlot(Type.MAGIC, new Gemstone[]{new SapphireGemstone(), new AlmandineGemstone()}, null);
-    public static final GemstoneSlot INTELLIGENCE = new GemstoneSlot(Type.INTELLIGENCE, new Gemstone[]{new SapphireGemstone()}, null);
-    public static final GemstoneSlot STRENGHT = new GemstoneSlot(Type.STRENGTH, new Gemstone[]{new JasperGemstone()}, null);
-    public static final GemstoneSlot HEALTH = new GemstoneSlot(Type.HEALTH, new Gemstone[]{new RubyGemstone()}, null);
-    public static final GemstoneSlot ABILITY_DAMAGE = new GemstoneSlot(Type.ABILITY_DAMAGE, new Gemstone[]{new AlmandineGemstone()}, null);
+    public static final GemstoneSlot COMBAT = new GemstoneSlot(Type.COMBAT, null, GemstoneType.Rarity.EMPTY);
+    public static final GemstoneSlot OFFENSIVE = new GemstoneSlot(Type.OFFENCE, null, GemstoneType.Rarity.EMPTY);
+    public static final GemstoneSlot DEFENCE = new GemstoneSlot(Type.DEFENCE, null, GemstoneType.Rarity.EMPTY);
+    public static final GemstoneSlot MAGIC = new GemstoneSlot(Type.MAGIC, null, GemstoneType.Rarity.EMPTY);
+    public static final GemstoneSlot INTELLIGENCE = new GemstoneSlot(Type.INTELLIGENCE, null, GemstoneType.Rarity.EMPTY);
+    public static final GemstoneSlot STRENGHT = new GemstoneSlot(Type.STRENGTH, null, GemstoneType.Rarity.EMPTY);
+    public static final GemstoneSlot HEALTH = new GemstoneSlot(Type.HEALTH, null, GemstoneType.Rarity.EMPTY);
+    public static final GemstoneSlot ABILITY_DAMAGE = new GemstoneSlot(Type.ABILITY_DAMAGE, null, GemstoneType.Rarity.EMPTY);
 
-    private Gemstone.Rarity gem_rarity;
+    private GemstoneType.Rarity gemRarity;
     private final Type TYPE;
-    private final Gemstone[] applicableGemstones;
-    private Gemstone appliedGemstone;
-    public GemstoneSlot(Type gem_type, Gemstone[] applicableGemstones, @Nullable Gemstone appliedGemstone) {
-        this.appliedGemstone = appliedGemstone;
-        this.applicableGemstones = applicableGemstones;
+    private GemstoneType appliedGemstoneType;
+    public GemstoneSlot(Type gem_type, @Nullable GemstoneType appliedGemstoneType, GemstoneType.Rarity rarity) {
+        this.appliedGemstoneType = appliedGemstoneType;
         this.TYPE = gem_type;
-        if (appliedGemstone != null) {
-            this.gem_rarity = appliedGemstone.getRarity();
+        this.gemRarity = rarity;
+    }
+
+    public CompoundTag toNBT() {
+        CompoundTag tag = new CompoundTag();
+        tag.putString("gem_rarity", this.gemRarity.getId());
+        tag.putString("type", this.TYPE.id);
+        if (this.appliedGemstoneType != null) {
+            tag.putString("gem", this.appliedGemstoneType.getId());
         } else {
-            this.gem_rarity = Gemstone.Rarity.EMPTY;
+            tag.putString("gem", "null");
         }
+        return tag;
+    }
+
+    public static GemstoneSlot fromNBT(CompoundTag tag) {
+        return new GemstoneSlot(Type.getById(tag.getString("type")), GemstoneType.getById(tag.getString("gem")), GemstoneType.Rarity.getById(tag.getString("gem_rarity")));
     }
 
     private String getColorForRarity() {
-        return this.gem_rarity.COLOUR;
+        return this.gemRarity.COLOUR;
     }
 
-    public Gemstone.Rarity getGemRarity() {
-        return this.gem_rarity;
+    public GemstoneType.Rarity getGemRarity() {
+        return this.gemRarity;
     }
 
     public Type getType() {
@@ -48,53 +57,73 @@ public class GemstoneSlot {
     }
 
 
-    private boolean isValidGemstone(Gemstone gemstone) {
-        for (Gemstone gemstone1 : applicableGemstones) {
-            if (gemstone1.getClass().equals(gemstone.getClass())) {
+    private boolean isValidGemstone(GemstoneType gemstoneType) {
+        for (GemstoneType gemstoneType1 : this.TYPE.applicable) {
+            if (gemstoneType1.equals(gemstoneType)) {
                 return true;
             }
         }
         return false;
     }
-    public boolean putGemstone(Gemstone gemstone) {
-        if (this.isValidGemstone(gemstone)) {
-            this.appliedGemstone = gemstone;
-            this.gem_rarity = gemstone.getRarity();
-            ModEventFactory.onGemstoneApplied(gemstone, this);
+    public boolean putGemstone(GemstoneType gemstoneType, GemstoneType.Rarity rarity) {
+        if (this.isValidGemstone(gemstoneType)) {
+            this.appliedGemstoneType = gemstoneType;
+            this.gemRarity = rarity;
+            ModEventFactory.onGemstoneApplied(gemstoneType, this);
+            MysticcraftMod.sendInfo("ea");
             return true;
         }
         return false;
     }
 
-    public @Nullable Gemstone getAppliedGemstone() {
-        return this.appliedGemstone;
+    public @Nullable GemstoneType getAppliedGemstone() {
+        return this.appliedGemstoneType;
     }
-    public void setGemRarity(Gemstone.Rarity rarity) {
-        this.gem_rarity = rarity;
+    public void setGemRarity(GemstoneType.Rarity rarity) {
+        this.gemRarity = rarity;
     }
 
     public String getDisplay() {
-        boolean flag = this.appliedGemstone == null;
-        return getColorForRarity() + "[" + FormattingCodes.RESET + (flag ? FormattingCodes.GRAY : appliedGemstone.getColour()) + this.TYPE.getUNICODE() + FormattingCodes.RESET + getColorForRarity() + "]";
+        boolean flag = this.appliedGemstoneType == null;
+        return getColorForRarity() + "[" + FormattingCodes.RESET + (flag ? FormattingCodes.GRAY : appliedGemstoneType.getColour()) + this.TYPE.getUNICODE() + FormattingCodes.RESET + getColorForRarity() + "]";
     }
 
 
 
-    public static class Type {
-        public static final Type COMBAT = new Type("");
-        public static final Type OFFENCE = new Type("");
-        public static final Type DEFENCE = new Type("\uF003");
-        public static final Type MAGIC = new Type("\uF004");
-        public static final Type INTELLIGENCE = new Type("\uF000");
-        public static final Type STRENGTH = new Type("\uF002");
-        public static final Type HEALTH = new Type("");
-        public static final Type ABILITY_DAMAGE = new Type("\uF001");
+    public enum Type {
+        COMBAT("", "combat", new GemstoneType[]{GemstoneType.JASPER, GemstoneType.SAPPHIRE, GemstoneType.RUBY, GemstoneType.ALMANDINE}),
+        OFFENCE("", "offence", new GemstoneType[]{GemstoneType.JASPER, GemstoneType.SAPPHIRE, GemstoneType.ALMANDINE}),
+        DEFENCE("\uF003", "defence", new GemstoneType[]{GemstoneType.RUBY}),
+        MAGIC("\uF004", "magic", new GemstoneType[]{GemstoneType.SAPPHIRE, GemstoneType.ALMANDINE}),
+        INTELLIGENCE("\uF000", "intel", new GemstoneType[]{GemstoneType.SAPPHIRE}),
+        STRENGTH("\uF002", "strength", new GemstoneType[]{GemstoneType.JASPER}),
+        HEALTH("", "health", new GemstoneType[]{GemstoneType.RUBY}),
+        ABILITY_DAMAGE("\uF001", "ability_damage", new GemstoneType[]{GemstoneType.ALMANDINE}),
+        EMPTY("", "empty", null);
 
         public final String UNICODE;
+        public final String id;
+        public final GemstoneType[] applicable;
 
-        public Type(String unicode) {
+        Type(String unicode, String id, GemstoneType[] applicable) {
             this.UNICODE = unicode;
+            this.id = id;
+            this.applicable = applicable;
         }
+
+        public GemstoneType[] getApplicable() {
+            return applicable;
+        }
+
+        public static Type getById(String id) {
+            for (int i = 0; i < values().length; i++) {
+                if (Objects.equals(values()[i].id, id)) {
+                    return values()[i];
+                }
+            }
+            return Type.EMPTY;
+        }
+
 
         public String getUNICODE() {
             return UNICODE;

@@ -1,5 +1,6 @@
 package net.kapitencraft.mysticcraft.spell.spells;
 
+import net.kapitencraft.mysticcraft.item.spells.FireLance;
 import net.kapitencraft.mysticcraft.misc.MISCTools;
 import net.kapitencraft.mysticcraft.spell.Spell;
 import net.kapitencraft.mysticcraft.spell.Spells;
@@ -7,6 +8,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.phys.AABB;
@@ -32,6 +34,11 @@ public class FireLanceSpell extends Spell {
                 }
             }
         }
+    }
+
+    @Override
+    public boolean canApply(Item stack) {
+        return stack instanceof FireLance;
     }
 
     @Override

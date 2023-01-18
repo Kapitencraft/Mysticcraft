@@ -57,12 +57,15 @@ public class  GemstoneGrinderBlockEntity extends BlockEntity implements MenuProv
                 return 2;
             }
         };
-        this.itemHandler.setStackInSlot(1, new ItemStack(GUI_SLOT_LOCK));
-        this.itemHandler.setStackInSlot(2, new ItemStack(GUI_SLOT_LOCK));
-        this.itemHandler.setStackInSlot(3, new ItemStack(GUI_SLOT_LOCK));
-        this.itemHandler.setStackInSlot(4, new ItemStack(GUI_SLOT_LOCK));
-        this.itemHandler.setStackInSlot(5, new ItemStack(GUI_SLOT_LOCK));
+        emptyItemHandler(this.itemHandler);
+    }
 
+    public static void emptyItemHandler(ItemStackHandler handler) {
+        handler.setStackInSlot(1, new ItemStack(GUI_SLOT_LOCK));
+        handler.setStackInSlot(2, new ItemStack(GUI_SLOT_LOCK));
+        handler.setStackInSlot(3, new ItemStack(GUI_SLOT_LOCK));
+        handler.setStackInSlot(4, new ItemStack(GUI_SLOT_LOCK));
+        handler.setStackInSlot(5, new ItemStack(GUI_SLOT_LOCK));
     }
 
     @Override
@@ -112,21 +115,10 @@ public class  GemstoneGrinderBlockEntity extends BlockEntity implements MenuProv
 
     public void drops() {
         SimpleContainer inventory = MISCTools.ContainerOf(this.itemHandler);
-
         Containers.dropContents(this.level, this.worldPosition, inventory);
     }
 
-
-    private static boolean canInsertItemIntoOutputSlot(SimpleContainer inventory, ItemStack stack) {
-        return inventory.getItem(2).getItem() == stack.getItem() || inventory.getItem(2).isEmpty();
-    }
-
-    private static boolean canInsertAmountIntoOutputSlot(SimpleContainer inventory) {
-        return inventory.getItem(2).getMaxStackSize() > inventory.getItem(2).getCount();
-    }
-
     public static <E extends BlockEntity> void tick(Level level, BlockPos pos, BlockState state, E e) {
-
     }
 
     public class ModItemStackHandler extends ItemStackHandler {

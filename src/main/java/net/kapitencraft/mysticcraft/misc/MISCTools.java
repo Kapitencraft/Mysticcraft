@@ -4,11 +4,12 @@ import com.google.common.collect.ImmutableMultimap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.api.APITools;
 import net.kapitencraft.mysticcraft.gui.IGuiHelper;
-import net.kapitencraft.mysticcraft.item.weapon.ranged.bow.ShortBowItem;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneItem;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
+import net.kapitencraft.mysticcraft.item.spells.NormalSpellItem;
 import net.kapitencraft.mysticcraft.item.spells.SpellItem;
 import net.kapitencraft.mysticcraft.item.weapon.melee.sword.LongSwordItem;
+import net.kapitencraft.mysticcraft.item.weapon.ranged.bow.ShortBowItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
@@ -25,6 +26,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -36,7 +38,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nullable;
-import java.text.DecimalFormat;
 import java.util.*;
 
 public class MISCTools {
@@ -65,7 +66,30 @@ public class MISCTools {
         return -1;
     }
 
+    public static double getAttributeValue(AttributeInstance instance, double baseValue) {
+        double d0 = baseValue;
 
+        if (instance.getModifiers(AttributeModifier.Operation.ADDITION) != null) {
+            for (AttributeModifier attributemodifier : instance.getModifiers(AttributeModifier.Operation.ADDITION)) {
+                d0 += attributemodifier.getAmount();
+            }
+        }
+
+        double d1 = d0;
+
+        if (instance.getModifiers(AttributeModifier.Operation.MULTIPLY_BASE) != null) {
+            for (AttributeModifier attributeModifier1 : instance.getModifiers(AttributeModifier.Operation.MULTIPLY_BASE)) {
+                d1 += d0 * attributeModifier1.getAmount();
+            }
+        }
+
+        if (instance.getModifiers(AttributeModifier.Operation.MULTIPLY_TOTAL) != null) {
+            for (AttributeModifier attributeModifier2 : instance.getModifiers(AttributeModifier.Operation.MULTIPLY_TOTAL)) {
+                d1 *= 1.0D + attributeModifier2.getAmount();
+            }
+        }
+        return instance.getAttribute().sanitizeValue(d1);
+    }
 
     public static boolean saveTeleport(Entity entity, double maxRange) {
         ArrayList<Vec3> lineOfSight = LineOfSight(entity, maxRange, 0.1);
@@ -75,10 +99,12 @@ public class MISCTools {
             if (entity.level.getBlockState(pos).canOcclude() && lineOfSight.indexOf(vec3) > 0) {
                 teleportPosition = lineOfSight.get(lineOfSight.indexOf(vec3) - 1);
                 entity.teleportTo(teleportPosition.x, teleportPosition.y, teleportPosition.z);
+                entity.fallDistance = 0;
                 return true;
             } else if (lineOfSight.indexOf(vec3) == lineOfSight.size() - 1) {
                 teleportPosition = lineOfSight.get(lineOfSight.indexOf(vec3) - 1);
                 entity.teleportTo(teleportPosition.x, teleportPosition.y, teleportPosition.z);
+                entity.fallDistance = 0;
                 return true;
             }
         }
@@ -95,18 +121,14 @@ public class MISCTools {
     }
 
     public static  @Nullable LivingEntity getAttacker(DamageSource source) {
-        if (source.getEntity() instanceof Projectile projectile) {
-            if (projectile.getOwner() instanceof LivingEntity living) {
-                return living;
-            }
+        if (source.getEntity() instanceof Projectile projectile && projectile.getOwner() instanceof LivingEntity living) {
+            return living;
         } else if (source.getEntity() instanceof LivingEntity living) {
             return living;
         }
         return null;
     }
 
-
-    private static final DecimalFormat FORMAT = new DecimalFormat("#.##");
     public static ArmorStand createDamageIndicator(LivingEntity entity, double amount, String type) {
         ArmorStand dmgInc = new ArmorStand(entity.level, entity.getX() + Math.random() - 0.5, entity.getY() - 1, entity.getZ() + Math.random() - 0.5);
         boolean dodge = Objects.equals(type, "dodge");
@@ -115,7 +137,7 @@ public class MISCTools {
         dmgInc.setInvulnerable(true);
         dmgInc.setBoundingBox(new AABB(0,0,0,0,0,0));
         dmgInc.setCustomNameVisible(true);
-        dmgInc.setCustomName(Component.literal(!dodge ? String.valueOf(FORMAT.format(amount)) : "DODGE").withStyle(damageIndicatorColorGenerator(type)));
+        dmgInc.setCustomName(Component.literal(!dodge ? String.valueOf(MysticcraftMod.MAIN_FORMAT.format(amount)) : "DODGE").withStyle(damageIndicatorColorGenerator(type)));
         CompoundTag persistentData = dmgInc.getPersistentData();
         persistentData.putBoolean("isDamageIndicator", true);
         persistentData.putInt("time", 0);
@@ -159,7 +181,7 @@ public class MISCTools {
 
     public static String getNameModifier(ItemStack stack) {
         Item item = stack.getItem();
-        if (item instanceof SpellItem) {
+        if (item instanceof NormalSpellItem) {
             return "SPELL ITEM";
         } else if (item instanceof LongSwordItem) {
             return "LONGSWORD";
@@ -255,6 +277,15 @@ public class MISCTools {
         return false;
     }
 
+    public static <T> boolean ListContains(List<T> list, T t) {
+        for (T t1 : list) {
+            if (t1 == t) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static int createCustomIndex(EquipmentSlot slot) {
         return switch (slot) {
             case LEGS -> 2;
@@ -267,7 +298,7 @@ public class MISCTools {
     }
 
     public static final EnchantmentCategory SPELL_ITEM = EnchantmentCategory.create("SPELL_ITEM", item -> item instanceof SpellItem);
-    public static final EnchantmentCategory TOOL = EnchantmentCategory.create("TOOL", item -> item instanceof DiggerItem || item instanceof SwordItem || item instanceof BowItem);
+    public static final EnchantmentCategory TOOL = EnchantmentCategory.create("TOOL", item -> item instanceof DiggerItem || item instanceof SwordItem || item instanceof BowItem || item instanceof SpellItem);
     public static final EnchantmentCategory GEMSTONE_ITEM = EnchantmentCategory.create("GEMSTONE_ITEM", item -> item instanceof IGemstoneApplicable);
 
     public static double round(double no, int num) {

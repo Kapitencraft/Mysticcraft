@@ -3,14 +3,17 @@ package net.kapitencraft.mysticcraft;
 import com.mojang.logging.LogUtils;
 import net.kapitencraft.mysticcraft.gui.gemstone_grinder.GemstoneGrinderScreen;
 import net.kapitencraft.mysticcraft.init.*;
+import net.kapitencraft.mysticcraft.misc.MISCTools;
 import net.kapitencraft.mysticcraft.misc.ModItemProperties;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.SpawnPlacements;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.common.MinecraftForge;
@@ -26,6 +29,7 @@ import net.minecraftforge.network.simple.SimpleChannel;
 import org.slf4j.Logger;
 import software.bernie.geckolib.GeckoLib;
 
+import java.text.DecimalFormat;
 import java.util.UUID;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -36,6 +40,7 @@ import java.util.function.Supplier;
 public class MysticcraftMod {
     public static final String MOD_ID = "mysticcraft";
     public static final float TIME_PER_TICK = 0.05f;
+    public static final DecimalFormat MAIN_FORMAT = new DecimalFormat("#.##");
     private static int messageID = 0;
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final String PROTOCOL_VERSION = "1";
@@ -48,16 +53,12 @@ public class MysticcraftMod {
     public MysticcraftMod()
     {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        sendInfo("Registering Items...");
-        ModItems.REGISTRY.register(modEventBus);
-        sendInfo("Registering Enchantments...");
-        ModEnchantments.REGISTRY.register(modEventBus);
         sendInfo("Registering Attributes...");
         ModAttributes.REGISTRY.register(modEventBus);
+        sendInfo("Registering Enchantments...");
+        ModEnchantments.REGISTRY.register(modEventBus);
         sendInfo("Registering Effects...");
         ModMobEffects.REGISTRY.register(modEventBus);
-        sendInfo("Registering Blocks...");
-        ModBlocks.REGISTRY.register(modEventBus);
         sendInfo("Registering Block Entities...");
         ModBlockEntities.REGISTRY.register(modEventBus);
         sendInfo("Registering Menus...");
@@ -70,9 +71,21 @@ public class MysticcraftMod {
         ModFluidTypes.REGISTRY.register(modEventBus);
         sendInfo("Registering Fluids...");
         ModFluids.REGISTRY.register(modEventBus);
+        sendInfo("Registering Items...");
+        ModItems.REGISTRY.register(modEventBus);
+        sendInfo("Registering Blocks...");
+        ModBlocks.REGISTRY.register(modEventBus);
 
         MinecraftForge.EVENT_BUS.register(this);
         GeckoLib.initialize();
+    }
+
+    public static AttributeModifier createModifier(AttributeModifier.Operation operation, double value, EquipmentSlot slot) {
+        if (operation == AttributeModifier.Operation.ADDITION) {
+            return new AttributeModifier(ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[MISCTools.createCustomIndex(slot)], "Modded Mod", value, operation);
+        } else {
+            return new AttributeModifier(ITEM_ATTRIBUTE_MODIFIER_MUL_FOR_SLOT[MISCTools.createCustomIndex(slot)], "Modded Mod", value, operation);
+        }
     }
 
     @Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -92,6 +105,8 @@ public class MysticcraftMod {
         public static void onCommonSetup(FMLCommonSetupEvent event) {
             sendInfo("Registering Entity World Generation");
             registerSpawnPlacements();
+            sendInfo("Registering Custom Fluid Interactions");
+
         }
 
         private static void registerSpawnPlacements() {

@@ -1,5 +1,8 @@
 package net.kapitencraft.mysticcraft.item.weapon.ranged.bow;
 
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Multimap;
+import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModEnchantments;
 import net.kapitencraft.mysticcraft.item.IModItem;
@@ -10,7 +13,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
@@ -136,7 +142,16 @@ public abstract class ModdedBows extends BowItem implements IModItem {
     public abstract double getDamage();
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level p_41422_, List<Component> toolTip, TooltipFlag p_41424_) {
+    public @NotNull Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(@NotNull EquipmentSlot slot) {
+        ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = new ImmutableMultimap.Builder<>();
+        if (slot == EquipmentSlot.MAINHAND) {
+            builder.put(ModAttributes.RANGED_DAMAGE.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[5], "Damage Modifier", this.getDamage(), AttributeModifier.Operation.ADDITION));
+        }
+        return builder.build();
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, @Nullable Level p_41422_, @NotNull List<Component> toolTip, @NotNull TooltipFlag p_41424_) {
         if (stack.getItem() instanceof IGemstoneApplicable gemstoneApplicable) {
             gemstoneApplicable.getDisplay(stack, toolTip);
         }

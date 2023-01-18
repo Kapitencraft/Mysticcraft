@@ -4,6 +4,7 @@ import net.kapitencraft.mysticcraft.spell.Spell;
 import net.kapitencraft.mysticcraft.spell.Spells;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 
@@ -17,6 +18,11 @@ public class EmptySpell extends Spell {
 
     @Override
     public void execute(LivingEntity user, ItemStack stack) {
+    }
+
+    @Override
+    public boolean canApply(Item stack) {
+        return false;
     }
 
     @Override

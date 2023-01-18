@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.misc;
+package net.kapitencraft.mysticcraft.misc.damage_source;
 
 import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.entity.Entity;

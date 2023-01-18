@@ -64,7 +64,7 @@ public class ModTiers {
 
         @Override
         public Ingredient getRepairIngredient() {
-            return null;
+            return Ingredient.of(ModItems.SPELL_SHARD.get());
         }
     };
 }
