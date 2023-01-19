@@ -69,13 +69,13 @@ public class  GemstoneGrinderBlockEntity extends BlockEntity implements MenuProv
     }
 
     @Override
-    public Component getDisplayName() {
+    public @NotNull Component getDisplayName() {
         return Component.literal("Gem Infusing Station");
     }
 
     @Nullable
     @Override
-    public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
+    public AbstractContainerMenu createMenu(int id, @NotNull Inventory inventory, @NotNull Player player) {
         return new GemstoneGrinderMenu(id, inventory, this, this.data);
     }
 
@@ -108,17 +108,18 @@ public class  GemstoneGrinderBlockEntity extends BlockEntity implements MenuProv
     }
 
     @Override
-    public void load(CompoundTag nbt) {
+    public void load(@NotNull CompoundTag nbt) {
         super.load(nbt);
         itemHandler.deserializeNBT(nbt.getCompound("inventory"));
     }
 
     public void drops() {
         SimpleContainer inventory = MISCTools.ContainerOf(this.itemHandler);
+        assert this.level != null;
         Containers.dropContents(this.level, this.worldPosition, inventory);
     }
 
-    public static <E extends BlockEntity> void tick(Level level, BlockPos pos, BlockState state, E e) {
+    public static <E extends BlockEntity> void tick(Level ignoredLevel, BlockPos ignoredPos, BlockState ignoredState, E ignoredE) {
     }
 
     public class ModItemStackHandler extends ItemStackHandler {
