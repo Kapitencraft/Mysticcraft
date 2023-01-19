@@ -70,7 +70,6 @@ public class GemstoneSlot {
             this.appliedGemstoneType = gemstoneType;
             this.gemRarity = rarity;
             ModEventFactory.onGemstoneApplied(gemstoneType, this);
-            MysticcraftMod.sendInfo("ea");
             return true;
         }
         return false;

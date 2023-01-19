@@ -3,20 +3,19 @@ package net.kapitencraft.mysticcraft.item;
 import net.kapitencraft.mysticcraft.misc.Color;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 
-public class DropRarity {
-    public static final DropRarity COMMON = create("common", FormattingCodes.WHITE, "COMMON");
-    public static final DropRarity UNCOMMON = create("uncommon", FormattingCodes.GREEN, "UNCOMMON");
-    public static final DropRarity RARE = create("rare", FormattingCodes.BLUE, "RARE");
-    public static final DropRarity LEGENDARY = create("legendary", FormattingCodes.LIGHT_PURPLE, "CRAZY RARE");
-    public static final DropRarity PRAY_RNG = create("pray_rng", FormattingCodes.RED, "PRAY TO RNGESUS");
-    public static final DropRarity RNG_INCARNATE = create("rng_incarnate", FormattingCodes.DARK_RED, "RNGESUS INCARNATE");
+public enum DropRarity {
+    COMMON(0, "common", FormattingCodes.WHITE, "COMMON"),
+    UNCOMMON(1, "uncommon", FormattingCodes.GREEN, "UNCOMMON"),
+    RARE(2, "rare", FormattingCodes.BLUE, "RARE"),
+    LEGENDARY(3, "legendary", FormattingCodes.LIGHT_PURPLE, "CRAZY RARE"),
+    PRAY_RNG(4, "pray_rng", FormattingCodes.RED, "PRAY TO RNGESUS"),
+    RNG_INCARNATE(5, "rng_incarnate", FormattingCodes.DARK_RED, "RNGESUS INCARNATE");
     private final int Id;
-    private static int genId;
     private final String name;
     private final String color;
     private final String displayName;
 
-    public DropRarity(int id, String name, String color, String displayName) {
+    DropRarity(int id, String name, String color, String displayName) {
         this.Id = id;
         this.name = name;
         this.color = color;
@@ -40,10 +39,5 @@ public class DropRarity {
         return name;
     }
 
-    private static DropRarity create(String name, String color, String displayName) {
-        DropRarity rarity = new DropRarity(genId, name, color, displayName);
-        genId++;
-        return rarity;
-    }
 }
 
