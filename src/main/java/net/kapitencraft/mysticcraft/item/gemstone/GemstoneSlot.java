@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.item.gemstone;
 
-import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.event.ModEventFactory;
+import net.kapitencraft.mysticcraft.init.ModItems;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.minecraft.nbt.CompoundTag;
 
@@ -21,6 +21,7 @@ public class GemstoneSlot {
 
     private GemstoneType.Rarity gemRarity;
     private final Type TYPE;
+    @Nullable
     private GemstoneType appliedGemstoneType;
     public GemstoneSlot(Type gem_type, @Nullable GemstoneType appliedGemstoneType, GemstoneType.Rarity rarity) {
         this.appliedGemstoneType = appliedGemstoneType;
@@ -73,6 +74,10 @@ public class GemstoneSlot {
             return true;
         }
         return false;
+    }
+
+    public @Nullable GemstoneItem toItem() {
+        return ModItems.GEMSTONES.get(this.appliedGemstoneType).get(this.gemRarity).get();
     }
 
     public @Nullable GemstoneType getAppliedGemstone() {

@@ -3,6 +3,7 @@ package net.kapitencraft.mysticcraft.item;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.init.ModBlocks;
 import net.kapitencraft.mysticcraft.init.ModItems;
+import net.kapitencraft.mysticcraft.item.gemstone.GemstoneItem;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -15,6 +16,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.RegistryObject;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
@@ -35,10 +37,7 @@ public class TabRegister {
                             output.accept(ModItems.WIZARD_HAT.get());
                             output.accept(ModItems.HYPERION.get());
                             output.accept(ModItems.THE_STAFF_DESTRUCTION.get());
-                            addGemstones(ModItems.ALMANDINE_GEMSTONES, output);
-                            addGemstones(ModItems.JASPER_GEMSTONES, output);
-                            addGemstones(ModItems.RUBY_GEMSTONES, output);
-                            addGemstones(ModItems.SAPPHIRE_GEMSTONES, output);
+                            addGemstones(ModItems.GEMSTONES, output);
                         }));
         event.registerCreativeModeTab(new ResourceLocation(MysticcraftMod.MOD_ID, "materials"), builder ->
                 builder.title(Component.translatable("itemGroup.materials_mm"))
@@ -83,10 +82,12 @@ public class TabRegister {
         }
     }
 
-    private static void addGemstones(HashMap<GemstoneType.Rarity, RegistryObject<Item>> gemstone, CreativeModeTab.Output output) {
-        Collection<RegistryObject<Item>> gemstones = gemstone.values();
-        for (RegistryObject<Item> registryObject : gemstones) {
-            output.accept(registryObject.get());
+    private static void addGemstones(HashMap<GemstoneType, HashMap<GemstoneType.Rarity, RegistryObject<GemstoneItem>>> gemstone, CreativeModeTab.Output output) {
+        for (int i = 0; i < GemstoneType.values().length; i++) {
+            Collection<RegistryObject<GemstoneItem>> gemstones = new ArrayList<>(gemstone.values()).get(i).values();
+                for (RegistryObject<GemstoneItem> registryObject : gemstones) {
+                    output.accept(registryObject.get());
+                }
         }
     }
 }

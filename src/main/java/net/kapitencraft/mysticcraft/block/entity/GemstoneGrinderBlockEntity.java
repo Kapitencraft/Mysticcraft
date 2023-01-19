@@ -33,7 +33,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class  GemstoneGrinderBlockEntity extends BlockEntity implements MenuProvider {
-    public final ModItemStackHandler itemHandler = new ModItemStackHandler(6);
+    public final GemstonGrinderItemStackHandler itemHandler = new GemstonGrinderItemStackHandler(6);
 
     public static final Item GUI_SLOT_LOCK = ((GUISlotBlockItem) ModItems.GUI_SLOT_BLOCK_ITEM.get()).putTooltip(List.of(Component.literal("This slot is locked.").withStyle(ChatFormatting.RED)));
     private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
@@ -122,11 +122,12 @@ public class  GemstoneGrinderBlockEntity extends BlockEntity implements MenuProv
     public static <E extends BlockEntity> void tick(Level ignoredLevel, BlockPos ignoredPos, BlockState ignoredState, E ignoredE) {
     }
 
-    public class ModItemStackHandler extends ItemStackHandler {
+    public class GemstonGrinderItemStackHandler extends ItemStackHandler {
 
-        public ModItemStackHandler(int amount) {
+        public GemstonGrinderItemStackHandler(int amount) {
             super(amount);
         }
+
         @Override
         protected void onContentsChanged(int slot) {
             setChanged();

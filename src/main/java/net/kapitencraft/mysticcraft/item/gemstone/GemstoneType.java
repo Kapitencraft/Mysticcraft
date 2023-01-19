@@ -4,7 +4,11 @@ import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.Item;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.RegistryObject;
 
+import java.util.HashMap;
 import java.util.Objects;
 import java.util.function.Supplier;
 
@@ -18,6 +22,8 @@ public enum GemstoneType {
     public final Supplier<Attribute>  modifiedAttribute;
     public final double BASE_VALUE;
     private final String id;
+
+
     GemstoneType(String colour, Supplier<Attribute> modifiedAttribute, double baseValue, String id) {
         this.COLOUR = colour;
         this.BASE_VALUE = baseValue;
@@ -34,6 +40,23 @@ public enum GemstoneType {
         return null;
     }
 
+    public static HashMap<GemstoneType, HashMap<Rarity, RegistryObject<GemstoneItem>>> createRegistry(DeferredRegister<Item> registry) {
+        HashMap<GemstoneType, HashMap<Rarity, RegistryObject<GemstoneItem>>> toReturn = new HashMap<>();
+        for (GemstoneType type : values()) {
+            toReturn.put(type, type.registerItems(registry));
+        }
+        return toReturn;
+    }
+
+    public HashMap<Rarity, RegistryObject<GemstoneItem>> registerItems(DeferredRegister<Item> registry) {
+        HashMap<Rarity, RegistryObject<GemstoneItem>> toReturn = new HashMap<>();
+        for (Rarity rarity : Rarity.values()) {
+            if (rarity != Rarity.EMPTY) {
+                toReturn.put(rarity, registry.register(rarity.id + "_" + this.getId() + "_gemstone", () -> new GemstoneItem(rarity, this.getId())));
+            }
+        }
+        return toReturn;
+    }
 
     public String getColour() {
         return this.COLOUR;
