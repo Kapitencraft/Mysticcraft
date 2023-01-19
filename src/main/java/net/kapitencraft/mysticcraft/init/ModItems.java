@@ -7,6 +7,7 @@ import net.kapitencraft.mysticcraft.item.armor.EnderKnightArmorItem;
 import net.kapitencraft.mysticcraft.item.armor.FrozenBlazeArmorItem;
 import net.kapitencraft.mysticcraft.item.armor.ShadowAssassinArmorItem;
 import net.kapitencraft.mysticcraft.item.armor.SoulMageArmorItem;
+import net.kapitencraft.mysticcraft.item.gemstone.GemstoneItem;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneType;
 import net.kapitencraft.mysticcraft.item.spells.*;
 import net.kapitencraft.mysticcraft.item.spells.necron_sword.Astraea;
@@ -78,8 +79,8 @@ public abstract class ModItems {
     public static final RegistryObject<Item> FROZEN_BLAZE_SPAWN_EGG = REGISTRY.register("frozen_blaze_spawn_egg", ()-> new ForgeSpawnEggItem(ModEntityTypes.FROZEN_BLAZE, -16711681, -16763956, new Item.Properties()));
     public static final RegistryObject<Item> GUI_SLOT_BLOCK_ITEM = REGISTRY.register("gui_slot_block", GUISlotBlockItem::new);
     public static final RegistryObject<BucketItem> BUCKET_OF_MANA = REGISTRY.register("bucket_of_mana", ()-> new BucketItem(ModFluids.SOURCE_MANA_FLUID, new Item.Properties().rarity(Rarity.EPIC).stacksTo(1)));
-    public static final HashMap<GemstoneType.Rarity, RegistryObject<Item>> ALMANDINE_GEMSTONES = GemstoneType.ALMANDINE.registerItems(REGISTRY);
-    public static final HashMap<GemstoneType.Rarity, RegistryObject<Item>> JASPER_GEMSTONES = GemstoneType.JASPER.registerItems(REGISTRY);
-    public static final HashMap<GemstoneType.Rarity, RegistryObject<Item>> RUBY_GEMSTONES = GemstoneType.RUBY.registerItems(REGISTRY);
-    public static final HashMap<GemstoneType.Rarity, RegistryObject<Item>> SAPPHIRE_GEMSTONES = GemstoneType.SAPPHIRE.registerItems(REGISTRY);
+    public static final HashMap<GemstoneType.Rarity, RegistryObject<Item>> ALMANDINE_GEMSTONES = GemstoneItem.registerItems(GemstoneType.ALMANDINE, REGISTRY);
+    public static final HashMap<GemstoneType.Rarity, RegistryObject<Item>> JASPER_GEMSTONES = GemstoneItem.registerItems(GemstoneType.JASPER, REGISTRY);
+    public static final HashMap<GemstoneType.Rarity, RegistryObject<Item>> RUBY_GEMSTONES = GemstoneItem.registerItems(GemstoneType.RUBY, REGISTRY);
+    public static final HashMap<GemstoneType.Rarity, RegistryObject<Item>> SAPPHIRE_GEMSTONES = GemstoneItem.registerItems(GemstoneType.SAPPHIRE, REGISTRY);
 }

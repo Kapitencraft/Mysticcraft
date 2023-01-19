@@ -162,8 +162,8 @@ public class GemstoneGrinderMenu extends AbstractContainerMenu {
                 } else {
                     updateSlots(gemstoneApplicable, handler);
                 }
-             } else if (slotId <= 5 && slotId >= 1) {
-                 if (handler.getStackInSlot(slotId).getItem() instanceof GemstoneItem gemstoneItem && gemstoneApplicable != null) {
+            } else if (slotId <= 5 && slotId >= 1) {
+                if (handler.getStackInSlot(slotId).getItem() instanceof GemstoneItem gemstoneItem && gemstoneApplicable != null) {
                     if (!gemstoneApplicable.putGemstone(gemstoneItem.getGemstone(), gemstoneItem.getRarity(), slotId - 1, gemstoneApplicableSlot)) {
                         playerInventory.add(handler.getStackInSlot(slotId));
                         handler.setStackInSlot(slotId, ItemStack.EMPTY);

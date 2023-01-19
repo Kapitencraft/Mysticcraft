@@ -4,24 +4,21 @@ import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.item.Item;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.RegistryObject;
 
-import java.util.HashMap;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 public enum GemstoneType {
-    ALMANDINE(FormattingCodes.LIGHT_PURPLE, ModAttributes.ABILITY_DAMAGE.get(), 0.3, "almandine"),
-    JASPER(FormattingCodes.ORANGE, ModAttributes.STRENGTH.get(), 2, "jasper"),
-    RUBY(FormattingCodes.RED, Attributes.MAX_HEALTH, 5, "ruby"),
-    SAPPHIRE(FormattingCodes.BLUE, ModAttributes.INTELLIGENCE.get(), 3.4, "sapphire");
+    ALMANDINE(FormattingCodes.LIGHT_PURPLE, ModAttributes.ABILITY_DAMAGE, 0.3, "almandine"),
+    JASPER(FormattingCodes.ORANGE, ModAttributes.STRENGTH, 2, "jasper"),
+    RUBY(FormattingCodes.RED, () -> Attributes.MAX_HEALTH, 5, "ruby"),
+    SAPPHIRE(FormattingCodes.BLUE, ModAttributes.INTELLIGENCE, 3.4, "sapphire");
 
     private final String COLOUR;
-    public final Attribute modifiedAttribute;
+    public final Supplier<Attribute>  modifiedAttribute;
     public final double BASE_VALUE;
     private final String id;
-    GemstoneType(String colour, Attribute modifiedAttribute, double baseValue, String id) {
+    GemstoneType(String colour, Supplier<Attribute> modifiedAttribute, double baseValue, String id) {
         this.COLOUR = colour;
         this.BASE_VALUE = baseValue;
         this.modifiedAttribute = modifiedAttribute;
@@ -44,27 +41,6 @@ public enum GemstoneType {
 
     public String getId() {
         return id;
-    }
-
-    public static GemstoneItem createGemstoneItem(Rarity rarity, String gemstoneType) {
-        net.minecraft.world.item.Rarity rarity1 = net.minecraft.world.item.Rarity.COMMON;
-        if (Rarity.FINE.equals(rarity) || Rarity.FLAWLESS.equals(rarity)) {
-            rarity1 = net.minecraft.world.item.Rarity.UNCOMMON;
-        } else if (Rarity.PERFECT.equals(rarity)) {
-            rarity1 = net.minecraft.world.item.Rarity.RARE;
-        }
-        return new GemstoneItem(rarity, new Item.Properties().rarity(rarity1), gemstoneType);
-    }
-
-
-    public HashMap<Rarity, RegistryObject<Item>> registerItems(DeferredRegister<Item> registry) {
-        HashMap<Rarity, RegistryObject<Item>> toReturn = new HashMap<>();
-        toReturn.put(Rarity.ROUGH, registry.register("rough_" + getId() + "_gemstone", () -> createGemstoneItem(Rarity.ROUGH, getId())));
-        toReturn.put(Rarity.FLAWED, registry.register("flawed_" + getId() + "_gemstone", () -> createGemstoneItem(Rarity.FLAWED, getId())));
-        toReturn.put(Rarity.FINE, registry.register("fine_" + getId() + "_gemstone", () -> createGemstoneItem(Rarity.FINE, getId())));
-        toReturn.put(Rarity.FLAWLESS, registry.register("flawless_" + getId() + "_gemstone", () -> createGemstoneItem(Rarity.FLAWLESS, getId())));
-        toReturn.put(Rarity.PERFECT, registry.register("perfect_" + getId() + "_gemstone", () -> createGemstoneItem(Rarity.PERFECT, getId())));
-        return toReturn;
     }
 
     public enum Rarity {

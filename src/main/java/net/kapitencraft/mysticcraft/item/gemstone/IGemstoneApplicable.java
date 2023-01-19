@@ -29,7 +29,7 @@ public interface IGemstoneApplicable {
             if (slot != null) {
                 gemstoneType = slot.getAppliedGemstone();
                 if (gemstoneType != null) {
-                    attribute = gemstoneType.modifiedAttribute;
+                    attribute = gemstoneType.modifiedAttribute.get();
                     gemstoneModifier = gemstoneType.BASE_VALUE * slot.getGemRarity().modMul * (1 + itemStack.getEnchantmentLevel(ModEnchantments.EFFICIENT_JEWELLING.get()) * 0.02);
                     if (attributeModifier.containsKey(attribute)) {
                         attributeModifier.put(attribute, attributeModifier.get(attribute) + gemstoneModifier);
@@ -58,7 +58,7 @@ public interface IGemstoneApplicable {
             if (slot != null) {
                 gemstoneType = slot.getAppliedGemstone();
                 if (gemstoneType != null) {
-                    attribute = gemstoneType.modifiedAttribute;
+                    attribute = gemstoneType.modifiedAttribute.get();
                     if (MISCTools.ArrayContains(attributes.toArray(), attribute)) {
                         attributes.add(attribute);
                     }
