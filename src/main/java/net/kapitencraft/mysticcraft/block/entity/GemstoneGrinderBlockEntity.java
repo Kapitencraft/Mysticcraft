@@ -1,11 +1,11 @@
 package net.kapitencraft.mysticcraft.block.entity;
 
-import net.kapitencraft.mysticcraft.gui.GUISlotBlockItem;
 import net.kapitencraft.mysticcraft.gui.gemstone_grinder.GemstoneGrinderMenu;
 import net.kapitencraft.mysticcraft.init.ModBlockEntities;
 import net.kapitencraft.mysticcraft.init.ModItems;
+import net.kapitencraft.mysticcraft.item.gemstone.GemstoneItem;
+import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.misc.MISCTools;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -17,7 +17,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -30,12 +29,9 @@ import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-
 public class  GemstoneGrinderBlockEntity extends BlockEntity implements MenuProvider {
-    public final GemstonGrinderItemStackHandler itemHandler = new GemstonGrinderItemStackHandler(6);
+    public final GemstoneGrinderItemStackHandler itemHandler = new GemstoneGrinderItemStackHandler(6);
 
-    public static final Item GUI_SLOT_LOCK = ((GUISlotBlockItem) ModItems.GUI_SLOT_BLOCK_ITEM.get()).putTooltip(List.of(Component.literal("This slot is locked.").withStyle(ChatFormatting.RED)));
     private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
 
     protected final ContainerData data;
@@ -61,11 +57,9 @@ public class  GemstoneGrinderBlockEntity extends BlockEntity implements MenuProv
     }
 
     public static void emptyItemHandler(ItemStackHandler handler) {
-        handler.setStackInSlot(1, new ItemStack(GUI_SLOT_LOCK));
-        handler.setStackInSlot(2, new ItemStack(GUI_SLOT_LOCK));
-        handler.setStackInSlot(3, new ItemStack(GUI_SLOT_LOCK));
-        handler.setStackInSlot(4, new ItemStack(GUI_SLOT_LOCK));
-        handler.setStackInSlot(5, new ItemStack(GUI_SLOT_LOCK));
+        for (int i = 1; i <= 5; i++) {
+            handler.setStackInSlot(i, new ItemStack(ModItems.EMPTY_APPLICABLE_SLOT.get()));
+        }
     }
 
     @Override
@@ -122,15 +116,25 @@ public class  GemstoneGrinderBlockEntity extends BlockEntity implements MenuProv
     public static <E extends BlockEntity> void tick(Level ignoredLevel, BlockPos ignoredPos, BlockState ignoredState, E ignoredE) {
     }
 
-    public class GemstonGrinderItemStackHandler extends ItemStackHandler {
+    public class GemstoneGrinderItemStackHandler extends ItemStackHandler {
 
-        public GemstonGrinderItemStackHandler(int amount) {
+        public GemstoneGrinderItemStackHandler(int amount) {
             super(amount);
         }
 
         @Override
         protected void onContentsChanged(int slot) {
             setChanged();
+        }
+
+        @Override
+        public boolean isItemValid(int slot, @NotNull ItemStack stack) {
+            return (slot == 0 && stack.getItem() instanceof IGemstoneApplicable) || (slot >= 1 && slot <= 5 && stack.getItem() instanceof GemstoneItem);
+        }
+
+        @Override
+        public int getSlotLimit(int slot) {
+                return 1;
         }
 
     }

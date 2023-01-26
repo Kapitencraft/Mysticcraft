@@ -19,7 +19,7 @@ import java.util.List;
 
 public class FireLanceSpell extends Spell {
     public FireLanceSpell() {
-        super(5, "Fire Lance", Spells.CYCLE, Rarity.UNCOMMON, "fire_lance");
+        super(5, "Fire Lance", "1011100", Spells.CYCLE, Rarity.UNCOMMON, "fire_lance");
     }
 
     @Override

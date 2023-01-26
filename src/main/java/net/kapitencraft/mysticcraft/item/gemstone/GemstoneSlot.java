@@ -42,6 +42,9 @@ public class GemstoneSlot {
     }
 
     public static GemstoneSlot fromNBT(CompoundTag tag) {
+        if (tag == null) {
+            return null;
+        }
         return new GemstoneSlot(Type.getById(tag.getString("type")), GemstoneType.getById(tag.getString("gem")), GemstoneType.Rarity.getById(tag.getString("gem_rarity")));
     }
 
@@ -77,6 +80,9 @@ public class GemstoneSlot {
     }
 
     public @Nullable GemstoneItem toItem() {
+        if (this.appliedGemstoneType == null || this.gemRarity == null) {
+            return null;
+        }
         return ModItems.GEMSTONES.get(this.appliedGemstoneType).get(this.gemRarity).get();
     }
 
@@ -95,13 +101,13 @@ public class GemstoneSlot {
 
 
     public enum Type {
-        COMBAT("", "combat", new GemstoneType[]{GemstoneType.JASPER, GemstoneType.SAPPHIRE, GemstoneType.RUBY, GemstoneType.ALMANDINE}),
-        OFFENCE("", "offence", new GemstoneType[]{GemstoneType.JASPER, GemstoneType.SAPPHIRE, GemstoneType.ALMANDINE}),
+        COMBAT("\u2694", "combat", new GemstoneType[]{GemstoneType.JASPER, GemstoneType.SAPPHIRE, GemstoneType.RUBY, GemstoneType.ALMANDINE}),
+        OFFENCE("\u2620", "offence", new GemstoneType[]{GemstoneType.JASPER, GemstoneType.SAPPHIRE, GemstoneType.ALMANDINE}),
         DEFENCE("\uF003", "defence", new GemstoneType[]{GemstoneType.RUBY}),
         MAGIC("\uF004", "magic", new GemstoneType[]{GemstoneType.SAPPHIRE, GemstoneType.ALMANDINE}),
         INTELLIGENCE("\uF000", "intel", new GemstoneType[]{GemstoneType.SAPPHIRE}),
         STRENGTH("\uF002", "strength", new GemstoneType[]{GemstoneType.JASPER}),
-        HEALTH("", "health", new GemstoneType[]{GemstoneType.RUBY}),
+        HEALTH("\u2764", "health", new GemstoneType[]{GemstoneType.RUBY}),
         ABILITY_DAMAGE("\uF001", "ability_damage", new GemstoneType[]{GemstoneType.ALMANDINE}),
         EMPTY("", "empty", null);
 

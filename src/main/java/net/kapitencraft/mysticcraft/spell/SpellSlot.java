@@ -1,7 +1,5 @@
 package net.kapitencraft.mysticcraft.spell;
 
-import net.kapitencraft.mysticcraft.init.ModAttributes;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 
 public class SpellSlot {
     private Spell spell;

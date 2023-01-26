@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 public class ImplosionSpell extends Spell {
     public ImplosionSpell() {
-        super(300, "Implosion", Spells.RELEASE, FormattingCodes.LEGENDARY, "implosion");
+        super(300, "Implosion", "0000000", Spells.RELEASE, FormattingCodes.LEGENDARY, "implosion");
     }
 
     @Override

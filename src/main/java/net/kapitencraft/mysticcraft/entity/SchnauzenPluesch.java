@@ -31,7 +31,7 @@ import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class SchnauzenPluesch extends PathfinderMob implements GeoItem {
-    private AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private String color;
     private SchnauzenPluesch(PlayMessages.SpawnEntity packet, Level world) {
         this(ModEntityTypes.SCHNAUZEN_PLUESCH.get(), world);

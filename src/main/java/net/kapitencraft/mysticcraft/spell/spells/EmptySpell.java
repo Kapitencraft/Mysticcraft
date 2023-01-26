@@ -11,9 +11,9 @@ import net.minecraft.world.item.Rarity;
 import java.util.List;
 
 public class EmptySpell extends Spell {
-    Component[] description = new Component[]{Component.literal("No Spell assigned to this Item"), Component.literal("Use the Spellment-Table to apply Spells"), Component.literal("to this Item")};
+    private Component[] description = new Component[]{Component.literal("No Spell assigned to this Item"), Component.literal("Use the Spellment-Table to apply Spells"), Component.literal("to this Item")};
     public EmptySpell() {
-        super(0, "Empty Spell", Spells.CYCLE, Rarity.COMMON, "empty");
+        super(0, "Empty Spell", null, Spells.CYCLE, Rarity.COMMON, "empty");
     }
 
     @Override

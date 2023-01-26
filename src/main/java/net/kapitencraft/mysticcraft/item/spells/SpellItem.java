@@ -15,6 +15,7 @@ import net.kapitencraft.mysticcraft.misc.MISCTools;
 import net.kapitencraft.mysticcraft.spell.Spell;
 import net.kapitencraft.mysticcraft.spell.SpellSlot;
 import net.kapitencraft.mysticcraft.spell.Spells;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -35,13 +36,19 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
 public abstract class SpellItem extends SwordItem implements IModItem {
+
+    public static final String SPELL_EXECUTION_DUR = "ExeSpellDur";
+    public static final String SPELL_EXE = "ExeSpell";
     private SpellSlot[] spellSlots;
     private final int intelligence;
     private final int ability_damage;
+    private final HashMap<String, Spell> SpellRegistrations = new HashMap<>();
+
 
 
     //Display settings
@@ -58,7 +65,7 @@ public abstract class SpellItem extends SwordItem implements IModItem {
             spell = activeSpellSlot.getSpell();
         }
         if (itemStack.getItem() instanceof IGemstoneApplicable applicable) {
-            GemstoneSlot[] gemstoneSlots = applicable.getGemstoneSlots();
+            GemstoneSlot[] gemstoneSlots = applicable.getGemstoneSlots(itemStack);
             StringBuilder gemstoneText = new StringBuilder();
             if (gemstoneSlots != null) {
                 for (@Nullable GemstoneSlot slot : gemstoneSlots) {
@@ -124,6 +131,7 @@ public abstract class SpellItem extends SwordItem implements IModItem {
     public boolean addSlot(SpellSlot slot) {
         if (this.getFirstEmptySpellSlot() > -1 && !this.containsSpell(slot.getSpell()) && slot.getSpell().canApply(this)) {
             this.setSlot(slot, this.getFirstEmptySpellSlot());
+            this.SpellRegistrations.put(slot.getSpell().getCastingType(), slot.getSpell());
             return true;
         }
         return false;
@@ -222,9 +230,27 @@ public abstract class SpellItem extends SwordItem implements IModItem {
 
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, Player player, @NotNull InteractionHand hand) {
+        CompoundTag tag = player.getPersistentData();
         ItemStack itemstack = player.getItemInHand(hand);
+        tag.putString(SPELL_EXE, tag.getString(SPELL_EXE) + "1");
+        MISCTools.sendTitle(player, Component.literal(Spell.getPattern(tag.getString(SPELL_EXE))));
+        tag.putByte(SPELL_EXECUTION_DUR, (byte) 20);
         player.startUsingItem(hand);
         return InteractionResultHolder.consume(itemstack);
+    }
+
+    public boolean executeSpell(String executionId, ItemStack stack, LivingEntity user) {
+        if (!this.SpellRegistrations.containsKey(executionId) || executionId.length() < 7) {
+            return false;
+        } else {
+            Spell spell = this.SpellRegistrations.get(executionId);
+            handleMana(user, spell);
+            spell.execute(user, stack);
+            if (user instanceof Player player) {
+                player.displayClientMessage(Component.literal("Used " + spell.getName() + ": " + FormattingCodes.RED + "-" + user.getAttributeValue(ModAttributes.MANA_COST.get()) + " Mana"), true);
+            }
+            return true;
+        }
     }
 
     @Override
@@ -235,7 +261,10 @@ public abstract class SpellItem extends SwordItem implements IModItem {
         return super.useOn(context);
     }
 
-    private boolean handleMana(LivingEntity user) {
+    private boolean handleMana(LivingEntity user, Spell spell) {
+        if (user.getAttribute(ModAttributes.INTELLIGENCE.get()) == null) {
+            return false;
+        }
         double manaToUse = user.getAttributeValue(ModAttributes.MANA_COST.get());
         double overflowMana = user.getPersistentData().getDouble("overflowMana");
         double currentMana = user.getAttribute(ModAttributes.MANA.get()).getBaseValue() + overflowMana;
@@ -255,25 +284,24 @@ public abstract class SpellItem extends SwordItem implements IModItem {
         return false;
     }
 
+
     @Override
-    public @NotNull ItemStack finishUsingItem(@NotNull ItemStack stack, @NotNull Level level, @NotNull LivingEntity user) {
-        if (!level.isClientSide()) {
-            Spell spell = this.getActiveSpell();
-            if (spell.TYPE == Spells.RELEASE && this.handleMana(user)) {
-                spell.execute(user, stack);
-            }
-            if (user instanceof Player player) {
-                player.displayClientMessage(Component.literal("Used " + spell.getName() + ": " + FormattingCodes.RED + "-" + user.getAttributeValue(ModAttributes.MANA_COST.get()) + " Mana"), true);
-            }
+    public boolean onEntitySwing(ItemStack stack, LivingEntity entity) {
+        if (entity instanceof Player player) {
+            CompoundTag tag = entity.getPersistentData();
+            tag.putString(SPELL_EXE, tag.getString(SPELL_EXE) + "0");
+            MISCTools.sendTitle(player, Component.literal(Spell.getPattern(tag.getString(SPELL_EXE))));
+            tag.putByte(SPELL_EXECUTION_DUR, (byte) 20);
+            return true;
         }
-        return stack;
+        return false;
     }
 
     @Override
     public void onUseTick(@NotNull Level level, @NotNull LivingEntity user, @NotNull ItemStack stack, int count) {
         if (!level.isClientSide()) {
             Spell spell = this.getActiveSpell();
-            if (spell.TYPE == Spells.CYCLE && this.handleMana(user)) {
+            if (spell.TYPE == Spells.CYCLE && this.handleMana(user, spell)) {
                 spell.execute(user, stack);
                 if (count == 1 && user instanceof Player player) {
                     player.sendSystemMessage(Component.literal("Started Using " + spell.getName() + ": " + FormattingCodes.RED + "-" + (this.getManaCost() * 20) + " Mana" + "/s"));

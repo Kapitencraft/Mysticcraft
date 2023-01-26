@@ -20,6 +20,8 @@ import net.kapitencraft.mysticcraft.item.weapon.ranged.bow.LongBowItem;
 import net.kapitencraft.mysticcraft.item.weapon.ranged.bow.TallinBow;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.kapitencraft.mysticcraft.spell.Spells;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
@@ -31,6 +33,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.HashMap;
+import java.util.List;
 
 public abstract class ModItems {
     public static final DeferredRegister<Item> REGISTRY = DeferredRegister.create(ForgeRegistries.ITEMS, MysticcraftMod.MOD_ID);
@@ -77,7 +80,8 @@ public abstract class ModItems {
     public static final HashMap<EquipmentSlot, RegistryObject<Item>> SHADOW_ASSASSIN_ARMOR = ShadowAssassinArmorItem.createRegistry(REGISTRY, "shadow_assassin");
     public static final HashMap<EquipmentSlot, RegistryObject<Item>> SOUL_MAGE_ARMOR = SoulMageArmorItem.createRegistry(REGISTRY, "soul_mage");
     public static final RegistryObject<Item> FROZEN_BLAZE_SPAWN_EGG = REGISTRY.register("frozen_blaze_spawn_egg", ()-> new ForgeSpawnEggItem(ModEntityTypes.FROZEN_BLAZE, -16711681, -16763956, new Item.Properties()));
-    public static final RegistryObject<Item> GUI_SLOT_BLOCK_ITEM = REGISTRY.register("gui_slot_block", GUISlotBlockItem::new);
+    public static final RegistryObject<Item> MISSING_GEMSTONE_SLOT = REGISTRY.register("missing_slot", ()-> new GUISlotBlockItem().putTooltip(List.of(Component.literal("This Gemstone Applicable has no gemstone at that slot").withStyle(ChatFormatting.RED))));
+    public static final RegistryObject<Item> EMPTY_APPLICABLE_SLOT = REGISTRY.register("empty_applicable", ()-> new GUISlotBlockItem().putTooltip(List.of(Component.literal("There is no Gemstone Applicable in it's slot").withStyle(ChatFormatting.RED))));
     public static final RegistryObject<BucketItem> BUCKET_OF_MANA = REGISTRY.register("bucket_of_mana", ()-> new BucketItem(ModFluids.SOURCE_MANA_FLUID, new Item.Properties().rarity(Rarity.EPIC).stacksTo(1)));
     public static final HashMap<GemstoneType, HashMap<GemstoneType.Rarity, RegistryObject<GemstoneItem>>> GEMSTONES = GemstoneType.createRegistry(REGISTRY);
 }

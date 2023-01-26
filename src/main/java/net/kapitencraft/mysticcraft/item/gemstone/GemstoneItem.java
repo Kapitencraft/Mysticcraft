@@ -12,6 +12,10 @@ public  class  GemstoneItem extends Item {
         this.gemstoneName = gemstoneName;
     }
 
+    public String createDisplay() {
+        return this.RARITY + " " + this.gemstoneName;
+    }
+
     public static Rarity getRarity(GemstoneType.Rarity rarity) {
         net.minecraft.world.item.Rarity rarity1 = net.minecraft.world.item.Rarity.COMMON;
         if (GemstoneType.Rarity.FINE.equals(rarity) || GemstoneType.Rarity.FLAWLESS.equals(rarity)) {

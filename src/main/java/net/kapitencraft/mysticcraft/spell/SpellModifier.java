@@ -5,12 +5,12 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 
 import java.util.Map;
 
-public class SpellModdifier {
+public class SpellModifier {
 
     private Map<Attribute, AttributeModifier> modifier;
 
 
-    public SpellModdifier(Map<Attribute, AttributeModifier> modifier) {
+    public SpellModifier(Map<Attribute, AttributeModifier> modifier) {
         this.modifier = modifier;
     }
 

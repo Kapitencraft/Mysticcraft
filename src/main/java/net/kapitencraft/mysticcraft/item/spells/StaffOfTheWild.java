@@ -1,15 +1,13 @@
 package net.kapitencraft.mysticcraft.item.spells;
 
 import net.kapitencraft.mysticcraft.item.client.StaffOfTheWildRenderer;
+import net.kapitencraft.mysticcraft.item.gemstone.GemstoneHelper;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneSlot;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.kapitencraft.mysticcraft.spell.SpellSlot;
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -24,8 +22,6 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -36,8 +32,6 @@ public class StaffOfTheWild extends NormalSpellItem implements GeoItem, IGemston
     @Override
     public void appendHoverText(@NotNull ItemStack itemStack, @Nullable Level level, @NotNull List<Component> list, @NotNull TooltipFlag flag) {
         super.appendHoverText(itemStack, level, list, flag);
-        HashMap<Attribute, Double> attributeModifiers = this.getAttributeModifiers(itemStack);
-        ArrayList<Attribute> attributesModified = this.getAttributesModified();
         if (gemstoneSlots != null) {
             boolean flag1 = false;
             for (@Nullable GemstoneSlot slot : gemstoneSlots) {
@@ -47,20 +41,13 @@ public class StaffOfTheWild extends NormalSpellItem implements GeoItem, IGemston
                 }
             }
             if (flag1) {
-                if (Screen.hasShiftDown()) {
-                    list.add(Component.literal("Gemstone Modifications:").withStyle(ChatFormatting.GREEN));
-                    for (Attribute ignored : attributesModified) {
-                        list.add(Component.literal(ignored.toString() + ": " + attributeModifiers.get(ignored)));
-                    }
-                } else {
-                    list.add(Component.literal("press [SHIFT] for Gemstone Information"));
-                }
+                this.getModInfo(itemStack, list);
             }
         }
 
     }
 
-    private GemstoneSlot[] gemstoneSlots = new GemstoneSlot[] {GemstoneSlot.MAGIC, GemstoneSlot.INTELLIGENCE, GemstoneSlot.INTELLIGENCE, GemstoneSlot.INTELLIGENCE, GemstoneSlot.ABILITY_DAMAGE};
+    private GemstoneSlot[] gemstoneSlots;
     public static final Component[] description = {Component.literal("As it is one of the most powerful"), Component.literal("Magical Artifacts, it is used for much greatness")};
     public static final Component[] post_description = {Component.literal(FormattingCodes.CITATION + "It`s a kind of magic! - Queen")};
 
@@ -101,17 +88,18 @@ public class StaffOfTheWild extends NormalSpellItem implements GeoItem, IGemston
 
 
     @Override
-    public int getGemstoneSlotAmount() {
-        return 5;
-    }
-    @Override
-    public GemstoneSlot[] getGemstoneSlots() {
-        return this.gemstoneSlots;
+    public GemstoneHelper getHelper() {
+        return new GemstoneHelper(getDefaultSlots());
     }
 
     @Override
-    public void setGemstoneSlots(GemstoneSlot[] slots) {
-        this.gemstoneSlots = slots;
+    public int getGemstoneSlotAmount() {
+        return 5;
+    }
+
+    @Override
+    public GemstoneSlot[] getDefaultSlots() {
+        return new GemstoneSlot[] {GemstoneSlot.MAGIC, GemstoneSlot.INTELLIGENCE, GemstoneSlot.INTELLIGENCE, GemstoneSlot.INTELLIGENCE, GemstoneSlot.ABILITY_DAMAGE};
     }
 
     @Override

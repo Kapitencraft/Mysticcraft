@@ -22,10 +22,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class WitherImpactSpell extends Spell {
-    private Component[] description = {Component.literal("Teleports you 10 blocks ahead"), Component.literal("and deals damage to all entities around")};
+    private final Component[] description = {Component.literal("Teleports you 10 blocks ahead"), Component.literal("and deals damage to all entities around")};
 
     public WitherImpactSpell() {
-        super(300, "Crystal Warp", Spells.RELEASE, Rarity.RARE, "crystal_warp");
+        super(300, "Crystal Warp", "1101110", Spells.RELEASE, Rarity.RARE, "crystal_warp");
     }
 
     @Override

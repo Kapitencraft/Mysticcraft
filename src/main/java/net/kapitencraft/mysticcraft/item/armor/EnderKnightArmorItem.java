@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
+import net.kapitencraft.mysticcraft.item.gemstone.GemstoneHelper;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneSlot;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
@@ -33,7 +34,7 @@ public class EnderKnightArmorItem extends ModArmorItem implements IGemstoneAppli
         super(ModArmorMaterials.ENDER_KNIGHT, p_40387_, new Properties().rarity(FormattingCodes.LEGENDARY).fireResistant());
     }
 
-    private GemstoneSlot[] slots = new GemstoneSlot[] {GemstoneSlot.DEFENCE, GemstoneSlot.OFFENSIVE, GemstoneSlot.COMBAT, GemstoneSlot.COMBAT, GemstoneSlot.STRENGHT};
+    private GemstoneSlot[] slots;
 
     public static HashMap<EquipmentSlot, RegistryObject<Item>> createRegistry(DeferredRegister<Item> register, String registryName) {
         HashMap<EquipmentSlot, RegistryObject<Item>> registry = new HashMap<>();
@@ -80,17 +81,14 @@ public class EnderKnightArmorItem extends ModArmorItem implements IGemstoneAppli
         list.add(Component.literal(""));
     }
 
+
     @Override
-    public int getGemstoneSlotAmount() {
-        return 5;
-    }
-    @Override
-    public GemstoneSlot[] getGemstoneSlots() {
-        return this.slots;
+    public GemstoneHelper getHelper() {
+        return new GemstoneHelper(getDefaultSlots());
     }
 
     @Override
-    public void setGemstoneSlots(GemstoneSlot[] slots) {
-        this.slots = slots;
+    public GemstoneSlot[] getDefaultSlots() {
+        return new GemstoneSlot[] {GemstoneSlot.DEFENCE, GemstoneSlot.OFFENSIVE, GemstoneSlot.COMBAT, GemstoneSlot.COMBAT, GemstoneSlot.STRENGHT};
     }
 }

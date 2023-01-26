@@ -24,7 +24,7 @@ public abstract class NecronSword extends SpellItem {
     private final double STRENGHT;
 
     public NecronSword(int damage, int intelligence, double ferocity, double strenght) {
-        super(new Properties().rarity(FormattingCodes.LEGENDARY), damage, -2.4f, 2, intelligence, 0);
+        super(new Properties().rarity(FormattingCodes.LEGENDARY), damage, -2.4f, 1, intelligence, 0);
         this.FEROCITY = ferocity;
         this.STRENGHT = strenght;
     }

@@ -17,7 +17,7 @@ public class FireBoltSpell extends Spell {
     private final boolean explosive;
     private final Component[] description;
     public FireBoltSpell(double base_damage, boolean explosive) {
-        super(50, "Fire Bolt", Spells.RELEASE, Rarity.UNCOMMON, "fire_bolt");
+        super(50, "Fire Bolt", "0110011", Spells.RELEASE, Rarity.UNCOMMON, "fire_bolt");
         this.damage = base_damage;
         this.explosive = explosive;
         this.description = new Component[]{Component.literal("Fires a Fire Bolt dealing"), Component.literal(FormattingCodes.RED + this.getDamage() + FormattingCodes.RESET + " Base Ability Damage")};

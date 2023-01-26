@@ -34,7 +34,7 @@ public class WithermancerLordEntity extends Monster {
     }
 
     private class WithermancerRangedAttackGoal extends Goal {
-        private WithermancerLordEntity lordEntity;
+        private final WithermancerLordEntity lordEntity;
 
         public WithermancerRangedAttackGoal(WithermancerLordEntity lordEntity) {
             this.lordEntity = lordEntity;

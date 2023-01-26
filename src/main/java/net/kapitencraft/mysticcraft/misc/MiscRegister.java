@@ -1,7 +1,6 @@
 package net.kapitencraft.mysticcraft.misc;
 
 import com.google.common.collect.Multimap;
-import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.enchantments.ExtendedCalculationEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.StatBoostEnchantment;
 import net.kapitencraft.mysticcraft.entity.FrozenBlazeEntity;
@@ -308,8 +307,19 @@ public class MiscRegister {
                 }
             }
         }
-    }
 
+        if (living instanceof Player && tag.contains(SpellItem.SPELL_EXECUTION_DUR)) {
+            if (tag.getByte(SpellItem.SPELL_EXECUTION_DUR) < 1 || tag.getString(SpellItem.SPELL_EXE).length() >= 7) {
+                ItemStack mainHand = living.getMainHandItem();
+                if (mainHand.getItem() instanceof SpellItem spellItem) {
+                    spellItem.executeSpell(tag.getString(SpellItem.SPELL_EXE), mainHand, living);
+                    tag.putString(SpellItem.SPELL_EXE, "");
+                }
+            } else {
+                tag.putByte(SpellItem.SPELL_EXECUTION_DUR, (byte) (tag.getByte(SpellItem.SPELL_EXECUTION_DUR) - 1));
+            }
+        }
+    }
 
     @SubscribeEvent
     public static void DescriptionRegister(ItemTooltipEvent event) {
@@ -372,16 +382,17 @@ public class MiscRegister {
         ItemStack stack = event.getItemStack();
         Item item = stack.getItem();
         if (item instanceof IGemstoneApplicable applicable) {
+            HashMap<Attribute, AttributeModifier> modifierHashMap = applicable.getAttributeModifiers(stack);
             if (item instanceof ArmorItem armorItem) {
-                if (event.getSlotType() == armorItem.getSlot() && applicable.getAttributesModified() != null) {
-                    for (Attribute attribute : applicable.getAttributesModified()) {
-                        event.addModifier(attribute, new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[MISCTools.createCustomIndex(armorItem.getSlot())], "Gemstone Modification", applicable.getAttributeModifiers(stack).get(attribute), AttributeModifier.Operation.ADDITION));
+                if (event.getSlotType() == armorItem.getSlot() && applicable.getAttributesModified(stack) != null) {
+                    for (Attribute attribute : modifierHashMap.keySet()) {
+                        event.addModifier(attribute, modifierHashMap.get(attribute));
                     }
                 }
             } else if (item instanceof TieredItem && event.getSlotType() == EquipmentSlot.MAINHAND) {
-                if (applicable.getAttributesModified() != null) {
-                    for (Attribute attribute : applicable.getAttributesModified()) {
-                        event.addModifier(attribute, new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[MISCTools.createCustomIndex(EquipmentSlot.MAINHAND)], "Gemstone Modification", applicable.getAttributeModifiers(stack).get(attribute), AttributeModifier.Operation.ADDITION));
+                if (applicable.getAttributesModified(stack) != null) {
+                    for (Attribute attribute : modifierHashMap.keySet()) {
+                        event.addModifier(attribute, modifierHashMap.get(attribute));
                     }
                 }
             }
@@ -414,8 +425,6 @@ public class MiscRegister {
             RNGDropHelper.calculateAndDrop(toDrop, 0.000001f, attacker, pos);
         }
     }
-
-
 
     @SubscribeEvent
     public static void telekinesisRegister(BlockEvent.BreakEvent event) {
@@ -494,7 +503,7 @@ public class MiscRegister {
         }
     }
 
-    private static BlockPos[] Values() {
+    public static BlockPos[] Values() {
         BlockPos[] returnValue = new BlockPos[27];
         int x = 0;
         for (int i = -1; i <= 1; i++) {

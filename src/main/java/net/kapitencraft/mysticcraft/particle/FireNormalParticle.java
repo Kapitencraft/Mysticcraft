@@ -13,12 +13,10 @@ public class FireNormalParticle extends TextureSheetParticle {
     public static FireNormalParticleProvider provider(SpriteSet spriteSet) {
         return new FireNormalParticleProvider(spriteSet);
     }
-    private final SpriteSet spriteSet;
 
 
     protected FireNormalParticle(ClientLevel world, double x, double y, double z, double vx, double vy, double vz, SpriteSet spriteSet) {
         super(world, x, y, z);
-        this.spriteSet = spriteSet;
         this.setSize(0.2f, 0.2f);
         this.gravity = 0;
         this.hasPhysics = false;
@@ -26,7 +24,7 @@ public class FireNormalParticle extends TextureSheetParticle {
         this.yd = vy;
         this.zd = vz;
         this.lifetime = xd > 1 || yd > 1 || zd > 1 ? 20 : 60;
-        this.setSprite(this.spriteSet.get(RandomSource.createNewThreadLocalInstance()));
+        this.setSprite(spriteSet.get(RandomSource.createNewThreadLocalInstance()));
     }
 
     @Override

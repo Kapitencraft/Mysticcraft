@@ -20,7 +20,7 @@ import java.util.function.Supplier;
 
 public class ModBlocks {
     public static final DeferredRegister<Block> REGISTRY = DeferredRegister.create(ForgeRegistries.BLOCKS, MysticcraftMod.MOD_ID);
-    private static BlockRegistryHolder registerBlock(String name, Supplier block, Item.Properties properties) {
+    private static BlockRegistryHolder registerBlock(String name, Supplier<Block> block, Item.Properties properties) {
         RegistryObject<Block> toReturn = REGISTRY.register(name, block);
         return new BlockRegistryHolder(toReturn, registerItem(name, toReturn, properties));
     }

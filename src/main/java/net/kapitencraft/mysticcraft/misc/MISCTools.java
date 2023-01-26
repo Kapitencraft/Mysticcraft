@@ -15,6 +15,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -29,6 +31,7 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
@@ -39,15 +42,20 @@ import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.function.Function;
 
 public class MISCTools {
+
     record Rotation(String relative, int vecRot, int vecNum) {
-    }
+        }
     public final Rotation EAST = new Rotation("x+", 90, 1);
-    public final Rotation WEST = new Rotation("x-", 270,3);
+    public final Rotation WEST = new Rotation("x-",270, 3);
     public final Rotation SOUTH = new Rotation("z+", 180, 2);
     public final Rotation NORTH = new Rotation("z-", 360, 4);
 
+    public static EquipmentSlot getSlotForStack(ItemStack stack) {
+        return stack.getItem() instanceof ArmorItem armorItem ? armorItem.getSlot() : EquipmentSlot.MAINHAND;
+    }
     public static ArrayList<Vec3> LineOfSight(Entity entity, double range, double scaling) {
         ArrayList<Vec3> line = new ArrayList<>();
         Vec3 vec3;
@@ -127,6 +135,13 @@ public class MISCTools {
             return living;
         }
         return null;
+    }
+
+    public static void sendTitle(Player player, Component title) {
+        if (player instanceof ServerPlayer serverPlayer) {
+            Function<Component, Packet<?>> function = ClientboundSetTitleTextPacket::new;
+            serverPlayer.connection.send(function.apply(title));
+        }
     }
 
     public static ArmorStand createDamageIndicator(LivingEntity entity, double amount, String type) {
