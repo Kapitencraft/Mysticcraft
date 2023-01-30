@@ -160,19 +160,17 @@ public class MISCTools {
 
     public static ArmorStand createMarker(Vec3 pos, Level level, boolean invisible) {
         ArmorStand stand = new ArmorStand(level, pos.x, pos.y, pos.z);
+        CompoundTag tag = stand.getPersistentData();
+        tag.putBoolean("Marker", true);
         stand.setInvulnerable(true);
         stand.setInvisible(invisible);
         stand.setNoGravity(true);
         stand.setBoundingBox(new AABB(0,0,0,0,0,0));
-        CompoundTag tag = stand.getPersistentData();
-        tag.putBoolean("Marker", true);
         return stand;
     }
     public static ArmorStand createDamageIndicator(LivingEntity entity, double amount, String type) {
         ArmorStand dmgInc = createMarker(new Vec3(entity.getX() + Math.random() - 0.5, entity.getY() - 1, entity.getZ() + Math.random() - 0.5), entity.level, true);
         boolean dodge = Objects.equals(type, "dodge");
-        dmgInc.setNoGravity(true);
-        dmgInc.setBoundingBox(new AABB(0,0,0,0,0,0));
         dmgInc.setCustomNameVisible(true);
         dmgInc.setCustomName(Component.literal(!dodge ? String.valueOf(MysticcraftMod.MAIN_FORMAT.format(amount)) : "DODGE").withStyle(damageIndicatorColorGenerator(type)));
         CompoundTag persistentData = dmgInc.getPersistentData();

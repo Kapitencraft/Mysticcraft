@@ -290,7 +290,7 @@ public class MiscRegister {
             }
         }
         MISCTools.createDamageIndicator(attacked, event.getAmount(), dodge ? "dodge" : source.msgId);
-        new ParticleHelper(1, 0.1f, 200, 0.2f, event.getEntity(), ParticleHelper.Type.ORBIT, ParticleTypes.ANGRY_VILLAGER);
+        new ParticleHelper(1, 2f, 200, 3f, event.getEntity(), ParticleHelper.Type.ORBIT, ParticleTypes.SMALL_FLAME);
     }
 
     @SubscribeEvent
@@ -330,8 +330,8 @@ public class MiscRegister {
             }
         }
         if (tag.contains("ParticleHelper")) {
-            CompoundTag particleHelper = (CompoundTag) tag.get("ParticleHelper");
             ParticleHelper helper = ParticleHelper.of(living);
+            assert helper != null;
             helper.tick(living.tickCount);
         }
     }
