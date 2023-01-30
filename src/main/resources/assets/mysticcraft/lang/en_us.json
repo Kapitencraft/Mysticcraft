@@ -30,6 +30,7 @@
   "generic.mana_regen": "§9Mana Regeneration",
   "generic.health_regen": "§4Health Regeneration",
   "generic.arrow_speed": "Arrow Speed",
+  "generic.ranged_damage": "Ranged Damage",
 
   "entity.mysticcraft.frozen_blaze": "Frozen Blaze",
   "entity.mysticcraft.fire_bolt": "Fire Bolt",
@@ -51,7 +52,7 @@
   "item.mysticcraft.burning_scythe": "Burning Scythe",
   "item.mysticcraft.infernal_scythe": "Infernal Scythe",
   "item.mysticcraft.aspect_of_the_end": "Aspect of the End",
-
+  "item.mysticcraft.fire_lance": "Fire Lance",
 
   "item.mysticcraft.bucket_of_mana": "Bucket of Mana",
   "item.mysticcraft.heart_of_the_nether": "Heart of the Nether",

@@ -12,7 +12,7 @@ public class TheStaffOfDestruction extends NormalSpellItem {
     private final Component[] description = {Component.literal("A very explosive tool")};
     public TheStaffOfDestruction() {
         super(new Properties().rarity(Rarity.RARE), 1, 50, 20);
-        this.addSlot(new SpellSlot(Spells.EXPLOSIVE_SIGHT));
+        this.addSlot(new SpellSlot(Spells.EXPLOSIVE_SIGHT.getSpell()));
     }
 
     @Override

@@ -2,7 +2,6 @@ package net.kapitencraft.mysticcraft.spell.spells;
 
 import net.kapitencraft.mysticcraft.misc.MISCTools;
 import net.kapitencraft.mysticcraft.spell.Spell;
-import net.kapitencraft.mysticcraft.spell.Spells;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
@@ -18,7 +17,7 @@ public class ExplosiveSightSpell extends Spell {
 
     private static final Component[] description = new Component[] {Component.literal("Explodes in a range of 150")};
     public ExplosiveSightSpell() {
-        super(150, "Explosive Sight", "1010110", Spells.RELEASE, Rarity.UNCOMMON, "explosive_sight");
+        super(150, "Explosive Sight", "1010110", Spell.RELEASE, Rarity.UNCOMMON);
     }
 
     @Override

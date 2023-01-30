@@ -50,9 +50,9 @@ public class GemstoneHelper {
 
     private boolean hasData(ItemStack stack) {
         if (stack.getTag() == null) {
-            MysticcraftMod.sendInfo("found Tag = null");
+            //MysticcraftMod.sendInfo("found Tag = null");
         } else if (stack.getTagElement(DATA_ID) == null) {
-            MysticcraftMod.sendInfo("found Gemstone Data = null");
+            //MysticcraftMod.sendInfo("found Gemstone Data = null");
         } else {
             return true;
         }
@@ -69,9 +69,9 @@ public class GemstoneHelper {
         this.saveData(stack);
     }
     public GemstoneSlot[] loadData(ItemStack current) {
-        MysticcraftMod.sendInfo("loading Data:");
+        //MysticcraftMod.sendInfo("loading Data:");
         if (hasData(current)) {
-            MysticcraftMod.sendInfo("Loading now...");
+            //MysticcraftMod.sendInfo("Loading now...");
             CompoundTag tag = current.getTagElement(DATA_ID);
             if (tag == null) {
                 throw new IllegalStateException("Existing Tag is not Existing :D");
@@ -83,9 +83,9 @@ public class GemstoneHelper {
             for (int i = 0; i < tag.getShort("Size"); i++) {
                 if (!(tag.get("slot" + i) == null)) {
                     slots[i] = GemstoneSlot.fromNBT((CompoundTag) tag.get("slot" + i));
-                    MysticcraftMod.sendInfo("Slot " + (i + 1) + " contains: " + (slots[i] == null ? null : slots[i].getDisplay()));
+                    //MysticcraftMod.sendInfo("Slot " + (i + 1) + " contains: " + (slots[i] == null ? null : slots[i].getDisplay()));
                 } else {
-                    MysticcraftMod.sendInfo("isNull");
+                    //MysticcraftMod.sendInfo("isNull");
                 }
             }
             this.putGemstones(slots, current);

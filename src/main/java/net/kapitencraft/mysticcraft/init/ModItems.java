@@ -51,8 +51,9 @@ public abstract class ModItems {
     public static final RegistryObject<Item> FIERY_SCYTHE = REGISTRY.register("fiery_scythe", FieryScythe::new);
     public static final RegistryObject<Item> BURNING_SCYTHE = REGISTRY.register("burning_scythe", BurningScythe::new);
     public static final RegistryObject<Item> INFERNAL_SCYTHE = REGISTRY.register("infernal_scythe", InfernalScythe::new);
+    public static final RegistryObject<Item> FIRE_LANCE = REGISTRY.register("fire_lance", FireLance::new);
     public static final RegistryObject<Item> STAFF_OF_THE_WILD = REGISTRY.register("staff_of_the_wild", StaffOfTheWild::new);
-    public static final RegistryObject<Item> IMPLOSION_SCROLL = REGISTRY.register("implosion_scroll", ()-> new SpellScrollItem(Spells.IMPLOSION));
+    public static final RegistryObject<Item> IMPLOSION_SCROLL = REGISTRY.register("implosion_scroll", ()-> new SpellScrollItem(Spells.IMPLOSION.getSpell()));
     public static final RegistryObject<Item> MANA_STEEL_INGOT = REGISTRY.register("mana_steel_ingot", () -> new Item(new Item.Properties().rarity(Rarity.RARE)));
     public static final RegistryObject<Item> UPPER_BlADE_MS = REGISTRY.register("upper_mana_steel_sword_part", () -> new Item(new Item.Properties().rarity(Rarity.RARE).stacksTo(1)));
     public static final RegistryObject<Item> DOWN_BlADE_MS = REGISTRY.register("lower_mana_steel_sword_part", () -> new Item(new Item.Properties().rarity(Rarity.RARE).stacksTo(1)));

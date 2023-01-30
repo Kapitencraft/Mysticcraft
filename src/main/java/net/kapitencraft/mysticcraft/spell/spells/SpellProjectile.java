@@ -20,7 +20,7 @@ import java.util.UUID;
 
 public abstract class SpellProjectile extends AbstractArrow {
     private final List<UUID> attacked = new ArrayList<>();
-    private final Spell spell;
+    protected final Spell spell;
     protected float damageInflicted = 0;
 
     protected SpellProjectile(EntityType<? extends AbstractArrow> p_36721_, Level p_36722_, Spell spell) {

@@ -3,7 +3,6 @@ package net.kapitencraft.mysticcraft.spell.spells;
 import net.kapitencraft.mysticcraft.item.spells.IFireScytheItem;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.kapitencraft.mysticcraft.spell.Spell;
-import net.kapitencraft.mysticcraft.spell.Spells;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
@@ -17,7 +16,7 @@ public class FireBoltSpell extends Spell {
     private final boolean explosive;
     private final Component[] description;
     public FireBoltSpell(double base_damage, boolean explosive) {
-        super(50, "Fire Bolt", "0110011", Spells.RELEASE, Rarity.UNCOMMON, "fire_bolt");
+        super(50, "Fire Bolt", "0110011", Spell.RELEASE, Rarity.UNCOMMON);
         this.damage = base_damage;
         this.explosive = explosive;
         this.description = new Component[]{Component.literal("Fires a Fire Bolt dealing"), Component.literal(FormattingCodes.RED + this.getDamage() + FormattingCodes.RESET + " Base Ability Damage")};

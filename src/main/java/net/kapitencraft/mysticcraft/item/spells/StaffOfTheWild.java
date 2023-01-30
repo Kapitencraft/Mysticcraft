@@ -6,6 +6,7 @@ import net.kapitencraft.mysticcraft.item.gemstone.GemstoneSlot;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.kapitencraft.mysticcraft.spell.SpellSlot;
+import net.kapitencraft.mysticcraft.spell.Spells;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -54,7 +55,9 @@ public class StaffOfTheWild extends NormalSpellItem implements GeoItem, IGemston
     private SpellSlot[] spellSlots = new SpellSlot[SPELL_SLOT_AMOUNT];
 
     public StaffOfTheWild() {
-        super(new Properties().rarity(FormattingCodes.LEGENDARY).stacksTo(1), 5, 100, 0);
+        super(new Properties().rarity(FormattingCodes.LEGENDARY).stacksTo(1), 5, 200, 0);
+        this.addSlot(new SpellSlot(Spells.HUGE_HEAL.getSpell()));
+        this.addSlot(new SpellSlot(Spells.INSTANT_TRANSMISSION.getSpell()));
     }
 
     @Override

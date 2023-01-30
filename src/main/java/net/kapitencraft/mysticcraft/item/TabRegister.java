@@ -34,6 +34,7 @@ public class TabRegister {
                             output.accept(ModItems.FIERY_SCYTHE.get());
                             output.accept(ModItems.BURNING_SCYTHE.get());
                             output.accept(ModItems.INFERNAL_SCYTHE.get());
+                            output.accept(ModItems.FIRE_LANCE.get());
                             output.accept(ModItems.WIZARD_HAT.get());
                             output.accept(ModItems.HYPERION.get());
                             output.accept(ModItems.THE_STAFF_DESTRUCTION.get());
@@ -59,6 +60,7 @@ public class TabRegister {
                         .icon(()-> new ItemStack(ModItems.MANA_STEEL_SWORD.get()))
                         .displayItems((featureFlagSet, output, p_260123_) -> {
                             output.accept(ModItems.MANA_STEEL_SWORD.get());
+                            output.accept(ModItems.TALLIN_BOW.get());
                             addArmor(ModItems.ENDER_KNIGHT_ARMOR, output);
                             addArmor(ModItems.FROZEN_BLAZE_ARMOR, output);
                             addArmor(ModItems.SHADOW_ASSASSIN_ARMOR, output);
@@ -67,6 +69,7 @@ public class TabRegister {
                             output.accept(ModItems.FIERY_SCYTHE.get());
                             output.accept(ModItems.BURNING_SCYTHE.get());
                             output.accept(ModItems.INFERNAL_SCYTHE.get());
+                            output.accept(ModItems.FIRE_LANCE.get());
                             output.accept(ModItems.HYPERION.get());
                             output.accept(ModItems.SCYLLA.get());
                             output.accept(ModItems.ASTREA.get());

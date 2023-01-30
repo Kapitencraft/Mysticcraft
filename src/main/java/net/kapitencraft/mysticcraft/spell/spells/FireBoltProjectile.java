@@ -3,6 +3,7 @@ package net.kapitencraft.mysticcraft.spell.spells;
 import net.kapitencraft.mysticcraft.init.ModEntityTypes;
 import net.kapitencraft.mysticcraft.init.ModParticleTypes;
 import net.kapitencraft.mysticcraft.misc.MISCTools;
+import net.kapitencraft.mysticcraft.misc.damage_source.IndirectAbilityDamageSource;
 import net.kapitencraft.mysticcraft.spell.Spell;
 import net.kapitencraft.mysticcraft.spell.Spells;
 import net.minecraft.core.particles.ParticleTypes;
@@ -10,7 +11,6 @@ import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.damagesource.IndirectEntityDamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -50,7 +50,7 @@ public class FireBoltProjectile extends SpellProjectile {
     }
 
     public FireBoltProjectile(EntityType<? extends AbstractArrow> type, Level level) {
-        super(type, level, Spells.FIRE_BOLT_1);
+        super(type, level, Spells.FIRE_BOLT_1.getSpell());
         this.explosive = false;
         this.damage = 1;
     }
@@ -95,7 +95,7 @@ public class FireBoltProjectile extends SpellProjectile {
     private void damage(LivingEntity living) {
         this.addHitEntity(living);
         float health = living.getHealth();
-        living.hurt(new IndirectEntityDamageSource("ability", this, this.getOwner()), (float) this.damage);
+        living.hurt(new IndirectAbilityDamageSource(this, this.getOwner(), 0.6f, this.spell.REGISTRY_NAME), (float) this.damage);
         this.damageInflicted += (health - living.getHealth());
         living.setSecondsOnFire((int) Math.floor(this.damage));
     }

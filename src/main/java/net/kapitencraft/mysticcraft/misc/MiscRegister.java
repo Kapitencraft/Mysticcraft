@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.misc;
 
 import com.google.common.collect.Multimap;
+import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.enchantments.ExtendedCalculationEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.StatBoostEnchantment;
 import net.kapitencraft.mysticcraft.entity.FrozenBlazeEntity;
@@ -14,9 +15,12 @@ import net.kapitencraft.mysticcraft.item.weapon.melee.sword.ManaSteelSwordItem;
 import net.kapitencraft.mysticcraft.item.weapon.ranged.bow.TallinBow;
 import net.kapitencraft.mysticcraft.misc.damage_source.FerociousDamageSource;
 import net.kapitencraft.mysticcraft.misc.damage_source.IAbilitySource;
+import net.kapitencraft.mysticcraft.spell.Spell;
+import net.kapitencraft.mysticcraft.spell.Spells;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -93,6 +97,7 @@ public class MiscRegister {
             attacker.heal(Math.min((float) live_steel, event.getAmount()));
         }
     }
+
     @SubscribeEvent(priority = EventPriority.HIGH)
     public static void DamageEnchantRegister(LivingDamageEvent event) {
         LivingEntity attacked = event.getEntity();
@@ -140,6 +145,7 @@ public class MiscRegister {
             }
         }
     }
+
     @SubscribeEvent
     public static void ItemBonusRegister(LivingDeathEvent event) {
         DamageSource source = event.getSource();
@@ -161,6 +167,7 @@ public class MiscRegister {
             }
         }
     }
+
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void StatModEnchantmentRegister(ItemAttributeModifierEvent event) {
         ItemStack stack = event.getItemStack();
@@ -283,16 +290,19 @@ public class MiscRegister {
             }
         }
         MISCTools.createDamageIndicator(attacked, event.getAmount(), dodge ? "dodge" : source.msgId);
+        new ParticleHelper(1, 0.1f, 200, 0.2f, event.getEntity(), ParticleHelper.Type.ORBIT, ParticleTypes.ANGRY_VILLAGER);
     }
 
     @SubscribeEvent
     public static void EntityTick(LivingEvent.LivingTickEvent event) {
         LivingEntity living = event.getEntity();
         CompoundTag tag = living.getPersistentData();
-        if (living instanceof ArmorStand && tag.getBoolean("isDamageIndicator")) {
-            tag.putInt("time", tag.getInt("time") + 1);
-            if (tag.getInt("time") >= 35) {
-                living.kill();
+        if (living instanceof ArmorStand) {
+            if (tag.getBoolean("isDamageIndicator")) {
+                tag.putInt("time", tag.getInt("time") + 1);
+                if (tag.getInt("time") >= 35) {
+                    living.kill();
+                }
             }
         }
 
@@ -307,17 +317,22 @@ public class MiscRegister {
                 }
             }
         }
-
-        if (living instanceof Player && tag.contains(SpellItem.SPELL_EXECUTION_DUR)) {
+        if (living instanceof Player player && tag.contains(SpellItem.SPELL_EXECUTION_DUR)) {
             if (tag.getByte(SpellItem.SPELL_EXECUTION_DUR) < 1 || tag.getString(SpellItem.SPELL_EXE).length() >= 7) {
                 ItemStack mainHand = living.getMainHandItem();
                 if (mainHand.getItem() instanceof SpellItem spellItem) {
                     spellItem.executeSpell(tag.getString(SpellItem.SPELL_EXE), mainHand, living);
                     tag.putString(SpellItem.SPELL_EXE, "");
                 }
+                MISCTools.clearTitle(player);
             } else {
                 tag.putByte(SpellItem.SPELL_EXECUTION_DUR, (byte) (tag.getByte(SpellItem.SPELL_EXECUTION_DUR) - 1));
             }
+        }
+        if (tag.contains("ParticleHelper")) {
+            CompoundTag particleHelper = (CompoundTag) tag.get("ParticleHelper");
+            ParticleHelper helper = ParticleHelper.of(living);
+            helper.tick(living.tickCount);
         }
     }
 
@@ -327,12 +342,32 @@ public class MiscRegister {
         List<Component> toolTip = event.getToolTip();
         Player player = event.getEntity();
         final Component SEARCHED = Component.literal(FormattingCodes.GRAY + "Mana-Cost: " + FormattingCodes.DARK_RED);
-        if (toolTip.contains(SEARCHED) && stack.getItem() instanceof SpellItem spellItem && player != null) {
-            Component found = toolTip.get(toolTip.lastIndexOf(SEARCHED));
-            if (found instanceof MutableComponent mutable) {
-                AttributeInstance instance = player.getAttribute(ModAttributes.MANA_COST.get());
-                if (instance != null) {
-                    mutable.append(FormattingCodes.DARK_RED + MISCTools.getAttributeValue(instance, spellItem.getManaCost() - (instance.getModifier(SpellItem.MANA_COST_MOD) != null ? instance.getModifier(SpellItem.MANA_COST_MOD).getAmount() : 0)));
+        if (player != null) {
+            if (toolTip.contains(SEARCHED) && stack.getItem() instanceof SpellItem spellItem) {
+                if (spellItem.getSpellSlotAmount() > 1) {
+                    for (int i = 0; i < toolTip.size(); i++) {
+                        Component component = toolTip.get(i);
+                        if (i < toolTip.size() - 1 && component.contains(SEARCHED)) {
+                            MutableComponent mutable = (MutableComponent) component;
+                            MysticcraftMod.sendInfo("a");
+                            Component pattern = toolTip.get(i + 1);
+                            String patternString = pattern.getString();
+                            Spell spell = Spells.get(Spell.getStringForPattern(patternString, true));
+                            if (spell != null) {
+                                AttributeInstance instance = player.getAttribute(ModAttributes.MANA_COST.get());
+                                mutable.append(FormattingCodes.DARK_RED + MISCTools.getAttributeValue(instance, spell.MANA_COST));
+                            }
+                        }
+                    }
+                } else {
+                    Spell spell = spellItem.getActiveSpell();
+                    Component component = toolTip.get(toolTip.indexOf(SEARCHED));
+                    if (component instanceof MutableComponent mutable) {
+                        AttributeInstance instance = player.getAttribute(ModAttributes.MANA_COST.get());
+                        if (instance != null) {
+                            mutable.append(FormattingCodes.DARK_RED + MISCTools.getAttributeValue(instance, spell.MANA_COST));
+                        }
+                    }
                 }
             }
         }
@@ -348,6 +383,7 @@ public class MiscRegister {
             toolTip.add(Component.literal((flag ? RarityMod + " " : "") + rarity + " " + MISCTools.getNameModifier(stack) + (flag ? " " + RarityMod : "")).withStyle(rarity.getStyleModifier()).withStyle(ChatFormatting.BOLD));
         }
     }
+
     @SubscribeEvent
     public static void healthRegenRegister(LivingHealEvent event) {
         if (event.getEntity().getAttribute(ModAttributes.HEALTH_REGEN.get()) != null) {
@@ -410,6 +446,18 @@ public class MiscRegister {
                     attacker.getInventory().add(stack);
                     entity.kill();
                 }
+            }
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void telekinesisXpRegister(LivingExperienceDropEvent event) {
+        Player attacker = event.getAttackingPlayer();
+        if (attacker != null) {
+            ItemStack mainHand = attacker.getMainHandItem();
+            if (mainHand.getEnchantmentLevel(ModEnchantments.TELEKINESIS.get()) > 0) {
+                attacker.giveExperiencePoints(event.getDroppedExperience());
+                event.setCanceled(true);
             }
         }
     }

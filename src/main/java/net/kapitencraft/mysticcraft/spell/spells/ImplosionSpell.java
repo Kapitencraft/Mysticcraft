@@ -5,7 +5,6 @@ import net.kapitencraft.mysticcraft.item.spells.necron_sword.NecronSword;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.kapitencraft.mysticcraft.misc.damage_source.AbilityDamageSource;
 import net.kapitencraft.mysticcraft.spell.Spell;
-import net.kapitencraft.mysticcraft.spell.Spells;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -20,7 +19,7 @@ import java.util.stream.Collectors;
 
 public class ImplosionSpell extends Spell {
     public ImplosionSpell() {
-        super(300, "Implosion", "0000000", Spells.RELEASE, FormattingCodes.LEGENDARY, "implosion");
+        super(300, "Implosion", "0000000", Spell.RELEASE, FormattingCodes.LEGENDARY);
     }
 
     @Override
@@ -31,7 +30,7 @@ public class ImplosionSpell extends Spell {
         for (LivingEntity entityIterator : entFound) {
             if (!(entityIterator == user)) {
                 EnemyHealth = entityIterator.getHealth();
-                entityIterator.hurt(new AbilityDamageSource(user, 0.1f), 5);
+                entityIterator.hurt(new AbilityDamageSource(user, 0.1f, this.REGISTRY_NAME), 5);
                 damageInflicted += (EnemyHealth - entityIterator.getHealth());
                 damaged++;
             }

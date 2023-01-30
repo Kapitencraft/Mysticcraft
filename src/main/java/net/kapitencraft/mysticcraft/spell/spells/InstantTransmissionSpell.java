@@ -1,9 +1,7 @@
 package net.kapitencraft.mysticcraft.spell.spells;
 
-import net.kapitencraft.mysticcraft.item.spells.AspectOfTheEndItem;
 import net.kapitencraft.mysticcraft.misc.MISCTools;
 import net.kapitencraft.mysticcraft.spell.Spell;
-import net.kapitencraft.mysticcraft.spell.Spells;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
@@ -17,7 +15,7 @@ public class InstantTransmissionSpell extends Spell {
 
 
     public InstantTransmissionSpell() {
-        super(50, "Instant Transmission", "1110111", Spells.RELEASE, Rarity.COMMON, "instant_transmission");
+        super(50, "Instant Transmission", "1110111", Spell.RELEASE, Rarity.COMMON);
     }
 
     @Override
@@ -28,7 +26,7 @@ public class InstantTransmissionSpell extends Spell {
 
     @Override
     public boolean canApply(Item item) {
-        return item instanceof AspectOfTheEndItem;
+        return true;
     }
 
     @Override

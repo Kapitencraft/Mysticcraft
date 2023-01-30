@@ -9,23 +9,23 @@ import net.minecraft.world.item.Rarity;
 
 import java.util.List;
 
-public class EmptySpell extends Spell {
-    private Component[] description = new Component[]{Component.literal("No Spell assigned to this Item"), Component.literal("Use the Spellment-Table to apply Spells"), Component.literal("to this Item")};
-    public EmptySpell() {
-        super(0, "Empty Spell", null, Spell.CYCLE, Rarity.COMMON);
+public class HugeHealSpell extends Spell {
+    public HugeHealSpell() {
+        super(120, "Huge Heal", "0011011", Spell.RELEASE, Rarity.UNCOMMON);
     }
 
     @Override
     public void execute(LivingEntity user, ItemStack stack) {
+        user.heal(5f);
     }
 
     @Override
     public boolean canApply(Item stack) {
-        return false;
+        return true;
     }
 
     @Override
     public List<Component> getDescription() {
-        return List.of(description);
+        return List.of(Component.literal("Heals for 5 health"));
     }
 }

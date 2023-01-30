@@ -25,7 +25,7 @@ public class ManaMain {
         double manaRegen = max_mana / 500 * (1 + mana_regen / 100);
         player.getPersistentData().putDouble("manaRegen", manaRegen);
         if (mana < max_mana) {
-            mana += manaRegen;
+             mana += manaRegen;
 
         }
         if (mana > max_mana) {

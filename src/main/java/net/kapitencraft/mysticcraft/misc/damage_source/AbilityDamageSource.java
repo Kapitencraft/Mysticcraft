@@ -5,12 +5,18 @@ import net.minecraft.world.entity.Entity;
 
 public class AbilityDamageSource extends EntityDamageSource implements IAbilitySource {
     private final float intScaling;
-    public AbilityDamageSource(Entity p_19395_, float intScaling) {
+    private final String spellName;
+    public AbilityDamageSource(Entity p_19395_, float intScaling, String spellName) {
         super("ability", p_19395_);
         this.intScaling = intScaling;
+        this.spellName = spellName;
     }
 
     public float getScaling() {
         return intScaling;
+    }
+
+    public String getSpellType() {
+        return spellName;
     }
 }

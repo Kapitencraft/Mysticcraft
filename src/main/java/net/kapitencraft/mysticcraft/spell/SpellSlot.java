@@ -1,24 +1,16 @@
 package net.kapitencraft.mysticcraft.spell;
 
 
-public class SpellSlot {
-    private Spell spell;
-    private double mana_cost;
+import org.jetbrains.annotations.NotNull;
 
-    public SpellSlot(Spell spell) {
+public class SpellSlot {
+    private @NotNull Spell spell;
+
+    public SpellSlot(@NotNull Spell spell) {
         this.spell = spell;
-        this.mana_cost = this.getManaCost();
     }
 
-    public Spell getSpell() {
+    public @NotNull Spell getSpell() {
         return this.spell;
     }
-    public double getManaCost() {
-        return this.spell.MANA_COST;
-    }
-
-    private void setManaCost(double mana_cost) {
-        this.mana_cost = mana_cost;
-    }
-
 }

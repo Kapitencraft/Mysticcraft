@@ -16,6 +16,8 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientboundClearTitlesPacket;
+import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
@@ -74,27 +76,25 @@ public class MISCTools {
         return -1;
     }
 
-    public static double getAttributeValue(AttributeInstance instance, double baseValue) {
+    public static double getAttributeValue(@Nullable AttributeInstance instance, double baseValue) {
+        if (instance == null) {
+            MysticcraftMod.sendInfo("Instance is null");
+            return 0;
+        }
         double d0 = baseValue;
 
-        if (instance.getModifiers(AttributeModifier.Operation.ADDITION) != null) {
-            for (AttributeModifier attributemodifier : instance.getModifiers(AttributeModifier.Operation.ADDITION)) {
-                d0 += attributemodifier.getAmount();
-            }
+        for (AttributeModifier attributemodifier : instance.getModifiers(AttributeModifier.Operation.ADDITION)) {
+            d0 += attributemodifier.getAmount();
         }
 
         double d1 = d0;
 
-        if (instance.getModifiers(AttributeModifier.Operation.MULTIPLY_BASE) != null) {
-            for (AttributeModifier attributeModifier1 : instance.getModifiers(AttributeModifier.Operation.MULTIPLY_BASE)) {
-                d1 += d0 * attributeModifier1.getAmount();
-            }
+        for (AttributeModifier attributeModifier1 : instance.getModifiers(AttributeModifier.Operation.MULTIPLY_BASE)) {
+            d1 += d0 * attributeModifier1.getAmount();
         }
 
-        if (instance.getModifiers(AttributeModifier.Operation.MULTIPLY_TOTAL) != null) {
-            for (AttributeModifier attributeModifier2 : instance.getModifiers(AttributeModifier.Operation.MULTIPLY_TOTAL)) {
-                d1 *= 1.0D + attributeModifier2.getAmount();
-            }
+        for (AttributeModifier attributeModifier2 : instance.getModifiers(AttributeModifier.Operation.MULTIPLY_TOTAL)) {
+            d1 *= 1.0D + attributeModifier2.getAmount();
         }
         return instance.getAttribute().sanitizeValue(d1);
     }
@@ -144,12 +144,34 @@ public class MISCTools {
         }
     }
 
+    public static void sendSubTitle(Player player, Component subtitle) {
+        if (player instanceof ServerPlayer serverPlayer) {
+            Function<Component, Packet<?>> function = ClientboundSetSubtitleTextPacket::new;
+            serverPlayer.connection.send(function.apply(subtitle));
+        }
+    }
+
+    public static void clearTitle(Player player) {
+        if (player instanceof ServerPlayer serverPlayer) {
+            ClientboundClearTitlesPacket clearTitlesPacket = new ClientboundClearTitlesPacket(true);
+            serverPlayer.connection.send(clearTitlesPacket);
+        }
+    }
+
+    public static ArmorStand createMarker(Vec3 pos, Level level, boolean invisible) {
+        ArmorStand stand = new ArmorStand(level, pos.x, pos.y, pos.z);
+        stand.setInvulnerable(true);
+        stand.setInvisible(invisible);
+        stand.setNoGravity(true);
+        stand.setBoundingBox(new AABB(0,0,0,0,0,0));
+        CompoundTag tag = stand.getPersistentData();
+        tag.putBoolean("Marker", true);
+        return stand;
+    }
     public static ArmorStand createDamageIndicator(LivingEntity entity, double amount, String type) {
-        ArmorStand dmgInc = new ArmorStand(entity.level, entity.getX() + Math.random() - 0.5, entity.getY() - 1, entity.getZ() + Math.random() - 0.5);
+        ArmorStand dmgInc = createMarker(new Vec3(entity.getX() + Math.random() - 0.5, entity.getY() - 1, entity.getZ() + Math.random() - 0.5), entity.level, true);
         boolean dodge = Objects.equals(type, "dodge");
         dmgInc.setNoGravity(true);
-        dmgInc.setInvisible(true);
-        dmgInc.setInvulnerable(true);
         dmgInc.setBoundingBox(new AABB(0,0,0,0,0,0));
         dmgInc.setCustomNameVisible(true);
         dmgInc.setCustomName(Component.literal(!dodge ? String.valueOf(MysticcraftMod.MAIN_FORMAT.format(amount)) : "DODGE").withStyle(damageIndicatorColorGenerator(type)));

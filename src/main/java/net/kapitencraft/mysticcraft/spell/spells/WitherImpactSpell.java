@@ -6,7 +6,6 @@ import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.kapitencraft.mysticcraft.misc.MISCTools;
 import net.kapitencraft.mysticcraft.misc.damage_source.AbilityDamageSource;
 import net.kapitencraft.mysticcraft.spell.Spell;
-import net.kapitencraft.mysticcraft.spell.Spells;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
@@ -25,7 +24,7 @@ public class WitherImpactSpell extends Spell {
     private final Component[] description = {Component.literal("Teleports you 10 blocks ahead"), Component.literal("and deals damage to all entities around")};
 
     public WitherImpactSpell() {
-        super(300, "Crystal Warp", "1101110", Spells.RELEASE, Rarity.RARE, "crystal_warp");
+        super(300, "Wither Impact", "1101110", Spell.RELEASE, Rarity.RARE);
     }
 
     @Override
@@ -39,7 +38,7 @@ public class WitherImpactSpell extends Spell {
         for (LivingEntity entityIterator : entFound) {
             if (!(entityIterator == user)) {
                 EnemyHealth = entityIterator.getHealth();
-                entityIterator.hurt(new AbilityDamageSource(user, 0.1f), 5);
+                entityIterator.hurt(new AbilityDamageSource(user, 0.4f, this.REGISTRY_NAME), 5);
                 damageInflicted += (EnemyHealth - entityIterator.getHealth());
                 damaged++;
             }

@@ -15,6 +15,7 @@ import net.kapitencraft.mysticcraft.misc.MISCTools;
 import net.kapitencraft.mysticcraft.spell.Spell;
 import net.kapitencraft.mysticcraft.spell.SpellSlot;
 import net.kapitencraft.mysticcraft.spell.Spells;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -36,7 +37,6 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -47,7 +47,6 @@ public abstract class SpellItem extends SwordItem implements IModItem {
     private SpellSlot[] spellSlots;
     private final int intelligence;
     private final int ability_damage;
-    private final HashMap<String, Spell> SpellRegistrations = new HashMap<>();
 
 
 
@@ -60,7 +59,7 @@ public abstract class SpellItem extends SwordItem implements IModItem {
         @Nullable SpellSlot activeSpellSlot = this.getActiveSpellSlot();
         Spell spell;
         if (activeSpellSlot == null) {
-            spell = Spells.EMPTY_SPELL;
+            spell = Spells.EMPTY_SPELL.getSpell();
         } else {
             spell = activeSpellSlot.getSpell();
         }
@@ -82,14 +81,31 @@ public abstract class SpellItem extends SwordItem implements IModItem {
             list.addAll(this.getItemDescription());
             list.add(Component.literal(""));
         }
-        spell.addDescription(list, this, itemStack);
+        if (this.spellSlots.length == 1) {
+            spell.addDescription(list, this, itemStack);
+        } else {
+            if (Screen.hasShiftDown()) {
+                list.add(Component.literal(""));
+                addMultiSpellDisplay(list, itemStack);
+            } else {
+                list.add(Component.literal(""));
+                list.add(Component.literal("press [SHIFT] to show all Spells"));
+            }
+        }
         list.add(Component.literal(""));
         if (this.getPostDescription() != null) {
             list.addAll(this.getPostDescription());
         }
     }
 
-
+    private void addMultiSpellDisplay(List<Component> list, ItemStack stack) {
+        for (SpellSlot spellSlot : this.spellSlots) {
+            if (spellSlot != null) {
+                list.add(Component.literal(""));
+                spellSlot.getSpell().addDescription(list, this, stack);
+            }
+        }
+    }
 
     public SpellItem(Properties p_41383_, int damage, float speed,  int spellSlots, int intelligence, int ability_damage) {
         super(ModTiers.SPELL_TIER, damage, speed,  p_41383_.stacksTo(1));
@@ -114,24 +130,10 @@ public abstract class SpellItem extends SwordItem implements IModItem {
         return builder.build();
     }
 
-    @Override
-    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
-        ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = new ImmutableMultimap.Builder<>();
-        if (slot == EquipmentSlot.MAINHAND) {
-            if (this.getManaCost() > 0) {
-                builder.put(ModAttributes.MANA_COST.get(), new AttributeModifier(SpellItem.MANA_COST_MOD, "Attribute Modifier for Mana Cost", this.getManaCost(), AttributeModifier.Operation.ADDITION));
-            }
-        }
-        builder.putAll(super.getAttributeModifiers(slot, stack));
-        return builder.build();
-    }
-
-
     //The actual logic for the SpellItem
     public boolean addSlot(SpellSlot slot) {
         if (this.getFirstEmptySpellSlot() > -1 && !this.containsSpell(slot.getSpell()) && slot.getSpell().canApply(this)) {
             this.setSlot(slot, this.getFirstEmptySpellSlot());
-            this.SpellRegistrations.put(slot.getSpell().getCastingType(), slot.getSpell());
             return true;
         }
         return false;
@@ -158,7 +160,7 @@ public abstract class SpellItem extends SwordItem implements IModItem {
 
     private int getFirstEmptySpellSlot() {
         for (int i = 0; i < this.getSpellSlotAmount(); i++) {
-            if (this.spellSlots[i] == null || this.spellSlots[i].getSpell() == Spells.EMPTY_SPELL) {
+            if (this.spellSlots[i] == null || this.spellSlots[i].getSpell() == Spells.EMPTY_SPELL.getSpell()) {
                 return i;
             }
         }
@@ -172,27 +174,29 @@ public abstract class SpellItem extends SwordItem implements IModItem {
     }
 
     public SpellSlot getActiveSpellSlot() {
-        SpellSlot activeSpellSlot = this.spellSlots[this.getActiveSpellIndex()];
-        if (activeSpellSlot != null) {
-            return this.spellSlots[this.getActiveSpellIndex()];
+        if (this.spellSlots.length == 1) {
+            SpellSlot activeSpellSlot = this.spellSlots[this.getActiveSpellIndex()];
+            if (activeSpellSlot != null) {
+                return this.spellSlots[this.getActiveSpellIndex()];
+            }
+            return new SpellSlot(Spells.EMPTY_SPELL.getSpell());
         }
-        return new SpellSlot(Spells.EMPTY_SPELL);
+        return null;
     }
 
     public Spell getActiveSpell() {
-        return this.getActiveSpellSlot().getSpell();
+        if (this.getActiveSpellSlot() != null) {
+            return this.getActiveSpellSlot().getSpell();
+        }
+        return null;
     }
 
     public static final UUID MANA_COST_MOD = UUID.fromString("95c53029-8493-4e05-9e7b-a0c0530dae83");
-    private Spells.SpellType getType() {
-        return this.getActiveSpell().TYPE;
-    }
-    public double getManaCost() {
+    private Spell.Type getType() {
         if (this.getActiveSpell() != null) {
-            return this.getActiveSpellSlot().getManaCost();
-        } else {
-            return 0;
+            return this.getActiveSpell().TYPE;
         }
+        return null;
     }
 
     @Override
@@ -224,34 +228,53 @@ public abstract class SpellItem extends SwordItem implements IModItem {
 
     @Override
     public int getUseDuration(@NotNull ItemStack stack) {
-        Spells.SpellType type = this.getType();
-        return type == Spells.RELEASE ? 2 : Integer.MAX_VALUE;
+        if (this.getType() != null) {
+            Spell.Type type = this.getType();
+            return type == Spell.RELEASE ? 2 : Integer.MAX_VALUE;
+        }
+        return -1;
     }
 
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, Player player, @NotNull InteractionHand hand) {
         CompoundTag tag = player.getPersistentData();
         ItemStack itemstack = player.getItemInHand(hand);
-        tag.putString(SPELL_EXE, tag.getString(SPELL_EXE) + "1");
-        MISCTools.sendTitle(player, Component.literal(Spell.getPattern(tag.getString(SPELL_EXE))));
-        tag.putByte(SPELL_EXECUTION_DUR, (byte) 20);
-        player.startUsingItem(hand);
+        if (this.getSpellSlotAmount() > 1) {
+            tag.putString(SPELL_EXE, tag.getString(SPELL_EXE) + "1");
+            MISCTools.sendTitle(player, Component.literal(Spell.getPattern(tag.getString(SPELL_EXE))));
+            if (this.getClosestSpell(tag.getString(SPELL_EXE)) != null) {
+                MISCTools.sendSubTitle(player, Component.literal(FormattingCodes.ORANGE + "\u27A4 " + this.getClosestSpell(tag.getString(SPELL_EXE)).NAME));
+            }
+            tag.putByte(SPELL_EXECUTION_DUR, (byte) 20);
+        } else {
+            if (this.getActiveSpell().TYPE == Spell.RELEASE) {
+                if (handleMana(player, this.getActiveSpell())) {
+                    MysticcraftMod.sendInfo("use");
+                    this.getActiveSpell().execute(player, itemstack);
+                }
+            } else {
+                player.startUsingItem(hand);
+            }
+        }
         return InteractionResultHolder.consume(itemstack);
     }
 
     public boolean executeSpell(String executionId, ItemStack stack, LivingEntity user) {
-        if (!this.SpellRegistrations.containsKey(executionId) || executionId.length() < 7) {
-            return false;
-        } else {
-            Spell spell = this.SpellRegistrations.get(executionId);
-            handleMana(user, spell);
-            spell.execute(user, stack);
-            if (user instanceof Player player) {
-                player.displayClientMessage(Component.literal("Used " + spell.getName() + ": " + FormattingCodes.RED + "-" + user.getAttributeValue(ModAttributes.MANA_COST.get()) + " Mana"), true);
+        if (Spells.contains(executionId) && executionId.length() == 7) {
+            Spell spell = Spells.get(executionId);
+            if (this.containsSpell(spell) && handleMana(user, spell)) {
+                MysticcraftMod.sendInfo("magic");
+                spell.execute(user, stack);
+                if (user instanceof Player player) {
+                    player.displayClientMessage(Component.literal("Used " + spell.getName() + ": " + FormattingCodes.RED + "-" + user.getAttributeValue(ModAttributes.MANA_COST.get()) + " Mana"), true);
+                }
+                return true;
             }
-            return true;
         }
+        return false;
     }
+
+
 
     @Override
     public @NotNull InteractionResult useOn(UseOnContext context) {
@@ -262,10 +285,10 @@ public abstract class SpellItem extends SwordItem implements IModItem {
     }
 
     private boolean handleMana(LivingEntity user, Spell spell) {
-        if (user.getAttribute(ModAttributes.INTELLIGENCE.get()) == null) {
+        if (user.getAttribute(ModAttributes.INTELLIGENCE.get()) == null || user.level.isClientSide()) {
             return false;
         }
-        double manaToUse = user.getAttributeValue(ModAttributes.MANA_COST.get());
+        double manaToUse = MISCTools.getAttributeValue(user.getAttribute(ModAttributes.MAX_MANA.get()), spell.MANA_COST);
         double overflowMana = user.getPersistentData().getDouble("overflowMana");
         double currentMana = user.getAttribute(ModAttributes.MANA.get()).getBaseValue() + overflowMana;
         if (currentMana == 0) { return false; }
@@ -287,25 +310,32 @@ public abstract class SpellItem extends SwordItem implements IModItem {
 
     @Override
     public boolean onEntitySwing(ItemStack stack, LivingEntity entity) {
-        if (entity instanceof Player player) {
+        if (entity instanceof Player player && this.getSpellSlotAmount() > 1) {
             CompoundTag tag = entity.getPersistentData();
             tag.putString(SPELL_EXE, tag.getString(SPELL_EXE) + "0");
             MISCTools.sendTitle(player, Component.literal(Spell.getPattern(tag.getString(SPELL_EXE))));
+            if (this.getClosestSpell(tag.getString(SPELL_EXE)) != null) {
+                MISCTools.sendSubTitle(player, Component.literal(FormattingCodes.ORANGE + "\u27A4 " + this.getClosestSpell(tag.getString(SPELL_EXE)).NAME));
+            }
             tag.putByte(SPELL_EXECUTION_DUR, (byte) 20);
             return true;
         }
         return false;
     }
 
+    private Spell getClosestSpell(String spell_exe) {
+        return Spells.EMPTY_SPELL.getSpell();
+    }
+
     @Override
     public void onUseTick(@NotNull Level level, @NotNull LivingEntity user, @NotNull ItemStack stack, int count) {
-        if (!level.isClientSide()) {
-            Spell spell = this.getActiveSpell();
-            if (spell.TYPE == Spells.CYCLE && this.handleMana(user, spell)) {
-                spell.execute(user, stack);
-                if (count == 1 && user instanceof Player player) {
-                    player.sendSystemMessage(Component.literal("Started Using " + spell.getName() + ": " + FormattingCodes.RED + "-" + (this.getManaCost() * 20) + " Mana" + "/s"));
-                }
+        Spell spell = this.getActiveSpell();
+        if (spell.TYPE == Spell.CYCLE && this.handleMana(user, spell) && (Integer.MAX_VALUE - count & 2) == 0) {
+            MysticcraftMod.sendInfo("tick");
+            spell.execute(user, stack);
+            double mana_cost = MISCTools.getAttributeValue(user.getAttribute(ModAttributes.MANA_COST.get()), spell.MANA_COST);
+            if (Integer.MAX_VALUE - count == 0 && user instanceof Player player) {
+                player.sendSystemMessage(Component.literal("Started Using " + spell.getName() + ": " + FormattingCodes.RED + "-" + (mana_cost * 20) + " Mana" + "/s"));
             }
         }
     }
