@@ -7,11 +7,7 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
 import net.minecraft.world.item.enchantment.ThornsEnchantment;
 
-public class YeetThornsEnchantment extends ExtendedCalculationEnchantment{
-    @Override
-    public Type getType() {
-        return Type.ARMOR;
-    }
+public class YeetThornsEnchantment extends ExtendedCalculationEnchantment implements IArmorEnchantment {
 
     public YeetThornsEnchantment() {
         super(Rarity.VERY_RARE, EnchantmentCategory.ARMOR, MISCTools.ARMOR_EQUIPMENT);

@@ -3,11 +3,10 @@ package net.kapitencraft.mysticcraft.enchantments;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.EnchantmentCategory;
 
 public class TripleStrikeEnchantment extends CountEnchantment {
     public TripleStrikeEnchantment() {
-        super(Rarity.UNCOMMON, EnchantmentCategory.WEAPON, new EquipmentSlot[]{EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND}, "TripleStrikeMap", countType.EXCEPT);
+        super(Rarity.UNCOMMON, new EquipmentSlot[]{EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND}, "TripleStrikeMap", countType.EXCEPT);
     }
 
     @Override
@@ -31,7 +30,7 @@ public class TripleStrikeEnchantment extends CountEnchantment {
     }
 
     @Override
-    protected double mainExecute(int level, ItemStack enchanted, LivingEntity attacker, LivingEntity attacked, double damageAmount) {
+    protected double mainExecute(int level, ItemStack enchanted, LivingEntity attacker, LivingEntity attacked, double damageAmount, int curTick) {
         damageAmount *= (1 + 0.2 * level);
         return damageAmount;
     }

@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
+import net.kapitencraft.mysticcraft.init.ModParticleTypes;
 import net.kapitencraft.mysticcraft.item.item_bonus.ExtraBonus;
 import net.kapitencraft.mysticcraft.item.item_bonus.FullSetBonus;
 import net.kapitencraft.mysticcraft.item.item_bonus.IArmorBonusItem;
@@ -13,6 +14,8 @@ import net.kapitencraft.mysticcraft.item.item_bonus.piece.SoulMageChestplateBonu
 import net.kapitencraft.mysticcraft.item.item_bonus.piece.SoulMageHelmetBonus;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.kapitencraft.mysticcraft.misc.MISCTools;
+import net.kapitencraft.mysticcraft.misc.ParticleHelper;
+import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -27,7 +30,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 
 public class SoulMageArmorItem extends ModArmorItem implements IArmorBonusItem {
-
+    private static final int maxHelpers = 2;
+    private static final String helperString = "SoulMageFullSet";
     private static final PieceBonus HELMET_BONUS = new SoulMageHelmetBonus();
     private static final PieceBonus CHEST_BONUS = new SoulMageChestplateBonus();
     private static final FullSetBonus SET_BONUS = new SoulMageArmorFullSetBonus();
@@ -49,8 +53,20 @@ public class SoulMageArmorItem extends ModArmorItem implements IArmorBonusItem {
     }
 
     @Override
-    public void armorTick(ItemStack stack, Level level, LivingEntity living) {
+    public void fullSetTick(ItemStack stack, Level level, LivingEntity living) {
+    }
 
+    @Override
+    protected void initFullSetTick(ItemStack stack, Level level, LivingEntity living) {
+        if (!living.getPersistentData().getBoolean("hadFullSet")) {
+            new ParticleHelper(helperString, 0, 3, 0, 1000, 4, living, ParticleHelper.Type.ORBIT, (SimpleParticleType) ModParticleTypes.HELIUM_FLAME.get());
+            new ParticleHelper(helperString, 180, 3, 0, 1000, 4, living, ParticleHelper.Type.ORBIT, (SimpleParticleType) ModParticleTypes.HELIUM_FLAME.get());
+        }
+    }
+
+    @Override
+    protected void postFullSetTick(ItemStack stack, Level level, LivingEntity living) {
+        ParticleHelper.clearAllHelpers(helperString, living);
     }
 
     @Override

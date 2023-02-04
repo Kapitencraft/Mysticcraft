@@ -4,7 +4,7 @@ plugins {
     id 'net.minecraftforge.gradle' version '5.1.+'
 }
 
-version = '0.4.9-1.19.3 [FML 44.1.0]'
+version = '0.8.5-1.19.3 [FML 44.1.0]'
 group = 'net.kapitencraft.mysticcraft' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'mysticcraft'
 

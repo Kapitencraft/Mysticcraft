@@ -9,6 +9,7 @@ import net.kapitencraft.mysticcraft.entity.renderer.SchnauzenPlueschRenderer;
 import net.kapitencraft.mysticcraft.init.ModEntityTypes;
 import net.kapitencraft.mysticcraft.init.ModParticleTypes;
 import net.kapitencraft.mysticcraft.particle.FireNormalParticle;
+import net.kapitencraft.mysticcraft.particle.HeliumFlameParticle;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -24,6 +25,7 @@ public class MiscEvents {
         @SubscribeEvent
         public static void registerParticles(RegisterParticleProvidersEvent event) {
             event.register((SimpleParticleType) ModParticleTypes.FIRE_NORMAL.get(), FireNormalParticle::provider);
+            event.register((SimpleParticleType) ModParticleTypes.HELIUM_FLAME.get(), HeliumFlameParticle::provider);
         }
     }
 

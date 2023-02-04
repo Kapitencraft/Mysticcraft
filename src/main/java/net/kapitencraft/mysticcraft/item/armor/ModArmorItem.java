@@ -2,6 +2,7 @@ package net.kapitencraft.mysticcraft.item.armor;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
+import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.item.item_bonus.FullSetBonus;
 import net.kapitencraft.mysticcraft.item.item_bonus.IArmorBonusItem;
@@ -23,6 +24,7 @@ import java.util.List;
 public abstract class ModArmorItem extends ArmorItem {
     protected String dimension;
     private Entity user;
+    private int fullSetTick = 0;
 
     public ModArmorItem(ArmorMaterial p_40386_, EquipmentSlot p_40387_, Properties p_40388_) {
         super(p_40386_, p_40387_, p_40388_);
@@ -47,7 +49,18 @@ public abstract class ModArmorItem extends ArmorItem {
     public void inventoryTick(@NotNull ItemStack stack, Level level, @NotNull Entity entity, int p_41407_, boolean p_41408_) {
         if (!level.isClientSide() && entity instanceof LivingEntity living ) {
             if (this.isFullSetActive(living)) {
-                this.armorTick(stack, level, living);
+                living.getPersistentData().putBoolean("hadFullSet", true);
+                if (this.fullSetTick == 0 && this.getSlot() == EquipmentSlot.CHEST) {
+                    MysticcraftMod.sendInfo("init Full Set");
+                    this.initFullSetTick(stack, level, living);
+                }
+                this.fullSetTick++;
+                this.fullSetTick(stack, level, living);
+            } else {
+                if (living.getPersistentData().getBoolean("hadFullSet")) {
+                    postFullSetTick(stack, level, living);
+                }
+                fullSetTick = 0;
             }
         }
         if (stack.getItem() == this) {
@@ -66,11 +79,12 @@ public abstract class ModArmorItem extends ArmorItem {
         }
         ArmorItem legs = living.getItemBySlot(EquipmentSlot.LEGS).getItem() instanceof ArmorItem armorItem ? armorItem : null;
         ArmorItem feet = living.getItemBySlot(EquipmentSlot.FEET).getItem() instanceof ArmorItem armorItem ? armorItem : null;
-
         return (head != null && legs != null && feet != null) && (this.equals(head) && this.equals(chest) && this.equals(legs) && this.equals(feet));
     }
 
-    public abstract void armorTick(ItemStack stack, Level level, LivingEntity living);
+    public abstract void fullSetTick(ItemStack stack, Level level, LivingEntity living);
+    protected abstract void initFullSetTick(ItemStack stack, Level level, LivingEntity living);
+    protected abstract void postFullSetTick(ItemStack stack, Level level, LivingEntity living);
 
     public abstract Multimap<Attribute, AttributeModifier> getAttributeMods(EquipmentSlot slot);
 

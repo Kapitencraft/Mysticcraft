@@ -29,8 +29,15 @@ public class ShadowAssassinArmorItem extends ModArmorItem {
     }
 
     @Override
-    public void armorTick(ItemStack stack, Level level, LivingEntity living) {
+    public void fullSetTick(ItemStack stack, Level level, LivingEntity living) {
+    }
 
+    @Override
+    protected void initFullSetTick(ItemStack stack, Level level, LivingEntity living) {
+    }
+
+    @Override
+    protected void postFullSetTick(ItemStack stack, Level level, LivingEntity living) {
     }
 
     @Override

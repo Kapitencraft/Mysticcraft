@@ -346,9 +346,9 @@ public class MISCTools {
             MobEffectInstance effectInstance = new MobEffectInstance(effect, oldInstance.getDuration() + ticks, oldInstance.getAmplifier(), oldInstance.isAmbient(), oldInstance.isVisible(), oldInstance.showIcon(), oldInstance, oldInstance.getFactorData());
             living.removeEffect(effect);
             living.addEffect(effectInstance);
-            return true;
-        } else {
             return false;
+        } else {
+            return true;
         }
     }
 

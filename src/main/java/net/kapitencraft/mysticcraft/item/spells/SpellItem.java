@@ -38,6 +38,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 public abstract class SpellItem extends SwordItem implements IModItem {
@@ -49,6 +50,14 @@ public abstract class SpellItem extends SwordItem implements IModItem {
     private final int ability_damage;
 
 
+    public int getIndexForSlot(Spell spell) {
+        for (int i = 0; i < this.spellSlots.length; i++) {
+            if (this.spellSlots[i].getSpell() == spell) {
+                return i;
+            }
+        }
+        return -1;
+    }
 
     //Display settings
     public abstract List<Component> getItemDescription();
@@ -175,11 +184,8 @@ public abstract class SpellItem extends SwordItem implements IModItem {
 
     public SpellSlot getActiveSpellSlot() {
         if (this.spellSlots.length == 1) {
-            SpellSlot activeSpellSlot = this.spellSlots[this.getActiveSpellIndex()];
-            if (activeSpellSlot != null) {
-                return this.spellSlots[this.getActiveSpellIndex()];
-            }
-            return new SpellSlot(Spells.EMPTY_SPELL.getSpell());
+            SpellSlot activeSpellSlot = this.spellSlots[0];
+            return Objects.requireNonNullElseGet(activeSpellSlot, () -> new SpellSlot(Spells.EMPTY_SPELL.getSpell()));
         }
         return null;
     }

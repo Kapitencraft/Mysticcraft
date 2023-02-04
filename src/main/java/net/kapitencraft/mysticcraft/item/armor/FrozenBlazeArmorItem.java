@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.function.Predicate;
 
-public class FrozenBlazeArmorItem extends ModArmorItem{
+public class FrozenBlazeArmorItem extends ModArmorItem {
     public FrozenBlazeArmorItem(EquipmentSlot p_40387_) {
         super(ModArmorMaterials.FROZEN_BLAZE, p_40387_, new Item.Properties().rarity(FormattingCodes.LEGENDARY).fireResistant());
     }
@@ -33,7 +33,7 @@ public class FrozenBlazeArmorItem extends ModArmorItem{
 
 
     @Override
-    public void armorTick(ItemStack stack, Level level, LivingEntity living) {
+    public void fullSetTick(ItemStack stack, Level level, LivingEntity living) {
         List<LivingEntity> entityList = level.getEntitiesOfClass(LivingEntity.class, living.getBoundingBox().inflate(5), new Predicate<LivingEntity>() {
             @Override
             public boolean test(LivingEntity living) {
@@ -47,6 +47,14 @@ public class FrozenBlazeArmorItem extends ModArmorItem{
         }
     }
 
+    @Override
+    protected void initFullSetTick(ItemStack stack, Level level, LivingEntity living) {
+    }
+
+    @Override
+    protected void postFullSetTick(ItemStack stack, Level level, LivingEntity living) {
+
+    }
 
 
     @Override

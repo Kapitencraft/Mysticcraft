@@ -10,7 +10,7 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ItemStack;
 
-public class UltimateWiseEnchantment extends StatBoostEnchantment implements IWeaponEnchantment {
+public class UltimateWiseEnchantment extends StatBoostEnchantment implements IWeaponEnchantment, IUltimateEnchantment {
     public UltimateWiseEnchantment() {
         super(Rarity.RARE, MISCTools.SPELL_ITEM, new EquipmentSlot[]{EquipmentSlot.MAINHAND});
     }

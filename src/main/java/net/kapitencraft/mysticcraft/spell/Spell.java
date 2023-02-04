@@ -74,7 +74,7 @@ public abstract class Spell {
 
     public List<Component> addDescription(List<Component> list, SpellItem item, ItemStack stack) {
         int spellSlotAmount = item.getSpellSlotAmount();
-        list.add(Component.literal("Ability: " + this.getName() + (spellSlotAmount > 1 ? (" " + (item.getActiveSpellIndex() + 1) + "/" + spellSlotAmount) : "")).withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.GOLD));
+        list.add(Component.literal("Ability: " + this.getName() + (spellSlotAmount > 1 ? item.getIndexForSlot(this) + " / " + item.getSpellSlotAmount() : "")).withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.GOLD));
         if (this.getDescription() != null) list.addAll(this.getDescription());
         if (this.MANA_COST > 0) list.add(Component.literal(FormattingCodes.GRAY + "Mana-Cost: " + FormattingCodes.DARK_RED));
         if (this.castingType != null && item.getSpellSlotAmount() > 1) list.add(Component.literal("Pattern: [" + this.getPattern() + FormattingCodes.RESET + "]"));

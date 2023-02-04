@@ -57,10 +57,6 @@ public abstract class SpellProjectile extends AbstractArrow {
             this.attacked.add(living.getUUID());
         }
     }
-    @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-    }
 
     protected void sendDamageMessage() {
         if (!this.level.isClientSide() && this.getOwner() instanceof Player player && attacked.size() > 0) {

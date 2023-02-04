@@ -17,10 +17,6 @@ public class GemstoneGrinderScreen extends AbstractContainerScreen<GemstoneGrind
         super(menu, inventory, component);
     }
 
-    @Override
-    protected void init() {
-        super.init();
-    }
 
     @Override
     protected void renderBg(@NotNull PoseStack pPoseStack, float pPartialTick, int pMouseX, int pMouseY) {

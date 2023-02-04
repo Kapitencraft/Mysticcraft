@@ -5,14 +5,9 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
 
-public class VenomousEnchantment extends ExtendedCalculationEnchantment {
+public class VenomousEnchantment extends ExtendedCalculationEnchantment implements IWeaponEnchantment {
     public VenomousEnchantment() {
         super(Rarity.VERY_RARE, EnchantmentCategory.WEAPON, new EquipmentSlot[]{EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND});
-    }
-
-    @Override
-    public Type getType() {
-        return Type.WEAPONS;
     }
 
     @Override

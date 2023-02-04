@@ -6,12 +6,11 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.EnchantmentCategory;
 import net.minecraft.world.phys.Vec3;
 
 public class LightningLordEnchantment extends CountEnchantment {
     public LightningLordEnchantment() {
-        super(Rarity.RARE, EnchantmentCategory.WEAPON, new EquipmentSlot[]{EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND}, "lightningLordMap", countType.NORMAL);
+        super(Rarity.RARE, new EquipmentSlot[]{EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND}, "lightningLordMap", countType.NORMAL);
     }
 
     @Override
@@ -25,7 +24,7 @@ public class LightningLordEnchantment extends CountEnchantment {
     }
 
     @Override
-    protected double mainExecute(int level, ItemStack enchanted, LivingEntity attacker, LivingEntity attacked, double damageAmount) {
+    protected double mainExecute(int level, ItemStack enchanted, LivingEntity attacker, LivingEntity attacked, double damageAmount, int curTick) {
         if (attacker.level instanceof ServerLevel serverLevel) {
             LightningBolt entityToSpawn = EntityType.LIGHTNING_BOLT.create(serverLevel);
             entityToSpawn.moveTo(Vec3.atBottomCenterOf(attacked.getOnPos()));

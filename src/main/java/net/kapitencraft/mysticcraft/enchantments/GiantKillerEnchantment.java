@@ -6,7 +6,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
 
-public class GiantKillerEnchantment extends ExtendedCalculationEnchantment {
+public class GiantKillerEnchantment extends ExtendedCalculationEnchantment implements IWeaponEnchantment {
 
     public GiantKillerEnchantment() {
         super(Enchantment.Rarity.RARE, EnchantmentCategory.WEAPON, new EquipmentSlot[]{EquipmentSlot.MAINHAND});
@@ -15,11 +15,6 @@ public class GiantKillerEnchantment extends ExtendedCalculationEnchantment {
     @Override
     public int getMaxLevel() {
         return 5;
-    }
-
-    @Override
-    public Type getType() {
-        return Type.WEAPONS;
     }
 
     @Override

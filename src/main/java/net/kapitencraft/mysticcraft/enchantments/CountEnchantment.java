@@ -13,15 +13,10 @@ import java.util.UUID;
 public abstract class CountEnchantment extends ExtendedCalculationEnchantment implements IWeaponEnchantment {
     private final String mapName;
     private final countType type;
-    protected CountEnchantment(Rarity p_44676_, EnchantmentCategory p_44677_, EquipmentSlot[] p_44678_, String mapName, countType type) {
-        super(p_44676_, p_44677_, p_44678_);
+    protected CountEnchantment(Rarity p_44676_, EquipmentSlot[] p_44678_, String mapName, countType type) {
+        super(p_44676_, EnchantmentCategory.WEAPON, p_44678_);
         this.mapName = mapName;
         this.type = type;
-    }
-
-    @Override
-    public Type getType() {
-        return Type.WEAPONS;
     }
 
     protected abstract int getCountAmount(int level);
@@ -34,24 +29,23 @@ public abstract class CountEnchantment extends ExtendedCalculationEnchantment im
             map.put(attacked.getUUID(), 0);
         }
         int integer = map.get(attacked.getUUID());
-        boolean flag1 = (this.type == countType.NORMAL && integer >= this.getCountAmount(level));
-        boolean flag2 = (this.type == countType.EXCEPT && integer <= this.getCountAmount(level));
-        if (flag1 || flag2) {
-            damageAmount = this.mainExecute(level, enchanted, attacker, attacked, damageAmount);
-            if (flag1) {
-                integer = 0;
-            } else {
-                integer++;
+        if (integer >= this.getCountAmount(level)) {
+            integer = 0;
+            if (this.type == countType.NORMAL) {
+                damageAmount = this.mainExecute(level, enchanted, attacker, attacked, damageAmount, integer);
             }
         } else {
             integer++;
+            if (this.type == countType.EXCEPT) {
+                damageAmount = this.mainExecute(level, enchanted, attacker, attacked, damageAmount, integer);
+            }
         }
         map.put(attacked.getUUID(), integer);
         attackerTag.put(this.mapName, MISCTools.putHashMapTag(map));
         return damageAmount;
     }
 
-    protected abstract double mainExecute(int level, ItemStack enchanted, LivingEntity attacker, LivingEntity attacked, double damageAmount);
+    protected abstract double mainExecute(int level, ItemStack enchanted, LivingEntity attacker, LivingEntity attacked, double damageAmount, int curHit);
 
     protected enum countType {
         NORMAL,

@@ -7,14 +7,9 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
 
-public class GlacialTouchEnchantment extends ExtendedCalculationEnchantment {
+public class GlacialTouchEnchantment extends ExtendedCalculationEnchantment implements IWeaponEnchantment {
     public GlacialTouchEnchantment() {
         super(Rarity.RARE, EnchantmentCategory.WEAPON, MISCTools.WEAPON_SLOT);
-    }
-
-    @Override
-    public Type getType() {
-        return Type.WEAPONS;
     }
 
     @Override

@@ -13,16 +13,24 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-public class ManaSteelArmor extends ModArmorItem{
+public class ManaSteelArmor extends ModArmorItem {
     public ManaSteelArmor(EquipmentSlot p_40387_) {
         super(ModArmorMaterials.MANA_STEEL, p_40387_, new Properties().rarity(FormattingCodes.MYTHIC));
     }
 
     @Override
-    public void armorTick(ItemStack stack, Level level, LivingEntity living) {
+    public void fullSetTick(ItemStack stack, Level level, LivingEntity living) {
         if (this.isFullSetActive(living)) {
             living.getAttribute(ModAttributes.MAX_MANA.get()).addTransientModifier(new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[MISCTools.createCustomIndex(slot)], "Full Set Bonus", 30, AttributeModifier.Operation.MULTIPLY_TOTAL));
         }
+    }
+
+    @Override
+    protected void initFullSetTick(ItemStack stack, Level level, LivingEntity living) {
+    }
+
+    @Override
+    protected void postFullSetTick(ItemStack stack, Level level, LivingEntity living) {
     }
 
     @Override

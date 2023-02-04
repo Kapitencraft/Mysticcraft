@@ -15,6 +15,7 @@ public abstract class ModEnchantments {
     public static final RegistryObject<Enchantment> FAST_ARROWS = REGISTRY.register("fast_arrows", FastArrowsEnchantment::new);
     public static final RegistryObject<Enchantment> GIANT_KILLER = REGISTRY.register("giant_killer", GiantKillerEnchantment::new);
     public static final RegistryObject<Enchantment> AIM = REGISTRY.register("aim", AimEnchantment::new);
+    public static final RegistryObject<Enchantment> INFERNO = REGISTRY.register("inferno", InfernoEnchantment::new);
     public static final RegistryObject<Enchantment> SNIPE = REGISTRY.register("snipe", SnipeEnchantment::new);
     public static final RegistryObject<Enchantment> REJUVENATE = REGISTRY.register("rejuvenate", RejuvenateEnchantment::new);
     public static final RegistryObject<Enchantment> GROWTH = REGISTRY.register("growth", GrowthEnchantment::new);

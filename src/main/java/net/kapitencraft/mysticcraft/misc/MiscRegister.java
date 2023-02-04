@@ -3,6 +3,8 @@ package net.kapitencraft.mysticcraft.misc;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.enchantments.ExtendedCalculationEnchantment;
+import net.kapitencraft.mysticcraft.enchantments.IArmorEnchantment;
+import net.kapitencraft.mysticcraft.enchantments.IWeaponEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.StatBoostEnchantment;
 import net.kapitencraft.mysticcraft.entity.FrozenBlazeEntity;
 import net.kapitencraft.mysticcraft.gui.IGuiHelper;
@@ -20,7 +22,6 @@ import net.kapitencraft.mysticcraft.spell.Spells;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -117,7 +118,7 @@ public class MiscRegister {
         Map<Enchantment, Integer> enchantments = stack.getAllEnchantments();
         if (enchantments != null) {
             for (Enchantment enchantment : enchantments.keySet()) {
-                if (enchantment instanceof ExtendedCalculationEnchantment modEnchantment && modEnchantment.getType() == ExtendedCalculationEnchantment.Type.WEAPONS) {
+                if (enchantment instanceof ExtendedCalculationEnchantment modEnchantment && enchantment instanceof IWeaponEnchantment) {
                     event.setAmount((float) modEnchantment.execute(enchantments.get(enchantment), stack, attacker, attacked, event.getAmount()));
                 }
             }
@@ -127,7 +128,7 @@ public class MiscRegister {
             enchantments = stack.getAllEnchantments();
             if (enchantments != null) {
                 for (Enchantment enchantment : enchantments.keySet()) {
-                    if (enchantment instanceof ExtendedCalculationEnchantment modEnchantment && modEnchantment.getType() == ExtendedCalculationEnchantment.Type.ARMOR) {
+                    if (enchantment instanceof ExtendedCalculationEnchantment modEnchantment && enchantment instanceof IArmorEnchantment) {
                         event.setAmount((float) modEnchantment.execute(enchantments.get(enchantment), stack, attacker, attacked, event.getAmount()));
                     }
                 }
@@ -138,7 +139,7 @@ public class MiscRegister {
             enchantments = stack.getAllEnchantments();
             if (enchantments != null) {
                 for (Enchantment enchantment : enchantments.keySet()) {
-                    if (enchantment instanceof ExtendedCalculationEnchantment modEnchantment && modEnchantment.getType() == ExtendedCalculationEnchantment.Type.ARMOR) {
+                    if (enchantment instanceof ExtendedCalculationEnchantment modEnchantment && enchantment instanceof IArmorEnchantment) {
                         event.setAmount((float) modEnchantment.execute(enchantments.get(enchantment), stack, attacker, attacked, event.getAmount()));
                     }
                 }
@@ -290,7 +291,6 @@ public class MiscRegister {
             }
         }
         MISCTools.createDamageIndicator(attacked, event.getAmount(), dodge ? "dodge" : source.msgId);
-        new ParticleHelper(1, 2f, 200, 3f, event.getEntity(), ParticleHelper.Type.ORBIT, ParticleTypes.SMALL_FLAME);
     }
 
     @SubscribeEvent
@@ -329,11 +329,7 @@ public class MiscRegister {
                 tag.putByte(SpellItem.SPELL_EXECUTION_DUR, (byte) (tag.getByte(SpellItem.SPELL_EXECUTION_DUR) - 1));
             }
         }
-        if (tag.contains("ParticleHelper")) {
-            ParticleHelper helper = ParticleHelper.of(living);
-            assert helper != null;
-            helper.tick(living.tickCount);
-        }
+        //ParticleHelper.tickHelper(living);
     }
 
     @SubscribeEvent
