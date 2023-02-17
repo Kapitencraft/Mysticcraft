@@ -2,7 +2,6 @@ package net.kapitencraft.mysticcraft.misc;
 
 import com.google.common.collect.ImmutableMultimap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.api.APITools;
 import net.kapitencraft.mysticcraft.gui.IGuiHelper;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneItem;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
@@ -22,6 +21,7 @@ import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
@@ -39,12 +39,14 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class MISCTools {
 
@@ -68,6 +70,17 @@ public class MISCTools {
         return line;
     }
 
+    public static float increaseFloatTagValue(CompoundTag tag, String name, float f) {
+        float value = tag.getFloat(name)+f;
+        tag.putFloat(name, value);
+        return value;
+    }
+
+    public static int increaseIntegerTagValue(CompoundTag tag, String name, int i) {
+        int value = tag.getInt(name)+i;
+        tag.putInt(name, value);
+        return value;
+    }
 
     public static double getSaveAttributeValue(Attribute attribute, LivingEntity living) {
         if (living.getAttribute(attribute) != null) {
@@ -168,6 +181,7 @@ public class MISCTools {
         stand.setBoundingBox(new AABB(0,0,0,0,0,0));
         return stand;
     }
+
     public static ArmorStand createDamageIndicator(LivingEntity entity, double amount, String type) {
         ArmorStand dmgInc = createMarker(new Vec3(entity.getX() + Math.random() - 0.5, entity.getY() - 1, entity.getZ() + Math.random() - 0.5), entity.level, true);
         boolean dodge = Objects.equals(type, "dodge");
@@ -180,38 +194,11 @@ public class MISCTools {
         return dmgInc;
     }
 
-    public static @Nullable LivingEntity[] sortLowestDistance(Entity source, List<LivingEntity> list) {
+    public static @Nullable List<LivingEntity> sortLowestDistance(Entity source, List<LivingEntity> list) {
         if (list.isEmpty()) {
             return null;
         }
-        LivingEntity[] ret = APITools.entityListToArray(list);
-        if (ret.length == 1) {
-            return ret;
-        }
-        boolean isDone = false;
-        LivingEntity temp;
-        double distance1;
-        double distance2;
-        int i = 0;
-        while (!isDone) {
-            do {
-                distance1 = source.distanceTo(list.get(i));
-                distance2 = source.distanceTo(list.get(i + 1));
-                i++;
-            } while (distance1 < distance2 && i < list.size() - 1);
-            i--;
-            temp = list.get(i);
-            ret[i] = list.get(i + 1);
-            ret[i + 1] = temp;
-            for (int j = 0; j <= ret.length - 2; j++) {
-                if (source.distanceTo(list.get(j)) > source.distanceTo(list.get(j + 1))) {
-                    break;
-                } else if (j == ret.length - 1) {
-                    isDone = true;
-                }
-            }
-        }
-        return ret;
+        return list.stream().sorted(Comparator.comparingDouble(_entcnd -> _entcnd.distanceToSqr(getPosition(source)))).collect(Collectors.toList());
     }
 
     public static String getNameModifier(ItemStack stack) {
@@ -290,6 +277,33 @@ public class MISCTools {
     public static <T extends ParticleOptions> int sendParticles(Level level, T type, boolean force, Vec3 loc, int amount, double deltaX, double deltaY, double deltaZ, double speed) {
         return sendParticles(level, type, force, loc.x, loc.y, loc.z, amount, deltaX, deltaY, deltaZ, speed);
     }
+
+    public static <T extends ParticleOptions> int sendParticles(Level level, boolean force, Vec3 loc, double deltaX, double deltaY, double deltaZ, double speed, ParticleAmountHolder holder) {
+        return sendParticles(level, (ParticleOptions) holder.particleType(), force, loc.x, loc.y, loc.z, holder.amount(), deltaX, deltaY, deltaZ, speed);
+    }
+
+    public static <T extends ParticleOptions> int sendParticles(Level level, boolean force, Vec3 loc, double deltaX, double deltaY, double deltaZ, double speed, ParticleGradientHolder holder) {
+        return sendParticles(level, force, loc, deltaX, deltaY, deltaZ, speed, holder.getHolder1()) + sendParticles(level, force, loc, deltaX, deltaY, deltaZ, speed, holder.getHolder2());
+    }
+
+    public static Vec2 getTargetRotation(Entity source, Entity target) {
+        double d0 = target.getX() - source.getX();
+        double d1 = target.getY() - source.getY();
+        double d2 = target.getZ() - source.getZ();
+        double d3 = Math.sqrt(d0 * d0 + d2 * d2);
+        return new Vec2(Mth.wrapDegrees((float)(-(Mth.atan2(d1, d3) * (double)(180F / (float)Math.PI)))), Mth.wrapDegrees((float)(Mth.atan2(d2, d0) * (double)(180F / (float)Math.PI)) - 90.0F));
+    }
+
+    public static Vec3 calculateViewVector(float p_20172_, float p_20173_) {
+        float f = p_20172_ * ((float)Math.PI / 180F);
+        float f1 = -p_20173_ * ((float)Math.PI / 180F);
+        float f2 = Mth.cos(f1);
+        float f3 = Mth.sin(f1);
+        float f4 = Mth.cos(f);
+        float f5 = Mth.sin(f);
+        return new Vec3(f3 * f4, -f5, f2 * f4);
+    }
+
 
     public static Vec3 getPosition(Entity entity) {
         return new Vec3(entity.getX(), entity.getY(), entity.getZ());
@@ -408,6 +422,7 @@ public class MISCTools {
         multimap = toReturn.build();
         return multimap;
     }
+
     public static CompoundTag putHashMapTag(HashMap<UUID, Integer> hashMap) {
         CompoundTag mapTag = new CompoundTag();
         UUID[] UuidArray = hashMap.keySet().toArray(new UUID[0]);

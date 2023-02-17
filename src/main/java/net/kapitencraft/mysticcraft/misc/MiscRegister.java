@@ -2,14 +2,14 @@ package net.kapitencraft.mysticcraft.misc;
 
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.enchantments.ExtendedCalculationEnchantment;
-import net.kapitencraft.mysticcraft.enchantments.IArmorEnchantment;
-import net.kapitencraft.mysticcraft.enchantments.IWeaponEnchantment;
-import net.kapitencraft.mysticcraft.enchantments.StatBoostEnchantment;
+import net.kapitencraft.mysticcraft.enchantments.*;
 import net.kapitencraft.mysticcraft.entity.FrozenBlazeEntity;
 import net.kapitencraft.mysticcraft.gui.IGuiHelper;
 import net.kapitencraft.mysticcraft.init.*;
 import net.kapitencraft.mysticcraft.item.RNGDropHelper;
+import net.kapitencraft.mysticcraft.item.armor.ModArmorItem;
+import net.kapitencraft.mysticcraft.item.armor.ModArmorMaterials;
+import net.kapitencraft.mysticcraft.item.armor.SoulMageArmorItem;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.item.item_bonus.IArmorBonusItem;
 import net.kapitencraft.mysticcraft.item.spells.SpellItem;
@@ -122,11 +122,8 @@ public class MiscRegister {
                     event.setAmount((float) modEnchantment.execute(enchantments.get(enchantment), stack, attacker, attacked, event.getAmount()));
                 }
             }
-        }
-        for (EquipmentSlot slot : MISCTools.ARMOR_EQUIPMENT) {
-            stack = attacked.getItemBySlot(slot);
-            enchantments = stack.getAllEnchantments();
-            if (enchantments != null) {
+            for (EquipmentSlot slot : MISCTools.ARMOR_EQUIPMENT) {
+                stack = attacked.getItemBySlot(slot);
                 for (Enchantment enchantment : enchantments.keySet()) {
                     if (enchantment instanceof ExtendedCalculationEnchantment modEnchantment && enchantment instanceof IArmorEnchantment) {
                         event.setAmount((float) modEnchantment.execute(enchantments.get(enchantment), stack, attacker, attacked, event.getAmount()));
@@ -134,14 +131,20 @@ public class MiscRegister {
                 }
             }
         }
-        for (EquipmentSlot slot : MISCTools.ARMOR_EQUIPMENT) {
-            stack = attacker.getItemBySlot(slot);
-            enchantments = stack.getAllEnchantments();
-            if (enchantments != null) {
-                for (Enchantment enchantment : enchantments.keySet()) {
-                    if (enchantment instanceof ExtendedCalculationEnchantment modEnchantment && enchantment instanceof IArmorEnchantment) {
-                        event.setAmount((float) modEnchantment.execute(enchantments.get(enchantment), stack, attacker, attacked, event.getAmount()));
-                    }
+    }
+
+    @SubscribeEvent
+    public static void shieldBlockEnchantments(ShieldBlockEvent event) {
+        LivingEntity attacked = event.getEntity();
+        @Nullable LivingEntity attacker = MISCTools.getAttacker(event.getDamageSource());
+        if (attacker == null) { return; }
+        ItemStack stack = attacker.getUseItem();
+        Map<Enchantment, Integer> enchantments = stack.getAllEnchantments();
+        if (enchantments != null && !enchantments.isEmpty()) {
+            MysticcraftMod.sendInfo("ea");
+            for (Enchantment enchantment : enchantments.keySet()) {
+                if (enchantment instanceof ExtendedCalculationEnchantment modEnchantment && enchantment instanceof IToolEnchantment) {
+                    modEnchantment.execute(enchantments.get(enchantment), stack, attacker, attacked, event.getBlockedDamage());
                 }
             }
         }
@@ -279,7 +282,8 @@ public class MiscRegister {
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void EntityDamaged(LivingDamageEvent event)   {
+    public static void MISCDamageEvents(LivingDamageEvent event)   {
+        @Nullable LivingEntity attacker = MISCTools.getAttacker(event.getSource());
         LivingEntity attacked = event.getEntity();
         boolean dodge = false;
         double Dodge = MISCTools.getSaveAttributeValue(ModAttributes.DODGE.get(), attacked);
@@ -288,6 +292,18 @@ public class MiscRegister {
             if (Math.random() > Dodge / 100 && ((!source.isBypassArmor() && !source.isFall() && !source.isFire()) || source == DamageSource.STALAGMITE)) {
                 dodge = true;
                 event.setAmount(0);
+            }
+        }
+        if (ModArmorItem.isFullSetActive(attacker, ModArmorMaterials.CRIMSON)) {
+            CompoundTag attackerTag = attacker.getPersistentData();
+            if (attackerTag.getInt("dominus") < 10) {
+                attacker.getPersistentData().putInt("dominus", attackerTag.getInt("dominus") + 1);
+            } else {
+                float YRot = attacker.getYRot();
+                for (int i = 0; i < 3; i++) {
+                    float curRor = YRot + (120 * i);
+
+                }
             }
         }
         MISCTools.createDamageIndicator(attacked, event.getAmount(), dodge ? "dodge" : source.msgId);
@@ -329,7 +345,10 @@ public class MiscRegister {
                 tag.putByte(SpellItem.SPELL_EXECUTION_DUR, (byte) (tag.getByte(SpellItem.SPELL_EXECUTION_DUR) - 1));
             }
         }
-        //ParticleHelper.tickHelper(living);
+        ParticleHelper.tickHelper(living);
+        if (!ModArmorItem.isFullSetActive(living, ModArmorMaterials.SOUL_MAGE) && tag.getString("lastFullSet").equals(ModArmorMaterials.SOUL_MAGE.getName())) {
+            ParticleHelper.clearAllHelpers(SoulMageArmorItem.helperString, living);
+        }
     }
 
     @SubscribeEvent

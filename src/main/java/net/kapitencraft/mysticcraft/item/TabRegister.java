@@ -54,6 +54,7 @@ public class TabRegister {
                             output.accept(ModBlocks.MANGATIC_STONE.getItem());
                             output.accept(ModBlocks.MANGATIC_SLIME.getItem());
                             output.accept(ModBlocks.OBSIDIAN_PRESSURE_PLATE.getItem());
+                            output.accept(ModBlocks.CRIMSONITE_ORE.getItem());
                         }));
         event.registerCreativeModeTab(new ResourceLocation(MysticcraftMod.MOD_ID, "weapons_and_tools"), builder ->
                 builder.title(Component.translatable("itemGroup.weapons_and_tools_mm"))
@@ -75,6 +76,7 @@ public class TabRegister {
                             output.accept(ModItems.ASTREA.get());
                             output.accept(ModItems.THE_STAFF_DESTRUCTION.get());
                             output.accept(ModItems.DIAMOND_CLEAVER.get());
+                            output.accept(ModItems.IRON_SHIELD.get());
                         }));
     }
 

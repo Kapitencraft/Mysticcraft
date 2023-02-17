@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 
 public class APITools {
-
     public static @NotNull LivingEntity[] entityListToArray(@NotNull List<LivingEntity> list) {
         LivingEntity[] ret = new LivingEntity[list.size()];
         for (int i = 0; i < list.size(); i++) {
@@ -18,24 +17,24 @@ public class APITools {
     }
 
     private static HashMap<Character, Integer> getConversationMap() {
-        HashMap<Character, Integer> convertationMap = new HashMap<Character, Integer>(16);
-        convertationMap.put('0', 0);
-        convertationMap.put('1', 1);
-        convertationMap.put('2', 2);
-        convertationMap.put('3', 3);
-        convertationMap.put('4', 4);
-        convertationMap.put('5', 5);
-        convertationMap.put('6', 6);
-        convertationMap.put('7', 7);
-        convertationMap.put('8', 8);
-        convertationMap.put('9', 9);
-        convertationMap.put('A', 10);
-        convertationMap.put('B', 11);
-        convertationMap.put('C', 12);
-        convertationMap.put('D', 13);
-        convertationMap.put('E', 14);
-        convertationMap.put('F', 15);
-        return convertationMap;
+        HashMap<Character, Integer> conversationMap = new HashMap<Character, Integer>(16);
+        conversationMap.put('0', 0);
+        conversationMap.put('1', 1);
+        conversationMap.put('2', 2);
+        conversationMap.put('3', 3);
+        conversationMap.put('4', 4);
+        conversationMap.put('5', 5);
+        conversationMap.put('6', 6);
+        conversationMap.put('7', 7);
+        conversationMap.put('8', 8);
+        conversationMap.put('9', 9);
+        conversationMap.put('A', 10);
+        conversationMap.put('B', 11);
+        conversationMap.put('C', 12);
+        conversationMap.put('D', 13);
+        conversationMap.put('E', 14);
+        conversationMap.put('F', 15);
+        return conversationMap;
     }
 
     private static char[] invertCharArray(char[] ts) {

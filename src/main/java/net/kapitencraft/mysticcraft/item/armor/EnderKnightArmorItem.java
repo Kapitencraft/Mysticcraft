@@ -29,12 +29,9 @@ import java.util.List;
 import java.util.Objects;
 
 public class EnderKnightArmorItem extends ModArmorItem implements IGemstoneApplicable {
-    private final static String registryName = "ender_knight_";
     public EnderKnightArmorItem(EquipmentSlot p_40387_) {
         super(ModArmorMaterials.ENDER_KNIGHT, p_40387_, new Properties().rarity(FormattingCodes.LEGENDARY).fireResistant());
     }
-
-    private GemstoneSlot[] slots;
 
     public static HashMap<EquipmentSlot, RegistryObject<Item>> createRegistry(DeferredRegister<Item> register, String registryName) {
         HashMap<EquipmentSlot, RegistryObject<Item>> registry = new HashMap<>();
@@ -44,7 +41,6 @@ public class EnderKnightArmorItem extends ModArmorItem implements IGemstoneAppli
         registry.put(EquipmentSlot.FEET, register.register(registryName + "_boots", ()-> new EnderKnightArmorItem(EquipmentSlot.FEET)));
         return registry;
     }
-
 
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
@@ -88,7 +84,6 @@ public class EnderKnightArmorItem extends ModArmorItem implements IGemstoneAppli
         list.add(Component.literal("This Armor get`s double stats in the End"));
         list.add(Component.literal(""));
     }
-
 
     @Override
     public GemstoneHelper getHelper() {

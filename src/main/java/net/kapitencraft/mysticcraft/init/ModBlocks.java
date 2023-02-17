@@ -33,4 +33,5 @@ public class ModBlocks {
     public static final BlockRegistryHolder MANGATIC_STONE = registerBlock("mangatic_stone", ()-> new Block(BlockBehaviour.Properties.copy(Blocks.END_STONE)), new Item.Properties().rarity(Rarity.RARE));
     public static final BlockRegistryHolder MANGATIC_SLIME = registerBlock("mangatic_slime", MangaticSlimeBlock::new, new Item.Properties().rarity(Rarity.EPIC));
     public static final BlockRegistryHolder OBSIDIAN_PRESSURE_PLATE = registerBlock("obsidian_pressure_plate", ObsidianPressurePlate::new, new Item.Properties().rarity(Rarity.UNCOMMON));
+    public static final BlockRegistryHolder CRIMSONITE_ORE = registerBlock("crimsonite_ore", ()-> new Block(BlockBehaviour.Properties.copy(Blocks.STONE)), new Item.Properties().rarity(Rarity.UNCOMMON));
 }

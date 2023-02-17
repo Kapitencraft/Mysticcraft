@@ -20,7 +20,8 @@ public enum ModArmorMaterials implements ArmorMaterial {
     ENDER_KNIGHT("ender_knight", 25, new int[]{8, 12, 19, 9}, 12, SoundEvents.ARMOR_EQUIP_NETHERITE, 1.2f, 0.9f, () -> Ingredient.of(Items.NETHERITE_INGOT)),
     MANA_STEEL("mana_steel", 12, new int[]{6, 9, 13, 6}, 4, SoundEvents.ARMOR_EQUIP_DIAMOND, 0.1f, 0f, () -> Ingredient.of(ModItems.MANA_STEEL_INGOT.get())),
     SHADOW_ASSASSIN("shadow_assassin", 17, new int[]{7, 11, 15, 6}, 6, SoundEvents.ARMOR_EQUIP_LEATHER, 0.5f, 0f, ()-> Ingredient.of(Items.LEATHER)),
-    SOUL_MAGE("soul_mage", 24, new int[]{8,11, 18, 7}, 34, SoundEvents.ARMOR_EQUIP_DIAMOND, 0.8f, 0.2f, ()-> Ingredient.of(Items.SOUL_SOIL));
+    SOUL_MAGE("soul_mage", 24, new int[]{8,11, 18, 7}, 34, SoundEvents.ARMOR_EQUIP_DIAMOND, 0.8f, 0.2f, ()-> Ingredient.of(Items.SOUL_SOIL)),
+    CRIMSON("crimson", 30, new int[]{15, 18, 25, 14}, 14, SoundEvents.ARMOR_EQUIP_NETHERITE, 2.3f, 1f, ()-> Ingredient.of(Items.LEATHER));
     private static final int[] HEALTH_PER_SLOT = new int[]{13, 15, 16, 11};
     private final String name;
     private final int durabilityMultiplier;

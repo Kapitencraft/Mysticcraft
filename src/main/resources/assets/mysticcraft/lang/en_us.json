@@ -88,17 +88,18 @@
   "item.mysticcraft.ender_knight_chestplate": "Ender Knight Chestplate",
   "item.mysticcraft.ender_knight_leggings": "Ender Knight Leggings",
   "item.mysticcraft.ender_knight_boots": "Ender Knight Boots",
-
   "item.mysticcraft.frozen_blaze_helmet": "Frozen Blaze Helmet",
   "item.mysticcraft.frozen_blaze_chestplate": "Frozen Blaze Chestplate",
   "item.mysticcraft.frozen_blaze_leggings": "Frozen Blaze Leggings",
   "item.mysticcraft.frozen_blaze_boots": "Frozen Blaze Boots",
-
   "item.mysticcraft.soul_mage_helmet": "Soul Mage Helmet",
   "item.mysticcraft.soul_mage_chestplate": "Soul Mage Chestplate",
   "item.mysticcraft.soul_mage_leggings": "Soul Mage Leggings",
   "item.mysticcraft.soul_mage_boots": "Soul Mage Boots",
-
+  "item.mysticcraft.crimson_helmet": "Crimson Helmet",
+  "item.mysticcraft.crimson_chestplate": "Crimson Chestplate",
+  "item.mysticcraft.crimson_leggings": "Crimson Leggings",
+  "item.mysticcraft.crimson_boots": "Crimson Boots",
   "item.mysticcraft.shadow_assassin_helmet": "Shadow Assassin Helmet",
   "item.mysticcraft.shadow_assassin_chestplate": "Shadow Assassin Chestplate",
   "item.mysticcraft.shadow_assassin_leggings": "Shadow Assassin Leggings",
@@ -139,6 +140,7 @@
   "enchantment.mysticcraft.divine_gift": "Divine Gift",
   "enchantment.mysticcraft.telekinesis": "Telekinesis",
   "enchantment.mysticcraft.armor_shredding": "Armor Shredding",
+  "enchantment.mysticcraft.thorny": "Thorny",
 
   "enchantment.level.11": "XI",
   "enchantment.level.12": "XII",

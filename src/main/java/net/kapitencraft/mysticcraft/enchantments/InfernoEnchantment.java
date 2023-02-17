@@ -18,7 +18,7 @@ public class InfernoEnchantment extends CountEnchantment implements IWeaponEncha
 
     @Override
     protected double mainExecute(int level, ItemStack enchanted, LivingEntity attacker, LivingEntity attacked, double damageAmount, int curTick) {
-        ParticleHelper.createWithTargetHeight("inferno", 0, 0, 200, 4, attacked, ParticleHelper.Type.ORBIT, ParticleTypes.DRIPPING_LAVA);
+        ParticleHelper.createWithTargetHeight("inferno", attacked, ParticleHelper.Type.ORBIT, ParticleHelper.createOrbitProperties(0, 200, 0, 0, 4, ParticleTypes.DRIPPING_LAVA));
         return damageAmount;
     }
 }

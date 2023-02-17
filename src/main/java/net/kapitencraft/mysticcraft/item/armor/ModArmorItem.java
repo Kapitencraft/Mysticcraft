@@ -22,6 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public abstract class ModArmorItem extends ArmorItem {
+    private static final String FULL_SET_ID = "hadFullSet";
     protected String dimension;
     private Entity user;
     private int fullSetTick = 0;
@@ -29,8 +30,9 @@ public abstract class ModArmorItem extends ArmorItem {
     public ModArmorItem(ArmorMaterial p_40386_, EquipmentSlot p_40387_, Properties p_40388_) {
         super(p_40386_, p_40387_, p_40388_);
     }
-    public boolean equals(Item item) {
-        return item instanceof ArmorItem armorItem && armorItem.getMaterial() == this.getMaterial();
+    public boolean equals(ArmorItem item) {
+        MysticcraftMod.sendInfo(item.getMaterial().getName());
+        return this == item || item.getMaterial() == this.getMaterial();
     }
 
     @Override
@@ -47,18 +49,21 @@ public abstract class ModArmorItem extends ArmorItem {
 
     @Override
     public void inventoryTick(@NotNull ItemStack stack, Level level, @NotNull Entity entity, int p_41407_, boolean p_41408_) {
-        if (!level.isClientSide() && entity instanceof LivingEntity living ) {
+        if (!level.isClientSide() && entity instanceof LivingEntity living) {
             if (this.isFullSetActive(living)) {
-                living.getPersistentData().putBoolean("hadFullSet", true);
                 if (this.fullSetTick == 0 && this.getSlot() == EquipmentSlot.CHEST) {
                     MysticcraftMod.sendInfo("init Full Set");
                     this.initFullSetTick(stack, level, living);
+                    living.getPersistentData().putBoolean(FULL_SET_ID, true);
+                    living.getPersistentData().putString("lastFullSet", this.getMaterial().getName());
                 }
                 this.fullSetTick++;
                 this.fullSetTick(stack, level, living);
             } else {
-                if (living.getPersistentData().getBoolean("hadFullSet")) {
+                if (living.getPersistentData().getBoolean(FULL_SET_ID)) {
+                    MysticcraftMod.sendInfo("post Full Set");
                     postFullSetTick(stack, level, living);
+                    living.getPersistentData().putBoolean(FULL_SET_ID, false);
                 }
                 fullSetTick = 0;
             }
@@ -69,9 +74,16 @@ public abstract class ModArmorItem extends ArmorItem {
         }
     }
     public boolean isFullSetActive(LivingEntity living) {
+        return isFullSetActive(living, this.getMaterial());
+    }
+
+    public static boolean isFullSetActive(LivingEntity living, ArmorMaterial materials) {
+        if (living == null) {
+            return false;
+        }
         ArmorItem head = living.getItemBySlot(EquipmentSlot.HEAD).getItem() instanceof ArmorItem armorItem ? armorItem : null;
-        ArmorItem chest;
         Item chestPlate = living.getItemBySlot(EquipmentSlot.CHEST).getItem();
+        ArmorItem chest;
         if (chestPlate instanceof ElytraItem || chestPlate instanceof AirItem) {
             return false;
         } else {
@@ -79,7 +91,7 @@ public abstract class ModArmorItem extends ArmorItem {
         }
         ArmorItem legs = living.getItemBySlot(EquipmentSlot.LEGS).getItem() instanceof ArmorItem armorItem ? armorItem : null;
         ArmorItem feet = living.getItemBySlot(EquipmentSlot.FEET).getItem() instanceof ArmorItem armorItem ? armorItem : null;
-        return (head != null && legs != null && feet != null) && (this.equals(head) && this.equals(chest) && this.equals(legs) && this.equals(feet));
+        return (head != null && legs != null && feet != null) && (head.getMaterial() == materials && chest.getMaterial() == materials && legs.getMaterial() == materials && feet.getMaterial() == materials);
     }
 
     public abstract void fullSetTick(ItemStack stack, Level level, LivingEntity living);
@@ -109,6 +121,7 @@ public abstract class ModArmorItem extends ArmorItem {
                     builder.putAll(bonus.getModifiers(living));
                 }
                 FullSetBonus bonus1 = bonusItem.getFullSetBonus();
+                MysticcraftMod.sendInfo("loading Bonus");
                 if (this.getSlot() == EquipmentSlot.CHEST && this.isFullSetActive(living) && bonus1 != null && bonus1.getModifiers(living) != null) {
                     builder.putAll(bonus1.getModifiers(living));
                 }

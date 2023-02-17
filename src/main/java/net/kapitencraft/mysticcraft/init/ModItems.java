@@ -3,12 +3,10 @@ package net.kapitencraft.mysticcraft.init;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.gui.GUISlotBlockItem;
 import net.kapitencraft.mysticcraft.item.WizardHatItem;
-import net.kapitencraft.mysticcraft.item.armor.EnderKnightArmorItem;
-import net.kapitencraft.mysticcraft.item.armor.FrozenBlazeArmorItem;
-import net.kapitencraft.mysticcraft.item.armor.ShadowAssassinArmorItem;
-import net.kapitencraft.mysticcraft.item.armor.SoulMageArmorItem;
+import net.kapitencraft.mysticcraft.item.armor.*;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneItem;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneType;
+import net.kapitencraft.mysticcraft.item.shield.IronShield;
 import net.kapitencraft.mysticcraft.item.spells.*;
 import net.kapitencraft.mysticcraft.item.spells.necron_sword.Astraea;
 import net.kapitencraft.mysticcraft.item.spells.necron_sword.Hyperion;
@@ -76,10 +74,14 @@ public abstract class ModItems {
             return 20;
         }
     });
+    public static final RegistryObject<Item> IRON_SHIELD = REGISTRY.register("iron_shield", IronShield::new);
+
     public static final HashMap<EquipmentSlot, RegistryObject<Item>> ENDER_KNIGHT_ARMOR = EnderKnightArmorItem.createRegistry(REGISTRY, "ender_knight");
     public static final HashMap<EquipmentSlot, RegistryObject<Item>> FROZEN_BLAZE_ARMOR = FrozenBlazeArmorItem.createRegistry(REGISTRY, "frozen_blaze");
     public static final HashMap<EquipmentSlot, RegistryObject<Item>> SHADOW_ASSASSIN_ARMOR = ShadowAssassinArmorItem.createRegistry(REGISTRY, "shadow_assassin");
+    public static final HashMap<EquipmentSlot, RegistryObject<Item>> CRIMSON_ARMOR = CrimsonArmorItem.createRegistry(REGISTRY, "crimson");
     public static final HashMap<EquipmentSlot, RegistryObject<Item>> SOUL_MAGE_ARMOR = SoulMageArmorItem.createRegistry(REGISTRY, "soul_mage");
+
     public static final RegistryObject<Item> FROZEN_BLAZE_SPAWN_EGG = REGISTRY.register("frozen_blaze_spawn_egg", ()-> new ForgeSpawnEggItem(ModEntityTypes.FROZEN_BLAZE, -16711681, -16763956, new Item.Properties()));
     public static final RegistryObject<Item> MISSING_GEMSTONE_SLOT = REGISTRY.register("missing_slot", ()-> new GUISlotBlockItem().putTooltip(List.of(Component.literal("This Gemstone Applicable has no gemstone at that slot").withStyle(ChatFormatting.RED))));
     public static final RegistryObject<Item> EMPTY_APPLICABLE_SLOT = REGISTRY.register("empty_applicable", ()-> new GUISlotBlockItem().putTooltip(List.of(Component.literal("There is no Gemstone Applicable in it's slot").withStyle(ChatFormatting.RED))));

@@ -23,6 +23,7 @@ public abstract class ModEnchantments {
     public static final RegistryObject<Enchantment> PROTECTIVE_COVER = REGISTRY.register("protective_cover", ProtectiveCoverEnchantment::new);
     public static final RegistryObject<Enchantment> NECROTIC_TOUCH = REGISTRY.register("necrotic_touch", NecroticTouchEnchantment::new);
     public static final RegistryObject<Enchantment> ULTIMATE_WISE = REGISTRY.register("ultimate_wise", UltimateWiseEnchantment::new);
+    public static final RegistryObject<Enchantment> THORNY = REGISTRY.register("thorny", ThornyEnchantment::new);
     public static final RegistryObject<Enchantment> LUMBERJACK = REGISTRY.register("lumberjack", LumberjackEnchantment::new);
     public static final RegistryObject<Enchantment> VEIN_MINER = REGISTRY.register("vein_miner", VeinMinerEnchantment::new);
     public static final RegistryObject<Enchantment> EFFICIENT_JEWELLING = REGISTRY.register("efficient_jewelling", EfficientJewellingEnchantment::new);

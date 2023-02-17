@@ -20,9 +20,6 @@ public class ManaSteelArmor extends ModArmorItem {
 
     @Override
     public void fullSetTick(ItemStack stack, Level level, LivingEntity living) {
-        if (this.isFullSetActive(living)) {
-            living.getAttribute(ModAttributes.MAX_MANA.get()).addTransientModifier(new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[MISCTools.createCustomIndex(slot)], "Full Set Bonus", 30, AttributeModifier.Operation.MULTIPLY_TOTAL));
-        }
     }
 
     @Override

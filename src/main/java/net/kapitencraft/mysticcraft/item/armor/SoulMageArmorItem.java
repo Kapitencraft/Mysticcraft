@@ -30,8 +30,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 
 public class SoulMageArmorItem extends ModArmorItem implements IArmorBonusItem {
-    private static final int maxHelpers = 2;
-    private static final String helperString = "SoulMageFullSet";
+    public static final String helperString = "SoulMageFullSet";
     private static final PieceBonus HELMET_BONUS = new SoulMageHelmetBonus();
     private static final PieceBonus CHEST_BONUS = new SoulMageChestplateBonus();
     private static final FullSetBonus SET_BONUS = new SoulMageArmorFullSetBonus();
@@ -58,10 +57,9 @@ public class SoulMageArmorItem extends ModArmorItem implements IArmorBonusItem {
 
     @Override
     protected void initFullSetTick(ItemStack stack, Level level, LivingEntity living) {
-        if (!living.getPersistentData().getBoolean("hadFullSet")) {
-            new ParticleHelper(helperString, 0, 3, 0, 1000, 4, living, ParticleHelper.Type.ORBIT, (SimpleParticleType) ModParticleTypes.HELIUM_FLAME.get());
-            new ParticleHelper(helperString, 180, 3, 0, 1000, 4, living, ParticleHelper.Type.ORBIT, (SimpleParticleType) ModParticleTypes.HELIUM_FLAME.get());
-        }
+        MysticcraftMod.sendInfo("SoulMage");
+        new ParticleHelper(helperString, living, ParticleHelper.Type.ORBIT, ParticleHelper.createOrbitProperties(0, 1000, 0, 0, 3, (SimpleParticleType) ModParticleTypes.HELIUM_FLAME.get()));
+        new ParticleHelper(helperString, living, ParticleHelper.Type.ORBIT, ParticleHelper.createOrbitProperties(0, 1000, 180, 0, 3, (SimpleParticleType) ModParticleTypes.HELIUM_FLAME.get()));
     }
 
     @Override

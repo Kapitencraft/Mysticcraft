@@ -7,34 +7,33 @@ import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Objects;
 
 public class ParticleHelper {
+    private static final String COOLDOWN_ID = "cooldown";
+    private static final String TICKS_ALIVE_ID = "ticksAlive";
+    private static final String MAX_TICKS_ALIVE_ID = "maxTicksAlive";
+    private static final String Y_OFFSET_ID = "YOffset";
+    private static final String CURRENT_ROTATION_ID = "curRotation";
+    private static final String MAX_HEIGHT_ID = "maxHeight";
+    private static final String ROTATION_PER_TICK_ID = "rotPerTick";
+    private static final String PARTICLE_TYPE_ID = "particleType";
+    private static final ParticleHelperQueueWorker worker = new ParticleHelperQueueWorker();
     public static void tickHelper(LivingEntity living) {
-        MysticcraftMod.sendInfo(String.valueOf(shouldHaveHelper(living)));
-        if (shouldHaveHelper(living)) {
-            for (ParticleHelper particleHelper : loadAllHelpers(living)) {
-                particleHelper.tick(living.tickCount);
-            }
+        if (!worker.hasTarget(living.getUUID())) {
+            loadAllHelpers(living);
         }
-    }
-
-
-    private static boolean shouldHaveHelper(LivingEntity target) {
-        return target.getPersistentData().contains("ParticleHelper0", 10);
+        worker.tick(living.tickCount, living.getUUID());
     }
 
     public static void clearAllHelpers(@Nullable String helperReason, LivingEntity target) {
+        worker.remove(target.getUUID(), helperReason);
+        MysticcraftMod.sendInfo("clearing Helpers: " + (helperReason == null ? "null" : helperReason));
         CompoundTag tag = target.getPersistentData();
         int i = 0;
         while (tag.contains("ParticleHelper" + i, 10)) {
@@ -45,83 +44,81 @@ public class ParticleHelper {
 
     }
 
-    private static Collection<ParticleHelper> loadAllHelpers(LivingEntity target) {
+
+    public static CompoundTag createOrbitProperties(int cooldown, int maxTicksAlive, float initRotation, float maxHeight, float rotPerTick, ParticleType<SimpleParticleType> particleType) {
+        CompoundTag tag = new CompoundTag();
+        tag.putInt(COOLDOWN_ID, cooldown);
+        tag.putInt(TICKS_ALIVE_ID, 0);
+        tag.putInt(MAX_TICKS_ALIVE_ID, maxTicksAlive);
+        tag.putFloat(Y_OFFSET_ID, 0);
+        tag.putFloat(CURRENT_ROTATION_ID, initRotation);
+        tag.putFloat(MAX_HEIGHT_ID, maxHeight);
+        tag.putFloat(ROTATION_PER_TICK_ID, rotPerTick);
+        ResourceLocation location = BuiltInRegistries.PARTICLE_TYPE.getKey(particleType);
+        tag.putString(PARTICLE_TYPE_ID, (location == null ? BuiltInRegistries.PARTICLE_TYPE.getKey(ParticleTypes.ANGRY_VILLAGER) : location).toString());
+        return tag;
+    }
+    private static void loadAllHelpers(LivingEntity target) {
         CompoundTag tag = target.getPersistentData();
-        Collection<ParticleHelper> helpers = new ArrayList<>();
         int i = 0;
         while (tag.contains("ParticleHelper" + i, 10)) {
-            helpers.add(of((CompoundTag) tag.get("ParticleHelper" + i), target));
+            worker.add(target.getUUID(), of((CompoundTag) tag.get("ParticleHelper" + i), target, i));
         }
-        return helpers;
     }
 
     private boolean isRemoved = false;
     private final String helperReason;
-    private final int cooldown, maxTicksAlive, ticksPerCycle;
-    private float YOffset, curRotation;
-    private final float maxHeight, heightChange, rotPerTick;
-    private int ticksAlive, currentTick = 0;
+    private final CompoundTag properties;
+    private final int ticksPerCycle;
+    private final float heightChange;
+    private int curTagID, currentTick = 0;
     private final LivingEntity target;
-    private final @NotNull ArmorStand helper;
     private final Type type;
-    private final ParticleType<SimpleParticleType> particleType;
 
     public void remove(boolean flag) {
         this.isRemoved = flag;
     }
 
-    public static ParticleHelper createWithTargetHeight(String helperReason, float initRot, int cooldown, int ticksAlive, float rotPerTick, LivingEntity target, Type type, ParticleType<SimpleParticleType> particleType) {
-        return new ParticleHelper(helperReason, initRot, cooldown, target.getBbHeight(), ticksAlive, rotPerTick, target, type, particleType);
+    public static ParticleHelper createWithTargetHeight(String helperReason, LivingEntity target, Type type, CompoundTag properties) {
+        properties.putFloat(MAX_HEIGHT_ID, target.getBbHeight());
+        return new ParticleHelper(helperReason, target, type, properties);
     }
 
-    public ParticleHelper(String helperReason, float initRot, int cooldown, float maxHeight, int ticksAlive, float rotPerTick, LivingEntity target, Type type, ParticleType<SimpleParticleType> particleType) {
+    public ParticleHelper(String helperReason, LivingEntity target, Type type, CompoundTag properties) {
         MysticcraftMod.sendInfo("created a new ParticleHelper");
-        this.helperReason = helperReason;
-        this.ticksAlive = 0;
-        this.YOffset = 0;
-        this.curRotation = initRot;
-        this.cooldown = cooldown;
-        this.maxHeight = maxHeight;
-        this.maxTicksAlive = ticksAlive;
-        this.rotPerTick = rotPerTick;
-        this.ticksPerCycle = (int) (360 / rotPerTick);
-        this.heightChange = getHeightChangePerTick();
+        this.properties = properties;
         this.target = target;
-        this.helper = MISCTools.createMarker(MISCTools.getPosition(target), target.level, true);
-        this.helper.setYRot(curRotation);
+        this.curTagID = getNextFreeHelperSlot();
+        this.helperReason = helperReason;
+        this.ticksPerCycle = (int) (360 / this.properties.getFloat(ROTATION_PER_TICK_ID));
+        this.heightChange = getHeightChangePerTick();
         this.type = type;
-        this.particleType = particleType;
-        this.updateSaveData();
+        this.save();
+        worker.add(target.getUUID(), this);
+    }
+
+    public String getHelperReason() {
+        return helperReason;
     }
 
     private float getHeightChangePerTick() {
-        return maxHeight / (ticksPerCycle / 2f);
+        return this.properties.getFloat(MAX_HEIGHT_ID) / (this.properties.getFloat(ROTATION_PER_TICK_ID) / 2f);
     }
 
-    private ParticleHelper(CompoundTag tag, LivingEntity target) {
+    private ParticleHelper(CompoundTag tag, LivingEntity target, int curTagID) {
+        this.curTagID = curTagID;
+        this.properties = (CompoundTag) tag.get("properties");
         this.helperReason = tag.getString("helperReason");
-        this.ticksAlive = tag.getInt("ticksAlive");
-        this.cooldown = tag.getInt("cooldown");
-        this.maxTicksAlive = tag.getInt("maxTicksAlive");
-        this.rotPerTick = tag.getFloat("rotTick");
-        this.maxHeight = tag.getFloat("height");
         this.currentTick = tag.getInt("currentTick");
-        this.ticksPerCycle = (int) (360 / rotPerTick);
+        if (this.properties != null) {
+            this.ticksPerCycle = (int) (360 / this.properties.getFloat(ROTATION_PER_TICK_ID));
+        } else {
+            throw new IllegalStateException("properties shouldn't be null");
+        }
         this.heightChange = getHeightChangePerTick();
-        this.YOffset = tag.getFloat("YOffset");
-        this.curRotation = tag.getFloat("curRot");
         this.target = target;
         this.type = Type.getFromString(tag.getString("type"));
-        if (target.level instanceof ServerLevel serverLevel && serverLevel.getEntity(tag.getUUID("helperID")) != null) {
-            this.helper = (ArmorStand) serverLevel.getEntity(tag.getUUID("helperID"));
-        } else {
-            this.helper = MISCTools.createMarker(MISCTools.getPosition(target), target.level, true);
-        }
-        if (this.helper == null) {
-            throw new IllegalStateException("Couldn't find nor create Helper");
-        }
-        this.helper.setYRot(this.curRotation);
-        this.particleType = (SimpleParticleType) BuiltInRegistries.PARTICLE_TYPE.get(new ResourceLocation(tag.getString("particleType")));
+        worker.add(target.getUUID(), this);
     }
 
     private int getNextFreeHelperSlot() {
@@ -133,64 +130,78 @@ public class ParticleHelper {
         return tagNum;
     }
 
-    private void updateSaveData() {
+    private CompoundTag updateSaveData(boolean shouldSave) {
         CompoundTag tag = new CompoundTag();
         tag.putString("helperReason", helperReason);
-        tag.putInt("ticksAlive", ticksAlive);
-        tag.putUUID("helperID", helper.getUUID());
         tag.putString("type", type.getRegistryName());
         tag.putInt("currentTick", currentTick);
-        tag.putInt("maxTicksAlive", maxTicksAlive);
-        ResourceLocation location = BuiltInRegistries.PARTICLE_TYPE.getKey(this.particleType);
-        tag.putString("particleType", (location == null ? BuiltInRegistries.PARTICLE_TYPE.getKey(ParticleTypes.ANGRY_VILLAGER) : location).toString());
-        tag.putFloat("rotTick", rotPerTick);
-        tag.putFloat("YOffset", YOffset);
-        tag.putInt("cooldown", cooldown);
-        tag.putFloat("height", maxHeight);
-        tag.putFloat("curRot", curRotation);
-        tag.putFloat("XRot", helper.getXRot());
-        MysticcraftMod.sendInfo("Saving ParticleHelper to slot: " + getNextFreeHelperSlot());
-        this.target.getPersistentData().put("ParticleHelper" + getNextFreeHelperSlot(), tag);
+        tag.put("properties", properties);
+        if (shouldSave) {
+            target.getPersistentData().put("ParticleHelper" + curTagID, tag);
+        }
+        return tag;
     }
 
-    public static @Nullable ParticleHelper of(CompoundTag tag, LivingEntity living) {
+    private void save() {
+        if (this.curTagID > getNextFreeHelperSlot()) {
+            updateSave(this.curTagID);
+        } else {
+            updateSaveData(true);
+        }
+    }
+
+    private void initSave() {
+        CompoundTag tag = updateSaveData(false);
+        MysticcraftMod.sendInfo("Saving ParticleHelper to slot: " + this.curTagID + "(" + "ParticleHelper" + getNextFreeHelperSlot() + ")");
+        this.target.getPersistentData().put("ParticleHelper" + this.curTagID, tag);
+    }
+
+    private void updateSave(int oldLoc) {
+        target.getPersistentData().remove("ParticleHelper" + oldLoc);
+        this.curTagID = getNextFreeHelperSlot();
+        initSave();
+    }
+
+    public static @Nullable ParticleHelper of(CompoundTag tag, LivingEntity living, int tagID) {
         if (tag != null) {
-            return new ParticleHelper(tag, living);
+            return new ParticleHelper(tag, living, tagID);
         }
         return null;
     }
 
     public void tick(int ticks) {
-        if (!(this.ticksAlive++ > this.maxTicksAlive && this.target.isRemoved()) && (this.cooldown == 0 || ticks % this.cooldown == 0) && !this.isRemoved) {
+        int cooldown = this.properties.getInt(COOLDOWN_ID);
+        if (!(MISCTools.increaseIntegerTagValue(this.properties, TICKS_ALIVE_ID, 1) > this.properties.getInt(MAX_TICKS_ALIVE_ID) && this.target.isRemoved()) && (cooldown == 0 || ticks % cooldown == 0) && !this.isRemoved) {
             Level level = this.target.level;
             if (this.currentTick++ >= this.ticksPerCycle) {
                 this.currentTick = 0;
             }
             if (this.type == Type.ORBIT) {
                 tickOrbit(level);
+            } else if (this.type == Type.ARROW_HEAD) {
+                tickArrowHead(level);
             }
-            this.updateSaveData();
-        }
-        if (this.target.isRemoved()) {
-            this.helper.kill();
+            this.save();
         }
     }
 
     private void tickOrbit(Level level) {
         if (currentTick >= (ticksPerCycle / 2)) {
-            YOffset-=this.heightChange;
+            MISCTools.increaseFloatTagValue(this.properties, Y_OFFSET_ID, -this.heightChange);
         } else {
-            YOffset+=this.heightChange;
+            MISCTools.increaseFloatTagValue(this.properties, Y_OFFSET_ID, this.heightChange);
         }
-        this.curRotation+=rotPerTick;
-        helper.setYRot(curRotation);
-        helper.setPos(target.getX(), target.getY() +  YOffset, target.getZ());
-        Vec3 targetPos = helper.getLookAngle().scale(1).add(MISCTools.getPosition(helper));
-        MISCTools.sendParticles(level, (SimpleParticleType) particleType, false, targetPos, 2, 0,0, 0, 0);
+        MISCTools.increaseFloatTagValue(this.properties, CURRENT_ROTATION_ID, this.properties.getFloat(ROTATION_PER_TICK_ID));
+        Vec3 targetPos = MISCTools.calculateViewVector(0, this.properties.getFloat(CURRENT_ROTATION_ID)).add(target.getX(), target.getY() +  this.properties.getFloat(Y_OFFSET_ID), target.getZ());
+        MISCTools.sendParticles(level, (SimpleParticleType) BuiltInRegistries.PARTICLE_TYPE.get(new ResourceLocation(this.properties.getString("particleType"))), false, targetPos, 2, 0,0, 0, 0);
     }
 
+    private void tickArrowHead(Level level) {
+
+    }
     public enum Type {
-        ORBIT("orbit");
+        ORBIT("orbit"),
+        ARROW_HEAD("arrow_head");
 
         private final String registryName;
         Type(String registryName) {

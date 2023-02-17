@@ -1,0 +1,12 @@
+{
+  "feature": "mysticcraft:crimson_ore",
+  "placement": [
+    {
+      "type": "minecraft:biome"
+    },
+    {
+      "type": "minecraft:count",
+      "count": 2
+    }
+  ]
+}

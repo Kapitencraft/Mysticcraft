@@ -2,6 +2,8 @@ package net.kapitencraft.mysticcraft.misc;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.ShieldItem;
+import net.minecraft.world.item.enchantment.EnchantmentCategory;
 
 public class FormattingCodes {
 
@@ -34,4 +36,6 @@ public class FormattingCodes {
     public static final Rarity LEGENDARY = Rarity.create("LEGENDARY", ChatFormatting.GOLD);
     public static final Rarity MYTHIC = Rarity.create("MYTHIC", ChatFormatting.DARK_PURPLE);
     public static final Rarity DIVINE = Rarity.create("DIVINE", ChatFormatting.AQUA);
+
+    public static final EnchantmentCategory SHIELD = EnchantmentCategory.create("shield", (item)-> item instanceof ShieldItem);
 }
