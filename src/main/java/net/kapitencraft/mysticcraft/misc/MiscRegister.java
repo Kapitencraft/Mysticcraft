@@ -3,6 +3,7 @@ package net.kapitencraft.mysticcraft.misc;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.enchantments.*;
+import net.kapitencraft.mysticcraft.entity.CrimsonDeathRayProjectile;
 import net.kapitencraft.mysticcraft.entity.FrozenBlazeEntity;
 import net.kapitencraft.mysticcraft.gui.IGuiHelper;
 import net.kapitencraft.mysticcraft.init.*;
@@ -17,7 +18,6 @@ import net.kapitencraft.mysticcraft.item.weapon.melee.sword.ManaSteelSwordItem;
 import net.kapitencraft.mysticcraft.item.weapon.ranged.bow.TallinBow;
 import net.kapitencraft.mysticcraft.misc.damage_source.FerociousDamageSource;
 import net.kapitencraft.mysticcraft.misc.damage_source.IAbilitySource;
-import net.kapitencraft.mysticcraft.spell.Spell;
 import net.kapitencraft.mysticcraft.spell.Spells;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -32,6 +32,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -56,7 +57,6 @@ import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ItemAttributeModifierEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
@@ -243,28 +243,10 @@ public class MiscRegister {
         if (attacker.getAttribute(ModAttributes.FEROCITY.get()) != null) {
             final double ferocity = event.getSource() instanceof FerociousDamageSource damageSource ? damageSource.ferocity : attacker.getAttributeValue(ModAttributes.FEROCITY.get());
             if (ferocity >= (Math.random() * 100)) {
-                new Object() {
-                    private int ticks = 0;
-                    private float waitTicks;
-
-                    public void start(int waitTicks) {
-                        this.waitTicks = waitTicks;
-                        MinecraftForge.EVENT_BUS.register(this);
-                    }
-                    @SubscribeEvent
-                    public void tick(TickEvent.ServerTickEvent event) {
-                        if (event.phase == TickEvent.Phase.END) {
-                            this.ticks += 1;
-                            if (this.ticks >= this.waitTicks)
-                                run();
-                        }
-                    }
-                    private void run() {
-                        MinecraftForge.EVENT_BUS.unregister(this);
-                        float ferocity_damage = (float) (event.getSource() instanceof FerociousDamageSource ferociousDamageSource ? ferociousDamageSource.damage : event.getSource().getEntity() instanceof AbstractArrow arrow ? arrow.getBaseDamage() : event.getSource().getEntity() instanceof LivingEntity living ? living.getAttributeValue(Attributes.ATTACK_DAMAGE) : 0.0f);
-                        attacked.hurt(new FerociousDamageSource(attacker, (ferocity - 100), ferocity_damage), ferocity_damage);
-                    }
-                }.start(40);
+                MISCTools.delayed(40, () -> {
+                    float ferocity_damage = (float) (event.getSource() instanceof FerociousDamageSource ferociousDamageSource ? ferociousDamageSource.damage : event.getSource().getEntity() instanceof AbstractArrow arrow ? arrow.getBaseDamage() : event.getSource().getEntity() instanceof LivingEntity living ? living.getAttributeValue(Attributes.ATTACK_DAMAGE) : 0.0f);
+                    attacked.hurt(new FerociousDamageSource(attacker, (ferocity - 100), ferocity_damage), ferocity_damage);
+                });
             }
         }
     }
@@ -302,7 +284,8 @@ public class MiscRegister {
                 float YRot = attacker.getYRot();
                 for (int i = 0; i < 3; i++) {
                     float curRor = YRot + (120 * i);
-
+                    CrimsonDeathRayProjectile projectile = CrimsonDeathRayProjectile.createProjectile(attacker.level, attacker, curRor);
+                    attacked.level.addFreshEntity(projectile);
                 }
             }
         }
@@ -345,9 +328,17 @@ public class MiscRegister {
                 tag.putByte(SpellItem.SPELL_EXECUTION_DUR, (byte) (tag.getByte(SpellItem.SPELL_EXECUTION_DUR) - 1));
             }
         }
-        ParticleHelper.tickHelper(living);
         if (!ModArmorItem.isFullSetActive(living, ModArmorMaterials.SOUL_MAGE) && tag.getString("lastFullSet").equals(ModArmorMaterials.SOUL_MAGE.getName())) {
             ParticleHelper.clearAllHelpers(SoulMageArmorItem.helperString, living);
+        }
+    }
+
+    @SubscribeEvent
+    public static void ServerTick(TickEvent.LevelTickEvent event) {
+        if (event.level instanceof ServerLevel serverLevel) {
+            for (Entity entity : serverLevel.getEntities().getAll()) {
+                ParticleHelper.tickHelper(entity);
+            }
         }
     }
 
@@ -367,7 +358,7 @@ public class MiscRegister {
                             MysticcraftMod.sendInfo("a");
                             Component pattern = toolTip.get(i + 1);
                             String patternString = pattern.getString();
-                            Spell spell = Spells.get(Spell.getStringForPattern(patternString, true));
+                            Spells spell = Spells.get(Spells.getStringForPattern(patternString, true));
                             if (spell != null) {
                                 AttributeInstance instance = player.getAttribute(ModAttributes.MANA_COST.get());
                                 mutable.append(FormattingCodes.DARK_RED + MISCTools.getAttributeValue(instance, spell.MANA_COST));
@@ -375,7 +366,7 @@ public class MiscRegister {
                         }
                     }
                 } else {
-                    Spell spell = spellItem.getActiveSpell();
+                    Spells spell = spellItem.getActiveSpell();
                     Component component = toolTip.get(toolTip.indexOf(SEARCHED));
                     if (component instanceof MutableComponent mutable) {
                         AttributeInstance instance = player.getAttribute(ModAttributes.MANA_COST.get());

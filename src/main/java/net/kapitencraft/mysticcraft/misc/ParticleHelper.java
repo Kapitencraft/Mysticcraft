@@ -7,9 +7,11 @@ import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
@@ -24,7 +26,7 @@ public class ParticleHelper {
     private static final String ROTATION_PER_TICK_ID = "rotPerTick";
     private static final String PARTICLE_TYPE_ID = "particleType";
     private static final ParticleHelperQueueWorker worker = new ParticleHelperQueueWorker();
-    public static void tickHelper(LivingEntity living) {
+    public static void tickHelper(Entity living) {
         if (!worker.hasTarget(living.getUUID())) {
             loadAllHelpers(living);
         }
@@ -44,6 +46,14 @@ public class ParticleHelper {
 
     }
 
+    public static CompoundTag createArrowHeadProperties(int maxSteps, int maxParticle, SimpleParticleType particleType, SimpleParticleType particleType1) {
+        CompoundTag tag = new CompoundTag();
+        tag.putInt("maxSteps", maxSteps);
+        tag.putInt("maxParticle", maxParticle);
+        tag.putString("type1", toTag(particleType));
+        tag.putString("type2", toTag(particleType1));
+        return tag;
+    }
 
     public static CompoundTag createOrbitProperties(int cooldown, int maxTicksAlive, float initRotation, float maxHeight, float rotPerTick, ParticleType<SimpleParticleType> particleType) {
         CompoundTag tag = new CompoundTag();
@@ -54,11 +64,16 @@ public class ParticleHelper {
         tag.putFloat(CURRENT_ROTATION_ID, initRotation);
         tag.putFloat(MAX_HEIGHT_ID, maxHeight);
         tag.putFloat(ROTATION_PER_TICK_ID, rotPerTick);
-        ResourceLocation location = BuiltInRegistries.PARTICLE_TYPE.getKey(particleType);
-        tag.putString(PARTICLE_TYPE_ID, (location == null ? BuiltInRegistries.PARTICLE_TYPE.getKey(ParticleTypes.ANGRY_VILLAGER) : location).toString());
+        tag.putString(PARTICLE_TYPE_ID, toTag((SimpleParticleType) particleType));
         return tag;
     }
-    private static void loadAllHelpers(LivingEntity target) {
+
+    public static String toTag(SimpleParticleType type) {
+        ResourceLocation location = BuiltInRegistries.PARTICLE_TYPE.getKey(type);
+        return (location == null ? BuiltInRegistries.PARTICLE_TYPE.getKey(ParticleTypes.ANGRY_VILLAGER) : location).toString();
+    }
+
+    private static void loadAllHelpers(Entity target) {
         CompoundTag tag = target.getPersistentData();
         int i = 0;
         while (tag.contains("ParticleHelper" + i, 10)) {
@@ -72,19 +87,19 @@ public class ParticleHelper {
     private final int ticksPerCycle;
     private final float heightChange;
     private int curTagID, currentTick = 0;
-    private final LivingEntity target;
+    private final Entity target;
     private final Type type;
 
     public void remove(boolean flag) {
         this.isRemoved = flag;
     }
 
-    public static ParticleHelper createWithTargetHeight(String helperReason, LivingEntity target, Type type, CompoundTag properties) {
+    public static ParticleHelper createWithTargetHeight(String helperReason, Entity target, Type type, CompoundTag properties) {
         properties.putFloat(MAX_HEIGHT_ID, target.getBbHeight());
         return new ParticleHelper(helperReason, target, type, properties);
     }
 
-    public ParticleHelper(String helperReason, LivingEntity target, Type type, CompoundTag properties) {
+    public ParticleHelper(String helperReason, Entity target, Type type, CompoundTag properties) {
         MysticcraftMod.sendInfo("created a new ParticleHelper");
         this.properties = properties;
         this.target = target;
@@ -105,7 +120,7 @@ public class ParticleHelper {
         return this.properties.getFloat(MAX_HEIGHT_ID) / (this.properties.getFloat(ROTATION_PER_TICK_ID) / 2f);
     }
 
-    private ParticleHelper(CompoundTag tag, LivingEntity target, int curTagID) {
+    private ParticleHelper(@NotNull CompoundTag tag, Entity target, int curTagID) {
         this.curTagID = curTagID;
         this.properties = (CompoundTag) tag.get("properties");
         this.helperReason = tag.getString("helperReason");
@@ -162,11 +177,8 @@ public class ParticleHelper {
         initSave();
     }
 
-    public static @Nullable ParticleHelper of(CompoundTag tag, LivingEntity living, int tagID) {
-        if (tag != null) {
-            return new ParticleHelper(tag, living, tagID);
-        }
-        return null;
+    public static ParticleHelper of(@NotNull CompoundTag tag, Entity living, int tagID) {
+        return new ParticleHelper(tag, living, tagID);
     }
 
     public void tick(int ticks) {
@@ -193,11 +205,21 @@ public class ParticleHelper {
         }
         MISCTools.increaseFloatTagValue(this.properties, CURRENT_ROTATION_ID, this.properties.getFloat(ROTATION_PER_TICK_ID));
         Vec3 targetPos = MISCTools.calculateViewVector(0, this.properties.getFloat(CURRENT_ROTATION_ID)).add(target.getX(), target.getY() +  this.properties.getFloat(Y_OFFSET_ID), target.getZ());
-        MISCTools.sendParticles(level, (SimpleParticleType) BuiltInRegistries.PARTICLE_TYPE.get(new ResourceLocation(this.properties.getString("particleType"))), false, targetPos, 2, 0,0, 0, 0);
+        MISCTools.sendParticles(level, getFromTag(this.properties.getString("particleType")), false, targetPos, 2, 0,0, 0, 0);
+        }
+
+    public static SimpleParticleType getFromTag(String tag) {
+        return (SimpleParticleType) BuiltInRegistries.PARTICLE_TYPE.get(new ResourceLocation(tag));
     }
 
     private void tickArrowHead(Level level) {
-
+        ParticleGradientHolder[] gradientHolders = new ParticleGradient(this.properties.getInt("maxSteps"),this.properties.getInt("maxParticle"), getFromTag(this.properties.getString("type1")), getFromTag(this.properties.getString("type2"))).generate();
+        for (int y = 0; y < 2; y++) {
+            for (int i = y; i <= 10; i++) {
+                Vec3 targetLoc = MISCTools.calculateViewVector(target.getXRot(), target.getYRot() + (y == 0 ? 120 : -120)).scale(1 + (i * 0.05)).add(MISCTools.getPosition(target));
+                MISCTools.sendParticles(level, false, targetLoc, 0, 0, 0, 0, gradientHolders[i]);
+            }
+        }
     }
     public enum Type {
         ORBIT("orbit"),

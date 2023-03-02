@@ -10,7 +10,7 @@ import java.util.List;
 public class AspectOfTheEndItem extends NormalSpellItem {
     public AspectOfTheEndItem() {
         super(new Properties().rarity(Rarity.UNCOMMON), 1, 40, 0);
-        this.addSlot(new SpellSlot(Spells.INSTANT_TRANSMISSION.getSpell()));
+        this.addSlot(new SpellSlot(Spells.INSTANT_TRANSMISSION));
     }
 
     @Override

@@ -41,6 +41,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nullable;
@@ -59,6 +62,34 @@ public class MISCTools {
 
     public static EquipmentSlot getSlotForStack(ItemStack stack) {
         return stack.getItem() instanceof ArmorItem armorItem ? armorItem.getSlot() : EquipmentSlot.MAINHAND;
+    }
+
+    public interface delayRun {
+        void run();
+    }
+
+    public static void delayed(int delay, delayRun run) {
+        new Object() {
+            private int ticks = 0;
+            private float waitTicks;
+
+            public void start(int waitTicks) {
+                this.waitTicks = waitTicks;
+                MinecraftForge.EVENT_BUS.register(this);
+            }
+            @SubscribeEvent
+            public void tick(TickEvent.ServerTickEvent event) {
+                if (event.phase == TickEvent.Phase.END) {
+                    this.ticks += 1;
+                    if (this.ticks >= this.waitTicks)
+                        run();
+                }
+            }
+            private void run() {
+                MinecraftForge.EVENT_BUS.unregister(this);
+                run.run();
+            }
+        }.start(delay);
     }
     public static ArrayList<Vec3> LineOfSight(Entity entity, double range, double scaling) {
         ArrayList<Vec3> line = new ArrayList<>();

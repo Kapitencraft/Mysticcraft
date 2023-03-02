@@ -66,6 +66,7 @@ public class TabRegister {
                             addArmor(ModItems.FROZEN_BLAZE_ARMOR, output);
                             addArmor(ModItems.SHADOW_ASSASSIN_ARMOR, output);
                             addArmor(ModItems.SOUL_MAGE_ARMOR, output);
+                            addArmor(ModItems.CRIMSON_ARMOR, output);
                             output.accept(ModItems.HEATED_SCYTHE.get());
                             output.accept(ModItems.FIERY_SCYTHE.get());
                             output.accept(ModItems.BURNING_SCYTHE.get());

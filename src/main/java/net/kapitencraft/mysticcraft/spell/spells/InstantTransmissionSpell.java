@@ -11,26 +11,22 @@ import net.minecraft.world.item.Rarity;
 import java.util.List;
 
 public class InstantTransmissionSpell extends Spell {
-    private final Component[] description = new Component[]{Component.literal("teleports you 8 blocks ahead")};
+    private static final Component[] description = new Component[]{Component.literal("teleports you 8 blocks ahead")};
 
 
     public InstantTransmissionSpell() {
-        super(50, "Instant Transmission", "1110111", Spell.RELEASE, Rarity.COMMON);
+        super(50, "Instant Transmission", "1110111", Type.RELEASE, Rarity.COMMON);
     }
 
-    @Override
-    public void execute(LivingEntity user, ItemStack stack) {
+    public static void execute(LivingEntity user, ItemStack stack) {
         MISCTools.saveTeleport(user, 8);
-
     }
 
-    @Override
-    public boolean canApply(Item item) {
+    public static boolean canApply(Item item) {
         return true;
     }
 
-    @Override
-    public List<Component> getDescription() {
+    public static List<Component> getDescription() {
         return List.of(description);
     }
 }

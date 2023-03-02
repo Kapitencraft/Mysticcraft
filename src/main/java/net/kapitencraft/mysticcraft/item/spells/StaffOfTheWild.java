@@ -56,8 +56,8 @@ public class StaffOfTheWild extends NormalSpellItem implements GeoItem, IGemston
 
     public StaffOfTheWild() {
         super(new Properties().rarity(FormattingCodes.LEGENDARY).stacksTo(1), 5, 200, 0);
-        this.addSlot(new SpellSlot(Spells.HUGE_HEAL.getSpell()));
-        this.addSlot(new SpellSlot(Spells.INSTANT_TRANSMISSION.getSpell()));
+        this.addSlot(new SpellSlot(Spells.HUGE_HEAL));
+        this.addSlot(new SpellSlot(Spells.INSTANT_TRANSMISSION));
     }
 
     @Override

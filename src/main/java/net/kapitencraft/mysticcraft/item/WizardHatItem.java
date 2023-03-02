@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.item;
 
-import net.kapitencraft.mysticcraft.entity.armor.client.WizardHatRenderer;
 import net.kapitencraft.mysticcraft.item.armor.ModArmorMaterials;
+import net.kapitencraft.mysticcraft.item.armor.client.WizardHatRenderer;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -43,7 +43,11 @@ public class WizardHatItem extends ArmorItem implements GeoItem, IModItem {
 
             @Override
             public @NotNull HumanoidModel<?> getHumanoidArmorModel(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, HumanoidModel<?> original) {
-                return IClientItemExtensions.super.getHumanoidArmorModel(livingEntity, itemStack, equipmentSlot, original);
+                if (this.renderer == null) {
+                    this.renderer = new WizardHatRenderer();
+                }
+                this.renderer.prepForRender(livingEntity, itemStack, equipmentSlot, original);
+                return this.renderer;
             }
         });
     }

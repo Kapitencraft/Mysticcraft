@@ -10,7 +10,7 @@ import java.util.List;
 public class BurningScythe extends NormalSpellItem implements IDamageSpellItem, IFireScytheItem {
     public BurningScythe() {
         super(new Properties().fireResistant().rarity(Rarity.EPIC), 1, 250, 50);
-        this.addSlot(new SpellSlot(Spells.FIRE_BOLT_3.getSpell()));
+        this.addSlot(new SpellSlot(Spells.FIRE_BOLT_3));
     }
 
     @Override

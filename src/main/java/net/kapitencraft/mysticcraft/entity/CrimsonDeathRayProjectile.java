@@ -1,7 +1,10 @@
 package net.kapitencraft.mysticcraft.entity;
 
+import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.init.ModEntityTypes;
 import net.kapitencraft.mysticcraft.misc.MISCTools;
+import net.kapitencraft.mysticcraft.misc.ParticleHelper;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.AbstractArrow;
@@ -22,16 +25,18 @@ public class CrimsonDeathRayProjectile extends AbstractArrow {
         super(ModEntityTypes.CRIMSON_DEATH_RAY.get(), level);
         this.setOwner(owner);
         this.setYRot(yRot);
+        new ParticleHelper("crimsonProjectile", this, ParticleHelper.Type.ARROW_HEAD, ParticleHelper.createArrowHeadProperties(10, 20, ParticleTypes.FLAME, ParticleTypes.ASH));
         this.setPos(MISCTools.getPosition(owner).add(0, 0.1, 0));
     }
 
     @Override
     public void tick() {
+        MysticcraftMod.sendInfo("ticking");
         List<LivingEntity> possibleTargetEntities = MISCTools.sortLowestDistance(this, this.level.getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(1.5)));
         Vec2 targetRot = null;
         if (possibleTargetEntities != null) {
             for (LivingEntity living : possibleTargetEntities) {
-                if (!this.ownedBy(living)) {
+                if (!this.ownedBy(living) && !living.isDeadOrDying()) {
                     targetRot = MISCTools.getTargetRotation(this, living);
                 }
             }
@@ -60,7 +65,7 @@ public class CrimsonDeathRayProjectile extends AbstractArrow {
         return ItemStack.EMPTY;
     }
 
-    public static CrimsonDeathRayProjectile createProjectile(Level level, LivingEntity owner, float y) {
-        return new CrimsonDeathRayProjectile(level, owner, y);
+    public static CrimsonDeathRayProjectile createProjectile(Level level, LivingEntity owner, float yRot) {
+        return new CrimsonDeathRayProjectile(level, owner, yRot);
     }
 }

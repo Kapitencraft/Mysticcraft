@@ -11,7 +11,7 @@ public class HeatedScythe extends NormalSpellItem implements IDamageSpellItem, I
 
     public HeatedScythe() {
         super(new Properties().rarity(Rarity.UNCOMMON), 1, 50, 0);
-        this.addSlot(new SpellSlot(Spells.FIRE_BOLT_1.getSpell()));
+        this.addSlot(new SpellSlot(Spells.FIRE_BOLT_1));
     }
     @Override
     public List<Component> getItemDescription() {

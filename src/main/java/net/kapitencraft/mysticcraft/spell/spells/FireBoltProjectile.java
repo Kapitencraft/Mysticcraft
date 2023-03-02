@@ -4,7 +4,6 @@ import net.kapitencraft.mysticcraft.init.ModEntityTypes;
 import net.kapitencraft.mysticcraft.init.ModParticleTypes;
 import net.kapitencraft.mysticcraft.misc.MISCTools;
 import net.kapitencraft.mysticcraft.misc.damage_source.IndirectAbilityDamageSource;
-import net.kapitencraft.mysticcraft.spell.Spell;
 import net.kapitencraft.mysticcraft.spell.Spells;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
@@ -28,8 +27,8 @@ public class FireBoltProjectile extends SpellProjectile {
     private int inGroundTime = 0;
     private final boolean explosive;
     private final double damage;
-    private FireBoltProjectile(Level level, LivingEntity living, boolean explosive, double damage, Spell spell) {
-        super(ModEntityTypes.FIRE_BOLD.get(), living, level, spell);
+    private FireBoltProjectile(Level level, LivingEntity living, boolean explosive, double damage, String name) {
+        super(ModEntityTypes.FIRE_BOLD.get(), living, level, name);
         this.inGroundTime = 0;
         this.setInvisible(true);
         this.setNoGravity(true);
@@ -50,7 +49,7 @@ public class FireBoltProjectile extends SpellProjectile {
     }
 
     public FireBoltProjectile(EntityType<? extends AbstractArrow> type, Level level) {
-        super(type, level, Spells.FIRE_BOLT_1.getSpell());
+        super(type, level, Spells.FIRE_BOLT_1.getName());
         this.explosive = false;
         this.damage = 1;
     }
@@ -68,7 +67,7 @@ public class FireBoltProjectile extends SpellProjectile {
     }
 
     @Override
-    protected void onHitEntity(EntityHitResult hitResult) {
+    protected void onHitEntity(@NotNull EntityHitResult hitResult) {
         Entity entity = hitResult.getEntity();
         if (entity instanceof LivingEntity living) {
             damage(living);
@@ -95,12 +94,12 @@ public class FireBoltProjectile extends SpellProjectile {
     private void damage(LivingEntity living) {
         this.addHitEntity(living);
         float health = living.getHealth();
-        living.hurt(new IndirectAbilityDamageSource(this, this.getOwner(), 0.6f, this.spell.REGISTRY_NAME), (float) this.damage);
+        living.hurt(new IndirectAbilityDamageSource(this, this.getOwner(), 0.6f, this.name.toLowerCase().replace(" ", "_")), (float) this.damage);
         this.damageInflicted += (health - living.getHealth());
         living.setSecondsOnFire((int) Math.floor(this.damage));
     }
 
-    public static FireBoltProjectile createProjectile(Level level, LivingEntity owner, boolean explosive, double damage, Spell spell) {
-        return new FireBoltProjectile(level, owner, explosive, damage, spell);
+    public static FireBoltProjectile createProjectile(Level level, LivingEntity owner, boolean explosive, double damage, String name) {
+        return new FireBoltProjectile(level, owner, explosive, damage, name);
     }
 }

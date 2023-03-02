@@ -8,13 +8,16 @@ import net.kapitencraft.mysticcraft.misc.ModItemProperties;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -39,7 +42,7 @@ import java.util.function.Supplier;
 @Mod(MysticcraftMod.MOD_ID)
 public class MysticcraftMod {
     public static final String MOD_ID = "mysticcraft";
-    public static final float TIME_PER_TICK = 0.05f;
+    public static final float SEC_PER_TICK = 0.05f;
     public static final DecimalFormat MAIN_FORMAT = new DecimalFormat("#.##");
     private static int messageID = 0;
     private static final Logger LOGGER = LogUtils.getLogger();
@@ -79,6 +82,8 @@ public class MysticcraftMod {
         MinecraftForge.EVENT_BUS.register(this);
         GeckoLib.initialize();
     }
+
+    public static final ResourceKey<Level> DUNGEON_INSTANCE = ResourceKey.create(Registries.DIMENSION, new ResourceLocation(MysticcraftMod.MOD_ID, "dungeon_instance"));
 
     public static AttributeModifier createModifier(AttributeModifier.Operation operation, double value, EquipmentSlot slot) {
         if (operation == AttributeModifier.Operation.ADDITION) {

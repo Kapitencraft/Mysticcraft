@@ -10,7 +10,7 @@ import java.util.List;
 public class FireLance extends NormalSpellItem {
     public FireLance() {
         super(new Properties().rarity(Rarity.RARE), 1, 40, 0);
-        this.addSlot(new SpellSlot(Spells.FIRE_LANCE.getSpell()));
+        this.addSlot(new SpellSlot(Spells.FIRE_LANCE));
     }
 
     @Override

@@ -14,10 +14,15 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
+import software.bernie.geckolib.animatable.GeoItem;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.HashMap;
 
-public class CrimsonArmorItem extends ModArmorItem {
+public class CrimsonArmorItem extends ModArmorItem implements GeoItem {
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public CrimsonArmorItem(EquipmentSlot p_40387_) {
         super(ModArmorMaterials.CRIMSON, p_40387_, new Properties().rarity(FormattingCodes.LEGENDARY));
     }
@@ -37,8 +42,10 @@ public class CrimsonArmorItem extends ModArmorItem {
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeMods(EquipmentSlot slot) {
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = new ImmutableMultimap.Builder<>();
-        builder.put(ModAttributes.STRENGTH.get(), MysticcraftMod.createModifier(AttributeModifier.Operation.ADDITION, 5*this.getMaterial().getDefenseForSlot(this.getSlot()), this.getSlot()));
-        builder.put(ModAttributes.CRIT_DAMAGE.get(), MysticcraftMod.createModifier(AttributeModifier.Operation.ADDITION, this.getMaterial().getDefenseForSlot(this.getSlot()), this.getSlot()));
+        if (slot == this.slot) {
+            builder.put(ModAttributes.STRENGTH.get(), MysticcraftMod.createModifier(AttributeModifier.Operation.ADDITION, 5 * this.getMaterial().getDefenseForSlot(this.getSlot()), this.getSlot()));
+            builder.put(ModAttributes.CRIT_DAMAGE.get(), MysticcraftMod.createModifier(AttributeModifier.Operation.ADDITION, this.getMaterial().getDefenseForSlot(this.getSlot()), this.getSlot()));
+        }
         return builder.build();
     }
 
@@ -51,4 +58,13 @@ public class CrimsonArmorItem extends ModArmorItem {
         return registry;
     }
 
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+
+    }
+
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
+    }
 }

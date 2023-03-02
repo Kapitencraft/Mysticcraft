@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.entity.armor.client;
+package net.kapitencraft.mysticcraft.item.armor.client;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.item.WizardHatItem;
@@ -7,6 +7,6 @@ import software.bernie.geckolib.model.DefaultedItemGeoModel;
 
 public class WizardHatModel extends DefaultedItemGeoModel<WizardHatItem> {
     public WizardHatModel() {
-        super(new ResourceLocation(MysticcraftMod.MOD_ID, "wizard_hat"));
+        super(new ResourceLocation(MysticcraftMod.MOD_ID, "wizard_hat_model"));
     }
 }

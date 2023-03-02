@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.entity.armor.client;
+package net.kapitencraft.mysticcraft.item.armor.client;
 
 import net.kapitencraft.mysticcraft.item.WizardHatItem;
 import software.bernie.geckolib.renderer.GeoArmorRenderer;

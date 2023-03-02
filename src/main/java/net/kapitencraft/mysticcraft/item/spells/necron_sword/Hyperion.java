@@ -10,7 +10,7 @@ public class Hyperion extends NecronSword {
 
     public Hyperion() {
         super(NecronSword.BASE_DAMAGE, 350, NecronSword.BASE_FEROCITY, NecronSword.BASE_STRENGHT);
-        this.addSlot(new SpellSlot(Spells.WITHER_IMPACT.getSpell()));
+        this.addSlot(new SpellSlot(Spells.WITHER_IMPACT));
     }
 
     @Override

@@ -4,13 +4,11 @@ import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.item.spells.FireLance;
 import net.kapitencraft.mysticcraft.misc.MISCTools;
 import net.kapitencraft.mysticcraft.misc.damage_source.AbilityDamageSource;
-import net.kapitencraft.mysticcraft.spell.Spell;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Rarity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
@@ -18,13 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class FireLanceSpell extends Spell {
-    public FireLanceSpell() {
-        super(5, "Fire Lance", "1011100", Spell.CYCLE, Rarity.UNCOMMON);
-    }
+public class FireLanceSpell {
 
-    @Override
-    public void execute(LivingEntity user, ItemStack stack) {
+    public static void execute(LivingEntity user, ItemStack stack) {
         MysticcraftMod.sendInfo("execute");
         ArrayList<Vec3> lineOfSight = MISCTools.LineOfSight(user, 10, 0.05);
         for (Vec3 vec3 : lineOfSight) {
@@ -32,22 +26,20 @@ public class FireLanceSpell extends Spell {
             MISCTools.sendParticles(user.level, ParticleTypes.SMALL_FLAME, false, vec3, 10, 0.1/8, 0.1/8, 0.1/8, 0);
             for (LivingEntity living : entities) {
                 if (living != user) {
-                    if (living.getLastDamageSource() instanceof AbilityDamageSource abilitySource && Objects.equals(abilitySource.getSpellType(), this.REGISTRY_NAME)) {
+                    if (living.getLastDamageSource() instanceof AbilityDamageSource abilitySource && Objects.equals(abilitySource.getSpellType(), "fire_lance")) {
                         living.invulnerableTime = 0;
                     }
-                    living.hurt(new AbilityDamageSource(user, 0.2f, this.REGISTRY_NAME).setIsFire(), 2);
+                    living.hurt(new AbilityDamageSource(user, 0.2f, "fire_lance").setIsFire(), 2);
                 }
             }
         }
     }
 
-    @Override
-    public boolean canApply(Item stack) {
+    public static boolean canApply(Item stack) {
         return stack instanceof FireLance;
     }
 
-    @Override
-    public List<Component> getDescription() {
+    public static List<Component> getDescription() {
         return List.of(Component.literal("Fires a line of fire where you are looking and deals 2 Damage per seconds"));
     }
 }

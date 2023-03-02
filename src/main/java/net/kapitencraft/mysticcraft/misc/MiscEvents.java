@@ -2,10 +2,7 @@ package net.kapitencraft.mysticcraft.misc;
 
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.entity.renderer.DamageIndicatorRenderer;
-import net.kapitencraft.mysticcraft.entity.renderer.FireBoltRenderer;
-import net.kapitencraft.mysticcraft.entity.renderer.FrozenBlazeRenderer;
-import net.kapitencraft.mysticcraft.entity.renderer.SchnauzenPlueschRenderer;
+import net.kapitencraft.mysticcraft.entity.renderer.*;
 import net.kapitencraft.mysticcraft.init.ModEntityTypes;
 import net.kapitencraft.mysticcraft.init.ModParticleTypes;
 import net.kapitencraft.mysticcraft.particle.FireNormalParticle;
@@ -40,9 +37,12 @@ public class MiscEvents {
         @SubscribeEvent
         public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
             event.registerEntityRenderer(ModEntityTypes.FROZEN_BLAZE.get(), FrozenBlazeRenderer::new);
-            event.registerEntityRenderer(ModEntityTypes.FIRE_BOLD.get(), FireBoltRenderer::new);
-            event.registerEntityRenderer(ModEntityTypes.DAMAGE_INDICATOR.get(), DamageIndicatorRenderer::new);
             event.registerEntityRenderer(ModEntityTypes.SCHNAUZEN_PLUESCH.get(), SchnauzenPlueschRenderer::new);
+
+            event.registerEntityRenderer(ModEntityTypes.FIRE_BOLD.get(), FireBoltRenderer::new);
+            event.registerEntityRenderer(ModEntityTypes.CRIMSON_DEATH_RAY.get(), CrimsonDeathRayRenderer::new);
+            event.registerEntityRenderer(ModEntityTypes.DAMAGE_INDICATOR.get(), DamageIndicatorRenderer::new);
+
         }
     }
 
