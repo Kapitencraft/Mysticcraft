@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.item.spells;
 
-import net.kapitencraft.mysticcraft.spell.Spells;
+import net.kapitencraft.mysticcraft.spell.Spell;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
@@ -13,13 +13,13 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class SpellScrollItem extends Item {
-    private final Spells SPELL;
-    public SpellScrollItem(Spells spell) {
+    private final Spell SPELL;
+    public SpellScrollItem(Spell spell) {
         super(new Properties().rarity(spell.RARITY));
         SPELL = spell;
     }
 
-    public Spells getSpell() {
+    public Spell getSpell() {
         return SPELL;
     }
 

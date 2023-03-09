@@ -1,16 +1,16 @@
 package net.kapitencraft.mysticcraft.item.spells;
 
+import net.kapitencraft.mysticcraft.spell.Spell;
 import net.kapitencraft.mysticcraft.spell.SpellSlot;
-import net.kapitencraft.mysticcraft.spell.Spells;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Rarity;
 
 import java.util.List;
 
 public class AspectOfTheEndItem extends NormalSpellItem {
-    public AspectOfTheEndItem() {
-        super(new Properties().rarity(Rarity.UNCOMMON), 1, 40, 0);
-        this.addSlot(new SpellSlot(Spells.INSTANT_TRANSMISSION));
+    public AspectOfTheEndItem(int intel) {
+        super(new Properties().rarity(Rarity.UNCOMMON), 1, intel, 0);
+        this.addSlot(new SpellSlot(Spell.INSTANT_TRANSMISSION));
     }
 
     @Override

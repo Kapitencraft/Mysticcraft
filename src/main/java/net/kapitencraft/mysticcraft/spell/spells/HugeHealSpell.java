@@ -11,11 +11,6 @@ public class HugeHealSpell {
     public static void execute(LivingEntity user, ItemStack stack) {
         user.heal(5f);
     }
-
-    public static boolean canApply(Item stack) {
-        return true;
-    }
-
     public static List<Component> getDescription() {
         return List.of(Component.literal("Heals for 5 health"));
     }

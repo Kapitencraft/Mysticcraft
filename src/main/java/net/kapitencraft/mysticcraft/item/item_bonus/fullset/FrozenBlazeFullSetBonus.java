@@ -1,10 +1,11 @@
 package net.kapitencraft.mysticcraft.item.item_bonus.fullset;
 
 import com.google.common.collect.Multimap;
-import net.kapitencraft.mysticcraft.init.ModAttributes;
+import it.unimi.dsi.fastutil.chars.CharImmutableList;
 import net.kapitencraft.mysticcraft.item.item_bonus.FullSetBonus;
-import net.kapitencraft.mysticcraft.misc.MISCTools;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -16,20 +17,18 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-public class SoulMageArmorFullSetBonus extends FullSetBonus {
-    public SoulMageArmorFullSetBonus() {
-        super("Mana Syphon");
+public class FrozenBlazeFullSetBonus extends FullSetBonus {
+    public FrozenBlazeFullSetBonus() {
+        super("Freezing Aura");
     }
 
     @Override
     public void onEntityKilled(LivingEntity killed, LivingEntity user) {
-        if (MISCTools.getSaveAttributeValue(ModAttributes.MANA.get(), user) != -1) {
-            double mana = MISCTools.getSaveAttributeValue(ModAttributes.MANA.get(), user);
-            Objects.requireNonNull(user.getAttribute(ModAttributes.MANA.get())).setBaseValue(mana + 10);
-        }
+
     }
+
+
 
     @Nullable
     @Override
@@ -39,13 +38,16 @@ public class SoulMageArmorFullSetBonus extends FullSetBonus {
 
     @Override
     public void onTick(@NotNull ItemStack stack, Level level, @NotNull Entity entity, int slotID, boolean isSelected, int ticks) {
-
+        List<LivingEntity> entities = level.getEntitiesOfClass(LivingEntity.class, entity.getBoundingBox().inflate(3));
+        for (LivingEntity living : entities) {
+            if (!(living.isDeadOrDying() || living == entity) && ticks % 20 == 0) {
+                living.hurt(new EntityDamageSource("freeze", entity).bypassArmor(), 2);
+            }
+        }
     }
 
     @Override
     public List<Component> getDisplay() {
-        ArrayList<Component> list = new ArrayList<>();
-        list.add(Component.literal("Regenerate 10 Mana on kill"));
-        return list;
+        return List.of(Component.literal("Deals 2 Damage per Second to all Entities within 3 Blocks."));
     }
 }

@@ -111,7 +111,6 @@ public class MysticcraftMod {
             sendInfo("Registering Entity World Generation");
             registerSpawnPlacements();
             sendInfo("Registering Custom Fluid Interactions");
-
         }
 
         private static void registerSpawnPlacements() {

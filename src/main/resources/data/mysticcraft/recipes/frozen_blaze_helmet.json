@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "***",
+    "* *"
+  ],
+  "key": {
+    "*":{
+      "item": "mysticcraft:frozen_blaze_rod"
+    }
+  },
+  "result": {
+    "item": "mysticcraft:frozen_blaze_helmet"
+  }
+}

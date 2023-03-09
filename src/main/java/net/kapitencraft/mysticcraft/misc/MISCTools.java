@@ -122,7 +122,6 @@ public class MISCTools {
 
     public static double getAttributeValue(@Nullable AttributeInstance instance, double baseValue) {
         if (instance == null) {
-            MysticcraftMod.sendInfo("Instance is null");
             return 0;
         }
         double d0 = baseValue;
@@ -162,7 +161,6 @@ public class MISCTools {
         }
         return false;
     }
-
     public static  <V> ArrayList<V> invertList(ArrayList<V> list) {
         ArrayList<V> out = new ArrayList<>();
         for (int i = list.size(); i > 0; i--) {
