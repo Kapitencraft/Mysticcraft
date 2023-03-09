@@ -44,19 +44,21 @@ public abstract class ModItems {
     public static final RegistryObject<Item> ASTREA = REGISTRY.register("astrea", Astraea::new);
     public static final RegistryObject<Item> VALKYRIE = REGISTRY.register("valkyrie", Valkyrie::new);
     public static final RegistryObject<Item> AOTE = REGISTRY.register("aspect_of_the_end", AspectOfTheEndItem::new);
-    public static final RegistryObject<Item> HEART_OF_THE_NETHER = REGISTRY.register("heart_of_the_nether", ()-> new Item(new Item.Properties().rarity(FormattingCodes.MYTHIC).stacksTo(1)));
-    public static final RegistryObject<Item> SPELL_SHARD = REGISTRY.register("spell_shard", () -> new Item(new Item.Properties().rarity(Rarity.UNCOMMON)));
     public static final RegistryObject<Item> HEATED_SCYTHE = REGISTRY.register("heated_scythe", HeatedScythe::new);
     public static final RegistryObject<Item> FIERY_SCYTHE = REGISTRY.register("fiery_scythe", FieryScythe::new);
     public static final RegistryObject<Item> BURNING_SCYTHE = REGISTRY.register("burning_scythe", BurningScythe::new);
     public static final RegistryObject<Item> INFERNAL_SCYTHE = REGISTRY.register("infernal_scythe", InfernalScythe::new);
     public static final RegistryObject<Item> FIRE_LANCE = REGISTRY.register("fire_lance", FireLance::new);
     public static final RegistryObject<Item> STAFF_OF_THE_WILD = REGISTRY.register("staff_of_the_wild", StaffOfTheWild::new);
+
     public static final RegistryObject<Item> IMPLOSION_SCROLL = REGISTRY.register("implosion_scroll", ()-> new SpellScrollItem(Spells.IMPLOSION));
     public static final RegistryObject<Item> MANA_STEEL_INGOT = REGISTRY.register("mana_steel_ingot", () -> new Item(new Item.Properties().rarity(Rarity.RARE)));
     public static final RegistryObject<Item> UPPER_BlADE_MS = REGISTRY.register("upper_mana_steel_sword_part", () -> new Item(new Item.Properties().rarity(Rarity.RARE).stacksTo(1)));
     public static final RegistryObject<Item> DOWN_BlADE_MS = REGISTRY.register("lower_mana_steel_sword_part", () -> new Item(new Item.Properties().rarity(Rarity.RARE).stacksTo(1)));
     public static final RegistryObject<Item> MS_HANDLE = REGISTRY.register("mana_steel_sword_handle", () -> new Item(new Item.Properties().rarity(Rarity.RARE).stacksTo(1)));
+    public static final RegistryObject<Item> HEART_OF_THE_NETHER = REGISTRY.register("heart_of_the_nether", ()-> new Item(new Item.Properties().rarity(FormattingCodes.MYTHIC).stacksTo(1)));
+    public static final RegistryObject<Item> SPELL_SHARD = REGISTRY.register("spell_shard", () -> new Item(new Item.Properties().rarity(Rarity.UNCOMMON)));
+    public static final RegistryObject<Item> FROZEN_BLAZE_ROD = REGISTRY.register("frozen_blaze_rod", () -> new Item(new Item.Properties().rarity(Rarity.RARE)));
     public static final RegistryObject<Item> TALLIN_BOW = REGISTRY.register("tallin_bow", TallinBow::new);
     public static final RegistryObject<Item> MANA_STEEL_SWORD = REGISTRY.register("mana_steel_sword", ManaSteelSwordItem::new);
     public static final RegistryObject<Item> DIAMOND_CLEAVER = REGISTRY.register("diamond_cleaver", ()-> new CleaverItem(Tiers.DIAMOND, 5, new Item.Properties().rarity(Rarity.RARE)) {
@@ -85,6 +87,7 @@ public abstract class ModItems {
     public static final HashMap<EquipmentSlot, RegistryObject<Item>> SOUL_MAGE_ARMOR = SoulMageArmorItem.createRegistry(REGISTRY, "soul_mage");
 
     public static final RegistryObject<Item> FROZEN_BLAZE_SPAWN_EGG = REGISTRY.register("frozen_blaze_spawn_egg", ()-> new ForgeSpawnEggItem(ModEntityTypes.FROZEN_BLAZE, -16711681, -16763956, new Item.Properties()));
+
     public static final RegistryObject<Item> MISSING_GEMSTONE_SLOT = REGISTRY.register("missing_slot", ()-> new GUISlotBlockItem().putTooltip(List.of(Component.literal("This Gemstone Applicable has no gemstone at that slot").withStyle(ChatFormatting.RED))));
     public static final RegistryObject<Item> EMPTY_APPLICABLE_SLOT = REGISTRY.register("empty_applicable", ()-> new GUISlotBlockItem().putTooltip(List.of(Component.literal("There is no Gemstone Applicable in it's slot").withStyle(ChatFormatting.RED))));
     public static final RegistryObject<BucketItem> BUCKET_OF_MANA = REGISTRY.register("bucket_of_mana", ()-> new BucketItem(ModFluids.SOURCE_MANA_FLUID, new Item.Properties().rarity(Rarity.EPIC).stacksTo(1)));

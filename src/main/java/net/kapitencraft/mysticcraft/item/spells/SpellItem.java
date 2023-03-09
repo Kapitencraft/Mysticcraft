@@ -255,8 +255,8 @@ public abstract class SpellItem extends SwordItem implements IModItem {
         } else {
             if (this.getActiveSpell().TYPE == Spell.Type.RELEASE) {
                 if (handleMana(player, this.getActiveSpell())) {
-                    MysticcraftMod.sendInfo("use");
                     this.getActiveSpell().execute(player, itemstack);
+                    player.displayClientMessage(Component.literal("Used " + this.getActiveSpell().getName() + ": " + FormattingCodes.RED + "-" + MISCTools.getAttributeValue(player.getAttribute(ModAttributes.MAX_MANA.get()), this.getActiveSpell().MANA_COST) + " Mana"), true);
                 }
             } else {
                 player.startUsingItem(hand);
@@ -297,7 +297,7 @@ public abstract class SpellItem extends SwordItem implements IModItem {
         double manaToUse = MISCTools.getAttributeValue(user.getAttribute(ModAttributes.MAX_MANA.get()), spell.MANA_COST);
         double overflowMana = user.getPersistentData().getDouble("overflowMana");
         double currentMana = user.getAttribute(ModAttributes.MANA.get()).getBaseValue() + overflowMana;
-        if (currentMana == 0) { return false; }
+        if (currentMana == 0 || manaToUse == 0) { return false; }
         if (currentMana >= manaToUse) {
             if (overflowMana > 0) {
                 user.getPersistentData().putDouble("overflowMana", overflowMana > manaToUse ? overflowMana - manaToUse : 0);
@@ -307,7 +307,7 @@ public abstract class SpellItem extends SwordItem implements IModItem {
                 user.getAttribute(ModAttributes.MANA.get()).setBaseValue(user.getAttributeBaseValue(ModAttributes.MANA.get()) - manaToUse);
             }
             ItemStack spellShardRNG = new ItemStack(ModItems.SPELL_SHARD.get());
-            RNGDropHelper.calculateAndDrop(spellShardRNG, 0.00002f, user, new Vec3(user.getX(), user.getY(), user.getZ()));
+            RNGDropHelper.calculateAndDrop(spellShardRNG, 0.00002f, user, MISCTools.getPosition(user));
             return true;
         }
         return false;
@@ -337,7 +337,6 @@ public abstract class SpellItem extends SwordItem implements IModItem {
     public void onUseTick(@NotNull Level level, @NotNull LivingEntity user, @NotNull ItemStack stack, int count) {
         Spells spell = this.getActiveSpell();
         if (spell.TYPE == Spell.Type.CYCLE && this.handleMana(user, spell) && (Integer.MAX_VALUE - count & 2) == 0) {
-            MysticcraftMod.sendInfo("tick");
             spell.execute(user, stack);
             double mana_cost = MISCTools.getAttributeValue(user.getAttribute(ModAttributes.MANA_COST.get()), spell.MANA_COST);
             if (Integer.MAX_VALUE - count == 0 && user instanceof Player player) {

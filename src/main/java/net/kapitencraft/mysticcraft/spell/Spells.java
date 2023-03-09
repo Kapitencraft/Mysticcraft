@@ -1,5 +1,6 @@
 package net.kapitencraft.mysticcraft.spell;
 
+import net.kapitencraft.mysticcraft.item.spells.FireLance;
 import net.kapitencraft.mysticcraft.item.spells.IFireScytheItem;
 import net.kapitencraft.mysticcraft.item.spells.SpellItem;
 import net.kapitencraft.mysticcraft.item.spells.necron_sword.NecronSword;
@@ -17,17 +18,17 @@ import java.util.Objects;
 import java.util.function.Supplier;
 
 public enum Spells {
-    WITHER_IMPACT("Wither Impact", "1101110", Spell.Type.RELEASE, 0, WitherImpactSpell::execute, item -> item instanceof NecronSword, WitherImpactSpell::getDescription, Rarity.RARE),
-    IMPLOSION("Implosion", "0000000", Spell.Type.RELEASE, 0, ImplosionSpell::execute, item -> item instanceof NecronSword, ImplosionSpell::getDescription, FormattingCodes.LEGENDARY),
-    INSTANT_TRANSMISSION("Instant Transmission", "1110111", Spell.Type.RELEASE, 0, InstantTransmissionSpell::execute, item -> true, InstantTransmissionSpell::getDescription, Rarity.COMMON),
-    EXPLOSIVE_SIGHT("Explosive Sight", "1010110", Spell.Type.RELEASE, 0, ExplosiveSightSpell::execute, item -> true, ExplosiveSightSpell::getDescription, Rarity.UNCOMMON),
+    WITHER_IMPACT("Wither Impact", "1101110", Spell.Type.RELEASE, 300, WitherImpactSpell::execute, item -> item instanceof NecronSword, WitherImpactSpell::getDescription, Rarity.RARE),
+    IMPLOSION("Implosion", "0000000", Spell.Type.RELEASE, 300, ImplosionSpell::execute, item -> item instanceof NecronSword, ImplosionSpell::getDescription, FormattingCodes.LEGENDARY),
+    INSTANT_TRANSMISSION("Instant Transmission", "1110111", Spell.Type.RELEASE, 50, InstantTransmissionSpell::execute, item -> true, InstantTransmissionSpell::getDescription, Rarity.COMMON),
+    EXPLOSIVE_SIGHT("Explosive Sight", "1010110", Spell.Type.RELEASE, 150, ExplosiveSightSpell::execute, item -> true, ExplosiveSightSpell::getDescription, Rarity.UNCOMMON),
     EMPTY_SPELL("Empty Spell", null, Spell.Type.RELEASE, 0, (living, itemStack)-> {}, item -> false, EmptySpell::getDescription, Rarity.UNCOMMON),
-    HUGE_HEAL("Huge Heal", "0011011", Spell.Type.RELEASE, 0, HugeHealSpell::execute, HugeHealSpell::canApply, HugeHealSpell::getDescription, Rarity.UNCOMMON),
-    FIRE_BOLT_1("Fire Bolt", "0110011", Spell.Type.RELEASE, 0, createFireBold(1, false), item -> item instanceof IFireScytheItem, createFireBoldDesc(1f), Rarity.UNCOMMON),
-    FIRE_BOLT_2("Fire Bolt", "0110011", Spell.Type.RELEASE, 0, createFireBold(1.4, false), item -> item instanceof IFireScytheItem, createFireBoldDesc(1.4f), Rarity.UNCOMMON),
-    FIRE_BOLT_3("Fire Bolt", "0110011", Spell.Type.RELEASE, 0, createFireBold(2.8, true), item -> item instanceof IFireScytheItem, createFireBoldDesc(2.8f), Rarity.UNCOMMON),
-    FIRE_BOLT_4("Fire Bolt", "0110011", Spell.Type.RELEASE, 0, createFireBold(5.2, true), item -> item instanceof IFireScytheItem, createFireBoldDesc(5.2f), Rarity.UNCOMMON),
-    FIRE_LANCE("Fire Lance", "1011100", Spell.Type.CYCLE, 0, FireLanceSpell::execute, FireLanceSpell::canApply, FireLanceSpell::getDescription, Rarity.UNCOMMON);
+    HUGE_HEAL("Huge Heal", "0011011", Spell.Type.RELEASE, 70, HugeHealSpell::execute, item -> true, HugeHealSpell::getDescription, Rarity.UNCOMMON),
+    FIRE_BOLT_1("Fire Bolt", "0110011", Spell.Type.RELEASE, 50, createFireBold(1, false), item -> item instanceof IFireScytheItem, createFireBoldDesc(1f), Rarity.UNCOMMON),
+    FIRE_BOLT_2("Fire Bolt", "0110011", Spell.Type.RELEASE, 50, createFireBold(1.4, false), item -> item instanceof IFireScytheItem, createFireBoldDesc(1.4f), Rarity.UNCOMMON),
+    FIRE_BOLT_3("Fire Bolt", "0110011", Spell.Type.RELEASE, 50, createFireBold(2.8, true), item -> item instanceof IFireScytheItem, createFireBoldDesc(2.8f), Rarity.UNCOMMON),
+    FIRE_BOLT_4("Fire Bolt", "0110011", Spell.Type.RELEASE, 50, createFireBold(5.2, true), item -> item instanceof IFireScytheItem, createFireBoldDesc(5.2f), Rarity.UNCOMMON),
+    FIRE_LANCE("Fire Lance", "1011100", Spell.Type.CYCLE, 5, FireLanceSpell::execute, item -> item instanceof FireLance, FireLanceSpell::getDescription, Rarity.UNCOMMON);
 
     private static Functions.SpellRun createFireBold(double baseDamage, boolean explosive) {
         return (user, stack) -> {
@@ -84,13 +85,12 @@ public enum Spells {
     }
 
     public boolean canApply(Item item) {return this.helper.canApply(item);}
-    public List<Component> addDescription(List<Component> list, SpellItem item, ItemStack stack) {
+    public void addDescription(List<Component> list, SpellItem item, ItemStack ignoredStack) {
         int spellSlotAmount = item.getSpellSlotAmount();
         list.add(Component.literal("Ability: " + this.getName() + " " + (spellSlotAmount > 1 ? (item.getIndexForSlot(this) + 1) + " / " + item.getSpellSlotAmount() : "")).withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.GOLD));
         if (this.description.get() != null) list.addAll(this.description.get());
         if (this.MANA_COST > 0) list.add(Component.literal(FormattingCodes.GRAY + "Mana-Cost: " + FormattingCodes.DARK_RED));
         if (this.castingType != null && item.getSpellSlotAmount() > 1) list.add(Component.literal("Pattern: [" + this.getPattern() + FormattingCodes.RESET + "]"));
-        return list;
     }
 
     public static Spells get(String pattern) {

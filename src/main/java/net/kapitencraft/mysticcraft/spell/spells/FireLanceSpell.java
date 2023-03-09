@@ -4,6 +4,7 @@ import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.item.spells.FireLance;
 import net.kapitencraft.mysticcraft.misc.MISCTools;
 import net.kapitencraft.mysticcraft.misc.damage_source.AbilityDamageSource;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
@@ -17,11 +18,12 @@ import java.util.List;
 import java.util.Objects;
 
 public class FireLanceSpell {
-
     public static void execute(LivingEntity user, ItemStack stack) {
-        MysticcraftMod.sendInfo("execute");
         ArrayList<Vec3> lineOfSight = MISCTools.LineOfSight(user, 10, 0.05);
         for (Vec3 vec3 : lineOfSight) {
+            if (user.level.getBlockState(new BlockPos(vec3)).canOcclude()) {
+                break;
+            }
             List<LivingEntity> entities = user.level.getEntitiesOfClass(LivingEntity.class, new AABB(vec3.x - 0.1, vec3.y - 0.1, vec3.z - 0.1, vec3.x + 0.1, vec3.y + 0.1, vec3.z + 0.1));
             MISCTools.sendParticles(user.level, ParticleTypes.SMALL_FLAME, false, vec3, 10, 0.1/8, 0.1/8, 0.1/8, 0);
             for (LivingEntity living : entities) {
@@ -35,11 +37,7 @@ public class FireLanceSpell {
         }
     }
 
-    public static boolean canApply(Item stack) {
-        return stack instanceof FireLance;
-    }
-
     public static List<Component> getDescription() {
-        return List.of(Component.literal("Fires a line of fire where you are looking and deals 2 Damage per seconds"));
+        return List.of(Component.literal("Fires a line of fire where you are looking and deals 40 Base Ability Damage per seconds"));
     }
 }

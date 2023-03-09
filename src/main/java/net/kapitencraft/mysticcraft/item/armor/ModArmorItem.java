@@ -48,7 +48,7 @@ public abstract class ModArmorItem extends ArmorItem {
     }
 
     @Override
-    public void inventoryTick(@NotNull ItemStack stack, Level level, @NotNull Entity entity, int p_41407_, boolean p_41408_) {
+    public void inventoryTick(@NotNull ItemStack stack, Level level, @NotNull Entity entity, int slotID, boolean isSelected) {
         if (!level.isClientSide() && entity instanceof LivingEntity living) {
             if (this.isFullSetActive(living)) {
                 if (this.fullSetTick == 0 && this.getSlot() == EquipmentSlot.CHEST) {
@@ -117,13 +117,18 @@ public abstract class ModArmorItem extends ArmorItem {
         if (slot == this.getSlot()) {
             if (this instanceof IArmorBonusItem bonusItem && this.user instanceof LivingEntity living) {
                 PieceBonus bonus = bonusItem.getPieceBonusForSlot(this.getSlot());
-                if (bonus != null && bonus.getModifiers(living) != null && bonus.getModifiers(living) != null) {
-                    builder.putAll(bonus.getModifiers(living));
+                if (bonus != null) {
+                    Multimap<Attribute, AttributeModifier> bonusMods = bonus.getModifiers(living);
+                    if (bonus.getModifiers(living) != null && bonusMods != null ) {
+                        builder.putAll(bonusMods);
+                    }
                 }
                 FullSetBonus bonus1 = bonusItem.getFullSetBonus();
-                MysticcraftMod.sendInfo("loading Bonus");
-                if (this.getSlot() == EquipmentSlot.CHEST && this.isFullSetActive(living) && bonus1 != null && bonus1.getModifiers(living) != null) {
-                    builder.putAll(bonus1.getModifiers(living));
+                if (bonus1 != null) {
+                    Multimap<Attribute, AttributeModifier> bonusMods = bonus1.getModifiers(living);
+                    if (this.getSlot() == EquipmentSlot.CHEST && this.isFullSetActive(living) && bonusMods != null) {
+                        builder.putAll(bonusMods);
+                    }
                 }
             }
         }
