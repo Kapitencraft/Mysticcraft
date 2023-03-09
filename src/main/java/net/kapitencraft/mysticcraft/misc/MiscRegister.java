@@ -18,7 +18,7 @@ import net.kapitencraft.mysticcraft.item.weapon.melee.sword.ManaSteelSwordItem;
 import net.kapitencraft.mysticcraft.item.weapon.ranged.bow.TallinBow;
 import net.kapitencraft.mysticcraft.misc.damage_source.FerociousDamageSource;
 import net.kapitencraft.mysticcraft.misc.damage_source.IAbilitySource;
-import net.kapitencraft.mysticcraft.spell.Spells;
+import net.kapitencraft.mysticcraft.spell.Spell;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -304,7 +304,6 @@ public class MiscRegister {
                 }
             }
         }
-
         if (MISCTools.getSaveAttributeValue(ModAttributes.MANA.get(), living) != -1 && living.level.getBlockState(new BlockPos(living.getX(), living.getY(), living.getZ())).getBlock() == ModBlocks.MANA_FLUID_BLOCK.get()) {
             double overflowMana = tag.getDouble("overflowMana") + tag.getDouble("manaRegen");
             tag.putDouble("overflowMana", overflowMana);
@@ -330,6 +329,7 @@ public class MiscRegister {
         }
         if (!ModArmorItem.isFullSetActive(living, ModArmorMaterials.SOUL_MAGE) && tag.getString("lastFullSet").equals(ModArmorMaterials.SOUL_MAGE.getName())) {
             ParticleHelper.clearAllHelpers(SoulMageArmorItem.helperString, living);
+            tag.putString("lastFullSet", "");
         }
     }
 
@@ -358,7 +358,7 @@ public class MiscRegister {
                             MysticcraftMod.sendInfo("a");
                             Component pattern = toolTip.get(i + 1);
                             String patternString = pattern.getString();
-                            Spells spell = Spells.get(Spells.getStringForPattern(patternString, true));
+                            Spell spell = Spell.get(Spell.getStringForPattern(patternString, true));
                             if (spell != null) {
                                 AttributeInstance instance = player.getAttribute(ModAttributes.MANA_COST.get());
                                 mutable.append(FormattingCodes.DARK_RED + MISCTools.getAttributeValue(instance, spell.MANA_COST));
@@ -366,7 +366,7 @@ public class MiscRegister {
                         }
                     }
                 } else {
-                    Spells spell = spellItem.getActiveSpell();
+                    Spell spell = spellItem.getActiveSpell();
                     Component component = toolTip.get(toolTip.indexOf(SEARCHED));
                     if (component instanceof MutableComponent mutable) {
                         AttributeInstance instance = player.getAttribute(ModAttributes.MANA_COST.get());

@@ -6,7 +6,7 @@ import net.kapitencraft.mysticcraft.item.gemstone.GemstoneSlot;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.kapitencraft.mysticcraft.spell.SpellSlot;
-import net.kapitencraft.mysticcraft.spell.Spells;
+import net.kapitencraft.mysticcraft.spell.Spell;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -56,8 +56,8 @@ public class StaffOfTheWild extends NormalSpellItem implements GeoItem, IGemston
 
     public StaffOfTheWild() {
         super(new Properties().rarity(FormattingCodes.LEGENDARY).stacksTo(1), 5, 200, 0);
-        this.addSlot(new SpellSlot(Spells.HUGE_HEAL));
-        this.addSlot(new SpellSlot(Spells.INSTANT_TRANSMISSION));
+        this.addSlot(new SpellSlot(Spell.HUGE_HEAL));
+        this.addSlot(new SpellSlot(Spell.INSTANT_TRANSMISSION));
     }
 
     @Override
@@ -68,11 +68,6 @@ public class StaffOfTheWild extends NormalSpellItem implements GeoItem, IGemston
     @Override
     public List<Component> getPostDescription() {
         return List.of(post_description);
-    }
-
-    @Override
-    public int getActiveSpellIndex() {
-        return 0;
     }
 
     @Override

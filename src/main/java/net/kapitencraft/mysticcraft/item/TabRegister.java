@@ -29,6 +29,8 @@ public class TabRegister {
                 builder.title(Component.translatable("itemGroup.spell_and_gemstone"))
                         .icon(() -> new ItemStack(ModItems.STAFF_OF_THE_WILD.get()))
                         .displayItems((featureFlagSet, output, flag) -> {
+                            output.accept(ModItems.AOTE.get());
+                            output.accept(ModItems.AOTV.get());
                             output.accept(ModItems.STAFF_OF_THE_WILD.get());
                             output.accept(ModItems.HEATED_SCYTHE.get());
                             output.accept(ModItems.FIERY_SCYTHE.get());

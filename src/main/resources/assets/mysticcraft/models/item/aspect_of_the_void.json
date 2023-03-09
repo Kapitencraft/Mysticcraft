@@ -1,6 +1,6 @@
 {
   "parent": "mysticcraft:item/handheld",
   "textures": {
-    "layer0": "mysticcraft:item/astrea"
+    "layer0": "mysticcraft:item/aspect_of_the_void"
   }
 }

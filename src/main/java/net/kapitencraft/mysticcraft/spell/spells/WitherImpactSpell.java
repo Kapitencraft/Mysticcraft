@@ -4,13 +4,11 @@ import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.kapitencraft.mysticcraft.misc.MISCTools;
 import net.kapitencraft.mysticcraft.misc.damage_source.AbilityDamageSource;
-import net.kapitencraft.mysticcraft.spell.Spell;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Rarity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
@@ -18,12 +16,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class WitherImpactSpell extends Spell {
+public class WitherImpactSpell {
     private static final Component[] description = {Component.literal("Teleports you 10 blocks ahead"), Component.literal("and deals damage to all entities around")};
-
-    public WitherImpactSpell() {
-        super(300, "Wither Impact", "1101110", Type.RELEASE, Rarity.RARE);
-    }
 
     public static void execute(LivingEntity user, ItemStack stack) {
         user.heal(0.5F);

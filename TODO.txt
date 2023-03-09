@@ -3,7 +3,7 @@ fix Spell Damage Values;
 fix Spell always using Default mana;
 fix Fire Lance not working on Warden & Wither;
 fix Fire Lance shooting 3 times;
-fix spells doing insane damage values (see down);
+fix spell doing insane damage values (see down);
 fix Hype having Cooldown (see down);
 fix Spells make MaxMana go bye bye;
 fix game Lag;
