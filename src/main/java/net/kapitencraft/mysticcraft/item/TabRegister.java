@@ -9,6 +9,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.CreativeModeTabEvent;
@@ -29,6 +30,7 @@ public class TabRegister {
                 builder.title(Component.translatable("itemGroup.spell_and_gemstone"))
                         .icon(() -> new ItemStack(ModItems.STAFF_OF_THE_WILD.get()))
                         .displayItems((featureFlagSet, output, flag) -> {
+                            output.accept(ModItems.IMPLOSION_SCROLL.get());
                             output.accept(ModItems.AOTE.get());
                             output.accept(ModItems.AOTV.get());
                             output.accept(ModItems.STAFF_OF_THE_WILD.get());
@@ -57,6 +59,7 @@ public class TabRegister {
                             output.accept(ModBlocks.MANGATIC_SLIME.getItem());
                             output.accept(ModBlocks.OBSIDIAN_PRESSURE_PLATE.getItem());
                             output.accept(ModBlocks.CRIMSONITE_ORE.getItem());
+                            output.accept(ModItems.FROZEN_BLAZE_ROD.get());
                         }));
         event.registerCreativeModeTab(new ResourceLocation(MysticcraftMod.MOD_ID, "weapons_and_tools"), builder ->
                 builder.title(Component.translatable("itemGroup.weapons_and_tools_mm"))
@@ -77,10 +80,18 @@ public class TabRegister {
                             output.accept(ModItems.HYPERION.get());
                             output.accept(ModItems.SCYLLA.get());
                             output.accept(ModItems.ASTREA.get());
+                            output.accept(ModItems.VALKYRIE.get());
                             output.accept(ModItems.THE_STAFF_DESTRUCTION.get());
                             output.accept(ModItems.DIAMOND_CLEAVER.get());
                             output.accept(ModItems.IRON_SHIELD.get());
                         }));
+    }
+
+    @SubscribeEvent
+    public static void addToTabs(CreativeModeTabEvent.BuildContents event) {
+        if (event.getTab() == CreativeModeTabs.SPAWN_EGGS) {
+            event.accept(ModItems.FROZEN_BLAZE_SPAWN_EGG);
+        }
     }
 
     private static void addArmor(HashMap<EquipmentSlot, RegistryObject<Item>> armor, CreativeModeTab.Output output) {

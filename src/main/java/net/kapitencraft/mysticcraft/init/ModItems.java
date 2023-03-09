@@ -18,7 +18,7 @@ import net.kapitencraft.mysticcraft.item.weapon.melee.sword.ManaSteelSwordItem;
 import net.kapitencraft.mysticcraft.item.weapon.ranged.bow.LongBowItem;
 import net.kapitencraft.mysticcraft.item.weapon.ranged.bow.TallinBow;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
-import net.kapitencraft.mysticcraft.spell.Spells;
+import net.kapitencraft.mysticcraft.spell.Spell;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -43,7 +43,8 @@ public abstract class ModItems {
     public static final RegistryObject<Item> SCYLLA = REGISTRY.register("scylla", Scylla::new);
     public static final RegistryObject<Item> ASTREA = REGISTRY.register("astrea", Astraea::new);
     public static final RegistryObject<Item> VALKYRIE = REGISTRY.register("valkyrie", Valkyrie::new);
-    public static final RegistryObject<Item> AOTE = REGISTRY.register("aspect_of_the_end", AspectOfTheEndItem::new);
+    public static final RegistryObject<Item> AOTE = REGISTRY.register("aspect_of_the_end", ()-> new AspectOfTheEndItem(50));
+    public static final RegistryObject<Item> AOTV = REGISTRY.register("aspect_of_the_void", AspectOfTheVoidItem::new);
     public static final RegistryObject<Item> HEATED_SCYTHE = REGISTRY.register("heated_scythe", HeatedScythe::new);
     public static final RegistryObject<Item> FIERY_SCYTHE = REGISTRY.register("fiery_scythe", FieryScythe::new);
     public static final RegistryObject<Item> BURNING_SCYTHE = REGISTRY.register("burning_scythe", BurningScythe::new);
@@ -51,7 +52,7 @@ public abstract class ModItems {
     public static final RegistryObject<Item> FIRE_LANCE = REGISTRY.register("fire_lance", FireLance::new);
     public static final RegistryObject<Item> STAFF_OF_THE_WILD = REGISTRY.register("staff_of_the_wild", StaffOfTheWild::new);
 
-    public static final RegistryObject<Item> IMPLOSION_SCROLL = REGISTRY.register("implosion_scroll", ()-> new SpellScrollItem(Spells.IMPLOSION));
+    public static final RegistryObject<Item> IMPLOSION_SCROLL = REGISTRY.register("implosion_scroll", ()-> new SpellScrollItem(Spell.IMPLOSION));
     public static final RegistryObject<Item> MANA_STEEL_INGOT = REGISTRY.register("mana_steel_ingot", () -> new Item(new Item.Properties().rarity(Rarity.RARE)));
     public static final RegistryObject<Item> UPPER_BlADE_MS = REGISTRY.register("upper_mana_steel_sword_part", () -> new Item(new Item.Properties().rarity(Rarity.RARE).stacksTo(1)));
     public static final RegistryObject<Item> DOWN_BlADE_MS = REGISTRY.register("lower_mana_steel_sword_part", () -> new Item(new Item.Properties().rarity(Rarity.RARE).stacksTo(1)));
