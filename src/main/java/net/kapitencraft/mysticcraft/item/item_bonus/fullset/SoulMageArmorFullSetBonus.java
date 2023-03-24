@@ -3,7 +3,8 @@ package net.kapitencraft.mysticcraft.item.item_bonus.fullset;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.item.item_bonus.FullSetBonus;
-import net.kapitencraft.mysticcraft.misc.MISCTools;
+import net.kapitencraft.mysticcraft.misc.utils.AttributeUtils;
+import net.kapitencraft.mysticcraft.misc.utils.MiscUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -24,9 +25,9 @@ public class SoulMageArmorFullSetBonus extends FullSetBonus {
     }
 
     @Override
-    public void onEntityKilled(LivingEntity killed, LivingEntity user) {
-        if (MISCTools.getSaveAttributeValue(ModAttributes.MANA.get(), user) != -1) {
-            double mana = MISCTools.getSaveAttributeValue(ModAttributes.MANA.get(), user);
+    public void onEntityKilled(LivingEntity killed, LivingEntity user, MiscUtils.DamageType type) {
+        if (AttributeUtils.getSaveAttributeValue(ModAttributes.MANA.get(), user) != -1) {
+            double mana = AttributeUtils.getSaveAttributeValue(ModAttributes.MANA.get(), user);
             Objects.requireNonNull(user.getAttribute(ModAttributes.MANA.get())).setBaseValue(mana + 10);
         }
     }

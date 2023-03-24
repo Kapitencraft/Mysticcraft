@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.misc;
+package net.kapitencraft.mysticcraft.misc.particle_help;
 
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;

@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.misc;
+package net.kapitencraft.mysticcraft.misc.utils;
 
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;

@@ -1,5 +1,6 @@
 package net.kapitencraft.mysticcraft.enchantments;
 
+import net.kapitencraft.mysticcraft.enchantments.abstracts.ExtendedCalculationEnchantment;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -9,7 +10,7 @@ import net.minecraft.world.item.enchantment.EnchantmentCategory;
 public class GiantKillerEnchantment extends ExtendedCalculationEnchantment implements IWeaponEnchantment {
 
     public GiantKillerEnchantment() {
-        super(Enchantment.Rarity.RARE, EnchantmentCategory.WEAPON, new EquipmentSlot[]{EquipmentSlot.MAINHAND});
+        super(Enchantment.Rarity.RARE, EnchantmentCategory.WEAPON, new EquipmentSlot[]{EquipmentSlot.MAINHAND}, CalculationType.ALL);
     }
 
     @Override

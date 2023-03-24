@@ -1,0 +1,43 @@
+<Name> {
+	EnchantmentType: "Löffel"
+	Description:
+	[
+	Wenn man ihn verwendet, bekommt man für 5*level min Nachtsicht.
+	]
+	MaxLevel: 3
+	}
+<Name> {
+	EnchantmentType: "Schere"
+	Description:
+	[
+	Wenn man sich die Haare schneidet, dann kann man für 5 min Gedanken lesen.
+	]
+	MaxLevel: 1
+	}
+<Name> {
+	EnchantmentType: "Axt"
+	Description:
+	[
+	Wenn man auf einen Stein schlägt, kann man für 3min wie Vögel singen, sodass diese Eier droppen.
+	]
+	MaxLevel: 1
+	}
+<Name> {
+	EnchantmentType: "Spitzhacke"
+	Description:
+	[
+	Wenn man Diorit/Andesit/Granit abaut, kann man für 2*level min Erze sehen (X-Ray).
+	]
+	MaxLevel: 3
+	}
+<Name> {
+    EnchantmentType: "Ohrring"
+    Description:
+    [
+    Man kann die Position von Geräuschen in einer Entfernung 5*level Meter sehen.
+    ]
+    MaxLevel: 5
+    }
+<Name> {
+
+}

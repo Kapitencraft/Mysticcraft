@@ -1,4 +1,6 @@
-package net.kapitencraft.mysticcraft.misc;
+package net.kapitencraft.mysticcraft.misc.particle_help;
+
+import net.kapitencraft.mysticcraft.misc.particle_help.ParticleAmountHolder;
 
 public final class ParticleGradientHolder {
     private final ParticleAmountHolder holder1;

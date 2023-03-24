@@ -9,6 +9,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.CreativeModeTabEvent;
@@ -64,6 +65,7 @@ public class TabRegister {
                         .displayItems((featureFlagSet, output, p_260123_) -> {
                             output.accept(ModItems.MANA_STEEL_SWORD.get());
                             output.accept(ModItems.TALLIN_BOW.get());
+                            output.accept(ModItems.LONGBOW.get());
                             addArmor(ModItems.ENDER_KNIGHT_ARMOR, output);
                             addArmor(ModItems.FROZEN_BLAZE_ARMOR, output);
                             addArmor(ModItems.SHADOW_ASSASSIN_ARMOR, output);
@@ -77,10 +79,19 @@ public class TabRegister {
                             output.accept(ModItems.HYPERION.get());
                             output.accept(ModItems.SCYLLA.get());
                             output.accept(ModItems.ASTREA.get());
+                            output.accept(ModItems.VALKYRIE.get());
                             output.accept(ModItems.THE_STAFF_DESTRUCTION.get());
                             output.accept(ModItems.DIAMOND_CLEAVER.get());
                             output.accept(ModItems.IRON_SHIELD.get());
                         }));
+    }
+
+    @SubscribeEvent
+    public static void addToExisting(CreativeModeTabEvent.BuildContents event) {
+        CreativeModeTab tab = event.getTab();
+        if (tab == CreativeModeTabs.SPAWN_EGGS) {
+            event.accept(ModItems.FROZEN_BLAZE_SPAWN_EGG);
+        }
     }
 
     private static void addArmor(HashMap<EquipmentSlot, RegistryObject<Item>> armor, CreativeModeTab.Output output) {

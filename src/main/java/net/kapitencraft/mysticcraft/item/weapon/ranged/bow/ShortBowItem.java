@@ -33,13 +33,13 @@ public abstract class ShortBowItem extends ModdedBows {
         CompoundTag tag = bow.getOrCreateTag();
         if (canShoot(tag, world)) {
             createArrows(bow, world, archer);
-            bow.getOrCreateTag().putInt("Cooldown", (int) (this.createCooldown(bow) / 0.05));
+            bow.getOrCreateTag().putInt("Cooldown", (int) (this.createCooldown(archer) / 0.05));
         }
     }
 
-    public float createCooldown(ItemStack stack) {
+    public float createCooldown(LivingEntity archer) {
         float base_cooldown = this.getShotCooldown();
-        base_cooldown *= (1 - stack.getEnchantmentLevel(ModEnchantments.ELVISH_MASTERY.get()) * 0.1);
+        base_cooldown *= (1 / (archer.getAttributeValue(ModAttributes.DRAW_SPEED.get()) / 100));
         return base_cooldown;
     }
 
@@ -86,10 +86,10 @@ public abstract class ShortBowItem extends ModdedBows {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack itemStack, @Nullable Level level, @NotNull List<Component> list, @Nullable TooltipFlag flag) {
+    public void appendHoverText(@NotNull ItemStack itemStack, @Nullable Level level, @NotNull List<Component> list, @NotNull TooltipFlag flag) {
         super.appendHoverText(itemStack, level, list, flag);
         list.add(Component.literal(""));
-        list.add(Component.literal("Shot Cooldown: " + this.createCooldown(itemStack) + "s").withStyle(ChatFormatting.GREEN));
+        list.add(Component.literal("Shot Cooldown: ").withStyle(ChatFormatting.GREEN));
         list.add(Component.literal(""));
         list.add(Component.literal("Short Bow: Instantly Shoots!").withStyle(ChatFormatting.DARK_PURPLE));
     }

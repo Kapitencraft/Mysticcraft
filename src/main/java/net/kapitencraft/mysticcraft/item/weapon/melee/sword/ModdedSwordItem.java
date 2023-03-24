@@ -7,7 +7,7 @@ import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.item.IModItem;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
-import net.kapitencraft.mysticcraft.misc.MISCTools;
+import net.kapitencraft.mysticcraft.misc.utils.MiscUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -32,7 +32,7 @@ public abstract class ModdedSwordItem extends SwordItem implements IModItem {
         if (!stack.isEnchanted()) {
             return super.getRarity(stack);
         } else {
-            final Rarity rarity = MISCTools.getItemRarity(this);
+            final Rarity rarity = MiscUtils.getItemRarity(this);
             if (rarity == Rarity.COMMON) {
                 return Rarity.UNCOMMON;
             } else if (rarity == Rarity.UNCOMMON) {

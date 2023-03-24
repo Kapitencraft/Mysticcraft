@@ -4,11 +4,10 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
-import net.kapitencraft.mysticcraft.init.ModEnchantments;
 import net.kapitencraft.mysticcraft.item.IModItem;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
-import net.kapitencraft.mysticcraft.misc.MISCTools;
+import net.kapitencraft.mysticcraft.misc.utils.MiscUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -17,7 +16,6 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.*;
@@ -50,7 +48,7 @@ public abstract class ModdedBows extends BowItem implements IModItem {
                 if (itemstack.isEmpty()) {
                     itemstack = new ItemStack(Items.ARROW);
                 }
-                float f = getPowerForTimeModded(i, bow.getEnchantmentLevel(ModEnchantments.ELVISH_MASTERY.get()));
+                float f = getPowerForTimeModded(i, player.getAttributeValue(ModAttributes.DRAW_SPEED.get()));
                 if (!(f < 0.1f)) {
                     boolean flag1 = player.getAbilities().instabuild || (itemstack.getItem() instanceof ArrowItem && ((ArrowItem)itemstack.getItem()).isInfinite(itemstack, bow, player));
                     if (!world.isClientSide) {
@@ -60,7 +58,7 @@ public abstract class ModdedBows extends BowItem implements IModItem {
                         double fbSpeedMul = LongBowItem.ARROW_SPEED_MUL / mul;
                         double speedMul = archer.getAttributeValue(ModAttributes.ARROW_SPEED.get());
                         abstractarrow.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, (float) (f * mul * (1+ getSpeedMul(abstractarrow, fbSpeedMul, speedMul))), 1.0F);
-                        abstractarrow.setBaseDamage(player.getAttributeValue(Attributes.ATTACK_DAMAGE));
+                        abstractarrow.setBaseDamage(player.getAttributeValue(ModAttributes.RANGED_DAMAGE.get()));
                         abstractarrow.setKnockback(2);
                         if (f == 1.0F) {
                             abstractarrow.setCritArrow(true);
@@ -85,14 +83,10 @@ public abstract class ModdedBows extends BowItem implements IModItem {
         }
     }
 
-    private float getPowerForTimeModded(int curMul, int elv_enchantLvl) {
-        float f = (float) curMul / (float)(this.DIVIDER * (1 - (elv_enchantLvl * 0.1)));
+    private float getPowerForTimeModded(int curMul, double draw_speed) {
+        float f = (float) curMul / (float)(this.DIVIDER * (1 / (draw_speed / 100)));
         f = (f * f + f * 2.0F) / 3.0F;
-        if (f > 1.0F) {
-            f = 1.0F;
-        }
-        return f;
-
+        return f > 1 ? 1 : f;
     }
 
     protected AbstractArrow registerEnchant(ItemStack bow, AbstractArrow arrow) {
@@ -120,7 +114,7 @@ public abstract class ModdedBows extends BowItem implements IModItem {
         if (!p_41461_.isEnchanted()) {
             return super.getRarity(p_41461_);
         } else {
-            final Rarity rarity = MISCTools.getItemRarity(this);
+            final Rarity rarity = MiscUtils.getItemRarity(this);
             if (rarity == Rarity.COMMON) {
                 return Rarity.UNCOMMON;
             } else if (rarity == Rarity.UNCOMMON) {

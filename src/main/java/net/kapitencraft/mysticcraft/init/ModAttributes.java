@@ -29,4 +29,5 @@ public abstract class ModAttributes {
     public static final RegistryObject<Attribute> ARROW_SPEED = register("arrow_speed", 0, 0, 100);
     public static final RegistryObject<Attribute> LIVE_STEAL = register("live_steal", 0, 0, 10);
     public static final RegistryObject<Attribute> RANGED_DAMAGE = register("ranged_damage", 0, 0, 100);
+    public static final RegistryObject<Attribute> DRAW_SPEED = register("draw_speed", 100, 0, 1000);
 }

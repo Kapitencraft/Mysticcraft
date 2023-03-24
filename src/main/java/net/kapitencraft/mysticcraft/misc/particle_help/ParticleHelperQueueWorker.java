@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.misc;
+package net.kapitencraft.mysticcraft.misc.particle_help;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;

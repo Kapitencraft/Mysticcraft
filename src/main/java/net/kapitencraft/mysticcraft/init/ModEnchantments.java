@@ -15,6 +15,7 @@ public abstract class ModEnchantments {
     public static final RegistryObject<Enchantment> FAST_ARROWS = REGISTRY.register("fast_arrows", FastArrowsEnchantment::new);
     public static final RegistryObject<Enchantment> GIANT_KILLER = REGISTRY.register("giant_killer", GiantKillerEnchantment::new);
     public static final RegistryObject<Enchantment> AIM = REGISTRY.register("aim", AimEnchantment::new);
+    public static final RegistryObject<Enchantment> FROZEN_ARROWS = REGISTRY.register("frozen_arrows", FrozenArrowsEnchantment::new);
     public static final RegistryObject<Enchantment> INFERNO = REGISTRY.register("inferno", InfernoEnchantment::new);
     public static final RegistryObject<Enchantment> SNIPE = REGISTRY.register("snipe", SnipeEnchantment::new);
     public static final RegistryObject<Enchantment> REJUVENATE = REGISTRY.register("rejuvenate", RejuvenateEnchantment::new);
@@ -31,6 +32,7 @@ public abstract class ModEnchantments {
     public static final RegistryObject<Enchantment> GLACIAL_BLADE = REGISTRY.register("glacial_blade", GlacialTouchEnchantment::new);
     public static final RegistryObject<Enchantment> LIGHTNING_LORD = REGISTRY.register("lightning_lord", LightningLordEnchantment::new);
     public static final RegistryObject<Enchantment> TRIPLE_STRIKE = REGISTRY.register("triple_strike", TripleStrikeEnchantment::new);
+    public static final RegistryObject<Enchantment> BACK_STAB = REGISTRY.register("back_stab", BackStabEnchantment::new);
     public static final RegistryObject<Enchantment> JUSTICE = REGISTRY.register("justice", JusticeEnchantment::new);
     public static final RegistryObject<Enchantment> VENOMOUS = REGISTRY.register("venomous", VenomousEnchantment::new);
     public static final RegistryObject<Enchantment> CRITICAL = REGISTRY.register("critical", CriticalEnchantment::new);

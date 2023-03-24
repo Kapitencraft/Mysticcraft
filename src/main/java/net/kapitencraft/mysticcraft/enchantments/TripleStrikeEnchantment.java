@@ -1,12 +1,13 @@
 package net.kapitencraft.mysticcraft.enchantments;
 
+import net.kapitencraft.mysticcraft.enchantments.abstracts.CountEnchantment;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 
 public class TripleStrikeEnchantment extends CountEnchantment {
     public TripleStrikeEnchantment() {
-        super(Rarity.UNCOMMON, new EquipmentSlot[]{EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND}, "TripleStrikeMap", countType.EXCEPT);
+        super(Rarity.UNCOMMON, new EquipmentSlot[]{EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND}, "TripleStrikeMap", countType.EXCEPT, CalculationType.ALL);
     }
 
     @Override

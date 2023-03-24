@@ -1,6 +1,5 @@
-package net.kapitencraft.mysticcraft.misc;
+package net.kapitencraft.mysticcraft.misc.utils;
 
-import com.google.common.collect.ImmutableMultimap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.gui.IGuiHelper;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneItem;
@@ -9,6 +8,8 @@ import net.kapitencraft.mysticcraft.item.spells.NormalSpellItem;
 import net.kapitencraft.mysticcraft.item.spells.SpellItem;
 import net.kapitencraft.mysticcraft.item.weapon.melee.sword.LongSwordItem;
 import net.kapitencraft.mysticcraft.item.weapon.ranged.bow.ShortBowItem;
+import net.kapitencraft.mysticcraft.misc.particle_help.ParticleAmountHolder;
+import net.kapitencraft.mysticcraft.misc.particle_help.ParticleGradientHolder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
@@ -21,17 +22,15 @@ import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.Mth;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.EntityDamageSource;
+import net.minecraft.world.damagesource.IndirectEntityDamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -39,7 +38,6 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
@@ -51,14 +49,11 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class MISCTools {
-
-    record Rotation(String relative, int vecRot, int vecNum) {
-        }
-    public final Rotation EAST = new Rotation("x+", 90, 1);
-    public final Rotation WEST = new Rotation("x-",270, 3);
-    public final Rotation SOUTH = new Rotation("z+", 180, 2);
-    public final Rotation NORTH = new Rotation("z-", 360, 4);
+public class MiscUtils {
+    //EAST = new Rotation("x+", 90, 1);
+    //WEST = new Rotation("x-",270, 3);
+    //SOUTH = new Rotation("z+", 180, 2);
+    //NORTH = new Rotation("z-", 360, 4);
 
     public static EquipmentSlot getSlotForStack(ItemStack stack) {
         return stack.getItem() instanceof ArmorItem armorItem ? armorItem.getSlot() : EquipmentSlot.MAINHAND;
@@ -68,7 +63,7 @@ public class MISCTools {
         void run();
     }
 
-    public static void delayed(int delay, delayRun run) {
+    public static void delayed(int delayTicks, delayRun run) {
         new Object() {
             private int ticks = 0;
             private float waitTicks;
@@ -89,9 +84,9 @@ public class MISCTools {
                 MinecraftForge.EVENT_BUS.unregister(this);
                 run.run();
             }
-        }.start(delay);
+        }.start(delayTicks);
     }
-    public static ArrayList<Vec3> LineOfSight(Entity entity, double range, double scaling) {
+    public static ArrayList<Vec3> lineOfSight(Entity entity, double range, double scaling) {
         ArrayList<Vec3> line = new ArrayList<>();
         Vec3 vec3;
         for (double i = 0; i <= range; i+=scaling) {
@@ -101,49 +96,8 @@ public class MISCTools {
         return line;
     }
 
-    public static float increaseFloatTagValue(CompoundTag tag, String name, float f) {
-        float value = tag.getFloat(name)+f;
-        tag.putFloat(name, value);
-        return value;
-    }
-
-    public static int increaseIntegerTagValue(CompoundTag tag, String name, int i) {
-        int value = tag.getInt(name)+i;
-        tag.putInt(name, value);
-        return value;
-    }
-
-    public static double getSaveAttributeValue(Attribute attribute, LivingEntity living) {
-        if (living.getAttribute(attribute) != null) {
-            return living.getAttributeValue(attribute);
-        }
-        return -1;
-    }
-
-    public static double getAttributeValue(@Nullable AttributeInstance instance, double baseValue) {
-        if (instance == null) {
-            return 0;
-        }
-        double d0 = baseValue;
-
-        for (AttributeModifier attributemodifier : instance.getModifiers(AttributeModifier.Operation.ADDITION)) {
-            d0 += attributemodifier.getAmount();
-        }
-
-        double d1 = d0;
-
-        for (AttributeModifier attributeModifier1 : instance.getModifiers(AttributeModifier.Operation.MULTIPLY_BASE)) {
-            d1 += d0 * attributeModifier1.getAmount();
-        }
-
-        for (AttributeModifier attributeModifier2 : instance.getModifiers(AttributeModifier.Operation.MULTIPLY_TOTAL)) {
-            d1 *= 1.0D + attributeModifier2.getAmount();
-        }
-        return instance.getAttribute().sanitizeValue(d1);
-    }
-
     public static boolean saveTeleport(Entity entity, double maxRange) {
-        ArrayList<Vec3> lineOfSight = LineOfSight(entity, maxRange, 0.1);
+        ArrayList<Vec3> lineOfSight = lineOfSight(entity, maxRange, 0.1);
         Vec3 teleportPosition;
         for (Vec3 vec3 : lineOfSight) {
             BlockPos pos = new BlockPos(vec3);
@@ -170,13 +124,33 @@ public class MISCTools {
         return out;
     }
 
-    public static  @Nullable LivingEntity getAttacker(DamageSource source) {
+    public static @Nullable LivingEntity getAttacker(DamageSource source) {
         if (source.getEntity() instanceof Projectile projectile && projectile.getOwner() instanceof LivingEntity living) {
             return living;
         } else if (source.getEntity() instanceof LivingEntity living) {
             return living;
         }
         return null;
+    }
+
+    public static DamageType getDamageType(DamageSource source) {
+        if (source.getMsgId().contains("ability")) {
+            return DamageType.MAGIC;
+        }
+        if (source instanceof IndirectEntityDamageSource) {
+            return DamageType.RANGED;
+        }
+        if (source instanceof EntityDamageSource) {
+            return DamageType.MELEE;
+        }
+        return DamageType.MISC;
+    }
+
+    public enum DamageType {
+        RANGED,
+        MELEE,
+        MAGIC,
+        MISC;
     }
 
     public static void sendTitle(Player player, Component title) {
@@ -315,25 +289,6 @@ public class MISCTools {
         return sendParticles(level, force, loc, deltaX, deltaY, deltaZ, speed, holder.getHolder1()) + sendParticles(level, force, loc, deltaX, deltaY, deltaZ, speed, holder.getHolder2());
     }
 
-    public static Vec2 getTargetRotation(Entity source, Entity target) {
-        double d0 = target.getX() - source.getX();
-        double d1 = target.getY() - source.getY();
-        double d2 = target.getZ() - source.getZ();
-        double d3 = Math.sqrt(d0 * d0 + d2 * d2);
-        return new Vec2(Mth.wrapDegrees((float)(-(Mth.atan2(d1, d3) * (double)(180F / (float)Math.PI)))), Mth.wrapDegrees((float)(Mth.atan2(d2, d0) * (double)(180F / (float)Math.PI)) - 90.0F));
-    }
-
-    public static Vec3 calculateViewVector(float p_20172_, float p_20173_) {
-        float f = p_20172_ * ((float)Math.PI / 180F);
-        float f1 = -p_20173_ * ((float)Math.PI / 180F);
-        float f2 = Mth.cos(f1);
-        float f3 = Mth.sin(f1);
-        float f4 = Mth.cos(f);
-        float f5 = Mth.sin(f);
-        return new Vec3(f3 * f4, -f5, f2 * f4);
-    }
-
-
     public static Vec3 getPosition(Entity entity) {
         return new Vec3(entity.getX(), entity.getY(), entity.getZ());
     }
@@ -346,7 +301,7 @@ public class MISCTools {
     public static final EquipmentSlot[] ARMOR_EQUIPMENT = new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
     public static final EquipmentSlot[] WEAPON_SLOT = new EquipmentSlot[]{EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND};
 
-    public static <T> boolean ArrayContains(T[] array, T t) {
+    public static <T> boolean arrayContains(T[] array, T t) {
         for (T t1 : array) {
             if (t1 == t) {
                 return true;
@@ -355,7 +310,7 @@ public class MISCTools {
         return false;
     }
 
-    public static <T> boolean ListContains(List<T> list, T t) {
+    public static <T> boolean listContains(List<T> list, T t) {
         for (T t1 : list) {
             if (t1 == t) {
                 return true;
@@ -366,12 +321,12 @@ public class MISCTools {
 
     public static int createCustomIndex(EquipmentSlot slot) {
         return switch (slot) {
-            case LEGS -> 2;
-            case FEET -> 3;
             case HEAD -> 0;
             case CHEST -> 1;
-            case MAINHAND -> 5;
+            case LEGS -> 2;
+            case FEET -> 3;
             case OFFHAND -> 4;
+            case MAINHAND -> 5;
         };
     }
 
@@ -407,101 +362,7 @@ public class MISCTools {
         return Registries;
     }
 
-    public static ImmutableMultimap<Attribute, AttributeModifier> increaseByPercent(ImmutableMultimap<Attribute, AttributeModifier> multimap, double percent, AttributeModifier.Operation[] operations, @Nullable Attribute attributeReq) {
-        ImmutableMultimap.Builder<Attribute, AttributeModifier> toReturn = new ImmutableMultimap.Builder<>();
-        Collection<AttributeModifier> attributeModifiers;
-        for (Attribute attribute : multimap.keys()) {
-            if (attributeReq == null || attribute == attributeReq) {
-                attributeModifiers = multimap.get(attribute);
-                for (AttributeModifier modifier : attributeModifiers) {
-                    if (ArrayContains(operations, modifier.getOperation())) {
-                        toReturn.put(attribute, new AttributeModifier(modifier.getId(), modifier.getName(), modifier.getAmount() * (1 + percent), modifier.getOperation()));
-                    } else {
-                        toReturn.put(attribute, modifier);
-                    }
-                }
-            } else {
-                attributeModifiers = multimap.get(attribute);
-                for (AttributeModifier modifier : attributeModifiers) {
-                    toReturn.put(attribute, modifier);
-                }
-            }
-        }
-        return toReturn.build();
-    }
-
-    public static ImmutableMultimap<Attribute, AttributeModifier> increaseByAmount(ImmutableMultimap<Attribute, AttributeModifier> multimap, double amount, AttributeModifier.Operation operation, @Nullable Attribute attributeReq) {
-        ImmutableMultimap.Builder<Attribute, AttributeModifier> toReturn = new ImmutableMultimap.Builder<>();
-        boolean hasBeenAdded = attributeReq == null;
-        Collection<AttributeModifier> attributeModifiers;
-        for (Attribute attribute : multimap.keys()) {
-            attributeModifiers = multimap.get(attribute);
-            for (AttributeModifier modifier : attributeModifiers) {
-                if (!hasBeenAdded && attribute == attributeReq && operation == modifier.getOperation()) {
-                        toReturn.put(attribute, new AttributeModifier(modifier.getId(), modifier.getName(), modifier.getAmount() + amount, modifier.getOperation()));
-                        hasBeenAdded = true;
-                } else {
-                    toReturn.put(attribute, modifier);
-                }
-            }
-        }
-        if (!hasBeenAdded) {
-            toReturn.put(attributeReq, new AttributeModifier(UUID.randomUUID(), "Custom Attribute", amount, AttributeModifier.Operation.ADDITION));
-        }
-        multimap = toReturn.build();
-        return multimap;
-    }
-
-    public static CompoundTag putHashMapTag(HashMap<UUID, Integer> hashMap) {
-        CompoundTag mapTag = new CompoundTag();
-        UUID[] UuidArray = hashMap.keySet().toArray(new UUID[0]);
-        List<Integer> IntArray = collectionToList(hashMap.values());
-        mapTag.put("Uuids", putUuidArray(UuidArray));
-        mapTag.putIntArray("Ints", IntArray);
-        return mapTag;
-    }
-
-    public static HashMap<UUID, Integer> getHashMapTag(CompoundTag tag) {
-        HashMap<UUID, Integer> hashMap = new HashMap<>();
-        if (tag == null) {
-            return hashMap;
-        }
-        int[] intArray = tag.getIntArray("Ints");
-        UUID[] UuidArray = getUuidArray((CompoundTag) Objects.requireNonNull(tag.get("Uuids")));
-        for (int i = 0; i < (intArray.length == Objects.requireNonNull(UuidArray).length ? intArray.length : 0); i++) {
-            hashMap.put(UuidArray[i], intArray[i]);
-        }
-        return hashMap;
-    }
-
-    public static CompoundTag putUuidArray(UUID[] array) {
-        CompoundTag arrayTag = new CompoundTag();
-        for (int i = 0; i < array.length; i++) {
-            arrayTag.putUUID(String.valueOf(i), array[i]);
-            arrayTag.putInt("Length", array.length);
-        }
-        return arrayTag;
-    }
-
-    public static UUID[] getUuidArray(CompoundTag arrayTag) {
-        if (!arrayTag.contains("Length")) {
-            MysticcraftMod.sendWarn("tried to load UUID Array from Tag but Tag isn`t Array Tag");
-        } else {
-            int length = arrayTag.getInt("Length");
-            UUID[] array = new UUID[length];
-            for (int i = 0; i < length; i++) {
-                array[i] = arrayTag.getUUID(String.valueOf(i));
-            }
-            return array;
-        }
-        return null;
-    }
-    
-    public static <T> List<T> collectionToList(Collection<T> collection) {
-        return new ArrayList<>(collection);
-    }
-
-    public static SimpleContainer ContainerOf(ItemStackHandler handler) {
+    public static SimpleContainer containerOf(ItemStackHandler handler) {
         SimpleContainer inventory = new SimpleContainer(handler.getSlots());
         for (int i = 0; i < handler.getSlots(); i++) {
             if (!(handler.getStackInSlot(i).getItem() instanceof IGuiHelper || handler.getStackInSlot(i).getItem() instanceof GemstoneItem)) {

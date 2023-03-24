@@ -7,7 +7,8 @@ import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.item.item_bonus.FullSetBonus;
 import net.kapitencraft.mysticcraft.item.item_bonus.IArmorBonusItem;
 import net.kapitencraft.mysticcraft.item.item_bonus.PieceBonus;
-import net.kapitencraft.mysticcraft.misc.MISCTools;
+import net.kapitencraft.mysticcraft.misc.utils.AttributeUtils;
+import net.kapitencraft.mysticcraft.misc.utils.MiscUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -132,11 +133,14 @@ public abstract class ModArmorItem extends ArmorItem {
                 }
             }
         }
+        if (stack.getTag() != null && stack.getTag().getBoolean("isOP")) {
+            return AttributeUtils.increaseByPercent(builder.build(), 300, new AttributeModifier.Operation[]{AttributeModifier.Operation.ADDITION, AttributeModifier.Operation.MULTIPLY_TOTAL, AttributeModifier.Operation.MULTIPLY_BASE}, null);
+        }
         return builder.build();
     }
 
     protected void updateDimension(Level level) {
-        this.dimension = MISCTools.getDimension(level);
+        this.dimension = MiscUtils.getDimension(level);
     }
 
     private void updateUser(Entity user) {

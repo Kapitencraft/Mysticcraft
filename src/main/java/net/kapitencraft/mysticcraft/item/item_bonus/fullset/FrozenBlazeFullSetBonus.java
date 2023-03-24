@@ -1,10 +1,9 @@
 package net.kapitencraft.mysticcraft.item.item_bonus.fullset;
 
 import com.google.common.collect.Multimap;
-import it.unimi.dsi.fastutil.chars.CharImmutableList;
 import net.kapitencraft.mysticcraft.item.item_bonus.FullSetBonus;
+import net.kapitencraft.mysticcraft.misc.utils.MiscUtils;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -15,7 +14,6 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class FrozenBlazeFullSetBonus extends FullSetBonus {
@@ -24,7 +22,7 @@ public class FrozenBlazeFullSetBonus extends FullSetBonus {
     }
 
     @Override
-    public void onEntityKilled(LivingEntity killed, LivingEntity user) {
+    public void onEntityKilled(LivingEntity killed, LivingEntity user, MiscUtils.DamageType type) {
 
     }
 

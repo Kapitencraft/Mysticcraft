@@ -1,10 +1,10 @@
 package net.kapitencraft.mysticcraft.misc;
 
+import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.entity.FrozenBlazeEntity;
 import net.kapitencraft.mysticcraft.entity.SchnauzenPluesch;
 import net.kapitencraft.mysticcraft.entity.WithermancerLordEntity;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
-import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.init.ModEntityTypes;
 import net.minecraft.world.entity.EntityType;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
@@ -31,6 +31,9 @@ public class AttributeAdder {
         event.add(EntityType.PLAYER, ModAttributes.DODGE.get());
         event.add(EntityType.PLAYER, ModAttributes.LIVE_STEAL.get());
         event.add(EntityType.PLAYER, ModAttributes.RANGED_DAMAGE.get());
+        event.add(EntityType.PLAYER, ModAttributes.DRAW_SPEED.get());
+        event.add(EntityType.PLAYER, ModAttributes.ARROW_SPEED.get());
+        event.add(EntityType.PLAYER, ModAttributes.ARMOR_SHREDDER.get());
     }
 
     @SubscribeEvent

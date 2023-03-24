@@ -1,7 +1,8 @@
 package net.kapitencraft.mysticcraft.enchantments;
 
+import net.kapitencraft.mysticcraft.enchantments.abstracts.ExtendedCalculationEnchantment;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
-import net.kapitencraft.mysticcraft.misc.MISCTools;
+import net.kapitencraft.mysticcraft.misc.utils.MiscUtils;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -14,7 +15,7 @@ public class ThornyEnchantment extends ExtendedCalculationEnchantment implements
     }
 
     public ThornyEnchantment() {
-        super(Rarity.RARE, FormattingCodes.SHIELD, MISCTools.WEAPON_SLOT);
+        super(Rarity.RARE, FormattingCodes.SHIELD, MiscUtils.WEAPON_SLOT, CalculationType.ALL);
     }
 
     @Override

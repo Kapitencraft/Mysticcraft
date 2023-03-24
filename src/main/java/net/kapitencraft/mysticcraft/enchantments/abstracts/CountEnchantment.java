@@ -1,6 +1,7 @@
-package net.kapitencraft.mysticcraft.enchantments;
+package net.kapitencraft.mysticcraft.enchantments.abstracts;
 
-import net.kapitencraft.mysticcraft.misc.MISCTools;
+import net.kapitencraft.mysticcraft.enchantments.IWeaponEnchantment;
+import net.kapitencraft.mysticcraft.misc.utils.TagUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -13,8 +14,8 @@ import java.util.UUID;
 public abstract class CountEnchantment extends ExtendedCalculationEnchantment implements IWeaponEnchantment {
     private final String mapName;
     private final countType type;
-    protected CountEnchantment(Rarity p_44676_, EquipmentSlot[] p_44678_, String mapName, countType type) {
-        super(p_44676_, EnchantmentCategory.WEAPON, p_44678_);
+    protected CountEnchantment(Rarity p_44676_, EquipmentSlot[] p_44678_, String mapName, countType type, CalculationType calculationType) {
+        super(p_44676_, EnchantmentCategory.WEAPON, p_44678_, calculationType);
         this.mapName = mapName;
         this.type = type;
     }
@@ -24,7 +25,7 @@ public abstract class CountEnchantment extends ExtendedCalculationEnchantment im
     @Override
     public double execute(int level, ItemStack enchanted, LivingEntity attacker, LivingEntity attacked, double damageAmount) {
         CompoundTag attackerTag = attacker.getPersistentData();
-        HashMap<UUID, Integer> map = attackerTag.get(this.mapName) != null ? MISCTools.getHashMapTag((CompoundTag) attackerTag.get("lightningLordMap")) : new HashMap<>();
+        HashMap<UUID, Integer> map = attackerTag.get(this.mapName) != null ? TagUtils.getHashMapTag((CompoundTag) attackerTag.get("lightningLordMap")) : new HashMap<>();
         if (!map.containsKey(attacked.getUUID())) {
             map.put(attacked.getUUID(), 0);
         }
@@ -41,7 +42,7 @@ public abstract class CountEnchantment extends ExtendedCalculationEnchantment im
             }
         }
         map.put(attacked.getUUID(), integer);
-        attackerTag.put(this.mapName, MISCTools.putHashMapTag(map));
+        attackerTag.put(this.mapName, TagUtils.putHashMapTag(map));
         return damageAmount;
     }
 

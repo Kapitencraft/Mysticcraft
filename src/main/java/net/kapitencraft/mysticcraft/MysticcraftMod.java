@@ -3,7 +3,7 @@ package net.kapitencraft.mysticcraft;
 import com.mojang.logging.LogUtils;
 import net.kapitencraft.mysticcraft.gui.gemstone_grinder.GemstoneGrinderScreen;
 import net.kapitencraft.mysticcraft.init.*;
-import net.kapitencraft.mysticcraft.misc.MISCTools;
+import net.kapitencraft.mysticcraft.misc.utils.MiscUtils;
 import net.kapitencraft.mysticcraft.misc.ModItemProperties;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
@@ -87,9 +87,9 @@ public class MysticcraftMod {
 
     public static AttributeModifier createModifier(AttributeModifier.Operation operation, double value, EquipmentSlot slot) {
         if (operation == AttributeModifier.Operation.ADDITION) {
-            return new AttributeModifier(ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[MISCTools.createCustomIndex(slot)], "Modded Mod", value, operation);
+            return new AttributeModifier(ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[MiscUtils.createCustomIndex(slot)], "Modded Mod", value, operation);
         } else {
-            return new AttributeModifier(ITEM_ATTRIBUTE_MODIFIER_MUL_FOR_SLOT[MISCTools.createCustomIndex(slot)], "Modded Mod", value, operation);
+            return new AttributeModifier(ITEM_ATTRIBUTE_MODIFIER_MUL_FOR_SLOT[MiscUtils.createCustomIndex(slot)], "Modded Mod", value, operation);
         }
     }
 

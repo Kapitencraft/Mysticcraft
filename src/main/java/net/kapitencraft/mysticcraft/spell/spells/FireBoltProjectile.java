@@ -2,7 +2,7 @@ package net.kapitencraft.mysticcraft.spell.spells;
 
 import net.kapitencraft.mysticcraft.init.ModEntityTypes;
 import net.kapitencraft.mysticcraft.init.ModParticleTypes;
-import net.kapitencraft.mysticcraft.misc.MISCTools;
+import net.kapitencraft.mysticcraft.misc.utils.MiscUtils;
 import net.kapitencraft.mysticcraft.misc.damage_source.IndirectAbilityDamageSource;
 import net.kapitencraft.mysticcraft.spell.Spell;
 import net.minecraft.core.particles.ParticleTypes;
@@ -62,8 +62,8 @@ public class FireBoltProjectile extends SpellProjectile {
     @Override
     public void tick() {
         super.tick();
-            MISCTools.sendParticles(this.level, (SimpleParticleType) ModParticleTypes.FIRE_NORMAL.get(), true, this.getX() - this.getDeltaMovement().x / 5, this.getY() - this.getDeltaMovement().y / 5, this.getZ() - this.getDeltaMovement().z / 5, ParticleAmount, 0.125, 0.125, 0.125, 0);
-            MISCTools.sendParticles(this.level, (SimpleParticleType) ModParticleTypes.FIRE_NORMAL.get(), true, this.getX(), this.getY(), this.getZ(), ParticleAmount, 0.125, 0.125, 0.125, 0);
+        MiscUtils.sendParticles(this.level, (SimpleParticleType) ModParticleTypes.FIRE_NORMAL.get(), true, this.getX() - this.getDeltaMovement().x / 5, this.getY() - this.getDeltaMovement().y / 5, this.getZ() - this.getDeltaMovement().z / 5, ParticleAmount, 0.125, 0.125, 0.125, 0);
+        MiscUtils.sendParticles(this.level, (SimpleParticleType) ModParticleTypes.FIRE_NORMAL.get(), true, this.getX(), this.getY(), this.getZ(), ParticleAmount, 0.125, 0.125, 0.125, 0);
     }
 
     @Override
@@ -82,8 +82,8 @@ public class FireBoltProjectile extends SpellProjectile {
             for (LivingEntity living : livingEntities) {
                 damage(living);
             }
-            MISCTools.sendParticles(this.level, (SimpleParticleType) ModParticleTypes.FIRE_NORMAL.get(), true, this.getX(), this.getY(), this.getZ(), ParticleAmount * 10, 0.125, 0.125, 0.125, 1.25);
-            MISCTools.sendParticles(this.level, ParticleTypes.EXPLOSION, true, this.getX(), this.getY(), this.getZ(), ParticleAmount / 2, 0.125, 0.125, 0.125, 0);
+            MiscUtils.sendParticles(this.level, (SimpleParticleType) ModParticleTypes.FIRE_NORMAL.get(), true, this.getX(), this.getY(), this.getZ(), ParticleAmount * 10, 0.125, 0.125, 0.125, 1.25);
+            MiscUtils.sendParticles(this.level, ParticleTypes.EXPLOSION, true, this.getX(), this.getY(), this.getZ(), ParticleAmount / 2, 0.125, 0.125, 0.125, 0);
             if (this.getOwner() instanceof Player player) {
                 this.level.playSound(player, hitResult.getBlockPos(), SoundEvents.GENERIC_EXPLODE, SoundSource.PLAYERS, 4.0F, (1.0F + (this.level.random.nextFloat() - this.level.random.nextFloat()) * 0.2F) * 0.7F);
             }

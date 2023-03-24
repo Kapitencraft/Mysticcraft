@@ -1,24 +1,31 @@
 package net.kapitencraft.mysticcraft.entity;
 
-import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.init.ModEntityTypes;
-import net.kapitencraft.mysticcraft.misc.MISCTools;
-import net.kapitencraft.mysticcraft.misc.ParticleHelper;
+import net.kapitencraft.mysticcraft.misc.particle_help.ParticleHelper;
+import net.kapitencraft.mysticcraft.misc.utils.MathUtils;
+import net.kapitencraft.mysticcraft.misc.utils.MiscUtils;
+import net.kapitencraft.mysticcraft.misc.utils.TagUtils;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec2;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class CrimsonDeathRayProjectile extends AbstractArrow {
-    private float distanceTravelled = 0;
+    private int timeTravelled = 0;
+    private List<UUID> alreadyHit = new ArrayList<>();
     public CrimsonDeathRayProjectile(EntityType<? extends AbstractArrow> p_36721_, Level p_36722_) {
         super(p_36721_, p_36722_);
+        this.setNoGravity(true);
     }
 
     private CrimsonDeathRayProjectile(Level level, LivingEntity owner, float yRot) {
@@ -26,36 +33,46 @@ public class CrimsonDeathRayProjectile extends AbstractArrow {
         this.setOwner(owner);
         this.setYRot(yRot);
         new ParticleHelper("crimsonProjectile", this, ParticleHelper.Type.ARROW_HEAD, ParticleHelper.createArrowHeadProperties(10, 20, ParticleTypes.FLAME, ParticleTypes.ASH));
-        this.setPos(MISCTools.getPosition(owner).add(0, 0.1, 0));
+        this.setPos(MiscUtils.getPosition(owner).add(0, 0.1, 0));
+        this.setNoGravity(true);
+        this.setDeltaMovement(this.getViewVector(1));
+    }
+
+    @Override
+    protected void onHitEntity(@NotNull EntityHitResult hitResult) {
+        super.onHitEntity(hitResult);
+        this.alreadyHit.add(hitResult.getEntity().getUUID());
+    }
+
+    @Override
+    public boolean save(@NotNull CompoundTag tag) {
+        tag.put("alreadyHit", TagUtils.putUuidList(this.alreadyHit));
+        tag.putInt("ticksAlive", this.timeTravelled);
+        return super.save(tag);
+    }
+
+    @Override
+    public void load(CompoundTag tag) {
+        this.alreadyHit = TagUtils.toList(TagUtils.getUuidArray(tag.getCompound("alreadyHit")));
+        this.timeTravelled = tag.getInt("ticksAlive");
+        super.load(tag);
     }
 
     @Override
     public void tick() {
-        MysticcraftMod.sendInfo("ticking");
-        List<LivingEntity> possibleTargetEntities = MISCTools.sortLowestDistance(this, this.level.getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(1.5)));
-        Vec2 targetRot = null;
+        super.tick();
+        List<LivingEntity> possibleTargetEntities = MiscUtils.sortLowestDistance(this, this.level.getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(3)));
         if (possibleTargetEntities != null) {
             for (LivingEntity living : possibleTargetEntities) {
-                if (!this.ownedBy(living) && !living.isDeadOrDying()) {
-                    targetRot = MISCTools.getTargetRotation(this, living);
+                if (!this.ownedBy(living) && !living.isDeadOrDying() && !this.alreadyHit.contains(living.getUUID())) {
+                    Vec3 targetVec = MiscUtils.getPosition(living).subtract(MiscUtils.getPosition(this));
+                    this.setDeltaMovement(MathUtils.maximise(targetVec, 0.5));
+                    this.alreadyHit.add(living.getUUID());
+                    break;
                 }
             }
         }
-        if (targetRot != null) {
-            if (targetRot.x > this.getXRot()) {
-                this.setXRot(Math.min(this.getXRot() + 3, targetRot.x));
-            } else if (targetRot.x < this.getXRot()) {
-                this.setXRot(Math.max(this.getXRot() - 3, targetRot.x));
-            }
-            if (targetRot.y > this.getYRot()) {
-                this.setYRot(Math.min(this.getYRot() + 3, targetRot.y));
-            } else if (targetRot.y < this.getYRot()) {
-                this.setYRot(Math.max(this.getYRot() - 3, targetRot.y));
-            }
-        }
-        this.setPos(MISCTools.getPosition(this).add(this.getLookAngle()));
-        this.distanceTravelled+=1;
-        if (distanceTravelled >= 10) {
+        if (this.timeTravelled++ > 80) {
             this.kill();
         }
     }

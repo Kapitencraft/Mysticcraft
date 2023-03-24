@@ -1,13 +1,14 @@
 package net.kapitencraft.mysticcraft.enchantments;
 
-import net.minecraft.world.entity.EquipmentSlot;
+import net.kapitencraft.mysticcraft.enchantments.abstracts.ExtendedCalculationEnchantment;
+import net.kapitencraft.mysticcraft.misc.utils.MiscUtils;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
 
 public class VenomousEnchantment extends ExtendedCalculationEnchantment implements IWeaponEnchantment {
     public VenomousEnchantment() {
-        super(Rarity.VERY_RARE, EnchantmentCategory.WEAPON, new EquipmentSlot[]{EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND});
+        super(Rarity.VERY_RARE, EnchantmentCategory.WEAPON, MiscUtils.WEAPON_SLOT, CalculationType.ALL);
     }
 
     @Override

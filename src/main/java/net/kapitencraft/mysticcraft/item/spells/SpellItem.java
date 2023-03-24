@@ -11,7 +11,8 @@ import net.kapitencraft.mysticcraft.item.RNGDropHelper;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneSlot;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
-import net.kapitencraft.mysticcraft.misc.MISCTools;
+import net.kapitencraft.mysticcraft.misc.utils.AttributeUtils;
+import net.kapitencraft.mysticcraft.misc.utils.MiscUtils;
 import net.kapitencraft.mysticcraft.spell.Spell;
 import net.kapitencraft.mysticcraft.spell.SpellSlot;
 import net.minecraft.client.gui.screens.Screen;
@@ -128,10 +129,10 @@ public abstract class SpellItem extends SwordItem implements IModItem {
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = new ImmutableMultimap.Builder<>();
         if (slot == EquipmentSlot.MAINHAND) {
             if (this.intelligence > 0) {
-                builder.put(ModAttributes.INTELLIGENCE.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[MISCTools.createCustomIndex(slot)], "Default Item Modifier", intelligence, AttributeModifier.Operation.ADDITION));
+                builder.put(ModAttributes.INTELLIGENCE.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[MiscUtils.createCustomIndex(slot)], "Default Item Modifier", intelligence, AttributeModifier.Operation.ADDITION));
             }
             if (this.ability_damage > 0) {
-                builder.put(ModAttributes.ABILITY_DAMAGE.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[MISCTools.createCustomIndex(slot)], "Default Item Modifier", ability_damage, AttributeModifier.Operation.ADDITION));
+                builder.put(ModAttributes.ABILITY_DAMAGE.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[MiscUtils.createCustomIndex(slot)], "Default Item Modifier", ability_damage, AttributeModifier.Operation.ADDITION));
             }
         }
         builder.putAll(super.getDefaultAttributeModifiers(slot));
@@ -206,7 +207,7 @@ public abstract class SpellItem extends SwordItem implements IModItem {
         if (!stack.isEnchanted()) {
             return super.getRarity(stack);
         } else {
-            final Rarity rarity = MISCTools.getItemRarity(this);
+            final Rarity rarity = MiscUtils.getItemRarity(this);
             if (rarity == Rarity.COMMON) {
                 return Rarity.UNCOMMON;
             } else if (rarity == Rarity.UNCOMMON) {
@@ -243,16 +244,16 @@ public abstract class SpellItem extends SwordItem implements IModItem {
         ItemStack itemstack = player.getItemInHand(hand);
         if (this.getSpellSlotAmount() > 1) {
             tag.putString(SPELL_EXE, tag.getString(SPELL_EXE) + "1");
-            MISCTools.sendTitle(player, Component.literal(Spell.getPattern(tag.getString(SPELL_EXE))));
+            MiscUtils.sendTitle(player, Component.literal(Spell.getPattern(tag.getString(SPELL_EXE))));
             if (this.getClosestSpell(tag.getString(SPELL_EXE)) != null) {
-                MISCTools.sendSubTitle(player, Component.literal(FormattingCodes.ORANGE + "\u27A4 " + this.getClosestSpell(tag.getString(SPELL_EXE)).getName()));
+                MiscUtils.sendSubTitle(player, Component.literal(FormattingCodes.ORANGE + "\u27A4 " + this.getClosestSpell(tag.getString(SPELL_EXE)).getName()));
             }
             tag.putByte(SPELL_EXECUTION_DUR, (byte) 20);
         } else {
             if (this.getActiveSpell().TYPE == Spell.Type.RELEASE) {
                 if (handleMana(player, this.getActiveSpell())) {
                     this.getActiveSpell().execute(player, itemstack);
-                    player.displayClientMessage(Component.literal("Used " + this.getActiveSpell().getName() + ": " + FormattingCodes.RED + "-" + MISCTools.getAttributeValue(player.getAttribute(ModAttributes.MANA_COST.get()), this.getActiveSpell().MANA_COST) + " Mana"), true);
+                    player.displayClientMessage(Component.literal("Used " + this.getActiveSpell().getName() + ": " + FormattingCodes.RED + "-" + AttributeUtils.getAttributeValue(player.getAttribute(ModAttributes.MANA_COST.get()), this.getActiveSpell().MANA_COST) + " Mana"), true);
                 }
             } else {
                 player.startUsingItem(hand);
@@ -268,7 +269,7 @@ public abstract class SpellItem extends SwordItem implements IModItem {
                 MysticcraftMod.sendInfo("magic");
                 spell.execute(user, stack);
                 if (user instanceof Player player) {
-                    player.displayClientMessage(Component.literal("Used " + spell.getName() + ": " + FormattingCodes.RED + "-" + MISCTools.getAttributeValue(user.getAttribute(ModAttributes.MANA_COST.get()), spell.MANA_COST) + " Mana"), true);
+                    player.displayClientMessage(Component.literal("Used " + spell.getName() + ": " + FormattingCodes.RED + "-" + AttributeUtils.getAttributeValue(user.getAttribute(ModAttributes.MANA_COST.get()), spell.MANA_COST) + " Mana"), true);
                 }
                 return true;
             }
@@ -290,7 +291,7 @@ public abstract class SpellItem extends SwordItem implements IModItem {
         if (user.getAttribute(ModAttributes.INTELLIGENCE.get()) == null || user.level.isClientSide()) {
             return false;
         }
-        double manaToUse = MISCTools.getAttributeValue(user.getAttribute(ModAttributes.MANA_COST.get()), spell.MANA_COST);
+        double manaToUse = AttributeUtils.getAttributeValue(user.getAttribute(ModAttributes.MANA_COST.get()), spell.MANA_COST);
         double overflowMana = user.getPersistentData().getDouble("overflowMana");
         AttributeInstance instance = user.getAttribute(ModAttributes.MANA.get());
         if (instance == null) {
@@ -307,7 +308,7 @@ public abstract class SpellItem extends SwordItem implements IModItem {
                 instance.setBaseValue(user.getAttributeBaseValue(ModAttributes.MANA.get()) - manaToUse);
             }
             ItemStack spellShardRNG = new ItemStack(ModItems.SPELL_SHARD.get());
-            RNGDropHelper.calculateAndDrop(spellShardRNG, 0.00002f, user, MISCTools.getPosition(user));
+            RNGDropHelper.calculateAndDrop(spellShardRNG, 0.00002f, user, MiscUtils.getPosition(user));
             return true;
         }
         return false;
@@ -318,9 +319,9 @@ public abstract class SpellItem extends SwordItem implements IModItem {
         if (entity instanceof Player player && this.getSpellSlotAmount() > 1) {
             CompoundTag tag = entity.getPersistentData();
             tag.putString(SPELL_EXE, tag.getString(SPELL_EXE) + "0");
-            MISCTools.sendTitle(player, Component.literal(Spell.getPattern(tag.getString(SPELL_EXE))));
+            MiscUtils.sendTitle(player, Component.literal(Spell.getPattern(tag.getString(SPELL_EXE))));
             if (this.getClosestSpell(tag.getString(SPELL_EXE)) != null) {
-                MISCTools.sendSubTitle(player, Component.literal(FormattingCodes.ORANGE + "\u27A4 " + this.getClosestSpell(tag.getString(SPELL_EXE)).getName()));
+                MiscUtils.sendSubTitle(player, Component.literal(FormattingCodes.ORANGE + "\u27A4 " + this.getClosestSpell(tag.getString(SPELL_EXE)).getName()));
             }
             tag.putByte(SPELL_EXECUTION_DUR, (byte) 20);
             return true;
@@ -337,7 +338,7 @@ public abstract class SpellItem extends SwordItem implements IModItem {
         Spell spell = this.getActiveSpell();
         if (spell.TYPE == Spell.Type.CYCLE && this.handleMana(user, spell) && (Integer.MAX_VALUE - count & 2) == 0) {
             spell.execute(user, stack);
-            double mana_cost = MISCTools.getAttributeValue(user.getAttribute(ModAttributes.MANA_COST.get()), spell.MANA_COST);
+            double mana_cost = AttributeUtils.getAttributeValue(user.getAttribute(ModAttributes.MANA_COST.get()), spell.MANA_COST);
             if (Integer.MAX_VALUE - count == 0 && user instanceof Player player) {
                 player.sendSystemMessage(Component.literal("Started Using " + spell.getName() + ": " + FormattingCodes.RED + "-" + (mana_cost * 20) + " Mana" + "/s"));
             }

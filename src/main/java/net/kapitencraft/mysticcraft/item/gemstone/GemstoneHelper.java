@@ -2,7 +2,7 @@ package net.kapitencraft.mysticcraft.item.gemstone;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.init.ModEnchantments;
-import net.kapitencraft.mysticcraft.misc.MISCTools;
+import net.kapitencraft.mysticcraft.misc.utils.MiscUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.nbt.CompoundTag;
@@ -152,7 +152,7 @@ public class GemstoneHelper {
         }
         HashMap<Attribute, AttributeModifier> modifierHashMap = new HashMap<>();
         for (Attribute attribute1 : attributeModifier.keySet()) {
-            modifierHashMap.put(attribute1, MysticcraftMod.createModifier(AttributeModifier.Operation.ADDITION, attributeModifier.get(attribute1), MISCTools.getSlotForStack(stack)));
+            modifierHashMap.put(attribute1, MysticcraftMod.createModifier(AttributeModifier.Operation.ADDITION, attributeModifier.get(attribute1), MiscUtils.getSlotForStack(stack)));
         }
         return modifierHashMap;
     }

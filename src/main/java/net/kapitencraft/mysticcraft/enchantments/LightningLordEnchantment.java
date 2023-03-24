@@ -1,5 +1,6 @@
 package net.kapitencraft.mysticcraft.enchantments;
 
+import net.kapitencraft.mysticcraft.enchantments.abstracts.CountEnchantment;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -10,7 +11,7 @@ import net.minecraft.world.phys.Vec3;
 
 public class LightningLordEnchantment extends CountEnchantment {
     public LightningLordEnchantment() {
-        super(Rarity.RARE, new EquipmentSlot[]{EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND}, "lightningLordMap", countType.NORMAL);
+        super(Rarity.RARE, new EquipmentSlot[]{EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND}, "lightningLordMap", countType.NORMAL, CalculationType.ALL);
     }
 
     @Override

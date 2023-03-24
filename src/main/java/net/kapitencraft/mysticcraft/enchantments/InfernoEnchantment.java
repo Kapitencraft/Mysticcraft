@@ -1,14 +1,15 @@
 package net.kapitencraft.mysticcraft.enchantments;
 
-import net.kapitencraft.mysticcraft.misc.MISCTools;
-import net.kapitencraft.mysticcraft.misc.ParticleHelper;
+import net.kapitencraft.mysticcraft.enchantments.abstracts.CountEnchantment;
+import net.kapitencraft.mysticcraft.misc.utils.MiscUtils;
+import net.kapitencraft.mysticcraft.misc.particle_help.ParticleHelper;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 
 public class InfernoEnchantment extends CountEnchantment implements IWeaponEnchantment, IUltimateEnchantment {
     public InfernoEnchantment() {
-        super(Rarity.VERY_RARE, MISCTools.WEAPON_SLOT, "infernoMap", countType.EXCEPT);
+        super(Rarity.VERY_RARE, MiscUtils.WEAPON_SLOT, "infernoMap", countType.EXCEPT, CalculationType.ALL);
     }
 
     @Override

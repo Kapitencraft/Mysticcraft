@@ -4,6 +4,11 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
+import net.kapitencraft.mysticcraft.item.item_bonus.ExtraBonus;
+import net.kapitencraft.mysticcraft.item.item_bonus.FullSetBonus;
+import net.kapitencraft.mysticcraft.item.item_bonus.IArmorBonusItem;
+import net.kapitencraft.mysticcraft.item.item_bonus.PieceBonus;
+import net.kapitencraft.mysticcraft.item.item_bonus.fullset.CrimsonArmorFullSetBonus;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -14,6 +19,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -21,8 +27,9 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.HashMap;
 
-public class CrimsonArmorItem extends ModArmorItem implements GeoItem {
+public class CrimsonArmorItem extends ModArmorItem implements GeoItem, IArmorBonusItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+    private static final FullSetBonus FULL_SET_BONUS = new CrimsonArmorFullSetBonus();
     public CrimsonArmorItem(EquipmentSlot p_40387_) {
         super(ModArmorMaterials.CRIMSON, p_40387_, new Properties().rarity(FormattingCodes.LEGENDARY));
     }
@@ -66,5 +73,21 @@ public class CrimsonArmorItem extends ModArmorItem implements GeoItem {
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return cache;
+    }
+
+    @Override
+    public FullSetBonus getFullSetBonus() {
+        return FULL_SET_BONUS;
+    }
+
+    @Override
+    public PieceBonus getPieceBonusForSlot(EquipmentSlot slot) {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public ExtraBonus getExtraBonus(EquipmentSlot slot) {
+        return null;
     }
 }

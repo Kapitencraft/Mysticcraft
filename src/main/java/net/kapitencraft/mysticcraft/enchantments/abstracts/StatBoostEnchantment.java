@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.enchantments;
+package net.kapitencraft.mysticcraft.enchantments.abstracts;
 
 import com.google.common.collect.Multimap;
 import net.minecraft.world.entity.EquipmentSlot;

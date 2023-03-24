@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.item.item_bonus;
 
 import com.google.common.collect.Multimap;
+import net.kapitencraft.mysticcraft.misc.utils.MiscUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -20,7 +21,7 @@ public abstract class Bonus {
         this.name = name;
     }
 
-    public abstract void onEntityKilled(LivingEntity killed, LivingEntity user);
+    public abstract void onEntityKilled(LivingEntity killed, LivingEntity user, MiscUtils.DamageType type);
     public abstract @Nullable Multimap<Attribute, AttributeModifier> getModifiers(LivingEntity living);
     public abstract void onTick(@NotNull ItemStack stack, Level level, @NotNull Entity entity, int slotID, boolean isSelected, int ticks);
     public abstract List<Component> getDisplay();

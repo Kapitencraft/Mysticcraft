@@ -1,14 +1,19 @@
-package net.kapitencraft.mysticcraft.misc;
+package net.kapitencraft.mysticcraft.misc.particle_help;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.misc.utils.MathUtils;
+import net.kapitencraft.mysticcraft.misc.utils.MiscUtils;
+import net.kapitencraft.mysticcraft.misc.utils.TagUtils;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -35,11 +40,12 @@ public class ParticleHelper {
 
     public static void clearAllHelpers(@Nullable String helperReason, LivingEntity target) {
         worker.remove(target.getUUID(), helperReason);
-        MysticcraftMod.sendInfo("clearing Helpers: " + (helperReason == null ? "null" : helperReason));
         CompoundTag tag = target.getPersistentData();
         int i = 0;
+        @Nullable CompoundTag helperTag;
         while (tag.contains("ParticleHelper" + i, 10)) {
-            if (helperReason == null || ((CompoundTag) tag.get("ParticleHelper" + i)).getString("helperReason").equals(helperReason)) {
+             helperTag = (CompoundTag) tag.get("ParticleHelper" + i);
+            if (helperReason == null || helperTag != null &&  helperTag.getString("helperReason").equals(helperReason)) {
                 tag.remove("ParticleHelper" + i);
             }
         }
@@ -82,6 +88,7 @@ public class ParticleHelper {
     }
 
     private boolean isRemoved = false;
+    private final boolean liveUntilTargetDeath;
     private final String helperReason;
     private final CompoundTag properties;
     private final int ticksPerCycle;
@@ -100,7 +107,7 @@ public class ParticleHelper {
     }
 
     public ParticleHelper(String helperReason, Entity target, Type type, CompoundTag properties) {
-        MysticcraftMod.sendInfo("created a new ParticleHelper");
+        this.liveUntilTargetDeath = type == Type.ARROW_HEAD;
         this.properties = properties;
         this.target = target;
         this.curTagID = getNextFreeHelperSlot();
@@ -133,6 +140,7 @@ public class ParticleHelper {
         this.heightChange = getHeightChangePerTick();
         this.target = target;
         this.type = Type.getFromString(tag.getString("type"));
+        this.liveUntilTargetDeath = this.type == Type.ARROW_HEAD;
         worker.add(target.getUUID(), this);
     }
 
@@ -183,41 +191,43 @@ public class ParticleHelper {
 
     public void tick(int ticks) {
         int cooldown = this.properties.getInt(COOLDOWN_ID);
-        if (!(MISCTools.increaseIntegerTagValue(this.properties, TICKS_ALIVE_ID, 1) > this.properties.getInt(MAX_TICKS_ALIVE_ID) && this.target.isRemoved()) && (cooldown == 0 || ticks % cooldown == 0) && !this.isRemoved) {
+        if (!(TagUtils.increaseIntegerTagValue(this.properties, TICKS_ALIVE_ID, 1) > this.properties.getInt(MAX_TICKS_ALIVE_ID) && this.target.isRemoved()) || this.liveUntilTargetDeath && (cooldown == 0 || ticks % cooldown == 0) && !this.isRemoved) {
             Level level = this.target.level;
             if (this.currentTick++ >= this.ticksPerCycle) {
                 this.currentTick = 0;
             }
-            if (this.type == Type.ORBIT) {
-                tickOrbit(level);
-            } else if (this.type == Type.ARROW_HEAD) {
-                tickArrowHead(level);
+            switch (this.type) {
+                case ORBIT -> tickOrbit(level);
+                case ARROW_HEAD -> tickArrowHead(level);
             }
             this.save();
         }
     }
 
-    private void tickOrbit(Level level) {
-        if (currentTick >= (ticksPerCycle / 2)) {
-            MISCTools.increaseFloatTagValue(this.properties, Y_OFFSET_ID, -this.heightChange);
-        } else {
-            MISCTools.increaseFloatTagValue(this.properties, Y_OFFSET_ID, this.heightChange);
-        }
-        MISCTools.increaseFloatTagValue(this.properties, CURRENT_ROTATION_ID, this.properties.getFloat(ROTATION_PER_TICK_ID));
-        Vec3 targetPos = MISCTools.calculateViewVector(0, this.properties.getFloat(CURRENT_ROTATION_ID)).add(target.getX(), target.getY() +  this.properties.getFloat(Y_OFFSET_ID), target.getZ());
-        MISCTools.sendParticles(level, getFromTag(this.properties.getString("particleType")), false, targetPos, 2, 0,0, 0, 0);
-        }
-
     public static SimpleParticleType getFromTag(String tag) {
         return (SimpleParticleType) BuiltInRegistries.PARTICLE_TYPE.get(new ResourceLocation(tag));
     }
 
+    private void tickOrbit(Level level) {
+        float currentRot = TagUtils.increaseFloatTagValue(this.properties, CURRENT_ROTATION_ID, this.properties.getFloat(ROTATION_PER_TICK_ID));
+        Vec3 targetPos;
+        if (this.target instanceof Projectile) {
+            targetPos = MathUtils.calculateViewVector(currentRot, 0).add(MiscUtils.getPosition(target));
+        } else {
+            TagUtils.increaseFloatTagValue(this.properties, Y_OFFSET_ID, (currentTick >= (ticksPerCycle / 2)) ? -this.heightChange : this.heightChange);
+            targetPos = MathUtils.calculateViewVector(0, currentRot).add(target.getX(), target.getY() +  this.properties.getFloat(Y_OFFSET_ID), target.getZ());
+        }
+        MiscUtils.sendParticles(level, getFromTag(this.properties.getString("particleType")), false, targetPos, 2, 0,0, 0, 0);
+    }
+
     private void tickArrowHead(Level level) {
-        ParticleGradientHolder[] gradientHolders = new ParticleGradient(this.properties.getInt("maxSteps"),this.properties.getInt("maxParticle"), getFromTag(this.properties.getString("type1")), getFromTag(this.properties.getString("type2"))).generate();
-        for (int y = 0; y < 2; y++) {
-            for (int i = y; i <= 10; i++) {
-                Vec3 targetLoc = MISCTools.calculateViewVector(target.getXRot(), target.getYRot() + (y == 0 ? 120 : -120)).scale(1 + (i * 0.05)).add(MISCTools.getPosition(target));
-                MISCTools.sendParticles(level, false, targetLoc, 0, 0, 0, 0, gradientHolders[i]);
+        if (level instanceof ServerLevel) {
+            ParticleGradientHolder[] gradientHolders = new ParticleGradient(this.properties.getInt("maxSteps"), this.properties.getInt("maxParticle"), getFromTag(this.properties.getString("type1")), getFromTag(this.properties.getString("type2"))).generate();
+            for (int y = 0; y < 2; y++) {
+                for (int i = y; i < 10; i++) {
+                    Vec3 targetLoc = MathUtils.calculateViewVector(target.getXRot(), target.getYRot() + (y == 0 ? 160 : -160)).scale(i * 0.05).add(target.getX(), target.getY() + 0.1f, target.getZ());
+                    MiscUtils.sendParticles(level, false, targetLoc, 0, 0, 0, 0, gradientHolders[i]);
+                }
             }
         }
     }

@@ -5,7 +5,7 @@ import net.kapitencraft.mysticcraft.init.ModBlockEntities;
 import net.kapitencraft.mysticcraft.init.ModItems;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneItem;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
-import net.kapitencraft.mysticcraft.misc.MISCTools;
+import net.kapitencraft.mysticcraft.misc.utils.MiscUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -108,7 +108,7 @@ public class  GemstoneGrinderBlockEntity extends BlockEntity implements MenuProv
     }
 
     public void drops() {
-        SimpleContainer inventory = MISCTools.ContainerOf(this.itemHandler);
+        SimpleContainer inventory = MiscUtils.containerOf(this.itemHandler);
         assert this.level != null;
         Containers.dropContents(this.level, this.worldPosition, inventory);
     }

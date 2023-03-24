@@ -2,7 +2,7 @@ package net.kapitencraft.mysticcraft.spell.spells;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
-import net.kapitencraft.mysticcraft.misc.MISCTools;
+import net.kapitencraft.mysticcraft.misc.utils.MiscUtils;
 import net.kapitencraft.mysticcraft.misc.damage_source.AbilityDamageSource;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
@@ -21,8 +21,8 @@ public class WitherImpactSpell {
 
     public static void execute(LivingEntity user, ItemStack stack) {
         user.heal(0.5F);
-        MISCTools.saveTeleport(user, 10);
-        MISCTools.sendParticles(user.level, ParticleTypes.ASH, false, user.getX(), user.getY(), user.getZ(), 1000, 1, 1, 1, 0.01);
+        MiscUtils.saveTeleport(user, 10);
+        MiscUtils.sendParticles(user.level, ParticleTypes.ASH, false, user.getX(), user.getY(), user.getZ(), 1000, 1, 1, 1, 0.01);
         final Vec3 center = new Vec3((user.getX()), (user.getY()), (user.getZ()));
         List<LivingEntity> entFound = user.level.getEntitiesOfClass(LivingEntity.class, new AABB(center, center).inflate(5), e -> true).stream().sorted(Comparator.comparingDouble(entCnd -> entCnd.distanceToSqr(center))).collect(Collectors.toList());
         double damageInflicted = 0; double EnemyHealth; int damaged = 0;

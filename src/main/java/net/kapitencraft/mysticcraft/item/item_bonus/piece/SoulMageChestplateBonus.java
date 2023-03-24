@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.item.item_bonus.PieceBonus;
+import net.kapitencraft.mysticcraft.misc.utils.MiscUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -22,7 +23,7 @@ public class SoulMageChestplateBonus extends PieceBonus {
     }
 
     @Override
-    public void onEntityKilled(LivingEntity killed, LivingEntity user) {
+    public void onEntityKilled(LivingEntity killed, LivingEntity user, MiscUtils.DamageType type) {
 
     }
 

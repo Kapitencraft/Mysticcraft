@@ -13,8 +13,8 @@ import net.kapitencraft.mysticcraft.item.item_bonus.fullset.SoulMageArmorFullSet
 import net.kapitencraft.mysticcraft.item.item_bonus.piece.SoulMageChestplateBonus;
 import net.kapitencraft.mysticcraft.item.item_bonus.piece.SoulMageHelmetBonus;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
-import net.kapitencraft.mysticcraft.misc.MISCTools;
-import net.kapitencraft.mysticcraft.misc.ParticleHelper;
+import net.kapitencraft.mysticcraft.misc.utils.MiscUtils;
+import net.kapitencraft.mysticcraft.misc.particle_help.ParticleHelper;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -71,7 +71,7 @@ public class SoulMageArmorItem extends ModArmorItem implements IArmorBonusItem {
     public Multimap<Attribute, AttributeModifier> getAttributeMods(EquipmentSlot slot) {
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = new ImmutableMultimap.Builder<>();
         if (slot == this.getSlot()) {
-            builder.put(ModAttributes.INTELLIGENCE.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[MISCTools.createCustomIndex(slot)], "Intelligence", 345, AttributeModifier.Operation.ADDITION));
+            builder.put(ModAttributes.INTELLIGENCE.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[MiscUtils.createCustomIndex(slot)], "Intelligence", 345, AttributeModifier.Operation.ADDITION));
         }
         return builder.build();
     }

@@ -1,16 +1,18 @@
 package net.kapitencraft.mysticcraft.enchantments;
 
-import net.kapitencraft.mysticcraft.misc.MISCTools;
+import net.kapitencraft.mysticcraft.enchantments.abstracts.ExtendedCalculationEnchantment;
+import net.kapitencraft.mysticcraft.misc.utils.MiscUtils;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
 import net.minecraft.world.item.enchantment.ThornsEnchantment;
+import org.jetbrains.annotations.NotNull;
 
 public class YeetThornsEnchantment extends ExtendedCalculationEnchantment implements IArmorEnchantment {
 
     public YeetThornsEnchantment() {
-        super(Rarity.VERY_RARE, EnchantmentCategory.ARMOR, MISCTools.ARMOR_EQUIPMENT);
+        super(Rarity.VERY_RARE, EnchantmentCategory.ARMOR, MiscUtils.ARMOR_EQUIPMENT, CalculationType.ALL);
     }
 
     @Override
@@ -25,7 +27,7 @@ public class YeetThornsEnchantment extends ExtendedCalculationEnchantment implem
     }
 
     @Override
-    protected boolean checkCompatibility(Enchantment enchantment) {
+    protected boolean checkCompatibility(@NotNull Enchantment enchantment) {
         return !(enchantment instanceof ThornsEnchantment);
     }
 }
