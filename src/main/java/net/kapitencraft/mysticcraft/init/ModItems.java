@@ -43,7 +43,7 @@ public abstract class ModItems {
     public static final RegistryObject<Item> SCYLLA = REGISTRY.register("scylla", Scylla::new);
     public static final RegistryObject<Item> ASTREA = REGISTRY.register("astrea", Astraea::new);
     public static final RegistryObject<Item> VALKYRIE = REGISTRY.register("valkyrie", Valkyrie::new);
-    public static final RegistryObject<Item> AOTE = REGISTRY.register("aspect_of_the_end", ()-> new AspectOfTheEndItem(40));
+    public static final RegistryObject<Item> AOTE = REGISTRY.register("aspect_of_the_end", ()-> new AspectOfTheEndItem(50));
     public static final RegistryObject<Item> AOTV = REGISTRY.register("aspect_of_the_void", AspectOfTheVoidItem::new);
     public static final RegistryObject<Item> HEATED_SCYTHE = REGISTRY.register("heated_scythe", HeatedScythe::new);
     public static final RegistryObject<Item> FIERY_SCYTHE = REGISTRY.register("fiery_scythe", FieryScythe::new);

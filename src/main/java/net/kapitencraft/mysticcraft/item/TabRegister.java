@@ -30,6 +30,7 @@ public class TabRegister {
                 builder.title(Component.translatable("itemGroup.spell_and_gemstone"))
                         .icon(() -> new ItemStack(ModItems.STAFF_OF_THE_WILD.get()))
                         .displayItems((featureFlagSet, output, flag) -> {
+                            output.accept(ModItems.IMPLOSION_SCROLL.get());
                             output.accept(ModItems.AOTE.get());
                             output.accept(ModItems.AOTV.get());
                             output.accept(ModItems.STAFF_OF_THE_WILD.get());
@@ -58,6 +59,7 @@ public class TabRegister {
                             output.accept(ModBlocks.MANGATIC_SLIME.getItem());
                             output.accept(ModBlocks.OBSIDIAN_PRESSURE_PLATE.getItem());
                             output.accept(ModBlocks.CRIMSONITE_ORE.getItem());
+                            output.accept(ModItems.FROZEN_BLAZE_ROD.get());
                         }));
         event.registerCreativeModeTab(new ResourceLocation(MysticcraftMod.MOD_ID, "weapons_and_tools"), builder ->
                 builder.title(Component.translatable("itemGroup.weapons_and_tools_mm"))
@@ -65,7 +67,6 @@ public class TabRegister {
                         .displayItems((featureFlagSet, output, p_260123_) -> {
                             output.accept(ModItems.MANA_STEEL_SWORD.get());
                             output.accept(ModItems.TALLIN_BOW.get());
-                            output.accept(ModItems.LONGBOW.get());
                             addArmor(ModItems.ENDER_KNIGHT_ARMOR, output);
                             addArmor(ModItems.FROZEN_BLAZE_ARMOR, output);
                             addArmor(ModItems.SHADOW_ASSASSIN_ARMOR, output);
@@ -87,9 +88,8 @@ public class TabRegister {
     }
 
     @SubscribeEvent
-    public static void addToExisting(CreativeModeTabEvent.BuildContents event) {
-        CreativeModeTab tab = event.getTab();
-        if (tab == CreativeModeTabs.SPAWN_EGGS) {
+    public static void addToTabs(CreativeModeTabEvent.BuildContents event) {
+        if (event.getTab() == CreativeModeTabs.SPAWN_EGGS) {
             event.accept(ModItems.FROZEN_BLAZE_SPAWN_EGG);
         }
     }
