@@ -21,4 +21,14 @@ public class PoisonousBladeEnchantment extends ExtendedCalculationEnchantment im
         }
         return damage;
     }
+
+    @Override
+    public double getValueMultiplier() {
+        return 5;
+    }
+
+    @Override
+    public boolean isPercentage() {
+        return false;
+    }
 }

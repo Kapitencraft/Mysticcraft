@@ -32,4 +32,9 @@ public class NecroticTouchEnchantment extends StatBoostEnchantment {
     public boolean hasModifiersForThatSlot(EquipmentSlot slot) {
         return slot == EquipmentSlot.MAINHAND;
     }
+
+    @Override
+    public double getValueMultiplier() {
+        return 1;
+    }
 }

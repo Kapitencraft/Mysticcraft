@@ -1,0 +1,3 @@
+added Description to most Enchantments;
+added Description Management to Display in tooltip;
+changed maxLevel of Venomous to 5;

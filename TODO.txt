@@ -1,4 +1,5 @@
 fix Gemstone Grinder;
+fix Venomous and Inferno Enchantment;
 fix Spell Damage Values;
 fix Spell always using Default mana;
 fix Fire Lance not working on Warden & Wither;

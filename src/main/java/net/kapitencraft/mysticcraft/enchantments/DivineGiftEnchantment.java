@@ -35,4 +35,9 @@ public class DivineGiftEnchantment extends WeaponStatBoostEnchantment {
     public boolean isTreasureOnly() {
         return true;
     }
+
+    @Override
+    public double getValueMultiplier() {
+        return 2;
+    }
 }

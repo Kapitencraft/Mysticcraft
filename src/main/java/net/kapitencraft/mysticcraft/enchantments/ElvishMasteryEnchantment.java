@@ -24,10 +24,15 @@ public class ElvishMasteryEnchantment extends StatBoostEnchantment implements IW
 
     @Override
     public Multimap<Attribute, AttributeModifier> getModifiers(int level, ItemStack enchanted, EquipmentSlot slot) {
-        return new ImmutableMultimap.Builder<Attribute, AttributeModifier>().put(ModAttributes.DRAW_SPEED.get(), MysticcraftMod.createModifier(AttributeModifier.Operation.MULTIPLY_TOTAL, 0.1*level, EquipmentSlot.MAINHAND)).build();
+        return new ImmutableMultimap.Builder<Attribute, AttributeModifier>().put(ModAttributes.DRAW_SPEED.get(), MysticcraftMod.createModifier(AttributeModifier.Operation.ADDITION, 10*level, EquipmentSlot.MAINHAND)).build();
     }
     @Override
     public boolean hasModifiersForThatSlot(EquipmentSlot slot) {
         return slot == EquipmentSlot.MAINHAND;
+    }
+
+    @Override
+    public double getValueMultiplier() {
+        return 10;
     }
 }

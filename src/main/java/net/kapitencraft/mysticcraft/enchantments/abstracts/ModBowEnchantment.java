@@ -10,7 +10,7 @@ import net.minecraft.world.item.enchantment.EnchantmentCategory;
 
 import java.util.HashMap;
 
-public abstract class ModBowEnchantment extends Enchantment {
+public abstract class ModBowEnchantment extends Enchantment implements ModEnchantment {
     private static final HashMap<String, Execution> executionMap = new HashMap<>();
     private final String tagName;
     protected ModBowEnchantment(Rarity p_44676_, EnchantmentCategory p_44677_, EquipmentSlot[] p_44678_, String tagName) {

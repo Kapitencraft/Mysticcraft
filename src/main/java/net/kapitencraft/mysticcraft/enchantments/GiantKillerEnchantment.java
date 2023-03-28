@@ -20,7 +20,17 @@ public class GiantKillerEnchantment extends ExtendedCalculationEnchantment imple
 
     @Override
     public double execute(int level, ItemStack enchanted, LivingEntity attacker, LivingEntity attacked, double damage) {
-        double MoreHpPercent = attacked.getHealth() - attacker.getHealth() / attacked.getMaxHealth() - attacker.getMaxHealth();
-        return  (float) (damage * (1 + MoreHpPercent * level * 0.01));
+        double MoreHpPercent = attacked.getHealth() / attacker.getHealth();
+        return  (float) (damage * (1 + Math.min(MoreHpPercent * level * 0.01, 0.5)));
+    }
+
+    @Override
+    public double getValueMultiplier() {
+        return 1;
+    }
+
+    @Override
+    public boolean isPercentage() {
+        return true;
     }
 }

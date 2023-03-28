@@ -1,0 +1,11 @@
+{
+  "required": true,
+  "package": "net.kapitencraft.mysticcraft.mixin",
+  "client": [
+    "LivingEntityMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "refmap": "mysticcraft.mixin-refmap.json"
+}

@@ -17,7 +17,7 @@ public class YeetThornsEnchantment extends ExtendedCalculationEnchantment implem
 
     @Override
     public double execute(int level, ItemStack enchanted, LivingEntity attacker, LivingEntity attacked, double damage) {
-        attacked.setDeltaMovement((attacker.getX() - attacked.getX()) / level / 0.1, 0.4 * level, (attacker.getZ() - attacked.getZ()) / level / 0.1);
+        attacked.setDeltaMovement((attacker.getX() - attacked.getX()) / level * 10, 0.4 * level, (attacker.getZ() - attacked.getZ()) / level * 10);
         return damage;
     }
 
@@ -29,5 +29,15 @@ public class YeetThornsEnchantment extends ExtendedCalculationEnchantment implem
     @Override
     protected boolean checkCompatibility(@NotNull Enchantment enchantment) {
         return !(enchantment instanceof ThornsEnchantment);
+    }
+
+    @Override
+    public double getValueMultiplier() {
+        return 10;
+    }
+
+    @Override
+    public boolean isPercentage() {
+        return false;
     }
 }

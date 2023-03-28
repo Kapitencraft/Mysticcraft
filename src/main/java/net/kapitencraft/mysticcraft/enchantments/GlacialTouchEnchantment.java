@@ -20,4 +20,14 @@ public class GlacialTouchEnchantment extends ExtendedCalculationEnchantment impl
         }
         return damage;
     }
+
+    @Override
+    public double getValueMultiplier() {
+        return 5;
+    }
+
+    @Override
+    public boolean isPercentage() {
+        return false;
+    }
 }

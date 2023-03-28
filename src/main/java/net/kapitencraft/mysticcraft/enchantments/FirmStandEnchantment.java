@@ -34,4 +34,9 @@ public class FirmStandEnchantment extends StatBoostEnchantment {
     public boolean hasModifiersForThatSlot(EquipmentSlot slot) {
         return MiscUtils.arrayContains(MiscUtils.ARMOR_EQUIPMENT, slot);
     }
+
+    @Override
+    public double getValueMultiplier() {
+        return 0.1;
+    }
 }

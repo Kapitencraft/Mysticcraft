@@ -12,7 +12,22 @@ public class VenomousEnchantment extends ExtendedCalculationEnchantment implemen
     }
 
     @Override
+    public int getMaxLevel() {
+        return 5;
+    }
+
+    @Override
     public double execute(int level, ItemStack enchanted, LivingEntity attacker, LivingEntity attacked, double damage) {
         return 0;
+    }
+
+    @Override
+    public double getValueMultiplier() {
+        return 0;
+    }
+
+    @Override
+    public boolean isPercentage() {
+        return false;
     }
 }

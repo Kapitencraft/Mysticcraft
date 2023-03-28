@@ -32,7 +32,7 @@ public class MathUtils {
         return !(vec31.dot(target.getViewVector(1)) < 0.0D);
     }
 
-    public static Vec3 minimise(Vec3 source, double minimum) {
+    public static Vec3 minimiseLength(Vec3 source, double minimum) {
         if (source.length() > minimum) {
             return source;
         } else {
@@ -41,7 +41,7 @@ public class MathUtils {
         }
     }
 
-    public static Vec3 maximise(Vec3 source, double maximum) {
+    public static Vec3 maximiseLength(Vec3 source, double maximum) {
         if (source.length() < maximum) {
             return source;
         } else {
@@ -50,4 +50,10 @@ public class MathUtils {
         }
     }
 
+    public static Vec3 setLength(Vec3 source, double value) {
+        if (source.length() > value) {
+            return maximiseLength(source, value);
+        }
+        return minimiseLength(source, value);
+    }
 }

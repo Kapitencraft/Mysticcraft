@@ -22,4 +22,14 @@ public class InfernoEnchantment extends CountEnchantment implements IWeaponEncha
         ParticleHelper.createWithTargetHeight("inferno", attacked, ParticleHelper.Type.ORBIT, ParticleHelper.createOrbitProperties(0, 200, 0, 0, 4, ParticleTypes.DRIPPING_LAVA));
         return damageAmount;
     }
+
+    @Override
+    public double getValueMultiplier() {
+        return 0;
+    }
+
+    @Override
+    public boolean isPercentage() {
+        return false;
+    }
 }

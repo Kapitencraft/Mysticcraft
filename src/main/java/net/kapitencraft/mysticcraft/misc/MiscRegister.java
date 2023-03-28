@@ -24,11 +24,15 @@ import net.kapitencraft.mysticcraft.misc.damage_source.FerociousDamageSource;
 import net.kapitencraft.mysticcraft.misc.damage_source.IAbilitySource;
 import net.kapitencraft.mysticcraft.misc.particle_help.ParticleHelper;
 import net.kapitencraft.mysticcraft.misc.utils.AttributeUtils;
+import net.kapitencraft.mysticcraft.misc.utils.MathUtils;
 import net.kapitencraft.mysticcraft.misc.utils.MiscUtils;
+import net.kapitencraft.mysticcraft.misc.utils.TagUtils;
+import net.kapitencraft.mysticcraft.mixin.LivingEntityMixin;
 import net.kapitencraft.mysticcraft.spell.Spell;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -303,16 +307,34 @@ public class MiscRegister {
                 }
             }
         }
-        if (living instanceof Player player && tag.contains(SpellItem.SPELL_EXECUTION_DUR)) {
-            if (tag.getByte(SpellItem.SPELL_EXECUTION_DUR) < 1 || tag.getString(SpellItem.SPELL_EXE).length() >= 7) {
-                ItemStack mainHand = living.getMainHandItem();
-                if (mainHand.getItem() instanceof SpellItem spellItem) {
-                    spellItem.executeSpell(tag.getString(SpellItem.SPELL_EXE), mainHand, living);
-                    tag.putString(SpellItem.SPELL_EXE, "");
+        if (living instanceof Player player) {
+            if (tag.contains(SpellItem.SPELL_EXECUTION_DUR)) {
+                if (tag.getByte(SpellItem.SPELL_EXECUTION_DUR) < 1 || tag.getString(SpellItem.SPELL_EXE).length() >= 7) {
+                    ItemStack mainHand = living.getMainHandItem();
+                    if (mainHand.getItem() instanceof SpellItem spellItem) {
+                        spellItem.executeSpell(tag.getString(SpellItem.SPELL_EXE), mainHand, living);
+                        tag.putString(SpellItem.SPELL_EXE, "");
+                    }
+                    MiscUtils.clearTitle(player);
+                } else {
+                    tag.putByte(SpellItem.SPELL_EXECUTION_DUR, (byte) (tag.getByte(SpellItem.SPELL_EXECUTION_DUR) - 1));
                 }
-                MiscUtils.clearTitle(player);
-            } else {
-                tag.putByte(SpellItem.SPELL_EXECUTION_DUR, (byte) (tag.getByte(SpellItem.SPELL_EXECUTION_DUR) - 1));
+            }
+
+            if (!player.isOnGround()) {
+                if (tag.getInt("currentDoubleJump") < player.getAttributeValue(ModAttributes.DOUBLE_JUMP.get()) && tag.getInt("doubleJumpCooldown") < 1) {
+                    if (canJump(player) && ((LivingEntityMixin) player).getJumping()) {
+                        MiscUtils.sendParticles(player.level, ParticleTypes.CLOUD, false, player.getX(), player.getY(), player.getZ(), 15, 0.25, 0, 0.25, 0.1);
+                        Vec3 targetLoc = MathUtils.setLength(player.getLookAngle().multiply(1, 0, 1), 0.75).add(0, 1, 0);
+                        player.setDeltaMovement(targetLoc.x, targetLoc.y > 0 ? targetLoc.y : -targetLoc.y, targetLoc.z);
+                        TagUtils.increaseIntegerTagValue(player.getPersistentData(), "currentDoubleJump", 1);
+                    }
+                }
+            } else if (tag.getInt("currentDoubleJump") > 0) {
+                tag.putInt("currentDoubleJump", 0);
+            }
+            if (tag.getInt("doubleJumpCooldown") > 0) {
+                TagUtils.increaseIntegerTagValue(tag, "doubleJumpCooldown", -1);
             }
         }
         if (!ModArmorItem.isFullSetActive(living, ModArmorMaterials.SOUL_MAGE) && tag.getString("lastFullSet").equals(ModArmorMaterials.SOUL_MAGE.getName())) {
@@ -321,6 +343,9 @@ public class MiscRegister {
         }
     }
 
+    private static boolean canJump(Player player) {
+        return !player.isOnGround() && !(player.isPassenger() || player.getAbilities().flying) && !(player.isInWater() || player.isInLava());
+    }
 
     @SubscribeEvent
     public static void serverTick(TickEvent.LevelTickEvent event) {

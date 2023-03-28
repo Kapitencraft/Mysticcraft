@@ -34,6 +34,7 @@ public class AttributeAdder {
         event.add(EntityType.PLAYER, ModAttributes.DRAW_SPEED.get());
         event.add(EntityType.PLAYER, ModAttributes.ARROW_SPEED.get());
         event.add(EntityType.PLAYER, ModAttributes.ARMOR_SHREDDER.get());
+        event.add(EntityType.PLAYER, ModAttributes.DOUBLE_JUMP.get());
     }
 
     @SubscribeEvent

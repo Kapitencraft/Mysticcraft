@@ -37,11 +37,21 @@ public class SnipeEnchantment extends ModBowEnchantment implements IWeaponEnchan
         Vec3 start = new Vec3(tag.getDouble("LaunchX"), tag.getDouble("LaunchY"), tag.getDouble("LaunchZ"));
         Vec3 targetPos = MiscUtils.getPosition(target);
         double distance = start.distanceTo(targetPos);
-        return (float) (oldDamage * (1 + (distance / 10 / 100)));
+        return (float) (oldDamage * (1 + (distance / 10) * 0.01) * tag.getInt("Level"));
     }
 
     @Override
     public boolean shouldTick() {
         return false;
+    }
+
+    @Override
+    public double getValueMultiplier() {
+        return 1;
+    }
+
+    @Override
+    public boolean isPercentage() {
+        return true;
     }
 }

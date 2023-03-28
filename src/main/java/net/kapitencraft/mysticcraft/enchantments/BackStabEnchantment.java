@@ -24,4 +24,14 @@ public class BackStabEnchantment extends ExtendedCalculationEnchantment implemen
     public int getMaxLevel() {
         return 5;
     }
+
+    @Override
+    public double getValueMultiplier() {
+        return 25;
+    }
+
+    @Override
+    public boolean isPercentage() {
+        return true;
+    }
 }

@@ -1,5 +1,6 @@
 package net.kapitencraft.mysticcraft.misc.utils;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.gui.IGuiHelper;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneItem;
@@ -11,6 +12,7 @@ import net.kapitencraft.mysticcraft.item.weapon.ranged.bow.ShortBowItem;
 import net.kapitencraft.mysticcraft.misc.particle_help.ParticleAmountHolder;
 import net.kapitencraft.mysticcraft.misc.particle_help.ParticleGradientHolder;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.nbt.CompoundTag;
@@ -61,6 +63,27 @@ public class MiscUtils {
 
     public interface delayRun {
         void run();
+    }
+
+    public interface keyRun {
+        void execute();
+    }
+
+    public interface keyReq {
+        boolean is();
+    }
+
+    public static void onKeyPressed(Player player, int key, keyReq req, keyRun run) {
+        if (!InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), key)) {
+            if (player.getPersistentData().getBoolean("hadKeyDown" + key)) {
+                run.execute();
+                player.getPersistentData().putBoolean("hadKeyDown" + key, false);
+            }
+        } else {
+            if (req.is()) {
+                player.getPersistentData().putBoolean("hadKeyDown" + key, true);
+            }
+        }
     }
 
     public static void delayed(int delayTicks, delayRun run) {

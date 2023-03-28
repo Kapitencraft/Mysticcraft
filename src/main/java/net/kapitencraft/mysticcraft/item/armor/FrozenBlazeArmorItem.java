@@ -1,13 +1,12 @@
 package net.kapitencraft.mysticcraft.item.armor;
 
 import com.google.common.collect.Multimap;
-import net.kapitencraft.mysticcraft.item.armor.client.FrozenBlazeRenderer;
+import net.kapitencraft.mysticcraft.item.armor.client.FrozenBlazeArmorRenderer;
 import net.kapitencraft.mysticcraft.item.item_bonus.ExtraBonus;
 import net.kapitencraft.mysticcraft.item.item_bonus.FullSetBonus;
 import net.kapitencraft.mysticcraft.item.item_bonus.IArmorBonusItem;
 import net.kapitencraft.mysticcraft.item.item_bonus.PieceBonus;
 import net.kapitencraft.mysticcraft.item.item_bonus.fullset.FrozenBlazeFullSetBonus;
-import net.kapitencraft.mysticcraft.item.item_bonus.fullset.SoulMageArmorFullSetBonus;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.kapitencraft.mysticcraft.misc.damage_source.FrozenDamageSource;
 import net.minecraft.client.model.HumanoidModel;
@@ -93,11 +92,11 @@ public class FrozenBlazeArmorItem extends ModArmorItem implements GeoItem, IArmo
     @Override
     public void initializeClient(Consumer<IClientItemExtensions> consumer) {
         consumer.accept(new IClientItemExtensions() {
-            private FrozenBlazeRenderer renderer;
+            private FrozenBlazeArmorRenderer renderer;
             @Override
             public @NotNull HumanoidModel<?> getHumanoidArmorModel(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, HumanoidModel<?> original) {
                 if (this.renderer == null) {
-                    this.renderer = new FrozenBlazeRenderer();
+                    this.renderer = new FrozenBlazeArmorRenderer();
                 }
                 this.renderer.prepForRender(livingEntity, itemStack, equipmentSlot, original);
                 return this.renderer;

@@ -66,7 +66,7 @@ public class CrimsonDeathRayProjectile extends AbstractArrow {
             for (LivingEntity living : possibleTargetEntities) {
                 if (!this.ownedBy(living) && !living.isDeadOrDying() && !this.alreadyHit.contains(living.getUUID())) {
                     Vec3 targetVec = MiscUtils.getPosition(living).subtract(MiscUtils.getPosition(this));
-                    this.setDeltaMovement(MathUtils.maximise(targetVec, 0.5));
+                    this.setDeltaMovement(MathUtils.maximiseLength(targetVec, 0.5));
                     this.alreadyHit.add(living.getUUID());
                     break;
                 }

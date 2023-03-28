@@ -26,4 +26,9 @@ public class RejuvenateEnchantment extends ArmorStatBoostEnchantment {
         builder.put(ModAttributes.HEALTH_REGEN.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[MiscUtils.createCustomIndex(slot)], "rejuvenate", level * 2, AttributeModifier.Operation.ADDITION));
         return builder.build();
     }
+
+    @Override
+    public double getValueMultiplier() {
+        return 2;
+    }
 }

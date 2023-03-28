@@ -46,4 +46,14 @@ public class AimEnchantment extends ModBowEnchantment implements IWeaponEnchantm
     public boolean shouldTick() {
         return true;
     }
+
+    @Override
+    public double getValueMultiplier() {
+        return 2;
+    }
+
+    @Override
+    public boolean isPercentage() {
+        return false;
+    }
 }

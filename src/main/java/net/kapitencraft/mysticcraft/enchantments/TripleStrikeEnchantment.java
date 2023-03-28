@@ -35,4 +35,14 @@ public class TripleStrikeEnchantment extends CountEnchantment {
         damageAmount *= (1 + 0.2 * level);
         return damageAmount;
     }
+
+    @Override
+    public double getValueMultiplier() {
+        return 20;
+    }
+
+    @Override
+    public boolean isPercentage() {
+        return true;
+    }
 }

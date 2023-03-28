@@ -31,4 +31,9 @@ public class CriticalEnchantment extends WeaponStatBoostEnchantment {
     public int getMaxLevel() {
         return 5;
     }
+
+    @Override
+    public double getValueMultiplier() {
+        return 10;
+    }
 }

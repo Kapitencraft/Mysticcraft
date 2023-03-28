@@ -1,10 +1,7 @@
 package net.kapitencraft.mysticcraft.init;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.block.GemstoneGrinderBlock;
-import net.kapitencraft.mysticcraft.block.ManaLiquidBlock;
-import net.kapitencraft.mysticcraft.block.MangaticSlimeBlock;
-import net.kapitencraft.mysticcraft.block.ObsidianPressurePlate;
+import net.kapitencraft.mysticcraft.block.*;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
@@ -34,4 +31,5 @@ public class ModBlocks {
     public static final BlockRegistryHolder MANGATIC_SLIME = registerBlock("mangatic_slime", MangaticSlimeBlock::new, new Item.Properties().rarity(Rarity.EPIC));
     public static final BlockRegistryHolder OBSIDIAN_PRESSURE_PLATE = registerBlock("obsidian_pressure_plate", ObsidianPressurePlate::new, new Item.Properties().rarity(Rarity.UNCOMMON));
     public static final BlockRegistryHolder CRIMSONITE_ORE = registerBlock("crimsonite_ore", ()-> new Block(BlockBehaviour.Properties.copy(Blocks.STONE)), new Item.Properties().rarity(Rarity.UNCOMMON));
+    public static final BlockRegistryHolder MANA_SAM_LAUNCHER = registerBlock("mana_sam_launcher", ManaSAMLauncherBlock::new, new Item.Properties().rarity(Rarity.EPIC));
 }

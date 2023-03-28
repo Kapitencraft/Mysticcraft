@@ -5,8 +5,8 @@ import net.kapitencraft.mysticcraft.item.armor.FrozenBlazeArmorItem;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.model.DefaultedItemGeoModel;
 
-public class FrozenBlazeModel extends DefaultedItemGeoModel<FrozenBlazeArmorItem> {
-    public FrozenBlazeModel() {
+public class FrozenBlazeArmorModel extends DefaultedItemGeoModel<FrozenBlazeArmorItem> {
+    public FrozenBlazeArmorModel() {
         super(new ResourceLocation(MysticcraftMod.MOD_ID, "frozen_blaze_armor"));
     }
 }

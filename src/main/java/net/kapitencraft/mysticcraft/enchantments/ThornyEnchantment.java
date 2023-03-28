@@ -23,4 +23,14 @@ public class ThornyEnchantment extends ExtendedCalculationEnchantment implements
         attacker.hurt(DamageSource.thorns(attacked), level);
         return damage;
     }
+
+    @Override
+    public double getValueMultiplier() {
+        return 1;
+    }
+
+    @Override
+    public boolean isPercentage() {
+        return false;
+    }
 }

@@ -35,4 +35,9 @@ public class FastArrowsEnchantment extends StatBoostEnchantment implements IWeap
     public boolean hasModifiersForThatSlot(EquipmentSlot slot) {
         return slot == EquipmentSlot.MAINHAND;
     }
+
+    @Override
+    public double getValueMultiplier() {
+        return 10;
+    }
 }

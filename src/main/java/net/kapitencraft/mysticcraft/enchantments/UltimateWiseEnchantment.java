@@ -34,4 +34,14 @@ public class UltimateWiseEnchantment extends StatBoostEnchantment implements IWe
     public boolean hasModifiersForThatSlot(EquipmentSlot slot) {
         return MiscUtils.arrayContains(MiscUtils.WEAPON_SLOT, slot);
     }
+
+    @Override
+    public double getValueMultiplier() {
+        return -10;
+    }
+
+    @Override
+    public boolean isPercentage() {
+        return true;
+    }
 }
