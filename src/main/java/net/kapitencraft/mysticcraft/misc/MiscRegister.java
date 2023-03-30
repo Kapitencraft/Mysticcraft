@@ -323,7 +323,7 @@ public class MiscRegister {
 
             if (!player.isOnGround()) {
                 if (tag.getInt("currentDoubleJump") < player.getAttributeValue(ModAttributes.DOUBLE_JUMP.get()) && tag.getInt("doubleJumpCooldown") < 1) {
-                    if (canJump(player) && ((LivingEntityMixin) player).getJumping()) {
+                    if (canJump(player) && ((LivingEntityMixin) player).getJumping() && ((LivingEntityMixin) player).getNoJumpDelay() <= 0) {
                         MiscUtils.sendParticles(player.level, ParticleTypes.CLOUD, false, player.getX(), player.getY(), player.getZ(), 15, 0.25, 0, 0.25, 0.1);
                         Vec3 targetLoc = MathUtils.setLength(player.getLookAngle().multiply(1, 0, 1), 0.75).add(0, 1, 0);
                         player.setDeltaMovement(targetLoc.x, targetLoc.y > 0 ? targetLoc.y : -targetLoc.y, targetLoc.z);
