@@ -127,6 +127,8 @@
 
   "enchantment.mysticcraft.elvish_mastery": "Elvish Mastery",
   "enchantment.mysticcraft.elvish_mastery.desc": "grants %1$s Draw Speed",
+  "enchantment.mysticcraft.legolas_emulation": "Legolas Emulation",
+  "enchantment.mysticcraft.legolas_emulation.desc": "grants a %2$s chance to fire up to %1$s more arrows",
   "enchantment.mysticcraft.fast_arrows": "Faster Arrows",
   "enchantment.mysticcraft.fast_arrows.desc": "grants %1$s Arrow Speed",
   "enchantment.mysticcraft.giant_killer": "Giant Killer",
@@ -161,6 +163,8 @@
   "enchantment.mysticcraft.critical.desc": "grants %1$s Crit Damage",
   "enchantment.mysticcraft.divine_gift": "Divine Gift",
   "enchantment.mysticcraft.divine_gift.desc": "grants %1$s Magic Find",
+  "enchantment.mysticcraft.double_jump": "Double Jump",
+  "enchantment.mysticcraft.double_jump.desc": "grants %1$s Double Jump",
   "enchantment.mysticcraft.yeet_thorns": "Yeet Thorns",
   "enchantment.mysticcraft.yeet_thorns.desc": "makes enemies, that attack you, fly",
   "enchantment.mysticcraft.telekinesis": "Telekinesis",

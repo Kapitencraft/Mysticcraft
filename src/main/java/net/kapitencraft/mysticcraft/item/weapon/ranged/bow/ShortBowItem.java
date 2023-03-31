@@ -48,7 +48,7 @@ public abstract class ShortBowItem extends ModdedBows {
         ItemStack arrowStack = archer.getProjectile(bow);
         if (!arrowStack.isEmpty() && arrowStack.getItem() instanceof ArrowItem arrowItem) {
             AbstractArrow arrow = arrowItem.createArrow(world, arrowStack, archer);
-            arrow.shootFromRotation(archer, rotX, rotY, 0.0F, (float) (5 + bow.getEnchantmentLevel(ModEnchantments.FAST_ARROWS.get()) * 0.2), 1.0F);
+            arrow.shootFromRotation(archer, rotX, rotY, 0.0F, (float) (5 + archer.getAttributeValue(ModAttributes.ARROW_SPEED.get()) * 0.02), 1.0F);
             arrow.setBaseDamage(archer.getAttributeValue(ModAttributes.RANGED_DAMAGE.get()));
             arrow.setKnockback(kb);
             arrow.setCritArrow(true);
@@ -95,6 +95,12 @@ public abstract class ShortBowItem extends ModdedBows {
     }
 
     protected void createArrows(@NotNull ItemStack bow, @NotNull Level world, @NotNull LivingEntity archer) {
+        int legolasLevel = bow.getEnchantmentLevel(ModEnchantments.LEGOLAS_EMULATION.get());
+        for (int j = 0; j < legolasLevel; j++) {
+            float yChange = (float) (Math.random() * (5 - legolasLevel) - (5 - legolasLevel) / 2);
+            float xChange = (float) (Math.random() * (5 - legolasLevel) - (5 - legolasLevel) / 2);
+            createArrowProperties(archer, bow, this.getKB(), archer.getXRot() + xChange, archer.getYRot() + yChange);
+        }
         createArrowProperties(archer, bow, this.getKB(), archer.getXRot(), archer.getYRot());
     }
 }

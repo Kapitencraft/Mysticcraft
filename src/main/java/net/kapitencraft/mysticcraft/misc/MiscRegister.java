@@ -19,6 +19,7 @@ import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.item.item_bonus.IArmorBonusItem;
 import net.kapitencraft.mysticcraft.item.spells.SpellItem;
 import net.kapitencraft.mysticcraft.item.weapon.melee.sword.ManaSteelSwordItem;
+import net.kapitencraft.mysticcraft.item.weapon.ranged.bow.ModdedBows;
 import net.kapitencraft.mysticcraft.item.weapon.ranged.bow.ShortBowItem;
 import net.kapitencraft.mysticcraft.misc.damage_source.FerociousDamageSource;
 import net.kapitencraft.mysticcraft.misc.damage_source.IAbilitySource;
@@ -59,6 +60,8 @@ import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.entity.projectile.SmallFireball;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -72,6 +75,7 @@ import net.minecraftforge.event.ItemAttributeModifierEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.*;
+import net.minecraftforge.event.entity.player.ArrowLooseEvent;
 import net.minecraftforge.event.entity.player.CriticalHitEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.level.BlockEvent;
@@ -84,6 +88,9 @@ import java.util.*;
 
 @Mod.EventBusSubscriber
 public class MiscRegister {
+
+    static final String doubleJumpId = "currentDoubleJump";
+
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void DamageAttributeRegister(LivingDamageEvent event) {
         @Nullable LivingEntity attacker = MiscUtils.getAttacker(event.getSource());
@@ -95,6 +102,10 @@ public class MiscRegister {
         } else if (AttributeUtils.getSaveAttributeValue(ModAttributes.STRENGTH.get(), attacker) != -1) {
             double Strength = AttributeUtils.getSaveAttributeValue(ModAttributes.STRENGTH.get(), attacker);
             event.setAmount((float) (event.getAmount() * (1 + Strength / 100)));
+        }
+        double double_jump = AttributeUtils.getSaveAttributeValue(ModAttributes.DOUBLE_JUMP.get(), attacker);
+        if (double_jump > 0 && attacker.getPersistentData().getInt(doubleJumpId) > 0 && event.getSource().getMsgId().equals("fall")) {
+            event.setAmount((float) (event.getAmount() * (1 - double_jump * 0.02)));
         }
         LivingEntity attacked = event.getEntity();
         if (AttributeUtils.getSaveAttributeValue(ModAttributes.ARMOR_SHREDDER.get(), attacker) != -1) {
@@ -108,6 +119,56 @@ public class MiscRegister {
             double live_steel = (int) AttributeUtils.getSaveAttributeValue(ModAttributes.LIVE_STEAL.get(), attacker);
             attacker.heal(Math.min((float) live_steel, event.getAmount()));
         }
+    }
+
+    @SubscribeEvent
+    public static void modArrowEnchantments(ArrowLooseEvent event) {
+        Player player = event.getEntity();
+        ItemStack bow = event.getBow();
+        if (bow.getItem() instanceof ModdedBows) return;
+        event.setCharge((int) (event.getCharge() * (1 + player.getAttributeValue(ModAttributes.DRAW_SPEED.get()) * 0.01)));
+        if (bow.getEnchantmentLevel(ModEnchantments.LEGOLAS_EMULATION.get()) > 0) {
+            int legolasLevel = bow.getEnchantmentLevel(ModEnchantments.LEGOLAS_EMULATION.get());
+            float movementSpeedValue = BowItem.getPowerForTime(event.getCharge());
+            for (int i = 0; i < legolasLevel; i++) {
+                if (Math.random() <= legolasLevel * 0.1) {
+                    float yChange = (float) (Math.random() *  (5 - legolasLevel) - (5 - legolasLevel) / 2);
+                    float xChange = (float) (Math.random() * (5 - legolasLevel) - (5 - legolasLevel) / 2);
+                    createArrow(bow, player, movementSpeedValue, xChange, yChange);
+                }
+            }
+        }
+    }
+
+    private static void createArrow(ItemStack itemStack, Player player, float speed, float xChange, float yChange) {
+        ItemStack projectile = player.getProjectile(itemStack);
+        ArrowItem arrowitem = (ArrowItem)(projectile.getItem() instanceof ArrowItem ? projectile.getItem() : Items.ARROW);
+        AbstractArrow abstractarrow = arrowitem.createArrow(player.level, itemStack, player);
+        abstractarrow.shootFromRotation(player, player.getXRot() + xChange, player.getYRot() + yChange, 0.0F, speed * 3.0F, 1.0F);
+        if (speed == 1.0F) {
+            abstractarrow.setCritArrow(true);
+        }
+
+        int j = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.POWER_ARROWS, itemStack);
+        if (j > 0) {
+            abstractarrow.setBaseDamage(abstractarrow.getBaseDamage() + (double)j * 0.5D + 0.5D);
+        }
+
+        int k = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PUNCH_ARROWS, itemStack);
+        if (k > 0) {
+            abstractarrow.setKnockback(k);
+        }
+
+        if (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FLAMING_ARROWS, itemStack) > 0) {
+            abstractarrow.setSecondsOnFire(100);
+        }
+        itemStack.hurtAndBreak(1, player, (p_253596_) -> {
+            p_253596_.broadcastBreakEvent(player.getUsedItemHand());
+        });
+        if ((player.getAbilities().instabuild || (projectile.getItem() instanceof ArrowItem && ((ArrowItem)projectile.getItem()).isInfinite(projectile, itemStack, player))) || player.getAbilities().instabuild && (itemStack.is(Items.SPECTRAL_ARROW) || itemStack.is(Items.TIPPED_ARROW))) {
+            abstractarrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
+        }
+        player.level.addFreshEntity(abstractarrow);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
@@ -322,19 +383,18 @@ public class MiscRegister {
             }
 
             if (!player.isOnGround()) {
-                if (tag.getInt("currentDoubleJump") < player.getAttributeValue(ModAttributes.DOUBLE_JUMP.get()) && tag.getInt("doubleJumpCooldown") < 1) {
+                //Serverside error
+                if (tag.getInt(doubleJumpId) < player.getAttributeValue(ModAttributes.DOUBLE_JUMP.get())) {
                     if (canJump(player) && ((LivingEntityMixin) player).getJumping() && ((LivingEntityMixin) player).getNoJumpDelay() <= 0) {
-                        MiscUtils.sendParticles(player.level, ParticleTypes.CLOUD, false, player.getX(), player.getY(), player.getZ(), 15, 0.25, 0, 0.25, 0.1);
+                        MiscUtils.sendParticles(ParticleTypes.CLOUD, false, player, 15, 0.025, 0.025, 0.025, 0.1);
+                        ((LivingEntityMixin) player).setNoJumpDelay(10); player.fallDistance = 0;
                         Vec3 targetLoc = MathUtils.setLength(player.getLookAngle().multiply(1, 0, 1), 0.75).add(0, 1, 0);
                         player.setDeltaMovement(targetLoc.x, targetLoc.y > 0 ? targetLoc.y : -targetLoc.y, targetLoc.z);
-                        TagUtils.increaseIntegerTagValue(player.getPersistentData(), "currentDoubleJump", 1);
+                        TagUtils.increaseIntegerTagValue(player.getPersistentData(), doubleJumpId, 1);
                     }
                 }
-            } else if (tag.getInt("currentDoubleJump") > 0) {
-                tag.putInt("currentDoubleJump", 0);
-            }
-            if (tag.getInt("doubleJumpCooldown") > 0) {
-                TagUtils.increaseIntegerTagValue(tag, "doubleJumpCooldown", -1);
+            } else if (tag.getInt(doubleJumpId) > 0) {
+                tag.putInt(doubleJumpId, 0);
             }
         }
         if (!ModArmorItem.isFullSetActive(living, ModArmorMaterials.SOUL_MAGE) && tag.getString("lastFullSet").equals(ModArmorMaterials.SOUL_MAGE.getName())) {

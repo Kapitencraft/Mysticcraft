@@ -2,8 +2,10 @@ package net.kapitencraft.mysticcraft.misc;
 
 import net.kapitencraft.mysticcraft.enchantments.abstracts.CountEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.ModEnchantment;
+import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentContents;
 import net.minecraft.network.chat.MutableComponent;
@@ -37,7 +39,7 @@ public class EnchantmentDescriptionManager {
         Set<Enchantment> enchantments = EnchantmentHelper.getEnchantments(stack).keySet();
         if (!enchantments.isEmpty()) {
             if (!Screen.hasShiftDown() && !(stack.getItem() instanceof EnchantedBookItem)) {
-                tooltip.add(1, Component.translatable("mysticcraft.ench_desc.shift").withStyle(ChatFormatting.DARK_GRAY));
+                tooltip.add(stack.getItem() instanceof IGemstoneApplicable ? 2:1, Component.translatable("mysticcraft.ench_desc.shift").withStyle(ChatFormatting.DARK_GRAY));
             } else {
                 for (Enchantment enchantment : enchantments) {
                     for (Component line : tooltip) {
@@ -57,6 +59,9 @@ public class EnchantmentDescriptionManager {
 
     public static MutableComponent getDescription(ItemStack stack, Enchantment ench) {
         String descriptionKey = ench.getDescriptionId() + ".desc";
+        if (!I18n.exists(descriptionKey) && I18n.exists(ench.getDescriptionId() + ".description")) {
+            descriptionKey = ench.getDescriptionId() + ".description";
+        }
         double change = 1;
         boolean isPercentage = false;
         int level = stack.getItem() instanceof EnchantedBookItem ? (EnchantmentHelper.deserializeEnchantments(EnchantedBookItem.getEnchantments(stack)).get(ench)) : EnchantmentHelper.getTagEnchantmentLevel(ench, stack);

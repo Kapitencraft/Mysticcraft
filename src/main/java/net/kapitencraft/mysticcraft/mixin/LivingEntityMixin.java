@@ -13,4 +13,7 @@ public interface LivingEntityMixin {
 
     @Accessor
     int getNoJumpDelay();
+
+    @Accessor
+    void setNoJumpDelay(int delay);
 }

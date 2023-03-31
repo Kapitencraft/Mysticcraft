@@ -14,7 +14,7 @@ import net.minecraft.world.item.enchantment.EnchantmentCategory;
 
 public class ElvishMasteryEnchantment extends StatBoostEnchantment implements IWeaponEnchantment {
     public ElvishMasteryEnchantment() {
-        super(Enchantment.Rarity.RARE, EnchantmentCategory.BOW, new EquipmentSlot[]{EquipmentSlot.MAINHAND});
+        super(Enchantment.Rarity.RARE, EnchantmentCategory.BOW, EquipmentSlot.MAINHAND);
     }
 
     @Override

@@ -67,6 +67,7 @@ public class TabRegister {
                         .displayItems((featureFlagSet, output, p_260123_) -> {
                             output.accept(ModItems.MANA_STEEL_SWORD.get());
                             output.accept(ModItems.TALLIN_BOW.get());
+                            output.accept(ModItems.LONGBOW.get());
                             addArmor(ModItems.ENDER_KNIGHT_ARMOR, output);
                             addArmor(ModItems.FROZEN_BLAZE_ARMOR, output);
                             addArmor(ModItems.SHADOW_ASSASSIN_ARMOR, output);

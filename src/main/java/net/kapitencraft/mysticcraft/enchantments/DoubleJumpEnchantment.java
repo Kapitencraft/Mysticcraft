@@ -22,6 +22,11 @@ public class DoubleJumpEnchantment extends ArmorStatBoostEnchantment {
     }
 
     @Override
+    public int getMaxLevel() {
+        return 3;
+    }
+
+    @Override
     public double getValueMultiplier() {
         return 1;
     }

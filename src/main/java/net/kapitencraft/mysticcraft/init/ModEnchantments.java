@@ -12,6 +12,7 @@ public abstract class ModEnchantments {
     public static final DeferredRegister<Enchantment> REGISTRY = DeferredRegister.create(ForgeRegistries.ENCHANTMENTS, MysticcraftMod.MOD_ID);
 
     public static final RegistryObject<Enchantment> ELVISH_MASTERY = REGISTRY.register("elvish_mastery", ElvishMasteryEnchantment::new);
+    public static final RegistryObject<Enchantment> LEGOLAS_EMULATION = REGISTRY.register("legolas_emulation", LegolasEmulationEnchantment::new);
     public static final RegistryObject<Enchantment> FAST_ARROWS = REGISTRY.register("fast_arrows", FastArrowsEnchantment::new);
     public static final RegistryObject<Enchantment> GIANT_KILLER = REGISTRY.register("giant_killer", GiantKillerEnchantment::new);
     public static final RegistryObject<Enchantment> AIM = REGISTRY.register("aim", AimEnchantment::new);

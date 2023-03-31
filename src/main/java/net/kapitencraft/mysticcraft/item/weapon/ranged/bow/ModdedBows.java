@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
+import net.kapitencraft.mysticcraft.init.ModEnchantments;
 import net.kapitencraft.mysticcraft.item.IModItem;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
@@ -57,7 +58,6 @@ public abstract class ModdedBows extends BowItem implements IModItem {
                         AbstractArrow abstractarrow = arrowitem.createArrow(world, itemstack, player);
                         double fbSpeedMul = LongBowItem.ARROW_SPEED_MUL / mul;
                         double speedMul = archer.getAttributeValue(ModAttributes.ARROW_SPEED.get());
-                        abstractarrow.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, (float) (f * mul * (1+ getSpeedMul(abstractarrow, fbSpeedMul, speedMul))), 1.0F);
                         abstractarrow.setBaseDamage(player.getAttributeValue(ModAttributes.RANGED_DAMAGE.get()));
                         abstractarrow.setKnockback(2);
                         if (f == 1.0F) {
@@ -68,6 +68,14 @@ public abstract class ModdedBows extends BowItem implements IModItem {
                         if (flag1 || player.getAbilities().instabuild && (itemstack.is(Items.SPECTRAL_ARROW) || itemstack.is(Items.TIPPED_ARROW))) {
                             abstractarrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
                         }
+                        AbstractArrow extraArrow = abstractarrow;
+                        int legolasLevel = bow.getEnchantmentLevel(ModEnchantments.LEGOLAS_EMULATION.get());
+                        for (int j = 0; j < legolasLevel; j++) {
+                            float yChange = (float) (Math.random() * (5 - legolasLevel) - (5 - legolasLevel) / 2);
+                            float xChange = (float) (Math.random() * (5 - legolasLevel) - (5 - legolasLevel) / 2);
+                            extraArrow.shootFromRotation(player, player.getXRot() + xChange, player.getYRot() + yChange, 0.0f, (float) (f * mul * (1+ getSpeedMul(abstractarrow, fbSpeedMul, speedMul))), 1f);
+                        }
+                        abstractarrow.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, (float) (f * mul * (1+ getSpeedMul(abstractarrow, fbSpeedMul, speedMul))), 1.0F);
                         world.addFreshEntity(abstractarrow);
                     }
                     world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ARROW_SHOOT, SoundSource.PLAYERS, 1.0F, 1.0F / (world.getRandom().nextFloat() * 0.4F + 1.2F) + f * 0.5F);

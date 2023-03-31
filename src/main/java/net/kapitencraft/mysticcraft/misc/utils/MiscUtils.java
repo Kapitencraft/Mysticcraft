@@ -299,7 +299,9 @@ public class MiscUtils {
         }
         return -1;
     }
-
+    public static <T extends ParticleOptions> int sendParticles(T type, boolean force, Entity source, int amount, double deltaX, double deltaY, double deltaZ, double speed) {
+        return sendParticles(source.level, type, force, MiscUtils.getPosition(source), amount, deltaX, deltaY, deltaZ, speed);
+    }
     public static <T extends ParticleOptions> int sendParticles(Level level, T type, boolean force, Vec3 loc, int amount, double deltaX, double deltaY, double deltaZ, double speed) {
         return sendParticles(level, type, force, loc.x, loc.y, loc.z, amount, deltaX, deltaY, deltaZ, speed);
     }
