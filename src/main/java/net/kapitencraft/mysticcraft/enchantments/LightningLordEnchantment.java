@@ -2,6 +2,7 @@ package net.kapitencraft.mysticcraft.enchantments;
 
 import net.kapitencraft.mysticcraft.enchantments.abstracts.CountEnchantment;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LightningBolt;
@@ -11,7 +12,7 @@ import net.minecraft.world.phys.Vec3;
 
 public class LightningLordEnchantment extends CountEnchantment {
     public LightningLordEnchantment() {
-        super(Rarity.RARE, new EquipmentSlot[]{EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND}, "lightningLordMap", countType.NORMAL, CalculationType.ALL);
+        super(Rarity.RARE, new EquipmentSlot[]{EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND}, "lightningLordMap", CountType.NORMAL, CalculationType.ALL, CalculationPriority.LOW);
     }
 
     @Override
@@ -25,7 +26,7 @@ public class LightningLordEnchantment extends CountEnchantment {
     }
 
     @Override
-    protected double mainExecute(int level, ItemStack enchanted, LivingEntity attacker, LivingEntity attacked, double damageAmount, int curTick) {
+    protected double mainExecute(int level, ItemStack enchanted, LivingEntity attacker, LivingEntity attacked, double damageAmount, int curTick, DamageSource source) {
         if (attacker.level instanceof ServerLevel serverLevel) {
             LightningBolt entityToSpawn = EntityType.LIGHTNING_BOLT.create(serverLevel);
             assert entityToSpawn != null;
@@ -37,13 +38,14 @@ public class LightningLordEnchantment extends CountEnchantment {
         return damageAmount;
     }
 
-    @Override
-    public double getValueMultiplier() {
-        return 10;
-    }
 
     @Override
     public boolean isPercentage() {
         return true;
+    }
+
+    @Override
+    public Object[] getDescriptionMods(int level) {
+        return new Object[] {level*10 + "%"};
     }
 }

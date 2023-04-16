@@ -6,37 +6,67 @@ import net.kapitencraft.mysticcraft.entity.SchnauzenPluesch;
 import net.kapitencraft.mysticcraft.entity.WithermancerLordEntity;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModEntityTypes;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.EntityAttributeModificationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.registries.ForgeRegistries;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @EventBusSubscriber(modid = MysticcraftMod.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public class AttributeAdder {
     @SubscribeEvent
     public static void AttributeAdding(EntityAttributeModificationEvent event) {
-        event.add(EntityType.PLAYER, ModAttributes.CRIT_DAMAGE.get());
+        addAll(event, ModAttributes.STRENGTH.get(), ONLY_WITH_BRAIN);
+        addAll(event, ModAttributes.CRIT_DAMAGE.get(), ONLY_WITH_BRAIN);
+        addAll(event, ModAttributes.RANGED_DAMAGE.get(), ONLY_WITH_BRAIN);
+        addAll(event, ModAttributes.HEALTH_REGEN.get(), ONLY_WITH_BRAIN);
         event.add(EntityType.PLAYER, ModAttributes.ABILITY_DAMAGE.get());
         event.add(EntityType.PLAYER, ModAttributes.MANA_COST.get());
         event.add(EntityType.PLAYER, ModAttributes.INTELLIGENCE.get());
-        event.add(EntityType.PLAYER, ModAttributes.STRENGTH.get());
         event.add(EntityType.PLAYER, ModAttributes.MAGIC_FIND.get());
         event.add(EntityType.PLAYER, ModAttributes.FEROCITY.get());
         event.add(EntityType.PLAYER, ModAttributes.MAX_MANA.get());
         event.add(EntityType.PLAYER, ModAttributes.MANA_REGEN.get());
-        event.add(EntityType.PLAYER, ModAttributes.CRIT_DAMAGE.get());
         event.add(EntityType.PLAYER, ModAttributes.MANA.get());
-        event.add(EntityType.PLAYER, ModAttributes.HEALTH_REGEN.get());
         event.add(EntityType.PLAYER, ModAttributes.DODGE.get());
         event.add(EntityType.PLAYER, ModAttributes.LIVE_STEAL.get());
-        event.add(EntityType.PLAYER, ModAttributes.RANGED_DAMAGE.get());
         event.add(EntityType.PLAYER, ModAttributes.DRAW_SPEED.get());
         event.add(EntityType.PLAYER, ModAttributes.ARROW_SPEED.get());
         event.add(EntityType.PLAYER, ModAttributes.ARMOR_SHREDDER.get());
         event.add(EntityType.PLAYER, ModAttributes.DOUBLE_JUMP.get());
     }
 
+    private interface isAInstance {
+        boolean is(EntityType<? extends LivingEntity> entityType);
+    }
+
+    private static final isAInstance ONLY_WITH_BRAIN = (entityType)-> (entityType.getCategory() != MobCategory.MISC) || entityType == EntityType.PLAYER;
+
+
+    private static void addAll(EntityAttributeModificationEvent event, Attribute attribute, isAInstance generator) {
+        List<String> addedList = new ArrayList<>();
+        for (EntityType<? extends Entity> entityType : ForgeRegistries.ENTITY_TYPES.getValues()) {
+            EntityType<? extends LivingEntity> livingType;
+            try {
+                livingType = (EntityType<? extends LivingEntity>) entityType;
+                if (generator.is(livingType)) {
+                    event.add(livingType, attribute);
+                    addedList.add(livingType.getDescriptionId());
+                }
+            } catch (Exception ignored) {
+
+            }
+        }
+        MysticcraftMod.sendInfo("Registering Attribute: [" + attribute.getDescriptionId() + "] to: " + addedList.toString());
+    }
     @SubscribeEvent
     public static void AttributeCreating(EntityAttributeCreationEvent event) {
         event.put(ModEntityTypes.FROZEN_BLAZE.get(), FrozenBlazeEntity.createAttributes().build());

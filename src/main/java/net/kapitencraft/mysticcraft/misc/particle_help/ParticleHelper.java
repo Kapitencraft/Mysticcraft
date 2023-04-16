@@ -2,7 +2,7 @@ package net.kapitencraft.mysticcraft.misc.particle_help;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.misc.utils.MathUtils;
-import net.kapitencraft.mysticcraft.misc.utils.MiscUtils;
+import net.kapitencraft.mysticcraft.misc.utils.ParticleUtils;
 import net.kapitencraft.mysticcraft.misc.utils.TagUtils;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.ParticleTypes;
@@ -212,12 +212,12 @@ public class ParticleHelper {
         float currentRot = TagUtils.increaseFloatTagValue(this.properties, CURRENT_ROTATION_ID, this.properties.getFloat(ROTATION_PER_TICK_ID));
         Vec3 targetPos;
         if (this.target instanceof Projectile) {
-            targetPos = MathUtils.calculateViewVector(currentRot, 0).add(MiscUtils.getPosition(target));
+            targetPos = MathUtils.calculateViewVector(currentRot, 0).add(MathUtils.getPosition(target));
         } else {
             TagUtils.increaseFloatTagValue(this.properties, Y_OFFSET_ID, (currentTick >= (ticksPerCycle / 2)) ? -this.heightChange : this.heightChange);
             targetPos = MathUtils.calculateViewVector(0, currentRot).add(target.getX(), target.getY() +  this.properties.getFloat(Y_OFFSET_ID), target.getZ());
         }
-        MiscUtils.sendParticles(level, getFromTag(this.properties.getString("particleType")), false, targetPos, 2, 0,0, 0, 0);
+        ParticleUtils.sendParticles(level, getFromTag(this.properties.getString("particleType")), false, targetPos, 2, 0,0, 0, 0);
     }
 
     private void tickArrowHead(Level level) {
@@ -226,7 +226,7 @@ public class ParticleHelper {
             for (int y = 0; y < 2; y++) {
                 for (int i = y; i < 10; i++) {
                     Vec3 targetLoc = MathUtils.calculateViewVector(target.getXRot(), target.getYRot() + (y == 0 ? 160 : -160)).scale(i * 0.05).add(target.getX(), target.getY() + 0.1f, target.getZ());
-                    MiscUtils.sendParticles(level, false, targetLoc, 0, 0, 0, 0, gradientHolders[i]);
+                    ParticleUtils.sendParticles(level, false, targetLoc, 0, 0, 0, 0, gradientHolders[i]);
                 }
             }
         }

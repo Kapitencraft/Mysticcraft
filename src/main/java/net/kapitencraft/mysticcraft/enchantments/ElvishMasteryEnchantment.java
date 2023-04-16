@@ -31,8 +31,9 @@ public class ElvishMasteryEnchantment extends StatBoostEnchantment implements IW
         return slot == EquipmentSlot.MAINHAND;
     }
 
+
     @Override
-    public double getValueMultiplier() {
-        return 10;
+    public Object[] getDescriptionMods(int level) {
+        return new Object[] {level*10};
     }
 }

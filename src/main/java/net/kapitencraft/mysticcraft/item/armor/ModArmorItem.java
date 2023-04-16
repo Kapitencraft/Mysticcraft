@@ -120,7 +120,7 @@ public abstract class ModArmorItem extends ArmorItem {
                 PieceBonus bonus = bonusItem.getPieceBonusForSlot(this.getSlot());
                 if (bonus != null) {
                     Multimap<Attribute, AttributeModifier> bonusMods = bonus.getModifiers(living);
-                    if (bonus.getModifiers(living) != null && bonusMods != null ) {
+                    if (bonusMods != null ) {
                         builder.putAll(bonusMods);
                     }
                 }

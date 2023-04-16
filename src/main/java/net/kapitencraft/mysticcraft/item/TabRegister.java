@@ -23,7 +23,6 @@ import java.util.HashMap;
 
 @Mod.EventBusSubscriber(modid = MysticcraftMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class TabRegister {
-
     @SubscribeEvent
     public static void registerTabs(CreativeModeTabEvent.Register event) {
         event.registerCreativeModeTab(new ResourceLocation(MysticcraftMod.MOD_ID, "spell_and_gemstone"), builder ->
@@ -42,12 +41,15 @@ public class TabRegister {
                             output.accept(ModItems.WIZARD_HAT.get());
                             output.accept(ModItems.HYPERION.get());
                             output.accept(ModItems.THE_STAFF_DESTRUCTION.get());
-                            addGemstones(ModItems.GEMSTONES, output);
+                            output.accept(ModBlocks.GEMSTONE_GRINDER.getItem());
+                            addGemstones(output);
+                            addScrolls(output);
                         }));
         event.registerCreativeModeTab(new ResourceLocation(MysticcraftMod.MOD_ID, "materials"), builder ->
                 builder.title(Component.translatable("itemGroup.materials_mm"))
                         .icon(()-> new ItemStack(ModItems.SPELL_SHARD.get()))
                         .displayItems((featureFlagSet, output, flag) -> {
+                            output.accept(ModItems.DYED_LEATHER.get());
                             output.accept(ModItems.SPELL_SHARD.get());
                             output.accept(ModItems.UPPER_BlADE_MS.get());
                             output.accept(ModItems.HEART_OF_THE_NETHER.get());
@@ -102,12 +104,18 @@ public class TabRegister {
         }
     }
 
-    private static void addGemstones(HashMap<GemstoneType, HashMap<GemstoneType.Rarity, RegistryObject<GemstoneItem>>> gemstone, CreativeModeTab.Output output) {
+    private static void addGemstones(CreativeModeTab.Output output) {
         for (int i = 0; i < GemstoneType.values().length; i++) {
-            Collection<RegistryObject<GemstoneItem>> gemstones = new ArrayList<>(gemstone.values()).get(i).values();
+            Collection<RegistryObject<GemstoneItem>> gemstones = new ArrayList<>(ModItems.GEMSTONES.values()).get(i).values();
                 for (RegistryObject<GemstoneItem> registryObject : gemstones) {
                     output.accept(registryObject.get());
                 }
+        }
+    }
+
+    private static void addScrolls(CreativeModeTab.Output output) {
+        for (RegistryObject<Item> item : ModItems.SCROLLS.values()) {
+            output.accept(item.get());
         }
     }
 }

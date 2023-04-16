@@ -1,6 +1,5 @@
 package net.kapitencraft.mysticcraft.misc;
 
-import net.kapitencraft.mysticcraft.enchantments.abstracts.CountEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.ModEnchantment;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.minecraft.ChatFormatting;
@@ -62,15 +61,8 @@ public class EnchantmentDescriptionManager {
         if (!I18n.exists(descriptionKey) && I18n.exists(ench.getDescriptionId() + ".description")) {
             descriptionKey = ench.getDescriptionId() + ".description";
         }
-        double change = 1;
-        boolean isPercentage = false;
         int level = stack.getItem() instanceof EnchantedBookItem ? (EnchantmentHelper.deserializeEnchantments(EnchantedBookItem.getEnchantments(stack)).get(ench)) : EnchantmentHelper.getTagEnchantmentLevel(ench, stack);
-        if (ench instanceof ModEnchantment modEnchantment) {
-            change = modEnchantment.getValueMultiplier();
-            isPercentage = modEnchantment.isPercentage();
-        }
-        boolean flag = ench instanceof CountEnchantment;
-        double value = level * change;
-        return Component.translatable(descriptionKey, Component.literal((value > 0 ? ("+" + value) : value) + (isPercentage ? "%" : "")), flag ? (stack.getEnchantmentLevel(ench) * 0.4) : 0).withStyle(ChatFormatting.DARK_GRAY);
+        Object[] objects = ench instanceof ModEnchantment modEnchantment ? modEnchantment.getDescriptionMods(level) : new Object[]{level};
+        return Component.translatable(descriptionKey, objects);
     }
 }

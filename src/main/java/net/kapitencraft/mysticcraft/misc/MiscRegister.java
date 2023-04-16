@@ -1,10 +1,10 @@
 package net.kapitencraft.mysticcraft.misc;
 
 import com.google.common.collect.Multimap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.enchantments.IArmorEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.IToolEnchantment;
-import net.kapitencraft.mysticcraft.enchantments.IWeaponEnchantment;
+import net.kapitencraft.mysticcraft.enchantments.VenomousEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.ExtendedCalculationEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.ModBowEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.StatBoostEnchantment;
@@ -24,12 +24,11 @@ import net.kapitencraft.mysticcraft.item.weapon.ranged.bow.ShortBowItem;
 import net.kapitencraft.mysticcraft.misc.damage_source.FerociousDamageSource;
 import net.kapitencraft.mysticcraft.misc.damage_source.IAbilitySource;
 import net.kapitencraft.mysticcraft.misc.particle_help.ParticleHelper;
-import net.kapitencraft.mysticcraft.misc.utils.AttributeUtils;
-import net.kapitencraft.mysticcraft.misc.utils.MathUtils;
-import net.kapitencraft.mysticcraft.misc.utils.MiscUtils;
-import net.kapitencraft.mysticcraft.misc.utils.TagUtils;
+import net.kapitencraft.mysticcraft.misc.utils.*;
 import net.kapitencraft.mysticcraft.mixin.LivingEntityMixin;
+import net.kapitencraft.mysticcraft.mob_effects.NumbnessMobEffect;
 import net.kapitencraft.mysticcraft.spell.Spell;
+import net.kapitencraft.mysticcraft.spell.spells.WitherImpactSpell;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -51,9 +50,11 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Blaze;
+import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Arrow;
@@ -79,6 +80,7 @@ import net.minecraftforge.event.entity.player.ArrowLooseEvent;
 import net.minecraftforge.event.entity.player.CriticalHitEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.level.BlockEvent;
+import net.minecraftforge.event.village.VillagerTradesEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -91,8 +93,9 @@ public class MiscRegister {
 
     static final String doubleJumpId = "currentDoubleJump";
 
+
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public static void DamageAttributeRegister(LivingDamageEvent event) {
+    public static void DamageAttributeRegister(LivingHurtEvent event) {
         @Nullable LivingEntity attacker = MiscUtils.getAttacker(event.getSource());
         if (attacker == null) { return; }
         if (event.getSource() instanceof IAbilitySource abilitySource) {
@@ -162,9 +165,7 @@ public class MiscRegister {
         if (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FLAMING_ARROWS, itemStack) > 0) {
             abstractarrow.setSecondsOnFire(100);
         }
-        itemStack.hurtAndBreak(1, player, (p_253596_) -> {
-            p_253596_.broadcastBreakEvent(player.getUsedItemHand());
-        });
+        itemStack.hurtAndBreak(1, player, (p_253596_) -> p_253596_.broadcastBreakEvent(player.getUsedItemHand()));
         if ((player.getAbilities().instabuild || (projectile.getItem() instanceof ArrowItem && ((ArrowItem)projectile.getItem()).isInfinite(projectile, itemStack, player))) || player.getAbilities().instabuild && (itemStack.is(Items.SPECTRAL_ARROW) || itemStack.is(Items.TIPPED_ARROW))) {
             abstractarrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
         }
@@ -172,32 +173,26 @@ public class MiscRegister {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
-    public static void DamageEnchantRegister(LivingDamageEvent event) {
+    public static void DamageEnchantRegister(LivingHurtEvent event) {
         LivingEntity attacked = event.getEntity();
         if (event.getSource().getEntity() instanceof Arrow arrow) {
             CompoundTag tag = arrow.getPersistentData();
             event.setAmount(ModBowEnchantment.loadFromTag(attacked, tag, ModBowEnchantment.ExecuteType.HIT, event.getAmount(), arrow));
             return;
         }
-        @Nullable LivingEntity attacker = MiscUtils.getAttacker(event.getSource());
+        DamageSource source = event.getSource();
+        @Nullable LivingEntity attacker = MiscUtils.getAttacker(source);
         if (attacker == null) { return; }
         ItemStack stack = attacker.getMainHandItem();
         Map<Enchantment, Integer> enchantments = stack.getAllEnchantments();
         MiscUtils.DamageType type = MiscUtils.getDamageType(event.getSource());
         if (enchantments != null) {
-            for (Enchantment enchantment : enchantments.keySet()) {
-                if (enchantment instanceof ExtendedCalculationEnchantment modEnchantment && enchantment instanceof IWeaponEnchantment) {
-                    event.setAmount((float) modEnchantment.tryExecute(enchantments.get(enchantment), stack, attacker, attacked, event.getAmount(), type));
-                }
-            }
-            for (EquipmentSlot slot : MiscUtils.ARMOR_EQUIPMENT) {
-                stack = attacked.getItemBySlot(slot);
-                for (Enchantment enchantment : enchantments.keySet()) {
-                    if (enchantment instanceof ExtendedCalculationEnchantment modEnchantment && enchantment instanceof IArmorEnchantment) {
-                        event.setAmount((float) modEnchantment.tryExecute(enchantments.get(enchantment), stack, attacker, attacked, event.getAmount(), type));
-                    }
-                }
-            }
+            event.setAmount(ExtendedCalculationEnchantment.runWithPriority(stack, attacker, attacked, event.getAmount(), type, true, source));
+        }
+        for (EquipmentSlot slot : MiscUtils.ARMOR_EQUIPMENT) {
+            stack = attacked.getItemBySlot(slot);
+            assert enchantments != null;
+            event.setAmount(ExtendedCalculationEnchantment.runWithPriority(stack, attacker, attacked, event.getAmount(), type, false, source));
         }
     }
 
@@ -213,7 +208,7 @@ public class MiscRegister {
             MysticcraftMod.sendInfo("ea");
             for (Enchantment enchantment : enchantments.keySet()) {
                 if (enchantment instanceof ExtendedCalculationEnchantment modEnchantment && enchantment instanceof IToolEnchantment) {
-                    modEnchantment.tryExecute(enchantments.get(enchantment), stack, attacker, attacked, event.getBlockedDamage(), type);
+                    modEnchantment.tryExecute(enchantments.get(enchantment), stack, attacker, attacked, event.getBlockedDamage(), type, event.getDamageSource());
                 }
             }
         }
@@ -276,6 +271,7 @@ public class MiscRegister {
         }
     }
 
+
     private static List<AttributeModifier.Operation> getOperations(Collection<AttributeModifier> attributeModifiers) {
         ArrayList<AttributeModifier.Operation> operations = new ArrayList<>();
         for (AttributeModifier modifier : attributeModifiers) {
@@ -285,10 +281,15 @@ public class MiscRegister {
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void HitEffectRegister(LivingDamageEvent event) {
+    public static void HitEffectRegister(LivingHurtEvent event) {
         LivingEntity living = event.getEntity();
+        CompoundTag tag = living.getPersistentData();
         if (living.hasEffect(ModMobEffects.VULNERABILITY.get())) {
             event.setAmount((float) (event.getAmount() * (1 + Objects.requireNonNull(living.getEffect(ModMobEffects.VULNERABILITY.get())).getAmplifier() * 0.05)));
+        }
+        if (living.hasEffect(ModMobEffects.NUMBNESS.get())) {
+            event.setCanceled(true);
+            tag.putFloat(NumbnessMobEffect.NUMBNESS_ID, tag.getFloat(NumbnessMobEffect.NUMBNESS_ID) + event.getAmount());
         }
         if (event.getSource().getDirectEntity() instanceof SmallFireball smallFireball) {
             if (smallFireball.getOwner() instanceof FrozenBlazeEntity) {
@@ -304,7 +305,7 @@ public class MiscRegister {
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
-    public static void FerocityRegister(LivingDamageEvent event) {
+    public static void FerocityRegister(LivingHurtEvent event) {
         LivingEntity attacked = event.getEntity();
         LivingEntity attacker = MiscUtils.getAttacker(event.getSource());
         if (attacker == null) {
@@ -322,12 +323,16 @@ public class MiscRegister {
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void miscDamageEvents(LivingDamageEvent event) {
+    public static void miscDamageEvents(LivingHurtEvent event) {
         LivingEntity attacked = event.getEntity();
         boolean dodge = false;
         double Dodge = AttributeUtils.getSaveAttributeValue(ModAttributes.DODGE.get(), attacked);
         LivingEntity attacker = MiscUtils.getAttacker(event.getSource());
         DamageSource source = event.getSource();
+        CompoundTag tag = attacked.getPersistentData();
+        if (TagUtils.checkForIntAbove0(tag, WitherImpactSpell.DAMAGE_REDUCTION_TIME)) {
+            event.setAmount(event.getAmount() * 0.9f);
+        }
         if (attacker != null) {
             ItemStack mainHand = attacker.getMainHandItem();
             if (mainHand.getItem() instanceof ManaSteelSwordItem) {
@@ -343,7 +348,8 @@ public class MiscRegister {
         MiscUtils.createDamageIndicator(attacked, event.getAmount(), dodge ? "dodge" : source.msgId);
     }
 
-    private static final List<UUID> arrows = new ArrayList<>();
+    private static final ArrowQueueHelper helper = new ArrowQueueHelper();
+    public static final String OVERFLOW_MANA_ID = "overflowMana";
 
     @SubscribeEvent
     public static void entityTick(LivingEvent.LivingTickEvent event) {
@@ -351,20 +357,30 @@ public class MiscRegister {
         CompoundTag tag = living.getPersistentData();
         if (living instanceof ArmorStand) {
             if (tag.getBoolean("isDamageIndicator")) {
-                tag.putInt("time", tag.getInt("time") + 1);
-                if (tag.getInt("time") >= 35) {
+                TagUtils.increaseIntegerTagValue(tag, MiscUtils.TIMER_ID, 1);
+                if (tag.getInt(MiscUtils.TIMER_ID) >= 35) {
                     living.kill();
                 }
             }
         }
+        final String timer = VenomousEnchantment.TIMER_ID;
+        if (tag.contains(timer)) {
+            if (tag.getInt(timer) <= 0) {
+                AttributeInstance speed = living.getAttribute(Attributes.MOVEMENT_SPEED);
+                assert speed != null;
+                speed.removeModifier(VenomousEnchantment.ID);
+            } else {
+                TagUtils.increaseIntegerTagValue(tag, timer, -1);
+            }
+        }
         if (AttributeUtils.getSaveAttributeValue(ModAttributes.MANA.get(), living) != -1 && living.level.getBlockState(new BlockPos(living.getX(), living.getY(), living.getZ())).getBlock() == ModBlocks.MANA_FLUID_BLOCK.get()) {
-            double overflowMana = tag.getDouble("overflowMana") + tag.getDouble("manaRegen");
-            tag.putDouble("overflowMana", overflowMana);
+            double overflowMana = tag.getDouble(OVERFLOW_MANA_ID) + tag.getDouble("manaRegen");
+            tag.putDouble(OVERFLOW_MANA_ID, overflowMana);
             if (overflowMana >= living.getAttributeValue(ModAttributes.MAX_MANA.get())) {
-                living.hurt(new DamageSource("overflowMana").bypassInvul().bypassMagic().bypassEnchantments().bypassArmor(), Float.MAX_VALUE);
+                living.hurt(new DamageSource(OVERFLOW_MANA_ID).bypassInvul().bypassMagic().bypassEnchantments().bypassArmor(), Float.MAX_VALUE);
                 List<LivingEntity> livings = living.level.getEntitiesOfClass(LivingEntity.class, living.getBoundingBox().inflate(5));
                 for (LivingEntity living1 : livings) {
-                    living1.hurt(new EntityDamageSource("overflowMana", living).bypassArmor().bypassMagic().bypassEnchantments().bypassInvul(), Float.MAX_VALUE);
+                    living1.hurt(new EntityDamageSource(OVERFLOW_MANA_ID, living).bypassArmor().bypassMagic().bypassEnchantments().bypassInvul(), (float) (Float.MAX_VALUE * (0.01 * Math.max(1 - living1.distanceTo(living), 0))));
                 }
             }
         }
@@ -381,12 +397,10 @@ public class MiscRegister {
                     tag.putByte(SpellItem.SPELL_EXECUTION_DUR, (byte) (tag.getByte(SpellItem.SPELL_EXECUTION_DUR) - 1));
                 }
             }
-
             if (!player.isOnGround()) {
-                //Serverside error
-                if (tag.getInt(doubleJumpId) < player.getAttributeValue(ModAttributes.DOUBLE_JUMP.get())) {
-                    if (canJump(player) && ((LivingEntityMixin) player).getJumping() && ((LivingEntityMixin) player).getNoJumpDelay() <= 0) {
-                        MiscUtils.sendParticles(ParticleTypes.CLOUD, false, player, 15, 0.025, 0.025, 0.025, 0.1);
+                if (canJump(player) && tag.getInt(doubleJumpId) < player.getAttributeValue(ModAttributes.DOUBLE_JUMP.get())) {
+                    if (((LivingEntityMixin) player).getJumping() && ((LivingEntityMixin) player).getNoJumpDelay() <= 0) {
+                        ParticleUtils.sendAlwaysVisibleParticles(ParticleTypes.CLOUD, player.level, player.getX(), player.getY(), player.getZ(), 0.25, 0.0, 0.25, 0,0,0, 15);
                         ((LivingEntityMixin) player).setNoJumpDelay(10); player.fallDistance = 0;
                         Vec3 targetLoc = MathUtils.setLength(player.getLookAngle().multiply(1, 0, 1), 0.75).add(0, 1, 0);
                         player.setDeltaMovement(targetLoc.x, targetLoc.y > 0 ? targetLoc.y : -targetLoc.y, targetLoc.z);
@@ -401,6 +415,15 @@ public class MiscRegister {
             ParticleHelper.clearAllHelpers(SoulMageArmorItem.helperString, living);
             tag.putString("lastFullSet", "");
         }
+        if (TagUtils.checkForIntAbove0(tag, WitherImpactSpell.DAMAGE_REDUCTION_TIME) && tag.getFloat(WitherImpactSpell.ABSORPTION_AMOUNT_ID) > 0) {
+            TagUtils.increaseIntegerTagValue(tag, WitherImpactSpell.DAMAGE_REDUCTION_TIME, -1);
+            float absorption = tag.getFloat(WitherImpactSpell.ABSORPTION_AMOUNT_ID);
+            if (tag.getInt(WitherImpactSpell.DAMAGE_REDUCTION_TIME) <= 0) {
+                living.heal(absorption / 2);
+                living.setAbsorptionAmount(living.getAbsorptionAmount() - absorption);
+                tag.putFloat(WitherImpactSpell.ABSORPTION_AMOUNT_ID, 0);
+            }
+        }
     }
 
     private static boolean canJump(Player player) {
@@ -413,15 +436,17 @@ public class MiscRegister {
             for (Entity entity : serverLevel.getEntities().getAll()) {
                 ParticleHelper.tickHelper(entity);
             }
-            for (UUID uuid : arrows) {
+            helper.update((uuid)-> {
                 Arrow arrow = (Arrow) serverLevel.getEntity(uuid);
-                assert arrow != null;
-                CompoundTag arrowTag = arrow.getPersistentData();
-                ModBowEnchantment.loadFromTag(null, arrowTag, ModBowEnchantment.ExecuteType.TICK, 0, arrow);
-            }
+                if (arrow != null) {
+                    CompoundTag arrowTag = arrow.getPersistentData();
+                    ModBowEnchantment.loadFromTag(null, arrowTag, ModBowEnchantment.ExecuteType.TICK, 0, arrow);
+                } else {
+                    helper.remove(uuid);
+                }
+            });
         }
     }
-
 
     @SubscribeEvent
     public static void arrowRegisterEvent(EntityJoinLevelEvent event) {
@@ -432,9 +457,7 @@ public class MiscRegister {
                 for (Enchantment enchantment : bow.getAllEnchantments().keySet()) {
                     if (enchantment instanceof ModBowEnchantment bowEnchantment) {
                         arrowTag.put(bowEnchantment.getTagName(), bowEnchantment.write(bow.getEnchantmentLevel(enchantment), bow, living, arrow));
-                        if (bowEnchantment.shouldTick() && !arrows.contains(arrow.getUUID())) {
-                            arrows.add(arrow.getUUID());
-                        }
+                        if (bowEnchantment.shouldTick()) helper.add(arrow.getUUID());
                     }
                 }
             }
@@ -501,7 +524,7 @@ public class MiscRegister {
             double health_regen = event.getEntity().getAttributeValue(ModAttributes.HEALTH_REGEN.get());
             event.setAmount(event.getAmount() * (1 + (float) health_regen / 100));
         }
-        MiscUtils.createDamageIndicator(event.getEntity(), event.getAmount(), "heal");
+        if (event.getAmount() > 0) MiscUtils.createDamageIndicator(event.getEntity(), event.getAmount(), "heal");
     }
 
 
@@ -563,6 +586,10 @@ public class MiscRegister {
         if (event.getEntity() instanceof Blaze && !(event.getEntity() instanceof FrozenBlazeEntity)) {
             ItemStack toDrop = new ItemStack(ModItems.HEART_OF_THE_NETHER.get());
             RNGDropHelper.calculateAndDrop(toDrop, 0.000001f, attacker, pos);
+        }
+        if (event.getEntity() instanceof WitherBoss) {
+            List<Item> possibleDrops = List.of(ModItems.VALKYRIE.get(), ModItems.ASTREA.get(), ModItems.HYPERION.get(), ModItems.SCYLLA.get());
+            RNGDropHelper.calculateAndDrop(new ItemStack(possibleDrops.get((int) (Math.random() * possibleDrops.size()))), 0.001f, attacker, pos);
         }
     }
 
@@ -665,6 +692,12 @@ public class MiscRegister {
         }
     }
 
+    @SubscribeEvent
+    public static void registerVillagerProfession(VillagerTradesEvent event) {
+        Int2ObjectMap<List<VillagerTrades.ItemListing>> trades = event.getTrades();
+        //if (event.getType() == ModVillagers.GEMSTONE_MAKER.getProfession().get()) {
+    }
+
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void manaRegister(RenderGuiOverlayEvent.Pre event) {
         int w = event.getWindow().getGuiScaledWidth();
@@ -673,7 +706,7 @@ public class MiscRegister {
         int posY = h / 2;
             Player entity = Minecraft.getInstance().player;
         if (entity != null) {
-            String builder = FormattingCodes.BLUE + MiscUtils.round(entity.getAttributeValue(ModAttributes.MANA.get()), 1) + " [+" + MiscUtils.round(entity.getPersistentData().getDouble("overflowMana"), 1) + " Overflow] " + FormattingCodes.RESET + " / " + FormattingCodes.DARK_BLUE + entity.getAttributeValue(ModAttributes.MAX_MANA.get()) + " (+" + MiscUtils.round(entity.getPersistentData().getDouble("manaRegen") * 20, 2) + "/s)";
+            String builder = FormattingCodes.BLUE + MathUtils.round(entity.getAttributeValue(ModAttributes.MANA.get()), 1) + " [+" + MathUtils.round(entity.getPersistentData().getDouble(MiscRegister.OVERFLOW_MANA_ID), 1) + " Overflow] " + FormattingCodes.RESET + " / " + FormattingCodes.DARK_BLUE + entity.getAttributeValue(ModAttributes.MAX_MANA.get()) + " (+" + MathUtils.round(entity.getPersistentData().getDouble("manaRegen") * 20, 2) + "/s)";
             Minecraft.getInstance().font.draw(event.getPoseStack(), builder, posX - 203, posY - 116, -1);
         }
     }

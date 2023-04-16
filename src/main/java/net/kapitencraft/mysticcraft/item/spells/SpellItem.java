@@ -11,7 +11,9 @@ import net.kapitencraft.mysticcraft.item.RNGDropHelper;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneSlot;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
+import net.kapitencraft.mysticcraft.misc.MiscRegister;
 import net.kapitencraft.mysticcraft.misc.utils.AttributeUtils;
+import net.kapitencraft.mysticcraft.misc.utils.MathUtils;
 import net.kapitencraft.mysticcraft.misc.utils.MiscUtils;
 import net.kapitencraft.mysticcraft.spell.Spell;
 import net.kapitencraft.mysticcraft.spell.SpellSlot;
@@ -24,6 +26,7 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -32,7 +35,6 @@ import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
@@ -295,20 +297,25 @@ public abstract class SpellItem extends SwordItem implements IModItem {
             return false;
         }
         double manaToUse = AttributeUtils.getAttributeValue(user.getAttribute(ModAttributes.MANA_COST.get()), spell.MANA_COST);
-        double overflowMana = user.getPersistentData().getDouble("overflowMana");
-        double currentMana = user.getAttribute(ModAttributes.MANA.get()).getBaseValue() + overflowMana;
-        if (currentMana == 0 || manaToUse == 0) { return false; }
-        if (currentMana >= manaToUse) {
-            if (overflowMana > 0) {
-                user.getPersistentData().putDouble("overflowMana", overflowMana > manaToUse ? overflowMana - manaToUse : 0);
-                manaToUse -=overflowMana;
+        double overflowMana = user.getPersistentData().getDouble(MiscRegister.OVERFLOW_MANA_ID);
+        AttributeInstance manaInstance = user.getAttribute(ModAttributes.MANA.get());
+        if (manaInstance != null) {
+            double currentMana = manaInstance.getBaseValue() + overflowMana;
+            if (currentMana == 0 || manaToUse == 0) {
+                return false;
             }
-            if (manaToUse > 0) {
-                user.getAttribute(ModAttributes.MANA.get()).setBaseValue(user.getAttributeBaseValue(ModAttributes.MANA.get()) - manaToUse);
+            if (currentMana >= manaToUse) {
+                if (overflowMana > 0) {
+                    user.getPersistentData().putDouble(MiscRegister.OVERFLOW_MANA_ID, overflowMana > manaToUse ? overflowMana - manaToUse : 0);
+                    manaToUse -= overflowMana;
+                }
+                if (manaToUse > 0) {
+                    manaInstance.setBaseValue(user.getAttributeBaseValue(ModAttributes.MANA.get()) - manaToUse);
+                }
+                ItemStack spellShardRNG = new ItemStack(ModItems.SPELL_SHARD.get());
+                RNGDropHelper.calculateAndDrop(spellShardRNG, 0.00002f, user, MathUtils.getPosition(user));
+                return true;
             }
-            ItemStack spellShardRNG = new ItemStack(ModItems.SPELL_SHARD.get());
-            RNGDropHelper.calculateAndDrop(spellShardRNG, 0.00002f, user, MiscUtils.getPosition(user));
-            return true;
         }
         return false;
     }

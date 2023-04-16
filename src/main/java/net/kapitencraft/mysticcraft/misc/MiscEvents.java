@@ -4,12 +4,15 @@ package net.kapitencraft.mysticcraft.misc;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.entity.renderer.*;
 import net.kapitencraft.mysticcraft.init.ModEntityTypes;
+import net.kapitencraft.mysticcraft.init.ModItems;
 import net.kapitencraft.mysticcraft.init.ModParticleTypes;
 import net.kapitencraft.mysticcraft.particle.FireNormalParticle;
 import net.kapitencraft.mysticcraft.particle.HeliumFlameParticle;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.world.item.DyeableLeatherItem;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -18,12 +21,18 @@ import net.minecraftforge.fml.common.Mod;
 public class MiscEvents {
     @Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class ClientForgeEvents {
-
         @SubscribeEvent
         public static void registerParticles(RegisterParticleProvidersEvent event) {
             event.register((SimpleParticleType) ModParticleTypes.FIRE_NORMAL.get(), FireNormalParticle::provider);
             event.register((SimpleParticleType) ModParticleTypes.HELIUM_FLAME.get(), HeliumFlameParticle::provider);
         }
+
+        @SubscribeEvent
+        public static void registerColors(RegisterColorHandlersEvent.Item event) {
+            MysticcraftMod.sendWarn("registering Custom Colors");
+            event.register((p_92708_, p_92709_) -> p_92709_ > 0 ? -1 : ((DyeableLeatherItem) p_92708_.getItem()).getColor(p_92708_), ModItems.DYED_LEATHER.get());
+        }
+
     }
 
     @Mod.EventBusSubscriber(modid = MysticcraftMod.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)

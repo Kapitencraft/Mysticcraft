@@ -22,7 +22,7 @@ public class FrozenArrowsEnchantment extends ModBowEnchantment {
 
     @Override
     public float execute(LivingEntity target, CompoundTag tag, ExecuteType type, float oldDamage, AbstractArrow arrow) {
-        target.setTicksFrozen(tag.getInt("Level") * 40);
+        if (type == ExecuteType.HIT) target.setTicksFrozen(tag.getInt("Level") * 40);
         return oldDamage;
     }
 
@@ -32,12 +32,12 @@ public class FrozenArrowsEnchantment extends ModBowEnchantment {
     }
 
     @Override
-    public double getValueMultiplier() {
-        return 2;
+    public boolean isPercentage() {
+        return false;
     }
 
     @Override
-    public boolean isPercentage() {
-        return false;
+    public Object[] getDescriptionMods(int level) {
+        return new Object[] {level*2};
     }
 }

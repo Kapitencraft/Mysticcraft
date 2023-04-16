@@ -3,8 +3,9 @@ package net.kapitencraft.mysticcraft;
 import com.mojang.logging.LogUtils;
 import net.kapitencraft.mysticcraft.gui.gemstone_grinder.GemstoneGrinderScreen;
 import net.kapitencraft.mysticcraft.init.*;
-import net.kapitencraft.mysticcraft.misc.utils.MiscUtils;
 import net.kapitencraft.mysticcraft.misc.ModItemProperties;
+import net.kapitencraft.mysticcraft.misc.utils.MiscUtils;
+import net.kapitencraft.mysticcraft.villagers.ModVillagers;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
@@ -32,7 +33,6 @@ import net.minecraftforge.network.simple.SimpleChannel;
 import org.slf4j.Logger;
 import software.bernie.geckolib.GeckoLib;
 
-import java.text.DecimalFormat;
 import java.util.UUID;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -42,8 +42,6 @@ import java.util.function.Supplier;
 @Mod(MysticcraftMod.MOD_ID)
 public class MysticcraftMod {
     public static final String MOD_ID = "mysticcraft";
-    public static final float SEC_PER_TICK = 0.05f;
-    public static final DecimalFormat MAIN_FORMAT = new DecimalFormat("#.##");
     private static int messageID = 0;
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final String PROTOCOL_VERSION = "1";
@@ -78,12 +76,16 @@ public class MysticcraftMod {
         ModItems.REGISTRY.register(modEventBus);
         sendInfo("Registering Blocks...");
         ModBlocks.REGISTRY.register(modEventBus);
+        sendInfo("Registering Villager Professions");
+        ModVillagers.PROFESSION_REGISTRY.register(modEventBus);
+        sendInfo("Registering POI-Types");
+        ModVillagers.REGISTRY.register(modEventBus);
 
         MinecraftForge.EVENT_BUS.register(this);
         GeckoLib.initialize();
     }
 
-    public static final ResourceKey<Level> DUNGEON_INSTANCE = ResourceKey.create(Registries.DIMENSION, new ResourceLocation(MysticcraftMod.MOD_ID, "dungeon_instance"));
+    public static final ResourceKey<Level> DUNGEON_INSTANCE = ResourceKey.create(Registries.DIMENSION, new ResourceLocation(MOD_ID, "dungeon_instance"));
 
     public static AttributeModifier createModifier(AttributeModifier.Operation operation, double value, EquipmentSlot slot) {
         if (operation == AttributeModifier.Operation.ADDITION) {
@@ -110,7 +112,8 @@ public class MysticcraftMod {
         public static void onCommonSetup(FMLCommonSetupEvent event) {
             sendInfo("Registering Entity World Generation");
             registerSpawnPlacements();
-            sendInfo("Registering Custom Fluid Interactions");
+
+
         }
 
         private static void registerSpawnPlacements() {

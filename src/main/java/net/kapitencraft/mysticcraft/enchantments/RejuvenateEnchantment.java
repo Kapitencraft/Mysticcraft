@@ -27,8 +27,9 @@ public class RejuvenateEnchantment extends ArmorStatBoostEnchantment {
         return builder.build();
     }
 
+
     @Override
-    public double getValueMultiplier() {
-        return 2;
+    public Object[] getDescriptionMods(int level) {
+        return new Object[] {level*2};
     }
 }

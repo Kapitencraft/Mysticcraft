@@ -2,6 +2,8 @@ package net.kapitencraft.mysticcraft.init;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.gui.GUISlotBlockItem;
+import net.kapitencraft.mysticcraft.item.DyedLeatherItem;
+import net.kapitencraft.mysticcraft.item.ModDebugStickItem;
 import net.kapitencraft.mysticcraft.item.WizardHatItem;
 import net.kapitencraft.mysticcraft.item.armor.*;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneItem;
@@ -36,6 +38,7 @@ import java.util.List;
 
 public abstract class ModItems {
     public static final DeferredRegister<Item> REGISTRY = DeferredRegister.create(ForgeRegistries.ITEMS, MysticcraftMod.MOD_ID);
+    public static final RegistryObject<Item> MOD_DEBUG_STICK = REGISTRY.register("mod_debug_stick", ModDebugStickItem::new);
     public static final RegistryObject<Item> LONGBOW = REGISTRY.register("longbow", LongBowItem::new);
     public static final RegistryObject<Item> WIZARD_HAT = REGISTRY.register("wizard_hat", WizardHatItem::new);
     public static final RegistryObject<Item> THE_STAFF_DESTRUCTION = REGISTRY.register("staff_of_destruction", TheStaffOfDestruction::new);
@@ -50,14 +53,16 @@ public abstract class ModItems {
     public static final RegistryObject<Item> BURNING_SCYTHE = REGISTRY.register("burning_scythe", BurningScythe::new);
     public static final RegistryObject<Item> INFERNAL_SCYTHE = REGISTRY.register("infernal_scythe", InfernalScythe::new);
     public static final RegistryObject<Item> FIRE_LANCE = REGISTRY.register("fire_lance", FireLance::new);
-    public static final RegistryObject<Item> STAFF_OF_THE_WILD = REGISTRY.register("staff_of_the_wild", StaffOfTheWild::new);
+    public static final RegistryObject<Item> STAFF_OF_THE_WILD = REGISTRY.register("staff_of_the_wild", StaffOfTheWildItem::new);
 
+    public static final HashMap<Spell, RegistryObject<Item>> SCROLLS = Spell.registerAll(REGISTRY);
     public static final RegistryObject<Item> IMPLOSION_SCROLL = REGISTRY.register("implosion_scroll", ()-> new SpellScrollItem(Spell.IMPLOSION));
     public static final RegistryObject<Item> MANA_STEEL_INGOT = REGISTRY.register("mana_steel_ingot", () -> new Item(new Item.Properties().rarity(Rarity.RARE)));
     public static final RegistryObject<Item> UPPER_BlADE_MS = REGISTRY.register("upper_mana_steel_sword_part", () -> new Item(new Item.Properties().rarity(Rarity.RARE).stacksTo(1)));
     public static final RegistryObject<Item> DOWN_BlADE_MS = REGISTRY.register("lower_mana_steel_sword_part", () -> new Item(new Item.Properties().rarity(Rarity.RARE).stacksTo(1)));
     public static final RegistryObject<Item> MS_HANDLE = REGISTRY.register("mana_steel_sword_handle", () -> new Item(new Item.Properties().rarity(Rarity.RARE).stacksTo(1)));
     public static final RegistryObject<Item> HEART_OF_THE_NETHER = REGISTRY.register("heart_of_the_nether", ()-> new Item(new Item.Properties().rarity(FormattingCodes.MYTHIC).stacksTo(1)));
+    public static final RegistryObject<Item> CRIMSON_STEEL_INGOT = REGISTRY.register("crimson_steel_ingot", ()-> new Item(new Item.Properties().rarity(Rarity.RARE)));
     public static final RegistryObject<Item> SPELL_SHARD = REGISTRY.register("spell_shard", () -> new Item(new Item.Properties().rarity(Rarity.UNCOMMON)));
     public static final RegistryObject<Item> FROZEN_BLAZE_ROD = REGISTRY.register("frozen_blaze_rod", () -> new Item(new Item.Properties().rarity(Rarity.RARE)));
     public static final RegistryObject<Item> TALLIN_BOW = REGISTRY.register("tallin_bow", TallinBow::new);
@@ -80,6 +85,7 @@ public abstract class ModItems {
     });
     public static final RegistryObject<Item> IRON_SHIELD = REGISTRY.register("iron_shield", IronShield::new);
     public static final RegistryObject<Item> GOLDEN_SHIELD = REGISTRY.register("golden_shield", GoldenShield::new);
+    public static final RegistryObject<Item> DYED_LEATHER = REGISTRY.register("dyed_leather",  DyedLeatherItem::new);
 
     public static final HashMap<EquipmentSlot, RegistryObject<Item>> ENDER_KNIGHT_ARMOR = EnderKnightArmorItem.createRegistry(REGISTRY, "ender_knight");
     public static final HashMap<EquipmentSlot, RegistryObject<Item>> FROZEN_BLAZE_ARMOR = FrozenBlazeArmorItem.createRegistry(REGISTRY, "frozen_blaze");

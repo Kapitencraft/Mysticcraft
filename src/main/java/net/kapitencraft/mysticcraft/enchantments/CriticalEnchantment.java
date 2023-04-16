@@ -33,7 +33,7 @@ public class CriticalEnchantment extends WeaponStatBoostEnchantment {
     }
 
     @Override
-    public double getValueMultiplier() {
-        return 10;
+    public Object[] getDescriptionMods(int level) {
+        return new Object[] {10*level};
     }
 }

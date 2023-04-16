@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.spell.spells;
 
-import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.ModConstance;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.kapitencraft.mysticcraft.misc.damage_source.AbilityDamageSource;
 import net.minecraft.network.chat.Component;
@@ -29,7 +29,7 @@ public class ImplosionSpell {
         }
         if (!user.level.isClientSide() && user instanceof Player player && damaged > 0) {
             String red = FormattingCodes.RED;
-            player.sendSystemMessage(Component.literal("Your Implosion hit " + red + damaged + FormattingCodes.RESET + " Enemies for " + red + MysticcraftMod.MAIN_FORMAT.format(damageInflicted) + " Damage"));
+            player.sendSystemMessage(Component.literal("Your Implosion hit " + red + damaged + FormattingCodes.RESET + " Enemies for " + red + ModConstance.MAIN_FORMAT.format(damageInflicted) + " Damage"));
         }
     }
     public static List<Component> getDescription() {

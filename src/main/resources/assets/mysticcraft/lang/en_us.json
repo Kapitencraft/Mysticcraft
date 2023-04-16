@@ -5,8 +5,14 @@
   "entity.mysticcraft.frozen_blaze": "Frozen Blaze",
   "entity.mysticcraft.fire_bolt": "Fire Bolt",
 
+  "entity.minecraft.villager.gemstone_maker": "Gemstone Maker",
+
   "item.mysticcraft.staff_of_destruction": "Staff of Destruction",
   "item.mysticcraft.staff_of_the_wild": "Staff of the Wild",
+  "item.mysticcraft.missing_slot": "§4There is no gemstone Slot here",
+  "item.mysticcraft.empty_applicable": "§4Put a Gemstone Item into the upper slot",
+  "item.mysticcraft.dyed_leather": "Dyed Leather",
+  "item.mysticcraft.shadow_leather": "Shadow Leather",
   "item.mysticcraft.longbow": "Longbow",
   "item.mysticcraft.tallin_bow": "Tallin Short Bow",
   "item.mysticcraft.hyperion": "Hyperion",
@@ -24,6 +30,7 @@
   "item.mysticcraft.aspect_of_the_end": "Aspect of the End",
   "item.mysticcraft.fire_lance": "Fire Lance",
 
+  "item.mysticcraft.mod_debug_stick": "Mod Debug Stick",
   "item.mysticcraft.bucket_of_mana": "Bucket of Mana",
   "item.mysticcraft.heart_of_the_nether": "Heart of the Nether",
   "item.mysticcraft.spell_shard": "Spell Shard",
@@ -31,6 +38,7 @@
   "item.mysticcraft.upper_mana_steel_sword_blade_part": "Upper Mana Steel Sword Blade Part",
   "item.mysticcraft.mana_steel_sword_handle": "Mana Steel Sword Handle",
   "item.mysticcraft.lower_mana_steel_sword_blade_part": "Lower Mana Steel Sword Blade Part",
+  "item.mysticcraft.frozen_blaze_rod": "Frozen Blaze Rod",
 
   "item.mysticcraft.rough_almandine_gemstone": "Rough Almandine",
   "item.mysticcraft.rough_jasper_gemstone": "Rough Jasper",
@@ -107,6 +115,7 @@
   "attribute.name.generic.arrow_speed": "Arrow Speed",
   "attribute.name.generic.life_steal": "Life Steal",
   "generic.dodge": "§0Dodge",
+  "generic.live_steal": "Live Steal",
   "generic.intel": "§5Intelligence",
   "generic.strenght": "§gStrenght",
   "generic.armor_shredder": "Armor Shredding",
@@ -125,10 +134,12 @@
 
   "mysticcraft.ench_desc.shift": "press [Shift] for enchantment descriptions",
 
+
+  "enchantment.mysticcraft.frozen_arrows": "Frozen Arrows",
   "enchantment.mysticcraft.elvish_mastery": "Elvish Mastery",
   "enchantment.mysticcraft.elvish_mastery.desc": "grants %1$s Draw Speed",
   "enchantment.mysticcraft.legolas_emulation": "Legolas Emulation",
-  "enchantment.mysticcraft.legolas_emulation.desc": "grants a %2$s chance to fire up to %1$s more arrows",
+  "enchantment.mysticcraft.legolas_emulation.desc": "fire up to %1$s more arrows",
   "enchantment.mysticcraft.fast_arrows": "Faster Arrows",
   "enchantment.mysticcraft.fast_arrows.desc": "grants %1$s Arrow Speed",
   "enchantment.mysticcraft.giant_killer": "Giant Killer",
@@ -178,7 +189,7 @@
   "enchantment.mysticcraft.thorny": "Thorny",
   "enchantment.mysticcraft.thorny.desc": "similar to Thorns for Armor",
   "enchantment.mysticcraft.infernal": "Infernal",
-  "enchantment.mysticcraft.infernal.desc": "<<-->>",
+  "enchantment.mysticcraft.infernal.desc": "every 10th hit trap your enemy for 5 sec dealing %1$s of your last hit per secinds",
   "enchantment.mysticcraft.back_stab": "Back Stab",
   "enchantment.mysticcraft.back_stab.desc": "increase damage dealt by %1$s from behind the enemy",
 

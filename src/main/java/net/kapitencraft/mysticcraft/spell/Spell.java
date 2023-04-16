@@ -1,9 +1,6 @@
 package net.kapitencraft.mysticcraft.spell;
 
-import net.kapitencraft.mysticcraft.item.spells.AspectOfTheVoidItem;
-import net.kapitencraft.mysticcraft.item.spells.FireLance;
-import net.kapitencraft.mysticcraft.item.spells.IFireScytheItem;
-import net.kapitencraft.mysticcraft.item.spells.SpellItem;
+import net.kapitencraft.mysticcraft.item.spells.*;
 import net.kapitencraft.mysticcraft.item.spells.necron_sword.NecronSword;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.kapitencraft.mysticcraft.spell.spells.*;
@@ -13,24 +10,27 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.RegistryObject;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Supplier;
 
 public enum Spell {
-    WITHER_IMPACT("Wither Impact", "1101110", Type.RELEASE, 300, WitherImpactSpell::execute, item -> item instanceof NecronSword, WitherImpactSpell::getDescription, Rarity.RARE),
-    IMPLOSION("Implosion", "0000000", Type.RELEASE, 300, ImplosionSpell::execute, item -> item instanceof NecronSword, ImplosionSpell::getDescription, FormattingCodes.LEGENDARY),
-    INSTANT_TRANSMISSION("Instant Transmission", "1110111", Type.RELEASE, 50, InstantTransmissionSpell::execute, item -> true, InstantTransmissionSpell::getDescription, Rarity.COMMON),
-    ETHER_WARP("Ether Transmission", "1000111", Type.RELEASE, 50, EtherWarpSpell::execute, item -> item instanceof AspectOfTheVoidItem, EtherWarpSpell::getDescription, Rarity.EPIC),
-    EXPLOSIVE_SIGHT("Explosive Sight", "1010110", Type.RELEASE, 150, ExplosiveSightSpell::execute, item -> true, ExplosiveSightSpell::getDescription, Rarity.UNCOMMON),
-    EMPTY_SPELL("Empty Spell", null, Type.RELEASE, 0, (living, itemStack)-> {}, item -> false, EmptySpell::getDescription, Rarity.UNCOMMON),
-    HUGE_HEAL("Huge Heal", "0011011", Type.RELEASE, 70, HugeHealSpell::execute, item -> true, HugeHealSpell::getDescription, Rarity.UNCOMMON),
-    FIRE_BOLT_1("Fire Bolt", "0110011", Type.RELEASE, 50, createFireBold(1, false), item -> item instanceof IFireScytheItem, createFireBoldDesc(1f), Rarity.UNCOMMON),
-    FIRE_BOLT_2("Fire Bolt", "0110011", Type.RELEASE, 50, createFireBold(1.4, false), item -> item instanceof IFireScytheItem, createFireBoldDesc(1.4f), Rarity.UNCOMMON),
-    FIRE_BOLT_3("Fire Bolt", "0110011", Type.RELEASE, 50, createFireBold(2.8, true), item -> item instanceof IFireScytheItem, createFireBoldDesc(2.8f), Rarity.UNCOMMON),
-    FIRE_BOLT_4("Fire Bolt", "0110011", Type.RELEASE, 50, createFireBold(5.2, true), item -> item instanceof IFireScytheItem, createFireBoldDesc(5.2f), Rarity.UNCOMMON),
-    FIRE_LANCE("Fire Lance", "1011100", Type.CYCLE, 5, FireLanceSpell::execute, item -> item instanceof FireLance, FireLanceSpell::getDescription, Rarity.UNCOMMON);
+    WITHER_IMPACT("Wither Impact", "1101110", Type.RELEASE, 300, WitherImpactSpell::execute, item -> item instanceof NecronSword, WitherImpactSpell::getDescription, Rarity.RARE, true),
+    IMPLOSION("Implosion", "0000000", Type.RELEASE, 300, ImplosionSpell::execute, item -> item instanceof NecronSword, ImplosionSpell::getDescription, FormattingCodes.LEGENDARY, true),
+    INSTANT_TRANSMISSION("Instant Transmission", "1110111", Type.RELEASE, 50, InstantTransmissionSpell::execute, item -> true, InstantTransmissionSpell::getDescription, Rarity.COMMON, true),
+    ETHER_WARP("Ether Transmission", "1000111", Type.RELEASE, 50, EtherWarpSpell::execute, item -> item instanceof AspectOfTheVoidItem, EtherWarpSpell::getDescription, Rarity.EPIC, true),
+    EXPLOSIVE_SIGHT("Explosive Sight", "1010110", Type.RELEASE, 150, ExplosiveSightSpell::execute, item -> true, ExplosiveSightSpell::getDescription, Rarity.UNCOMMON, true),
+    EMPTY_SPELL("Empty Spell", null, Type.RELEASE, 0, (living, itemStack)-> {}, item -> false, EmptySpell::getDescription, Rarity.UNCOMMON, true),
+    HUGE_HEAL("Huge Heal", "0011011", Type.RELEASE, 70, HugeHealSpell::execute, item -> true, HugeHealSpell::getDescription, Rarity.UNCOMMON, true),
+    FIRE_BOLT_1("Fire Bolt", "0110011", Type.RELEASE, 50, createFireBold(1, false), item -> item instanceof IFireScytheItem, createFireBoldDesc(1f), Rarity.UNCOMMON, true),
+    FIRE_BOLT_2("Fire Bolt", "0110011", Type.RELEASE, 50, createFireBold(1.4, false), item -> item instanceof IFireScytheItem, createFireBoldDesc(1.4f), Rarity.UNCOMMON, true),
+    FIRE_BOLT_3("Fire Bolt", "0110011", Type.RELEASE, 50, createFireBold(2.8, true), item -> item instanceof IFireScytheItem, createFireBoldDesc(2.8f), Rarity.UNCOMMON, true),
+    FIRE_BOLT_4("Fire Bolt", "0110011", Type.RELEASE, 50, createFireBold(5.2, true), item -> item instanceof IFireScytheItem, createFireBoldDesc(5.2f), Rarity.UNCOMMON, true),
+    FIRE_LANCE("Fire Lance", "1011100", Type.CYCLE, 5, FireLanceSpell::execute, item -> item instanceof FireLance, FireLanceSpell::getDescription, Rarity.UNCOMMON, true);
 
     public enum Type {
         RELEASE("release"),
@@ -45,6 +45,18 @@ public enum Spell {
             return string;
         }
     }
+
+    public static HashMap<Spell, RegistryObject<Item>> registerAll(DeferredRegister<Item> register) {
+        HashMap<Spell, RegistryObject<Item>> map = new HashMap<>();
+        for (Spell spell : values()) {
+            if (spell.shouldBeItem) {
+                SpellScrollItem scrollItem = new SpellScrollItem(spell);
+                map.put(spell, register.register(spell.REGISTRY_NAME + "_scroll", ()-> scrollItem));
+            }
+        }
+        return map;
+    }
+
 
     private static Functions.SpellRun createFireBold(double baseDamage, boolean explosive) {
         return (user, stack) -> {
@@ -72,8 +84,10 @@ public enum Spell {
     private final Functions.applicationHelper helper;
     private final Supplier<List<Component>> description;
     public final String REGISTRY_NAME;
+    private final boolean shouldBeItem;
     public final Rarity RARITY;
-    Spell(String name, String castingType, Type type, double manaCost, Functions.SpellRun toRun, Functions.applicationHelper helper, Supplier<List<Component>> description, Rarity rarity) {
+    Spell(String name, String castingType, Type type, double manaCost, Functions.SpellRun toRun, Functions.applicationHelper helper, Supplier<List<Component>> description, Rarity rarity, boolean shouldBeItem) {
+        this.shouldBeItem = shouldBeItem;
         this.name = name;
         this.TYPE = type;
         this.MANA_COST = manaCost;

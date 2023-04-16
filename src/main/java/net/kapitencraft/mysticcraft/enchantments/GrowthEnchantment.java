@@ -31,7 +31,7 @@ public class GrowthEnchantment extends ArmorStatBoostEnchantment {
     }
 
     @Override
-    public double getValueMultiplier() {
-        return 1;
+    public Object[] getDescriptionMods(int level) {
+        return new Object[] {level};
     }
 }

@@ -3,17 +3,18 @@ package net.kapitencraft.mysticcraft.enchantments;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.ExtendedCalculationEnchantment;
 import net.kapitencraft.mysticcraft.misc.utils.MathUtils;
 import net.kapitencraft.mysticcraft.misc.utils.MiscUtils;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
 
 public class BackStabEnchantment extends ExtendedCalculationEnchantment implements IWeaponEnchantment {
     public BackStabEnchantment() {
-        super(Rarity.VERY_RARE, EnchantmentCategory.WEAPON, MiscUtils.WEAPON_SLOT, CalculationType.ONLY_MELEE);
+        super(Rarity.VERY_RARE, EnchantmentCategory.WEAPON, MiscUtils.WEAPON_SLOT, CalculationType.ONLY_MELEE, CalculationPriority.HIGHEST);
     }
 
     @Override
-    public double execute(int level, ItemStack enchanted, LivingEntity attacker, LivingEntity attacked, double damage) {
+    public double execute(int level, ItemStack enchanted, LivingEntity attacker, LivingEntity attacked, double damage, DamageSource source) {
         if (MathUtils.isBehind(attacker, attacked)) {
             return damage * (1 + level * 0.25);
         }
@@ -26,12 +27,12 @@ public class BackStabEnchantment extends ExtendedCalculationEnchantment implemen
     }
 
     @Override
-    public double getValueMultiplier() {
-        return 25;
+    public boolean isPercentage() {
+        return true;
     }
 
     @Override
-    public boolean isPercentage() {
-        return true;
+    public Object[] getDescriptionMods(int level) {
+        return new Object[] {level*25 + "%"};
     }
 }

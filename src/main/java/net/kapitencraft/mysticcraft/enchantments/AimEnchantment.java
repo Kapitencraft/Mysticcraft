@@ -1,7 +1,8 @@
 package net.kapitencraft.mysticcraft.enchantments;
 
+import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.ModBowEnchantment;
-import net.kapitencraft.mysticcraft.misc.utils.MiscUtils;
+import net.kapitencraft.mysticcraft.misc.utils.MathUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -34,7 +35,8 @@ public class AimEnchantment extends ModBowEnchantment implements IWeaponEnchantm
             List<LivingEntity> livingEntities = arrow.level.getEntitiesOfClass(LivingEntity.class, arrow.getBoundingBox().inflate(tag.getInt("Level")));
             for (LivingEntity living : livingEntities) {
                 if (arrow.getOwner() != living && !living.isDeadOrDying()) {
-                    arrow.setDeltaMovement(MiscUtils.getPosition(living).subtract(MiscUtils.getPosition(arrow)).scale(0.5));
+                    MysticcraftMod.sendInfo(living.toString());
+                    arrow.setDeltaMovement(MathUtils.setLength(MathUtils.getPosition(living).subtract(MathUtils.getPosition(arrow)), arrow.getDeltaMovement().length()));
                     break;
                 }
             }
@@ -48,12 +50,12 @@ public class AimEnchantment extends ModBowEnchantment implements IWeaponEnchantm
     }
 
     @Override
-    public double getValueMultiplier() {
-        return 2;
+    public boolean isPercentage() {
+        return false;
     }
 
     @Override
-    public boolean isPercentage() {
-        return false;
+    public Object[] getDescriptionMods(int level) {
+        return new Object[] {2*level};
     }
 }

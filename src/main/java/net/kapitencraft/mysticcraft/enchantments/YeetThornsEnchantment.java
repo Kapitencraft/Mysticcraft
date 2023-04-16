@@ -2,6 +2,7 @@ package net.kapitencraft.mysticcraft.enchantments;
 
 import net.kapitencraft.mysticcraft.enchantments.abstracts.ExtendedCalculationEnchantment;
 import net.kapitencraft.mysticcraft.misc.utils.MiscUtils;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -12,12 +13,12 @@ import org.jetbrains.annotations.NotNull;
 public class YeetThornsEnchantment extends ExtendedCalculationEnchantment implements IArmorEnchantment {
 
     public YeetThornsEnchantment() {
-        super(Rarity.VERY_RARE, EnchantmentCategory.ARMOR, MiscUtils.ARMOR_EQUIPMENT, CalculationType.ALL);
+        super(Rarity.VERY_RARE, EnchantmentCategory.ARMOR, MiscUtils.ARMOR_EQUIPMENT, CalculationType.ALL, CalculationPriority.LOW);
     }
 
     @Override
-    public double execute(int level, ItemStack enchanted, LivingEntity attacker, LivingEntity attacked, double damage) {
-        attacked.setDeltaMovement((attacker.getX() - attacked.getX()) / level * 10, 0.4 * level, (attacker.getZ() - attacked.getZ()) / level * 10);
+    public double execute(int level, ItemStack enchanted, LivingEntity attacker, LivingEntity attacked, double damage, DamageSource source) {
+        attacker.setDeltaMovement((attacker.getX() - attacked.getX()) / level * 10, 0.4 * level, (attacker.getZ() - attacked.getZ()) / level * 10);
         return damage;
     }
 
@@ -32,12 +33,12 @@ public class YeetThornsEnchantment extends ExtendedCalculationEnchantment implem
     }
 
     @Override
-    public double getValueMultiplier() {
-        return 10;
+    public boolean isPercentage() {
+        return false;
     }
 
     @Override
-    public boolean isPercentage() {
-        return false;
+    public Object[] getDescriptionMods(int level) {
+        return new Object[] {level*10};
     }
 }

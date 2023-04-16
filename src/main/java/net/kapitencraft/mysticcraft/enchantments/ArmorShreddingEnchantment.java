@@ -33,9 +33,8 @@ public class ArmorShreddingEnchantment extends StatBoostEnchantment implements I
     public boolean hasModifiersForThatSlot(EquipmentSlot slot) {
         return slot == EquipmentSlot.MAINHAND;
     }
-
     @Override
-    public double getValueMultiplier() {
-        return 1;
+    public Object[] getDescriptionMods(int level) {
+        return new Object[] {"+" + level};
     }
 }

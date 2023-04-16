@@ -1,7 +1,6 @@
 package net.kapitencraft.mysticcraft.misc.utils;
 
-import com.mojang.blaze3d.platform.InputConstants;
-import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.ModConstance;
 import net.kapitencraft.mysticcraft.gui.IGuiHelper;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneItem;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
@@ -9,12 +8,8 @@ import net.kapitencraft.mysticcraft.item.spells.NormalSpellItem;
 import net.kapitencraft.mysticcraft.item.spells.SpellItem;
 import net.kapitencraft.mysticcraft.item.weapon.melee.sword.LongSwordItem;
 import net.kapitencraft.mysticcraft.item.weapon.ranged.bow.ShortBowItem;
-import net.kapitencraft.mysticcraft.misc.particle_help.ParticleAmountHolder;
-import net.kapitencraft.mysticcraft.misc.particle_help.ParticleGradientHolder;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
@@ -22,7 +17,6 @@ import net.minecraft.network.protocol.game.ClientboundClearTitlesPacket;
 import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.damagesource.DamageSource;
@@ -63,27 +57,6 @@ public class MiscUtils {
 
     public interface delayRun {
         void run();
-    }
-
-    public interface keyRun {
-        void execute();
-    }
-
-    public interface keyReq {
-        boolean is();
-    }
-
-    public static void onKeyPressed(Player player, int key, keyReq req, keyRun run) {
-        if (!InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), key)) {
-            if (player.getPersistentData().getBoolean("hadKeyDown" + key)) {
-                run.execute();
-                player.getPersistentData().putBoolean("hadKeyDown" + key, false);
-            }
-        } else {
-            if (req.is()) {
-                player.getPersistentData().putBoolean("hadKeyDown" + key, true);
-            }
-        }
     }
 
     public static void delayed(int delayTicks, delayRun run) {
@@ -208,14 +181,16 @@ public class MiscUtils {
         return stand;
     }
 
+
+    public static final String TIMER_ID = "time";
     public static ArmorStand createDamageIndicator(LivingEntity entity, double amount, String type) {
         ArmorStand dmgInc = createMarker(new Vec3(entity.getX() + Math.random() - 0.5, entity.getY() - 1, entity.getZ() + Math.random() - 0.5), entity.level, true);
         boolean dodge = Objects.equals(type, "dodge");
         dmgInc.setCustomNameVisible(true);
-        dmgInc.setCustomName(Component.literal(!dodge ? String.valueOf(MysticcraftMod.MAIN_FORMAT.format(amount)) : "DODGE").withStyle(damageIndicatorColorGenerator(type)));
+        dmgInc.setCustomName(Component.literal(!dodge ? String.valueOf(ModConstance.MAIN_FORMAT.format(amount)) : "DODGE").withStyle(damageIndicatorColorGenerator(type)));
         CompoundTag persistentData = dmgInc.getPersistentData();
         persistentData.putBoolean("isDamageIndicator", true);
-        persistentData.putInt("time", 0);
+        persistentData.putInt(TIMER_ID, 0);
         entity.level.addFreshEntity(dmgInc);
         return dmgInc;
     }
@@ -224,7 +199,7 @@ public class MiscUtils {
         if (list.isEmpty()) {
             return null;
         }
-        return list.stream().sorted(Comparator.comparingDouble(_entcnd -> _entcnd.distanceToSqr(getPosition(source)))).collect(Collectors.toList());
+        return list.stream().sorted(Comparator.comparingDouble(_entcnd -> _entcnd.distanceToSqr(MathUtils.getPosition(source)))).collect(Collectors.toList());
     }
 
     public static String getNameModifier(ItemStack stack) {
@@ -287,37 +262,6 @@ public class MiscUtils {
         return item.getRarity(new ItemStack(item));
     }
 
-    public static <T extends ParticleOptions> int sendParticles(Level level, T type, boolean force, double x, double y, double z, int amount, double deltaX, double deltaY, double deltaZ, double speed) {
-        if (level instanceof ServerLevel serverLevel) {
-            List<ServerPlayer> players = serverLevel.getPlayers(serverPlayer -> true);
-            int i;
-            for (i = 0; i < players.size(); i++) {
-                ServerPlayer serverPlayer = players.get(i);
-                serverLevel.sendParticles(serverPlayer, type, force, x, y, z, amount, deltaX, deltaY, deltaZ, speed);
-            }
-            return i;
-        }
-        return -1;
-    }
-    public static <T extends ParticleOptions> int sendParticles(T type, boolean force, Entity source, int amount, double deltaX, double deltaY, double deltaZ, double speed) {
-        return sendParticles(source.level, type, force, MiscUtils.getPosition(source), amount, deltaX, deltaY, deltaZ, speed);
-    }
-    public static <T extends ParticleOptions> int sendParticles(Level level, T type, boolean force, Vec3 loc, int amount, double deltaX, double deltaY, double deltaZ, double speed) {
-        return sendParticles(level, type, force, loc.x, loc.y, loc.z, amount, deltaX, deltaY, deltaZ, speed);
-    }
-
-    public static <T extends ParticleOptions> int sendParticles(Level level, boolean force, Vec3 loc, double deltaX, double deltaY, double deltaZ, double speed, ParticleAmountHolder holder) {
-        return sendParticles(level, (ParticleOptions) holder.particleType(), force, loc.x, loc.y, loc.z, holder.amount(), deltaX, deltaY, deltaZ, speed);
-    }
-
-    public static <T extends ParticleOptions> int sendParticles(Level level, boolean force, Vec3 loc, double deltaX, double deltaY, double deltaZ, double speed, ParticleGradientHolder holder) {
-        return sendParticles(level, force, loc, deltaX, deltaY, deltaZ, speed, holder.getHolder1()) + sendParticles(level, force, loc, deltaX, deltaY, deltaZ, speed, holder.getHolder2());
-    }
-
-    public static Vec3 getPosition(Entity entity) {
-        return new Vec3(entity.getX(), entity.getY(), entity.getZ());
-    }
-
     public static String fromVec3(Vec3 vec3) {
         return "Pos: [" + vec3.x + ", " + vec3.y + ", " + vec3.z + "]";
     }
@@ -325,6 +269,17 @@ public class MiscUtils {
     public static final EquipmentSlot[] allEquipmentSlots = new EquipmentSlot[]{EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND, EquipmentSlot.LEGS, EquipmentSlot.CHEST, EquipmentSlot.HEAD, EquipmentSlot.FEET};
     public static final EquipmentSlot[] ARMOR_EQUIPMENT = new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
     public static final EquipmentSlot[] WEAPON_SLOT = new EquipmentSlot[]{EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND};
+
+    public static String getRegistryNameForSlot(EquipmentSlot slot) {
+        HashMap<EquipmentSlot, String> hashMap = new HashMap<>();
+        hashMap.put(EquipmentSlot.HEAD, "helmet");
+        hashMap.put(EquipmentSlot.CHEST, "chestplate");
+        hashMap.put(EquipmentSlot.LEGS, "leggings");
+        hashMap.put(EquipmentSlot.FEET, "boots");
+        hashMap.put(EquipmentSlot.MAINHAND, "mainhand");
+        hashMap.put(EquipmentSlot.OFFHAND, "offhand");
+        return hashMap.get(slot);
+    }
 
     public static <T> boolean arrayContains(T[] array, T t) {
         for (T t1 : array) {
@@ -359,9 +314,6 @@ public class MiscUtils {
     public static final EnchantmentCategory TOOL = EnchantmentCategory.create("TOOL", item -> item instanceof DiggerItem || item instanceof SwordItem || item instanceof BowItem || item instanceof SpellItem);
     public static final EnchantmentCategory GEMSTONE_ITEM = EnchantmentCategory.create("GEMSTONE_ITEM", item -> item instanceof IGemstoneApplicable);
 
-    public static double round(double no, int num) {
-        return Math.floor(no * (num * 10)) / (num * 10);
-    }
     public static boolean increaseEffectDuration(LivingEntity living, MobEffect effect, int ticks) {
         if (living.hasEffect(effect)) {
             MobEffectInstance oldInstance = living.getEffect(effect);
@@ -371,9 +323,14 @@ public class MiscUtils {
             living.addEffect(effectInstance);
             return false;
         } else {
+            living.addEffect(new MobEffectInstance(effect, 1, ticks));
             return true;
         }
     }
+
+
+
+
 
     public static String getDimension(Level level) {
         return level.dimension().toString();

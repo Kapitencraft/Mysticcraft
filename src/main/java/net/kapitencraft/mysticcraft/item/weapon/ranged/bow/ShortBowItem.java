@@ -2,6 +2,7 @@ package net.kapitencraft.mysticcraft.item.weapon.ranged.bow;
 
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModEnchantments;
+import net.kapitencraft.mysticcraft.misc.utils.TagUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -22,6 +23,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public abstract class ShortBowItem extends ModdedBows {
+    public static final String COOLDOWN_ID = "Cooldown";
 
     public ShortBowItem(Properties p_40660_) {
         super(p_40660_);
@@ -33,7 +35,7 @@ public abstract class ShortBowItem extends ModdedBows {
         CompoundTag tag = bow.getOrCreateTag();
         if (canShoot(tag, world)) {
             createArrows(bow, world, archer);
-            bow.getOrCreateTag().putInt("Cooldown", (int) (this.createCooldown(archer) / 0.05));
+            bow.getOrCreateTag().putInt(COOLDOWN_ID, (int) (this.createCooldown(archer) / 0.05));
         }
     }
 
@@ -72,15 +74,15 @@ public abstract class ShortBowItem extends ModdedBows {
     public abstract float getShotCooldown();
 
     public boolean canShoot(CompoundTag tag, Level world) {
-        return (!world.isClientSide && (!tag.contains("Cooldown") || tag.getInt("Cooldown") <= 0));
+        return !world.isClientSide && !TagUtils.checkForIntAbove0(tag, COOLDOWN_ID);
     }
 
     @Override
     public void inventoryTick(ItemStack bow, @NotNull Level p_41405_, @NotNull Entity p_41406_, int p_41407_, boolean p_41408_) {
         if (bow.getTag() != null) {
             CompoundTag tag = bow.getTag();
-            if (tag.contains("Cooldown") && tag.getInt("Cooldown") > 0) {
-                tag.putInt("Cooldown", tag.getInt("Cooldown") - 1);
+            if (TagUtils.checkForIntAbove0(tag, COOLDOWN_ID)) {
+                tag.putInt(COOLDOWN_ID, tag.getInt(COOLDOWN_ID) - 1);
             }
         }
     }

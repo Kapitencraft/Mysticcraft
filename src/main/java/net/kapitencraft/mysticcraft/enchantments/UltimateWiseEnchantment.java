@@ -13,7 +13,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class UltimateWiseEnchantment extends StatBoostEnchantment implements IWeaponEnchantment, IUltimateEnchantment {
     public UltimateWiseEnchantment() {
-        super(Rarity.RARE, MiscUtils.SPELL_ITEM, new EquipmentSlot[]{EquipmentSlot.MAINHAND});
+        super(Rarity.RARE, MiscUtils.SPELL_ITEM, EquipmentSlot.MAINHAND);
     }
 
 
@@ -36,12 +36,12 @@ public class UltimateWiseEnchantment extends StatBoostEnchantment implements IWe
     }
 
     @Override
-    public double getValueMultiplier() {
-        return -10;
+    public boolean isPercentage() {
+        return true;
     }
 
     @Override
-    public boolean isPercentage() {
-        return true;
+    public Object[] getDescriptionMods(int level) {
+        return new Object[] {level*-10 + "%"};
     }
 }

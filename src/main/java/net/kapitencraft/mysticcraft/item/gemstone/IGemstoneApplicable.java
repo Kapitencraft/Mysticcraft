@@ -26,6 +26,10 @@ public interface IGemstoneApplicable {
         return this.getHelper().getAttributeModifiers(stack);
     }
 
+    default GemstoneSlot[] loadData(ItemStack stack) {
+        return this.getHelper().loadData(stack);
+    }
+
 
     GemstoneSlot[] getDefaultSlots();
     default void getDisplay(ItemStack itemStack, List<Component> list) {

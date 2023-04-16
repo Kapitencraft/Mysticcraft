@@ -5,13 +5,12 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeMap;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 public class StunMobEffect extends MobEffect {
     public StunMobEffect() {
         super(MobEffectCategory.HARMFUL, -16777216);
-        this.addAttributeModifier(Attributes.MOVEMENT_SPEED, "8cd44445-99c8-46c4-8cf7-1ca9469124ea", 0, AttributeModifier.Operation.MULTIPLY_TOTAL);
     }
 
     @Override
@@ -23,19 +22,26 @@ public class StunMobEffect extends MobEffect {
             stunTag.putFloat("YRot", living.getYRot());
             stunTag.putFloat("XRot", living.getXRot());
             stunTag.putFloat("YBodyRot", living.getVisualRotationYInDegrees());
+            stunTag.putDouble("x", living.getX());
+            stunTag.putDouble("y", living.getY());
+            stunTag.putDouble("z", living.getZ());
             tag.put("StunInfo", stunTag);
             tag.putBoolean("isStunned", true);
         }
         if (tag.contains("StunInfo", 10)) {
             CompoundTag stunTag = (CompoundTag) tag.get("StunInfo");
-            living.setYHeadRot(stunTag.getFloat("YHeadRot"));
-            living.setYRot(stunTag.getFloat("YRot"));
-            living.setXRot(stunTag.getFloat("XRot"));
-            living.setYBodyRot(stunTag.getFloat("YBodyRot"));
+            if (stunTag != null) {
+                living.setYHeadRot(stunTag.getFloat("YHeadRot"));
+                living.setYRot(stunTag.getFloat("YRot"));
+                living.setXRot(stunTag.getFloat("XRot"));
+                living.setYBodyRot(stunTag.getFloat("YBodyRot"));
+                living.setPos(new Vec3(stunTag.getDouble("x"), stunTag.getDouble("y"), stunTag.getDouble("z")));
+                living.setJumping(false);
+            } else {
+                throw new IllegalStateException("could not find Tag");
+            }
         }
     }
-
-
 
     @Override
     public boolean isDurationEffectTick(int p_19455_, int p_19456_) {
@@ -43,7 +49,7 @@ public class StunMobEffect extends MobEffect {
     }
 
     @Override
-    public void removeAttributeModifiers(LivingEntity living, AttributeMap p_19470_, int p_19471_) {
+    public void removeAttributeModifiers(@NotNull LivingEntity living, @NotNull AttributeMap p_19470_, int p_19471_) {
         super.removeAttributeModifiers(living, p_19470_, p_19471_);
         CompoundTag tag = living.getPersistentData();
         tag.putBoolean("isStunned", false);

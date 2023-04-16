@@ -15,6 +15,8 @@ public class GemstoneGrinderScreen extends AbstractContainerScreen<GemstoneGrind
 
     public GemstoneGrinderScreen(GemstoneGrinderMenu menu, Inventory inventory, Component component) {
         super(menu, inventory, component);
+        this.imageHeight = 166;
+        this.imageWidth = 176;
     }
 
 

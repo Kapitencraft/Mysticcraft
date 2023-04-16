@@ -106,7 +106,7 @@ public class GemstoneSlot {
         DEFENCE("\uF003", "defence", new GemstoneType[]{GemstoneType.RUBY}),
         MAGIC("\uF004", "magic", new GemstoneType[]{GemstoneType.SAPPHIRE, GemstoneType.ALMANDINE}),
         INTELLIGENCE("\uF000", "intel", new GemstoneType[]{GemstoneType.SAPPHIRE}),
-        STRENGTH("\uF002", "strength", new GemstoneType[]{GemstoneType.JASPER}),
+        STRENGTH("\u2741", "strength", new GemstoneType[]{GemstoneType.JASPER}),
         HEALTH("\u2764", "health", new GemstoneType[]{GemstoneType.RUBY}),
         ABILITY_DAMAGE("\uF001", "ability_damage", new GemstoneType[]{GemstoneType.ALMANDINE}),
         EMPTY("", "empty", null);

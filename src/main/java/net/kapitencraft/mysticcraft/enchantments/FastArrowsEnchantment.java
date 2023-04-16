@@ -37,7 +37,7 @@ public class FastArrowsEnchantment extends StatBoostEnchantment implements IWeap
     }
 
     @Override
-    public double getValueMultiplier() {
-        return 10;
+    public Object[] getDescriptionMods(int level) {
+        return new Object[]{10*level};
     }
 }

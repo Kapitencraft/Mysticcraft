@@ -2,11 +2,14 @@ package net.kapitencraft.mysticcraft.item.armor;
 
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.item.armor.client.ShadowAssassinArmorRenderer;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
@@ -29,6 +32,21 @@ public class ShadowAssassinArmorItem extends ModArmorItem implements GeoItem {
     public ShadowAssassinArmorItem(EquipmentSlot p_40387_) {
         super(ModArmorMaterials.SHADOW_ASSASSIN, p_40387_, new Properties().rarity(Rarity.EPIC));
         this.isHidden = false;
+    }
+
+    @Override
+    public void onArmorTick(ItemStack stack, Level level, Player player) {
+        if (this.isFullSetActive(player)) {
+            CompoundTag tag = player.getPersistentData();
+            if (Screen.hasShiftDown()) {
+                if (!tag.getBoolean("hadBeenSneaking")) {
+                    tag.putBoolean("Invisible", !tag.getBoolean("Invisible"));
+                    tag.putBoolean("hadBeenSneaking", true);
+                }
+            } else {
+                tag.putBoolean("hadBeenSneaking", false);
+            }
+        }
     }
 
     public static HashMap<EquipmentSlot, RegistryObject<Item>> createRegistry(DeferredRegister<Item> register, String registryName) {

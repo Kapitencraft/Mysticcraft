@@ -19,7 +19,7 @@ import java.util.List;
 public class GemstoneHelper {
     private static final String DATA_ID = "GemstoneData";
 
-    private final GemstoneSlot[] defaultSlots;
+    private final @Nullable GemstoneSlot[] defaultSlots;
     private final int slotAmount;
     private GemstoneSlot[] cachedSlots = null;
 
@@ -49,19 +49,12 @@ public class GemstoneHelper {
     }
 
     private boolean hasData(ItemStack stack) {
-        if (stack.getTag() == null) {
-            //MysticcraftMod.sendInfo("found Tag = null");
-        } else if (stack.getTagElement(DATA_ID) == null) {
-            //MysticcraftMod.sendInfo("found Gemstone Data = null");
-        } else {
-            return true;
-        }
-        return false;
+        return !(stack.getTag() == null || stack.getTagElement(DATA_ID) == null);
     }
 
     private void setSlots(GemstoneSlot[] slots, ItemStack stack) {
         for (int i = 0; i < slots.length; i++) {
-            if (!(slots[i].getType() == this.defaultSlots[i].getType())) {
+            if (this.defaultSlots != null && !(slots[i].getType() == this.defaultSlots[i].getType())) {
                 return;
             }
         }
@@ -83,9 +76,6 @@ public class GemstoneHelper {
             for (int i = 0; i < tag.getShort("Size"); i++) {
                 if (!(tag.get("slot" + i) == null)) {
                     slots[i] = GemstoneSlot.fromNBT((CompoundTag) tag.get("slot" + i));
-                    //MysticcraftMod.sendInfo("Slot " + (i + 1) + " contains: " + (slots[i] == null ? null : slots[i].getDisplay()));
-                } else {
-                    //MysticcraftMod.sendInfo("isNull");
                 }
             }
             this.putGemstones(slots, current);
@@ -111,11 +101,9 @@ public class GemstoneHelper {
 
     public void getDisplay(ItemStack itemStack, List<Component> list) {
         StringBuilder gemstoneText = new StringBuilder();
-        if (itemStack.getItem() instanceof IGemstoneApplicable gemstoneApplicable) {
-            for (@Nullable GemstoneSlot slot : gemstoneApplicable.getGemstoneSlots(itemStack)) {
-                if (slot != null) {
-                    gemstoneText.append(slot.getDisplay());
-                }
+        for (@Nullable GemstoneSlot slot : this.getGemstoneSlots(itemStack)) {
+            if (slot != null) {
+                gemstoneText.append(slot.getDisplay());
             }
         }
         if (!gemstoneText.toString().equals("")) {
@@ -172,10 +160,11 @@ public class GemstoneHelper {
                 if (Screen.hasShiftDown()) {
                     list.add(Component.literal("Gemstone Modifications:").withStyle(ChatFormatting.GREEN));
                     for (Attribute attribute : modified) {
-                        list.add(Component.translatable(attribute.getDescriptionId()).append(Component.literal(": " + this.getAttributeModifiers(stack).get(attribute))));
+                        double amount = this.getAttributeModifiers(stack).get(attribute).getAmount();
+                        list.add(Component.translatable(attribute.getDescriptionId()).append(Component.literal(": " + (amount > 0 ? "+" : "") + amount)));
                     }
                 } else {
-                    list.add(Component.literal("press [SHIFT] for Gemstone Information").withStyle(ChatFormatting.GREEN));
+                    list.add(Component.literal("Press [SHIFT] for Gemstone Information").withStyle(ChatFormatting.GREEN));
                 }
             }
         }

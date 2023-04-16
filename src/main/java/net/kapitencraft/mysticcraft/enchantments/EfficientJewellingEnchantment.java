@@ -15,12 +15,13 @@ public class EfficientJewellingEnchantment extends Enchantment implements IToolE
     }
 
     @Override
-    public double getValueMultiplier() {
-        return 2;
-    }
-
-    @Override
     public boolean isPercentage() {
         return true;
+    }
+
+
+    @Override
+    public Object[] getDescriptionMods(int level) {
+        return new Object[] {"+" + 2*level + "%"};
     }
 }

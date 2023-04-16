@@ -1,5 +1,5 @@
 {
-  "parent": "mysticcraft:item/handheld",
+  "parent": "minecraft:item/handheld",
   "textures": {
     "layer0": "mysticcraft:item/astrea"
   }

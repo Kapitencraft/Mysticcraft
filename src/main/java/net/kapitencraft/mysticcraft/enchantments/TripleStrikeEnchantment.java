@@ -1,13 +1,14 @@
 package net.kapitencraft.mysticcraft.enchantments;
 
 import net.kapitencraft.mysticcraft.enchantments.abstracts.CountEnchantment;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 
 public class TripleStrikeEnchantment extends CountEnchantment {
     public TripleStrikeEnchantment() {
-        super(Rarity.UNCOMMON, new EquipmentSlot[]{EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND}, "TripleStrikeMap", countType.EXCEPT, CalculationType.ALL);
+        super(Rarity.UNCOMMON, new EquipmentSlot[]{EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND}, "TripleStrikeMap", CountType.EXCEPT, CalculationType.ALL, CalculationPriority.HIGHEST);
     }
 
     @Override
@@ -31,18 +32,18 @@ public class TripleStrikeEnchantment extends CountEnchantment {
     }
 
     @Override
-    protected double mainExecute(int level, ItemStack enchanted, LivingEntity attacker, LivingEntity attacked, double damageAmount, int curTick) {
+    protected double mainExecute(int level, ItemStack enchanted, LivingEntity attacker, LivingEntity attacked, double damageAmount, int curTick, DamageSource source) {
         damageAmount *= (1 + 0.2 * level);
         return damageAmount;
     }
 
     @Override
-    public double getValueMultiplier() {
-        return 20;
+    public boolean isPercentage() {
+        return true;
     }
 
     @Override
-    public boolean isPercentage() {
-        return true;
+    public Object[] getDescriptionMods(int level) {
+        return new Object[] {level*20 + "%"};
     }
 }

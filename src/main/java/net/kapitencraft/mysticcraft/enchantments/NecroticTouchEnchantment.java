@@ -5,6 +5,7 @@ import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.StatBoostEnchantment;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
+import net.kapitencraft.mysticcraft.misc.utils.MiscUtils;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -13,7 +14,7 @@ import net.minecraft.world.item.enchantment.EnchantmentCategory;
 
 public class NecroticTouchEnchantment extends StatBoostEnchantment {
     public NecroticTouchEnchantment() {
-        super(Rarity.COMMON, EnchantmentCategory.WEAPON, new EquipmentSlot[]{EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND});
+        super(Rarity.COMMON, EnchantmentCategory.WEAPON, MiscUtils.WEAPON_SLOT);
     }
 
     @Override
@@ -34,7 +35,7 @@ public class NecroticTouchEnchantment extends StatBoostEnchantment {
     }
 
     @Override
-    public double getValueMultiplier() {
-        return 1;
+    public Object[] getDescriptionMods(int level) {
+        return new Object[] {level};
     }
 }

@@ -2,7 +2,6 @@ package net.kapitencraft.mysticcraft.init;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.enchantments.*;
-import net.kapitencraft.mysticcraft.enchantments.ReplenishEnchantment;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;

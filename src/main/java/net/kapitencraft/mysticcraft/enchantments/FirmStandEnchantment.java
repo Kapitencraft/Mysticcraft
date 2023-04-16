@@ -15,7 +15,7 @@ import java.util.UUID;
 
 public class FirmStandEnchantment extends StatBoostEnchantment {
     public FirmStandEnchantment() {
-        super(Rarity.UNCOMMON, EnchantmentCategory.WEARABLE, new EquipmentSlot[]{EquipmentSlot.FEET, EquipmentSlot.LEGS});
+        super(Rarity.UNCOMMON, EnchantmentCategory.WEARABLE, EquipmentSlot.FEET, EquipmentSlot.LEGS);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class FirmStandEnchantment extends StatBoostEnchantment {
     }
 
     @Override
-    public double getValueMultiplier() {
-        return 0.1;
+    public Object[] getDescriptionMods(int level) {
+        return new Object[]{level*0.1};
     }
 }

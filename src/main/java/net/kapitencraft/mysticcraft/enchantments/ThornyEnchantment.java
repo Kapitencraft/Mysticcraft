@@ -15,22 +15,23 @@ public class ThornyEnchantment extends ExtendedCalculationEnchantment implements
     }
 
     public ThornyEnchantment() {
-        super(Rarity.RARE, FormattingCodes.SHIELD, MiscUtils.WEAPON_SLOT, CalculationType.ALL);
+        super(Rarity.RARE, FormattingCodes.SHIELD, MiscUtils.WEAPON_SLOT, CalculationType.ALL, CalculationPriority.HIGHEST);
     }
 
     @Override
-    public double execute(int level, ItemStack enchanted, LivingEntity attacker, LivingEntity attacked, double damage) {
+    public double execute(int level, ItemStack enchanted, LivingEntity attacker, LivingEntity attacked, double damage, DamageSource source) {
         attacker.hurt(DamageSource.thorns(attacked), level);
         return damage;
     }
 
-    @Override
-    public double getValueMultiplier() {
-        return 1;
-    }
 
     @Override
     public boolean isPercentage() {
         return false;
+    }
+
+    @Override
+    public Object[] getDescriptionMods(int level) {
+        return new Object[] {level};
     }
 }
