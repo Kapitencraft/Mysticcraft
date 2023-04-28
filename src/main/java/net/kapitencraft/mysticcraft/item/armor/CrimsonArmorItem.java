@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
+import net.kapitencraft.mysticcraft.init.ModParticleTypes;
 import net.kapitencraft.mysticcraft.item.armor.client.CrimsonArmorRenderer;
 import net.kapitencraft.mysticcraft.item.item_bonus.ExtraBonus;
 import net.kapitencraft.mysticcraft.item.item_bonus.FullSetBonus;
@@ -11,11 +12,14 @@ import net.kapitencraft.mysticcraft.item.item_bonus.IArmorBonusItem;
 import net.kapitencraft.mysticcraft.item.item_bonus.PieceBonus;
 import net.kapitencraft.mysticcraft.item.item_bonus.fullset.CrimsonArmorFullSetBonus;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
+import net.kapitencraft.mysticcraft.misc.particle_help.ParticleHelper;
 import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -30,9 +34,11 @@ import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.function.Consumer;
 
-public class CrimsonArmorItem extends ModArmorItem implements GeoItem, IArmorBonusItem {
+public class CrimsonArmorItem extends TieredArmorItem implements GeoItem, IArmorBonusItem {
+    private static final String helperString = "crimsonParticles";
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private static final FullSetBonus FULL_SET_BONUS = new CrimsonArmorFullSetBonus();
     public CrimsonArmorItem(EquipmentSlot p_40387_) {
@@ -45,18 +51,23 @@ public class CrimsonArmorItem extends ModArmorItem implements GeoItem, IArmorBon
 
     @Override
     protected void initFullSetTick(ItemStack stack, Level level, LivingEntity living) {
+        new ParticleHelper(helperString, living, ParticleHelper.Type.ORBIT, ParticleHelper.createOrbitProperties(0, 1000, 0, 0, 3, (SimpleParticleType) ModParticleTypes.RED_FLAME.get(), 0.75f));
+        new ParticleHelper(helperString, living, ParticleHelper.Type.ORBIT, ParticleHelper.createOrbitProperties(0, 1000, 180, 0, 3, (SimpleParticleType) ModParticleTypes.RED_FLAME.get(), 0.75f));
+
     }
 
     @Override
     protected void postFullSetTick(ItemStack stack, Level level, LivingEntity living) {
+        ParticleHelper.clearAllHelpers(helperString, living);
     }
 
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeMods(EquipmentSlot slot) {
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = new ImmutableMultimap.Builder<>();
         if (slot == this.slot) {
-            builder.put(ModAttributes.STRENGTH.get(), MysticcraftMod.createModifier(AttributeModifier.Operation.ADDITION, 5 * this.getMaterial().getDefenseForSlot(this.getSlot()), this.getSlot()));
+            builder.put(ModAttributes.STRENGTH.get(), MysticcraftMod.createModifier(AttributeModifier.Operation.ADDITION, 3 * this.getMaterial().getDefenseForSlot(this.getSlot()), this.getSlot()));
             builder.put(ModAttributes.CRIT_DAMAGE.get(), MysticcraftMod.createModifier(AttributeModifier.Operation.ADDITION, this.getMaterial().getDefenseForSlot(this.getSlot()), this.getSlot()));
+            builder.put(Attributes.MAX_HEALTH, MysticcraftMod.createModifier(AttributeModifier.Operation.ADDITION, this.getMaterial().getDefenseForSlot(this.getSlot()) / 2.5, this.getSlot()));
         }
         return builder.build();
     }
@@ -109,5 +120,10 @@ public class CrimsonArmorItem extends ModArmorItem implements GeoItem, IArmorBon
                 return renderer;
             }
         });
+    }
+
+    @Override
+    public List<ArmorTier> getAvailableTiers() {
+        return List.of(ArmorTier.HOT, ArmorTier.BURNING, ArmorTier.FIERY, ArmorTier.INFERNAL);
     }
 }

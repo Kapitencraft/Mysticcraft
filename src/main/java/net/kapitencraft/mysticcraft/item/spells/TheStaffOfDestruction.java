@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.item.spells;
 
 import net.kapitencraft.mysticcraft.spell.SpellSlot;
-import net.kapitencraft.mysticcraft.spell.Spell;
+import net.kapitencraft.mysticcraft.spell.Spells;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Rarity;
 
@@ -12,7 +12,7 @@ public class TheStaffOfDestruction extends NormalSpellItem {
     private final Component[] description = {Component.literal("A very explosive tool")};
     public TheStaffOfDestruction() {
         super(new Properties().rarity(Rarity.RARE), 1, 50, 20);
-        this.addSlot(new SpellSlot(Spell.EXPLOSIVE_SIGHT));
+        this.addSlot(new SpellSlot(Spells.EXPLOSIVE_SIGHT));
     }
 
     @Override

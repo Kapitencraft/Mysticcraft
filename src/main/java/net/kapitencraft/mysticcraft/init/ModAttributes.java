@@ -22,7 +22,7 @@ public abstract class ModAttributes {
     public static final RegistryObject<Attribute> FEROCITY = register("ferocity", 0, 0, 500);
     public static final RegistryObject<Attribute> MAX_MANA = register("max_mana", 0, 0, Double.MAX_VALUE);
     public static final RegistryObject<Attribute> MANA = register("mana", 100, 0, Double.MAX_VALUE);
-    public static final RegistryObject<Attribute> MANA_COST = register("mana_cost", 0, 0, 1000);
+    public static final RegistryObject<Attribute> MANA_COST = register("mana_cost", 0, 0, 100000);
     public static final RegistryObject<Attribute> ABILITY_DAMAGE = register("ability_damage", 0, 0, Double.MAX_VALUE);
     public static final RegistryObject<Attribute> MANA_REGEN = register("mana_regen", 0, 0, Double.MAX_VALUE);
     public static final RegistryObject<Attribute> HEALTH_REGEN = register("health_regen", 0, 0, Double.MAX_VALUE);

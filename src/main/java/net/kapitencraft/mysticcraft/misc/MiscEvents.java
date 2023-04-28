@@ -7,7 +7,7 @@ import net.kapitencraft.mysticcraft.init.ModEntityTypes;
 import net.kapitencraft.mysticcraft.init.ModItems;
 import net.kapitencraft.mysticcraft.init.ModParticleTypes;
 import net.kapitencraft.mysticcraft.particle.FireNormalParticle;
-import net.kapitencraft.mysticcraft.particle.HeliumFlameParticle;
+import net.kapitencraft.mysticcraft.particle.flame.*;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.world.item.DyeableLeatherItem;
 import net.minecraftforge.api.distmarker.Dist;
@@ -23,8 +23,13 @@ public class MiscEvents {
     public static class ClientForgeEvents {
         @SubscribeEvent
         public static void registerParticles(RegisterParticleProvidersEvent event) {
-            event.register((SimpleParticleType) ModParticleTypes.FIRE_NORMAL.get(), FireNormalParticle::provider);
-            event.register((SimpleParticleType) ModParticleTypes.HELIUM_FLAME.get(), HeliumFlameParticle::provider);
+            event.register((SimpleParticleType) ModParticleTypes.FIRE_NORMAL.get(), FireNormalParticle.FireNormalParticleProvider::new);
+            event.register((SimpleParticleType) ModParticleTypes.RED_FLAME.get(), RedFlameParticle.RisingFlameParticleProvider::new);
+            event.register((SimpleParticleType) ModParticleTypes.DARK_BLUE_FLAME.get(), DarkBlueFlame.RisingFlameParticleProvider::new);
+            event.register((SimpleParticleType) ModParticleTypes.LIGHT_BLUE_FLAME.get(), LightBlueFlame.RisingFlameParticleProvider::new);
+            event.register((SimpleParticleType) ModParticleTypes.LIGHT_GREEN_FLAME.get(), LightGreenFlame.RisingFlameParticleProvider::new);
+            event.register((SimpleParticleType) ModParticleTypes.DARK_GREEN_FLAME.get(), DarkGreenFlame.RisingFlameParticleProvider::new);
+            event.register((SimpleParticleType) ModParticleTypes.PURPLE_FLAME.get(), PurpleFlame.RisingFlameParticleProvider::new);
         }
 
         @SubscribeEvent

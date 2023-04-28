@@ -59,7 +59,7 @@ public abstract class SpellProjectile extends AbstractArrow {
     }
 
     protected void sendDamageMessage() {
-        if (!this.level.isClientSide() && this.getOwner() instanceof Player player && attacked.size() > 0) {
+        if (!this.level.isClientSide() && this.getOwner() instanceof Player player && attacked.size() > 0 && damageInflicted > 0) {
             String red = FormattingCodes.RED;
             player.sendSystemMessage(Component.literal("Your " + this.name + " hit " + red + attacked.size() + FormattingCodes.RESET + " Enemies for " + red + MathUtils.round(this.damageInflicted, 3) + " Damage"));
         }

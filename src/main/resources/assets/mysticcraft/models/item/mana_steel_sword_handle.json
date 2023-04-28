@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "mysticcraft:item/mana_steel_handle"
+    "layer0": "mysticcraft:item/mana_steel_sword_handle"
   }
 }

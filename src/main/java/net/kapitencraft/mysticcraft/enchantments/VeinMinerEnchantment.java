@@ -1,5 +1,6 @@
 package net.kapitencraft.mysticcraft.enchantments;
 
+import net.kapitencraft.mysticcraft.enchantments.abstracts.IToolEnchantment;
 import net.kapitencraft.mysticcraft.misc.utils.MiscUtils;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;

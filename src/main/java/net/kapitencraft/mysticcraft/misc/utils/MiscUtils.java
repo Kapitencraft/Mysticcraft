@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.misc.utils;
 
 import net.kapitencraft.mysticcraft.ModConstance;
+import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.gui.IGuiHelper;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneItem;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
@@ -9,6 +10,8 @@ import net.kapitencraft.mysticcraft.item.spells.SpellItem;
 import net.kapitencraft.mysticcraft.item.weapon.melee.sword.LongSwordItem;
 import net.kapitencraft.mysticcraft.item.weapon.ranged.bow.ShortBowItem;
 import net.minecraft.ChatFormatting;
+import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -17,6 +20,9 @@ import net.minecraft.network.protocol.game.ClientboundClearTitlesPacket;
 import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.PlayerAdvancements;
+import net.minecraft.server.ServerAdvancementManager;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.damagesource.DamageSource;
@@ -55,6 +61,23 @@ public class MiscUtils {
         return stack.getItem() instanceof ArmorItem armorItem ? armorItem.getSlot() : EquipmentSlot.MAINHAND;
     }
 
+
+    public static boolean awardAchievement(Player player, String achievementName) {
+        if (player instanceof ServerPlayer _player) {
+            ServerAdvancementManager manager = _player.server.getAdvancements();
+            Advancement _adv = manager.getAdvancement(new ResourceLocation(achievementName));
+            MysticcraftMod.sendInfo(manager.getAllAdvancements().toString());
+            PlayerAdvancements advancements = _player.getAdvancements();
+            if (_adv != null) {
+                AdvancementProgress _ap = advancements.getOrStartProgress(_adv);
+                if (!_ap.isDone()) {
+                    for (String s : _ap.getRemainingCriteria()) advancements.award(_adv, s);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
     public interface delayRun {
         void run();
     }
@@ -256,6 +279,15 @@ public class MiscUtils {
             case "dodge" -> ChatFormatting.DARK_GRAY;
             default -> ChatFormatting.RED;
         };
+    }
+
+    private static final List<String> NUMBERS = List.of("0", "1", "2", "3", "4", "5", "6", "7", "8", "9");
+
+    public static String removeNumbers(String string) {
+        for (String number : NUMBERS) {
+            string = string.replace(number, "");
+        }
+        return string;
     }
 
     public static Rarity getItemRarity(Item item) {

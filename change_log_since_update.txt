@@ -1,12 +1,17 @@
-added Description to most Enchantments;
-added Description Management to Display in tooltip;
-changed maxLevel of Venomous to 5;
-removed visibility of 0hp healing indicators;
 fixed not seeing particles at double jump;
 fixed armor enchantments only working when attacker had enchantments;
-added Priority for Enchantments;
+fixed mana-steel-sword-parts missing textures/models;
 fixed Staff of the Wild`s Animation not working;
 fixed Wither Impact telling damage, even when no creature is hurt;
-changed Wither Impact healing from 0.5 to 30% of Crit Damage and added absorption shield;
 fixed Jasper Gemstone Slot Display being huge;
+fixed Any Enchantment having wrong maxLevel; (changed maxLevel of Venomous to 5, FrozenArrows to 3)
+
+changed Wither Impact healing from 0.5 to 30% of Crit Damage and added absorption shield;
+changed Attribute Calculation using base value;
+
+added Description to most Enchantments;
+added Description Management to Display in tooltip;
+added Priority for Enchantments;
 added Wither Blades being droped from Withers with a 0.1% chance;
+
+removed visibility of 0hp healing indicators;

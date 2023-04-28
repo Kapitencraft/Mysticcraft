@@ -35,7 +35,7 @@ public class SoulMageArmorItem extends ModArmorItem implements IArmorBonusItem {
     private static final PieceBonus CHEST_BONUS = new SoulMageChestplateBonus();
     private static final FullSetBonus SET_BONUS = new SoulMageArmorFullSetBonus();
     public SoulMageArmorItem(EquipmentSlot p_40387_) {
-        super(ModArmorMaterials.SOUL_MAGE, p_40387_, new Properties().rarity(FormattingCodes.MYTHIC));
+        super(ModArmorMaterials.SOUL_MAGE, p_40387_, new Properties().rarity(FormattingCodes.LEGENDARY));
     }
 
     public static HashMap<EquipmentSlot, RegistryObject<Item>> createRegistry(DeferredRegister<Item> register, String registryName) {
@@ -58,8 +58,8 @@ public class SoulMageArmorItem extends ModArmorItem implements IArmorBonusItem {
     @Override
     protected void initFullSetTick(ItemStack stack, Level level, LivingEntity living) {
         MysticcraftMod.sendInfo("SoulMage");
-        new ParticleHelper(helperString, living, ParticleHelper.Type.ORBIT, ParticleHelper.createOrbitProperties(0, 1000, 0, 0, 3, (SimpleParticleType) ModParticleTypes.HELIUM_FLAME.get()));
-        new ParticleHelper(helperString, living, ParticleHelper.Type.ORBIT, ParticleHelper.createOrbitProperties(0, 1000, 180, 0, 3, (SimpleParticleType) ModParticleTypes.HELIUM_FLAME.get()));
+        new ParticleHelper(helperString, living, ParticleHelper.Type.ORBIT, ParticleHelper.createOrbitProperties(0, 1000, 0, 0, 3, (SimpleParticleType) ModParticleTypes.PURPLE_FLAME.get(), 0.75f));
+        new ParticleHelper(helperString, living, ParticleHelper.Type.ORBIT, ParticleHelper.createOrbitProperties(0, 1000, 180, 0, 3, (SimpleParticleType) ModParticleTypes.PURPLE_FLAME.get(), 0.75f));
     }
 
     @Override

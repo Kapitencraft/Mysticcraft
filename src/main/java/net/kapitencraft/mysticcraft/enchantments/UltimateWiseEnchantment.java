@@ -3,6 +3,8 @@ package net.kapitencraft.mysticcraft.enchantments;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.enchantments.abstracts.IUltimateEnchantment;
+import net.kapitencraft.mysticcraft.enchantments.abstracts.IWeaponEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.StatBoostEnchantment;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.misc.utils.MiscUtils;

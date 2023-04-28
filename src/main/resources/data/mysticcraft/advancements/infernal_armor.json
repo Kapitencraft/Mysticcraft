@@ -1,0 +1,47 @@
+{
+  "criteria": {
+    "infernal_armor": {
+      "conditions": {
+        "items": [
+          {
+            "nbt": "{tier:armor_tier.infernal}"
+          },
+          {
+            "nbt": "{tier:armor_tier.infernal}"
+          },
+          {
+            "nbt": "{tier:armor_tier.infernal}"
+          },
+          {
+            "nbt": "{tier:armor_tier.infernal}"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.mysticcraft.infernal_armor"
+    },
+    "frame": "challenge",
+    "hidden": false,
+    "icon": {
+      "item": "mysticcraft:crimson_chestplate",
+      "nbt": "{tier:armor_tier.infernal}"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.mysticcraft.infernal_armor.title"
+    }
+  },
+  "requirements": [
+    [
+      "netherite_armor"
+    ]
+  ],
+  "rewards": {
+    "experience": 100
+  }
+}

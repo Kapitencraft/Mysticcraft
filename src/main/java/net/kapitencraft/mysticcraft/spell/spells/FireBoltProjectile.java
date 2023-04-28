@@ -4,7 +4,7 @@ import net.kapitencraft.mysticcraft.init.ModEntityTypes;
 import net.kapitencraft.mysticcraft.init.ModParticleTypes;
 import net.kapitencraft.mysticcraft.misc.damage_source.IndirectAbilityDamageSource;
 import net.kapitencraft.mysticcraft.misc.utils.ParticleUtils;
-import net.kapitencraft.mysticcraft.spell.Spell;
+import net.kapitencraft.mysticcraft.spell.Spells;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.nbt.CompoundTag;
@@ -49,7 +49,7 @@ public class FireBoltProjectile extends SpellProjectile {
     }
 
     public FireBoltProjectile(EntityType<? extends AbstractArrow> type, Level level) {
-        super(type, level, Spell.FIRE_BOLT_1.getName());
+        super(type, level, Spells.FIRE_BOLT_1.getName());
         this.explosive = false;
         this.damage = 1;
     }

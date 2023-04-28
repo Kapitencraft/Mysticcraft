@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "mysticcraft:default_hammer"
+    },
+    {
+      "item": "mysticcraft:crimsonite_cluster"
+    }
+  ],
+  "result": {
+    "count": 2,
+    "item": "mysticcraft:crimsonite_dust"
+  }
+}

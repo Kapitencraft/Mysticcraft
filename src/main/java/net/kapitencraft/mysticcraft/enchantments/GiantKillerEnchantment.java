@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.enchantments;
 
 import net.kapitencraft.mysticcraft.enchantments.abstracts.ExtendedCalculationEnchantment;
+import net.kapitencraft.mysticcraft.enchantments.abstracts.IWeaponEnchantment;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;

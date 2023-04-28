@@ -1,6 +1,5 @@
 package net.kapitencraft.mysticcraft.enchantments.abstracts;
 
-import net.kapitencraft.mysticcraft.enchantments.IWeaponEnchantment;
 import net.kapitencraft.mysticcraft.misc.utils.TagUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.damagesource.DamageSource;

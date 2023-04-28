@@ -1,7 +1,5 @@
 package net.kapitencraft.mysticcraft.enchantments.abstracts;
 
-import net.kapitencraft.mysticcraft.enchantments.IArmorEnchantment;
-import net.kapitencraft.mysticcraft.enchantments.IWeaponEnchantment;
 import net.kapitencraft.mysticcraft.misc.utils.MiscUtils;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EquipmentSlot;

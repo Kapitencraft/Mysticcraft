@@ -1,8 +1,10 @@
 package net.kapitencraft.mysticcraft.spell;
 
+import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.item.spells.*;
 import net.kapitencraft.mysticcraft.item.spells.necron_sword.NecronSword;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
+import net.kapitencraft.mysticcraft.misc.utils.MiscUtils;
 import net.kapitencraft.mysticcraft.spell.spells.*;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -18,40 +20,28 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Supplier;
 
-public enum Spell {
+public enum Spells implements Spell {
     WITHER_IMPACT("Wither Impact", "1101110", Type.RELEASE, 300, WitherImpactSpell::execute, item -> item instanceof NecronSword, WitherImpactSpell::getDescription, Rarity.RARE, true),
+    WITHER_SHIELD("Wither Shield", "1101111", Type.RELEASE, 150, WitherShieldSpell::execute, item -> item instanceof NecronSword, WitherShieldSpell::getDescription, Rarity.RARE, true),
     IMPLOSION("Implosion", "0000000", Type.RELEASE, 300, ImplosionSpell::execute, item -> item instanceof NecronSword, ImplosionSpell::getDescription, FormattingCodes.LEGENDARY, true),
     INSTANT_TRANSMISSION("Instant Transmission", "1110111", Type.RELEASE, 50, InstantTransmissionSpell::execute, item -> true, InstantTransmissionSpell::getDescription, Rarity.COMMON, true),
     ETHER_WARP("Ether Transmission", "1000111", Type.RELEASE, 50, EtherWarpSpell::execute, item -> item instanceof AspectOfTheVoidItem, EtherWarpSpell::getDescription, Rarity.EPIC, true),
     EXPLOSIVE_SIGHT("Explosive Sight", "1010110", Type.RELEASE, 150, ExplosiveSightSpell::execute, item -> true, ExplosiveSightSpell::getDescription, Rarity.UNCOMMON, true),
-    EMPTY_SPELL("Empty Spell", null, Type.RELEASE, 0, (living, itemStack)-> {}, item -> false, EmptySpell::getDescription, Rarity.UNCOMMON, true),
+    EMPTY_SPELL("Empty Spell", null, Type.RELEASE, 0, (living, itemStack)-> {}, item -> false, EmptySpell::getDescription, Rarity.UNCOMMON, false),
     HUGE_HEAL("Huge Heal", "0011011", Type.RELEASE, 70, HugeHealSpell::execute, item -> true, HugeHealSpell::getDescription, Rarity.UNCOMMON, true),
-    FIRE_BOLT_1("Fire Bolt", "0110011", Type.RELEASE, 50, createFireBold(1, false), item -> item instanceof IFireScytheItem, createFireBoldDesc(1f), Rarity.UNCOMMON, true),
-    FIRE_BOLT_2("Fire Bolt", "0110011", Type.RELEASE, 50, createFireBold(1.4, false), item -> item instanceof IFireScytheItem, createFireBoldDesc(1.4f), Rarity.UNCOMMON, true),
-    FIRE_BOLT_3("Fire Bolt", "0110011", Type.RELEASE, 50, createFireBold(2.8, true), item -> item instanceof IFireScytheItem, createFireBoldDesc(2.8f), Rarity.UNCOMMON, true),
-    FIRE_BOLT_4("Fire Bolt", "0110011", Type.RELEASE, 50, createFireBold(5.2, true), item -> item instanceof IFireScytheItem, createFireBoldDesc(5.2f), Rarity.UNCOMMON, true),
+    FIRE_BOLT_1("Fire Bolt 1", "0110011", Type.RELEASE, 50, createFireBold(1, false), item -> item instanceof IFireScytheItem, createFireBoldDesc(1f), Rarity.UNCOMMON, true),
+    FIRE_BOLT_2("Fire Bolt 2", "0110011", Type.RELEASE, 50, createFireBold(1.4, false), item -> item instanceof IFireScytheItem, createFireBoldDesc(1.4f), Rarity.UNCOMMON, true),
+    FIRE_BOLT_3("Fire Bolt 3", "0110011", Type.RELEASE, 50, createFireBold(2.8, true), item -> item instanceof IFireScytheItem, createFireBoldDesc(2.8f), Rarity.UNCOMMON, true),
+    FIRE_BOLT_4("Fire Bolt 4", "0110011", Type.RELEASE, 50, createFireBold(5.2, true), item -> item instanceof IFireScytheItem, createFireBoldDesc(5.2f), Rarity.UNCOMMON, true),
     FIRE_LANCE("Fire Lance", "1011100", Type.CYCLE, 5, FireLanceSpell::execute, item -> item instanceof FireLance, FireLanceSpell::getDescription, Rarity.UNCOMMON, true);
 
-    public enum Type {
-        RELEASE("release"),
-        CYCLE("cycle");
-        private final String string;
 
-        Type(String string) {
-            this.string = string;
-        }
-
-        public String getString() {
-            return string;
-        }
-    }
-
-    public static HashMap<Spell, RegistryObject<Item>> registerAll(DeferredRegister<Item> register) {
-        HashMap<Spell, RegistryObject<Item>> map = new HashMap<>();
-        for (Spell spell : values()) {
+    public static HashMap<Spells, RegistryObject<Item>> registerAll(DeferredRegister<Item> register) {
+        HashMap<Spells, RegistryObject<Item>> map = new HashMap<>();
+        MysticcraftMod.sendInfo("loading Spell Scrolls");
+        for (Spells spell : values()) {
             if (spell.shouldBeItem) {
-                SpellScrollItem scrollItem = new SpellScrollItem(spell);
-                map.put(spell, register.register(spell.REGISTRY_NAME + "_scroll", ()-> scrollItem));
+                map.put(spell, register.register(spell.REGISTRY_NAME + "_scroll", ()-> new SpellScrollItem(spell)));
             }
         }
         return map;
@@ -86,9 +76,9 @@ public enum Spell {
     public final String REGISTRY_NAME;
     private final boolean shouldBeItem;
     public final Rarity RARITY;
-    Spell(String name, String castingType, Type type, double manaCost, Functions.SpellRun toRun, Functions.applicationHelper helper, Supplier<List<Component>> description, Rarity rarity, boolean shouldBeItem) {
+    Spells(String name, String castingType, Type type, double manaCost, Functions.SpellRun toRun, Functions.applicationHelper helper, Supplier<List<Component>> description, Rarity rarity, boolean shouldBeItem) {
         this.shouldBeItem = shouldBeItem;
-        this.name = name;
+        this.name = MiscUtils.removeNumbers(name);
         this.TYPE = type;
         this.MANA_COST = manaCost;
         this.run = toRun;
@@ -106,6 +96,22 @@ public enum Spell {
     public String getName() {
         return this.name;
     }
+
+    @Override
+    public Type getType() {
+        return this.TYPE;
+    }
+
+    @Override
+    public double getDefaultManaCost() {
+        return this.MANA_COST;
+    }
+
+    @Override
+    public Rarity getRarity() {
+        return this.RARITY;
+    }
+
     public void execute(LivingEntity living, ItemStack stack) {
         this.run.execute(living, stack);
     }
@@ -123,8 +129,8 @@ public enum Spell {
         if (this.castingType != null && item.getSpellSlotAmount() > 1) list.add(Component.literal("Pattern: [" + this.getPattern() + FormattingCodes.RESET + "]"));
     }
 
-    public static Spell get(String pattern) {
-        for (Spell spell : values()) {
+    public static Spells get(String pattern) {
+        for (Spells spell : values()) {
             String castingType = spell.getCastingType();
             if (Objects.equals(castingType, pattern)) {
                 return spell;
@@ -137,13 +143,13 @@ public enum Spell {
         return get(pattern) != EMPTY_SPELL;
     }
 
+    public String getPattern() {
+        return getPattern(this.castingType);
+    }
+
     public static String getPattern(String s) {
         String replace = s.replace("0", RED);
         return replace.replace("1", BLUE);
-    }
-
-    public String getPattern() {
-        return getPattern(this.castingType);
     }
 
     private static final String BLUE = FormattingCodes.BLUE + "\u2726";

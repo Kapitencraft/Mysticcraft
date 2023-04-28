@@ -10,6 +10,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 
@@ -19,7 +20,7 @@ public class RNGDropHelper {
 
     public static void calculateAndDrop(ItemStack stack, float chance, LivingEntity source, Vec3 spawnPos) {
         double magicFind = source.getAttributeValue(ModAttributes.MAGIC_FIND.get());
-        if (Math.random() <= chance * (1 + magicFind / 100)) {
+        if (Math.random() <= getFinalChance(chance, magicFind)) {
             if (source instanceof Player player) {
                 player.sendSystemMessage(createRareDropMessage(stack, magicFind));
             }
@@ -29,6 +30,23 @@ public class RNGDropHelper {
                 source.level.addFreshEntity(new ItemEntity(source.level, spawnPos.x, spawnPos.y, spawnPos.z, stack));
             }
         }
+    }
+
+    private static double getFinalChance(float chance, double magicFind) {
+        return chance * (1 + magicFind) / 100;
+    }
+
+    public static ItemStack dontDrop(Item item, int maxAmount, LivingEntity source, float chance) {
+        double magicFind = source.getAttributeValue(ModAttributes.MAGIC_FIND.get());
+        int amount = 0;
+        for (int i = 0; i < maxAmount; i++) {
+            if (Math.random() <= getFinalChance(chance, magicFind)) {
+                amount++;
+            }
+        }
+        ItemStack stack = new ItemStack(item, amount);
+        createRareDropMessage(stack, magicFind);
+        return stack;
     }
 
     private static Component getStackNameWithoutBrackets(ItemStack stack) {
@@ -45,5 +63,4 @@ public class RNGDropHelper {
     private static Component createRareDropMessage(ItemStack drop, double magic_find) {
         return Component.literal(FormattingCodes.BOLD + FormattingCodes.LIGHT_PURPLE + "VERY CRAZY RARE DROP" + FormattingCodes.RESET + FormattingCodes.BOLD + ": " + FormattingCodes.RESET).append(getStackNameWithoutBrackets(drop)).append(FormattingCodes.AQUA + " (+" + magic_find + ")");
     }
-
 }

@@ -3,7 +3,6 @@ package net.kapitencraft.mysticcraft.particle;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.util.RandomSource;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
@@ -11,9 +10,6 @@ import org.jetbrains.annotations.Nullable;
 
 @OnlyIn(Dist.CLIENT)
 public class FireNormalParticle extends TextureSheetParticle {
-    public static FireNormalParticleProvider provider(SpriteSet spriteSet) {
-        return new FireNormalParticleProvider(spriteSet);
-    }
 
 
     protected FireNormalParticle(ClientLevel world, double x, double y, double z, double vx, double vy, double vz, SpriteSet spriteSet) {
@@ -25,12 +21,13 @@ public class FireNormalParticle extends TextureSheetParticle {
         this.yd = vy;
         this.zd = vz;
         this.lifetime = xd > 1 || yd > 1 || zd > 1 ? 20 : 60;
-        this.setSprite(spriteSet.get(RandomSource.createNewThreadLocalInstance()));
+        this.alpha = 0.5f;
+        this.pickSprite(spriteSet);
     }
 
     @Override
     public @NotNull ParticleRenderType getRenderType() {
-        return ParticleRenderType.PARTICLE_SHEET_LIT;
+        return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
     }
 
     public static class FireNormalParticleProvider implements ParticleProvider<SimpleParticleType> {

@@ -1,7 +1,7 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "mysticcraft:item/the_staff_of_destruction"
+    "layer0": "mysticcraft:item/staff_of_destruction"
   },
   "display": {
     "thirdperson_righthand": {

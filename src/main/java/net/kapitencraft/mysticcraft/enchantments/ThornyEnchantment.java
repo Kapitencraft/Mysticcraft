@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.enchantments;
 
 import net.kapitencraft.mysticcraft.enchantments.abstracts.ExtendedCalculationEnchantment;
+import net.kapitencraft.mysticcraft.enchantments.abstracts.IToolEnchantment;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.kapitencraft.mysticcraft.misc.utils.MiscUtils;
 import net.minecraft.world.damagesource.DamageSource;

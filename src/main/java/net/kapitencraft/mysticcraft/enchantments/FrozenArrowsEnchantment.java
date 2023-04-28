@@ -21,6 +21,11 @@ public class FrozenArrowsEnchantment extends ModBowEnchantment {
     }
 
     @Override
+    public int getMaxLevel() {
+        return 3;
+    }
+
+    @Override
     public float execute(LivingEntity target, CompoundTag tag, ExecuteType type, float oldDamage, AbstractArrow arrow) {
         if (type == ExecuteType.HIT) target.setTicksFrozen(tag.getInt("Level") * 40);
         return oldDamage;

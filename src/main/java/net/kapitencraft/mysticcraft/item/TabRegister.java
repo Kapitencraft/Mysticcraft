@@ -29,7 +29,6 @@ public class TabRegister {
                 builder.title(Component.translatable("itemGroup.spell_and_gemstone"))
                         .icon(() -> new ItemStack(ModItems.STAFF_OF_THE_WILD.get()))
                         .displayItems((featureFlagSet, output, flag) -> {
-                            output.accept(ModItems.IMPLOSION_SCROLL.get());
                             output.accept(ModItems.AOTE.get());
                             output.accept(ModItems.AOTV.get());
                             output.accept(ModItems.STAFF_OF_THE_WILD.get());
@@ -49,6 +48,14 @@ public class TabRegister {
                 builder.title(Component.translatable("itemGroup.materials_mm"))
                         .icon(()-> new ItemStack(ModItems.SPELL_SHARD.get()))
                         .displayItems((featureFlagSet, output, flag) -> {
+                            output.accept(ModItems.RAW_CRIMSONIUM_DUST.get());
+                            output.accept(ModItems.RAW_CRIMSONIUM.get());
+                            output.accept(ModItems.CRIMSONITE_CLUSTER.get());
+                            output.accept(ModItems.CRIMSONITE_DUST.get());
+                            output.accept(ModItems.CRIMSONIUM_INGOT.get());
+                            output.accept(ModItems.CRIMSONIUM_DUST.get());
+                            output.accept(ModItems.CRIMSON_STEEL_DUST.get());
+                            output.accept(ModItems.CRIMSON_STEEL_INGOT.get());
                             output.accept(ModItems.DYED_LEATHER.get());
                             output.accept(ModItems.SPELL_SHARD.get());
                             output.accept(ModItems.UPPER_BlADE_MS.get());
@@ -60,8 +67,12 @@ public class TabRegister {
                             output.accept(ModBlocks.MANGATIC_STONE.getItem());
                             output.accept(ModBlocks.MANGATIC_SLIME.getItem());
                             output.accept(ModBlocks.OBSIDIAN_PRESSURE_PLATE.getItem());
-                            output.accept(ModBlocks.CRIMSONITE_ORE.getItem());
+                            output.accept(ModBlocks.CRIMSONIUM_ORE.getItem());
                             output.accept(ModItems.FROZEN_BLAZE_ROD.get());
+                            output.accept(ModItems.STONE_HAMMER.get());
+                            output.accept(ModItems.IRON_HAMMER.get());
+                            output.accept(ModItems.IRON_HAMMER.get());
+                            output.accept(ModItems.DIAMOND_HAMMER.get());
                         }));
         event.registerCreativeModeTab(new ResourceLocation(MysticcraftMod.MOD_ID, "weapons_and_tools"), builder ->
                 builder.title(Component.translatable("itemGroup.weapons_and_tools_mm"))

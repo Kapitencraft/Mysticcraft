@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "tag": "minecraft:tier_1_hammer"
+    },
+    {
+      "item": "mysticcraft:crimsonium_ingot"
+    }
+  ],
+  "result": {
+    "item": "mysticcraft:crimsonium_dust"
+  }
+}

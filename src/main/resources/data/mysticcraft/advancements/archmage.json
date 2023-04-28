@@ -1,0 +1,27 @@
+{
+  "criteria": {
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.mysticcraft.archmage"
+    },
+    "frame": "challenge",
+    "hidden": false,
+    "icon": {
+      "item": "mysticcraft:spell_shard"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.mysticcraft.archmage.title"
+    }
+  },
+  "requirements": [
+    [
+      "archmage"
+    ]
+  ],
+  "rewards": {
+    "experience": 100
+  }
+}

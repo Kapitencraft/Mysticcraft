@@ -2,10 +2,12 @@ package net.kapitencraft.mysticcraft;
 
 import com.mojang.logging.LogUtils;
 import net.kapitencraft.mysticcraft.gui.gemstone_grinder.GemstoneGrinderScreen;
-import net.kapitencraft.mysticcraft.init.*;
+import net.kapitencraft.mysticcraft.init.ModEntityTypes;
+import net.kapitencraft.mysticcraft.init.ModFluids;
+import net.kapitencraft.mysticcraft.init.ModMenuTypes;
+import net.kapitencraft.mysticcraft.init.ModRegistryInit;
 import net.kapitencraft.mysticcraft.misc.ModItemProperties;
 import net.kapitencraft.mysticcraft.misc.utils.MiscUtils;
-import net.kapitencraft.mysticcraft.villagers.ModVillagers;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
@@ -54,32 +56,7 @@ public class MysticcraftMod {
     public MysticcraftMod()
     {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        sendInfo("Registering Attributes...");
-        ModAttributes.REGISTRY.register(modEventBus);
-        sendInfo("Registering Enchantments...");
-        ModEnchantments.REGISTRY.register(modEventBus);
-        sendInfo("Registering Effects...");
-        ModMobEffects.REGISTRY.register(modEventBus);
-        sendInfo("Registering Block Entities...");
-        ModBlockEntities.REGISTRY.register(modEventBus);
-        sendInfo("Registering Menus...");
-        ModMenuTypes.REGISTRY.register(modEventBus);
-        sendInfo("Registering Entity Types...");
-        ModEntityTypes.REGISTRY.register(modEventBus);
-        sendInfo("Registering Particle Types...");
-        ModParticleTypes.REGISTRY.register(modEventBus);
-        sendInfo("Registering Fluid Types...");
-        ModFluidTypes.REGISTRY.register(modEventBus);
-        sendInfo("Registering Fluids...");
-        ModFluids.REGISTRY.register(modEventBus);
-        sendInfo("Registering Items...");
-        ModItems.REGISTRY.register(modEventBus);
-        sendInfo("Registering Blocks...");
-        ModBlocks.REGISTRY.register(modEventBus);
-        sendInfo("Registering Villager Professions");
-        ModVillagers.PROFESSION_REGISTRY.register(modEventBus);
-        sendInfo("Registering POI-Types");
-        ModVillagers.REGISTRY.register(modEventBus);
+        ModRegistryInit.register(modEventBus);
 
         MinecraftForge.EVENT_BUS.register(this);
         GeckoLib.initialize();

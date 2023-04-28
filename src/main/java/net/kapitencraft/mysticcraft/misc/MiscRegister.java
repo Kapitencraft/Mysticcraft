@@ -3,9 +3,9 @@ package net.kapitencraft.mysticcraft.misc;
 import com.google.common.collect.Multimap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.enchantments.IToolEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.VenomousEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.ExtendedCalculationEnchantment;
+import net.kapitencraft.mysticcraft.enchantments.abstracts.IToolEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.ModBowEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.StatBoostEnchantment;
 import net.kapitencraft.mysticcraft.entity.FrozenBlazeEntity;
@@ -15,6 +15,7 @@ import net.kapitencraft.mysticcraft.item.RNGDropHelper;
 import net.kapitencraft.mysticcraft.item.armor.ModArmorItem;
 import net.kapitencraft.mysticcraft.item.armor.ModArmorMaterials;
 import net.kapitencraft.mysticcraft.item.armor.SoulMageArmorItem;
+import net.kapitencraft.mysticcraft.item.armor.TieredArmorItem;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.item.item_bonus.IArmorBonusItem;
 import net.kapitencraft.mysticcraft.item.spells.SpellItem;
@@ -27,8 +28,9 @@ import net.kapitencraft.mysticcraft.misc.particle_help.ParticleHelper;
 import net.kapitencraft.mysticcraft.misc.utils.*;
 import net.kapitencraft.mysticcraft.mixin.LivingEntityMixin;
 import net.kapitencraft.mysticcraft.mob_effects.NumbnessMobEffect;
-import net.kapitencraft.mysticcraft.spell.Spell;
-import net.kapitencraft.mysticcraft.spell.spells.WitherImpactSpell;
+import net.kapitencraft.mysticcraft.spell.Spells;
+import net.kapitencraft.mysticcraft.spell.spells.Spell;
+import net.kapitencraft.mysticcraft.spell.spells.WitherShieldSpell;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -330,7 +332,7 @@ public class MiscRegister {
         LivingEntity attacker = MiscUtils.getAttacker(event.getSource());
         DamageSource source = event.getSource();
         CompoundTag tag = attacked.getPersistentData();
-        if (TagUtils.checkForIntAbove0(tag, WitherImpactSpell.DAMAGE_REDUCTION_TIME)) {
+        if (TagUtils.checkForIntAbove0(tag, WitherShieldSpell.DAMAGE_REDUCTION_TIME)) {
             event.setAmount(event.getAmount() * 0.9f);
         }
         if (attacker != null) {
@@ -397,6 +399,8 @@ public class MiscRegister {
                     tag.putByte(SpellItem.SPELL_EXECUTION_DUR, (byte) (tag.getByte(SpellItem.SPELL_EXECUTION_DUR) - 1));
                 }
             }
+            if (InventoryUtils.hasSetInInventory(player, TieredArmorItem.ArmorTier.INFERNAL)) {
+            }
             if (!player.isOnGround()) {
                 if (canJump(player) && tag.getInt(doubleJumpId) < player.getAttributeValue(ModAttributes.DOUBLE_JUMP.get())) {
                     if (((LivingEntityMixin) player).getJumping() && ((LivingEntityMixin) player).getNoJumpDelay() <= 0) {
@@ -415,13 +419,13 @@ public class MiscRegister {
             ParticleHelper.clearAllHelpers(SoulMageArmorItem.helperString, living);
             tag.putString("lastFullSet", "");
         }
-        if (TagUtils.checkForIntAbove0(tag, WitherImpactSpell.DAMAGE_REDUCTION_TIME) && tag.getFloat(WitherImpactSpell.ABSORPTION_AMOUNT_ID) > 0) {
-            TagUtils.increaseIntegerTagValue(tag, WitherImpactSpell.DAMAGE_REDUCTION_TIME, -1);
-            float absorption = tag.getFloat(WitherImpactSpell.ABSORPTION_AMOUNT_ID);
-            if (tag.getInt(WitherImpactSpell.DAMAGE_REDUCTION_TIME) <= 0) {
+        if (TagUtils.checkForIntAbove0(tag, WitherShieldSpell.DAMAGE_REDUCTION_TIME) && tag.getFloat(WitherShieldSpell.ABSORPTION_AMOUNT_ID) > 0) {
+            TagUtils.increaseIntegerTagValue(tag, WitherShieldSpell.DAMAGE_REDUCTION_TIME, -1);
+            float absorption = tag.getFloat(WitherShieldSpell.ABSORPTION_AMOUNT_ID);
+            if (tag.getInt(WitherShieldSpell.DAMAGE_REDUCTION_TIME) <= 0) {
                 living.heal(absorption / 2);
                 living.setAbsorptionAmount(living.getAbsorptionAmount() - absorption);
-                tag.putFloat(WitherImpactSpell.ABSORPTION_AMOUNT_ID, 0);
+                tag.putFloat(WitherShieldSpell.ABSORPTION_AMOUNT_ID, 0);
             }
         }
     }
@@ -480,7 +484,7 @@ public class MiscRegister {
                             MutableComponent mutable = (MutableComponent) component;
                             Component pattern = toolTip.get(i + 1);
                             String patternString = pattern.getString();
-                            Spell spell = Spell.get(Spell.getStringForPattern(patternString, true));
+                            Spells spell = Spells.get(Spells.getStringForPattern(patternString, true));
                             if (spell != null) {
                                 AttributeInstance instance = player.getAttribute(ModAttributes.MANA_COST.get());
                                 mutable.append(FormattingCodes.DARK_RED + AttributeUtils.getAttributeValue(instance, spell.MANA_COST));
@@ -493,7 +497,7 @@ public class MiscRegister {
                     if (component instanceof MutableComponent mutable) {
                         AttributeInstance instance = player.getAttribute(ModAttributes.MANA_COST.get());
                         if (instance != null) {
-                            mutable.append(FormattingCodes.DARK_RED + AttributeUtils.getAttributeValue(instance, spell.MANA_COST));
+                            mutable.append(FormattingCodes.DARK_RED + AttributeUtils.getAttributeValue(instance, spell.getDefaultManaCost()));
                         }
                     }
                 }
@@ -607,6 +611,9 @@ public class MiscRegister {
         boolean hasTelekinesis = mainHandItem.getEnchantmentLevel(ModEnchantments.TELEKINESIS.get()) > 0;
         boolean hasReplenish = mainHandItem.getEnchantmentLevel(ModEnchantments.REPLENISH.get()) > 0;
         List<ItemStack> drops = state.getDrops(context);
+        if (block == Blocks.CRIMSON_NYLIUM) {
+            drops.add(RNGDropHelper.dontDrop(ModItems.CRIMSONITE_CLUSTER.get(), 5, player, 0.00005f));
+        }
         if (hasReplenish) {
             MiscUtils.shrinkDrops(drops, Items.WHEAT_SEEDS, 1);
         }

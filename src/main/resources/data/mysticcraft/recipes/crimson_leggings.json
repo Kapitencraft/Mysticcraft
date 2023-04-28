@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "*": {
+      "item": "mysticcraft:crimson_steel_ingot"
+    }
+  },
+  "pattern": [
+    "***",
+    "* *",
+    "* *"
+  ],
+  "result": {
+    "item": "mysticcraft:crimson_leggings"
+  }
+}

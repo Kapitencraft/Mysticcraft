@@ -1,5 +1,6 @@
-package net.kapitencraft.mysticcraft.enchantments;
+package net.kapitencraft.mysticcraft.enchantments.abstracts;
 
+import net.kapitencraft.mysticcraft.enchantments.abstracts.IWeaponEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.StatBoostEnchantment;
 import net.kapitencraft.mysticcraft.misc.utils.MiscUtils;
 import net.minecraft.world.entity.EquipmentSlot;

@@ -67,7 +67,7 @@ public class AttributeUtils {
         if (instance == null) {
             return 0;
         }
-        double d0 = baseValue;
+        double d0 = baseValue + instance.getBaseValue();
 
         for (AttributeModifier attributemodifier : instance.getModifiers(AttributeModifier.Operation.ADDITION)) {
             d0 += attributemodifier.getAmount();

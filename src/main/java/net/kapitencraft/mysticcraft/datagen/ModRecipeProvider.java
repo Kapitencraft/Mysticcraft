@@ -1,11 +1,8 @@
 package net.kapitencraft.mysticcraft.datagen;
 
-import net.kapitencraft.mysticcraft.init.ModItems;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.recipes.FinishedRecipe;
-import net.minecraft.data.recipes.RecipeCategory;
-import net.minecraft.data.recipes.RecipeProvider;
-import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.data.recipes.*;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.common.crafting.conditions.IConditionBuilder;
@@ -22,7 +19,6 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
 
     @Override
     protected void buildRecipes(@NotNull Consumer<FinishedRecipe> consumer) {
-        createArmor(consumer, ModItems.CRIMSON_ARMOR, ModItems.CRIMSON_STEEL_INGOT);
     }
 
 
@@ -33,15 +29,19 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
         createBoots(recipe, material, armor.get(EquipmentSlot.FEET));
     }
     private static void createHelmet(Consumer<FinishedRecipe> recipe, RegistryObject<Item> material, RegistryObject<Item> result) {
-        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, result.get()).pattern("***").pattern("* *").define('*', material.get()).save(recipe);
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, result.get()).pattern("***").pattern("* *").define('*', material.get()).unlockedBy(getHasName(result.get()), has(material.get())).save(recipe);
     }
     private static void createChestplate(Consumer<FinishedRecipe> recipe, RegistryObject<Item> material, RegistryObject<Item> result) {
-        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, result.get()).pattern("* *").pattern("***").pattern("***").define('*', material.get()).save(recipe);
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, result.get()).pattern("* *").pattern("***").pattern("***").define('*', material.get()).unlockedBy(getHasName(result.get()), has(material.get())).save(recipe);
     }
     private static void createLeggings(Consumer<FinishedRecipe> recipe, RegistryObject<Item> material, RegistryObject<Item> result) {
-        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, result.get()).pattern("***").pattern("* *").pattern("* *").define('*', material.get()).save(recipe);
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, result.get()).pattern("***").pattern("* *").pattern("* *").define('*', material.get()).unlockedBy(getHasName(result.get()), has(material.get())).save(recipe);
     }
     private static void createBoots(Consumer<FinishedRecipe> recipe, RegistryObject<Item> material, RegistryObject<Item> result) {
-        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, result.get()).pattern("* *").pattern("* *").define('*', material.get()).save(recipe);
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, result.get()).pattern("* *").pattern("* *").define('*', material.get()).unlockedBy(getHasName(result.get()), has(material.get())).save(recipe);
+    }
+
+    private static void hammerCrafting(Consumer<FinishedRecipe> consumer, TagKey<Item> hammerTier, RegistryObject<Item> material, RegistryObject<Item> result, int amount) {
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, result.get(), amount).requires(hammerTier).requires(material.get()).unlockedBy(getHasName(result.get()), has(material.get())).save(consumer);
     }
 }

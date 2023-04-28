@@ -26,6 +26,7 @@ public class ParticleHelper {
     private static final String TICKS_ALIVE_ID = "ticksAlive";
     private static final String MAX_TICKS_ALIVE_ID = "maxTicksAlive";
     private static final String Y_OFFSET_ID = "YOffset";
+    private static final String DISTANCE_ID = "distance";
     private static final String CURRENT_ROTATION_ID = "curRotation";
     private static final String MAX_HEIGHT_ID = "maxHeight";
     private static final String ROTATION_PER_TICK_ID = "rotPerTick";
@@ -61,7 +62,7 @@ public class ParticleHelper {
         return tag;
     }
 
-    public static CompoundTag createOrbitProperties(int cooldown, int maxTicksAlive, float initRotation, float maxHeight, float rotPerTick, ParticleType<SimpleParticleType> particleType) {
+    public static CompoundTag createOrbitProperties(int cooldown, int maxTicksAlive, float initRotation, float maxHeight, float rotPerTick, ParticleType<SimpleParticleType> particleType, float distance) {
         CompoundTag tag = new CompoundTag();
         tag.putInt(COOLDOWN_ID, cooldown);
         tag.putInt(TICKS_ALIVE_ID, 0);
@@ -71,6 +72,7 @@ public class ParticleHelper {
         tag.putFloat(MAX_HEIGHT_ID, maxHeight);
         tag.putFloat(ROTATION_PER_TICK_ID, rotPerTick);
         tag.putString(PARTICLE_TYPE_ID, toTag((SimpleParticleType) particleType));
+        tag.putFloat(DISTANCE_ID, distance);
         return tag;
     }
 
@@ -212,10 +214,10 @@ public class ParticleHelper {
         float currentRot = TagUtils.increaseFloatTagValue(this.properties, CURRENT_ROTATION_ID, this.properties.getFloat(ROTATION_PER_TICK_ID));
         Vec3 targetPos;
         if (this.target instanceof Projectile) {
-            targetPos = MathUtils.calculateViewVector(currentRot, 0).add(MathUtils.getPosition(target));
+            targetPos = MathUtils.setLength(MathUtils.calculateViewVector(currentRot, 0), this.properties.getFloat(DISTANCE_ID)).add(MathUtils.getPosition(target));
         } else {
             TagUtils.increaseFloatTagValue(this.properties, Y_OFFSET_ID, (currentTick >= (ticksPerCycle / 2)) ? -this.heightChange : this.heightChange);
-            targetPos = MathUtils.calculateViewVector(0, currentRot).add(target.getX(), target.getY() +  this.properties.getFloat(Y_OFFSET_ID), target.getZ());
+            targetPos = MathUtils.setLength(MathUtils.calculateViewVector(0, currentRot), this.properties.getFloat(DISTANCE_ID)).add(target.getX(), target.getY() +  this.properties.getFloat(Y_OFFSET_ID), target.getZ());
         }
         ParticleUtils.sendParticles(level, getFromTag(this.properties.getString("particleType")), false, targetPos, 2, 0,0, 0, 0);
     }

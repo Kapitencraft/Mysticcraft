@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "tag": "mysticcraft:default_hammer"
+    },
+    {
+      "item": "mysticcraft:raw_crimsonium"
+    }
+  ],
+  "result": {
+    "count": 2,
+    "item": "mysticcraft:raw_crimsonium_dust"
+  }
+}
