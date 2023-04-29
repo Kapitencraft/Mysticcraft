@@ -12,7 +12,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
@@ -63,7 +62,8 @@ public class  GemstoneGrinderBlockEntity extends BlockEntity implements MenuProv
 
     public void emptyItemHandler() {
         GemstoneGrinderItemStackHandler handler = this.itemHandler;
-        if (handler.getStackInSlot(0).getItem() instanceof IGemstoneApplicable || this.level instanceof ServerLevel) return;
+        MysticcraftMod.sendInfo("debug3");
+        if (handler.getStackInSlot(0).getItem() instanceof IGemstoneApplicable) return;
         for (int i = 1; i <= 5; i++) {
             handler.setStackInSlot(i, new ItemStack(ModItems.EMPTY_APPLICABLE_SLOT.get()));
         }
@@ -144,11 +144,13 @@ public class  GemstoneGrinderBlockEntity extends BlockEntity implements MenuProv
             boolean applicableNull = gemstoneApplicable == ItemStack.EMPTY || applicable == null;
             if (applicableNull) {
                 if (!tag.contains("hasApplicable", 99) || tag.getBoolean("hasApplicable")) {
+                    MysticcraftMod.sendInfo("debug2");
                     tag.putBoolean("hasApplicable", false);
                     blockEntity.emptyItemHandler();
                 }
             } else {
                 if (!tag.getBoolean("hasApplicable")) {
+                    MysticcraftMod.sendInfo("debug4");
                     tag.putBoolean("hasApplicable", true);
                     boolean[] gemstones = getSlotUnlocked(applicable.getGemstoneSlotAmount());
                     for (int i = 1; i < 5; i++) {
@@ -162,6 +164,7 @@ public class  GemstoneGrinderBlockEntity extends BlockEntity implements MenuProv
                         tag.putBoolean("hadGemstoneIn" + i, true);
                         GemstoneItem gemstoneItem = (GemstoneItem) stack.getItem();
                         if (!applicable.putGemstone(gemstoneItem.getGemstone(), gemstoneItem.getRarity(), blockEntity.getSlotForItem(i), gemstoneApplicable)) {
+                            MysticcraftMod.sendInfo("debug1");
                             blockEntity.queue.add(stack);
                             handler.setStackInSlot(i, ItemStack.EMPTY);
                         }
