@@ -54,7 +54,7 @@ public abstract class ModdedSwordItem extends SwordItem implements IModItem {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, @NotNull List<Component> list, @NotNull TooltipFlag flag) {
         if (stack.getItem() instanceof IGemstoneApplicable applicable) {
-            applicable.getDisplay(stack, list);
+            applicable.appendDisplay(stack, list);
         }
         list.add(Component.literal(""));
     }

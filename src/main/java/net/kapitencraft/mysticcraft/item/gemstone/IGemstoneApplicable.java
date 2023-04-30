@@ -26,13 +26,12 @@ public interface IGemstoneApplicable {
         return this.getHelper().getAttributeModifiers(stack);
     }
 
-    default GemstoneSlot[] loadData(ItemStack stack) {
-        return this.getHelper().loadData(stack);
+    default void removeGemstone(int slotIndex, ItemStack stack) {
+        this.getHelper().removeGemstone(slotIndex, stack);
     }
 
-
     GemstoneSlot[] getDefaultSlots();
-    default void getDisplay(ItemStack itemStack, List<Component> list) {
+    default void appendDisplay(ItemStack itemStack, List<Component> list) {
         this.getHelper().getDisplay(itemStack, list);
     }
 
@@ -40,6 +39,8 @@ public interface IGemstoneApplicable {
     default boolean putGemstone(GemstoneType gemstoneType, GemstoneType.Rarity rarity, int slotIndex, ItemStack stack) {
         return this.getHelper().putGemstone(gemstoneType, rarity, slotIndex, stack);
     }
+
+
 
     default void getModInfo(ItemStack stack, List<Component> list) {
         this.getHelper().getModInfo(stack, list);

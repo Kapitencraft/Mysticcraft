@@ -13,5 +13,6 @@ added Description to most Enchantments;
 added Description Management to Display in tooltip;
 added Priority for Enchantments;
 added Wither Blades being droped from Withers with a 0.1% chance;
+added Scrollable Tooltips;
 
 removed visibility of 0hp healing indicators;

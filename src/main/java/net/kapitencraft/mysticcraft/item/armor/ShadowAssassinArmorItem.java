@@ -101,7 +101,7 @@ public class ShadowAssassinArmorItem extends ModArmorItem implements GeoItem {
                     renderer = new ShadowAssassinArmorRenderer();
                 }
                 renderer.prepForRender(livingEntity, itemStack, equipmentSlot, original);
-                renderer.hide(isHidden);
+                //renderer.hide(isHidden);
                 return renderer;
             }
         });

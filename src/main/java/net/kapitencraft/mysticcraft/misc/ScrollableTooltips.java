@@ -1,42 +1,65 @@
 package net.kapitencraft.mysticcraft.misc;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.RenderTooltipEvent;
+import net.minecraftforge.client.event.ScreenEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import org.joml.Vector2i;
 
 import java.util.List;
 
+@Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class ScrollableTooltips {
-    public static float scrollX;
-    public static float scrollY;
-    public static float zoomFactor = 1;
-    public static boolean allowScrolling;
+    private static final int scrollScale = 5;
+    private static int scrollY = 0;
+    private static int initY = 0;
+    private static int scale = 1;
+    private static ItemStack stack = ItemStack.EMPTY;
 
-    public static void drawHoveringText(PoseStack poseStack, List<String> textLines, int screenHeight, int tooltipY, int tooltipHeight) {
-        allowScrolling = tooltipY < 0;
-        int eventDWheel = 0;
-        if (Screen.hasControlDown()) {
-            zoomFactor *= (1.0 + 0.1 * Integer.signum(eventDWheel));
-        } else if (Screen.hasShiftDown()) {
-            if (eventDWheel < 0) {
-                scrollX += 10;
-            } else if (eventDWheel > 0) {
-                //Scrolling to access higher stuff
-                scrollX -= 10;
+    @SubscribeEvent
+    public static void registerScrollable(RenderTooltipEvent.Pre event) {
+        Vector2i toolTipSize = createToolTipBoxSize(event.getComponents(), event.getFont());
+        Vector2i screenSize = new Vector2i(event.getScreenWidth(), event.getScreenHeight());
+        Vector2i pos = new Vector2i(event.getX(), event.getY());
+        if (createToolTipBoxSize(event.getComponents(), event.getFont()).y > event.getScreenHeight()) {
+            if (stack != event.getItemStack()) {
+                scrollY = 0;
+                int i = toolTipSize.y + 3;
+                if (pos.y + i > screenSize.y) {
+                    initY = screenSize.y - i;
+                }
+                stack = event.getItemStack();
             }
-        } else {
-            if (eventDWheel < 0) {
-                scrollY -= 10;
-            } else if (eventDWheel > 0) {
-                //Scrolling to access higher stuff
-                scrollY += 10;
+            event.setY(initY + scrollY);
+        }
+    }
+
+    @SubscribeEvent
+    public static void scrollEvent(ScreenEvent.MouseScrolled.Post event) {
+        if (stack != ItemStack.EMPTY) {
+            if (Screen.hasControlDown()) {
+                scale += event.getScrollDelta() * scrollScale;
+            } else {
+                scrollY += event.getScrollDelta() * scrollScale;
             }
         }
-        if (scrollY + tooltipY > 6) {
-            scrollY = -tooltipY + 6;
-        } else if (scrollY + tooltipY + tooltipHeight + 6 < screenHeight) {
-            scrollY = screenHeight - 6 - tooltipY - tooltipHeight;
+    }
+
+    private static Vector2i createToolTipBoxSize(List<ClientTooltipComponent> components, Font font) {
+        int i = 0, j = 0;
+        for(ClientTooltipComponent clienttooltipcomponent : components) {
+            int k = clienttooltipcomponent.getWidth(font);
+            if (k > i) {
+                i = k;
+            }
+
+            j += clienttooltipcomponent.getHeight();
         }
-        poseStack.translate(scrollX, scrollY, 0);
-        poseStack.scale(zoomFactor, zoomFactor, 0.0f);
+        return new Vector2i(i, j);
     }
 }

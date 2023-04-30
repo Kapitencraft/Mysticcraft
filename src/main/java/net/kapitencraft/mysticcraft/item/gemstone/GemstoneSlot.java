@@ -63,7 +63,7 @@ public class GemstoneSlot {
 
     private boolean isValidGemstone(GemstoneType gemstoneType) {
         for (GemstoneType gemstoneType1 : this.TYPE.applicable) {
-            if (gemstoneType1.equals(gemstoneType)) {
+            if (gemstoneType1.equals(gemstoneType) || gemstoneType == null) {
                 return true;
             }
         }
@@ -99,6 +99,10 @@ public class GemstoneSlot {
     }
 
 
+    @Override
+    public String toString() {
+        return "GemstoneSlot{Rarity: " + this.getGemRarity().getId() + ", GemstoneType: " + (this.appliedGemstoneType == null ? "null" : this.appliedGemstoneType.getId()) + "}";
+    }
 
     public enum Type {
         COMBAT("\u2694", "combat", new GemstoneType[]{GemstoneType.JASPER, GemstoneType.SAPPHIRE, GemstoneType.RUBY, GemstoneType.ALMANDINE}),

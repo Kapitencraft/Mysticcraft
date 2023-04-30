@@ -1,5 +1,6 @@
 package net.kapitencraft.mysticcraft.item.gemstone;
 
+import net.kapitencraft.mysticcraft.init.ModItems;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 
@@ -27,19 +28,19 @@ public  class  GemstoneItem extends Item {
     }
 
 
+    public static GemstoneItem of(GemstoneSlot slot) {
+        if (slot.getAppliedGemstone() == null || slot.getType() == null) {
+            return null;
+        }
+        return ModItems.GEMSTONES.get(slot.getAppliedGemstone()).get(slot.getGemRarity()).get();
+    }
 
     public GemstoneType.Rarity getRarity() {
         return this.RARITY;
     }
 
     public GemstoneType getGemstone() {
-        return switch (this.gemstoneName) {
-            case "almandine" -> GemstoneType.ALMANDINE;
-            case "jasper" -> GemstoneType.JASPER;
-            case "ruby" -> GemstoneType.RUBY;
-            case "sapphire" -> GemstoneType.SAPPHIRE;
-            default -> throw new IllegalStateException("There are no other Gemstones");
-        };
+        return GemstoneType.getById(this.gemstoneName);
     }
 
 }

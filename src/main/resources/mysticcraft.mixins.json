@@ -4,7 +4,8 @@
   "package": "net.kapitencraft.mysticcraft.mixin",
   "refmap": "mysticcraft.mixin-refmap.json",
   "mixins": [
-    "LivingEntityMixin"
+    "LivingEntityMixin",
+    "ClientToolTipPositionerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

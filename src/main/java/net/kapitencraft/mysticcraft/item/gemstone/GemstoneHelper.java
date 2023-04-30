@@ -13,13 +13,14 @@ import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
 public class GemstoneHelper {
     private static final String DATA_ID = "GemstoneData";
 
-    private final @Nullable GemstoneSlot[] defaultSlots;
+    private final GemstoneSlot[] defaultSlots;
     private final int slotAmount;
     private GemstoneSlot[] cachedSlots = null;
 
@@ -45,7 +46,12 @@ public class GemstoneHelper {
         boolean flag = this.getGemstoneSlots(stack)[slotIndex].putGemstone(gemstoneType, rarity);
         this.saveData(stack);
         return flag;
+    }
 
+    public void removeGemstone(int slotIndex, ItemStack stack) {
+        MysticcraftMod.sendInfo(Arrays.toString(this.getGemstoneSlots(stack)));
+        this.getGemstoneSlots(stack)[slotIndex] = this.defaultSlots[slotIndex];
+        this.saveData(stack);
     }
 
     private boolean hasData(ItemStack stack) {
@@ -54,7 +60,7 @@ public class GemstoneHelper {
 
     private void setSlots(GemstoneSlot[] slots, ItemStack stack) {
         for (int i = 0; i < slots.length; i++) {
-            if (this.defaultSlots != null && !(slots[i].getType() == this.defaultSlots[i].getType())) {
+            if (!(slots[i].getType() == this.defaultSlots[i].getType())) {
                 return;
             }
         }
@@ -62,9 +68,7 @@ public class GemstoneHelper {
         this.saveData(stack);
     }
     public GemstoneSlot[] loadData(ItemStack current) {
-        //MysticcraftMod.sendInfo("loading Data:");
         if (hasData(current)) {
-            //MysticcraftMod.sendInfo("Loading now...");
             CompoundTag tag = current.getTagElement(DATA_ID);
             if (tag == null) {
                 throw new IllegalStateException("Existing Tag is not Existing :D");
@@ -87,14 +91,12 @@ public class GemstoneHelper {
 
     private void saveData(ItemStack current) {
         GemstoneSlot[] slots = this.cachedSlots;
-        MysticcraftMod.sendInfo("saving Data with Size: " + slots.length);
         CompoundTag tag = new CompoundTag();
         for (int i = 0; i < slots.length; i++) {
             GemstoneSlot slot = slots[i];
             tag.put("slot" + i, slot.toNBT());
         }
         tag.putShort("Size", (short) slots.length);
-        MysticcraftMod.sendInfo("saving Data Now");
         current.addTagElement(DATA_ID, tag);
     }
 

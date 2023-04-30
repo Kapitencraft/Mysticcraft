@@ -39,7 +39,7 @@ public abstract class ModArmorItem extends ArmorItem {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level p_41422_, @NotNull List<Component> toolTip, @NotNull TooltipFlag p_41424_) {
         if (stack.getItem() instanceof IGemstoneApplicable gemstoneApplicable) {
-            gemstoneApplicable.getDisplay(stack, toolTip);
+            gemstoneApplicable.appendDisplay(stack, toolTip);
             toolTip.add(Component.literal(""));
         }
         if (stack.getItem() instanceof IArmorBonusItem bonusItem) {
