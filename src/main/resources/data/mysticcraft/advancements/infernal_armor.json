@@ -1,23 +1,7 @@
 {
   "criteria": {
     "infernal_armor": {
-      "conditions": {
-        "items": [
-          {
-            "nbt": "{tier:armor_tier.infernal}"
-          },
-          {
-            "nbt": "{tier:armor_tier.infernal}"
-          },
-          {
-            "nbt": "{tier:armor_tier.infernal}"
-          },
-          {
-            "nbt": "{tier:armor_tier.infernal}"
-          }
-        ]
-      },
-      "trigger": "minecraft:inventory_changed"
+      "trigger": "minecraft:impossible"
     }
   },
   "display": {
@@ -38,7 +22,7 @@
   },
   "requirements": [
     [
-      "netherite_armor"
+      "infernal_armor"
     ]
   ],
   "rewards": {

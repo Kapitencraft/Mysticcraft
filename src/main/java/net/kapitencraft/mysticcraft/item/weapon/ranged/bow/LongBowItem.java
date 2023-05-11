@@ -8,7 +8,6 @@ import net.minecraft.world.item.Rarity;
 
 public class LongBowItem extends ModdedBows implements IGemstoneApplicable {
     public final double DIVIDER = 40;
-    private GemstoneSlot[] gemstoneSlots;
     public static final double ARROW_SPEED_MUL = 5;
 
     public LongBowItem() {
@@ -18,11 +17,6 @@ public class LongBowItem extends ModdedBows implements IGemstoneApplicable {
     @Override
     public GemstoneHelper getHelper() {
         return new GemstoneHelper(getDefaultSlots());
-    }
-
-    @Override
-    public int getGemstoneSlotAmount() {
-        return 1;
     }
 
     @Override

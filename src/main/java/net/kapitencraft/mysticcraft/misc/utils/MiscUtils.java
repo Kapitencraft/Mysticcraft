@@ -1,24 +1,15 @@
 package net.kapitencraft.mysticcraft.misc.utils;
 
 import net.kapitencraft.mysticcraft.ModConstance;
-import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.gui.IGuiHelper;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneItem;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
-import net.kapitencraft.mysticcraft.item.spells.NormalSpellItem;
 import net.kapitencraft.mysticcraft.item.spells.SpellItem;
-import net.kapitencraft.mysticcraft.item.weapon.melee.sword.LongSwordItem;
-import net.kapitencraft.mysticcraft.item.weapon.ranged.bow.ShortBowItem;
-import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientboundClearTitlesPacket;
-import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
-import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.PlayerAdvancements;
@@ -48,7 +39,6 @@ import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nullable;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class MiscUtils {
@@ -66,7 +56,6 @@ public class MiscUtils {
         if (player instanceof ServerPlayer _player) {
             ServerAdvancementManager manager = _player.server.getAdvancements();
             Advancement _adv = manager.getAdvancement(new ResourceLocation(achievementName));
-            MysticcraftMod.sendInfo(manager.getAllAdvancements().toString());
             PlayerAdvancements advancements = _player.getAdvancements();
             if (_adv != null) {
                 AdvancementProgress _ap = advancements.getOrStartProgress(_adv);
@@ -117,6 +106,7 @@ public class MiscUtils {
 
     public static boolean saveTeleport(Entity entity, double maxRange) {
         ArrayList<Vec3> lineOfSight = lineOfSight(entity, maxRange, 0.1);
+        entity.stopRiding();
         Vec3 teleportPosition;
         for (Vec3 vec3 : lineOfSight) {
             BlockPos pos = new BlockPos(vec3);
@@ -169,28 +159,7 @@ public class MiscUtils {
         RANGED,
         MELEE,
         MAGIC,
-        MISC;
-    }
-
-    public static void sendTitle(Player player, Component title) {
-        if (player instanceof ServerPlayer serverPlayer) {
-            Function<Component, Packet<?>> function = ClientboundSetTitleTextPacket::new;
-            serverPlayer.connection.send(function.apply(title));
-        }
-    }
-
-    public static void sendSubTitle(Player player, Component subtitle) {
-        if (player instanceof ServerPlayer serverPlayer) {
-            Function<Component, Packet<?>> function = ClientboundSetSubtitleTextPacket::new;
-            serverPlayer.connection.send(function.apply(subtitle));
-        }
-    }
-
-    public static void clearTitle(Player player) {
-        if (player instanceof ServerPlayer serverPlayer) {
-            ClientboundClearTitlesPacket clearTitlesPacket = new ClientboundClearTitlesPacket(true);
-            serverPlayer.connection.send(clearTitlesPacket);
-        }
+        MISC
     }
 
     public static ArmorStand createMarker(Vec3 pos, Level level, boolean invisible) {
@@ -210,7 +179,7 @@ public class MiscUtils {
         ArmorStand dmgInc = createMarker(new Vec3(entity.getX() + Math.random() - 0.5, entity.getY() - 1, entity.getZ() + Math.random() - 0.5), entity.level, true);
         boolean dodge = Objects.equals(type, "dodge");
         dmgInc.setCustomNameVisible(true);
-        dmgInc.setCustomName(Component.literal(!dodge ? String.valueOf(ModConstance.MAIN_FORMAT.format(amount)) : "DODGE").withStyle(damageIndicatorColorGenerator(type)));
+        dmgInc.setCustomName(Component.literal(!dodge ? String.valueOf(ModConstance.MAIN_FORMAT.format(amount)) : "DODGE").withStyle(TextUtils.damageIndicatorColorGenerator(type)));
         CompoundTag persistentData = dmgInc.getPersistentData();
         persistentData.putBoolean("isDamageIndicator", true);
         persistentData.putInt(TIMER_ID, 0);
@@ -225,93 +194,16 @@ public class MiscUtils {
         return list.stream().sorted(Comparator.comparingDouble(_entcnd -> _entcnd.distanceToSqr(MathUtils.getPosition(source)))).collect(Collectors.toList());
     }
 
-    public static String getNameModifier(ItemStack stack) {
-        Item item = stack.getItem();
-        if (item instanceof NormalSpellItem) {
-            return "SPELL ITEM";
-        } else if (item instanceof LongSwordItem) {
-            return "LONGSWORD";
-        } else if (item instanceof ShortBowItem) {
-            return "SHORT BOW";
-        } else if (item instanceof SwordItem) {
-            return "SWORD";
-        } else if (item instanceof PickaxeItem) {
-            return "PICKAXE";
-        } else if (item instanceof AxeItem) {
-            return "AXE";
-        } else if (item instanceof ShovelItem) {
-            return "SHOVEL";
-        } else if (item instanceof HoeItem) {
-            return "HOE";
-        } else if (item instanceof BowItem) {
-            return "BOW";
-        } else if (item instanceof CrossbowItem) {
-            return "CROSSBOW";
-        } else if (item instanceof EnchantedBookItem) {
-            return "ENCHANTED BOOK";
-        } else if (item instanceof ArmorItem armorItem) {
-            if (armorItem.getSlot() == EquipmentSlot.FEET) {
-                return "BOOTS";
-            } else if (armorItem.getSlot() == EquipmentSlot.LEGS) {
-                return "LEGGINGS";
-            } else if (armorItem.getSlot() == EquipmentSlot.CHEST) {
-                return "CHEST PLATE";
-            } else if (armorItem.getSlot() == EquipmentSlot.HEAD) {
-                return "HELMET";
-            }
-        } else if (item instanceof BlockItem) {
-            return "BLOCK";
-        } else if (item instanceof BoatItem) {
-            return "BOAT";
-        } else if (item instanceof FishingRodItem) {
-            return "FISHING ROD";
-        }
-        return "ITEM";
-    }
-
-    private static ChatFormatting damageIndicatorColorGenerator(String type) {
-        return switch (type) {
-            case "heal" -> ChatFormatting.GREEN;
-            case "wither" -> ChatFormatting.BLACK;
-            case "ferocity" -> ChatFormatting.GOLD;
-            case "drown" -> ChatFormatting.AQUA;
-            case "ability" -> ChatFormatting.DARK_RED;
-            case "dodge" -> ChatFormatting.DARK_GRAY;
-            default -> ChatFormatting.RED;
-        };
-    }
-
-    private static final List<String> NUMBERS = List.of("0", "1", "2", "3", "4", "5", "6", "7", "8", "9");
-
-    public static String removeNumbers(String string) {
-        for (String number : NUMBERS) {
-            string = string.replace(number, "");
-        }
-        return string;
-    }
 
     public static Rarity getItemRarity(Item item) {
         return item.getRarity(new ItemStack(item));
     }
 
-    public static String fromVec3(Vec3 vec3) {
-        return "Pos: [" + vec3.x + ", " + vec3.y + ", " + vec3.z + "]";
-    }
 
     public static final EquipmentSlot[] allEquipmentSlots = new EquipmentSlot[]{EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND, EquipmentSlot.LEGS, EquipmentSlot.CHEST, EquipmentSlot.HEAD, EquipmentSlot.FEET};
     public static final EquipmentSlot[] ARMOR_EQUIPMENT = new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
     public static final EquipmentSlot[] WEAPON_SLOT = new EquipmentSlot[]{EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND};
 
-    public static String getRegistryNameForSlot(EquipmentSlot slot) {
-        HashMap<EquipmentSlot, String> hashMap = new HashMap<>();
-        hashMap.put(EquipmentSlot.HEAD, "helmet");
-        hashMap.put(EquipmentSlot.CHEST, "chestplate");
-        hashMap.put(EquipmentSlot.LEGS, "leggings");
-        hashMap.put(EquipmentSlot.FEET, "boots");
-        hashMap.put(EquipmentSlot.MAINHAND, "mainhand");
-        hashMap.put(EquipmentSlot.OFFHAND, "offhand");
-        return hashMap.get(slot);
-    }
 
     public static <T> boolean arrayContains(T[] array, T t) {
         for (T t1 : array) {

@@ -1,5 +1,8 @@
 {
   "criteria": {
+    "archmage": {
+      "trigger": "minecraft:impossible"
+    }
   },
   "display": {
     "announce_to_chat": true,

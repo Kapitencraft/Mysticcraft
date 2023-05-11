@@ -26,10 +26,6 @@ public interface IGemstoneApplicable {
         return this.getHelper().getAttributeModifiers(stack);
     }
 
-    default void removeGemstone(int slotIndex, ItemStack stack) {
-        this.getHelper().removeGemstone(slotIndex, stack);
-    }
-
     GemstoneSlot[] getDefaultSlots();
     default void appendDisplay(ItemStack itemStack, List<Component> list) {
         this.getHelper().getDisplay(itemStack, list);
@@ -42,8 +38,8 @@ public interface IGemstoneApplicable {
 
 
 
-    default void getModInfo(ItemStack stack, List<Component> list) {
-        this.getHelper().getModInfo(stack, list);
+    default void addModInfo(ItemStack stack, List<Component> list) {
+        this.getHelper().addModInfo(stack, list);
     }
 
 }

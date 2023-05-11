@@ -63,6 +63,6 @@ public class EnchantmentDescriptionManager {
         }
         int level = stack.getItem() instanceof EnchantedBookItem ? (EnchantmentHelper.deserializeEnchantments(EnchantedBookItem.getEnchantments(stack)).get(ench)) : EnchantmentHelper.getTagEnchantmentLevel(ench, stack);
         Object[] objects = ench instanceof ModEnchantment modEnchantment ? modEnchantment.getDescriptionMods(level) : new Object[]{level};
-        return Component.translatable(descriptionKey, objects);
+        return Component.translatable(descriptionKey, objects).withStyle(ChatFormatting.DARK_GRAY);
     }
 }

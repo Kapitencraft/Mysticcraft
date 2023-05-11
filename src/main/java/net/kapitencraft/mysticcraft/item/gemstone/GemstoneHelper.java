@@ -7,6 +7,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ItemStack;
@@ -22,12 +23,13 @@ public class GemstoneHelper {
 
     private final GemstoneSlot[] defaultSlots;
     private final int slotAmount;
-    private GemstoneSlot[] cachedSlots = null;
+    private GemstoneSlot[] cachedSlots;
 
 
     public GemstoneHelper(GemstoneSlot[] defaultSlots) {
         this.defaultSlots = defaultSlots;
         this.slotAmount = defaultSlots.length;
+        this.cachedSlots = defaultSlots;
     }
 
     public GemstoneSlot[] getGemstoneSlots(ItemStack stack) {
@@ -102,14 +104,18 @@ public class GemstoneHelper {
 
 
     public void getDisplay(ItemStack itemStack, List<Component> list) {
-        StringBuilder gemstoneText = new StringBuilder();
+        MutableComponent component = null;
         for (@Nullable GemstoneSlot slot : this.getGemstoneSlots(itemStack)) {
             if (slot != null) {
-                gemstoneText.append(slot.getDisplay());
+                if (component == null) {
+                    component = slot.getDisplay();
+                } else {
+                    component.append(slot.getDisplay());
+                }
             }
         }
-        if (!gemstoneText.toString().equals("")) {
-            list.add(Component.literal(gemstoneText.toString()));
+        if (component != null) {
+            list.add(component);
         }
     }
 
@@ -147,7 +153,7 @@ public class GemstoneHelper {
         return modifierHashMap;
     }
 
-    public void getModInfo(ItemStack stack, List<Component> list) {
+    public void addModInfo(ItemStack stack, List<Component> list) {
         GemstoneSlot[] slots = this.getGemstoneSlots(stack);
         if (slots != null) {
             boolean flag1 = false;
@@ -161,8 +167,9 @@ public class GemstoneHelper {
                 ArrayList<Attribute> modified = new ArrayList<>(this.getAttributeModifiers(stack).keySet());
                 if (Screen.hasShiftDown()) {
                     list.add(Component.literal("Gemstone Modifications:").withStyle(ChatFormatting.GREEN));
+                    HashMap<Attribute, AttributeModifier> modifiers = this.getAttributeModifiers(stack);
                     for (Attribute attribute : modified) {
-                        double amount = this.getAttributeModifiers(stack).get(attribute).getAmount();
+                        double amount = modifiers.get(attribute).getAmount();
                         list.add(Component.translatable(attribute.getDescriptionId()).append(Component.literal(": " + (amount > 0 ? "+" : "") + amount)));
                     }
                 } else {

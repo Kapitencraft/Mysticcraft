@@ -4,7 +4,7 @@ import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.item.spells.*;
 import net.kapitencraft.mysticcraft.item.spells.necron_sword.NecronSword;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
-import net.kapitencraft.mysticcraft.misc.utils.MiscUtils;
+import net.kapitencraft.mysticcraft.misc.utils.TextUtils;
 import net.kapitencraft.mysticcraft.spell.spells.*;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -78,7 +78,7 @@ public enum Spells implements Spell {
     public final Rarity RARITY;
     Spells(String name, String castingType, Type type, double manaCost, Functions.SpellRun toRun, Functions.applicationHelper helper, Supplier<List<Component>> description, Rarity rarity, boolean shouldBeItem) {
         this.shouldBeItem = shouldBeItem;
-        this.name = MiscUtils.removeNumbers(name);
+        this.name = TextUtils.removeNumbers(name);
         this.TYPE = type;
         this.MANA_COST = manaCost;
         this.run = toRun;

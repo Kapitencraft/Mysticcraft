@@ -18,8 +18,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoItem;
@@ -28,7 +26,6 @@ import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -38,15 +35,6 @@ public class FrozenBlazeArmorItem extends ModArmorItem implements GeoItem, IArmo
     private static final FrozenBlazeFullSetBonus FULL_SET_BONUS = new FrozenBlazeFullSetBonus();
     public FrozenBlazeArmorItem(EquipmentSlot p_40387_) {
         super(ModArmorMaterials.FROZEN_BLAZE, p_40387_, new Item.Properties().rarity(FormattingCodes.LEGENDARY).fireResistant());
-    }
-
-    public static HashMap<EquipmentSlot, RegistryObject<Item>> createRegistry(DeferredRegister<Item> register, String registryName) {
-        HashMap<EquipmentSlot, RegistryObject<Item>> registry = new HashMap<>();
-        registry.put(EquipmentSlot.HEAD, register.register(registryName + "_helmet", ()-> new FrozenBlazeArmorItem(EquipmentSlot.HEAD)));
-        registry.put(EquipmentSlot.CHEST, register.register(registryName + "_chestplate", ()-> new FrozenBlazeArmorItem(EquipmentSlot.CHEST)));
-        registry.put(EquipmentSlot.LEGS, register.register(registryName + "_leggings", ()-> new FrozenBlazeArmorItem(EquipmentSlot.LEGS)));
-        registry.put(EquipmentSlot.FEET, register.register(registryName + "_boots", ()-> new FrozenBlazeArmorItem(EquipmentSlot.FEET)));
-        return registry;
     }
 
     @Override
@@ -63,6 +51,11 @@ public class FrozenBlazeArmorItem extends ModArmorItem implements GeoItem, IArmo
     @Override
     public ExtraBonus getExtraBonus(EquipmentSlot slot) {
         return null;
+    }
+
+    @Override
+    String getRegistryName() {
+        return "frozen_blaze";
     }
 
     @Override

@@ -8,13 +8,13 @@ import net.kapitencraft.mysticcraft.init.ModItems;
 import net.kapitencraft.mysticcraft.item.IModItem;
 import net.kapitencraft.mysticcraft.item.ModTiers;
 import net.kapitencraft.mysticcraft.item.RNGDropHelper;
-import net.kapitencraft.mysticcraft.item.gemstone.GemstoneSlot;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.kapitencraft.mysticcraft.misc.MiscRegister;
 import net.kapitencraft.mysticcraft.misc.utils.AttributeUtils;
 import net.kapitencraft.mysticcraft.misc.utils.MathUtils;
 import net.kapitencraft.mysticcraft.misc.utils.MiscUtils;
+import net.kapitencraft.mysticcraft.misc.utils.TextUtils;
 import net.kapitencraft.mysticcraft.spell.SpellSlot;
 import net.kapitencraft.mysticcraft.spell.Spells;
 import net.kapitencraft.mysticcraft.spell.spells.Spell;
@@ -76,18 +76,7 @@ public abstract class SpellItem extends SwordItem implements IModItem {
             spell = activeSpellSlot.getSpell();
         }
         if (itemStack.getItem() instanceof IGemstoneApplicable applicable) {
-            GemstoneSlot[] gemstoneSlots = applicable.getGemstoneSlots(itemStack);
-            StringBuilder gemstoneText = new StringBuilder();
-            if (gemstoneSlots != null) {
-                for (@Nullable GemstoneSlot slot : gemstoneSlots) {
-                    if (slot != null) {
-                        gemstoneText.append(slot.getDisplay());
-                    }
-                }
-                if (!gemstoneText.toString().equals("")) {
-                    list.add(Component.literal(gemstoneText.toString()));
-                }
-            }
+            applicable.appendDisplay(itemStack, list);
         }
         if (this.getItemDescription() != null) {
             list.addAll(this.getItemDescription());
@@ -250,9 +239,9 @@ public abstract class SpellItem extends SwordItem implements IModItem {
         ItemStack itemstack = player.getItemInHand(hand);
         if (this.getSpellSlotAmount() > 1) {
             tag.putString(SPELL_EXE, tag.getString(SPELL_EXE) + "1");
-            MiscUtils.sendTitle(player, Component.literal(Spells.getPattern(tag.getString(SPELL_EXE))));
+            TextUtils.sendTitle(player, Component.literal(Spells.getPattern(tag.getString(SPELL_EXE))));
             if (this.getClosestSpell(tag.getString(SPELL_EXE)) != null) {
-                MiscUtils.sendSubTitle(player, Component.literal(FormattingCodes.ORANGE + "\u27A4 " + this.getClosestSpell(tag.getString(SPELL_EXE)).getName()));
+                TextUtils.sendSubTitle(player, Component.literal(FormattingCodes.ORANGE + "\u27A4 " + this.getClosestSpell(tag.getString(SPELL_EXE)).getName()));
             }
             tag.putByte(SPELL_EXECUTION_DUR, (byte) 20);
         } else {
@@ -272,7 +261,6 @@ public abstract class SpellItem extends SwordItem implements IModItem {
         if (Spells.contains(executionId) && executionId.length() == 7) {
             Spell spell = Spells.get(executionId);
             if (this.containsSpell(spell) && handleMana(user, spell)) {
-                MysticcraftMod.sendInfo("magic");
                 spell.execute(user, stack);
                 if (user instanceof Player player) {
                     player.displayClientMessage(Component.literal("Used " + spell.getName() + ": " + FormattingCodes.RED + "-" + AttributeUtils.getAttributeValue(user.getAttribute(ModAttributes.MANA_COST.get()), spell.getDefaultManaCost()) + " Mana"), true);
@@ -330,9 +318,9 @@ public abstract class SpellItem extends SwordItem implements IModItem {
         if (entity instanceof Player player && this.getSpellSlotAmount() > 1) {
             CompoundTag tag = entity.getPersistentData();
             tag.putString(SPELL_EXE, tag.getString(SPELL_EXE) + "0");
-            MiscUtils.sendTitle(player, Component.literal(Spells.getPattern(tag.getString(SPELL_EXE))));
+            TextUtils.sendTitle(player, Component.literal(Spells.getPattern(tag.getString(SPELL_EXE))));
             if (this.getClosestSpell(tag.getString(SPELL_EXE)) != null) {
-                MiscUtils.sendSubTitle(player, Component.literal(FormattingCodes.ORANGE + "\u27A4 " + this.getClosestSpell(tag.getString(SPELL_EXE)).getName()));
+                TextUtils.sendSubTitle(player, Component.literal(FormattingCodes.ORANGE + "\u27A4 " + this.getClosestSpell(tag.getString(SPELL_EXE)).getName()));
             }
             tag.putByte(SPELL_EXECUTION_DUR, (byte) 20);
             return true;

@@ -16,24 +16,17 @@
     },
     {
       "type": "bitmap",
-      "file": "mysticcraft:font/strength.png",
-      "height": 16,
-      "ascent": 15,
-      "chars": ["\uF002"]
-    },
-    {
-      "type": "bitmap",
       "file": "mysticcraft:font/defensive.png",
       "height": 8,
       "ascent": 7,
-      "chars": ["\uF003"]
+      "chars": ["\uF002"]
     },
     {
       "type": "bitmap",
       "file": "mysticcraft:font/magic.png",
       "height": 8,
       "ascent": 7,
-      "chars": ["\uF004"]
+      "chars": ["\uF003"]
     }
   ]
 }

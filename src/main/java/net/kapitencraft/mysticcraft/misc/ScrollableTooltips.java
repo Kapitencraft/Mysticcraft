@@ -26,17 +26,24 @@ public class ScrollableTooltips {
         Vector2i toolTipSize = createToolTipBoxSize(event.getComponents(), event.getFont());
         Vector2i screenSize = new Vector2i(event.getScreenWidth(), event.getScreenHeight());
         Vector2i pos = new Vector2i(event.getX(), event.getY());
-        if (createToolTipBoxSize(event.getComponents(), event.getFont()).y > event.getScreenHeight()) {
-            if (stack != event.getItemStack()) {
-                scrollY = 0;
-                int i = toolTipSize.y + 3;
-                if (pos.y + i > screenSize.y) {
-                    initY = screenSize.y - i;
-                }
-                stack = event.getItemStack();
-            }
-            event.setY(initY + scrollY);
+        boolean isHigherThanScreen = toolTipSize.y > event.getScreenHeight();
+        int height = event.getY();
+        if (stack != event.getItemStack()) {
+            scrollY = 0;
+            stack = event.getItemStack();
         }
+        if (scrollY == 0 || !isHigherThanScreen) {
+            int i = toolTipSize.y + 3;
+            if (pos.y + i > screenSize.y) {
+                height = screenSize.y - i;
+            }
+        }
+        if (isHigherThanScreen) {
+            if (scrollY == 0) initY = height;
+            event.setY(initY + scrollY);
+            return;
+        }
+        event.setY(height);
     }
 
     @SubscribeEvent

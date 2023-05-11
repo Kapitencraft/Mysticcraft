@@ -43,7 +43,7 @@ public class StaffOfTheWildItem extends NormalSpellItem implements GeoItem, IGem
             }
         }
         if (flag1) {
-            this.getModInfo(itemStack, list);
+            this.addModInfo(itemStack, list);
         }
     }
     public static final Component[] description = {Component.literal("As it is one of the most powerful"), Component.literal("Magical Artifacts, it is used for much greatness")};
@@ -84,11 +84,6 @@ public class StaffOfTheWildItem extends NormalSpellItem implements GeoItem, IGem
     @Override
     public GemstoneHelper getHelper() {
         return new GemstoneHelper(getDefaultSlots());
-    }
-
-    @Override
-    public int getGemstoneSlotAmount() {
-        return 5;
     }
 
     @Override

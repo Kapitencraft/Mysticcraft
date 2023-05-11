@@ -24,6 +24,8 @@ import net.kapitencraft.mysticcraft.item.weapon.ranged.bow.ModdedBows;
 import net.kapitencraft.mysticcraft.item.weapon.ranged.bow.ShortBowItem;
 import net.kapitencraft.mysticcraft.misc.damage_source.FerociousDamageSource;
 import net.kapitencraft.mysticcraft.misc.damage_source.IAbilitySource;
+import net.kapitencraft.mysticcraft.misc.guilds.Guild;
+import net.kapitencraft.mysticcraft.misc.guilds.GuildHandler;
 import net.kapitencraft.mysticcraft.misc.particle_help.ParticleHelper;
 import net.kapitencraft.mysticcraft.misc.utils.*;
 import net.kapitencraft.mysticcraft.mixin.LivingEntityMixin;
@@ -92,9 +94,7 @@ import java.util.*;
 
 @Mod.EventBusSubscriber
 public class MiscRegister {
-
     static final String doubleJumpId = "currentDoubleJump";
-
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void DamageAttributeRegister(LivingHurtEvent event) {
@@ -394,12 +394,13 @@ public class MiscRegister {
                         spellItem.executeSpell(tag.getString(SpellItem.SPELL_EXE), mainHand, living);
                         tag.putString(SpellItem.SPELL_EXE, "");
                     }
-                    MiscUtils.clearTitle(player);
+                    TextUtils.clearTitle(player);
                 } else {
                     tag.putByte(SpellItem.SPELL_EXECUTION_DUR, (byte) (tag.getByte(SpellItem.SPELL_EXECUTION_DUR) - 1));
                 }
             }
             if (InventoryUtils.hasSetInInventory(player, TieredArmorItem.ArmorTier.INFERNAL)) {
+                MiscUtils.awardAchievement(player, "mysticcraft:infernal_armor");
             }
             if (!player.isOnGround()) {
                 if (canJump(player) && tag.getInt(doubleJumpId) < player.getAttributeValue(ModAttributes.DOUBLE_JUMP.get())) {
@@ -413,6 +414,11 @@ public class MiscRegister {
                 }
             } else if (tag.getInt(doubleJumpId) > 0) {
                 tag.putInt(doubleJumpId, 0);
+            }
+            if (tag.contains("InvuTime", 3)) {
+                if (TagUtils.increaseIntegerTagValue(tag, "InvuTime", -1) <= 0) {
+                    player.setInvulnerable(false);
+                }
             }
         }
         if (!ModArmorItem.isFullSetActive(living, ModArmorMaterials.SOUL_MAGE) && tag.getString("lastFullSet").equals(ModArmorMaterials.SOUL_MAGE.getName())) {
@@ -508,17 +514,24 @@ public class MiscRegister {
                     mutableComponent.append(shortBowItem.createCooldown(player) + "s");
                 }
             }
+            if (item instanceof BannerItem) {
+                Guild guild = GuildHandler.getInstance().getGuildForBanner(stack);
+                if (guild != null) {
+                    toolTip.remove(0);
+                    toolTip.add(0, Component.translatable("guild.banner.name", guild.getName()));
+                }
+            }
         }
         Rarity rarity = item.getRarity(stack);
         if (item instanceof IGemstoneApplicable gemstoneApplicable) {
-            gemstoneApplicable.getModInfo(stack, toolTip);
+            gemstoneApplicable.addModInfo(stack, toolTip);
             toolTip.add(Component.literal(""));
         }
         if (!(item instanceof IGuiHelper)) {
             boolean flag = rarity != MiscUtils.getItemRarity(stack.getItem());
             String RarityMod = FormattingCodes.OBFUSCATED + "A" + FormattingCodes.RESET;
             toolTip.add(Component.literal(""));
-            toolTip.add(Component.literal((flag ? RarityMod + " " : "") + rarity + " " + MiscUtils.getNameModifier(stack) + (flag ? " " + RarityMod : "")).withStyle(rarity.getStyleModifier()).withStyle(ChatFormatting.BOLD));
+            toolTip.add(Component.literal((flag ? RarityMod + " " : "") + rarity + " " + TextUtils.getNameModifier(stack) + (flag ? " " + RarityMod : "")).withStyle(rarity.getStyleModifier()).withStyle(ChatFormatting.BOLD));
         }
     }
 
@@ -539,7 +552,7 @@ public class MiscRegister {
         if (item instanceof IGemstoneApplicable applicable) {
             HashMap<Attribute, AttributeModifier> modifierHashMap = applicable.getAttributeModifiers(stack);
             if (item instanceof ArmorItem armorItem) {
-                if (event.getSlotType() == armorItem.getSlot() && applicable.getAttributesModified(stack) != null) {
+                if (event.getSlotType() == armorItem.getSlot() && modifierHashMap != null) {
                     for (Attribute attribute : modifierHashMap.keySet()) {
                         event.addModifier(attribute, modifierHashMap.get(attribute));
                     }
@@ -715,6 +728,26 @@ public class MiscRegister {
         if (entity != null) {
             String builder = FormattingCodes.BLUE + MathUtils.round(entity.getAttributeValue(ModAttributes.MANA.get()), 1) + " [+" + MathUtils.round(entity.getPersistentData().getDouble(MiscRegister.OVERFLOW_MANA_ID), 1) + " Overflow] " + FormattingCodes.RESET + " / " + FormattingCodes.DARK_BLUE + entity.getAttributeValue(ModAttributes.MAX_MANA.get()) + " (+" + MathUtils.round(entity.getPersistentData().getDouble("manaRegen") * 20, 2) + "/s)";
             Minecraft.getInstance().font.draw(event.getPoseStack(), builder, posX - 203, posY - 116, -1);
+        }
+    }
+
+    @SubscribeEvent
+    public static void entityDeathEvents(LivingDeathEvent event) {
+        LivingEntity toDie = event.getEntity();
+        Level level = toDie.level;
+        if (toDie instanceof Player player) {
+            if (InventoryUtils.hasPlayerStackInInventory(player, ModItems.MOD_DEBUG_STICK.get())) {
+                event.setCanceled(true);
+                toDie.setHealth(2);
+                toDie.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 200, 2));
+                Minecraft.getInstance().gameRenderer.displayItemActivation(player.getMainHandItem());
+                if (level instanceof ServerLevel serverLevel) {
+                    MiscUtils.awardAchievement(player, "minecraft:adventure/totem_of_undying");
+                    toDie.setInvulnerable(true);
+                    toDie.getPersistentData().putInt("InvuTime", 20);
+                    serverLevel.explode(null, toDie.getX(), toDie.getY(), toDie.getZ(), 10, Level.ExplosionInteraction.BLOCK);
+                }
+            }
         }
     }
 }

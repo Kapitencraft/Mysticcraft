@@ -11,6 +11,8 @@ public class ModRegistryInit {
         ModAttributes.REGISTRY.register(bus);
         MysticcraftMod.sendInfo("Registering Enchantments...");
         ModEnchantments.REGISTRY.register(bus);
+        MysticcraftMod.sendInfo("Registering Items...");
+        ModItems.REGISTRY.register(bus);
         MysticcraftMod.sendInfo("Registering Effects...");
         ModMobEffects.REGISTRY.register(bus);
         MysticcraftMod.sendInfo("Registering Block Entities...");
@@ -25,8 +27,6 @@ public class ModRegistryInit {
         ModFluidTypes.REGISTRY.register(bus);
         MysticcraftMod.sendInfo("Registering Fluids...");
         ModFluids.REGISTRY.register(bus);
-        MysticcraftMod.sendInfo("Registering Items...");
-        ModItems.REGISTRY.register(bus);
         MysticcraftMod.sendInfo("Registering Blocks...");
         ModBlocks.REGISTRY.register(bus);
         MysticcraftMod.sendInfo("Registering Villager Professions");

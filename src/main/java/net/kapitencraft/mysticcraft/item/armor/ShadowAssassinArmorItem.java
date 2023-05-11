@@ -1,29 +1,24 @@
 package net.kapitencraft.mysticcraft.item.armor;
 
 import com.google.common.collect.Multimap;
+import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.item.armor.client.ShadowAssassinArmorRenderer;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import java.util.HashMap;
 import java.util.function.Consumer;
 
 public class ShadowAssassinArmorItem extends ModArmorItem implements GeoItem {
@@ -35,36 +30,19 @@ public class ShadowAssassinArmorItem extends ModArmorItem implements GeoItem {
     }
 
     @Override
-    public void onArmorTick(ItemStack stack, Level level, Player player) {
-        if (this.isFullSetActive(player)) {
-            CompoundTag tag = player.getPersistentData();
-            if (Screen.hasShiftDown()) {
-                if (!tag.getBoolean("hadBeenSneaking")) {
-                    tag.putBoolean("Invisible", !tag.getBoolean("Invisible"));
-                    tag.putBoolean("hadBeenSneaking", true);
-                }
-            } else {
-                tag.putBoolean("hadBeenSneaking", false);
-            }
-        }
-    }
-
-    public static HashMap<EquipmentSlot, RegistryObject<Item>> createRegistry(DeferredRegister<Item> register, String registryName) {
-        HashMap<EquipmentSlot, RegistryObject<Item>> registry = new HashMap<>();
-        registry.put(EquipmentSlot.HEAD, register.register(registryName + "_helmet", ()-> new ShadowAssassinArmorItem(EquipmentSlot.HEAD)));
-        registry.put(EquipmentSlot.CHEST, register.register(registryName + "_chestplate", ()-> new ShadowAssassinArmorItem(EquipmentSlot.CHEST)));
-        registry.put(EquipmentSlot.LEGS, register.register(registryName + "_leggings", ()-> new ShadowAssassinArmorItem(EquipmentSlot.LEGS)));
-        registry.put(EquipmentSlot.FEET, register.register(registryName + "_boots", ()-> new ShadowAssassinArmorItem(EquipmentSlot.FEET)));
-        return registry;
+    String getRegistryName() {
+        return "shadow_assassin";
     }
 
     @Override
     public void fullSetTick(ItemStack stack, Level level, LivingEntity living) {
-        if (living.isCrouching() && !living.getPersistentData().getBoolean("isCrouching")) {
+        CompoundTag tag = living.getPersistentData();
+        if (living.isCrouching() && !tag.getBoolean("isCrouching")) {
+            MysticcraftMod.sendInfo("crouching");
             this.isHidden = !isHidden;
-            living.getPersistentData().putBoolean("isCrouching", true);
+            tag.putBoolean("isCrouching", true);
         } else {
-            living.getPersistentData().putBoolean("isCrouching", false);
+            tag.putBoolean("isCrouching", false);
         }
     }
 
@@ -100,8 +78,9 @@ public class ShadowAssassinArmorItem extends ModArmorItem implements GeoItem {
                 if (renderer == null) {
                     renderer = new ShadowAssassinArmorRenderer();
                 }
+
                 renderer.prepForRender(livingEntity, itemStack, equipmentSlot, original);
-                //renderer.hide(isHidden);
+                renderer.hide(isHidden);
                 return renderer;
             }
         });

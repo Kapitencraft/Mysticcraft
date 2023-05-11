@@ -9,6 +9,7 @@ import net.kapitencraft.mysticcraft.item.item_bonus.IArmorBonusItem;
 import net.kapitencraft.mysticcraft.item.item_bonus.PieceBonus;
 import net.kapitencraft.mysticcraft.misc.utils.AttributeUtils;
 import net.kapitencraft.mysticcraft.misc.utils.MiscUtils;
+import net.kapitencraft.mysticcraft.misc.utils.TextUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -17,16 +18,19 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.List;
 
 public abstract class ModArmorItem extends ArmorItem {
     private static final String FULL_SET_ID = "hadFullSet";
     protected String dimension;
     private Entity user;
-    private int fullSetTick = 0;
+    protected int fullSetTick = 0;
 
     public ModArmorItem(ArmorMaterial p_40386_, EquipmentSlot p_40387_, Properties p_40388_) {
         super(p_40386_, p_40387_, p_40388_);
@@ -35,6 +39,22 @@ public abstract class ModArmorItem extends ArmorItem {
         MysticcraftMod.sendInfo(item.getMaterial().getName());
         return this == item || item.getMaterial() == this.getMaterial();
     }
+
+    public interface Creator {
+        ModArmorItem create(EquipmentSlot slot);
+    }
+
+    public static HashMap<EquipmentSlot, RegistryObject<Item>> createRegistry(DeferredRegister<Item> register, Creator creator) {
+        HashMap<EquipmentSlot, RegistryObject<Item>> registry = new HashMap<>();
+        for (EquipmentSlot slot : MiscUtils.ARMOR_EQUIPMENT) {
+            ModArmorItem modArmorItem = creator.create(slot);
+            registry.put(slot, register.register(modArmorItem.getRegistryName() + "_" + TextUtils.getRegistryNameForSlot(slot), () -> modArmorItem));
+        }
+        return registry;
+    }
+
+
+    abstract String getRegistryName();
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level p_41422_, @NotNull List<Component> toolTip, @NotNull TooltipFlag p_41424_) {
@@ -52,14 +72,16 @@ public abstract class ModArmorItem extends ArmorItem {
     public void inventoryTick(@NotNull ItemStack stack, Level level, @NotNull Entity entity, int slotID, boolean isSelected) {
         if (!level.isClientSide() && entity instanceof LivingEntity living) {
             if (this.isFullSetActive(living)) {
-                if (this.fullSetTick == 0 && this.getSlot() == EquipmentSlot.CHEST) {
-                    MysticcraftMod.sendInfo("init Full Set");
-                    this.initFullSetTick(stack, level, living);
-                    living.getPersistentData().putBoolean(FULL_SET_ID, true);
-                    living.getPersistentData().putString("lastFullSet", this.getMaterial().getName());
+                if (this.getSlot() == EquipmentSlot.CHEST) {
+                    if (this.fullSetTick == 0) {
+                        MysticcraftMod.sendInfo("init Full Set");
+                        this.initFullSetTick(stack, level, living);
+                        living.getPersistentData().putBoolean(FULL_SET_ID, true);
+                        living.getPersistentData().putString("lastFullSet", this.getMaterial().getName());
+                    }
+                    this.fullSetTick++;
+                    this.fullSetTick(stack, level, living);
                 }
-                this.fullSetTick++;
-                this.fullSetTick(stack, level, living);
             } else {
                 if (living.getPersistentData().getBoolean(FULL_SET_ID)) {
                     MysticcraftMod.sendInfo("post Full Set");

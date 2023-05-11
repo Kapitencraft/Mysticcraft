@@ -1,8 +1,9 @@
-fix Gemstone Grinder;
 fix Venomous and Inferno Enchantment;
 fix Spell Damage Values;
 fix Spells make MaxMana go bye bye;
 fix Gemstone Grinder Screen being rendered wrong;
 fix game Lag;
+fix Guilds not loading;
+fix Gemstone-Helper adding stuff to all items;
 fix Soul Mage Armor crashing the Game;
-add Armor Model to Shadow Assassin Armor; add Shadow Assassin Effect;
+fix Shadow Assassin Effect;

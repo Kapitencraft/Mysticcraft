@@ -1,10 +1,13 @@
 package net.kapitencraft.mysticcraft.item.gemstone;
 
 import net.kapitencraft.mysticcraft.init.ModItems;
+import net.minecraft.world.item.DyeableLeatherItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
+import org.jetbrains.annotations.NotNull;
 
-public  class  GemstoneItem extends Item {
+public  class  GemstoneItem extends Item implements DyeableLeatherItem {
     private final GemstoneType.Rarity RARITY;
     public final String gemstoneName;
     public GemstoneItem(GemstoneType.Rarity rarity, String gemstoneName) {
@@ -13,8 +16,22 @@ public  class  GemstoneItem extends Item {
         this.gemstoneName = gemstoneName;
     }
 
-    public String createDisplay() {
-        return this.RARITY + " " + this.gemstoneName;
+    @Override
+    public int getColor(@NotNull ItemStack p_41122_) {
+        return this.getGemstone().getColour();
+    }
+
+    @Override
+    public void clearColor(@NotNull ItemStack p_41124_) {
+    }
+
+    @Override
+    public boolean hasCustomColor(@NotNull ItemStack p_41114_) {
+        return false;
+    }
+
+    @Override
+    public void setColor(@NotNull ItemStack p_41116_, int p_41117_) {
     }
 
     public static Rarity getRarity(GemstoneType.Rarity rarity) {

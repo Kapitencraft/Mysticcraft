@@ -9,6 +9,7 @@ import java.util.function.Consumer;
 public class ItemStackQueue {
     private final List<ItemStack> itemStacks = new ArrayList<>();
     private final List<ItemStack> queue = new ArrayList<>();
+    private final List<ItemStack> removeQueue = new ArrayList<>();
     private boolean toQueue = false;
 
     public void add(ItemStack stack) {
@@ -28,8 +29,7 @@ public class ItemStackQueue {
     }
 
     public boolean remove(ItemStack stack) {
-        if (this.toQueue) return false;
-        return this.itemStacks.remove(stack);
+        return this.removeQueue.add(stack);
     }
 
     public ItemStackQueue() {}
@@ -42,8 +42,23 @@ public class ItemStackQueue {
         this.toQueue = true;
         this.itemStacks.forEach(consumer);
         this.toQueue = false;
+        this.itemStacks.removeAll(removeQueue);
         this.itemStacks.addAll(queue);
         this.queue.clear();
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        for (ItemStack stack : this.itemStacks) {
+            builder.append(stack.toString());
+        }
+        StringBuilder queueBuilder = new StringBuilder();
+        for (ItemStack stack : this.queue) {
+            queueBuilder.append(stack.toString());
+        }
+
+        return "ItemStackQueue{Stacks: " + builder + ", Queue" + queueBuilder;
     }
 
     public static ItemStackQueue of(List<ItemStack> list) {

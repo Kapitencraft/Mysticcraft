@@ -18,6 +18,23 @@
   "armor_tier.fiery": "Fiery",
   "armor_tier.infernal": "Infernal",
 
+  "command.guild.add.success": "Successfully created a new Guild called %1$s",
+  "command.guild.add.failed": "Couldn't create guild: Name already existing",
+  "command.guild.join.invite.accept": "You successfully accepted the invite and joined %1$s",
+  "command.guild.join.invite.failed": "Couldn't join %1$s: wrong invite Key",
+  "command.guild.join.success": "You have successfully joined %1$s",
+  "command.guild.join.failed": "Failed to join %1$s",
+  "command.guild.invite.isMember": "%1$s is already member of this Guild",
+  "command.guild.invite.isInvited": "%1$s has already been invited",
+  "command.guild.kick.success": "Successfully kicked %1$s from the guild",
+  "command.guild.kick.failed": "Could not kick %1$s from the guild",
+  "command.guild.kick.isOwner": "Can not kick Owner",
+  "command.guild.promote.success": "Successfully promoted %1$s to %2$s",
+  "command.guild.promote.isOwner": "The target Player (%1$s) is the Guild Owner",
+  "command.guild.promote.failed": "Failed to promote %1$s",
+
+  "guild.banner.name": "%1$s's Banner",
+
   "item.mysticcraft.staff_of_destruction": "Staff of Destruction",
   "item.mysticcraft.staff_of_the_wild": "Staff of the Wild",
   "item.mysticcraft.missing_slot": "§4There is no gemstone Slot here",

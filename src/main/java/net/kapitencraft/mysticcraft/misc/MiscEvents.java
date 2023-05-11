@@ -6,17 +6,26 @@ import net.kapitencraft.mysticcraft.entity.renderer.*;
 import net.kapitencraft.mysticcraft.init.ModEntityTypes;
 import net.kapitencraft.mysticcraft.init.ModItems;
 import net.kapitencraft.mysticcraft.init.ModParticleTypes;
+import net.kapitencraft.mysticcraft.item.gemstone.GemstoneItem;
+import net.kapitencraft.mysticcraft.item.gemstone.GemstoneType;
+import net.kapitencraft.mysticcraft.misc.guilds.GuildSavedData;
 import net.kapitencraft.mysticcraft.particle.FireNormalParticle;
 import net.kapitencraft.mysticcraft.particle.flame.*;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.DyeableLeatherItem;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
+import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.registries.RegistryObject;
+
+import java.util.HashMap;
 
 public class MiscEvents {
     @Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -36,6 +45,11 @@ public class MiscEvents {
         public static void registerColors(RegisterColorHandlersEvent.Item event) {
             MysticcraftMod.sendWarn("registering Custom Colors");
             event.register((p_92708_, p_92709_) -> p_92709_ > 0 ? -1 : ((DyeableLeatherItem) p_92708_.getItem()).getColor(p_92708_), ModItems.DYED_LEATHER.get());
+            for (HashMap<GemstoneType.Rarity, RegistryObject<GemstoneItem>> item : ModItems.GEMSTONES.values()) {
+                for (GemstoneItem item1 : item.values().stream().map(RegistryObject::get).toList()) {
+                    event.register((p_92708_, p_92709_) -> p_92709_ > 0 ? -1 : ((DyeableLeatherItem) p_92708_.getItem()).getColor(p_92708_), item1);
+                }
+            }
         }
 
     }
@@ -56,8 +70,18 @@ public class MiscEvents {
             event.registerEntityRenderer(ModEntityTypes.FIRE_BOLD.get(), FireBoltRenderer::new);
             event.registerEntityRenderer(ModEntityTypes.CRIMSON_DEATH_RAY.get(), CrimsonDeathRayRenderer::new);
             event.registerEntityRenderer(ModEntityTypes.DAMAGE_INDICATOR.get(), DamageIndicatorRenderer::new);
-
+            event.registerEntityRenderer(ModEntityTypes.MOD_FISHING_HOOK.get(), ModFishingHookRenderer::new);
         }
     }
 
+    @Mod.EventBusSubscriber(modid = MysticcraftMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+    public static class ModEvents {
+        @SubscribeEvent
+        public static void saveData(LevelEvent.Load event) {
+            if (event.getLevel() instanceof ServerLevel serverLevel && serverLevel.dimension() == Level.OVERWORLD) {
+                MysticcraftMod.sendInfo("1xs");
+                serverLevel.getDataStorage().computeIfAbsent((tag -> GuildSavedData.load(tag, serverLevel.getServer())), GuildSavedData::createDefault, "guilds");
+            }
+        }
+    }
 }

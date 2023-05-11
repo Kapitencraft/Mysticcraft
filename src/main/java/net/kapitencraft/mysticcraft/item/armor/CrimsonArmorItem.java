@@ -46,6 +46,11 @@ public class CrimsonArmorItem extends TieredArmorItem implements GeoItem, IArmor
     }
 
     @Override
+    String getRegistryName() {
+        return "crimson";
+    }
+
+    @Override
     public void fullSetTick(ItemStack stack, Level level, LivingEntity living) {
     }
 

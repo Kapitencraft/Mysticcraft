@@ -2,10 +2,7 @@ package net.kapitencraft.mysticcraft.init;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.gui.GUISlotBlockItem;
-import net.kapitencraft.mysticcraft.item.DyedLeatherItem;
-import net.kapitencraft.mysticcraft.item.HammerItem;
-import net.kapitencraft.mysticcraft.item.ModDebugStickItem;
-import net.kapitencraft.mysticcraft.item.WizardHatItem;
+import net.kapitencraft.mysticcraft.item.*;
 import net.kapitencraft.mysticcraft.item.armor.*;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneItem;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneType;
@@ -47,6 +44,7 @@ public abstract class ModItems {
     public static final RegistryObject<Item> SCYLLA = REGISTRY.register("scylla", Scylla::new);
     public static final RegistryObject<Item> ASTREA = REGISTRY.register("astrea", Astraea::new);
     public static final RegistryObject<Item> VALKYRIE = REGISTRY.register("valkyrie", Valkyrie::new);
+    public static final RegistryObject<Item> LAVA_FISHING_ROD_TEST = REGISTRY.register("lava_fishing_rod", ()-> new LavaFishingRod(Rarity.RARE));
     public static final RegistryObject<Item> AOTE = REGISTRY.register("aspect_of_the_end", ()-> new AspectOfTheEndItem(50));
     public static final RegistryObject<Item> AOTV = REGISTRY.register("aspect_of_the_void", AspectOfTheVoidItem::new);
     public static final RegistryObject<Item> HEATED_SCYTHE = REGISTRY.register("heated_scythe", HeatedScythe::new);
@@ -96,11 +94,11 @@ public abstract class ModItems {
     public static final RegistryObject<Item> GOLDEN_SHIELD = REGISTRY.register("golden_shield", GoldenShield::new);
     public static final RegistryObject<Item> DYED_LEATHER = REGISTRY.register("dyed_leather",  DyedLeatherItem::new);
 
-    public static final HashMap<EquipmentSlot, RegistryObject<Item>> ENDER_KNIGHT_ARMOR = EnderKnightArmorItem.createRegistry(REGISTRY, "ender_knight");
-    public static final HashMap<EquipmentSlot, RegistryObject<Item>> FROZEN_BLAZE_ARMOR = FrozenBlazeArmorItem.createRegistry(REGISTRY, "frozen_blaze");
-    public static final HashMap<EquipmentSlot, RegistryObject<Item>> SHADOW_ASSASSIN_ARMOR = ShadowAssassinArmorItem.createRegistry(REGISTRY, "shadow_assassin");
-    public static final HashMap<EquipmentSlot, RegistryObject<Item>> CRIMSON_ARMOR = CrimsonArmorItem.createRegistry(REGISTRY, "crimson");
-    public static final HashMap<EquipmentSlot, RegistryObject<Item>> SOUL_MAGE_ARMOR = SoulMageArmorItem.createRegistry(REGISTRY, "soul_mage");
+    public static final HashMap<EquipmentSlot, RegistryObject<Item>> ENDER_KNIGHT_ARMOR = ModArmorItem.createRegistry(REGISTRY, EnderKnightArmorItem::new);
+    public static final HashMap<EquipmentSlot, RegistryObject<Item>> FROZEN_BLAZE_ARMOR = ModArmorItem.createRegistry(REGISTRY, FrozenBlazeArmorItem::new);
+    public static final HashMap<EquipmentSlot, RegistryObject<Item>> SHADOW_ASSASSIN_ARMOR = ModArmorItem.createRegistry(REGISTRY, ShadowAssassinArmorItem::new);
+    public static final HashMap<EquipmentSlot, RegistryObject<Item>> CRIMSON_ARMOR = ModArmorItem.createRegistry(REGISTRY, CrimsonArmorItem::new);
+    public static final HashMap<EquipmentSlot, RegistryObject<Item>> SOUL_MAGE_ARMOR = ModArmorItem.createRegistry(REGISTRY, SoulMageArmorItem::new);
 
     public static final RegistryObject<Item> FROZEN_BLAZE_SPAWN_EGG = REGISTRY.register("frozen_blaze_spawn_egg", ()-> new ForgeSpawnEggItem(ModEntityTypes.FROZEN_BLAZE, -16711681, -16763956, new Item.Properties()));
 
