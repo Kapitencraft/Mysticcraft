@@ -3,7 +3,7 @@ package net.kapitencraft.mysticcraft.entity;
 import com.mojang.logging.LogUtils;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.fluid.ModFluidTags;
-import net.kapitencraft.mysticcraft.init.ModEntityTypes;
+import net.kapitencraft.mysticcraft.misc.ModLootTables;
 import net.kapitencraft.mysticcraft.misc.utils.FishingHookUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -17,7 +17,6 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.stats.Stats;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
@@ -37,7 +36,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
@@ -73,21 +71,22 @@ public class ModFishingHook extends Projectile {
     private final int luck;
     private final int lureSpeed;
 
-    private ModFishingHook(EntityType<? extends ModFishingHook> p_150141_, Level p_150142_, int p_150143_, int p_150144_, TagKey<Fluid> fluidType) {
+    private ModFishingHook(EntityType<? extends ModFishingHook> p_150141_, Level p_150142_, int luck, int lureSpeed, TagKey<Fluid> fluidType) {
         super(p_150141_, p_150142_);
-        this.fluidType = fluidType;
         this.noCulling = true;
-        this.luck = Math.max(0, p_150143_);
-        this.lureSpeed = Math.max(0, p_150144_);
+        this.luck = Math.max(0, luck);
+        this.lureSpeed = Math.max(0, lureSpeed);
+        this.fluidType = fluidType;
     }
 
-    public ModFishingHook(EntityType<? extends ModFishingHook> p_150138_, Level p_150139_) {
-        this(p_150138_, p_150139_, 0, 0, FluidTags.WATER);
+    protected ModFishingHook(EntityType<? extends ModFishingHook> type, Level level, TagKey<Fluid> fluidType) {
+        this(type, level, 0, 0, fluidType);
+        MysticcraftMod.sendWarn(level instanceof ServerLevel ? "server":"client");
     }
 
-    private ModFishingHook(Player p_37106_, Level level, int p_37108_, int p_37109_, TagKey<Fluid> fluidType) {
-        this(ModEntityTypes.MOD_FISHING_HOOK.get(), level, p_37108_, p_37109_, fluidType);
-        MysticcraftMod.sendInfo("ServerLevel?: " + !level.isClientSide);
+
+    protected ModFishingHook(EntityType<? extends ModFishingHook> type, Player p_37106_, Level level, int luck, int lureSpeed, TagKey<Fluid> fluidType) {
+        this(type, level, luck, lureSpeed, fluidType);
         this.setOwner(p_37106_);
         float f = p_37106_.getXRot();
         float f1 = p_37106_.getYRot();
@@ -109,9 +108,6 @@ public class ModFishingHook extends Projectile {
         this.xRotO = this.getXRot();
     }
 
-    public static ModFishingHook create(Player player, Level level, int luck, int lureSpeed, TagKey<Fluid> fluidType) {
-        return new ModFishingHook(player, level, luck, lureSpeed, fluidType);
-    }
 
     protected void defineSynchedData() {
         this.getEntityData().define(DATA_HOOKED_ENTITY, 0);
@@ -167,7 +163,6 @@ public class ModFishingHook extends Projectile {
 
             boolean flag = f > 0.0F;
             if (this.currentState == FishHookState.FLYING) {
-                MysticcraftMod.sendInfo("flying");
                 if (this.hookedIn != null) {
                     this.setDeltaMovement(Vec3.ZERO);
                     this.currentState = FishHookState.HOOKED_IN_ENTITY;
@@ -183,7 +178,6 @@ public class ModFishingHook extends Projectile {
                 this.checkCollision();
             } else {
                 if (this.currentState == FishHookState.HOOKED_IN_ENTITY) {
-                    MysticcraftMod.sendInfo("hooked");
                     if (this.hookedIn != null) {
                         if (!this.hookedIn.isRemoved() && this.hookedIn.level.dimension() == this.level.dimension()) {
                             this.setPos(this.hookedIn.getX(), this.hookedIn.getY(0.8D), this.hookedIn.getZ());
@@ -197,7 +191,6 @@ public class ModFishingHook extends Projectile {
                 }
 
                 if (this.currentState == FishHookState.BOBBING) {
-                    MysticcraftMod.sendInfo("bobbing");
                     Vec3 vec3 = this.getDeltaMovement();
                     double d0 = this.getY() + vec3.y - (double)blockpos.getY() - (double)f;
                     if (Math.abs(d0) < 0.01D) {
@@ -233,7 +226,6 @@ public class ModFishingHook extends Projectile {
             this.move(MoverType.SELF, this.getDeltaMovement());
             this.updateRotation();
             if (this.currentState == FishHookState.FLYING && (this.onGround || this.horizontalCollision)) {
-                MysticcraftMod.sendInfo("flying");
                 this.setDeltaMovement(Vec3.ZERO);
             }
 
@@ -325,7 +317,7 @@ public class ModFishingHook extends Projectile {
                 this.playSound(SoundEvents.FISHING_BOBBER_SPLASH, 0.25F, 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.4F);
                 double d3 = this.getY() + 0.5D;
                 serverlevel.sendParticles(ParticleTypes.BUBBLE, this.getX(), d3, this.getZ(), (int)(1.0F + this.getBbWidth() * 20.0F), this.getBbWidth(), 0.0D, this.getBbWidth(), 0.2F);
-                    serverlevel.sendParticles(ParticleTypes.FISHING, this.getX(), d3, this.getZ(), (int)(1.0F + this.getBbWidth() * 20.0F), this.getBbWidth(), 0.0D, this.getBbWidth(), 0.2F);
+                serverlevel.sendParticles(ParticleTypes.FISHING, this.getX(), d3, this.getZ(), (int)(1.0F + this.getBbWidth() * 20.0F), this.getBbWidth(), 0.0D, this.getBbWidth(), 0.2F);
                 this.nibble = Mth.nextInt(this.random, 20, 40);
                 this.getEntityData().set(DATA_BITING, true);
             }
@@ -357,7 +349,6 @@ public class ModFishingHook extends Projectile {
             }
         } else {
             this.timeUntilLured = Mth.nextInt(this.random, 100, MAX_UNTIL_LURED);
-            MysticcraftMod.sendInfo("UntilLured: " + this.timeUntilLured);
             this.timeUntilLured -= this.lureSpeed * 20 * 5;
         }
 
@@ -425,7 +416,7 @@ public class ModFishingHook extends Projectile {
                     builder.withParameter(LootContextParams.KILLER_ENTITY, this.getOwner());
                 }
                 builder.withParameter(LootContextParams.THIS_ENTITY, this);
-                LootTable loottable = serverLevel.getServer().getLootTables().get(BuiltInLootTables.FISHING);
+                LootTable loottable = serverLevel.getServer().getLootTables().get(ModLootTables.LAVA_FISHING);
                 List<ItemStack> list = loottable.getRandomItems(builder.create(LootContextParamSets.FISHING));
                 for(ItemStack itemstack : list) {
                     ItemEntity itementity = new ItemEntity(this.level, this.getX(), this.getY(), this.getZ(), itemstack);
@@ -448,7 +439,6 @@ public class ModFishingHook extends Projectile {
                 i = 2;
             }
 
-            MysticcraftMod.sendInfo("removing...");
             this.discard();
             FishingHookUtils.removeHook(player);
             return i;
@@ -494,7 +484,11 @@ public class ModFishingHook extends Projectile {
     private void updateOwnerInfo(@Nullable ModFishingHook modFishingHook) {
         Player player = this.getPlayerOwner();
         if (player != null) {
-            FishingHookUtils.setActiveHook(player, modFishingHook);
+            if (modFishingHook == null) {
+                FishingHookUtils.removeHook(player);
+            } else {
+                FishingHookUtils.setActiveHook(player, modFishingHook);
+            }
         }
     }
 

@@ -52,12 +52,6 @@ public class FrozenBlazeArmorItem extends ModArmorItem implements GeoItem, IArmo
     public ExtraBonus getExtraBonus(EquipmentSlot slot) {
         return null;
     }
-
-    @Override
-    String getRegistryName() {
-        return "frozen_blaze";
-    }
-
     @Override
     public void fullSetTick(ItemStack stack, Level level, LivingEntity living) {
         List<LivingEntity> entityList = level.getEntitiesOfClass(LivingEntity.class, living.getBoundingBox().inflate(5), new Predicate<LivingEntity>() {
@@ -79,6 +73,11 @@ public class FrozenBlazeArmorItem extends ModArmorItem implements GeoItem, IArmo
 
     @Override
     protected void postFullSetTick(ItemStack stack, Level level, LivingEntity living) {
+
+    }
+
+    @Override
+    protected void clientFullSetTick(ItemStack stack, Level level, LivingEntity living) {
 
     }
 

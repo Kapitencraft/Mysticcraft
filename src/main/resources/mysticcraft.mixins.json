@@ -4,7 +4,7 @@
   "package": "net.kapitencraft.mysticcraft.mixin",
   "refmap": "mysticcraft.mixin-refmap.json",
   "mixins": [
-    "LivingEntityMixin",
+    "LivingEntityAccessor",
     "ClientToolTipPositionerMixin",
     "FishingHookMixin"
   ],

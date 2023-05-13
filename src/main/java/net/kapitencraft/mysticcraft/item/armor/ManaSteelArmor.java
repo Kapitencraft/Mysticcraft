@@ -19,11 +19,6 @@ public class ManaSteelArmor extends ModArmorItem {
     }
 
     @Override
-    String getRegistryName() {
-        return "mana_steel";
-    }
-
-    @Override
     public void fullSetTick(ItemStack stack, Level level, LivingEntity living) {
     }
 
@@ -33,6 +28,11 @@ public class ManaSteelArmor extends ModArmorItem {
 
     @Override
     protected void postFullSetTick(ItemStack stack, Level level, LivingEntity living) {
+    }
+
+    @Override
+    protected void clientFullSetTick(ItemStack stack, Level level, LivingEntity living) {
+
     }
 
     @Override

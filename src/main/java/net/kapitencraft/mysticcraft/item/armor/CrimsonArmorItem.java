@@ -45,10 +45,6 @@ public class CrimsonArmorItem extends TieredArmorItem implements GeoItem, IArmor
         super(ModArmorMaterials.CRIMSON, p_40387_, new Properties().rarity(FormattingCodes.LEGENDARY));
     }
 
-    @Override
-    String getRegistryName() {
-        return "crimson";
-    }
 
     @Override
     public void fullSetTick(ItemStack stack, Level level, LivingEntity living) {
@@ -64,6 +60,11 @@ public class CrimsonArmorItem extends TieredArmorItem implements GeoItem, IArmor
     @Override
     protected void postFullSetTick(ItemStack stack, Level level, LivingEntity living) {
         ParticleHelper.clearAllHelpers(helperString, living);
+    }
+
+    @Override
+    protected void clientFullSetTick(ItemStack stack, Level level, LivingEntity living) {
+
     }
 
     @Override

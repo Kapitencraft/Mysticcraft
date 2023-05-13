@@ -106,11 +106,23 @@ public class MysticcraftMod {
         messageID++;
     }
 
+    private static String lastMSG = "";
 
     public static void sendInfo(String info) {
-        LOGGER.info("[" + MOD_ID.toUpperCase() + "]: " + info);
+        sendInfo(info, false);
+    }
+
+    public static void sendInfo(String info, boolean shouldRepeat) {
+        if (!lastMSG.equals(info) || shouldRepeat) LOGGER.info("[" + MOD_ID.toUpperCase() + "]: " + info);
+        lastMSG = info;
     }
     public static void sendWarn(String warn) {
-        LOGGER.warn("[" + MOD_ID.toUpperCase() + "]: " + warn);
+        sendWarn(warn, false);
     }
+
+    public static void sendWarn(String info, boolean shouldRepeat) {
+        if (!lastMSG.equals(info) || shouldRepeat) LOGGER.info("[" + MOD_ID.toUpperCase() + "]: " + info);
+        lastMSG = info;
+    }
+
 }

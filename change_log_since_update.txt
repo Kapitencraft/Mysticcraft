@@ -15,5 +15,6 @@ added Priority for Enchantments;
 added Wither Blades being droped from Withers with a 0.1% chance;
 added Scrollable Tooltips;
 added custom Achivements, yaaay!;
+added Lava Fishing Rod;
 
 removed visibility of 0hp healing indicators;

@@ -17,6 +17,7 @@ public abstract class ModEnchantments {
     public static final RegistryObject<Enchantment> AIM = REGISTRY.register("aim", AimEnchantment::new);
     public static final RegistryObject<Enchantment> FROZEN_ARROWS = REGISTRY.register("frozen_arrows", FrozenArrowsEnchantment::new);
     public static final RegistryObject<Enchantment> INFERNO = REGISTRY.register("inferno", InfernoEnchantment::new);
+    public static final RegistryObject<Enchantment> BASALT_WALKER = REGISTRY.register("basalt_walker", BasaltWalkerEnchantment::new);
     public static final RegistryObject<Enchantment> SNIPE = REGISTRY.register("snipe", SnipeEnchantment::new);
     public static final RegistryObject<Enchantment> REJUVENATE = REGISTRY.register("rejuvenate", RejuvenateEnchantment::new);
     public static final RegistryObject<Enchantment> GROWTH = REGISTRY.register("growth", GrowthEnchantment::new);

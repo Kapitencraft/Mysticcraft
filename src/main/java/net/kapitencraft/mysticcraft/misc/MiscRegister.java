@@ -3,6 +3,7 @@ package net.kapitencraft.mysticcraft.misc;
 import com.google.common.collect.Multimap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.enchantments.BasaltWalkerEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.VenomousEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.ExtendedCalculationEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.IToolEnchantment;
@@ -28,7 +29,7 @@ import net.kapitencraft.mysticcraft.misc.guilds.Guild;
 import net.kapitencraft.mysticcraft.misc.guilds.GuildHandler;
 import net.kapitencraft.mysticcraft.misc.particle_help.ParticleHelper;
 import net.kapitencraft.mysticcraft.misc.utils.*;
-import net.kapitencraft.mysticcraft.mixin.LivingEntityMixin;
+import net.kapitencraft.mysticcraft.mixin.LivingEntityAccessor;
 import net.kapitencraft.mysticcraft.mob_effects.NumbnessMobEffect;
 import net.kapitencraft.mysticcraft.spell.Spells;
 import net.kapitencraft.mysticcraft.spell.spells.Spell;
@@ -365,6 +366,10 @@ public class MiscRegister {
                 }
             }
         }
+        int i = EnchantmentHelper.getEnchantmentLevel(ModEnchantments.BASALT_WALKER.get(), living);
+        if (i > 0) {
+            BasaltWalkerEnchantment.onEntityMoved(living, living.blockPosition(), i);
+        }
         final String timer = VenomousEnchantment.TIMER_ID;
         if (tag.contains(timer)) {
             if (tag.getInt(timer) <= 0) {
@@ -404,9 +409,9 @@ public class MiscRegister {
             }
             if (!player.isOnGround()) {
                 if (canJump(player) && tag.getInt(doubleJumpId) < player.getAttributeValue(ModAttributes.DOUBLE_JUMP.get())) {
-                    if (((LivingEntityMixin) player).getJumping() && ((LivingEntityMixin) player).getNoJumpDelay() <= 0) {
+                    if (((LivingEntityAccessor) player).getJumping() && ((LivingEntityAccessor) player).getNoJumpDelay() <= 0) {
                         ParticleUtils.sendAlwaysVisibleParticles(ParticleTypes.CLOUD, player.level, player.getX(), player.getY(), player.getZ(), 0.25, 0.0, 0.25, 0,0,0, 15);
-                        ((LivingEntityMixin) player).setNoJumpDelay(10); player.fallDistance = 0;
+                        ((LivingEntityAccessor) player).setNoJumpDelay(10); player.fallDistance = 0;
                         Vec3 targetLoc = MathUtils.setLength(player.getLookAngle().multiply(1, 0, 1), 0.75).add(0, 1, 0);
                         player.setDeltaMovement(targetLoc.x, targetLoc.y > 0 ? targetLoc.y : -targetLoc.y, targetLoc.z);
                         TagUtils.increaseIntegerTagValue(player.getPersistentData(), doubleJumpId, 1);
@@ -514,7 +519,7 @@ public class MiscRegister {
                     mutableComponent.append(shortBowItem.createCooldown(player) + "s");
                 }
             }
-            if (item instanceof BannerItem) {
+            if (item instanceof BannerItem && false) {
                 Guild guild = GuildHandler.getInstance().getGuildForBanner(stack);
                 if (guild != null) {
                     toolTip.remove(0);
@@ -522,12 +527,12 @@ public class MiscRegister {
                 }
             }
         }
-        Rarity rarity = item.getRarity(stack);
         if (item instanceof IGemstoneApplicable gemstoneApplicable) {
             gemstoneApplicable.addModInfo(stack, toolTip);
             toolTip.add(Component.literal(""));
         }
         if (!(item instanceof IGuiHelper)) {
+            Rarity rarity = item.getRarity(stack);
             boolean flag = rarity != MiscUtils.getItemRarity(stack.getItem());
             String RarityMod = FormattingCodes.OBFUSCATED + "A" + FormattingCodes.RESET;
             toolTip.add(Component.literal(""));

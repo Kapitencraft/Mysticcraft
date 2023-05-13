@@ -10,6 +10,7 @@ import net.kapitencraft.mysticcraft.item.item_bonus.PieceBonus;
 import net.kapitencraft.mysticcraft.misc.utils.AttributeUtils;
 import net.kapitencraft.mysticcraft.misc.utils.MiscUtils;
 import net.kapitencraft.mysticcraft.misc.utils.TextUtils;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -44,17 +45,13 @@ public abstract class ModArmorItem extends ArmorItem {
         ModArmorItem create(EquipmentSlot slot);
     }
 
-    public static HashMap<EquipmentSlot, RegistryObject<Item>> createRegistry(DeferredRegister<Item> register, Creator creator) {
+    public static HashMap<EquipmentSlot, RegistryObject<Item>> createRegistry(DeferredRegister<Item> register, String registryName, Creator creator) {
         HashMap<EquipmentSlot, RegistryObject<Item>> registry = new HashMap<>();
         for (EquipmentSlot slot : MiscUtils.ARMOR_EQUIPMENT) {
-            ModArmorItem modArmorItem = creator.create(slot);
-            registry.put(slot, register.register(modArmorItem.getRegistryName() + "_" + TextUtils.getRegistryNameForSlot(slot), () -> modArmorItem));
+            registry.put(slot, register.register(registryName + "_" + TextUtils.getRegistryNameForSlot(slot), () -> creator.create(slot)));
         }
         return registry;
     }
-
-
-    abstract String getRegistryName();
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level p_41422_, @NotNull List<Component> toolTip, @NotNull TooltipFlag p_41424_) {
@@ -70,23 +67,28 @@ public abstract class ModArmorItem extends ArmorItem {
 
     @Override
     public void inventoryTick(@NotNull ItemStack stack, Level level, @NotNull Entity entity, int slotID, boolean isSelected) {
-        if (!level.isClientSide() && entity instanceof LivingEntity living) {
+        if (entity instanceof LivingEntity living) {
+            CompoundTag tag = living.getPersistentData();
             if (this.isFullSetActive(living)) {
                 if (this.getSlot() == EquipmentSlot.CHEST) {
                     if (this.fullSetTick == 0) {
                         MysticcraftMod.sendInfo("init Full Set");
-                        this.initFullSetTick(stack, level, living);
-                        living.getPersistentData().putBoolean(FULL_SET_ID, true);
-                        living.getPersistentData().putString("lastFullSet", this.getMaterial().getName());
+                        if (!level.isClientSide) this.initFullSetTick(stack, level, living);
+                        tag.putBoolean(FULL_SET_ID, true);
+                        tag.putString("lastFullSet", this.getMaterial().getName());
                     }
                     this.fullSetTick++;
-                    this.fullSetTick(stack, level, living);
+                    if (level.isClientSide) {
+                        this.clientFullSetTick(stack, level, living);
+                    } else {
+                        this.fullSetTick(stack, level, living);
+                    }
                 }
             } else {
                 if (living.getPersistentData().getBoolean(FULL_SET_ID)) {
                     MysticcraftMod.sendInfo("post Full Set");
-                    postFullSetTick(stack, level, living);
-                    living.getPersistentData().putBoolean(FULL_SET_ID, false);
+                    if (!level.isClientSide) postFullSetTick(stack, level, living);
+                    tag.putBoolean(FULL_SET_ID, false);
                 }
                 fullSetTick = 0;
             }
@@ -117,9 +119,10 @@ public abstract class ModArmorItem extends ArmorItem {
         return (head != null && legs != null && feet != null) && (head.getMaterial() == materials && chest.getMaterial() == materials && legs.getMaterial() == materials && feet.getMaterial() == materials);
     }
 
-    public abstract void fullSetTick(ItemStack stack, Level level, LivingEntity living);
+    protected abstract void fullSetTick(ItemStack stack, Level level, LivingEntity living);
     protected abstract void initFullSetTick(ItemStack stack, Level level, LivingEntity living);
     protected abstract void postFullSetTick(ItemStack stack, Level level, LivingEntity living);
+    protected abstract void clientFullSetTick(ItemStack stack, Level level, LivingEntity living);
 
     public abstract Multimap<Attribute, AttributeModifier> getAttributeMods(EquipmentSlot slot);
 

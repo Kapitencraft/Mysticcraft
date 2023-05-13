@@ -34,11 +34,6 @@ public class SoulMageArmorItem extends ModArmorItem implements IArmorBonusItem {
     }
 
     @Override
-    String getRegistryName() {
-        return "soul_mage";
-    }
-
-    @Override
     public void fullSetTick(ItemStack stack, Level level, LivingEntity living) {
     }
 
@@ -52,6 +47,11 @@ public class SoulMageArmorItem extends ModArmorItem implements IArmorBonusItem {
     @Override
     protected void postFullSetTick(ItemStack stack, Level level, LivingEntity living) {
         ParticleHelper.clearAllHelpers(helperString, living);
+    }
+
+    @Override
+    protected void clientFullSetTick(ItemStack stack, Level level, LivingEntity living) {
+
     }
 
     @Override

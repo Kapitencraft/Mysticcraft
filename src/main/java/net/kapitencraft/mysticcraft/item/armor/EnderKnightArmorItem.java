@@ -30,6 +30,11 @@ public class EnderKnightArmorItem extends ModArmorItem implements IGemstoneAppli
         super(ModArmorMaterials.ENDER_KNIGHT, p_40387_, new Properties().rarity(FormattingCodes.LEGENDARY).fireResistant());
     }
 
+
+    public static EnderKnightArmorItem create(EquipmentSlot slot) {
+        return new EnderKnightArmorItem(slot);
+    }
+
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
         ImmutableMultimap<Attribute, AttributeModifier> modifierMultimap = (ImmutableMultimap<Attribute, AttributeModifier>) super.getAttributeModifiers(slot, stack);
@@ -51,6 +56,11 @@ public class EnderKnightArmorItem extends ModArmorItem implements IGemstoneAppli
     protected void postFullSetTick(ItemStack stack, Level level, LivingEntity living) {
     }
 
+    @Override
+    protected void clientFullSetTick(ItemStack stack, Level level, LivingEntity living) {
+
+    }
+
     public ImmutableMultimap<Attribute, AttributeModifier> getAttributeMods(EquipmentSlot slot) {
         ImmutableMultimap.Builder<Attribute, AttributeModifier> preReturn = new ImmutableMultimap.Builder<>();
         if (slot == this.slot) {
@@ -61,10 +71,6 @@ public class EnderKnightArmorItem extends ModArmorItem implements IGemstoneAppli
         return preReturn.build();
     }
 
-    @Override
-    String getRegistryName() {
-        return "ender_knight";
-    }
 
     @Override
     public void appendHoverText(@NotNull ItemStack p_41421_, @Nullable Level p_41422_, @NotNull List<Component> list, @NotNull TooltipFlag p_41424_) {

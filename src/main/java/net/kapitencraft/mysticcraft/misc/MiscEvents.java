@@ -70,7 +70,7 @@ public class MiscEvents {
             event.registerEntityRenderer(ModEntityTypes.FIRE_BOLD.get(), FireBoltRenderer::new);
             event.registerEntityRenderer(ModEntityTypes.CRIMSON_DEATH_RAY.get(), CrimsonDeathRayRenderer::new);
             event.registerEntityRenderer(ModEntityTypes.DAMAGE_INDICATOR.get(), DamageIndicatorRenderer::new);
-            event.registerEntityRenderer(ModEntityTypes.MOD_FISHING_HOOK.get(), ModFishingHookRenderer::new);
+            event.registerEntityRenderer(ModEntityTypes.LAVA_FISHING_HOOK.get(), ModFishingHookRenderer::new);
         }
     }
 

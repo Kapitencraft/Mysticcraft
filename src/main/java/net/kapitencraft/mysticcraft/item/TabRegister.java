@@ -48,6 +48,8 @@ public class TabRegister {
                 builder.title(Component.translatable("itemGroup.materials_mm"))
                         .icon(()-> new ItemStack(ModItems.SPELL_SHARD.get()))
                         .displayItems((featureFlagSet, output, flag) -> {
+                            output.accept(ModItems.BLAZING_SALMON.get());
+                            output.accept(ModItems.MAGMA_COD.get());
                             output.accept(ModItems.RAW_CRIMSONIUM_DUST.get());
                             output.accept(ModItems.RAW_CRIMSONIUM.get());
                             output.accept(ModItems.CRIMSONITE_CLUSTER.get());
@@ -105,6 +107,9 @@ public class TabRegister {
     public static void addToTabs(CreativeModeTabEvent.BuildContents event) {
         if (event.getTab() == CreativeModeTabs.SPAWN_EGGS) {
             event.accept(ModItems.FROZEN_BLAZE_SPAWN_EGG);
+        } else if (event.getTab() == CreativeModeTabs.FOOD_AND_DRINKS) {
+            event.accept(ModItems.BLAZING_SALMON);
+            event.accept(ModItems.MAGMA_COD);
         }
     }
 

@@ -22,25 +22,21 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.function.Consumer;
 
 public class ShadowAssassinArmorItem extends ModArmorItem implements GeoItem {
-    private boolean isHidden;
+    public static String INVISIBLE_ID = "Invisible";
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public ShadowAssassinArmorItem(EquipmentSlot p_40387_) {
         super(ModArmorMaterials.SHADOW_ASSASSIN, p_40387_, new Properties().rarity(Rarity.EPIC));
-        this.isHidden = false;
     }
 
     @Override
-    String getRegistryName() {
-        return "shadow_assassin";
-    }
-
-    @Override
-    public void fullSetTick(ItemStack stack, Level level, LivingEntity living) {
+    public void clientFullSetTick(ItemStack stack, Level level, LivingEntity living) {
         CompoundTag tag = living.getPersistentData();
-        if (living.isCrouching() && !tag.getBoolean("isCrouching")) {
-            MysticcraftMod.sendInfo("crouching");
-            this.isHidden = !isHidden;
-            tag.putBoolean("isCrouching", true);
+        if (living.isCrouching()) {
+            if (!tag.getBoolean("isCrouching") || !tag.contains("isCrouching")) {
+                MysticcraftMod.sendInfo("crouching");
+                tag.putBoolean(INVISIBLE_ID, !tag.getBoolean(INVISIBLE_ID));
+                tag.putBoolean("isCrouching", true);
+            }
         } else {
             tag.putBoolean("isCrouching", false);
         }
@@ -52,6 +48,11 @@ public class ShadowAssassinArmorItem extends ModArmorItem implements GeoItem {
 
     @Override
     protected void postFullSetTick(ItemStack stack, Level level, LivingEntity living) {
+    }
+
+    @Override
+    protected void fullSetTick(ItemStack stack, Level level, LivingEntity living) {
+
     }
 
     @Override
@@ -80,7 +81,8 @@ public class ShadowAssassinArmorItem extends ModArmorItem implements GeoItem {
                 }
 
                 renderer.prepForRender(livingEntity, itemStack, equipmentSlot, original);
-                renderer.hide(isHidden);
+                CompoundTag tag = livingEntity.getPersistentData();
+                renderer.hide(tag.getBoolean(INVISIBLE_ID));
                 return renderer;
             }
         });

@@ -1,9 +1,7 @@
 package net.kapitencraft.mysticcraft.item;
 
-import net.minecraft.tags.FluidTags;
-import net.minecraft.tags.TagKey;
+import net.kapitencraft.mysticcraft.entity.LavaFishingHook;
 import net.minecraft.world.item.Rarity;
-import net.minecraft.world.level.material.Fluid;
 
 public class LavaFishingRod extends ModFishingRod {
     public LavaFishingRod(Rarity rarity) {
@@ -11,7 +9,7 @@ public class LavaFishingRod extends ModFishingRod {
     }
 
     @Override
-    public TagKey<Fluid> getFluidType() {
-        return FluidTags.LAVA;
+    public HookCreator creator() {
+        return LavaFishingHook::create;
     }
 }
