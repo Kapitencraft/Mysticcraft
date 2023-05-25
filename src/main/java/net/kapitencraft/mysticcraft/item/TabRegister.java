@@ -48,6 +48,7 @@ public class TabRegister {
                 builder.title(Component.translatable("itemGroup.materials_mm"))
                         .icon(()-> new ItemStack(ModItems.SPELL_SHARD.get()))
                         .displayItems((featureFlagSet, output, flag) -> {
+                            output.accept(ModItems.UNBREAKING_CORE.get());
                             output.accept(ModItems.BLAZING_SALMON.get());
                             output.accept(ModItems.MAGMA_COD.get());
                             output.accept(ModItems.RAW_CRIMSONIUM_DUST.get());
@@ -98,7 +99,6 @@ public class TabRegister {
                             output.accept(ModItems.ASTREA.get());
                             output.accept(ModItems.VALKYRIE.get());
                             output.accept(ModItems.THE_STAFF_DESTRUCTION.get());
-                            output.accept(ModItems.DIAMOND_CLEAVER.get());
                             output.accept(ModItems.IRON_SHIELD.get());
                         }));
     }

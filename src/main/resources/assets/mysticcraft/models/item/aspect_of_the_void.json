@@ -1,5 +1,5 @@
 {
-  "parent": "mysticcraft:item/handheld",
+  "parent": "item/handheld",
   "textures": {
     "layer0": "mysticcraft:item/aspect_of_the_void"
   }

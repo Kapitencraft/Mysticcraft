@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.mixin;
+package net.kapitencraft.mysticcraft.mixin.classes;
 
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.Mixin;
 public class ClientTooltipPositionerMixin implements ClientTooltipPositioner {
 
     @Override
-    public Vector2ic positionTooltip(@NotNull Screen p_263072_, int x, int y, int toolTipWidth, int toolTipHeight) {
+    public @NotNull Vector2ic positionTooltip(@NotNull Screen p_263072_, int x, int y, int toolTipWidth, int toolTipHeight) {
         return new Vector2i(x, y);
     }
 }

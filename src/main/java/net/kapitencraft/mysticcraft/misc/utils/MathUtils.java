@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.misc.utils;
 
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
@@ -49,16 +50,22 @@ public class MathUtils {
     public static Vec3 getPosition(Entity entity) {
         return new Vec3(entity.getX(), entity.getY(), entity.getZ());
     }
+    public static Vec3 getEyePosition(Entity entity) {return getPosition(entity).add(0, entity.getEyeHeight(), 0);}
 
-    private record ConeHelper(Vec3 pos, double num, boolean right, boolean up) {
+    public static Vec2 createTargetRotation(Entity source, Entity target) {
+        return createTargetRotationFromPos(getPosition(source), getPosition(target));
     }
 
-    public static Vec2 getTargetRotation(Entity source, Entity target) {
-        double d0 = target.getX() - source.getX();
-        double d1 = target.getY() - source.getY();
-        double d2 = target.getZ() - source.getZ();
+    public static Vec2 createTargetRotationFromPos(Vec3 source, Vec3 target) {
+        double d0 = target.x - source.x;
+        double d1 = target.y - source.y;
+        double d2 = target.z - source.z;
         double d3 = Math.sqrt(d0 * d0 + d2 * d2);
         return new Vec2(Mth.wrapDegrees((float)(-(Mth.atan2(d1, d3) * (double)(180F / (float)Math.PI)))), Mth.wrapDegrees((float)(Mth.atan2(d2, d0) * (double)(180F / (float)Math.PI)) - 90.0F));
+    }
+
+    public static Vec2 createTargetRotationFromEyeHeight(Entity source, Entity target) {
+        return createTargetRotationFromPos(getEyePosition(source), getEyePosition(target));
     }
 
     public static boolean isBehind(Entity source, Entity target) {
@@ -93,21 +100,23 @@ public class MathUtils {
         return minimiseLength(source, value);
     }
 
-    private static class MathFunction3D {
-        public double x, y, z;
+    public static Vec3 getRandomOffsetForPos(Entity target, double dist, double maxOffset) {
+        maxOffset *=2;
+        RandomSource source = RandomSource.create();
+        Vec2 rot = target.getRotationVector();
+        Vec3 targetPos = calculateViewVector(rot.x, rot.y).scale(dist);
+        Vec3 secPos = removeByScale(calculateViewVector(rot.x - 90, rot.y).scale(maxOffset * source.nextFloat()), 0.5);
+        Vec3 thirdPos = removeByScale(calculateViewVector(rot.x, rot.y - 90).scale(maxOffset * source.nextFloat()), 0.5);
+        return targetPos.add(secPos).add(thirdPos);
+    }
 
-        public MathFunction3D(double x, double y, double z) {
-            this.x = x; this.y = y; this.z = z;
-        }
-
-        public MathFunction3D(Vec3 vec3) {
-            double vecSquare = vec3.length() * vec3.length();
-            double xSquare = vec3.x * vec3.x;
-            double ySquare = vec3.y * vec3.y;
-            double zSquare = vec3.z * vec3.z;
-            this.x = -Math.sqrt(vecSquare - ySquare - zSquare);
-            this.y = -Math.sqrt(vecSquare - xSquare - zSquare);
-            this.z = -Math.sqrt(vecSquare - ySquare - xSquare);
-        }
+    public static Vec3 removeByScale(Vec3 vec3, double scale) {
+        double x = vec3.x;
+        double y = vec3.y;
+        double z = vec3.z;
+        double halfX = (x - (x * scale));
+        double halfY = (y - (y * scale));
+        double halfZ = (z - (z * scale));
+        return new Vec3(halfX, halfY, halfZ);
     }
 }

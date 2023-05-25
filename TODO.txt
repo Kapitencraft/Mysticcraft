@@ -1,9 +1,6 @@
-fix Venomous and Inferno Enchantment;
+add Skills;
+add Reforging;
+add Soul-Binding;
+add Unbreakability;
 fix Spell Damage Values;
-fix Spells make MaxMana go bye bye;
-fix Gemstone Grinder Screen being rendered wrong;
-fix game Lag;
-fix Guilds not loading;
-fix Gemstone-Helper adding stuff to all items;
-fix Soul Mage Armor crashing the Game;
-fix Shadow Assassin Effect;
+add Fishing Speed, Bow Draw Speed Gemstone;

@@ -1,6 +1,6 @@
-package net.kapitencraft.mysticcraft.mixin;
+package net.kapitencraft.mysticcraft.mixin.classes;
 
-import net.kapitencraft.mysticcraft.misc.guilds.GuildHandler;
+import net.kapitencraft.mysticcraft.guild.GuildHandler;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;

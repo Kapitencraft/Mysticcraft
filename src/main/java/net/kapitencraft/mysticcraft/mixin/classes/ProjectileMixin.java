@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.mixin;
+package net.kapitencraft.mysticcraft.mixin.classes;
 
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.misc.utils.AttributeUtils;

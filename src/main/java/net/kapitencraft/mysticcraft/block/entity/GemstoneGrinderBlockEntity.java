@@ -76,7 +76,7 @@ public class  GemstoneGrinderBlockEntity extends BlockEntity implements MenuProv
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int id, @NotNull Inventory inventory, @NotNull Player player) {
-        return new GemstoneGrinderMenu(id, inventory, this, this.data);
+        return new GemstoneGrinderMenu(id, inventory, this);
     }
 
     @Override

@@ -131,6 +131,16 @@ public abstract class SpellItem extends SwordItem implements IModItem {
         return builder.build();
     }
 
+    @Override
+    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
+        ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = new ImmutableMultimap.Builder<>();
+        builder.putAll(super.getAttributeModifiers(slot, stack));
+        if (this instanceof IGemstoneApplicable applicable && slot == EquipmentSlot.MAINHAND) {
+            return AttributeUtils.increaseAllByAmount(builder.build(), applicable.getAttributeModifiers(stack));
+        }
+        return builder.build();
+    }
+
     //The actual logic for the SpellItem
     public boolean addSlot(SpellSlot slot) {
         if (this.getFirstEmptySpellSlot() > -1 && !this.containsSpell(slot.getSpell()) && slot.getSpell().canApply(this)) {

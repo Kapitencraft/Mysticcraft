@@ -14,10 +14,12 @@ public abstract class ModAttributes {
     }
 
     public static final RegistryObject<Attribute> DODGE = register("dodge", 0, 0, 100);
+    public static final RegistryObject<Attribute> MAGIC_DEFENCE = register("magic_defence", 0, 0, Double.MAX_VALUE);
     public static final RegistryObject<Attribute> DOUBLE_JUMP = register("double_jump", 0, 0, 20);
     public static final RegistryObject<Attribute> INTELLIGENCE = register("intel", 0, 0, Double.MAX_VALUE);
     public static final RegistryObject<Attribute> STRENGTH = register("strenght", 0, 0, Double.MAX_VALUE);
     public static final RegistryObject<Attribute> MAGIC_FIND = register("magic_find", 0, 0, Double.MAX_VALUE);
+    public static final RegistryObject<Attribute> FISHING_SPEED = register("fishing_speed", 0, 0, Double.MAX_VALUE);
     public static final RegistryObject<Attribute> CRIT_DAMAGE = register("crit_damage", 50, 0, Double.MAX_VALUE);
     public static final RegistryObject<Attribute> FEROCITY = register("ferocity", 0, 0, 500);
     public static final RegistryObject<Attribute> MAX_MANA = register("max_mana", 0, 0, Double.MAX_VALUE);

@@ -6,7 +6,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-public class TallinBow extends ShortBowItem{
+public class TallinBow extends ShortBowItem {
     public TallinBow() {
         super(new Properties().rarity(FormattingCodes.LEGENDARY).durability(1500));
     }

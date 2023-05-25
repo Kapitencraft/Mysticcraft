@@ -3,12 +3,12 @@ package net.kapitencraft.mysticcraft.misc;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.entity.renderer.*;
+import net.kapitencraft.mysticcraft.guild.GuildHandler;
 import net.kapitencraft.mysticcraft.init.ModEntityTypes;
 import net.kapitencraft.mysticcraft.init.ModItems;
 import net.kapitencraft.mysticcraft.init.ModParticleTypes;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneItem;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneType;
-import net.kapitencraft.mysticcraft.misc.guilds.GuildSavedData;
 import net.kapitencraft.mysticcraft.particle.FireNormalParticle;
 import net.kapitencraft.mysticcraft.particle.flame.*;
 import net.minecraft.core.particles.SimpleParticleType;
@@ -66,6 +66,7 @@ public class MiscEvents {
         public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
             event.registerEntityRenderer(ModEntityTypes.FROZEN_BLAZE.get(), FrozenBlazeRenderer::new);
             event.registerEntityRenderer(ModEntityTypes.SCHNAUZEN_PLUESCH.get(), SchnauzenPlueschRenderer::new);
+            event.registerEntityRenderer(ModEntityTypes.SKELETON_MASTER.get(), SkeletonMasterRenderer::new);
 
             event.registerEntityRenderer(ModEntityTypes.FIRE_BOLD.get(), FireBoltRenderer::new);
             event.registerEntityRenderer(ModEntityTypes.CRIMSON_DEATH_RAY.get(), CrimsonDeathRayRenderer::new);
@@ -77,10 +78,9 @@ public class MiscEvents {
     @Mod.EventBusSubscriber(modid = MysticcraftMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class ModEvents {
         @SubscribeEvent
-        public static void saveData(LevelEvent.Load event) {
+        public static void loadingLevel(LevelEvent.Load event) {
             if (event.getLevel() instanceof ServerLevel serverLevel && serverLevel.dimension() == Level.OVERWORLD) {
-                MysticcraftMod.sendInfo("1xs");
-                serverLevel.getDataStorage().computeIfAbsent((tag -> GuildSavedData.load(tag, serverLevel.getServer())), GuildSavedData::createDefault, "guilds");
+                GuildHandler.setInstance(serverLevel.getDataStorage().computeIfAbsent((tag -> GuildHandler.load(tag, serverLevel.getServer())), GuildHandler::createDefault, "guilds"));
             }
         }
     }

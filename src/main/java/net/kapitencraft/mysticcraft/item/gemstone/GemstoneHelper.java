@@ -33,11 +33,15 @@ public class GemstoneHelper {
     }
 
     public GemstoneSlot[] getGemstoneSlots(ItemStack stack) {
-        if (this.cachedSlots != null) {
+        if (this.cachedSlots != null && !isEmpty(this.cachedSlots)) {
             return this.cachedSlots;
         } else {
             return this.cachedSlots = this.loadData(stack);
         }
+    }
+
+    private boolean isEmpty(GemstoneSlot[] slots) {
+        return Arrays.equals(slots, defaultSlots);
     }
 
     public int getGemstoneSlotAmount() {
@@ -45,7 +49,8 @@ public class GemstoneHelper {
     }
 
     public boolean putGemstone(GemstoneType gemstoneType, GemstoneType.Rarity rarity, int slotIndex, ItemStack stack) {
-        boolean flag = this.getGemstoneSlots(stack)[slotIndex].putGemstone(gemstoneType, rarity);
+        GemstoneSlot slot = this.getGemstoneSlots(stack)[slotIndex];
+        boolean flag = slot.putGemstone(gemstoneType, rarity);
         this.saveData(stack);
         return flag;
     }

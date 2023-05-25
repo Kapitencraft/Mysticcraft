@@ -349,9 +349,9 @@ public class ModFishingHook extends Projectile {
             }
         } else {
             this.timeUntilLured = Mth.nextInt(this.random, 100, MAX_UNTIL_LURED);
-            this.timeUntilLured -= this.lureSpeed * 20 * 5;
+            this.timeUntilLured -= this.lureSpeed * 100;
+            if (timeUntilLured < 1) timeUntilLured = 1;
         }
-
     }
 
     private boolean calculateOpenWater(BlockPos pos) {
@@ -419,7 +419,7 @@ public class ModFishingHook extends Projectile {
                 LootTable loottable = serverLevel.getServer().getLootTables().get(ModLootTables.LAVA_FISHING);
                 List<ItemStack> list = loottable.getRandomItems(builder.create(LootContextParamSets.FISHING));
                 for(ItemStack itemstack : list) {
-                    ItemEntity itementity = new ItemEntity(this.level, this.getX(), this.getY(), this.getZ(), itemstack);
+                    ItemEntity itementity = new NoFireItemEntity(this.level, this.getX(), this.getY(), this.getZ(), itemstack);
                     double d0 = player.getX() - this.getX();
                     double d1 = player.getY() - this.getY();
                     double d2 = player.getZ() - this.getZ();

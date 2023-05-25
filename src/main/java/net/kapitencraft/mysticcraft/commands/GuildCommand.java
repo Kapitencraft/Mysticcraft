@@ -3,8 +3,8 @@ package net.kapitencraft.mysticcraft.commands;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.tree.LiteralCommandNode;
-import net.kapitencraft.mysticcraft.misc.guilds.Guild;
-import net.kapitencraft.mysticcraft.misc.guilds.GuildHandler;
+import net.kapitencraft.mysticcraft.guild.Guild;
+import net.kapitencraft.mysticcraft.guild.GuildHandler;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
@@ -23,7 +23,7 @@ public class GuildCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         LiteralCommandNode<CommandSourceStack> main = dispatcher.register(Commands.literal("guild")
                 .then(Commands.literal("create")
-                        .then(Commands.argument("name", StringArgumentType.string())
+                        .then(Commands.argument("name", StringArgumentType.greedyString())
                                 .executes(context -> addGuild(StringArgumentType.getString(context, "name"), context.getSource()))
                         )
                 ).then(Commands.literal("join")
@@ -45,6 +45,8 @@ public class GuildCommand {
                         .then(Commands.argument("name", EntityArgument.player())
                                 .executes(context -> promotePlayer(EntityArgument.getPlayer(context, "name"), context.getSource()))
                         )
+                ).then(Commands.literal("disband")
+                        .executes(context -> disbandGuild(context.getSource()))
                 )
         );
 
@@ -59,8 +61,27 @@ public class GuildCommand {
             return 1;
         } else if (Objects.equals(guildAdd, "noBanner")) {
             stack.sendFailure(Component.translatable("command.guild.add.noBanner"));
+            return 0;
         }
         stack.sendFailure(Component.translatable("command.guild.add.failed"));
+        return 0;
+    }
+
+    private static int disbandGuild(CommandSourceStack stack) {
+        Player player = stack.getPlayer();
+        if (player != null) {
+            Guild guild = GuildHandler.getInstance().getGuildForPlayer(player);
+            if (guild.getOwner() == player) {
+                String msg = GuildHandler.getInstance().removeGuild(guild.getName());
+                if (Objects.equals(msg, "success")) {
+                    stack.sendSuccess(Component.translatable("guild.disband.success"), true);
+                    return guild.getMemberAmount();
+                } else if (Objects.equals(msg, "noSuchGuild")) {
+                    throw new IllegalArgumentException("Found Guild with Wrong Name!");
+                }
+            }
+        }
+        stack.sendFailure(Component.translatable(""));
         return 0;
     }
 
@@ -148,5 +169,17 @@ public class GuildCommand {
             return GuildHandler.getInstance().getGuild(guildName);
         }
         return null;
+    }
+
+    private static int declareWar(Guild guild, CommandSourceStack stack) {
+        Player player = stack.getPlayer();
+        if (player != null) {
+            Guild ownerGuild = GuildHandler.getInstance().getGuildForPlayer(player);
+            if (ownerGuild != null) {
+                ownerGuild.declareWar(guild);
+                return ownerGuild.getMemberAmount() + guild.getMemberAmount();
+            }
+        }
+        return 0;
     }
 }

@@ -1,6 +1,5 @@
 package net.kapitencraft.mysticcraft.item;
 
-import net.kapitencraft.mysticcraft.misc.Color;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 
 public enum DropRarity {

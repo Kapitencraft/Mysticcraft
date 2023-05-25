@@ -9,6 +9,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 public class TagUtils {
+    private static String LENGTH_ID = "Length";
 
 
     public static boolean checkForIntAbove0(CompoundTag tag, String name) {
@@ -32,6 +33,7 @@ public class TagUtils {
         List<Integer> IntArray = colToList(hashMap.values());
         mapTag.put("Uuids", putUuidList(colToList(hashMap.keySet())));
         mapTag.putIntArray("Ints", IntArray);
+        mapTag.putInt(LENGTH_ID, hashMap.size());
         return mapTag;
     }
 
@@ -41,9 +43,11 @@ public class TagUtils {
             return hashMap;
         }
         int[] intArray = tag.getIntArray("Ints");
-        UUID[] UuidArray = getUuidArray((CompoundTag) Objects.requireNonNull(tag.get("Uuids")));
-        for (int i = 0; i < (intArray.length == Objects.requireNonNull(UuidArray).length ? intArray.length : 0); i++) {
-            hashMap.put(UuidArray[i], intArray[i]);
+        UUID[] UuidArray = getUuidArray(tag.getCompound("Uuids"));
+        if (UuidArray != null) {
+            for (int i = 0; i < (intArray.length == UuidArray.length ? intArray.length : 0); i++) {
+                hashMap.put(UuidArray[i], intArray[i]);
+            }
         }
         return hashMap;
     }
@@ -58,26 +62,25 @@ public class TagUtils {
         return target;
     }
 
-    public static int[] getIntArray(CompoundTag tag) {
-        if (!tag.contains("Length")) {
+    public static int @NotNull [] getIntArray(CompoundTag tag) {
+        if (!tag.contains(LENGTH_ID)) {
             MysticcraftMod.sendWarn("tried to load UUID Array from Tag but Tag isn`t Array Tag");
         } else {
-            int length = tag.getInt("Length");
+            int length = tag.getInt(LENGTH_ID);
             int[] array = new int[length];
             for (int i = 0; i < length; i++) {
                 array[i] = tag.getInt(String.valueOf(i));
             }
             return array;
         }
-        return null;
-
+        return new int[0];
     }
 
     public static UUID[] getUuidArray(CompoundTag arrayTag) {
-        if (!arrayTag.contains("Length")) {
+        if (!arrayTag.contains(LENGTH_ID)) {
             MysticcraftMod.sendWarn("tried to load UUID Array from Tag but Tag isn`t Array Tag");
         } else {
-            int length = arrayTag.getInt("Length");
+            int length = arrayTag.getInt(LENGTH_ID);
             UUID[] array = new UUID[length];
             for (int i = 0; i < length; i++) {
                 array[i] = arrayTag.getUUID(String.valueOf(i));
@@ -92,7 +95,7 @@ public class TagUtils {
         for (int i = 0; i < list.size(); i++) {
             arrayTag.putInt(String.valueOf(i), list.get(i));
         }
-        arrayTag.putInt("Length", list.size());
+        arrayTag.putInt(LENGTH_ID, list.size());
         return arrayTag;
     }
 
@@ -119,7 +122,7 @@ public class TagUtils {
         for (int i = 0; i < list.size(); i++) {
             arrayTag.putUUID(String.valueOf(i), list.get(i));
         }
-        arrayTag.putInt("Length", list.size());
+        arrayTag.putInt(LENGTH_ID, list.size());
         return arrayTag;
     }
 }

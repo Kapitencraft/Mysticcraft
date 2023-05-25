@@ -1,14 +1,2 @@
-// 1.19.3	2023-04-27T16:08:29.4286051	Item Models: mysticcraft
-ee63c1ba6e885a2a7ccbdc666678f34d13cefa3d assets/mysticcraft/models/item/ether_transmission_scroll.json
-ee63c1ba6e885a2a7ccbdc666678f34d13cefa3d assets/mysticcraft/models/item/explosive_sight_scroll.json
-ee63c1ba6e885a2a7ccbdc666678f34d13cefa3d assets/mysticcraft/models/item/fire_bolt_1_scroll.json
-ee63c1ba6e885a2a7ccbdc666678f34d13cefa3d assets/mysticcraft/models/item/fire_bolt_2_scroll.json
-ee63c1ba6e885a2a7ccbdc666678f34d13cefa3d assets/mysticcraft/models/item/fire_bolt_3_scroll.json
-ee63c1ba6e885a2a7ccbdc666678f34d13cefa3d assets/mysticcraft/models/item/fire_bolt_4_scroll.json
-ee63c1ba6e885a2a7ccbdc666678f34d13cefa3d assets/mysticcraft/models/item/fire_lance_scroll.json
-ee63c1ba6e885a2a7ccbdc666678f34d13cefa3d assets/mysticcraft/models/item/huge_heal_scroll.json
-ee63c1ba6e885a2a7ccbdc666678f34d13cefa3d assets/mysticcraft/models/item/implosion_scroll.json
-ee63c1ba6e885a2a7ccbdc666678f34d13cefa3d assets/mysticcraft/models/item/instant_transmission_scroll.json
-af962534ded2d90e326a46b1cb43be5d7ffb6f49 assets/mysticcraft/models/item/raw_crimsonium.json
-db554847974c27049dc61689abf7f89b9bbea6a7 assets/mysticcraft/models/item/raw_crimsonium_dust.json
-ee63c1ba6e885a2a7ccbdc666678f34d13cefa3d assets/mysticcraft/models/item/wither_impact_scroll.json
+// 1.19.3	2023-05-22T10:29:02.5675701	Item Models: mysticcraft
+b6d87446f62ae1f862e06accc251dc9179b88f63 assets/mysticcraft/models/item/unbreaking_core.json

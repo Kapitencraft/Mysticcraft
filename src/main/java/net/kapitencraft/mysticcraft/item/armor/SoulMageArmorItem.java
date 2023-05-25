@@ -71,7 +71,6 @@ public class SoulMageArmorItem extends ModArmorItem implements IArmorBonusItem {
     @Override
     public PieceBonus getPieceBonusForSlot(EquipmentSlot slot) {
         return switch (slot) {
-            case HEAD -> HELMET_BONUS;
             case CHEST -> CHEST_BONUS;
             default -> null;
         };

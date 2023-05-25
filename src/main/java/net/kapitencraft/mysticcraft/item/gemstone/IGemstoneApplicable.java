@@ -10,7 +10,15 @@ import java.util.HashMap;
 import java.util.List;
 
 public interface IGemstoneApplicable {
-    GemstoneHelper getHelper();
+    HashMap<IGemstoneApplicable, GemstoneHelper> cache = new HashMap<>();
+    default GemstoneHelper getHelper() {
+        if (cache.containsKey(this)) {
+            return cache.get(this);
+        }
+        GemstoneHelper helper = new GemstoneHelper(this.getDefaultSlots());
+        cache.put(this, helper);
+        return helper;
+    }
     default int getGemstoneSlotAmount() {
         return getHelper().getGemstoneSlotAmount();
     }

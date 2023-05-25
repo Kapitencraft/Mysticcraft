@@ -12,7 +12,7 @@ import net.minecraftforge.common.ForgeMod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class LongSwordItem extends ModdedSwordItem {
+public abstract class LongSwordItem extends ModSwordItem {
 
     public LongSwordItem(Tier p_43269_, int attackDamage, Properties p_43272_) {
         super(p_43269_, attackDamage, -3.3f, p_43272_);

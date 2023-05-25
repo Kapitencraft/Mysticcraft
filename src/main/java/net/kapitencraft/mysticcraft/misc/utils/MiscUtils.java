@@ -223,6 +223,10 @@ public class MiscUtils {
         return false;
     }
 
+    public static <T> T[] listToArray(List<T> list) {
+        return (T[]) list.toArray();
+    }
+
     public static int createCustomIndex(EquipmentSlot slot) {
         return switch (slot) {
             case HEAD -> 0;

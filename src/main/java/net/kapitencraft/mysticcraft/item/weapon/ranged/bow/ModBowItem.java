@@ -8,6 +8,7 @@ import net.kapitencraft.mysticcraft.init.ModEnchantments;
 import net.kapitencraft.mysticcraft.item.IModItem;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
+import net.kapitencraft.mysticcraft.misc.utils.AttributeUtils;
 import net.kapitencraft.mysticcraft.misc.utils.MiscUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
@@ -27,13 +28,13 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public abstract class ModdedBows extends BowItem implements IModItem {
+public abstract class ModBowItem extends BowItem implements IModItem {
 
-    public final double DIVIDER = 20;
+    public abstract double getDivider();
 
     public abstract int getKB();
 
-    public ModdedBows(Item.Properties p_40660_) {
+    public ModBowItem(Item.Properties p_40660_) {
         super(p_40660_);
     }
 
@@ -92,7 +93,7 @@ public abstract class ModdedBows extends BowItem implements IModItem {
     }
 
     private float getPowerForTimeModded(int curMul, double draw_speed) {
-        float f = (float) curMul / (float)(this.DIVIDER * (1 / (draw_speed / 100)));
+        float f = (float) curMul / (float)(this.getDivider() * (1 / (draw_speed / 100)));
         f = (f * f + f * 2.0F) / 3.0F;
         return f > 1 ? 1 : f;
     }
@@ -157,5 +158,15 @@ public abstract class ModdedBows extends BowItem implements IModItem {
         if (stack.getItem() instanceof IGemstoneApplicable gemstoneApplicable) {
             gemstoneApplicable.appendDisplay(stack, toolTip);
         }
+    }
+
+    @Override
+    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
+        ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = new ImmutableMultimap.Builder<>();
+        builder.putAll(super.getAttributeModifiers(slot, stack));
+        if (this instanceof IGemstoneApplicable applicable && slot == EquipmentSlot.MAINHAND) {
+            return AttributeUtils.increaseAllByAmount(builder.build(), applicable.getAttributeModifiers(stack));
+        }
+        return builder.build();
     }
 }

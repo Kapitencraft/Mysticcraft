@@ -22,8 +22,13 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public abstract class ShortBowItem extends ModdedBows {
+public abstract class ShortBowItem extends ModBowItem {
     public static final String COOLDOWN_ID = "Cooldown";
+
+    @Override
+    public double getDivider() {
+        return 0;
+    }
 
     public ShortBowItem(Properties p_40660_) {
         super(p_40660_);

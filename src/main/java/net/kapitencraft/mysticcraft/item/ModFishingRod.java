@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.item;
 
 import net.kapitencraft.mysticcraft.entity.ModFishingHook;
+import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.misc.utils.FishingHookUtils;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -40,7 +41,7 @@ public abstract class ModFishingRod extends FishingRodItem {
             } else {
                 int k = EnchantmentHelper.getFishingSpeedBonus(itemstack);
                 int j = EnchantmentHelper.getFishingLuckBonus(itemstack);
-                level.addFreshEntity(creator().create(player, level, j, k));
+                level.addFreshEntity(creator().create(player, level, j, (int) (k + player.getAttributeValue(ModAttributes.FISHING_SPEED.get()))));
             }
         }
         if (retrieve) {

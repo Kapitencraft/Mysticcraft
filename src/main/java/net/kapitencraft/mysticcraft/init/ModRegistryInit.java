@@ -12,7 +12,7 @@ public class ModRegistryInit {
         MysticcraftMod.sendInfo("Registering Enchantments...");
         ModEnchantments.REGISTRY.register(bus);
         MysticcraftMod.sendInfo("Registering Items...");
-        ModItems.REGISTRY.register(bus);
+        ModItems.register(bus);
         MysticcraftMod.sendInfo("Registering Effects...");
         ModMobEffects.REGISTRY.register(bus);
         MysticcraftMod.sendInfo("Registering Block Entities...");

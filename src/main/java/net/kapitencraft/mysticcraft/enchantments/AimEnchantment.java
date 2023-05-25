@@ -36,7 +36,6 @@ public class AimEnchantment extends ModBowEnchantment implements IWeaponEnchantm
             List<LivingEntity> livingEntities = arrow.level.getEntitiesOfClass(LivingEntity.class, arrow.getBoundingBox().inflate(tag.getInt("Level")));
             for (LivingEntity living : livingEntities) {
                 if (arrow.getOwner() != living && !living.isDeadOrDying()) {
-                    MysticcraftMod.sendInfo(living.toString());
                     arrow.setDeltaMovement(MathUtils.setLength(MathUtils.getPosition(living).subtract(MathUtils.getPosition(arrow)), arrow.getDeltaMovement().length()));
                     break;
                 }

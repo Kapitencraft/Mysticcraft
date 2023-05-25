@@ -1,6 +1,7 @@
 {
-  "parent": "item/generated",
+  "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "mysticcraft:item/fine_sapphire_gemstone"
+    "layer0": "mysticcraft:item/fine_gemstone",
+    "layer1": "mysticcraft:item/empty_dyed_overlay"
   }
 }

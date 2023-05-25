@@ -1,5 +1,6 @@
 package net.kapitencraft.mysticcraft.enchantments.abstracts;
 
+import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.misc.utils.TagUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.damagesource.DamageSource;
@@ -25,23 +26,24 @@ public abstract class CountEnchantment extends ExtendedCalculationEnchantment im
     @Override
     public double execute(int level, ItemStack enchanted, LivingEntity attacker, LivingEntity attacked, double damageAmount, DamageSource source) {
         CompoundTag attackerTag = attacker.getPersistentData();
-        HashMap<UUID, Integer> map = attackerTag.get(this.mapName) != null ? TagUtils.getHashMapTag((CompoundTag) attackerTag.get("lightningLordMap")) : new HashMap<>();
+        HashMap<UUID, Integer> map = !attackerTag.getCompound(this.mapName).isEmpty() ? TagUtils.getHashMapTag(attackerTag.getCompound(this.mapName)) : new HashMap<>();
         if (!map.containsKey(attacked.getUUID())) {
             map.put(attacked.getUUID(), 0);
         }
-        int integer = map.get(attacked.getUUID());
-        if (integer >= this.getCountAmount(level)) {
-            integer = 0;
+        int i = map.get(attacked.getUUID());
+        MysticcraftMod.sendInfo(String.valueOf(i));
+        if (i >= this.getCountAmount(level)) {
+            i = 0;
             if (this.type == CountType.NORMAL) {
-                damageAmount = this.mainExecute(level, enchanted, attacker, attacked, damageAmount, integer, source);
+                damageAmount = this.mainExecute(level, enchanted, attacker, attacked, damageAmount, i, source);
             }
         } else {
-            integer++;
+            i++;
             if (this.type == CountType.EXCEPT) {
-                damageAmount = this.mainExecute(level, enchanted, attacker, attacked, damageAmount, integer, source);
+                damageAmount = this.mainExecute(level, enchanted, attacker, attacked, damageAmount, i, source);
             }
         }
-        map.put(attacked.getUUID(), integer);
+        map.put(attacked.getUUID(), i);
         attackerTag.put(this.mapName, TagUtils.putHashMapTag(map));
         return damageAmount;
     }

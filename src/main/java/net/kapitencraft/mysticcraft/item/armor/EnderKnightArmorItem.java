@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
-import net.kapitencraft.mysticcraft.item.gemstone.GemstoneHelper;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneSlot;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
@@ -29,7 +28,6 @@ public class EnderKnightArmorItem extends ModArmorItem implements IGemstoneAppli
     public EnderKnightArmorItem(EquipmentSlot p_40387_) {
         super(ModArmorMaterials.ENDER_KNIGHT, p_40387_, new Properties().rarity(FormattingCodes.LEGENDARY).fireResistant());
     }
-
 
     public static EnderKnightArmorItem create(EquipmentSlot slot) {
         return new EnderKnightArmorItem(slot);
@@ -81,12 +79,7 @@ public class EnderKnightArmorItem extends ModArmorItem implements IGemstoneAppli
     }
 
     @Override
-    public GemstoneHelper getHelper() {
-        return new GemstoneHelper(getDefaultSlots());
-    }
-
-    @Override
     public GemstoneSlot[] getDefaultSlots() {
-        return new GemstoneSlot[] {GemstoneSlot.DEFENCE, GemstoneSlot.OFFENSIVE, GemstoneSlot.COMBAT, GemstoneSlot.COMBAT, GemstoneSlot.STRENGHT};
+        return new GemstoneSlot.Builder(GemstoneSlot.Type.DEFENCE, GemstoneSlot.Type.OFFENCE, GemstoneSlot.Type.COMBAT, GemstoneSlot.Type.COMBAT, GemstoneSlot.Type.STRENGTH).build();
     }
 }

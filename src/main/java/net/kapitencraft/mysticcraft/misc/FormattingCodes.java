@@ -7,7 +7,7 @@ import net.minecraft.world.item.enchantment.EnchantmentCategory;
 
 public class FormattingCodes {
 
-    public static final Color BLACK = new Color("black","\u00A70");
+    public static final String BLACK = "\u00A70";
     public static final String DARK_BLUE = "\u00A71";
     public static final String DARK_GREEN = "\u00A72";
     public static final String DARK_AQUA = "\u00A73";

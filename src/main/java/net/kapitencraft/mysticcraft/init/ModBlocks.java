@@ -26,7 +26,7 @@ public class ModBlocks {
     }
 
     private static <T extends Block> RegistryObject<Item> registerItem(String name, RegistryObject<T> block, Item.Properties properties) {
-        RegistryObject<Item> registryObject = ModItems.REGISTRY.register(name, () -> new BlockItem(block.get(), properties));
+        RegistryObject<Item> registryObject = ModItems.register(name, () -> new BlockItem(block.get(), properties));
         ITEM_BLOCKS.add(registryObject);
         return registryObject;
     }

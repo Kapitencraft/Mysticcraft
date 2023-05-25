@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
-import net.kapitencraft.mysticcraft.item.gemstone.GemstoneHelper;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneSlot;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.item.spells.SpellItem;
@@ -28,13 +27,8 @@ public abstract class NecronSword extends SpellItem implements IGemstoneApplicab
 
     @Override
     public GemstoneSlot[] getDefaultSlots() {
-        GemstoneSlot extraSlot = (this instanceof Valkyrie ? GemstoneSlot.STRENGHT : this instanceof Hyperion ? GemstoneSlot.INTELLIGENCE : this instanceof Scylla ? GemstoneSlot.COMBAT : this instanceof Astraea ? GemstoneSlot.DEFENCE : null);
-        return extraSlot == null ? null : new GemstoneSlot[] {GemstoneSlot.COMBAT, extraSlot};
-    }
-
-    @Override
-    public GemstoneHelper getHelper() {
-        return new GemstoneHelper(this.getDefaultSlots());
+        GemstoneSlot.Type type = (this instanceof Valkyrie ? GemstoneSlot.Type.STRENGTH : this instanceof Hyperion ? GemstoneSlot.Type.INTELLIGENCE : this instanceof Scylla ? GemstoneSlot.Type.COMBAT : this instanceof Astraea ? GemstoneSlot.Type.DEFENCE : null);
+        return type == null ? null : new GemstoneSlot.Builder(GemstoneSlot.Type.COMBAT, type).build();
     }
 
     public NecronSword(int damage, int intelligence, double ferocity, double strenght) {

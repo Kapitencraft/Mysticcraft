@@ -1,6 +1,5 @@
 package net.kapitencraft.mysticcraft.misc.utils;
 
-import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.entity.ModFishingHook;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
@@ -19,7 +18,6 @@ public class FishingHookUtils {
     public static void setActiveHook(Player player, @Nullable ModFishingHook hook) {
         if (hook == null || hook.level instanceof ServerLevel)  {
             fishingHooks.put(player, hook);
-            MysticcraftMod.sendInfo("putting");
         }
     }
 

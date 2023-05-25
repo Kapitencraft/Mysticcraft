@@ -3,7 +3,9 @@ package net.kapitencraft.mysticcraft.item.armor;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.init.ModItems;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
+import net.kapitencraft.mysticcraft.item.item_bonus.ExtraBonus;
 import net.kapitencraft.mysticcraft.item.item_bonus.FullSetBonus;
 import net.kapitencraft.mysticcraft.item.item_bonus.IArmorBonusItem;
 import net.kapitencraft.mysticcraft.item.item_bonus.PieceBonus;
@@ -19,7 +21,6 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -45,12 +46,16 @@ public abstract class ModArmorItem extends ArmorItem {
         ModArmorItem create(EquipmentSlot slot);
     }
 
-    public static HashMap<EquipmentSlot, RegistryObject<Item>> createRegistry(DeferredRegister<Item> register, String registryName, Creator creator) {
+    public static HashMap<EquipmentSlot, RegistryObject<Item>> createRegistry(String registryName, Creator creator) {
         HashMap<EquipmentSlot, RegistryObject<Item>> registry = new HashMap<>();
         for (EquipmentSlot slot : MiscUtils.ARMOR_EQUIPMENT) {
-            registry.put(slot, register.register(registryName + "_" + TextUtils.getRegistryNameForSlot(slot), () -> creator.create(slot)));
+            registry.put(slot, ModItems.register(registryName + "_" + TextUtils.getRegistryNameForSlot(slot), () -> creator.create(slot)));
         }
         return registry;
+    }
+
+    public static boolean hadFullSet(ModArmorMaterials materials, LivingEntity living) {
+        return !ModArmorItem.isFullSetActive(living, materials) && living.getPersistentData().getString("lastFullSet").equals(materials.getName());
     }
 
     @Override
@@ -66,7 +71,7 @@ public abstract class ModArmorItem extends ArmorItem {
     }
 
     @Override
-    public void inventoryTick(@NotNull ItemStack stack, Level level, @NotNull Entity entity, int slotID, boolean isSelected) {
+    public void inventoryTick(@NotNull ItemStack stack, @NotNull Level level, @NotNull Entity entity, int slotID, boolean isSelected) {
         if (entity instanceof LivingEntity living) {
             CompoundTag tag = living.getPersistentData();
             if (this.isFullSetActive(living)) {
@@ -84,6 +89,9 @@ public abstract class ModArmorItem extends ArmorItem {
                         this.fullSetTick(stack, level, living);
                     }
                 }
+                if (this instanceof IArmorBonusItem bonusItem) {
+                    bonusItem.getFullSetBonus().onTick(stack, level, entity, slotID, isSelected, this.fullSetTick);
+                }
             } else {
                 if (living.getPersistentData().getBoolean(FULL_SET_ID)) {
                     MysticcraftMod.sendInfo("post Full Set");
@@ -92,6 +100,13 @@ public abstract class ModArmorItem extends ArmorItem {
                 }
                 fullSetTick = 0;
             }
+            if (this instanceof IArmorBonusItem bonusItem) {
+                PieceBonus pieceBonus = bonusItem.getPieceBonusForSlot(slot);
+                if (pieceBonus != null) pieceBonus.onTick(stack, level, entity, slotID, isSelected, this.fullSetTick);
+                ExtraBonus extraBonus = bonusItem.getExtraBonus(slot);
+                if (extraBonus != null) extraBonus.onTick(stack, level, entity, slotID, isSelected, this.fullSetTick);
+            }
+
         }
         if (stack.getItem() == this) {
             updateDimension(entity.level);
@@ -139,27 +154,38 @@ public abstract class ModArmorItem extends ArmorItem {
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = new ImmutableMultimap.Builder<>();
+        ImmutableMultimap<Attribute, AttributeModifier> map = null;
         builder.putAll(this.getDefaultAttributeModifiers(slot));
         if (slot == this.getSlot()) {
             if (this instanceof IArmorBonusItem bonusItem && this.user instanceof LivingEntity living) {
-                PieceBonus bonus = bonusItem.getPieceBonusForSlot(this.getSlot());
-                if (bonus != null) {
-                    Multimap<Attribute, AttributeModifier> bonusMods = bonus.getModifiers(living);
-                    if (bonusMods != null ) {
+                PieceBonus pieceBonus = bonusItem.getPieceBonusForSlot(this.getSlot());
+                if (pieceBonus != null) {
+                    Multimap<Attribute, AttributeModifier> bonusMods = pieceBonus.getModifiers(living);
+                    if (bonusMods != null) {
                         builder.putAll(bonusMods);
                     }
                 }
-                FullSetBonus bonus1 = bonusItem.getFullSetBonus();
-                if (bonus1 != null) {
-                    Multimap<Attribute, AttributeModifier> bonusMods = bonus1.getModifiers(living);
+                FullSetBonus fullSetBonus = bonusItem.getFullSetBonus();
+                if (fullSetBonus != null) {
+                    Multimap<Attribute, AttributeModifier> bonusMods = fullSetBonus.getModifiers(living);
                     if (this.getSlot() == EquipmentSlot.CHEST && this.isFullSetActive(living) && bonusMods != null) {
                         builder.putAll(bonusMods);
                     }
                 }
+                ExtraBonus extraBonus = bonusItem.getExtraBonus(this.getSlot());
+                if (extraBonus != null) {
+                    Multimap<Attribute, AttributeModifier> extraMods = extraBonus.getModifiers(living);
+                    if (extraMods != null) {
+                        builder.putAll(extraMods);
+                    }
+                }
+            }
+            if (this instanceof IGemstoneApplicable applicable) {
+                map = AttributeUtils.increaseAllByAmount(builder.build(), applicable.getAttributeModifiers(stack));
             }
         }
         if (stack.getTag() != null && stack.getTag().getBoolean("isOP")) {
-            return AttributeUtils.increaseByPercent(builder.build(), 300, new AttributeModifier.Operation[]{AttributeModifier.Operation.ADDITION, AttributeModifier.Operation.MULTIPLY_TOTAL, AttributeModifier.Operation.MULTIPLY_BASE}, null);
+            return AttributeUtils.increaseByPercent(map == null ? map = builder.build() : map, 300, new AttributeModifier.Operation[]{AttributeModifier.Operation.ADDITION, AttributeModifier.Operation.MULTIPLY_TOTAL, AttributeModifier.Operation.MULTIPLY_BASE}, null);
         }
         return builder.build();
     }

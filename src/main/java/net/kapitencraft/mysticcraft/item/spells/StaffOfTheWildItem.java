@@ -1,7 +1,6 @@
 package net.kapitencraft.mysticcraft.item.spells;
 
 import net.kapitencraft.mysticcraft.item.client.StaffOfTheWildRenderer;
-import net.kapitencraft.mysticcraft.item.gemstone.GemstoneHelper;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneSlot;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
@@ -80,15 +79,9 @@ public class StaffOfTheWildItem extends NormalSpellItem implements GeoItem, IGem
         });
     }
 
-
-    @Override
-    public GemstoneHelper getHelper() {
-        return new GemstoneHelper(getDefaultSlots());
-    }
-
     @Override
     public GemstoneSlot[] getDefaultSlots() {
-        return new GemstoneSlot[] {GemstoneSlot.MAGIC, GemstoneSlot.INTELLIGENCE, GemstoneSlot.INTELLIGENCE, GemstoneSlot.INTELLIGENCE, GemstoneSlot.ABILITY_DAMAGE};
+        return new GemstoneSlot.Builder(GemstoneSlot.Type.MAGIC, GemstoneSlot.Type.INTELLIGENCE, GemstoneSlot.Type.INTELLIGENCE, GemstoneSlot.Type.INTELLIGENCE, GemstoneSlot.Type.ABILITY_DAMAGE).build();
     }
 
     private PlayState predicate(AnimationState<?> state) {

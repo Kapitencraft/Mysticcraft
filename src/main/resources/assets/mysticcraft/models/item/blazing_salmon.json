@@ -1,0 +1,7 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "mysticcraft:item/blazing_salmon_1",
+    "layer1": "mysticcraft:item/salmon_head"
+  }
+}

@@ -2,11 +2,10 @@ package net.kapitencraft.mysticcraft.item.gemstone;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
+import net.kapitencraft.mysticcraft.init.ModItems;
 import net.minecraft.ChatFormatting;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.item.Item;
-import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.HashMap;
@@ -16,8 +15,10 @@ import java.util.function.Supplier;
 public enum GemstoneType {
     ALMANDINE(getColorFromChatFormatting(ChatFormatting.LIGHT_PURPLE), ModAttributes.ABILITY_DAMAGE, 0.3, "almandine"),
     JASPER(getColorFromChatFormatting(ChatFormatting.DARK_RED), ModAttributes.STRENGTH, 2, "jasper"),
-    RUBY(getColorFromChatFormatting(ChatFormatting.RED), () -> Attributes.MAX_HEALTH, 1.24, "ruby"),
-    SAPPHIRE(getColorFromChatFormatting(ChatFormatting.BLUE), ModAttributes.INTELLIGENCE, 2.7, "sapphire");
+    RUBY(getColorFromChatFormatting(ChatFormatting.RED), () -> Attributes.MAX_HEALTH, 1.2, "ruby"),
+    SAPPHIRE(getColorFromChatFormatting(ChatFormatting.BLUE), ModAttributes.INTELLIGENCE, 2.7, "sapphire"),
+    AQUAMARINE(getColorFromChatFormatting(ChatFormatting.AQUA), ModAttributes.FISHING_SPEED, 3.1, "aquamarine"),
+    MOON_STONE(getColorFromChatFormatting(ChatFormatting.WHITE), ModAttributes.DRAW_SPEED, 0.5, "moon_stone");
 
     private final int COLOR;
     public final Supplier<Attribute>  modifiedAttribute;
@@ -46,19 +47,19 @@ public enum GemstoneType {
         return null;
     }
 
-    public static HashMap<GemstoneType, HashMap<Rarity, RegistryObject<GemstoneItem>>> createRegistry(DeferredRegister<Item> registry) {
+    public static HashMap<GemstoneType, HashMap<Rarity, RegistryObject<GemstoneItem>>> createRegistry() {
         HashMap<GemstoneType, HashMap<Rarity, RegistryObject<GemstoneItem>>> toReturn = new HashMap<>();
         for (GemstoneType type : values()) {
-            toReturn.put(type, type.registerItems(registry));
+            toReturn.put(type, type.registerItems());
         }
         return toReturn;
     }
 
-    public HashMap<Rarity, RegistryObject<GemstoneItem>> registerItems(DeferredRegister<Item> registry) {
+    public HashMap<Rarity, RegistryObject<GemstoneItem>> registerItems() {
         HashMap<Rarity, RegistryObject<GemstoneItem>> toReturn = new HashMap<>();
         for (Rarity rarity : Rarity.values()) {
             if (rarity != Rarity.EMPTY) {
-                toReturn.put(rarity, registry.register(rarity.id + "_" + this.getId() + "_gemstone", () -> new GemstoneItem(rarity, this.getId())));
+                toReturn.put(rarity, ModItems.register(rarity.id + "_" + this.getId() + "_gemstone", () -> new GemstoneItem(rarity, this.getId())));
             }
         }
         return toReturn;

@@ -1,5 +1,6 @@
 package net.kapitencraft.mysticcraft.enchantments;
 
+import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.CountEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.IUltimateEnchantment;
 import net.kapitencraft.mysticcraft.init.ModMobEffects;
@@ -23,6 +24,7 @@ public class InfernoEnchantment extends CountEnchantment implements IUltimateEnc
 
     @Override
     protected double mainExecute(int level, ItemStack enchanted, LivingEntity attacker, LivingEntity attacked, double damageAmount, int curTick, DamageSource source) {
+        MysticcraftMod.sendWarn("infernoExecute");
         if (!source.getMsgId().equals("inferno")) {
             ParticleHelper.createWithTargetHeight("inferno", attacked, ParticleHelper.Type.ORBIT, ParticleHelper.createOrbitProperties(0, 200, 0, 0, 4, ParticleTypes.DRIPPING_LAVA, 0.75f));
             MiscUtils.increaseEffectDuration(attacked, ModMobEffects.STUN.get(), 80);
@@ -38,6 +40,11 @@ public class InfernoEnchantment extends CountEnchantment implements IUltimateEnc
                 tick(attacked, attacker, tick + 1, damage);
             }
         });
+    }
+
+    @Override
+    public int getMaxLevel() {
+        return 5;
     }
 
     @Override

@@ -7,6 +7,7 @@ import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.item.IModItem;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
+import net.kapitencraft.mysticcraft.misc.utils.AttributeUtils;
 import net.kapitencraft.mysticcraft.misc.utils.MiscUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -19,8 +20,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public abstract class ModdedSwordItem extends SwordItem implements IModItem {
-    public ModdedSwordItem(Tier p_43269_, int attackDamage, float attackSpeed, Properties p_43272_) {
+public abstract class ModSwordItem extends SwordItem implements IModItem {
+    public ModSwordItem(Tier p_43269_, int attackDamage, float attackSpeed, Properties p_43272_) {
         super(p_43269_, attackDamage, attackSpeed, p_43272_);
     }
 
@@ -66,6 +67,16 @@ public abstract class ModdedSwordItem extends SwordItem implements IModItem {
         if (slot == EquipmentSlot.MAINHAND) {
             builder.put(ModAttributes.STRENGTH.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[5], "Default Attribute modification", this.getStrenght(), AttributeModifier.Operation.ADDITION));
             builder.put(ModAttributes.CRIT_DAMAGE.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[5], "Default Attribute modification", this.getCritDamage(), AttributeModifier.Operation.ADDITION));
+        }
+        return builder.build();
+    }
+
+    @Override
+    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
+        ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = new ImmutableMultimap.Builder<>();
+        builder.putAll(super.getAttributeModifiers(slot, stack));
+        if (this instanceof IGemstoneApplicable applicable && slot == EquipmentSlot.MAINHAND) {
+            return AttributeUtils.increaseAllByAmount(builder.build(), applicable.getAttributeModifiers(stack));
         }
         return builder.build();
     }

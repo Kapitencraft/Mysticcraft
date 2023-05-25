@@ -17,6 +17,6 @@ public class IgnitionEffect extends MobEffect {
 
     @Override
     public void applyEffectTick(@NotNull LivingEntity living, int i) {
-        living.setSecondsOnFire(i / 20);
+        living.setSecondsOnFire(i);
     }
 }

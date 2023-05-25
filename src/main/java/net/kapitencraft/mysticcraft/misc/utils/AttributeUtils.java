@@ -8,6 +8,8 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class AttributeUtils {
@@ -54,6 +56,14 @@ public class AttributeUtils {
         }
         multimap = toReturn.build();
         return multimap;
+    }
+
+    public static ImmutableMultimap<Attribute, AttributeModifier> increaseAllByAmount(ImmutableMultimap<Attribute, AttributeModifier> list, Map<Attribute, AttributeModifier> toMerge) {
+        for (Attribute attribute : toMerge.keySet()) {
+            for (AttributeModifier modifier : List.of(toMerge.get(attribute)))
+                list = increaseByAmount(list, modifier.getAmount(), modifier.getOperation(), attribute);
+        }
+        return list;
     }
 
     public static double getSaveAttributeValue(Attribute attribute, LivingEntity living) {

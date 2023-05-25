@@ -45,7 +45,6 @@ public class CrimsonArmorItem extends TieredArmorItem implements GeoItem, IArmor
         super(ModArmorMaterials.CRIMSON, p_40387_, new Properties().rarity(FormattingCodes.LEGENDARY));
     }
 
-
     @Override
     public void fullSetTick(ItemStack stack, Level level, LivingEntity living) {
     }

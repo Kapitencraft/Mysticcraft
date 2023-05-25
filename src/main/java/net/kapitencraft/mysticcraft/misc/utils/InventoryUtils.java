@@ -8,6 +8,10 @@ import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Predicate;
+
 public class InventoryUtils {
     public static boolean hasPlayerStackInInventory(Player player, Item item) {
         Inventory inventory = player.getInventory();
@@ -39,6 +43,15 @@ public class InventoryUtils {
             }
         }
         return ItemStack.EMPTY;
+    }
+
+    public static List<ItemStack> getByFilter(Player player, Predicate<ItemStack> predicate) {
+        List<ItemStack> itemStacks = new ArrayList<>();
+        for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
+            ItemStack stack = player.getInventory().getItem(i);
+            if (predicate.test(stack)) itemStacks.add(stack);
+        }
+        return itemStacks;
     }
 
     public static boolean hasSetInInventory(Player player,  ArmorMaterial material) {

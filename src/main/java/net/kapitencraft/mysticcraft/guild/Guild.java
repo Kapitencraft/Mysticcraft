@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.misc.guilds;
+package net.kapitencraft.mysticcraft.guild;
 
 import net.kapitencraft.mysticcraft.misc.utils.TextUtils;
 import net.minecraft.nbt.CompoundTag;
@@ -18,7 +18,10 @@ public class Guild {
     private final List<Player> members = new ArrayList<>();
     private final HashMap<Player, GuildRank> ranks = new HashMap<>();
     private final HashMap<Player, String> invites = new HashMap<>();
+    private List<Guild> inWar = new ArrayList<>();
     private final ItemStack banner;
+
+    private boolean removed = false;
 
 
     public Guild(String name, Player owner, ItemStack banner) {
@@ -28,9 +31,13 @@ public class Guild {
     }
 
     public void setRank(Player player, GuildRank rank) {
-        if (!ranks.containsKey(player)) {
+        if (!ranks.containsKey(player) && !removed) {
             ranks.put(player, rank);
         }
+    }
+
+    public int getMemberAmount() {
+        return members.size();
     }
 
     public final Player getOwner() {
@@ -38,23 +45,52 @@ public class Guild {
     }
 
     public String addInvitation(Player player) {
-        if (members.contains(player)) {
-            return "isMember";
-        } else if (invites.containsKey(player)) {
-            return "isInvited";
+        if (!removed) {
+            if (members.contains(player)) {
+                return "isMember";
+            } else if (invites.containsKey(player)) {
+                return "isInvited";
+            }
+            String inviteKey = TextUtils.createRandom(8);
+            invites.put(player, inviteKey);
+            return inviteKey;
         }
-        String inviteKey = TextUtils.createRandom(8);
-        invites.put(player, inviteKey);
-        return inviteKey;
+        return "removed";
     }
 
     public boolean acceptInvitation(Player player, String inviteKey) {
-        if (this.invites.containsKey(player) && Objects.equals(this.invites.get(player), inviteKey)) {
-            this.addMember(player);
-            this.invites.remove(player);
-            return true;
+        if (!removed) {
+            if (this.invites.containsKey(player) && Objects.equals(this.invites.get(player), inviteKey)) {
+                this.addMember(player);
+                this.invites.remove(player);
+                return true;
+            }
         }
         return false;
+    }
+
+    public List<Guild> getInWar() {
+        return inWar;
+    }
+
+    public void declareWar(Guild guild) {
+        if (!removed) {
+            inWar.add(guild);
+            guild.sendDeclareWar(this);
+        }
+    }
+
+    public void remove() {
+        this.members.clear();
+        this.invites.clear();
+        this.inWar.clear();
+        this.ranks.clear();
+        isPublic = false;
+        removed = true;
+    }
+
+    private void sendDeclareWar(Guild warOpponent) {
+        if (!removed) inWar.add(warOpponent);
     }
 
     public GuildRank getRank(Player player) {
@@ -66,7 +102,7 @@ public class Guild {
     }
 
     public boolean kickMember(Player member) {
-        if (containsMember(member)) {
+        if (containsMember(member) && !removed) {
             removeMember(member);
             member.sendSystemMessage(Component.translatable("guild.kick"));
             return true;
@@ -75,23 +111,27 @@ public class Guild {
     }
 
     public void addMember(Player newMember) {
-        members.add(newMember);
-        ranks.put(newMember, GuildRank.DEFAULT);
-        newMember.getPersistentData().putString("GuildName", this.getName());
+        if (!removed) {
+            members.add(newMember);
+            ranks.put(newMember, GuildRank.DEFAULT);
+            newMember.getPersistentData().putString("GuildName", this.getName());
+        }
     }
 
     private void removeMember(Player player) {
-        members.remove(player);
-        ranks.remove(player);
-        player.getPersistentData().putString("GuildName", "");
+        if (!removed) {
+            members.remove(player);
+            ranks.remove(player);
+            player.getPersistentData().putString("GuildName", "");
+        }
     }
 
     public boolean isPublic() {
-        return isPublic;
+        return isPublic && !removed;
     }
 
     public void setPublic(boolean aPublic) {
-        isPublic = aPublic;
+        if (!removed) isPublic = aPublic;
     }
 
     public List<Player> getAllMembers() {
@@ -104,8 +144,10 @@ public class Guild {
 
     public CompoundTag saveToTag() {
         CompoundTag tag = new CompoundTag();
+        if (removed) return tag;
         tag.putString("owner", owner.getStringUUID());
         tag.put("banner", this.banner.save(new CompoundTag()));
+        tag.putString("name", this.name);
         int i = 0;
         for (Player player : getAllMembers()) {
             CompoundTag playerTag = new CompoundTag();
@@ -118,7 +160,7 @@ public class Guild {
     }
 
     public String promotePlayer(Player player) {
-        if (members.contains(player)) {
+        if (members.contains(player) && !removed) {
             GuildRank currentRank = ranks.get(player);
             ranks.remove(player);
             GuildRank nextRank;

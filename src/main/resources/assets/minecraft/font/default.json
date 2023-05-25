@@ -27,6 +27,24 @@
       "height": 8,
       "ascent": 7,
       "chars": ["\uF003"]
+    },
+    {
+      "type": "bitmap",
+      "file": "mysticcraft:font/bow.png",
+      "ascent": 7,
+      "chars": ["\uF004"]
+    },
+    {
+      "type": "bitmap",
+      "file": "mysticcraft:font/sword.png",
+      "ascent": 7,
+      "chars": ["\uF005"]
+    },
+    {
+      "type": "bitmap",
+      "file": "mysticcraft:font/fishing_rod.png",
+      "ascent": 7,
+      "chars": ["\uF006"]
     }
   ]
 }

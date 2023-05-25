@@ -3,8 +3,6 @@ package net.kapitencraft.mysticcraft.enchantments;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.ExtendedCalculationEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.IWeaponEnchantment;
 import net.kapitencraft.mysticcraft.misc.utils.MiscUtils;
-import net.kapitencraft.mysticcraft.misc.utils.TagUtils;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -42,12 +40,9 @@ public class VenomousEnchantment extends ExtendedCalculationEnchantment implemen
         AttributeInstance speed = attacked.getAttribute(Attributes.MOVEMENT_SPEED);
         assert speed != null;
         try {
-            speed.addTransientModifier(new AttributeModifier(ID, "VenomousMod", 0.05 * level, AttributeModifier.Operation.MULTIPLY_TOTAL));
+            speed.addTransientModifier(new AttributeModifier(ID, "VenomousMod", -0.05 * level, AttributeModifier.Operation.MULTIPLY_TOTAL));
         } catch (Throwable ignored) {}
         attacked.getPersistentData().putInt(TIMER_ID, 100);
-        List<Integer> list = fromArray(TagUtils.getIntArray((CompoundTag) attacked.getPersistentData().get("VenomousList")));
-        list.add(100);
-        attacked.getPersistentData().put(TIMER_ID, TagUtils.putIntList(list));
         return damage;
     }
 

@@ -4,14 +4,14 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
-import net.kapitencraft.mysticcraft.item.weapon.melee.sword.ModdedSwordItem;
+import net.kapitencraft.mysticcraft.item.weapon.melee.sword.ModSwordItem;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.Tier;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class CleaverItem extends ModdedSwordItem {
+public abstract class CleaverItem extends ModSwordItem {
 
     public CleaverItem(Tier p_43269_, int attackDamage, Properties p_43272_) {
         super(p_43269_, attackDamage, -2.8f, p_43272_);

@@ -11,15 +11,7 @@ import net.minecraft.network.chat.Style;
 import javax.annotation.Nullable;
 import java.util.Objects;
 
-public enum GemstoneSlot {
-    COMBAT(Type.COMBAT, null, GemstoneType.Rarity.EMPTY),
-    OFFENSIVE(Type.OFFENCE, null, GemstoneType.Rarity.EMPTY),
-    DEFENCE(Type.DEFENCE, null, GemstoneType.Rarity.EMPTY),
-    MAGIC(Type.MAGIC, null, GemstoneType.Rarity.EMPTY),
-    INTELLIGENCE(Type.INTELLIGENCE, null, GemstoneType.Rarity.EMPTY),
-    STRENGHT(Type.STRENGTH, null, GemstoneType.Rarity.EMPTY),
-    HEALTH(Type.HEALTH, null, GemstoneType.Rarity.EMPTY),
-    ABILITY_DAMAGE(Type.ABILITY_DAMAGE, null, GemstoneType.Rarity.EMPTY);
+public class GemstoneSlot {
 
     private static final String TYPE_ID = "type";
     private static final String GEMSTONE_RARITY_ID = "gem_rarity";
@@ -55,12 +47,7 @@ public enum GemstoneSlot {
         return this;
     }
     private static GemstoneSlot getByType(Type type) {
-        for (GemstoneSlot slot : values()) {
-            if (slot.getType() == type) {
-                return slot;
-            }
-        }
-        return GemstoneSlot.HEALTH;
+        return new GemstoneSlot(type, null, GemstoneType.Rarity.EMPTY);
     }
     private int getColorForRarity() {
         return this.gemRarity.COLOUR;
@@ -118,28 +105,26 @@ public enum GemstoneSlot {
     }
 
     public enum Type {
-        COMBAT("\u2694", "combat", new GemstoneType[]{GemstoneType.JASPER, GemstoneType.SAPPHIRE, GemstoneType.RUBY, GemstoneType.ALMANDINE}),
-        OFFENCE("\u2620", "offence", new GemstoneType[]{GemstoneType.JASPER, GemstoneType.SAPPHIRE, GemstoneType.ALMANDINE}),
-        DEFENCE("\uF002", "defence", new GemstoneType[]{GemstoneType.RUBY}),
-        MAGIC("\uF003", "magic", new GemstoneType[]{GemstoneType.SAPPHIRE, GemstoneType.ALMANDINE}),
-        INTELLIGENCE("\uF000", "intel", new GemstoneType[]{GemstoneType.SAPPHIRE}),
-        STRENGTH("\u2741", "strength", new GemstoneType[]{GemstoneType.JASPER}),
-        HEALTH("\u2764", "health", new GemstoneType[]{GemstoneType.RUBY}),
-        ABILITY_DAMAGE("\uF001", "ability_damage", new GemstoneType[]{GemstoneType.ALMANDINE}),
-        EMPTY("", "empty", null);
+        COMBAT("\u2694", "combat", GemstoneType.JASPER, GemstoneType.SAPPHIRE, GemstoneType.RUBY, GemstoneType.ALMANDINE),
+        OFFENCE("\uF005", "offence", GemstoneType.JASPER, GemstoneType.SAPPHIRE, GemstoneType.ALMANDINE),
+        DEFENCE("\uF002", "defence", GemstoneType.RUBY),
+        MAGIC("\uF003", "magic", GemstoneType.SAPPHIRE, GemstoneType.ALMANDINE),
+        INTELLIGENCE("\uF000", "intel", GemstoneType.SAPPHIRE),
+        STRENGTH("\u2741", "strength", GemstoneType.JASPER),
+        HEALTH("\u2764", "health", GemstoneType.RUBY),
+        ABILITY_DAMAGE("\uF001", "ability_damage", GemstoneType.ALMANDINE),
+        EMPTY("", "empty", (GemstoneType) null),
+        FISHING_SPEED("\uF006", "fishing_speed", GemstoneType.AQUAMARINE),
+        DRAW_SPEED("\uF004", "draw_speed", GemstoneType.MOON_STONE);
 
         public final String UNICODE;
         public final String id;
         public final GemstoneType[] applicable;
 
-        Type(String unicode, String id, GemstoneType[] applicable) {
+        Type(String unicode, String id, GemstoneType... applicable) {
             this.UNICODE = unicode;
             this.id = id;
             this.applicable = applicable;
-        }
-
-        public GemstoneType[] getApplicable() {
-            return applicable;
         }
 
         public static Type getById(String id) {
@@ -154,6 +139,22 @@ public enum GemstoneSlot {
 
         public String getUNICODE() {
             return UNICODE;
+        }
+    }
+
+    public static class Builder {
+        private final Type[] types;
+
+        public Builder(Type... types) {
+            this.types = types;
+        }
+
+        public GemstoneSlot[] build() {
+            GemstoneSlot[] slots = new GemstoneSlot[types.length];
+            for (int i = 0; i < slots.length; i++) {
+                slots[i] = new GemstoneSlot(types[i], null, GemstoneType.Rarity.EMPTY);
+            }
+            return slots;
         }
     }
 }
