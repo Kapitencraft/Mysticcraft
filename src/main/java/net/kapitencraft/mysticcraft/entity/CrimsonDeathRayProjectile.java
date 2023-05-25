@@ -22,6 +22,7 @@ public class CrimsonDeathRayProjectile extends AbstractArrow {
     public CrimsonDeathRayProjectile(EntityType<? extends AbstractArrow> p_36721_, Level p_36722_) {
         super(p_36721_, p_36722_);
         this.setNoGravity(true);
+        this.setNoPhysics(true);
     }
 
     private CrimsonDeathRayProjectile(Level level, LivingEntity owner, float yRot) {
@@ -31,6 +32,7 @@ public class CrimsonDeathRayProjectile extends AbstractArrow {
         new ParticleHelper("crimsonProjectile", this, ParticleHelper.Type.ARROW_HEAD, ParticleHelper.createArrowHeadProperties(10, 20, ParticleTypes.FLAME, ParticleTypes.ASH));
         this.setPos(MathUtils.getPosition(owner).add(0, 0.1, 0));
         this.setNoGravity(true);
+        this.setNoPhysics(true);
         this.setDeltaMovement(this.getViewVector(1));
     }
 

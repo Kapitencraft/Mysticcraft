@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SkeletonMaster extends Monster {
-    private List<Arrow> toShoot;
+    private List<ControlledArrow> toShoot;
     private int cooldown;
     private int amount;
     public SkeletonMaster(EntityType<? extends SkeletonMaster> p_32133_, Level p_32134_) {
@@ -95,7 +95,7 @@ public class SkeletonMaster extends Monster {
                 spawnArrows();
             } else {
                 if (this.cooldown == 0) {
-                    Arrow arrow = this.toShoot.get(0);
+                    ControlledArrow arrow = this.toShoot.get(0);
                     this.shootArrow(arrow);
                     this.toShoot.remove(0);
                 } else {
@@ -115,17 +115,14 @@ public class SkeletonMaster extends Monster {
     }
 
     private void spawnArrows() {
-        List<Arrow> arrows = new ArrayList<>();
+        List<ControlledArrow> arrows = new ArrayList<>();
         for (int i = 0; i < amount; i++) {
             Vec3 arrowPos = getPosForEntity(i).add(MathUtils.getPosition(this));
-            Arrow arrow = new Arrow(this.level, arrowPos.x, arrowPos.y, arrowPos.z);
+            ControlledArrow arrow = new ControlledArrow(this.level, arrowPos.x, arrowPos.y, arrowPos.z);
             arrow.setOwner(this);
             arrow.setYRot(this.getYRot());
             arrow.setXRot(this.getXRot());
-            arrow.setPierceLevel((byte) 5);
-            arrow.setBaseDamage(7);
-            arrow.addEffect(new MobEffectInstance(MobEffects.HARM, 100, 1));
-            arrow.setNoGravity(true);
+            arrow.setBaseDamage(15);
             this.level.addFreshEntity(arrow);
             arrows.add(arrow);
         }
@@ -134,15 +131,14 @@ public class SkeletonMaster extends Monster {
 
     private Vec3 getPosForEntity(int index) {
         RandomSource source = RandomSource.create();
-        Vec3 defaultPos = MathUtils.calculateViewVector(0, this.getYRot()).scale((index % 2 == 0 ? 2 : -2) + Mth.nextDouble(source, -0.5, 0.5));
-        defaultPos.add(0, 0.5 + Mth.nextDouble(source, 0, 2), 0);
-        return defaultPos;
+        return MathUtils.calculateViewVector(0, this.getYRot()).scale((index % 2 == 0 ? 2 : -2) + Mth.nextDouble(source, -0.5, 0.5)).add(0, 0.5 + Mth.nextDouble(source, 0, 2), 0);
     }
-    private void shootArrow(Arrow arrow) {
+    private void shootArrow(ControlledArrow arrow) {
         if (this.getTarget() != null) {
             Vec2 rot = MathUtils.createTargetRotationFromEyeHeight(arrow, this.getTarget());
             arrow.setXRot(rot.x);
             arrow.setYRot(rot.y);
+            arrow.fire();
             arrow.setDeltaMovement(MathUtils.calculateViewVector(rot.x, rot.y));
             this.setArrowCount(this.getArrowCount() - 1);
         }

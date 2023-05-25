@@ -10,6 +10,7 @@ import net.kapitencraft.mysticcraft.enchantments.abstracts.IToolEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.ModBowEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.StatBoostEnchantment;
 import net.kapitencraft.mysticcraft.entity.FrozenBlazeEntity;
+import net.kapitencraft.mysticcraft.entity.SkeletonMaster;
 import net.kapitencraft.mysticcraft.gui.IGuiHelper;
 import net.kapitencraft.mysticcraft.guild.Guild;
 import net.kapitencraft.mysticcraft.guild.GuildHandler;
@@ -210,7 +211,6 @@ public class MiscRegister {
         MiscUtils.DamageType type = MiscUtils.getDamageType(event.getDamageSource());
         Map<Enchantment, Integer> enchantments = stack.getAllEnchantments();
         if (enchantments != null && !enchantments.isEmpty()) {
-            MysticcraftMod.sendInfo("ea");
             for (Enchantment enchantment : enchantments.keySet()) {
                 if (enchantment instanceof ExtendedCalculationEnchantment modEnchantment && enchantment instanceof IToolEnchantment) {
                     modEnchantment.tryExecute(enchantments.get(enchantment), stack, attacker, attacked, event.getBlockedDamage(), type, event.getDamageSource());
