@@ -18,26 +18,26 @@ import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 
 @Mod.EventBusSubscriber
 public class EnchantmentDescriptionManager {
-    private static final Map<Enchantment, MutableComponent> descriptions = new ConcurrentHashMap<>();
+    private static final Map<String, Object[]> descriptions = new HashMap<>();
 
     @SubscribeEvent
     public static void registerTooltip(ItemTooltipEvent event) {
         onItemTooltip(event.getItemStack(), event.getToolTip(), event.getFlags());
-
     }
 
     private static void onItemTooltip(ItemStack stack, List<Component> tooltip, TooltipFlag ignoredTooltipFlag) {
         Set<Enchantment> enchantments = EnchantmentHelper.getEnchantments(stack).keySet();
+        boolean fromBook = stack.getItem() instanceof EnchantedBookItem;
         if (!enchantments.isEmpty()) {
-            if (!Screen.hasShiftDown() && !(stack.getItem() instanceof EnchantedBookItem)) {
+            if (!Screen.hasShiftDown() && !fromBook) {
                 tooltip.add(stack.getItem() instanceof IGemstoneApplicable ? 2:1, Component.translatable("mysticcraft.ench_desc.shift").withStyle(ChatFormatting.DARK_GRAY));
             } else {
                 for (Enchantment enchantment : enchantments) {
@@ -45,6 +45,10 @@ public class EnchantmentDescriptionManager {
                         ComponentContents contents = line.getContents();
                         if (contents instanceof TranslatableContents translatable) {
                             if (translatable.getKey().equals(enchantment.getDescriptionId())) {
+                                if (fromBook) {
+                                    if (!enchantment.isTradeable()) tooltip.add(tooltip.indexOf(line) + 1, Component.translatable("mysticcraft.ench_desc.not_tradeable").withStyle(ChatFormatting.YELLOW));
+                                    if (enchantment.isTreasureOnly()) tooltip.add(tooltip.indexOf(line) + 1, Component.translatable("mysticcraft.ench_desc.treasure").withStyle(ChatFormatting.YELLOW));
+                                }
                                 Component descriptionText = getDescription(stack, enchantment);
                                 tooltip.add(tooltip.indexOf(line) + 1, descriptionText);
                                 break;

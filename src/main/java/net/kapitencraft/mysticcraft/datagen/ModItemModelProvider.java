@@ -6,6 +6,7 @@ import net.kapitencraft.mysticcraft.item.gemstone.GemstoneItem;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneType;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.TieredItem;
 import net.minecraftforge.client.model.generators.ItemModelBuilder;
@@ -28,7 +29,7 @@ public class ModItemModelProvider extends ItemModelProvider {
 
     private List<RegistryObject<Item>> toKeep() {
         List<RegistryObject<Item>> items = new ArrayList<>();
-        items.add(ModItems.UNBREAKING_CORE);
+        items.add(ModItems.WARPED_ARMOR.get(EquipmentSlot.CHEST));
         return items;
     }
 
@@ -39,10 +40,14 @@ public class ModItemModelProvider extends ItemModelProvider {
         //registerGemstones();
         List<RegistryObject<Item>> items = toKeep();
         for (RegistryObject<Item> item : items) {
-            if (item.get() instanceof TieredItem) {
-                handHeldItem(item, null);
-            } else {
-                simpleItem(item, null);
+            try {
+                if (item.get() instanceof TieredItem) {
+                    handHeldItem(item, null);
+                } else {
+                    simpleItem(item, null);
+                }
+            } catch (IllegalArgumentException e) {
+                MysticcraftMod.sendInfo("Unable to find texture '" + item.getId() + "'");
             }
         }
     }

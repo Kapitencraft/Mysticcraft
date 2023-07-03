@@ -36,10 +36,6 @@ public class FrozenArrowsEnchantment extends ModBowEnchantment {
         return false;
     }
 
-    @Override
-    public boolean isPercentage() {
-        return false;
-    }
 
     @Override
     public Object[] getDescriptionMods(int level) {

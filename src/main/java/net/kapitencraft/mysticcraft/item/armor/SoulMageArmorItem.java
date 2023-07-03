@@ -34,10 +34,6 @@ public class SoulMageArmorItem extends ModArmorItem implements IArmorBonusItem {
     }
 
     @Override
-    public void fullSetTick(ItemStack stack, Level level, LivingEntity living) {
-    }
-
-    @Override
     protected void initFullSetTick(ItemStack stack, Level level, LivingEntity living) {
         MysticcraftMod.sendInfo("SoulMage");
         new ParticleHelper(helperString, living, ParticleHelper.Type.ORBIT, ParticleHelper.createOrbitProperties(0, 1000, 0, 0, 3, (SimpleParticleType) ModParticleTypes.PURPLE_FLAME.get(), 0.75f));
@@ -47,11 +43,6 @@ public class SoulMageArmorItem extends ModArmorItem implements IArmorBonusItem {
     @Override
     protected void postFullSetTick(ItemStack stack, Level level, LivingEntity living) {
         ParticleHelper.clearAllHelpers(helperString, living);
-    }
-
-    @Override
-    protected void clientFullSetTick(ItemStack stack, Level level, LivingEntity living) {
-
     }
 
     @Override

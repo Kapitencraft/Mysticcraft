@@ -13,12 +13,14 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 
 public abstract class ModSwordItem extends SwordItem implements IModItem {
     public ModSwordItem(Tier p_43269_, int attackDamage, float attackSpeed, Properties p_43272_) {
@@ -58,6 +60,13 @@ public abstract class ModSwordItem extends SwordItem implements IModItem {
             applicable.appendDisplay(stack, list);
         }
         list.add(Component.literal(""));
+
+
+    }
+
+    @Override
+    public Optional<TooltipComponent> getTooltipImage(ItemStack p_150902_) {
+        return super.getTooltipImage(p_150902_);
     }
 
     @Override

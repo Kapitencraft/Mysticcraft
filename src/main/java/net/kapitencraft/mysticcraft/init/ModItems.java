@@ -103,6 +103,7 @@ public abstract class ModItems {
     public static final HashMap<EquipmentSlot, RegistryObject<Item>> SHADOW_ASSASSIN_ARMOR = ModArmorItem.createRegistry("shadow_assassin", ShadowAssassinArmorItem::new);
     public static final HashMap<EquipmentSlot, RegistryObject<Item>> CRIMSON_ARMOR = ModArmorItem.createRegistry("crimson", CrimsonArmorItem::new);
     public static final HashMap<EquipmentSlot, RegistryObject<Item>> SOUL_MAGE_ARMOR = ModArmorItem.createRegistry("soul_mage", SoulMageArmorItem::new);
+    public static final HashMap<EquipmentSlot, RegistryObject<Item>> WARPED_ARMOR = ModArmorItem.createRegistry("warped", WarpedArmorItem::new);
 
     public static final RegistryObject<Item> FROZEN_BLAZE_SPAWN_EGG = register("frozen_blaze_spawn_egg", ()-> new ForgeSpawnEggItem(ModEntityTypes.FROZEN_BLAZE, -16711681, -16763956, new Item.Properties()));
 

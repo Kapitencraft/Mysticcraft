@@ -154,9 +154,9 @@ public abstract class ModBowItem extends BowItem implements IModItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level p_41422_, @NotNull List<Component> toolTip, @NotNull TooltipFlag p_41424_) {
+    public void appendHoverTextWithPlayer(@NotNull ItemStack stack, @Nullable Level level, @NotNull List<Component> list, @NotNull TooltipFlag flag, Player player) {
         if (stack.getItem() instanceof IGemstoneApplicable gemstoneApplicable) {
-            gemstoneApplicable.appendDisplay(stack, toolTip);
+            gemstoneApplicable.appendDisplay(stack, list);
         }
     }
 

@@ -2,6 +2,7 @@ package net.kapitencraft.mysticcraft.item.armor;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
+import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.kapitencraft.mysticcraft.misc.utils.AttributeUtils;
 import net.kapitencraft.mysticcraft.misc.utils.MiscUtils;
 import net.minecraft.nbt.CompoundTag;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.Objects;
 
 public abstract class TieredArmorItem extends ModArmorItem {
+    protected static final Properties NETHER_ARMOR_PROPERTIES = new Properties().rarity(FormattingCodes.LEGENDARY);
 
     public TieredArmorItem(ArmorMaterial p_40386_, EquipmentSlot p_40387_, Properties p_40388_) {
         super(p_40386_, p_40387_, p_40388_);
@@ -71,8 +73,7 @@ public abstract class TieredArmorItem extends ModArmorItem {
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = new ImmutableMultimap.Builder<>();
         builder.putAll(super.getAttributeModifiers(slot, stack));
         ArmorTier armorTier = getTier(stack);
-        assert armorTier != null;
-        return AttributeUtils.increaseByPercent(builder.build(), armorTier.valueMul, AttributeModifier.Operation.values(), null);
+        return AttributeUtils.increaseByPercent(builder.build(), armorTier == null ? 1 : armorTier.valueMul, AttributeModifier.Operation.values(), null);
     }
 
     public abstract List<ArmorTier> getAvailableTiers();
@@ -83,6 +84,8 @@ public abstract class TieredArmorItem extends ModArmorItem {
         BURNING("armor_tier.burning", 0.586206, 2),
         FIERY("armor_tier.fiery", 1, 3),
         INFERNAL("armor_tier.infernal", 1.521379, 4);
+
+        public static final List<ArmorTier> NETHER_ARMOR_TIERS = List.of(ArmorTier.HOT, ArmorTier.BURNING, ArmorTier.FIERY, ArmorTier.INFERNAL);
 
 
         final String name;

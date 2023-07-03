@@ -11,7 +11,6 @@ import net.kapitencraft.mysticcraft.item.item_bonus.FullSetBonus;
 import net.kapitencraft.mysticcraft.item.item_bonus.IArmorBonusItem;
 import net.kapitencraft.mysticcraft.item.item_bonus.PieceBonus;
 import net.kapitencraft.mysticcraft.item.item_bonus.fullset.CrimsonArmorFullSetBonus;
-import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.kapitencraft.mysticcraft.misc.particle_help.ParticleHelper;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.core.particles.SimpleParticleType;
@@ -42,11 +41,7 @@ public class CrimsonArmorItem extends TieredArmorItem implements GeoItem, IArmor
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private static final FullSetBonus FULL_SET_BONUS = new CrimsonArmorFullSetBonus();
     public CrimsonArmorItem(EquipmentSlot p_40387_) {
-        super(ModArmorMaterials.CRIMSON, p_40387_, new Properties().rarity(FormattingCodes.LEGENDARY));
-    }
-
-    @Override
-    public void fullSetTick(ItemStack stack, Level level, LivingEntity living) {
+        super(ModArmorMaterials.CRIMSON, p_40387_, NETHER_ARMOR_PROPERTIES);
     }
 
     @Override
@@ -59,11 +54,6 @@ public class CrimsonArmorItem extends TieredArmorItem implements GeoItem, IArmor
     @Override
     protected void postFullSetTick(ItemStack stack, Level level, LivingEntity living) {
         ParticleHelper.clearAllHelpers(helperString, living);
-    }
-
-    @Override
-    protected void clientFullSetTick(ItemStack stack, Level level, LivingEntity living) {
-
     }
 
     @Override
@@ -129,6 +119,6 @@ public class CrimsonArmorItem extends TieredArmorItem implements GeoItem, IArmor
 
     @Override
     public List<ArmorTier> getAvailableTiers() {
-        return List.of(ArmorTier.HOT, ArmorTier.BURNING, ArmorTier.FIERY, ArmorTier.INFERNAL);
+        return ArmorTier.NETHER_ARMOR_TIERS;
     }
 }

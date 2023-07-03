@@ -68,20 +68,6 @@ public class FrozenBlazeArmorItem extends ModArmorItem implements GeoItem, IArmo
     }
 
     @Override
-    protected void initFullSetTick(ItemStack stack, Level level, LivingEntity living) {
-    }
-
-    @Override
-    protected void postFullSetTick(ItemStack stack, Level level, LivingEntity living) {
-
-    }
-
-    @Override
-    protected void clientFullSetTick(ItemStack stack, Level level, LivingEntity living) {
-
-    }
-
-    @Override
     public void initializeClient(Consumer<IClientItemExtensions> consumer) {
         consumer.accept(new IClientItemExtensions() {
             private FrozenBlazeArmorRenderer renderer;

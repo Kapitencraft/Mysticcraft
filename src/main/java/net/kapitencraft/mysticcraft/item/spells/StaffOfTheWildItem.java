@@ -28,7 +28,7 @@ import java.util.function.Consumer;
 
 public class StaffOfTheWildItem extends NormalSpellItem implements GeoItem, IGemstoneApplicable {
     private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("idle");
-    private AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public final int SPELL_SLOT_AMOUNT = 5;
 
     @Override
@@ -84,7 +84,7 @@ public class StaffOfTheWildItem extends NormalSpellItem implements GeoItem, IGem
         return new GemstoneSlot.Builder(GemstoneSlot.Type.MAGIC, GemstoneSlot.Type.INTELLIGENCE, GemstoneSlot.Type.INTELLIGENCE, GemstoneSlot.Type.INTELLIGENCE, GemstoneSlot.Type.ABILITY_DAMAGE).build();
     }
 
-    private PlayState predicate(AnimationState<?> state) {
+    private PlayState predicate(AnimationState<StaffOfTheWildItem> state) {
         state.getController().setAnimation(IDLE);
         return PlayState.CONTINUE;
     }

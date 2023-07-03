@@ -134,12 +134,12 @@ public abstract class ModArmorItem extends ArmorItem {
         return (head != null && legs != null && feet != null) && (head.getMaterial() == materials && chest.getMaterial() == materials && legs.getMaterial() == materials && feet.getMaterial() == materials);
     }
 
-    protected abstract void fullSetTick(ItemStack stack, Level level, LivingEntity living);
-    protected abstract void initFullSetTick(ItemStack stack, Level level, LivingEntity living);
-    protected abstract void postFullSetTick(ItemStack stack, Level level, LivingEntity living);
-    protected abstract void clientFullSetTick(ItemStack stack, Level level, LivingEntity living);
+    protected void fullSetTick(ItemStack stack, Level level, LivingEntity living) {}
+    protected void initFullSetTick(ItemStack stack, Level level, LivingEntity living) {}
+    protected void postFullSetTick(ItemStack stack, Level level, LivingEntity living) {}
+    protected void clientFullSetTick(ItemStack stack, Level level, LivingEntity living) {}
 
-    public abstract Multimap<Attribute, AttributeModifier> getAttributeMods(EquipmentSlot slot);
+    public Multimap<Attribute, AttributeModifier> getAttributeMods(EquipmentSlot slot) {return null;}
 
     @Override
     public @NotNull Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(@NotNull EquipmentSlot slot) {
@@ -154,7 +154,7 @@ public abstract class ModArmorItem extends ArmorItem {
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = new ImmutableMultimap.Builder<>();
-        ImmutableMultimap<Attribute, AttributeModifier> map = null;
+        Multimap<Attribute, AttributeModifier> map = null;
         builder.putAll(this.getDefaultAttributeModifiers(slot));
         if (slot == this.getSlot()) {
             if (this instanceof IArmorBonusItem bonusItem && this.user instanceof LivingEntity living) {
@@ -185,7 +185,7 @@ public abstract class ModArmorItem extends ArmorItem {
             }
         }
         if (stack.getTag() != null && stack.getTag().getBoolean("isOP")) {
-            return AttributeUtils.increaseByPercent(map == null ? map = builder.build() : map, 300, new AttributeModifier.Operation[]{AttributeModifier.Operation.ADDITION, AttributeModifier.Operation.MULTIPLY_TOTAL, AttributeModifier.Operation.MULTIPLY_BASE}, null);
+            return AttributeUtils.increaseByPercent(map == null ? builder.build() : map, 300, new AttributeModifier.Operation[]{AttributeModifier.Operation.ADDITION, AttributeModifier.Operation.MULTIPLY_TOTAL, AttributeModifier.Operation.MULTIPLY_BASE}, null);
         }
         return builder.build();
     }

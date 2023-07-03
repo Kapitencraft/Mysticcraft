@@ -5,16 +5,22 @@ import net.kapitencraft.mysticcraft.gui.IGuiHelper;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneItem;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.item.spells.SpellItem;
+import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementProgress;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.PlayerAdvancements;
 import net.minecraft.server.ServerAdvancementManager;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.EntityDamageSource;
@@ -50,7 +56,6 @@ public class MiscUtils {
     public static EquipmentSlot getSlotForStack(ItemStack stack) {
         return stack.getItem() instanceof ArmorItem armorItem ? armorItem.getSlot() : EquipmentSlot.MAINHAND;
     }
-
 
     public static boolean awardAchievement(Player player, String achievementName) {
         if (player instanceof ServerPlayer _player) {
@@ -124,6 +129,27 @@ public class MiscUtils {
         }
         return false;
     }
+
+    public static void checkAndAppendMissingTexture(ItemStack stack, List<Component> components) {
+        ResourceManager manager = Minecraft.getInstance().getResourceManager();
+        Item item = stack.getItem();
+        ResourceLocation location = BuiltInRegistries.ITEM.getKey(item);
+        ModelManager modelManager = Minecraft.getInstance().getModelManager();
+        if (manager.getResource(location).isEmpty()) {
+            components.add(Component.translatable("texture.missing.1").withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.GREEN));
+        }
+    }
+
+
+    public static final MutableComponent SPLIT = Component.literal(" ");
+    public static MutableComponent buildComponent(MutableComponent... components) {
+        MutableComponent empty = Component.empty();
+        for (MutableComponent component : components) {
+            empty.append(component);
+        }
+        return empty;
+    }
+
     public static  <V> ArrayList<V> invertList(ArrayList<V> list) {
         ArrayList<V> out = new ArrayList<>();
         for (int i = list.size(); i > 0; i--) {
@@ -187,9 +213,21 @@ public class MiscUtils {
         return dmgInc;
     }
 
-    public static @Nullable List<LivingEntity> sortLowestDistance(Entity source, List<LivingEntity> list) {
+    public static final char HEART = '\u2661';
+
+    public static ArmorStand createHealthIndicator(LivingEntity target) {
+        ArmorStand marker = createMarker(MathUtils.getPosition(target).add(0, 0.5, 0), target.getLevel(), true);
+        CompoundTag tag = marker.getPersistentData();
+        tag.putBoolean("healthMarker", true);
+        marker.setCustomName(Component.literal(HEART + target.getHealth() + "/" + target.getMaxHealth()));
+        marker.setCustomNameVisible(true);
+        target.getLevel().addFreshEntity(marker);
+        return marker;
+    }
+
+    public static List<LivingEntity> sortLowestDistance(Entity source, List<LivingEntity> list) {
         if (list.isEmpty()) {
-            return null;
+            return List.of();
         }
         return list.stream().sorted(Comparator.comparingDouble(_entcnd -> _entcnd.distanceToSqr(MathUtils.getPosition(source)))).collect(Collectors.toList());
     }

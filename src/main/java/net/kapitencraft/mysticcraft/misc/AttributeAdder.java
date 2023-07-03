@@ -29,6 +29,10 @@ public class AttributeAdder {
         addAll(event, ModAttributes.CRIT_DAMAGE.get(), ONLY_WITH_BRAIN);
         addAll(event, ModAttributes.RANGED_DAMAGE.get(), ONLY_WITH_BRAIN);
         addAll(event, ModAttributes.HEALTH_REGEN.get(), ONLY_WITH_BRAIN);
+        addAll(event, ModAttributes.MAGIC_DEFENCE.get(), ONLY_WITH_BRAIN);
+        addAll(event, ModAttributes.TRUE_DEFENCE.get(), ONLY_WITH_BRAIN);
+        addAll(event, ModAttributes.BONUS_ATTACK_SPEED.get(), ONLY_WITH_BRAIN);
+        addAll(event, ModAttributes.CRIT_CHANCE.get(), ONLY_WITH_BRAIN);
         event.add(EntityType.PLAYER, ModAttributes.ABILITY_DAMAGE.get());
         event.add(EntityType.PLAYER, ModAttributes.MANA_COST.get());
         event.add(EntityType.PLAYER, ModAttributes.INTELLIGENCE.get());

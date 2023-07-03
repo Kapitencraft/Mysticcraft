@@ -47,11 +47,6 @@ public class VenomousEnchantment extends ExtendedCalculationEnchantment implemen
     }
 
     @Override
-    public boolean isPercentage() {
-        return false;
-    }
-
-    @Override
     public Object[] getDescriptionMods(int level) {
         return new Object[] {level};
     }

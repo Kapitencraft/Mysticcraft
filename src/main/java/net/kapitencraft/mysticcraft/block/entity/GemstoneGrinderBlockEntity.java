@@ -110,6 +110,7 @@ public class  GemstoneGrinderBlockEntity extends BlockEntity implements MenuProv
             stack.save(tag);
             toReturnTag.put("id: " + i, toReturnTag);
         }));
+        nbt.put("queue", toReturnTag);
         super.saveAdditional(nbt);
     }
 

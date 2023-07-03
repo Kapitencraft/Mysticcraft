@@ -10,7 +10,10 @@
     "BannerItemMixin",
     "PlayerMixin",
     "ItemStackMixin",
-    "LivingEntityMixin"
+    "LivingEntityMixin",
+    "AttributesMixin",
+    "ItemMixin",
+    "ProjectileMixin"
   ],
   "injectors": {
     "defaultRequire": 1

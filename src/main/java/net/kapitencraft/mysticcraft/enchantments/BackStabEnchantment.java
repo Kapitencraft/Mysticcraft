@@ -27,10 +27,6 @@ public class BackStabEnchantment extends ExtendedCalculationEnchantment implemen
         return 5;
     }
 
-    @Override
-    public boolean isPercentage() {
-        return true;
-    }
 
     @Override
     public Object[] getDescriptionMods(int level) {

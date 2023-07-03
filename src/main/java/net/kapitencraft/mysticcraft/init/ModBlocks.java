@@ -31,6 +31,8 @@ public class ModBlocks {
         return registryObject;
     }
     public static final BlockRegistryHolder GEMSTONE_GRINDER = registerBlock("gemstone_grinder", GemstoneGrinderBlock::new, new Item.Properties().rarity(Rarity.RARE));
+
+    public static final BlockRegistryHolder REFORGING_ANVIL = registerBlock("reforging_anvil", ReforgeAnvilBlock::new, new Item.Properties().rarity(Rarity.UNCOMMON));
     public static final RegistryObject<LiquidBlock> MANA_FLUID_BLOCK = REGISTRY.register("mana_fluid_block", ManaLiquidBlock::new);
     public static final BlockRegistryHolder MANGATIC_STONE = registerBlock("mangatic_stone", ()-> new Block(BlockBehaviour.Properties.copy(Blocks.END_STONE)), new Item.Properties().rarity(Rarity.RARE));
     public static final BlockRegistryHolder MANGATIC_SLIME = registerBlock("mangatic_slime", MangaticSlimeBlock::new, new Item.Properties().rarity(Rarity.EPIC));

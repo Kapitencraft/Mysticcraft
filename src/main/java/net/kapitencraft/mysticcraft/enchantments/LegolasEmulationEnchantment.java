@@ -22,11 +22,6 @@ public class LegolasEmulationEnchantment extends Enchantment implements ModEncha
 
 
     @Override
-    public boolean isPercentage() {
-        return false;
-    }
-
-    @Override
     public Object[] getDescriptionMods(int level) {
         return new Object[] {level};
     }

@@ -1,6 +1,5 @@
 package net.kapitencraft.mysticcraft.enchantments;
 
-import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.IWeaponEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.ModBowEnchantment;
 import net.kapitencraft.mysticcraft.misc.utils.MathUtils;
@@ -33,7 +32,7 @@ public class AimEnchantment extends ModBowEnchantment implements IWeaponEnchantm
     @Override
     public float execute(LivingEntity target, CompoundTag tag, ExecuteType type, float oldDamage, AbstractArrow arrow) {
         if (type == ExecuteType.TICK) {
-            List<LivingEntity> livingEntities = arrow.level.getEntitiesOfClass(LivingEntity.class, arrow.getBoundingBox().inflate(tag.getInt("Level")));
+            List<LivingEntity> livingEntities = MathUtils.getLivingAround(arrow, tag.getInt("Level"));
             for (LivingEntity living : livingEntities) {
                 if (arrow.getOwner() != living && !living.isDeadOrDying()) {
                     arrow.setDeltaMovement(MathUtils.setLength(MathUtils.getPosition(living).subtract(MathUtils.getPosition(arrow)), arrow.getDeltaMovement().length()));
@@ -49,10 +48,6 @@ public class AimEnchantment extends ModBowEnchantment implements IWeaponEnchantm
         return true;
     }
 
-    @Override
-    public boolean isPercentage() {
-        return false;
-    }
 
     @Override
     public Object[] getDescriptionMods(int level) {

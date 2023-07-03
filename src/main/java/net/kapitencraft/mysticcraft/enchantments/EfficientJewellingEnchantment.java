@@ -17,10 +17,6 @@ public class EfficientJewellingEnchantment extends Enchantment implements IToolE
         return 100;
     }
 
-    @Override
-    public boolean isPercentage() {
-        return true;
-    }
 
 
     @Override

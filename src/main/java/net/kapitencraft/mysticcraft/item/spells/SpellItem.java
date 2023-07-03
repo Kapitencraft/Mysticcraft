@@ -38,13 +38,15 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
 public abstract class SpellItem extends SwordItem implements IModItem {
+    public static final UUID ATTACK_SPEED_UUID = BASE_ATTACK_SPEED_UUID;
+    public static final UUID ATTACK_DAMAGE_UUID = BASE_ATTACK_DAMAGE_UUID;
+
 
     public static final String SPELL_EXECUTION_DUR = "ExeSpellDur";
     public static final String SPELL_EXE = "ExeSpell";
@@ -66,8 +68,9 @@ public abstract class SpellItem extends SwordItem implements IModItem {
     public abstract List<Component> getItemDescription();
     public abstract List<Component> getPostDescription();
 
+
     @Override
-    public void appendHoverText(@Nonnull ItemStack itemStack, @Nullable Level level, @Nonnull List<Component> list, @Nonnull TooltipFlag flag) {
+    public void appendHoverTextWithPlayer(@NotNull ItemStack itemStack, @Nullable Level level, @NotNull List<Component> list, @NotNull TooltipFlag flag, Player player) {
         @Nullable SpellSlot activeSpellSlot = this.getActiveSpellSlot();
         Spell spell;
         if (activeSpellSlot == null) {
@@ -83,11 +86,11 @@ public abstract class SpellItem extends SwordItem implements IModItem {
             list.add(Component.literal(""));
         }
         if (this.spellSlots.length == 1) {
-            spell.addDescription(list, this, itemStack);
+            spell.addDescription(list, this, itemStack, player);
         } else {
             if (Screen.hasShiftDown()) {
                 list.add(Component.literal(""));
-                addMultiSpellDisplay(list, itemStack);
+                addMultiSpellDisplay(list, itemStack, player);
             } else {
                 list.add(Component.literal(""));
                 list.add(Component.literal("press [SHIFT] to show all Spells"));
@@ -99,11 +102,11 @@ public abstract class SpellItem extends SwordItem implements IModItem {
         }
     }
 
-    private void addMultiSpellDisplay(List<Component> list, ItemStack stack) {
+    private void addMultiSpellDisplay(List<Component> list, ItemStack stack, Player player) {
         for (SpellSlot spellSlot : this.spellSlots) {
             if (spellSlot != null) {
                 list.add(Component.literal(""));
-                spellSlot.getSpell().addDescription(list, this, stack);
+                spellSlot.getSpell().addDescription(list, this, stack, player);
             }
         }
     }

@@ -11,7 +11,6 @@ import net.kapitencraft.mysticcraft.misc.utils.AttributeUtils;
 import net.kapitencraft.mysticcraft.misc.utils.MiscUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -40,23 +39,6 @@ public class EnderKnightArmorItem extends ModArmorItem implements IGemstoneAppli
             modifierMultimap = AttributeUtils.increaseByPercent(modifierMultimap, 1, new AttributeModifier.Operation[]{AttributeModifier.Operation.ADDITION, AttributeModifier.Operation.MULTIPLY_BASE, AttributeModifier.Operation.MULTIPLY_TOTAL}, null);
         }
         return modifierMultimap;
-    }
-
-    @Override
-    public void fullSetTick(ItemStack stack, Level level, LivingEntity living) {
-    }
-
-    @Override
-    protected void initFullSetTick(ItemStack stack, Level level, LivingEntity living) {
-    }
-
-    @Override
-    protected void postFullSetTick(ItemStack stack, Level level, LivingEntity living) {
-    }
-
-    @Override
-    protected void clientFullSetTick(ItemStack stack, Level level, LivingEntity living) {
-
     }
 
     public ImmutableMultimap<Attribute, AttributeModifier> getAttributeMods(EquipmentSlot slot) {

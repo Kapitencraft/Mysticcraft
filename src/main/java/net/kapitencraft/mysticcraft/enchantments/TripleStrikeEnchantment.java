@@ -37,13 +37,9 @@ public class TripleStrikeEnchantment extends CountEnchantment {
         return damageAmount;
     }
 
-    @Override
-    public boolean isPercentage() {
-        return true;
-    }
 
     @Override
     public Object[] getDescriptionMods(int level) {
-        return new Object[] {level*20 + "%"};
+        return new Object[] {level*20};
     }
 }

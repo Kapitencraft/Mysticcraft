@@ -1,14 +1,18 @@
 package net.kapitencraft.mysticcraft.spell;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.item.spells.*;
 import net.kapitencraft.mysticcraft.item.spells.necron_sword.NecronSword;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
+import net.kapitencraft.mysticcraft.misc.utils.AttributeUtils;
 import net.kapitencraft.mysticcraft.misc.utils.TextUtils;
 import net.kapitencraft.mysticcraft.spell.spells.*;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
@@ -121,12 +125,19 @@ public enum Spells implements Spell {
     }
 
     public boolean canApply(Item item) {return this.helper.canApply(item);}
-    public void addDescription(List<Component> list, SpellItem item, ItemStack ignoredStack) {
+    public void addDescription(List<Component> list, SpellItem item, ItemStack ignoredStack, Player player) {
         int spellSlotAmount = item.getSpellSlotAmount();
         list.add(Component.literal("Ability: " + this.getName() + " " + (spellSlotAmount > 1 ? (item.getIndexForSlot(this) + 1) + " / " + item.getSpellSlotAmount() : "")).withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.GOLD));
         if (this.description.get() != null) list.addAll(this.description.get());
-        if (this.MANA_COST > 0) list.add(Component.literal(FormattingCodes.GRAY + "Mana-Cost: " + FormattingCodes.DARK_RED));
+        if (this.MANA_COST > 0 && player != null) {
+            list.add(Component.literal(FormattingCodes.GRAY + "Mana-Cost: " + FormattingCodes.DARK_RED + getManaCostForPlayer(player)));
+        }
         if (this.castingType != null && item.getSpellSlotAmount() > 1) list.add(Component.literal("Pattern: [" + this.getPattern() + FormattingCodes.RESET + "]"));
+    }
+
+    public double getManaCostForPlayer(Player player) {
+        AttributeInstance instance = player.getAttribute(ModAttributes.MANA_COST.get());
+        return AttributeUtils.getAttributeValue(instance, this.MANA_COST);
     }
 
     public static Spells get(String pattern) {

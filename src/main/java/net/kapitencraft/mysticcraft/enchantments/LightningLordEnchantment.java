@@ -40,12 +40,7 @@ public class LightningLordEnchantment extends CountEnchantment {
 
 
     @Override
-    public boolean isPercentage() {
-        return true;
-    }
-
-    @Override
     public Object[] getDescriptionMods(int level) {
-        return new Object[] {level*10 + "%"};
+        return new Object[] {level*10};
     }
 }

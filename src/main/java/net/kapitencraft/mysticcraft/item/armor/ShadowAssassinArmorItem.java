@@ -32,14 +32,6 @@ public class ShadowAssassinArmorItem extends ModArmorItem implements GeoItem {
     }
 
     @Override
-    public void clientFullSetTick(ItemStack stack, Level level, LivingEntity living) {
-    }
-
-    @Override
-    protected void initFullSetTick(ItemStack stack, Level level, LivingEntity living) {
-    }
-
-    @Override
     protected void postFullSetTick(ItemStack stack, Level level, LivingEntity living) {
         CompoundTag tag = living.getPersistentData();
         living.setInvisible(false);

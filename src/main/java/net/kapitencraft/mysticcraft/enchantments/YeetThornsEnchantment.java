@@ -34,11 +34,6 @@ public class YeetThornsEnchantment extends ExtendedCalculationEnchantment implem
     }
 
     @Override
-    public boolean isPercentage() {
-        return false;
-    }
-
-    @Override
     public Object[] getDescriptionMods(int level) {
         return new Object[] {level*10};
     }

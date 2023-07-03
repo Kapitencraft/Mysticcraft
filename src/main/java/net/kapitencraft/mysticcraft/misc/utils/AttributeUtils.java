@@ -1,19 +1,25 @@
 package net.kapitencraft.mysticcraft.misc.utils;
 
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Multimap;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nullable;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+import java.util.function.Function;
 
 public class AttributeUtils {
-    public static ImmutableMultimap<Attribute, AttributeModifier> increaseByPercent(ImmutableMultimap<Attribute, AttributeModifier> multimap, double percent, AttributeModifier.Operation[] operations, @Nullable Attribute attributeReq) {
+
+    private static final HashMap<UUID, Function<LivingEntity, Double>> map = new HashMap<>();
+
+    public static ImmutableMultimap<Attribute, AttributeModifier> increaseByPercent(Multimap<Attribute, AttributeModifier> multimap, double percent, AttributeModifier.Operation[] operations, @Nullable Attribute attributeReq) {
         ImmutableMultimap.Builder<Attribute, AttributeModifier> toReturn = new ImmutableMultimap.Builder<>();
         Collection<AttributeModifier> attributeModifiers;
         for (Attribute attribute : multimap.keys()) {
@@ -36,7 +42,7 @@ public class AttributeUtils {
         return toReturn.build();
     }
 
-    public static ImmutableMultimap<Attribute, AttributeModifier> increaseByAmount(ImmutableMultimap<Attribute, AttributeModifier> multimap, double amount, AttributeModifier.Operation operation, @Nullable Attribute attributeReq) {
+    public static Multimap<Attribute, AttributeModifier> increaseByAmount(Multimap<Attribute, AttributeModifier> multimap, double amount, AttributeModifier.Operation operation, @Nullable Attribute attributeReq) {
         ImmutableMultimap.Builder<Attribute, AttributeModifier> toReturn = new ImmutableMultimap.Builder<>();
         boolean hasBeenAdded = attributeReq == null;
         Collection<AttributeModifier> attributeModifiers;
@@ -52,18 +58,31 @@ public class AttributeUtils {
             }
         }
         if (!hasBeenAdded) {
-            toReturn.put(attributeReq, new AttributeModifier(UUID.randomUUID(), "Custom Attribute", amount, AttributeModifier.Operation.ADDITION));
+            if (attributeReq == Attributes.MOVEMENT_SPEED && operation == AttributeModifier.Operation.ADDITION) {
+                operation = AttributeModifier.Operation.MULTIPLY_BASE;
+                amount *= 0.01;
+            }
+            toReturn.put(attributeReq, new AttributeModifier(UUID.randomUUID(), "Custom Attribute", amount, operation));
         }
         multimap = toReturn.build();
         return multimap;
     }
 
-    public static ImmutableMultimap<Attribute, AttributeModifier> increaseAllByAmount(ImmutableMultimap<Attribute, AttributeModifier> list, Map<Attribute, AttributeModifier> toMerge) {
+    public static Multimap<Attribute, AttributeModifier> increaseAllByAmount(Multimap<Attribute, AttributeModifier> list, Map<Attribute, AttributeModifier> toMerge) {
         for (Attribute attribute : toMerge.keySet()) {
             for (AttributeModifier modifier : List.of(toMerge.get(attribute)))
                 list = increaseByAmount(list, modifier.getAmount(), modifier.getOperation(), attribute);
         }
         return list;
+    }
+
+    public static Multimap<Attribute, AttributeModifier> increaseAllByAmount(Multimap<Attribute, AttributeModifier> map, Multimap<Attribute, AttributeModifier> toMerge) {
+        for (Attribute attribute : toMerge.keySet()) {
+            for (AttributeModifier modifier : toMerge.get(attribute)) {
+                map = increaseByAmount(map, modifier.getAmount(), modifier.getOperation(), attribute);
+            }
+        }
+        return map;
     }
 
     public static double getSaveAttributeValue(Attribute attribute, LivingEntity living) {
@@ -75,7 +94,7 @@ public class AttributeUtils {
 
     public static double getAttributeValue(@Nullable AttributeInstance instance, double baseValue) {
         if (instance == null) {
-            return 0;
+            return baseValue;
         }
         double d0 = baseValue + instance.getBaseValue();
 
@@ -95,4 +114,72 @@ public class AttributeUtils {
         return instance.getAttribute().sanitizeValue(d1);
     }
 
+    public static AttributeModifier copyWithValue(AttributeModifier modifier, double value) {
+        return new AttributeModifier(modifier.getId(), modifier.getName(), value, modifier.getOperation());
+    }
+
+    public static AttributeModifier addLiquidModifier(@Nullable UUID uuid, AttributeModifier.Operation operation, Function<LivingEntity, Double> transfer) {
+        if (uuid == null) {
+            uuid = UUID.randomUUID();
+        }
+        map.put(uuid, transfer);
+        return new AttributeModifier(uuid, "LiquidModifier", 0, operation);
+    }
+
+    public static <T, K> Multimap<T, K> fromMap(Map<T, K> map) {
+        Multimap<T, K> multimap = HashMultimap.create();
+        for (T t : map.keySet()) {
+            multimap.put(t, map.get(t));
+        }
+        return multimap;
+    }
+
+    public static void removeLiquidModifierTracking(UUID uuid) {
+        map.remove(uuid);
+    }
+
+    public static void updateLiquidModifiers(LivingEntity living) {
+        for (EquipmentSlot slot : EquipmentSlot.values()) {
+            ItemStack stack = living.getItemBySlot(slot);
+            Multimap<Attribute, AttributeModifier> modifiers = stack.getAttributeModifiers(slot);
+            for (Attribute attribute : modifiers.keySet()) {
+                for (AttributeModifier modifier : modifiers.get(attribute)) {
+                    if (modifier.getName().equals("LiquidModifier")) {
+                        UUID uuid = modifier.getId();
+                        if (map.containsKey(uuid)) {
+                            modifiers.remove(attribute, modifier);
+                            modifiers.put(attribute, copyWithValue(modifier, map.get(uuid).apply(living)));
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public static class AttributeBuilder {
+        private Multimap<Attribute, AttributeModifier> modifiers;
+
+
+        public AttributeBuilder(Multimap<Attribute, AttributeModifier> multimap) {
+            this.modifiers = multimap;
+        }
+
+        public AttributeBuilder() {
+            this.modifiers = HashMultimap.create();
+        }
+
+        public void merge(Multimap<Attribute, AttributeModifier> toMerge) {
+            this.modifiers = increaseAllByAmount(modifiers, toMerge);
+        }
+
+        public void merge(HashMap<Attribute, Double> toMerge, AttributeModifier.Operation operation) {
+            for (Attribute attribute : toMerge.keySet()) {
+                this.modifiers = increaseByAmount(this.modifiers, toMerge.get(attribute), operation, attribute);
+            }
+        }
+
+        public Multimap<Attribute, AttributeModifier> build() {
+            return this.modifiers;
+        }
+    }
 }

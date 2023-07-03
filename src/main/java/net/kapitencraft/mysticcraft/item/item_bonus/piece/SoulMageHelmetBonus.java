@@ -5,23 +5,21 @@ import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.item.item_bonus.PieceBonus;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
-import net.kapitencraft.mysticcraft.misc.utils.MiscUtils;
+import net.kapitencraft.mysticcraft.misc.utils.AttributeUtils;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.UUID;
 
 public class SoulMageHelmetBonus extends PieceBonus {
     public SoulMageHelmetBonus() {
         super("Magic Conversation");
     }
+    private static final UUID ID = UUID.fromString("fedb2655-2723-4fb9-b744-0e37a4988dbb");
 
     @Override
     public List<Component> getDisplay() {
@@ -29,21 +27,11 @@ public class SoulMageHelmetBonus extends PieceBonus {
                 Component.literal("you have"));
     }
 
-    @Override
-    public void onEntityKilled(LivingEntity killed, LivingEntity user, MiscUtils.DamageType type) {
-
-    }
-
     @Nullable
     @Override
     public Multimap<Attribute, AttributeModifier> getModifiers(LivingEntity living) {
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = new ImmutableMultimap.Builder<>();
-        builder.put(ModAttributes.ABILITY_DAMAGE.get(), new AttributeModifier("Helmet Bonus", living.getAttributeValue(ModAttributes.INTELLIGENCE.get()) / 25, AttributeModifier.Operation.ADDITION));
+        builder.put(ModAttributes.ABILITY_DAMAGE.get(), AttributeUtils.addLiquidModifier(ID, AttributeModifier.Operation.ADDITION, (living1 -> living1.getAttributeValue(ModAttributes.INTELLIGENCE.get()) / 25)));
         return builder.build();
-    }
-
-    @Override
-    public void onTick(@NotNull ItemStack stack, Level level, @NotNull Entity entity, int slotID, boolean isSelected, int ticks) {
-
     }
 }

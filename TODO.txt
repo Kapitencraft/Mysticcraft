@@ -1,6 +1,0 @@
-add Skills;
-add Reforging;
-add Soul-Binding;
-add Unbreakability;
-fix Spell Damage Values;
-add Fishing Speed, Bow Draw Speed Gemstone;

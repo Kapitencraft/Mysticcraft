@@ -46,7 +46,7 @@ public abstract class ShortBowItem extends ModBowItem {
 
     public float createCooldown(LivingEntity archer) {
         float base_cooldown = this.getShotCooldown();
-        base_cooldown *= (1 / (archer.getAttributeValue(ModAttributes.DRAW_SPEED.get()) / 100));
+        if (archer != null) base_cooldown *= (1 / (archer.getAttributeValue(ModAttributes.DRAW_SPEED.get()) / 100));
         return base_cooldown;
     }
 
@@ -92,11 +92,12 @@ public abstract class ShortBowItem extends ModBowItem {
         }
     }
 
+
     @Override
-    public void appendHoverText(@NotNull ItemStack itemStack, @Nullable Level level, @NotNull List<Component> list, @NotNull TooltipFlag flag) {
-        super.appendHoverText(itemStack, level, list, flag);
+    public void appendHoverTextWithPlayer(@NotNull ItemStack stack, @Nullable Level level, @NotNull List<Component> list, @NotNull TooltipFlag flag, Player player) {
+        super.appendHoverText(stack, level, list, flag);
         list.add(Component.literal(""));
-        list.add(Component.literal("Shot Cooldown: ").withStyle(ChatFormatting.GREEN));
+        list.add(Component.literal("Shot Cooldown: ").append(this.createCooldown(player) + "s").withStyle(ChatFormatting.GREEN));
         list.add(Component.literal(""));
         list.add(Component.literal("Short Bow: Instantly Shoots!").withStyle(ChatFormatting.DARK_PURPLE));
     }

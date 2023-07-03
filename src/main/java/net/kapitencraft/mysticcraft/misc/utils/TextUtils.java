@@ -1,8 +1,7 @@
 package net.kapitencraft.mysticcraft.misc.utils;
 
-import net.kapitencraft.mysticcraft.item.spells.NormalSpellItem;
-import net.kapitencraft.mysticcraft.item.weapon.melee.sword.LongSwordItem;
-import net.kapitencraft.mysticcraft.item.weapon.ranged.bow.ShortBowItem;
+import net.kapitencraft.mysticcraft.misc.string_converter.MathArgument;
+import net.kapitencraft.mysticcraft.misc.string_converter.TransferArg;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
@@ -14,7 +13,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.*;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
@@ -45,49 +43,7 @@ public class TextUtils {
         }
     }
 
-    public static String getNameModifier(ItemStack stack) {
-        Item item = stack.getItem();
-        if (item instanceof NormalSpellItem) {
-            return "SPELL ITEM";
-        } else if (item instanceof LongSwordItem) {
-            return "LONGSWORD";
-        } else if (item instanceof ShortBowItem) {
-            return "SHORT BOW";
-        } else if (item instanceof SwordItem) {
-            return "SWORD";
-        } else if (item instanceof PickaxeItem) {
-            return "PICKAXE";
-        } else if (item instanceof AxeItem) {
-            return "AXE";
-        } else if (item instanceof ShovelItem) {
-            return "SHOVEL";
-        } else if (item instanceof HoeItem) {
-            return "HOE";
-        } else if (item instanceof BowItem) {
-            return "BOW";
-        } else if (item instanceof CrossbowItem) {
-            return "CROSSBOW";
-        } else if (item instanceof EnchantedBookItem) {
-            return "ENCHANTED BOOK";
-        } else if (item instanceof ArmorItem armorItem) {
-            if (armorItem.getSlot() == EquipmentSlot.FEET) {
-                return "BOOTS";
-            } else if (armorItem.getSlot() == EquipmentSlot.LEGS) {
-                return "LEGGINGS";
-            } else if (armorItem.getSlot() == EquipmentSlot.CHEST) {
-                return "CHEST PLATE";
-            } else if (armorItem.getSlot() == EquipmentSlot.HEAD) {
-                return "HELMET";
-            }
-        } else if (item instanceof BlockItem) {
-            return "BLOCK";
-        } else if (item instanceof BoatItem) {
-            return "BOAT";
-        } else if (item instanceof FishingRodItem) {
-            return "FISHING ROD";
-        }
-        return "ITEM";
-    }
+
 
     private static final List<String> NUMBERS = List.of("0", "1", "2", "3", "4", "5", "6", "7", "8", "9");
     private static final List<String> LETTERS_SMALL = List.of("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z");
@@ -111,6 +67,19 @@ public class TextUtils {
             s.append(ALL_DEFAULT.get(index));
         }
         return s.toString();
+    }
+
+    private String createListName(List<TransferArg<Integer>> list) {
+        StringBuilder builder = new StringBuilder();
+        for (TransferArg<Integer> integerTransferArg : list) {
+            builder.append(" ");
+            if (integerTransferArg instanceof MathArgument<Integer> mathArgument) {
+                builder.append(mathArgument.getName());
+            } else {
+                builder.append(integerTransferArg.value());
+            }
+        }
+        return builder.toString();
     }
 
     public static ChatFormatting damageIndicatorColorGenerator(String type) {

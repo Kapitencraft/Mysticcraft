@@ -49,13 +49,9 @@ public class SnipeEnchantment extends ModBowEnchantment implements IWeaponEnchan
         return false;
     }
 
-    @Override
-    public boolean isPercentage() {
-        return true;
-    }
 
     @Override
     public Object[] getDescriptionMods(int level) {
-        return new Object[] {level + "%"};
+        return new Object[] {level};
     }
 }

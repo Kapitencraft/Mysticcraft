@@ -56,14 +56,12 @@ public class CrimsonDeathRayProjectile extends AbstractArrow {
     @Override
     public void tick() {
         super.tick();
-        List<LivingEntity> possibleTargetEntities = MiscUtils.sortLowestDistance(this, this.level.getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(3)));
-        if (possibleTargetEntities != null) {
-            for (LivingEntity living : possibleTargetEntities) {
-                if (!this.ownedBy(living) && !living.isDeadOrDying()) {
-                    Vec3 targetVec = MathUtils.getPosition(living).subtract(MathUtils.getPosition(this));
-                    this.setDeltaMovement(MathUtils.maximiseLength(targetVec, 0.5));
-                    break;
-                }
+        List<LivingEntity> possibleTargetEntities = MiscUtils.sortLowestDistance(this, MathUtils.getLivingAround(this, 3));
+        for (LivingEntity living : possibleTargetEntities) {
+            if (!this.ownedBy(living) && !living.isDeadOrDying()) {
+                Vec3 targetVec = MathUtils.getPosition(living).subtract(MathUtils.getPosition(this));
+                this.setDeltaMovement(MathUtils.maximiseLength(targetVec, 0.5));
+                break;
             }
         }
         if (this.timeTravelled++ > 80) {

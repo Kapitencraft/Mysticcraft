@@ -1,20 +1,33 @@
 package net.kapitencraft.mysticcraft.gui;
-
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class ModMenu extends AbstractContainerMenu {
+public abstract class ModMenu<T extends BlockEntity> extends AbstractContainerMenu {
     private final int slotAmount;
-    protected ModMenu(@Nullable MenuType<?> p_38851_, int p_38852_, int slotAmount) {
-        super(p_38851_, p_38852_);
-        this.slotAmount = slotAmount;
+    protected final Level level;
+    protected final Player player;
+    protected final T blockEntity;
+
+    protected ModMenu(@Nullable MenuType<?> menuType, int containerId, int slotAMount, Inventory inventory, T block) {
+        super(menuType, containerId);
+        this.slotAmount = slotAMount;
+        this.player = inventory.player;
+        this.level = player.level;
+        this.blockEntity = block;
+    }
+
+    protected T fromBlockEntityLoader(Inventory inventory, FriendlyByteBuf byteBuf) {
+        return (T) inventory.player.level.getBlockEntity(byteBuf.readBlockPos());
     }
 
     protected void addPlayerInventories(Inventory inventory, int xOffset, int yOffset) {
@@ -78,4 +91,7 @@ public abstract class ModMenu extends AbstractContainerMenu {
         return copyOfSourceStack;
     }
 
+    public T getBlockEntity() {
+        return blockEntity;
+    }
 }

@@ -29,10 +29,6 @@ public class GlacialTouchEnchantment extends ExtendedCalculationEnchantment impl
         return damage;
     }
 
-    @Override
-    public boolean isPercentage() {
-        return false;
-    }
 
     @Override
     public Object[] getDescriptionMods(int level) {

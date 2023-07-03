@@ -10,28 +10,20 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import org.jetbrains.annotations.NotNull;
 
-public class GemstoneGrinderMenu extends ModMenu {
-    public final GemstoneGrinderBlockEntity blockEntity;
-    private final Level level;
-    private final Player player;
+public class GemstoneGrinderMenu extends ModMenu<GemstoneGrinderBlockEntity> {
 
     public GemstoneGrinderMenu(int id, Inventory inv, FriendlyByteBuf extraData) {
-        this(id, inv, inv.player.level.getBlockEntity(extraData.readBlockPos()));
+        this(id, inv, (GemstoneGrinderBlockEntity) inv.player.level.getBlockEntity(extraData.readBlockPos()));
     }
 
-    public GemstoneGrinderMenu(int id, Inventory inv, BlockEntity entity) {
-        super(ModMenuTypes.GEM_GRINDER_MENU.get(), id, 6);
+    public GemstoneGrinderMenu(int id, Inventory inv, GemstoneGrinderBlockEntity entity) {
+        super(ModMenuTypes.GEM_GRINDER.get(), id, 6, inv, entity);
         checkContainerSize(inv, 3);
-        blockEntity = (GemstoneGrinderBlockEntity) entity;
-        this.level = inv.player.level;
-        this.player = inv.player;
 
         this.addPlayerInventories(inv, 0, 0);
 

@@ -16,8 +16,4 @@ public abstract class StatBoostEnchantment extends Enchantment implements ModEnc
     public abstract Multimap<Attribute, AttributeModifier> getModifiers(int level, ItemStack enchanted, EquipmentSlot slot);
     public abstract boolean hasModifiersForThatSlot(EquipmentSlot slot);
 
-    @Override
-    public boolean isPercentage() {
-        return false;
-    }
 }

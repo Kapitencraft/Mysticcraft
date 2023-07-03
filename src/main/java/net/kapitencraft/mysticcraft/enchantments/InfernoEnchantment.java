@@ -47,13 +47,9 @@ public class InfernoEnchantment extends CountEnchantment implements IUltimateEnc
         return 5;
     }
 
-    @Override
-    public boolean isPercentage() {
-        return false;
-    }
 
     @Override
     public Object[] getDescriptionMods(int level) {
-        return new Object[]{(100 + level * 25) + "%"};
+        return new Object[]{(100 + level * 25)};
     }
 }

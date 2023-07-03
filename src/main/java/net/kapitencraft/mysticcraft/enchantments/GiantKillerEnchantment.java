@@ -26,13 +26,9 @@ public class GiantKillerEnchantment extends ExtendedCalculationEnchantment imple
         return  (float) (damage * (1 + Math.min(MoreHpPercent * level * 0.01, 0.5)));
     }
 
-    @Override
-    public boolean isPercentage() {
-        return true;
-    }
 
     @Override
     public Object[] getDescriptionMods(int level) {
-        return new Object[] {level+"%"};
+        return new Object[] {level};
     }
 }

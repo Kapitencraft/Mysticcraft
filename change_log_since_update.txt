@@ -1,3 +1,10 @@
 added SkeletonMaster;
+added Translation to all Reforges;
+
 
 nerved Skeleton Master shooting Damage 2 Potions, due to killing Netherite Dude in 2 Hits xD;
+
+fixed Reforges causing the Item Name to become infinite;
+fixed Reforges not being shown in 1. Person GUI;
+fixed Reforge Stats not being applied;
+fixed Reforges only being applied client-side;

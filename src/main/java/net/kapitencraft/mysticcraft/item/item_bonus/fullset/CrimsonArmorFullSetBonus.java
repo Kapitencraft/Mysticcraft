@@ -1,6 +1,5 @@
 package net.kapitencraft.mysticcraft.item.item_bonus.fullset;
 
-import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.entity.CrimsonDeathRayProjectile;
 import net.kapitencraft.mysticcraft.item.item_bonus.FullSetBonus;
 import net.kapitencraft.mysticcraft.misc.utils.MiscUtils;
@@ -9,12 +8,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -40,12 +36,6 @@ public class CrimsonArmorFullSetBonus extends FullSetBonus {
             }
         }
         data.putInt(COOLDOWN_ID, 120);
-    }
-
-    @Nullable
-    @Override
-    public Multimap<Attribute, AttributeModifier> getModifiers(LivingEntity living) {
-        return null;
     }
 
     @Override

@@ -12,5 +12,6 @@ public class RegisterCommands {
     public static void registerCommands(RegisterCommandsEvent event) {
         CommandDispatcher<CommandSourceStack> dispatcher = event.getDispatcher();
         GuildCommand.register(dispatcher);
+        TestCommand.register(dispatcher);
     }
 }

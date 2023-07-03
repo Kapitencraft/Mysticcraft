@@ -28,6 +28,6 @@ public class DataGenerators {
         generator.addProvider(false, new ModBlockStateProvider(output, helper));
         generator.addProvider(false, new ModRecipeProvider(output));
         generator.addProvider(true, new ModItemModelProvider(output, helper));
-        generator.addProvider(true, new ModLanguageProvider(output));
+        generator.addProvider(false, new ModLanguageProvider(output));
     }
 }

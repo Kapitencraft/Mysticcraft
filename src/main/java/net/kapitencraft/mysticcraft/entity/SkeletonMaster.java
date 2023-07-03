@@ -1,14 +1,15 @@
 package net.kapitencraft.mysticcraft.entity;
 
+import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.misc.utils.MathUtils;
+import net.kapitencraft.mysticcraft.misc.utils.ParticleUtils;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -24,22 +25,26 @@ import net.minecraft.world.entity.animal.Turtle;
 import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec2;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 public class SkeletonMaster extends Monster {
-    private List<ControlledArrow> toShoot;
+    public static final int ARROW_AMOUNT = 10;
+    public static final double ARROW_SPAWN_LENGTH = 1;
+    private final ArrowKeeper toShoot = new ArrowKeeper();
+    private List<ControlledArrow> arrows;
     private int cooldown;
-    private int amount;
+    private int reloadCooldown;
     public SkeletonMaster(EntityType<? extends SkeletonMaster> p_32133_, Level p_32134_) {
         super(p_32133_, p_32134_);
+
     }
 
     @Override
@@ -82,57 +87,55 @@ public class SkeletonMaster extends Monster {
     }
 
     @Override
-    public void die(@NotNull DamageSource source) {
-        super.die(source);
-    }
-
-    @Override
     public void tick() {
         super.tick();
-        if (this.getTarget() != null) {
-            if (this.toShoot == null || toShoot.size() == 0) {
-                reload();
-                spawnArrows();
-            } else {
-                if (this.cooldown == 0) {
-                    ControlledArrow arrow = this.toShoot.get(0);
-                    this.shootArrow(arrow);
-                    this.toShoot.remove(0);
-                } else {
-                    this.cooldown--;
-                }
+        reloadTick();
+        checkArrowKilled();
+        if (this.cooldown == 0) {
+            if (this.arrows == null || this.arrows.isEmpty()) {
+                this.arrows = this.toShoot.getList();
+                this.toShoot.removeList();
+            } else if (this.getTarget() != null) {
+                this.shootArrow(this.arrows.get(0));
+                this.arrows.remove(0);
             }
         } else {
-            if (this.toShoot != null) {
-                this.toShoot.forEach(Entity::kill);
-            }
+            this.cooldown--;
         }
     }
 
 
-    private void reload() {
-        this.amount = Mth.nextInt(RandomSource.create(), 10, 50);
+    private void checkArrowKilled() {
+        this.toShoot.removeIf(Entity::isRemoved);
+    }
+
+    private void reloadTick() {
+        if (reloadCooldown <= 0) {
+            RandomSource source = RandomSource.create();
+            this.spawnArrows();
+            this.reloadCooldown = Mth.nextInt(source, 15, 35);
+        } else {
+            reloadCooldown--;
+        }
     }
 
     private void spawnArrows() {
+        if (this.toShoot.getSize() >= 5) {
+            MysticcraftMod.sendInfo("done!");
+            return;
+        }
         List<ControlledArrow> arrows = new ArrayList<>();
-        for (int i = 0; i < amount; i++) {
-            Vec3 arrowPos = getPosForEntity(i).add(MathUtils.getPosition(this));
-            ControlledArrow arrow = new ControlledArrow(this.level, arrowPos.x, arrowPos.y, arrowPos.z);
-            arrow.setOwner(this);
-            arrow.setYRot(this.getYRot());
-            arrow.setXRot(this.getXRot());
+        for (int i = 0; i < SkeletonMaster.ARROW_AMOUNT; i++) {
+            //TODO Fix Arrows not being placed on the right pos
+            ControlledArrow arrow = new ControlledArrow(this.level, this, i + this.toShoot.getSize() * SkeletonMaster.ARROW_AMOUNT);
+            ParticleUtils.sendParticles(ParticleTypes.FLAME, true, arrow, 1, 0, 0, 0, 0);
             arrow.setBaseDamage(15);
             this.level.addFreshEntity(arrow);
             arrows.add(arrow);
         }
-        this.toShoot = arrows;
+        this.toShoot.addList(arrows);
     }
 
-    private Vec3 getPosForEntity(int index) {
-        RandomSource source = RandomSource.create();
-        return MathUtils.calculateViewVector(0, this.getYRot()).scale((index % 2 == 0 ? 2 : -2) + Mth.nextDouble(source, -0.5, 0.5)).add(0, 0.5 + Mth.nextDouble(source, 0, 2), 0);
-    }
     private void shootArrow(ControlledArrow arrow) {
         if (this.getTarget() != null) {
             Vec2 rot = MathUtils.createTargetRotationFromEyeHeight(arrow, this.getTarget());
@@ -141,6 +144,46 @@ public class SkeletonMaster extends Monster {
             arrow.fire();
             arrow.setDeltaMovement(MathUtils.calculateViewVector(rot.x, rot.y));
             this.setArrowCount(this.getArrowCount() - 1);
+        }
+    }
+
+    private static class ArrowKeeper {
+        private final List<List<ControlledArrow>> arrows = new ArrayList<>();
+
+        public ArrowKeeper() {
+        }
+
+        public int getSize() {
+            return arrows.size();
+        }
+
+        public void addList(List<ControlledArrow> list) {
+            this.arrows.add(list);
+        }
+
+        public void removeList() {
+            if (this.arrows.size() > 0) {
+                this.arrows.remove(this.arrows.size() - 1);
+            }
+        }
+
+        public List<ControlledArrow> getList() {
+            if (this.arrows.size() > 0) {
+                return this.arrows.get(this.arrows.size() - 1);
+            }
+            return List.of();
+        }
+
+        public void forEach(Consumer<ControlledArrow> consumer) {
+            for (List<ControlledArrow> list : this.arrows) {
+                list.forEach(consumer);
+            }
+        }
+
+        public void removeIf(Predicate<ControlledArrow> predicate) {
+            for (List<ControlledArrow> list : this.arrows) {
+                list.removeIf(predicate);
+            }
         }
     }
 }

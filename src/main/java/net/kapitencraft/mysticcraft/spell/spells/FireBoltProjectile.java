@@ -3,6 +3,7 @@ package net.kapitencraft.mysticcraft.spell.spells;
 import net.kapitencraft.mysticcraft.init.ModEntityTypes;
 import net.kapitencraft.mysticcraft.init.ModParticleTypes;
 import net.kapitencraft.mysticcraft.misc.damage_source.IndirectAbilityDamageSource;
+import net.kapitencraft.mysticcraft.misc.utils.MathUtils;
 import net.kapitencraft.mysticcraft.misc.utils.ParticleUtils;
 import net.kapitencraft.mysticcraft.spell.Spells;
 import net.minecraft.core.particles.ParticleTypes;
@@ -78,7 +79,7 @@ public class FireBoltProjectile extends SpellProjectile {
     @Override
     protected void onHitBlock(@NotNull BlockHitResult hitResult) {
         if (this.explosive) {
-            List<LivingEntity> livingEntities = this.level.getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(3));
+            List<LivingEntity> livingEntities = MathUtils.getLivingAround(this, 3);
             for (LivingEntity living : livingEntities) {
                 damage(living);
             }

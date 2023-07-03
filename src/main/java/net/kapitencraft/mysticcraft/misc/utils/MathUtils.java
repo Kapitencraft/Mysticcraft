@@ -3,10 +3,12 @@ package net.kapitencraft.mysticcraft.misc.utils;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Vector3i;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +17,15 @@ public class MathUtils {
 
     public static double round(double no, int num) {
         return Math.floor(no * (num * 10)) / (num * 10);
+    }
+
+    public static <T extends Entity> List<T> getEntitiesAround(Class<T> tClass, Entity source, double range) {
+        Level level = source.getLevel();
+        return level.getEntitiesOfClass(tClass, source.getBoundingBox().inflate(range));
+    }
+
+    public static List<LivingEntity> getLivingAround(Entity source, double range) {
+        return getEntitiesAround(LivingEntity.class, source, range);
     }
 
     public static Vec3 calculateViewVector(float horizontalAxis, float verticalAxis) {
@@ -118,5 +129,12 @@ public class MathUtils {
         double halfY = (y - (y * scale));
         double halfZ = (z - (z * scale));
         return new Vec3(halfX, halfY, halfZ);
+    }
+
+    public static Vector3i intToRGB(int in) {
+        int r = in >> 16 & 255;
+        int g = in >> 8 & 255;
+        int b = in & 255;
+        return new Vector3i(r, g, b);
     }
 }
