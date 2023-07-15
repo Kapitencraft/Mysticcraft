@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.spell.spells;
 
-import net.kapitencraft.mysticcraft.item.spells.SpellItem;
+import net.kapitencraft.mysticcraft.item.combat.spells.SpellItem;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;

@@ -2,8 +2,8 @@ package net.kapitencraft.mysticcraft.spell;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
-import net.kapitencraft.mysticcraft.item.spells.*;
-import net.kapitencraft.mysticcraft.item.spells.necron_sword.NecronSword;
+import net.kapitencraft.mysticcraft.item.combat.spells.*;
+import net.kapitencraft.mysticcraft.item.combat.spells.necron_sword.NecronSword;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.kapitencraft.mysticcraft.misc.utils.AttributeUtils;
 import net.kapitencraft.mysticcraft.misc.utils.TextUtils;

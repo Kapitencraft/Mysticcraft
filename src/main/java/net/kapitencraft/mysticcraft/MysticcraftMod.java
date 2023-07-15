@@ -17,6 +17,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.SpawnPlacements;
@@ -42,6 +43,7 @@ public class MysticcraftMod {
     public static final String MOD_ID = "mysticcraft";
     public static final double DAMAGE_CALCULATION_VALUE = 50;
 
+    public static final RandomSource RANDOM_SOURCE = RandomSource.create();
 
     private static final Logger LOGGER = LogUtils.getLogger();
 

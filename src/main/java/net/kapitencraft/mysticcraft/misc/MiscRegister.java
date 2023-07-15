@@ -14,12 +14,13 @@ import net.kapitencraft.mysticcraft.entity.FrozenBlazeEntity;
 import net.kapitencraft.mysticcraft.init.*;
 import net.kapitencraft.mysticcraft.item.RNGDropHelper;
 import net.kapitencraft.mysticcraft.item.armor.*;
+import net.kapitencraft.mysticcraft.item.combat.spells.SpellItem;
+import net.kapitencraft.mysticcraft.item.combat.totems.ModTotemItem;
+import net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword.ManaSteelSwordItem;
+import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.bow.ModBowItem;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.item.item_bonus.IArmorBonusItem;
 import net.kapitencraft.mysticcraft.item.reforging.Reforge;
-import net.kapitencraft.mysticcraft.item.spells.SpellItem;
-import net.kapitencraft.mysticcraft.item.weapon.melee.sword.ManaSteelSwordItem;
-import net.kapitencraft.mysticcraft.item.weapon.ranged.bow.ModBowItem;
 import net.kapitencraft.mysticcraft.misc.damage_source.FerociousDamageSource;
 import net.kapitencraft.mysticcraft.misc.damage_source.IAbilitySource;
 import net.kapitencraft.mysticcraft.misc.particle_help.ParticleHelper;
@@ -68,6 +69,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.ItemAttributeModifierEvent;
@@ -555,7 +557,13 @@ public class MiscRegister {
         }
     }
 
-
+    @SubscribeEvent
+    public static void stunEffectRegister(InputEvent.Key event) {
+        Player player = Minecraft.getInstance().player;
+        if (player != null && player.getEffect(ModMobEffects.STUN.get()) != null) {
+            event.setCanceled(true);
+        }
+    }
     @SubscribeEvent
     public static void healthRegenRegister(LivingHealEvent event) {
         LivingEntity living = event.getEntity();
@@ -762,16 +770,14 @@ public class MiscRegister {
         LivingEntity toDie = event.getEntity();
         Level level = toDie.level;
         if (toDie instanceof Player player) {
-            if (InventoryUtils.hasPlayerStackInInventory(player, ModItems.MOD_DEBUG_STICK.get())) {
-                event.setCanceled(true);
-                toDie.setHealth(2);
-                toDie.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 200, 2));
-                Minecraft.getInstance().gameRenderer.displayItemActivation(player.getMainHandItem());
-                if (level instanceof ServerLevel serverLevel) {
-                    MiscUtils.awardAchievement(player, "minecraft:adventure/totem_of_undying");
-                    toDie.setInvulnerable(true);
-                    toDie.getPersistentData().putInt("InvuTime", 20);
-                    serverLevel.explode(null, toDie.getX(), toDie.getY(), toDie.getZ(), 10, Level.ExplosionInteraction.BLOCK);
+            List<ItemStack> totems = InventoryUtils.getByFilter(player, stack -> stack.getItem() instanceof ModTotemItem);
+            for (ItemStack stack : totems) {
+                ModTotemItem totemItem = (ModTotemItem) stack.getItem();
+                if (totemItem.onUse(player, event.getSource())) {
+                    event.setCanceled(true);
+                    Minecraft.getInstance().gameRenderer.displayItemActivation(stack);
+                    stack.shrink(1);
+
                 }
             }
         }

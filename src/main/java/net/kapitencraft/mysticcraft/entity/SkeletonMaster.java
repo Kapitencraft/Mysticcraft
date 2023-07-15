@@ -2,9 +2,7 @@ package net.kapitencraft.mysticcraft.entity;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.misc.utils.MathUtils;
-import net.kapitencraft.mysticcraft.misc.utils.ParticleUtils;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
@@ -40,11 +38,10 @@ public class SkeletonMaster extends Monster {
     public static final double ARROW_SPAWN_LENGTH = 1;
     private final ArrowKeeper toShoot = new ArrowKeeper();
     private List<ControlledArrow> arrows;
-    private int cooldown;
+    private int attackCooldown;
     private int reloadCooldown;
     public SkeletonMaster(EntityType<? extends SkeletonMaster> p_32133_, Level p_32134_) {
         super(p_32133_, p_32134_);
-
     }
 
     @Override
@@ -91,16 +88,13 @@ public class SkeletonMaster extends Monster {
         super.tick();
         reloadTick();
         checkArrowKilled();
-        if (this.cooldown == 0) {
-            if (this.arrows == null || this.arrows.isEmpty()) {
-                this.arrows = this.toShoot.getList();
-                this.toShoot.removeList();
-            } else if (this.getTarget() != null) {
-                this.shootArrow(this.arrows.get(0));
-                this.arrows.remove(0);
+        if (this.attackCooldown == 0) {
+            if (this.getTarget() != null) {
+                this.shootArrow(this.toShoot.getList().get(0));
+                this.attackCooldown = Mth.nextInt(MysticcraftMod.RANDOM_SOURCE, 5, 20);
             }
         } else {
-            this.cooldown--;
+            this.attackCooldown--;
         }
     }
 
@@ -120,15 +114,13 @@ public class SkeletonMaster extends Monster {
     }
 
     private void spawnArrows() {
-        if (this.toShoot.getSize() >= 5) {
-            MysticcraftMod.sendInfo("done!");
+        if (this.toShoot.getSize() >= 10) {
             return;
         }
         List<ControlledArrow> arrows = new ArrayList<>();
         for (int i = 0; i < SkeletonMaster.ARROW_AMOUNT; i++) {
             //TODO Fix Arrows not being placed on the right pos
-            ControlledArrow arrow = new ControlledArrow(this.level, this, i + this.toShoot.getSize() * SkeletonMaster.ARROW_AMOUNT);
-            ParticleUtils.sendParticles(ParticleTypes.FLAME, true, arrow, 1, 0, 0, 0, 0);
+            ControlledArrow arrow = new ControlledArrow(this.level, this, i + this.toShoot.getSize() * SkeletonMaster.ARROW_AMOUNT, this.toShoot.getSize() % 2 == 0);
             arrow.setBaseDamage(15);
             this.level.addFreshEntity(arrow);
             arrows.add(arrow);
@@ -162,13 +154,13 @@ public class SkeletonMaster extends Monster {
         }
 
         public void removeList() {
-            if (this.arrows.size() > 0) {
+            if (this.getSize() > 0) {
                 this.arrows.remove(this.arrows.size() - 1);
             }
         }
 
         public List<ControlledArrow> getList() {
-            if (this.arrows.size() > 0) {
+            if (this.getSize() > 0) {
                 return this.arrows.get(this.arrows.size() - 1);
             }
             return List.of();
@@ -181,6 +173,7 @@ public class SkeletonMaster extends Monster {
         }
 
         public void removeIf(Predicate<ControlledArrow> predicate) {
+            this.arrows.removeIf(List::isEmpty);
             for (List<ControlledArrow> list : this.arrows) {
                 list.removeIf(predicate);
             }

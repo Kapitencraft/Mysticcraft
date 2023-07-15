@@ -5,7 +5,7 @@
   "refmap": "mysticcraft.mixin-refmap.json",
   "mixins": [
     "LivingEntityAccessor",
-    "ClientToolTipPositionerMixin",
+    "ClientTooltipPositionerMixin",
     "HandItemLayerRendererMixin",
     "BannerItemMixin",
     "PlayerMixin",

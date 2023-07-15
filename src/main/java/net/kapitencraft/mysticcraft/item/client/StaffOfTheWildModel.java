@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.item.client;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.item.spells.StaffOfTheWildItem;
+import net.kapitencraft.mysticcraft.item.combat.spells.StaffOfTheWildItem;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.model.DefaultedItemGeoModel;
 

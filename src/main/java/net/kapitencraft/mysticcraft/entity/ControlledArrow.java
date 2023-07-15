@@ -3,7 +3,6 @@ package net.kapitencraft.mysticcraft.entity;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.misc.utils.MathUtils;
 import net.kapitencraft.mysticcraft.misc.utils.ParticleUtils;
-import net.kapitencraft.mysticcraft.misc.utils.TextUtils;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -25,12 +24,15 @@ public class ControlledArrow extends Arrow {
     private static final EntityDataAccessor<Float> ROTATION_X = SynchedEntityData.defineId(ControlledArrow.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> ROTATION_Y = SynchedEntityData.defineId(ControlledArrow.class, EntityDataSerializers.FLOAT);
     private final int volleyVal;
+    private final boolean left;
 
     boolean hasBeenFired = false;
 
-    public ControlledArrow(Level p_36866_, LivingEntity p_36867_, int volleyVal) {
+    public ControlledArrow(Level p_36866_, LivingEntity p_36867_, int volleyVal, boolean left) {
         super(p_36866_, p_36867_);
         this.volleyVal = volleyVal;
+        this.left = left;
+        this.updatePos();
         this.setNoGravity(true);
     }
 
@@ -61,20 +63,21 @@ public class ControlledArrow extends Arrow {
     }
 
     private void updatePos() {
-        if (this.getOwner() == null) {
-            MysticcraftMod.sendInfo("updating Pos...");
+        if (this.getOwner() != null) {
             int index = this.volleyVal % ARROW_AMOUNT;
-            Vec3 deltaPos = MathUtils.calculateViewVector(0, this.getYRot());
+            Vec3 deltaPos = MathUtils.calculateViewVector(0, this.getYRot() + 90);
             double offSetPerArrow = ARROW_SPAWN_LENGTH / ARROW_AMOUNT;
             double arrowOffset = offSetPerArrow * (index % 2 == 0 ? index : index - 1);
-            if (index % 2 == 0) {
+            double height = (this.volleyVal - index) * offSetPerArrow;
+            if (this.left) {
                 deltaPos.scale(2);
             } else {
                 deltaPos.scale(-2);
             }
             deltaPos.scale(1 + (arrowOffset - ARROW_SPAWN_LENGTH / 2));
-            MysticcraftMod.sendInfo(TextUtils.fromVec3(deltaPos));
-            this.setPos(new Vec3(deltaPos.x, 0.5 + (this.volleyVal - index) * offSetPerArrow, deltaPos.z).add(MathUtils.getPosition(this.getOwner())));
+            this.setPos(new Vec3(deltaPos.x, 0.5 + height, deltaPos.z).add(MathUtils.getPosition(this.getOwner())));
+            MysticcraftMod.sendInfo(String.valueOf(0.5 + height));
+            this.setRot(this.getOwner().getXRot(), this.getOwner().getYRot());
         }
     }
 
@@ -92,6 +95,7 @@ public class ControlledArrow extends Arrow {
 
     public void fire() {
         this.setCritArrow(true);
+        this.setNoGravity(false);
         this.hasBeenFired = true;
     }
 }

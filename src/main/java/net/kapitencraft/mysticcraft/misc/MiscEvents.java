@@ -45,7 +45,7 @@ public class MiscEvents {
 
         @SubscribeEvent
         public static void registerColors(RegisterColorHandlersEvent.Item event) {
-            MysticcraftMod.sendWarn("registering Custom Colors");
+            MysticcraftMod.sendInfo("registering Custom Colors");
             event.register((p_92708_, p_92709_) -> p_92709_ > 0 ? -1 : ((DyeableLeatherItem) p_92708_.getItem()).getColor(p_92708_), ModItems.DYED_LEATHER.get());
             for (HashMap<GemstoneType.Rarity, RegistryObject<GemstoneItem>> item : ModItems.GEMSTONES.values()) {
                 for (GemstoneItem item1 : item.values().stream().map(RegistryObject::get).toList()) {

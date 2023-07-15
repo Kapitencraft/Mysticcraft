@@ -2,9 +2,9 @@ package net.kapitencraft.mysticcraft.misc.utils;
 
 import net.kapitencraft.mysticcraft.ModConstance;
 import net.kapitencraft.mysticcraft.gui.IGuiHelper;
+import net.kapitencraft.mysticcraft.item.combat.spells.SpellItem;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneItem;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
-import net.kapitencraft.mysticcraft.item.spells.SpellItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementProgress;

@@ -2,8 +2,8 @@ package net.kapitencraft.mysticcraft.misc;
 
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModItems;
-import net.kapitencraft.mysticcraft.item.shield.ModShieldItem;
-import net.kapitencraft.mysticcraft.item.weapon.ranged.bow.ModBowItem;
+import net.kapitencraft.mysticcraft.item.combat.shield.ModShieldItem;
+import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.bow.ModBowItem;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;

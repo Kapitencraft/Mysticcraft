@@ -2,7 +2,7 @@ package net.kapitencraft.mysticcraft.init;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.entity.*;
-import net.kapitencraft.mysticcraft.item.weapon.ranged.firework.NapalmRocketEntity;
+import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.firework.NapalmRocketEntity;
 import net.kapitencraft.mysticcraft.misc.function.Provider;
 import net.kapitencraft.mysticcraft.spell.spells.FireBoltProjectile;
 import net.minecraft.resources.ResourceLocation;
