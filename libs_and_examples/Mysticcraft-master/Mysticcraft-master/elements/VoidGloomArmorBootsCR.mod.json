@@ -1,0 +1,46 @@
+{
+  "_fv": 34,
+  "_type": "recipe",
+  "definition": {
+    "recipeType": "Crafting",
+    "xpReward": 0.0,
+    "cookingTime": 200,
+    "recipeRetstackSize": 1,
+    "group": "",
+    "recipeShapeless": false,
+    "recipeSlots": [
+      {
+        "value": ""
+      },
+      {
+        "value": ""
+      },
+      {
+        "value": ""
+      },
+      {
+        "value": "CUSTOM:VoidGloomSphere"
+      },
+      {
+        "value": ""
+      },
+      {
+        "value": "CUSTOM:VoidGloomSphere"
+      },
+      {
+        "value": "CUSTOM:VoidGloomSphere"
+      },
+      {
+        "value": ""
+      },
+      {
+        "value": "CUSTOM:VoidGloomSphere"
+      }
+    ],
+    "recipeReturnStack": {
+      "value": "CUSTOM:VoidGloomArmor.boots"
+    },
+    "name": "void_gloom_armor_boots_cr",
+    "namespace": "mod"
+  }
+}

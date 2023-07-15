@@ -1,0 +1,7 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "mysticcraft:blocks/titanium_ore_block",
+    "particle": "mysticcraft:blocks/titanium_ore_block"
+  }
+}

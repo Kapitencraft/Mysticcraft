@@ -1,0 +1,109 @@
+{
+  "_fv": 34,
+  "_type": "overlay",
+  "definition": {
+    "priority": "NORMAL",
+    "components": [
+      {
+        "type": "label",
+        "data": {
+          "text": "<VAR:integer:MaxMana>",
+          "color": {
+            "value": -16724788,
+            "falpha": 0.0
+          },
+          "name": "<VAR:integer:MaxMana>",
+          "x": 1,
+          "y": 224
+        }
+      },
+      {
+        "type": "label",
+        "data": {
+          "text": "<VAR:integer:Mana>",
+          "color": {
+            "value": -16751002,
+            "falpha": 0.0
+          },
+          "name": "<VAR:integer:Mana>",
+          "x": 2,
+          "y": 209
+        }
+      },
+      {
+        "type": "label",
+        "data": {
+          "text": "<VAR:integer:Intelligence>",
+          "color": {
+            "value": -3407668,
+            "falpha": 0.0
+          },
+          "name": "<VAR:integer:Intelligence>",
+          "x": 291,
+          "y": 0
+        }
+      },
+      {
+        "type": "label",
+        "data": {
+          "text": "<VAR:xvec>",
+          "color": {
+            "value": -65536,
+            "falpha": 0.0
+          },
+          "name": "<VAR:xvec>",
+          "x": 373,
+          "y": 170
+        }
+      },
+      {
+        "type": "label",
+        "data": {
+          "text": "<VAR:yvec>",
+          "color": {
+            "value": -65536,
+            "falpha": 0.0
+          },
+          "name": "<VAR:yvec>",
+          "x": 373,
+          "y": 180
+        }
+      },
+      {
+        "type": "label",
+        "data": {
+          "text": "<VAR:zvec>",
+          "color": {
+            "value": -65536,
+            "falpha": 0.0
+          },
+          "name": "<VAR:zvec>",
+          "x": 373,
+          "y": 190
+        }
+      },
+      {
+        "type": "label",
+        "data": {
+          "text": "<VAR:manaused>",
+          "color": {
+            "value": -1,
+            "falpha": 0.0
+          },
+          "name": "<VAR:manaused>",
+          "x": 18,
+          "y": 191
+        }
+      }
+    ],
+    "baseTexture": "",
+    "overlayTarget": "Ingame",
+    "gridSettings": {
+      "sx": 18,
+      "sy": 18,
+      "ox": 11,
+      "oy": 15,
+      "snapOnGrid": false
+    }
+  }
+}

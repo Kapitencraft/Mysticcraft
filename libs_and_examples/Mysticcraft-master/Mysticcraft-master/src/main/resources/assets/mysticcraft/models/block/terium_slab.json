@@ -1,0 +1,8 @@
+{
+  "parent": "block/slab",
+  "textures": {
+    "bottom": "mysticcraft:blocks/terium_planks",
+    "top": "mysticcraft:blocks/terium_planks",
+    "side": "mysticcraft:blocks/terium_planks"
+  }
+}

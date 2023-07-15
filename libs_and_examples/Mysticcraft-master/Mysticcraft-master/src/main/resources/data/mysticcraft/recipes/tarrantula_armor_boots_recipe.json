@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "012",
+    "3 5"
+  ],
+  "key": {
+    "0": {
+      "item": "mysticcraft:reforged_spider_eye"
+    },
+    "1": {
+      "item": "mysticcraft:spider_armor_boots"
+    },
+    "2": {
+      "item": "mysticcraft:reforged_spider_eye"
+    },
+    "3": {
+      "item": "mysticcraft:reforged_spider_eye"
+    },
+    "5": {
+      "item": "mysticcraft:reforged_spider_eye"
+    }
+  },
+  "result": {
+    "item": "mysticcraft:tarrantula_armor_boots",
+    "count": 1
+  }
+}

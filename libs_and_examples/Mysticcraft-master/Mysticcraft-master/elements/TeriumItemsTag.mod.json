@@ -1,0 +1,20 @@
+{
+  "_fv": 34,
+  "_type": "tag",
+  "definition": {
+    "type": "Items",
+    "items": [
+      {
+        "value": "CUSTOM:TeriumWood"
+      },
+      {
+        "value": "CUSTOM:TeriumLog"
+      }
+    ],
+    "blocks": [],
+    "functions": [],
+    "entities": [],
+    "name": "terium_log",
+    "namespace": "forge"
+  }
+}

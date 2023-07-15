@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "012",
+    "3 5"
+  ],
+  "key": {
+    "0": {
+      "item": "minecraft:fermented_spider_eye"
+    },
+    "1": {
+      "item": "minecraft:fermented_spider_eye"
+    },
+    "2": {
+      "item": "minecraft:fermented_spider_eye"
+    },
+    "3": {
+      "item": "minecraft:fermented_spider_eye"
+    },
+    "5": {
+      "item": "minecraft:fermented_spider_eye"
+    }
+  },
+  "result": {
+    "item": "mysticcraft:spider_armor_helmet",
+    "count": 1
+  }
+}

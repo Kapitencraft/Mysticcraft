@@ -1,0 +1,12 @@
+{
+  "_fv": 34,
+  "_type": "keybind",
+  "definition": {
+    "triggerKey": "R",
+    "keyBindingName": "Ability Armor Use Key",
+    "keyBindingCategoryKey": "gameplay",
+    "onKeyPressed": {
+      "name": "ArmorAbilityUse"
+    }
+  }
+}

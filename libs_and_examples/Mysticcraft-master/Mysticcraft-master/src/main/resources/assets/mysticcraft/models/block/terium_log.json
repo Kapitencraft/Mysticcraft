@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "down": "mysticcraft:blocks/terium_log_top",
+    "up": "mysticcraft:blocks/terium_log_top",
+    "north": "mysticcraft:blocks/terium_log_side",
+    "east": "mysticcraft:blocks/terium_log_side",
+    "south": "mysticcraft:blocks/terium_log_side",
+    "west": "mysticcraft:blocks/terium_log_side",
+    "particle": "mysticcraft:blocks/terium_log_top"
+  }
+}

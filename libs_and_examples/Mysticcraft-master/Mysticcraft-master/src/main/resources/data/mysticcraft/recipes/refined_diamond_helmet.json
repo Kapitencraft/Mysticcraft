@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "012",
+    "3 5"
+  ],
+  "key": {
+    "0": {
+      "item": "mysticcraft:refined_diamond"
+    },
+    "1": {
+      "item": "mysticcraft:refined_diamond"
+    },
+    "2": {
+      "item": "mysticcraft:refined_diamond"
+    },
+    "3": {
+      "item": "mysticcraft:refined_diamond"
+    },
+    "5": {
+      "item": "mysticcraft:refined_diamond"
+    }
+  },
+  "result": {
+    "item": "mysticcraft:refined_diamond_armor_helmet",
+    "count": 1
+  }
+}

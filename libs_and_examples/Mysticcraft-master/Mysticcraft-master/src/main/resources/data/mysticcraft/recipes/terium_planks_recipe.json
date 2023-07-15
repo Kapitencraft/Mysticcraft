@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "forge:terium_log"
+    }
+  ],
+  "result": {
+    "item": "mysticcraft:terium_planks",
+    "count": 4
+  }
+}

@@ -1,0 +1,7 @@
+{
+    "parent": "mysticcraft:item/long_bow",
+    "textures": 
+    {
+        "layer0": "mysticcraft:items/longbow_pulling_0"
+    }
+}

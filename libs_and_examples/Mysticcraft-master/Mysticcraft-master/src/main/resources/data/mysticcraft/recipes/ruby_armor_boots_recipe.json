@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "0 2",
+    "3 5"
+  ],
+  "key": {
+    "0": {
+      "item": "mysticcraft:ruby"
+    },
+    "2": {
+      "item": "mysticcraft:ruby"
+    },
+    "3": {
+      "item": "mysticcraft:ruby"
+    },
+    "5": {
+      "item": "mysticcraft:ruby"
+    }
+  },
+  "result": {
+    "item": "mysticcraft:ruby_armor_boots",
+    "count": 1
+  }
+}

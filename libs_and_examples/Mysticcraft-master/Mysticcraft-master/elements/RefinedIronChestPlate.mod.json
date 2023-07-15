@@ -1,0 +1,46 @@
+{
+  "_fv": 34,
+  "_type": "recipe",
+  "definition": {
+    "recipeType": "Crafting",
+    "xpReward": 0.0,
+    "cookingTime": 200,
+    "recipeRetstackSize": 1,
+    "group": "",
+    "recipeShapeless": false,
+    "recipeSlots": [
+      {
+        "value": "CUSTOM:RefinedIron"
+      },
+      {
+        "value": ""
+      },
+      {
+        "value": "CUSTOM:RefinedIron"
+      },
+      {
+        "value": "CUSTOM:RefinedIron"
+      },
+      {
+        "value": "CUSTOM:RefinedIron"
+      },
+      {
+        "value": "CUSTOM:RefinedIron"
+      },
+      {
+        "value": "CUSTOM:RefinedIron"
+      },
+      {
+        "value": "CUSTOM:RefinedIron"
+      },
+      {
+        "value": "CUSTOM:RefinedIron"
+      }
+    ],
+    "recipeReturnStack": {
+      "value": "CUSTOM:RefinedIronArmor.body"
+    },
+    "name": "refined_iron_chest_plate",
+    "namespace": "mod"
+  }
+}

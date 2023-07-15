@@ -1,0 +1,6 @@
+{
+  "parent": "block/button",
+  "textures": {
+    "texture": "mysticcraft:blocks/fillorium_planks"
+  }
+}

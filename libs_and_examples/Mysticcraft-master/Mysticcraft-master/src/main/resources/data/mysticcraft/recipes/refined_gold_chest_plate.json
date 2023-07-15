@@ -1,0 +1,38 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "0 2",
+    "345",
+    "678"
+  ],
+  "key": {
+    "0": {
+      "item": "mysticcraft:refined_gold"
+    },
+    "2": {
+      "item": "mysticcraft:refined_gold"
+    },
+    "3": {
+      "item": "mysticcraft:refined_gold"
+    },
+    "4": {
+      "item": "mysticcraft:refined_gold"
+    },
+    "5": {
+      "item": "mysticcraft:refined_gold"
+    },
+    "6": {
+      "item": "mysticcraft:refined_gold"
+    },
+    "7": {
+      "item": "mysticcraft:refined_gold"
+    },
+    "8": {
+      "item": "mysticcraft:refined_gold"
+    }
+  },
+  "result": {
+    "item": "mysticcraft:refined_gold_armor_chestplate",
+    "count": 1
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "parent": "block/fence_inventory",
+  "textures": {
+    "texture": "mysticcraft:blocks/terium_planks",
+    "particle": "mysticcraft:blocks/terium_planks"
+  }
+}

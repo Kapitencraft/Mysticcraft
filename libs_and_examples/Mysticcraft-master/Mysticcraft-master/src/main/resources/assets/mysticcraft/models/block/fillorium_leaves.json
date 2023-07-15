@@ -1,0 +1,7 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "mysticcraft:blocks/fillorium_leaves",
+    "particle": "mysticcraft:blocks/fillorium_leaves"
+  }
+}

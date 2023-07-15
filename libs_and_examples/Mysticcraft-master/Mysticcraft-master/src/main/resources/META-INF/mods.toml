@@ -1,0 +1,25 @@
+modLoader="javafml"
+loaderVersion="[40,)"
+license="Academic Free License v3.0"
+
+[[mods]]
+modId="mysticcraft"
+version="1.0.0"
+displayName="mysticcraft"
+credits="MeisterYeet; Hypixel Skyblock;"
+displayURL="https://mcreator.net"
+authors="erasmus.von.platen, MCreator"
+description='''
+a Mod that makes Minecraft more like an RPG
+'''
+
+[[dependencies.mysticcraft]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.18.2]"
+    ordering="NONE"
+    side="BOTH"
+
+
+
+

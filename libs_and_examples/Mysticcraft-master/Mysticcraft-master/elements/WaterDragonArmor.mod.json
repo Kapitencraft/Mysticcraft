@@ -1,0 +1,74 @@
+{
+  "_fv": 34,
+  "_type": "armor",
+  "definition": {
+    "enableHelmet": true,
+    "textureHelmet": "water_dragon_helmet",
+    "enableBody": true,
+    "textureBody": "water_dragon_chestplate",
+    "enableLeggings": true,
+    "textureLeggings": "water_dragon_leggings",
+    "enableBoots": true,
+    "textureBoots": "water_dragon_boots",
+    "creativeTab": {
+      "value": "COMBAT"
+    },
+    "armorTextureFile": "water_dragon_",
+    "helmetName": "Water Dragon Armor Helmet",
+    "bodyName": "Water Dragon Armor Body",
+    "leggingsName": "Water Dragon Armor Leggings",
+    "bootsName": "Water Dragon Armor Boots",
+    "helmetSpecialInfo": [
+      "�b+125 Intelligence",
+      "�4+1 Strength"
+    ],
+    "bodySpecialInfo": [
+      "�b+125 Intelligence",
+      "�4+1Strength"
+    ],
+    "leggingsSpecialInfo": [
+      "�b+125 Intelligence",
+      "�4+1 Strength"
+    ],
+    "bootsSpecialInfo": [
+      "�b+125 Intelligence",
+      "�4+1 Strength"
+    ],
+    "helmetModelName": "Default",
+    "helmetModelPart": "Helmet",
+    "helmetModelTexture": "From armor",
+    "bodyModelName": "Default",
+    "bodyModelPart": "Body",
+    "armsModelPartL": "Arms L",
+    "armsModelPartR": "Arms R",
+    "bodyModelTexture": "From armor",
+    "leggingsModelName": "Default",
+    "leggingsModelPartL": "Leggings L",
+    "leggingsModelPartR": "Leggings R",
+    "leggingsModelTexture": "From armor",
+    "bootsModelName": "Default",
+    "bootsModelPartL": "Boots L",
+    "bootsModelPartR": "Boots R",
+    "bootsModelTexture": "From armor",
+    "helmetImmuneToFire": false,
+    "bodyImmuneToFire": false,
+    "leggingsImmuneToFire": false,
+    "bootsImmuneToFire": false,
+    "maxDamage": 40,
+    "damageValueHelmet": 5,
+    "damageValueBody": 8,
+    "damageValueLeggings": 6,
+    "damageValueBoots": 4,
+    "enchantability": 12,
+    "toughness": 2.5,
+    "knockbackResistance": 0.11,
+    "equipSound": {
+      "value": "item.armor.equip_netherite"
+    },
+    "repairItems": [
+      {
+        "value": "CUSTOM:WaterDragonScale"
+      }
+    ]
+  }
+}

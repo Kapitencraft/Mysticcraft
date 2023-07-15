@@ -35,6 +35,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
 import software.bernie.geckolib.GeckoLib;
 
+import java.text.DecimalFormat;
 import java.util.UUID;
 
 // The value here should match an entry in the META-INF/mods.toml file
@@ -109,6 +110,10 @@ public class MysticcraftMod {
         }
     }
 
+
+    public static String doubleFormat(double d) {
+        return new DecimalFormat("#.##").format(d);
+    }
 
     private static String lastMSG = "";
 

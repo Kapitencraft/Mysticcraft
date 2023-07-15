@@ -1,0 +1,7 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "mysticcraft:blocks/ruby_ore",
+    "particle": "mysticcraft:blocks/ruby_ore"
+  }
+}

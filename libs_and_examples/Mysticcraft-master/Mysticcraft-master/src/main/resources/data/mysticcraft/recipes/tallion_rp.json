@@ -1,0 +1,32 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " 12",
+    "3 5",
+    " 78"
+  ],
+  "key": {
+    "1": {
+      "item": "mysticcraft:plasma_core"
+    },
+    "2": {
+      "item": "minecraft:string"
+    },
+    "3": {
+      "item": "mysticcraft:refined_diamond"
+    },
+    "5": {
+      "item": "minecraft:string"
+    },
+    "7": {
+      "item": "mysticcraft:plasma_core"
+    },
+    "8": {
+      "item": "minecraft:string"
+    }
+  },
+  "result": {
+    "item": "mysticcraft:tallion",
+    "count": 1
+  }
+}

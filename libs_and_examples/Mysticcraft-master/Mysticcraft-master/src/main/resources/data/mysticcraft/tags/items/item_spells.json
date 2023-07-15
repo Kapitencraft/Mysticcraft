@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "mysticcraft:lightning_shield_spell",
+    "mysticcraft:lightning_rush",
+    "mysticcraft:shadow_warp",
+    "mysticcraft:beam_me_up_spell"
+  ]
+}

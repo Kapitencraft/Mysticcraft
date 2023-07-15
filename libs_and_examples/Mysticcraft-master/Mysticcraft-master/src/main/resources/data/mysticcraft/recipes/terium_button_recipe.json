@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "mysticcraft:terium_planks"
+    }
+  ],
+  "result": {
+    "item": "mysticcraft:terium_button",
+    "count": 1
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "mysticcraft:block/reforge_anvil_block"
+    }
+  }
+}

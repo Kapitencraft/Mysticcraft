@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "0 2",
+    "3 5"
+  ],
+  "key": {
+    "0": {
+      "item": "mysticcraft:ice_dragon_scale"
+    },
+    "2": {
+      "item": "mysticcraft:ice_dragon_scale"
+    },
+    "3": {
+      "item": "mysticcraft:ice_dragon_scale"
+    },
+    "5": {
+      "item": "mysticcraft:ice_dragon_scale"
+    }
+  },
+  "result": {
+    "item": "mysticcraft:ice_dragon_armor_boots",
+    "count": 1
+  }
+}

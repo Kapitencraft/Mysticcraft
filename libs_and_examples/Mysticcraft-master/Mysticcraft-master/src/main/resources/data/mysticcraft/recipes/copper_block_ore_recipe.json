@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "mysticcraft:copper_block"
+    }
+  ],
+  "result": {
+    "item": "mysticcraft:copper_ingot",
+    "count": 9
+  }
+}

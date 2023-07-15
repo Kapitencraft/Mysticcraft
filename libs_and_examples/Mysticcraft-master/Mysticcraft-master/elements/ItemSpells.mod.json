@@ -1,0 +1,26 @@
+{
+  "_fv": 34,
+  "_type": "tag",
+  "definition": {
+    "type": "Items",
+    "items": [
+      {
+        "value": "CUSTOM:LightningRush"
+      },
+      {
+        "value": "CUSTOM:LightningShieldSpell"
+      },
+      {
+        "value": "CUSTOM:BeamMeUpSpell"
+      },
+      {
+        "value": "CUSTOM:ShadowWarp"
+      }
+    ],
+    "blocks": [],
+    "functions": [],
+    "entities": [],
+    "name": "item_spells",
+    "namespace": "mod"
+  }
+}
