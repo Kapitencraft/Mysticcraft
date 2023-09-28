@@ -5,11 +5,11 @@ import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModEnchantments;
-import net.kapitencraft.mysticcraft.item.IModItem;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
+import net.kapitencraft.mysticcraft.item.misc.IModItem;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
-import net.kapitencraft.mysticcraft.misc.utils.AttributeUtils;
-import net.kapitencraft.mysticcraft.misc.utils.MiscUtils;
+import net.kapitencraft.mysticcraft.utils.AttributeUtils;
+import net.kapitencraft.mysticcraft.utils.MiscUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -46,11 +46,9 @@ public abstract class ModBowItem extends BowItem implements IModItem {
             int i = this.getUseDuration(bow) - timeLeft;
             i = net.minecraftforge.event.ForgeEventFactory.onArrowLoose(bow, world, player, i, !itemstack.isEmpty() || flag);
             if (i < 0) return;
-            if (!itemstack.isEmpty() || flag) {
-                if (itemstack.isEmpty()) {
-                    itemstack = new ItemStack(Items.ARROW);
-                }
-                float f = getPowerForTimeModded(i, player.getAttributeValue(ModAttributes.DRAW_SPEED.get()));
+            if (flag) itemstack = new ItemStack(Items.ARROW);
+            if (!itemstack.isEmpty()) {
+                float f = getPowerForTime(i);
                 if (!(f < 0.1f)) {
                     boolean flag1 = player.getAbilities().instabuild || (itemstack.getItem() instanceof ArrowItem && ((ArrowItem)itemstack.getItem()).isInfinite(itemstack, bow, player));
                     if (!world.isClientSide) {
@@ -64,18 +62,12 @@ public abstract class ModBowItem extends BowItem implements IModItem {
                         if (f == 1.0F) {
                             abstractarrow.setCritArrow(true);
                         }
-                        abstractarrow = registerEnchant(bow, abstractarrow);
+                        registerEnchant(bow, abstractarrow);
                         bow.hurtAndBreak(1, player, (p_40665_) -> p_40665_.broadcastBreakEvent(player.getUsedItemHand()));
                         if (flag1 || player.getAbilities().instabuild && (itemstack.is(Items.SPECTRAL_ARROW) || itemstack.is(Items.TIPPED_ARROW))) {
                             abstractarrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
                         }
-                        AbstractArrow extraArrow = abstractarrow;
-                        int legolasLevel = bow.getEnchantmentLevel(ModEnchantments.LEGOLAS_EMULATION.get());
-                        for (int j = 0; j < legolasLevel; j++) {
-                            float yChange = (float) (Math.random() * (5 - legolasLevel) - (5 - legolasLevel) / 2);
-                            float xChange = (float) (Math.random() * (5 - legolasLevel) - (5 - legolasLevel) / 2);
-                            extraArrow.shootFromRotation(player, player.getXRot() + xChange, player.getYRot() + yChange, 0.0f, (float) (f * mul * (1+ getSpeedMul(abstractarrow, fbSpeedMul, speedMul))), 1f);
-                        }
+                        createLegolasExtraArrows(bow, archer, this.getKB());
                         abstractarrow.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, (float) (f * mul * (1+ getSpeedMul(abstractarrow, fbSpeedMul, speedMul))), 1.0F);
                         world.addFreshEntity(abstractarrow);
                     }
@@ -92,13 +84,38 @@ public abstract class ModBowItem extends BowItem implements IModItem {
         }
     }
 
-    private float getPowerForTimeModded(int curMul, double draw_speed) {
-        float f = (float) curMul / (float)(this.getDivider() * (1 / (draw_speed / 100)));
-        f = (f * f + f * 2.0F) / 3.0F;
-        return f > 1 ? 1 : f;
+    public static void createLegolasExtraArrows(@NotNull ItemStack bow, @NotNull LivingEntity archer, int kb) {
+        int legolasLevel = bow.getEnchantmentLevel(ModEnchantments.LEGOLAS_EMULATION.get());
+        for (int j = 0; j < legolasLevel; j++) {
+            float yChange = (float) (Math.random() * (5 - legolasLevel) - (5 - legolasLevel) / 2);
+            float xChange = (float) (Math.random() * (5 - legolasLevel) - (5 - legolasLevel) / 2);
+            createArrowProperties(archer, bow, kb, archer.getXRot() + xChange, archer.getYRot() + yChange);
+        }
     }
 
-    protected AbstractArrow registerEnchant(ItemStack bow, AbstractArrow arrow) {
+    public static AbstractArrow createArrowProperties(LivingEntity archer, ItemStack bow, int kb, float rotX, float rotY) {
+        Level world = archer.level;
+        ItemStack arrowStack = archer.getProjectile(bow);
+        if (!arrowStack.isEmpty() && arrowStack.getItem() instanceof ArrowItem arrowItem) {
+            AbstractArrow arrow = arrowItem.createArrow(world, arrowStack, archer);
+            arrow.shootFromRotation(archer, rotX, rotY, 0.0F, (float) (5 + archer.getAttributeValue(ModAttributes.ARROW_SPEED.get()) * 0.02), 1.0F);
+            arrow.setBaseDamage(archer.getAttributeValue(ModAttributes.RANGED_DAMAGE.get()));
+            arrow.setKnockback(kb);
+            arrow.setCritArrow(true);
+            registerEnchant(bow, arrow);
+            bow.hurtAndBreak(1, archer, (p_40665_) -> p_40665_.broadcastBreakEvent(archer.getUsedItemHand()));
+            world.addFreshEntity(arrow);
+            if (!(archer instanceof Player player && player.getAbilities().instabuild) || bow.getEnchantmentLevel(Enchantments.INFINITY_ARROWS) > 0) {
+                arrowStack.shrink(1);
+            }
+            world.playSound(null, archer.getX(), archer.getY(), archer.getZ(), SoundEvents.ARROW_SHOOT, SoundSource.PLAYERS, 1.0F, 1.0F / (world.getRandom().nextFloat() * 0.4F + 1.2F) + 0.5F);
+            return arrow;
+        } else { return null;}
+    }
+
+
+
+    protected static AbstractArrow registerEnchant(ItemStack bow, AbstractArrow arrow) {
         int j = bow.getEnchantmentLevel(Enchantments.POWER_ARROWS);
         if (j > 0) {
             arrow.setBaseDamage(arrow.getBaseDamage() + (double)j * 0.5D + 0.5D);
@@ -165,7 +182,7 @@ public abstract class ModBowItem extends BowItem implements IModItem {
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = new ImmutableMultimap.Builder<>();
         builder.putAll(super.getAttributeModifiers(slot, stack));
         if (this instanceof IGemstoneApplicable applicable && slot == EquipmentSlot.MAINHAND) {
-            return AttributeUtils.increaseAllByAmount(builder.build(), applicable.getAttributeModifiers(stack));
+            return AttributeUtils.increaseAllByAmount(builder.build(), applicable.getAttributeModifiers(stack, slot));
         }
         return builder.build();
     }

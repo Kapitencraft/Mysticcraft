@@ -1,6 +1,5 @@
 package net.kapitencraft.mysticcraft.item.item_bonus;
 
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
 
@@ -17,15 +16,14 @@ public interface IArmorBonusItem {
 
     default void addDisplay(List<Component> toolTip, EquipmentSlot slot) {
         if (this.getFullSetBonus() != null) {
-            toolTip.add(Component.literal("Full Set Bonus: " + this.getFullSetBonus().name).withStyle(ChatFormatting.GOLD).withStyle(ChatFormatting.BOLD));
-            toolTip.addAll(this.getFullSetBonus().getDisplay());
+            toolTip.addAll(this.getFullSetBonus().makeDisplay());
             toolTip.add(Component.literal(""));
         }
         if (this.getPieceBonusForSlot(slot) != null) {
-            toolTip.addAll(this.getPieceBonusForSlot(slot).getDisplay());
+            toolTip.addAll(this.getPieceBonusForSlot(slot).makeDisplay());
         }
         if (this.getExtraBonus(slot) != null) {
-            toolTip.addAll(this.getExtraBonus(slot).getDisplay());
+            toolTip.addAll(this.getExtraBonus(slot).makeDisplay());
         }
     }
 }

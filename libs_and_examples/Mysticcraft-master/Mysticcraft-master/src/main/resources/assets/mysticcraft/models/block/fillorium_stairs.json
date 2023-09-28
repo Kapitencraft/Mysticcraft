@@ -1,8 +1,0 @@
-{
-  "parent": "block/stairs",
-  "textures": {
-    "bottom": "mysticcraft:blocks/fillorium_planks",
-    "top": "mysticcraft:blocks/fillorium_planks",
-    "side": "mysticcraft:blocks/fillorium_planks"
-  }
-}

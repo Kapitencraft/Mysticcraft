@@ -17,25 +17,29 @@ public class ReforgeStat {
         throw new RuntimeException("Unable to find Rarity " + rarity.name());
     }
 
-    public static ReforgeStat build(double... values) {
+    public static ReforgeStat build(Double... values) {
         return new Builder(values).build();
     }
 
     public static class Builder {
-        private final double[] values;
+        private final List<Double> values;
 
-        public Builder(double... values) {
-            this.values = values;
+        public Builder(Double... values) {
+            this.values = List.of(values);
+        }
+
+        public Builder(List<Double> list) {
+            values = list;
         }
 
         public ReforgeStat build() {
             HashMap<Rarity, Double> map = new HashMap<>();
             List<Rarity> rarities = Reforges.getRegisteredRarities();
-            if (rarities.size() != values.length) {
+            if (rarities.size() != values.size()) {
                 throw new IllegalStateException("There must be the same amount of Rarities and Values");
             }
             for (int i = 0; i < rarities.size(); i++) {
-                map.put(rarities.get(i), values[i]);
+                map.put(rarities.get(i), values.get(i));
             }
             return new ReforgeStat(map);
         }

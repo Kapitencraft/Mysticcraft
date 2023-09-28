@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword;
 
-import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -30,11 +30,11 @@ public abstract class LongSwordItem extends ModSwordItem {
 
     @Override
     public @NotNull Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(@NotNull EquipmentSlot slot) {
-        ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-        builder.putAll(super.getDefaultAttributeModifiers(slot));
+        HashMultimap<Attribute, AttributeModifier> multimap = HashMultimap.create();
+        multimap.putAll(super.getDefaultAttributeModifiers(slot));
         if (slot == EquipmentSlot.MAINHAND) {
-            builder.put(ForgeMod.ATTACK_RANGE.get(), new AttributeModifier(ATTACK_RANGE_ID, "Long Sword Range Mod", this.getReachMod(), AttributeModifier.Operation.ADDITION));
+            multimap.put(ForgeMod.ATTACK_RANGE.get(), new AttributeModifier(ATTACK_RANGE_ID, "Long Sword Range Mod", this.getReachMod(), AttributeModifier.Operation.ADDITION));
         }
-        return builder.build();
+        return multimap;
     }
 }

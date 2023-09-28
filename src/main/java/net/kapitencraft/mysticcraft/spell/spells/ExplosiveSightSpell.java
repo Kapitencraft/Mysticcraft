@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.spell.spells;
 
-import net.kapitencraft.mysticcraft.misc.utils.MiscUtils;
+import net.kapitencraft.mysticcraft.utils.MathUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
@@ -14,7 +14,7 @@ public class ExplosiveSightSpell {
 
     private static final Component[] description = new Component[] {Component.literal("Explodes in a range of 150")};
     public static void execute(LivingEntity user, ItemStack ignoredStack) {
-        ArrayList<Vec3> sight = MiscUtils.lineOfSight(user, 150, 0.5);
+        ArrayList<Vec3> sight = MathUtils.lineOfSight(user, 150, 0.5);
         for (Vec3 vec3 : sight) {
             if ((user.level.getBlockState(new BlockPos(vec3)).canOcclude())) {
                 if (user.level.isClientSide()) {

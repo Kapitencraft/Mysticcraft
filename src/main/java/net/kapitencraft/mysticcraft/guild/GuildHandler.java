@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.guild;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.utils.TextUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.player.Player;
@@ -20,7 +21,6 @@ public class GuildHandler extends SavedData {
     }
 
     public static GuildHandler createDefault() {
-        MysticcraftMod.sendInfo("creating Default...");
         return new GuildHandler();
     }
 
@@ -43,7 +43,7 @@ public class GuildHandler extends SavedData {
             ItemStack stack = owner.getMainHandItem();
             if (stack.getItem() instanceof BannerItem) {
                 this.setDirty();
-                guilds.put(newGuildName, new Guild(newGuildName, owner, stack));
+                guilds.put(newGuildName, new Guild(newGuildName, owner, stack, new GuildUpgradeInstance()));
                 return "success";
             }
             return "noBanner";
@@ -89,7 +89,7 @@ public class GuildHandler extends SavedData {
         GuildHandler guildHandler = new GuildHandler();
         while (tag.contains("Guild" + i, 10)) {
             Guild guild = Guild.loadFromTag(tag.getCompound("Guild" + i), server);
-            MysticcraftMod.sendInfo("Loaded Guild called '" + guild.getName() + "'");
+            MysticcraftMod.sendInfo("Loaded Guild called " + TextUtils.wrapInNameMarkers(guild.getName()));
             guildHandler.addGuild(guild);
             i++;
         }

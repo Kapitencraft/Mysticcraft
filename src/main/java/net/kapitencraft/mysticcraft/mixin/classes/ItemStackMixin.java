@@ -5,18 +5,20 @@ import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.IUltimateEnchantment;
 import net.kapitencraft.mysticcraft.event.ModEventFactory;
 import net.kapitencraft.mysticcraft.gui.IGuiHelper;
-import net.kapitencraft.mysticcraft.item.IModItem;
+import net.kapitencraft.mysticcraft.item.QuiverItem;
 import net.kapitencraft.mysticcraft.item.combat.spells.SpellItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword.LongSwordItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.bow.ShortBowItem;
+import net.kapitencraft.mysticcraft.item.misc.IModItem;
 import net.kapitencraft.mysticcraft.item.reforging.Reforge;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
-import net.kapitencraft.mysticcraft.misc.utils.MiscUtils;
-import net.kapitencraft.mysticcraft.mixin.IItemStackMixin;
+import net.kapitencraft.mysticcraft.utils.MiscUtils;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.*;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.MobType;
@@ -30,7 +32,7 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.event.ForgeEventFactory;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.gen.Accessor;
+import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.gen.Invoker;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -43,12 +45,9 @@ import java.util.*;
 import static net.minecraft.world.item.ItemStack.ATTRIBUTE_MODIFIER_FORMAT;
 
 @Mixin(ItemStack.class)
-public abstract class ItemStackMixin implements IItemStackMixin {
+public abstract class ItemStackMixin {
 
-    @Accessor
-    public abstract int getCount();
-
-    private static final Style LORE_STYLE = Style.EMPTY.withColor(ChatFormatting.DARK_PURPLE).withItalic(true);;
+    private static final Style LORE_STYLE = Style.EMPTY.withColor(ChatFormatting.DARK_PURPLE).withItalic(true);
 
     private ItemStack self() {
         return (ItemStack) (Object) this;
@@ -64,7 +63,7 @@ public abstract class ItemStackMixin implements IItemStackMixin {
         ModEventFactory.onSavingItemStack(self(), tag);
     }
 
-    @Override
+    @Overwrite
     public List<Component> getTooltipLines(@Nullable Player player, TooltipFlag tooltipFlag) {
         List<Component> list = Lists.newArrayList();
         Item item = self().getItem();
@@ -87,7 +86,7 @@ public abstract class ItemStackMixin implements IItemStackMixin {
             if (item instanceof IModItem modItem) {
                 modItem.appendHoverTextWithPlayer(self(), player == null ? null : player.level, list, tooltipFlag, player);
             } else {
-                self().getItem().appendHoverText(self(), player == null ? null : player.level, list, tooltipFlag);
+                item.appendHoverText(self(), player == null ? null : player.level, list, tooltipFlag);
             }
         }
 
@@ -98,18 +97,21 @@ public abstract class ItemStackMixin implements IItemStackMixin {
                     Optional<Enchantment> enchantmentOptional = BuiltInRegistries.ENCHANTMENT.getOptional(EnchantmentHelper.getEnchantmentId(compoundtag));
                     if (enchantmentOptional.isPresent()) {
                         Enchantment enchantment = enchantmentOptional.get();
+                        int level = self().getEnchantmentLevel(enchantment);
                         final MutableComponent[] components = new MutableComponent[1];
                         enchantmentOptional.ifPresent((p_41708_) -> components[0] = (MutableComponent) p_41708_.getFullname(EnchantmentHelper.getEnchantmentLevel(compoundtag)));
                         MutableComponent component = components[0];
                         if (enchantment instanceof IUltimateEnchantment) {
                             component.withStyle(ChatFormatting.LIGHT_PURPLE).withStyle(ChatFormatting.BOLD);
+                        } else if (level >= enchantment.getMaxLevel()) {
+                            component.withStyle(ChatFormatting.GOLD);
                         }
                         list.add(component);
                     }
                 }
             }
         if (tag.contains("display", 10)) {
-            CompoundTag compoundtag = tag.getCompound("disply");
+            CompoundTag compoundtag = tag.getCompound("display");
             if (shouldShowInTooltip(j, ItemStack.TooltipPart.DYE) && compoundtag.contains("color", 99)) {
                 if (tooltipFlag.isAdvanced()) {
                     list.add(Component.translatable("item.color", String.format(Locale.ROOT, "#%06X", compoundtag.getInt("color"))).withStyle(ChatFormatting.GRAY));
@@ -238,13 +240,15 @@ public abstract class ItemStackMixin implements IItemStackMixin {
             list.add(Component.literal(BuiltInRegistries.ITEM.getKey(item).toString()).withStyle(ChatFormatting.DARK_GRAY));
             if (self().hasTag()) {
                 list.add(Component.translatable("item.nbt_tags", tag.getAllKeys().size()).withStyle(ChatFormatting.DARK_GRAY));
+                if (Screen.hasAltDown() && self().getTag() != null) {
+                    list.add(NbtUtils.toPrettyComponent(self().getTag()));
+                }
             }
         }
 
         if (player != null && !item.isEnabled(player.getLevel().enabledFeatures())) {
             list.add(Component.translatable("item.disabled").withStyle(ChatFormatting.RED));
         }
-        MiscUtils.checkAndAppendMissingTexture(self(), list);
         ForgeEventFactory.onItemTooltip(self(), player, list, tooltipFlag);
         if (!(item instanceof IGuiHelper)) {
             Rarity rarity = item.getRarity(self());
@@ -252,7 +256,7 @@ public abstract class ItemStackMixin implements IItemStackMixin {
             String RarityMod = FormattingCodes.OBFUSCATED + "A" + FormattingCodes.RESET;
             MutableComponent obfuscated = Component.literal(flag ? RarityMod : "");
             list.add(Component.literal(""));
-            list.add(MiscUtils.buildComponent(obfuscated, MiscUtils.SPLIT,  createNameMod(self()), MiscUtils.SPLIT, obfuscated).withStyle(rarity.getStyleModifier()).withStyle(ChatFormatting.BOLD));
+            list.add(MiscUtils.buildComponent(Component.literal(flag ? RarityMod + " " : "") ,  createNameMod(self()), MiscUtils.SPLIT, obfuscated).withStyle(rarity.getStyleModifier()).withStyle(ChatFormatting.BOLD));
         }
 
         return list;
@@ -261,43 +265,51 @@ public abstract class ItemStackMixin implements IItemStackMixin {
     private static Component getNameModifier(ItemStack stack) {
         Item item = stack.getItem();
         if (item instanceof LongSwordItem) {
-            return Component.translatable("item.indicator.longsword");
+            return indicator("longsword");
         } else if (item instanceof ShortBowItem) {
-            return Component.translatable("item.indicator.short_bow");
+            return indicator("short_bow");
         } else if (item instanceof SwordItem) {
-            return Component.translatable("item.indicator.sword");
+            return indicator("sword");
         } else if (item instanceof PickaxeItem) {
-            return Component.translatable("item.indicator.pickaxe");
+            return indicator("pickaxe");
         } else if (item instanceof AxeItem) {
-            return Component.translatable("item.indicator.axe");
+            return indicator("axe");
         } else if (item instanceof ShovelItem) {
-            return Component.translatable("item.indicator.shovel");
+            return indicator("shovel");
         } else if (item instanceof HoeItem) {
-            return Component.translatable("item.indicator.hoe");
+            return indicator("hoe");
         } else if (item instanceof BowItem) {
-            return Component.translatable("item.indicator.bow");
+            return indicator("bow");
         } else if (item instanceof CrossbowItem) {
-            return Component.translatable("item.indicator.crossbow");
+            return indicator("crossbow");
         } else if (item instanceof EnchantedBookItem) {
-            return Component.translatable("item.indicator.enchanted_book");
+            return indicator("enchanted_book");
         } else if (item instanceof ArmorItem armorItem) {
             if (armorItem.getSlot() == EquipmentSlot.FEET) {
-                return Component.translatable("item.indicator.boots");
+                return indicator("boots");
             } else if (armorItem.getSlot() == EquipmentSlot.LEGS) {
-                return Component.translatable("item.indicator.legs");
+                return indicator("legs");
             } else if (armorItem.getSlot() == EquipmentSlot.CHEST) {
-                return Component.translatable("item.indicator.chestplate");
+                return indicator("chestplate");
             } else if (armorItem.getSlot() == EquipmentSlot.HEAD) {
-                return Component.translatable("item.indicator.helmet");
+                return indicator("helmet");
             }
         } else if (item instanceof BlockItem) {
-            return Component.translatable("item.indicator.block");
+            return indicator("block");
         } else if (item instanceof BoatItem) {
-            return Component.translatable("item.indicator.boat");
+            return indicator("boat");
         } else if (item instanceof FishingRodItem) {
-            return Component.translatable("item.indicator.fishing_rod");
+            return indicator("fishing_rod");
+        } else if (item instanceof QuiverItem) {
+            return indicator("quiver");
+        } else if (item instanceof ShieldItem) {
+            return indicator("shield");
         }
-        return Component.translatable("item.indicator.item");
+        return indicator("item");
+    }
+
+    private static MutableComponent indicator(String id) {
+        return Component.translatable("item.indicator." + id);
     }
 
     private static MutableComponent createNameMod(ItemStack stack) {
@@ -318,7 +330,7 @@ public abstract class ItemStackMixin implements IItemStackMixin {
     }
 
 
-    @Override
+    @Overwrite
     public Component getHoverName() {
         Reforge reforge = Reforge.getFromStack(self());
         CompoundTag compoundtag = self().getTagElement("display");

@@ -1,9 +1,9 @@
 package net.kapitencraft.mysticcraft.misc.particle_help;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.misc.utils.MathUtils;
-import net.kapitencraft.mysticcraft.misc.utils.ParticleUtils;
-import net.kapitencraft.mysticcraft.misc.utils.TagUtils;
+import net.kapitencraft.mysticcraft.utils.MathUtils;
+import net.kapitencraft.mysticcraft.utils.ParticleUtils;
+import net.kapitencraft.mysticcraft.utils.TagUtils;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;

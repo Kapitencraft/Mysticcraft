@@ -1,6 +1,5 @@
 package net.kapitencraft.mysticcraft.gui.gemstone_grinder;
 
-import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.block.entity.GemstoneGrinderBlockEntity;
 import net.kapitencraft.mysticcraft.gui.GUISlotBlockItem;
 import net.kapitencraft.mysticcraft.gui.ModMenu;
@@ -65,7 +64,6 @@ public class GemstoneGrinderMenu extends ModMenu<GemstoneGrinderBlockEntity> {
 
     public void slotChanged() {
         if (!this.blockEntity.queue.isEmpty()) {
-            MysticcraftMod.sendInfo(this.blockEntity.queue.toString());
             this.blockEntity.queue.forEach((stack -> {
                 if (this.blockEntity.queue.remove(stack)) this.player.getInventory().add(stack);
             }));

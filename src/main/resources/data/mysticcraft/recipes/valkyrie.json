@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "*": {
+      "item": "mysticcraft:diamantes_handle"
+    },
+    ".": {
+      "item": "mysticcraft:necron_sword"
+    }
+  },
+  "pattern": [
+    "***",
+    "*.*",
+    "***"
+  ],
+  "result": {
+    "item": "mysticcraft:valkyrie"
+  }
+}

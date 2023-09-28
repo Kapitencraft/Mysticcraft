@@ -3,8 +3,8 @@ package net.kapitencraft.mysticcraft.entity;
 import com.mojang.logging.LogUtils;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.fluid.ModFluidTags;
-import net.kapitencraft.mysticcraft.misc.ModLootTables;
-import net.kapitencraft.mysticcraft.misc.utils.FishingHookUtils;
+import net.kapitencraft.mysticcraft.misc.loot_table.ModLootTables;
+import net.kapitencraft.mysticcraft.utils.FishingHookUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -415,7 +415,6 @@ public class ModFishingHook extends Projectile {
                 if (this.getOwner() != null) {
                     builder.withParameter(LootContextParams.KILLER_ENTITY, this.getOwner());
                 }
-                builder.withParameter(LootContextParams.THIS_ENTITY, this);
                 LootTable loottable = serverLevel.getServer().getLootTables().get(ModLootTables.LAVA_FISHING);
                 List<ItemStack> list = loottable.getRandomItems(builder.create(LootContextParamSets.FISHING));
                 for(ItemStack itemstack : list) {

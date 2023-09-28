@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.item.gemstone;
 
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ItemStack;
@@ -10,44 +11,41 @@ import java.util.HashMap;
 import java.util.List;
 
 public interface IGemstoneApplicable {
-    HashMap<IGemstoneApplicable, GemstoneHelper> cache = new HashMap<>();
-    default GemstoneHelper getHelper() {
-        if (cache.containsKey(this)) {
-            return cache.get(this);
-        }
+    default GemstoneHelper getHelper(ItemStack stack) {
         GemstoneHelper helper = new GemstoneHelper(this.getDefaultSlots());
-        cache.put(this, helper);
+        helper.loadData(stack);
         return helper;
     }
+
     default int getGemstoneSlotAmount() {
-        return getHelper().getGemstoneSlotAmount();
+        return getDefaultSlots().length;
     }
     default GemstoneSlot[] getGemstoneSlots(ItemStack stack) {
-        return this.getHelper().getGemstoneSlots(stack);
+        return this.getHelper(stack).getGemstoneSlots(stack);
     }
 
     default ArrayList<Attribute> getAttributesModified(ItemStack stack) {
-        return getHelper().getAttributesModified(stack);
+        return getHelper(stack).getAttributesModified(stack);
     }
 
-    default HashMap<Attribute, AttributeModifier> getAttributeModifiers(ItemStack stack) {
-        return this.getHelper().getAttributeModifiers(stack);
+    default HashMap<Attribute, AttributeModifier> getAttributeModifiers(ItemStack stack, EquipmentSlot slot) {
+        return this.getHelper(stack).getAttributeModifiers(stack, slot);
     }
 
     GemstoneSlot[] getDefaultSlots();
     default void appendDisplay(ItemStack itemStack, List<Component> list) {
-        this.getHelper().getDisplay(itemStack, list);
+        this.getHelper(itemStack).getDisplay(itemStack, list);
     }
 
 
     default boolean putGemstone(GemstoneType gemstoneType, GemstoneType.Rarity rarity, int slotIndex, ItemStack stack) {
-        return this.getHelper().putGemstone(gemstoneType, rarity, slotIndex, stack);
+        return this.getHelper(stack).putGemstone(gemstoneType, rarity, slotIndex, stack);
     }
 
 
 
     default void addModInfo(ItemStack stack, List<Component> list) {
-        this.getHelper().addModInfo(stack, list);
+        this.getHelper(stack).addModInfo(stack, list);
     }
 
 }

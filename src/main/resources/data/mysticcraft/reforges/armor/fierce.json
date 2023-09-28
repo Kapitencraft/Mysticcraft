@@ -1,0 +1,22 @@
+{
+  "mods": {
+    "mysticcraft:generic.strenght": [
+      2,
+      4,
+      6,
+      8,
+      10,
+      12,
+      14
+    ],
+    "mysticcraft:generic.crit_damage": [
+      6,
+      11,
+      15,
+      21,
+      27,
+      36,
+      47
+    ]
+  }
+}

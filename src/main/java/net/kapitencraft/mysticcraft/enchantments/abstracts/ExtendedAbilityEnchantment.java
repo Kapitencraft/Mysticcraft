@@ -10,5 +10,5 @@ public abstract class ExtendedAbilityEnchantment extends Enchantment implements 
         super(p_44676_, p_44677_, p_44678_);
     }
 
-    public abstract void onTick(LivingEntity source, int tick);
+    public abstract void onTick(LivingEntity source, int level);
 }

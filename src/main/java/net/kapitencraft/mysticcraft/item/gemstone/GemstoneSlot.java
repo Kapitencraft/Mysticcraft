@@ -12,6 +12,7 @@ import javax.annotation.Nullable;
 import java.util.Objects;
 
 public class GemstoneSlot {
+    public static final GemstoneSlot BLOCKED = new GemstoneSlot(Type.EMPTY, GemstoneType.ALMANDINE, GemstoneType.Rarity.EMPTY);
 
     private static final String TYPE_ID = "type";
     private static final String GEMSTONE_RARITY_ID = "gem_rarity";
@@ -64,7 +65,7 @@ public class GemstoneSlot {
 
     private boolean isValidGemstone(GemstoneType gemstoneType) {
         for (GemstoneType gemstoneType1 : this.type.applicable) {
-            if (gemstoneType1.equals(gemstoneType) || gemstoneType == null) {
+            if (gemstoneType1 != null && gemstoneType1.equals(gemstoneType) || gemstoneType == null) {
                 return true;
             }
         }

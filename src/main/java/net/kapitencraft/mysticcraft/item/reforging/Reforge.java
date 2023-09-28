@@ -1,7 +1,12 @@
 package net.kapitencraft.mysticcraft.item.reforging;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.item.item_bonus.ReforgingBonus;
+import net.kapitencraft.mysticcraft.misc.FormattingCodes;
+import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.SaveAbleEnum;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -9,6 +14,9 @@ import net.minecraft.world.item.*;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public class Reforge {
@@ -36,6 +44,22 @@ public class Reforge {
 
     public boolean isOnlyFromStone() {
         return onlyFromStone;
+    }
+
+    public JsonObject serialize() {
+        JsonObject object = new JsonObject();
+        JsonObject mods = new JsonObject();
+        final List<Rarity> rarities = List.of(Rarity.COMMON, Rarity.UNCOMMON, Rarity.RARE, Rarity.EPIC, FormattingCodes.LEGENDARY, FormattingCodes.MYTHIC, FormattingCodes.DIVINE);
+        for (Map.Entry<Attribute, ReforgeStat> entry : statList.entrySet()) {
+            JsonArray array = new JsonArray();
+            rarities.forEach(rarity -> array.add(entry.getValue().apply(rarity)));
+            mods.add(String.valueOf(BuiltInRegistries.ATTRIBUTE.getKey(entry.getKey())), array);
+        }
+        if (this.bonus != null) {
+            object.addProperty("bonus", ReforgeBonuses.byBonus(this.bonus).getName());
+        }
+        object.add("mods", mods);
+        return object;
     }
 
     public HashMap<Attribute, Double> applyModifiers(Rarity rarity) {
@@ -125,21 +149,73 @@ public class Reforge {
         }
     }
 
-    public enum Type {
-        MELEE_WEAPON(stack -> stack.getItem() instanceof SwordItem),
-        RANGED_WEAPON(stack -> stack.getItem() instanceof BowItem),
-        ARMOR(stack -> stack.getItem() instanceof ArmorItem),
-        FISHING_ROD(stack -> stack.getItem() instanceof FishingRodItem),
-        EQUIPMENT(stack -> !(MELEE_WEAPON.mayApply(stack) || RANGED_WEAPON.mayApply(stack) || ARMOR.mayApply(stack) || FISHING_ROD.mayApply(stack)));
+
+    public static boolean reforgeAble(ItemStack stack) {
+        for (Type type : Type.values()) {
+            if (type.mayApply(stack)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public enum Type implements SaveAbleEnum {
+        MELEE_WEAPON("melee", stack -> stack.getItem() instanceof SwordItem),
+        RANGED_WEAPON("ranged", stack -> stack.getItem() instanceof BowItem),
+        ARMOR("armor", stack -> stack.getItem() instanceof ArmorItem),
+        FISHING_ROD("fishing", stack -> stack.getItem() instanceof FishingRodItem),
+        EQUIPMENT("equipment", stack -> !(MELEE_WEAPON.mayApply(stack) || RANGED_WEAPON.mayApply(stack) || ARMOR.mayApply(stack) || FISHING_ROD.mayApply(stack)));
 
         private final Predicate<ItemStack> applicably;
+        private final String name;
 
-        Type(Predicate<ItemStack> applicably) {
+        Type(String name, Predicate<ItemStack> applicably) {
             this.applicably = applicably;
+            this.name = name;
+        }
+
+        public static Type byName(String in) {
+            return SaveAbleEnum.getValue(ARMOR, in, values());
         }
 
         boolean mayApply(ItemStack stack) {
             return this.applicably.test(stack);
+        }
+
+        @Override
+        public String getName() {
+            return name;
+        }
+    }
+
+    public enum Functions implements SaveAbleEnum {
+        EMPTY("empty", new ReforgingBonus("Empty") {
+            @Override
+            public Consumer<List<Component>> getDisplay() {
+                return list -> list.add(Component.literal("this bonus is empty"));
+            }
+        })
+        ;
+
+
+        private final String name;
+        private final ReforgingBonus stat;
+
+        Functions(String name, ReforgingBonus stat) {
+            this.name = name;
+            this.stat = stat;
+        }
+
+        public ReforgingBonus getBonus() {
+            return stat;
+        }
+
+        public Functions byName(String name) {
+            return SaveAbleEnum.getValue(EMPTY, name, values());
+        }
+
+        public String getName() {
+            return name;
         }
     }
 }

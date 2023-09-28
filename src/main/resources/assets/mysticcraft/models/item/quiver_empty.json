@@ -1,0 +1,14 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "mysticcraft:item/quiver/quiver_without_arrows"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "minecraft:filled": 0.5
+      },
+      "model": "mysticcraft:item/quiver_filled"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "*": {
+      "item": "minecraft:wither_skeleton_skull",
+      "amount": 12
+    },
+    ".": {
+      "item": "mysticcraft:necrons_handle"
+    }
+  },
+  "pattern": [
+    "*",
+    "*",
+    "."
+  ],
+  "result": {
+    "item": "mysticcraft:necron_sword"
+  }
+}

@@ -1,6 +1,8 @@
 package net.kapitencraft.mysticcraft.misc;
 
+import net.kapitencraft.mysticcraft.utils.MathUtils;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.ShieldItem;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
@@ -30,6 +32,8 @@ public class FormattingCodes {
     public static final String UNDERLINE = "\u00A7n";
     public static final String ITALIC = "\u00A7o";
     public static final String RESET = "\u00A7r";
+
+    public static final TextColor ORANGE_COLOR = TextColor.fromRgb(MathUtils.RGBtoInt(255, 127, 0));
 
     public static final String CITATION = FormattingCodes.GRAY + FormattingCodes.ITALIC;
 

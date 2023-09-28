@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "mysticcraft:block/golden_slab"
+    },
+    "type=double": {
+      "model": "minecraft:block/gold_block"
+    },
+    "type=top": {
+      "model": "mysticcraft:block/golden_slab_top"
+    }
+  }
+}

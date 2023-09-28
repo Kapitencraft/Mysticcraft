@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.enchantments.abstracts;
 
-import net.kapitencraft.mysticcraft.misc.utils.MiscUtils;
+import net.kapitencraft.mysticcraft.utils.MiscUtils;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -14,7 +14,7 @@ import java.util.Map;
 public abstract class ExtendedCalculationEnchantment extends Enchantment implements ModEnchantment {
 
     private final CalculationType type;
-    private final CalculationPriority priority;
+    private final ProcessPriority priority;
 
     public static Map<ExtendedCalculationEnchantment, Integer> getAllEnchantments(ItemStack stack, boolean isWeapon) {
         Map<ExtendedCalculationEnchantment, Integer> map = new HashMap<>();
@@ -30,7 +30,7 @@ public abstract class ExtendedCalculationEnchantment extends Enchantment impleme
 
     public static float runWithPriority(ItemStack enchanted, LivingEntity attacker, LivingEntity attacked, double damage, MiscUtils.DamageType type, boolean isWeapon, DamageSource source) {
         Map<ExtendedCalculationEnchantment, Integer> enchantmentIntegerMap = getAllEnchantments(enchanted, isWeapon);
-        for (CalculationPriority priority : CalculationPriority.values()) {
+        for (ProcessPriority priority : ProcessPriority.values()) {
             for (ExtendedCalculationEnchantment enchantment : enchantmentIntegerMap.keySet()) {
                 if (enchantment.priority == priority) {
                     damage = enchantment.tryExecute(enchantmentIntegerMap.get(enchantment), enchanted, attacker, attacked, damage, type, source);
@@ -40,13 +40,13 @@ public abstract class ExtendedCalculationEnchantment extends Enchantment impleme
         return (float) damage;
     }
 
-    protected ExtendedCalculationEnchantment(Rarity rarity, EnchantmentCategory category, EquipmentSlot[] slots, CalculationType type, CalculationPriority priority) {
+    protected ExtendedCalculationEnchantment(Rarity rarity, EnchantmentCategory category, EquipmentSlot[] slots, CalculationType type, ProcessPriority priority) {
         super(rarity, category, slots);
         this.type = type;
         this.priority = priority;
     }
 
-    public CalculationPriority getPriority() {
+    public ProcessPriority getPriority() {
         return priority;
     }
 
@@ -82,7 +82,7 @@ public abstract class ExtendedCalculationEnchantment extends Enchantment impleme
         }
     }
 
-    public enum CalculationPriority {
+    public enum ProcessPriority {
         HIGHEST,
         HIGH,
         MEDIUM,

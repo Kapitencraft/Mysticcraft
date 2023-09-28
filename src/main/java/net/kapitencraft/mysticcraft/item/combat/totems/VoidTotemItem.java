@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.item.combat.totems;
 
-import net.kapitencraft.mysticcraft.misc.utils.MathUtils;
+import net.kapitencraft.mysticcraft.utils.MathUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;

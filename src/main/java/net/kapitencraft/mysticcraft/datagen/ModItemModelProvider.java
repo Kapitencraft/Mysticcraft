@@ -6,7 +6,6 @@ import net.kapitencraft.mysticcraft.item.gemstone.GemstoneItem;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneType;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.TieredItem;
 import net.minecraftforge.client.model.generators.ItemModelBuilder;
@@ -26,19 +25,13 @@ public class ModItemModelProvider extends ItemModelProvider {
         super(output, MysticcraftMod.MOD_ID, existingFileHelper);
     }
 
-
-    private List<RegistryObject<Item>> toKeep() {
-        List<RegistryObject<Item>> items = new ArrayList<>();
-        items.add(ModItems.WARPED_ARMOR.get(EquipmentSlot.CHEST));
-        return items;
-    }
-
-
     @Override
     protected void registerModels() {
         //registerScrolls();
         //registerGemstones();
-        List<RegistryObject<Item>> items = toKeep();
+
+
+        List<RegistryObject<Item>> items = List.of();
         for (RegistryObject<Item> item : items) {
             try {
                 if (item.get() instanceof TieredItem) {

@@ -1,7 +1,0 @@
-{
-  "parent": "block/cube_all",
-  "textures": {
-    "all": "mysticcraft:blocks/mithril_ore",
-    "particle": "mysticcraft:blocks/mithril_ore"
-  }
-}

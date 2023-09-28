@@ -1,0 +1,22 @@
+{
+  "mods": {
+    "mysticcraft:generic.magic_find": [
+      0.1,
+      0.3,
+      0.7,
+      1.4,
+      2.6,
+      3.7,
+      5.2
+    ],
+    "mysticcraft:generic.strenght": [
+      7.0,
+      16.0,
+      30.0,
+      57.0,
+      80.0,
+      115.0,
+      150.0
+    ]
+  }
+}

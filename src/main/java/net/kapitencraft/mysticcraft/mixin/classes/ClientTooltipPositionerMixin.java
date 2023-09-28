@@ -12,7 +12,11 @@ import org.spongepowered.asm.mixin.Mixin;
 public class ClientTooltipPositionerMixin implements ClientTooltipPositioner {
 
     @Override
-    public @NotNull Vector2ic positionTooltip(@NotNull Screen p_263072_, int x, int y, int toolTipWidth, int toolTipHeight) {
+    public @NotNull Vector2ic positionTooltip(@NotNull Screen screen, int x, int y, int toolTipWidth, int toolTipHeight) {
+        if (x + toolTipWidth > screen.width) {
+            x = Math.max(x - 24 - toolTipWidth, 4);
+        }
+
         return new Vector2i(x, y);
     }
 }

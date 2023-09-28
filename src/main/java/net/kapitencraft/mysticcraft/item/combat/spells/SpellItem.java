@@ -5,19 +5,20 @@ import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModItems;
-import net.kapitencraft.mysticcraft.item.IModItem;
-import net.kapitencraft.mysticcraft.item.ModTiers;
-import net.kapitencraft.mysticcraft.item.RNGDropHelper;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
+import net.kapitencraft.mysticcraft.item.misc.IModItem;
+import net.kapitencraft.mysticcraft.item.misc.ModTiers;
+import net.kapitencraft.mysticcraft.item.misc.RNGDropHelper;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.kapitencraft.mysticcraft.misc.MiscRegister;
-import net.kapitencraft.mysticcraft.misc.utils.AttributeUtils;
-import net.kapitencraft.mysticcraft.misc.utils.MathUtils;
-import net.kapitencraft.mysticcraft.misc.utils.MiscUtils;
-import net.kapitencraft.mysticcraft.misc.utils.TextUtils;
+import net.kapitencraft.mysticcraft.spell.Element;
 import net.kapitencraft.mysticcraft.spell.SpellSlot;
 import net.kapitencraft.mysticcraft.spell.Spells;
 import net.kapitencraft.mysticcraft.spell.spells.Spell;
+import net.kapitencraft.mysticcraft.utils.AttributeUtils;
+import net.kapitencraft.mysticcraft.utils.MathUtils;
+import net.kapitencraft.mysticcraft.utils.MiscUtils;
+import net.kapitencraft.mysticcraft.utils.TextUtils;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -42,6 +43,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 public abstract class SpellItem extends SwordItem implements IModItem {
     public static final UUID ATTACK_SPEED_UUID = BASE_ATTACK_SPEED_UUID;
@@ -62,6 +64,10 @@ public abstract class SpellItem extends SwordItem implements IModItem {
             }
         }
         return -1;
+    }
+
+    public void e(Predicate<SpellItem> predicate) {
+
     }
 
     //Display settings
@@ -139,7 +145,7 @@ public abstract class SpellItem extends SwordItem implements IModItem {
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = new ImmutableMultimap.Builder<>();
         builder.putAll(super.getAttributeModifiers(slot, stack));
         if (this instanceof IGemstoneApplicable applicable && slot == EquipmentSlot.MAINHAND) {
-            return AttributeUtils.increaseAllByAmount(builder.build(), applicable.getAttributeModifiers(stack));
+            return AttributeUtils.increaseAllByAmount(builder.build(), applicable.getAttributeModifiers(stack, slot));
         }
         return builder.build();
     }
@@ -261,7 +267,6 @@ public abstract class SpellItem extends SwordItem implements IModItem {
             if (this.getActiveSpell().getType() == Spells.Type.RELEASE) {
                 if (handleMana(player, this.getActiveSpell())) {
                     this.getActiveSpell().execute(player, itemstack);
-                    player.displayClientMessage(Component.literal("Used " + this.getActiveSpell().getName() + ": " + FormattingCodes.RED + "-" + AttributeUtils.getAttributeValue(player.getAttribute(ModAttributes.MANA_COST.get()), this.getActiveSpell().getDefaultManaCost()) + " Mana"), true);
                 }
             } else {
                 player.startUsingItem(hand);
@@ -316,8 +321,12 @@ public abstract class SpellItem extends SwordItem implements IModItem {
                 }
                 if (manaToUse > 0) {
                     manaInstance.setBaseValue(user.getAttributeBaseValue(ModAttributes.MANA.get()) - manaToUse);
+                    if (user instanceof Player player) {
+                        player.displayClientMessage(Component.literal("Used " + spell + ": " + FormattingCodes.RED + "-" + AttributeUtils.getAttributeValue(player.getAttribute(ModAttributes.MANA_COST.get()), this.getActiveSpell().getDefaultManaCost()) + " Mana"), true);
+                    }
                 }
-                ItemStack spellShardRNG = new ItemStack(ModItems.SPELL_SHARD.get());
+                List<Element> elements = spell.elements();
+                ItemStack spellShardRNG = new ItemStack(ModItems.ELEMENTAL_SHARDS.get(MathUtils.pickRandom(elements)).get());
                 RNGDropHelper.calculateAndDrop(spellShardRNG, 0.00002f, user, MathUtils.getPosition(user));
                 return true;
             }

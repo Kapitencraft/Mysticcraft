@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.spell.spells;
 
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
-import net.kapitencraft.mysticcraft.misc.utils.MathUtils;
+import net.kapitencraft.mysticcraft.utils.MathUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;

@@ -4,8 +4,7 @@ package net.kapitencraft.mysticcraft.mixin.classes;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.misc.damage_source.IAbilitySource;
-import net.kapitencraft.mysticcraft.misc.utils.AttributeUtils;
-import net.kapitencraft.mysticcraft.mixin.ILivingEntityMixin;
+import net.kapitencraft.mysticcraft.utils.AttributeUtils;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -13,30 +12,31 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.gen.Invoker;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LivingEntity.class)
-public abstract class LivingEntityMixin extends Entity implements ILivingEntityMixin {
+public abstract class LivingEntityMixin extends Entity {
 
 
     public LivingEntityMixin(EntityType<?> p_19870_, Level p_19871_) {
         super(p_19870_, p_19871_);
     }
 
-    private LivingEntity instance() {
+    private LivingEntity own() {
         return (LivingEntity) (Object) this;
     }
 
-    @Override
+    @Overwrite
     public float getDamageAfterArmorAbsorb(DamageSource source, float damage) {
         if (!source.isBypassArmor()) {
             double armorShredValue = source.getEntity() instanceof LivingEntity living ? AttributeUtils.getSaveAttributeValue(ModAttributes.ARMOR_SHREDDER.get(), living) : 0;
             this.callHurtArmor(source, damage);
             double armorValue = Math.max(0, getArmorValue(source) - armorShredValue);
-            return calculateDamage(damage, (float) armorValue, (float) instance().getAttributeValue(Attributes.ARMOR_TOUGHNESS));
+            return calculateDamage(damage, (float) armorValue, (float) own().getAttributeValue(Attributes.ARMOR_TOUGHNESS));
         }
 
         return damage;
@@ -44,11 +44,11 @@ public abstract class LivingEntityMixin extends Entity implements ILivingEntityM
 
     private double getArmorValue(DamageSource source) {
         if (source.getMsgId().equals("true_damage")) {
-            return instance().getAttributeValue(ModAttributes.TRUE_DEFENCE.get());
+            return own().getAttributeValue(ModAttributes.TRUE_DEFENCE.get());
         } else if (source instanceof IAbilitySource) {
-            return instance().getAttributeValue(ModAttributes.MAGIC_DEFENCE.get());
+            return own().getAttributeValue(ModAttributes.MAGIC_DEFENCE.get());
         } else {
-            return instance().getAttributeValue(Attributes.ARMOR);
+            return own().getAttributeValue(Attributes.ARMOR);
         }
     }
 
@@ -66,7 +66,7 @@ public abstract class LivingEntityMixin extends Entity implements ILivingEntityM
         if (source.getEntity() != null && source.getEntity() instanceof LivingEntity living) {
             double attackSpeed = living.getAttributeValue(ModAttributes.BONUS_ATTACK_SPEED.get());
             if (attackSpeed > 0) {
-                instance().invulnerableTime = (int) (20 - (attackSpeed * 0.15));
+                own().invulnerableTime = (int) (20 - (attackSpeed * 0.15));
             }
         }
     }

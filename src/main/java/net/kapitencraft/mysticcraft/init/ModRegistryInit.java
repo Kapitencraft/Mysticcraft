@@ -1,37 +1,40 @@
 package net.kapitencraft.mysticcraft.init;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.potion.ModPotions;
 import net.kapitencraft.mysticcraft.villagers.ModVillagers;
 import net.minecraftforge.eventbus.api.IEventBus;
 
 public class ModRegistryInit {
 
     public static void register(IEventBus bus) {
-        MysticcraftMod.sendInfo("Registering Attributes...");
+        MysticcraftMod.sendRegisterDisplay("Attributes");
         ModAttributes.REGISTRY.register(bus);
-        MysticcraftMod.sendInfo("Registering Enchantments...");
+        MysticcraftMod.sendRegisterDisplay("Enchantments");
         ModEnchantments.REGISTRY.register(bus);
-        MysticcraftMod.sendInfo("Registering Items...");
+        MysticcraftMod.sendRegisterDisplay("Items");
         ModItems.register(bus);
-        MysticcraftMod.sendInfo("Registering Effects...");
+        MysticcraftMod.sendRegisterDisplay("Effects");
         ModMobEffects.REGISTRY.register(bus);
-        MysticcraftMod.sendInfo("Registering Block Entities...");
+        MysticcraftMod.sendRegisterDisplay("Potions");
+        ModPotions.REGISTRY.register(bus);
+        MysticcraftMod.sendRegisterDisplay("Entities");
         ModBlockEntities.REGISTRY.register(bus);
-        MysticcraftMod.sendInfo("Registering Menus...");
+        MysticcraftMod.sendRegisterDisplay("Menus");
         ModMenuTypes.REGISTRY.register(bus);
-        MysticcraftMod.sendInfo("Registering Entity Types...");
+        MysticcraftMod.sendRegisterDisplay("Entity Types");
         ModEntityTypes.REGISTRY.register(bus);
-        MysticcraftMod.sendInfo("Registering Particle Types...");
+        MysticcraftMod.sendRegisterDisplay("Particle Types");
         ModParticleTypes.REGISTRY.register(bus);
-        MysticcraftMod.sendInfo("Registering Fluid Types...");
+        MysticcraftMod.sendRegisterDisplay("Fluid Types");
         ModFluidTypes.REGISTRY.register(bus);
-        MysticcraftMod.sendInfo("Registering Fluids...");
+        MysticcraftMod.sendRegisterDisplay("Fluids");
         ModFluids.REGISTRY.register(bus);
-        MysticcraftMod.sendInfo("Registering Blocks...");
+        MysticcraftMod.sendRegisterDisplay("Blocks");
         ModBlocks.REGISTRY.register(bus);
-        MysticcraftMod.sendInfo("Registering Villager Professions");
+        MysticcraftMod.sendRegisterDisplay("Villager Professions");
         ModVillagers.PROFESSION_REGISTRY.register(bus);
-        MysticcraftMod.sendInfo("Registering POI-Types");
-        ModVillagers.REGISTRY.register(bus);
+        MysticcraftMod.sendRegisterDisplay("POI Types");
+        ModVillagers.POI_TYPE_REGISTRY.register(bus);
     }
 }

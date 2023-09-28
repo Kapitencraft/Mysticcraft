@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.entity.model;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.kapitencraft.mysticcraft.entity.SkeletonMaster;
+import net.kapitencraft.mysticcraft.entity.skeleton_master.SkeletonMaster;
 import net.minecraft.client.model.AnimationUtils;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;

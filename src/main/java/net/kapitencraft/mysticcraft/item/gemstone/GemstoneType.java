@@ -59,7 +59,7 @@ public enum GemstoneType {
         HashMap<Rarity, RegistryObject<GemstoneItem>> toReturn = new HashMap<>();
         for (Rarity rarity : Rarity.values()) {
             if (rarity != Rarity.EMPTY) {
-                toReturn.put(rarity, ModItems.register(rarity.id + "_" + this.getId() + "_gemstone", () -> new GemstoneItem(rarity, this.getId())));
+                toReturn.put(rarity, ModItems.register(rarity.id + "_" + this.getId() + "_gemstone", () -> new GemstoneItem(rarity, this.getId()), ModItems.TabTypes.SPELL_AND_GEMSTONE));
             }
         }
         return toReturn;

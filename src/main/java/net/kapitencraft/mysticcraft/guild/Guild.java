@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.guild;
 
-import net.kapitencraft.mysticcraft.misc.utils.TextUtils;
+import net.kapitencraft.mysticcraft.utils.TextUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
@@ -18,22 +18,32 @@ public class Guild {
     private final List<Player> members = new ArrayList<>();
     private final HashMap<Player, GuildRank> ranks = new HashMap<>();
     private final HashMap<Player, String> invites = new HashMap<>();
-    private List<Guild> inWar = new ArrayList<>();
+    private final List<Guild> inWar = new ArrayList<>();
     private final ItemStack banner;
+    private final GuildUpgradeInstance instance;
 
     private boolean removed = false;
 
 
-    public Guild(String name, Player owner, ItemStack banner) {
+    public Guild(String name, Player owner, ItemStack banner, GuildUpgradeInstance instance) {
         this.name = name;
         this.owner = owner;
         this.banner = banner;
+        this.instance = instance;
     }
 
     public void setRank(Player player, GuildRank rank) {
         if (!ranks.containsKey(player) && !removed) {
             ranks.put(player, rank);
         }
+    }
+
+    public int getProtectionRange() {
+        return 16 + (8 * this.instance.getUpgradeLevel(GuildUpgrades.RANGE));
+    }
+
+    public boolean upgrade(GuildUpgrade toUpgrade) {
+        return this.instance.upgrade(toUpgrade);
     }
 
     public int getMemberAmount() {
@@ -43,6 +53,8 @@ public class Guild {
     public final Player getOwner() {
         return owner;
     }
+
+
 
     public String addInvitation(Player player) {
         if (!removed) {
@@ -148,6 +160,7 @@ public class Guild {
         tag.putString("owner", owner.getStringUUID());
         tag.put("banner", this.banner.save(new CompoundTag()));
         tag.putString("name", this.name);
+        tag.put("upgrades", this.instance.save());
         int i = 0;
         for (Player player : getAllMembers()) {
             CompoundTag playerTag = new CompoundTag();
@@ -185,7 +198,7 @@ public class Guild {
     public static Guild loadFromTag(CompoundTag tag, MinecraftServer server) {
         PlayerList playerList = server.getPlayerList();
         int i = 0;
-        Guild guild = new Guild(tag.getString("name"), playerList.getPlayer(UUID.fromString(tag.getString("owner"))), ItemStack.of(tag.getCompound("banner")));
+        Guild guild = new Guild(tag.getString("name"), playerList.getPlayer(UUID.fromString(tag.getString("owner"))), ItemStack.of(tag.getCompound("banner")), GuildUpgradeInstance.load(tag.getCompound("upgrades")));
         while (tag.contains("Player" + i, 10)) {
             CompoundTag tag1 = tag.getCompound("Player" + i);
             Player player = playerList.getPlayer(UUID.fromString(tag1.getString("name")));

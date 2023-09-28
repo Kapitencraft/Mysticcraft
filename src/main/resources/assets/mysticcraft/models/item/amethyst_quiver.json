@@ -1,0 +1,6 @@
+{
+  "parent": "mysticcraft:item/quiver_empty",
+  "textures": {
+    "layer1": "mysticcraft:item/quiver/amethyst_overlay"
+  }
+}

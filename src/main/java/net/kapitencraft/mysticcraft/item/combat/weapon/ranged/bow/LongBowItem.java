@@ -14,6 +14,7 @@ public class LongBowItem extends ModBowItem implements IGemstoneApplicable {
         super(new Item.Properties().durability(1320).rarity(Rarity.RARE));
     }
 
+
     @Override
     public GemstoneSlot[] getDefaultSlots() {
         return new GemstoneSlot.Builder(GemstoneSlot.Type.OFFENCE, GemstoneSlot.Type.DRAW_SPEED).build();

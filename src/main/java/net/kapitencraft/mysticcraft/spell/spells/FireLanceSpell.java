@@ -1,8 +1,8 @@
 package net.kapitencraft.mysticcraft.spell.spells;
 
 import net.kapitencraft.mysticcraft.misc.damage_source.AbilityDamageSource;
-import net.kapitencraft.mysticcraft.misc.utils.MiscUtils;
-import net.kapitencraft.mysticcraft.misc.utils.ParticleUtils;
+import net.kapitencraft.mysticcraft.utils.MathUtils;
+import net.kapitencraft.mysticcraft.utils.ParticleUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
@@ -18,7 +18,7 @@ import java.util.Objects;
 
 public class FireLanceSpell {
     public static void execute(LivingEntity user, ItemStack stack) {
-        ArrayList<Vec3> lineOfSight = MiscUtils.lineOfSight(user, 10, 0.05);
+        ArrayList<Vec3> lineOfSight = MathUtils.lineOfSight(user, 10, 0.05);
         for (Vec3 vec3 : lineOfSight) {
             if (user.level.getBlockState(new BlockPos(vec3)).canOcclude()) {
                 break;

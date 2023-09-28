@@ -1,7 +1,0 @@
-{
-  "parent": "block/cube_all",
-  "textures": {
-    "all": "mysticcraft:blocks/witherkingspawnblock",
-    "particle": "mysticcraft:blocks/witherkingspawnblock"
-  }
-}

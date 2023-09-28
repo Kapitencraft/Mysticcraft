@@ -1,7 +1,0 @@
-{
-  "parent": "block/cube_all",
-  "textures": {
-    "all": "mysticcraft:blocks/terium_leaves",
-    "particle": "mysticcraft:blocks/terium_leaves"
-  }
-}

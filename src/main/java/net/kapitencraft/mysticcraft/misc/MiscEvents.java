@@ -9,6 +9,7 @@ import net.kapitencraft.mysticcraft.init.ModItems;
 import net.kapitencraft.mysticcraft.init.ModParticleTypes;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneItem;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneType;
+import net.kapitencraft.mysticcraft.particle.DamageIndicatorParticle;
 import net.kapitencraft.mysticcraft.particle.FireNormalParticle;
 import net.kapitencraft.mysticcraft.particle.MagicCircleParticle;
 import net.kapitencraft.mysticcraft.particle.flame.*;
@@ -41,11 +42,12 @@ public class MiscEvents {
             event.register((SimpleParticleType) ModParticleTypes.DARK_GREEN_FLAME.get(), DarkGreenFlame.RisingFlameParticleProvider::new);
             event.register((SimpleParticleType) ModParticleTypes.PURPLE_FLAME.get(), PurpleFlame.RisingFlameParticleProvider::new);
             event.register(ModParticleTypes.MAGIC_CIRCLE.get(), MagicCircleParticle.MagicCircleParticleProvider::new);
+            event.register(ModParticleTypes.DAMAGE_INDICATOR.get(), DamageIndicatorParticle.Provider::new);
         }
 
         @SubscribeEvent
         public static void registerColors(RegisterColorHandlersEvent.Item event) {
-            MysticcraftMod.sendInfo("registering Custom Colors");
+            MysticcraftMod.sendRegisterDisplay("Custom Colors");
             event.register((p_92708_, p_92709_) -> p_92709_ > 0 ? -1 : ((DyeableLeatherItem) p_92708_.getItem()).getColor(p_92708_), ModItems.DYED_LEATHER.get());
             for (HashMap<GemstoneType.Rarity, RegistryObject<GemstoneItem>> item : ModItems.GEMSTONES.values()) {
                 for (GemstoneItem item1 : item.values().stream().map(RegistryObject::get).toList()) {
@@ -60,8 +62,9 @@ public class MiscEvents {
     public static class ClientModEvents {
         @SubscribeEvent
         public static void onKeyRegister(RegisterKeyMappingsEvent event) {
-            event.register(KeyBinding.NEXT_SPELL_KEY);
-            event.register(KeyBinding.PREVIOUS_SPELL_KEY);
+            event.register(ModKeyMappings.NEXT);
+            event.register(ModKeyMappings.PREVIOUS);
+            event.register(ModKeyMappings.STASH);
         }
 
         @SubscribeEvent
@@ -75,6 +78,7 @@ public class MiscEvents {
             event.registerEntityRenderer(ModEntityTypes.DAMAGE_INDICATOR.get(), DamageIndicatorRenderer::new);
             event.registerEntityRenderer(ModEntityTypes.LAVA_FISHING_HOOK.get(), ModFishingHookRenderer::new);
         }
+
     }
 
     @Mod.EventBusSubscriber(modid = MysticcraftMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)

@@ -10,10 +10,10 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
-public class ModMobEffects {
-    public static final DeferredRegister<MobEffect> REGISTRY = DeferredRegister.create(ForgeRegistries.MOB_EFFECTS, MysticcraftMod.MOD_ID);
-    public static final RegistryObject<MobEffect> VULNERABILITY = REGISTRY.register("vulnerability", VulnerabilityMobEffect::new);
-    public static final RegistryObject<MobEffect> STUN = REGISTRY.register("stun", StunMobEffect::new);
-    public static final RegistryObject<MobEffect> NUMBNESS = REGISTRY.register("numbness", NumbnessMobEffect::new);
-    public static final RegistryObject<MobEffect> IGNITION = REGISTRY.register("ignition", IgnitionEffect::new);
+public interface ModMobEffects {
+    DeferredRegister<MobEffect> REGISTRY = DeferredRegister.create(ForgeRegistries.MOB_EFFECTS, MysticcraftMod.MOD_ID);
+    RegistryObject<MobEffect> VULNERABILITY = REGISTRY.register("vulnerability", VulnerabilityMobEffect::new);
+    RegistryObject<MobEffect> STUN = REGISTRY.register("stun", StunMobEffect::new);
+    RegistryObject<MobEffect> NUMBNESS = REGISTRY.register("numbness", NumbnessMobEffect::new);
+    RegistryObject<MobEffect> IGNITION = REGISTRY.register("ignition", IgnitionEffect::new);
 }

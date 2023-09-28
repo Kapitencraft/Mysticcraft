@@ -1,8 +1,7 @@
 package net.kapitencraft.mysticcraft.mixin.classes;
 
 import net.kapitencraft.mysticcraft.init.ModAttributes;
-import net.kapitencraft.mysticcraft.misc.utils.AttributeUtils;
-import net.kapitencraft.mysticcraft.mixin.IProjectileMixin;
+import net.kapitencraft.mysticcraft.utils.AttributeUtils;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -11,16 +10,17 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(Projectile.class)
-public abstract class ProjectileMixin extends Entity implements IProjectileMixin {
+public abstract class ProjectileMixin extends Entity {
 
     public ProjectileMixin(EntityType<?> p_19870_, Level p_19871_) {
         super(p_19870_, p_19871_);
     }
 
-    @Override
+    @Overwrite
     public void shootFromRotation(Entity entity, float p_37253_, float p_37254_, float p_37255_, float speed, float p_37257_) {
         if (entity instanceof LivingEntity living) {
             speed *= 1 + AttributeUtils.getSaveAttributeValue(ModAttributes.ARROW_SPEED.get(), living) / 100;

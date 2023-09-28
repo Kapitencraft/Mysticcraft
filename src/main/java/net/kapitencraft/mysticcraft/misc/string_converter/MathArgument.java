@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.misc.string_converter;
 
-import net.kapitencraft.mysticcraft.misc.function.SingleBinaryProvider;
+import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.SingleBinaryProvider;
 
 public class MathArgument<T extends Number> implements SingleBinaryProvider<T, T>, TransferArg<T> {
     private final String name;

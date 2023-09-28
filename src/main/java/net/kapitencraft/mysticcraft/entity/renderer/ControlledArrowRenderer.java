@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.entity.renderer;
 
-import net.kapitencraft.mysticcraft.entity.ControlledArrow;
+import net.kapitencraft.mysticcraft.entity.skeleton_master.ControlledArrow;
 import net.minecraft.client.renderer.entity.ArrowRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.TippableArrowRenderer;

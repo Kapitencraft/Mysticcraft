@@ -12,6 +12,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 public class SoulMageChestplateBonus extends PieceBonus {
 
@@ -29,9 +30,7 @@ public class SoulMageChestplateBonus extends PieceBonus {
     }
 
     @Override
-    public List<Component> getDisplay() {
-        List<Component> components = super.getDisplay();
-        components.add(Component.literal("Increases your maximum Mana by 20%"));
-        return components;
+    public Consumer<List<Component>> getDisplay() {
+        return list -> list.add(Component.literal("Increases your maximum Mana by 20%"));
     }
 }

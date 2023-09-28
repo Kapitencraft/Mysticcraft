@@ -17,10 +17,10 @@ public class TallinBow extends ShortBowItem {
     }
 
     @Override
-    protected void createArrows(@NotNull ItemStack bow, @NotNull Level world, @NotNull LivingEntity archer) {
+    public void createArrows(@NotNull ItemStack bow, @NotNull Level world, @NotNull LivingEntity archer) {
         super.createArrows(bow, world, archer);
-        this.createArrowProperties(archer, bow, this.getKB(), archer.getXRot(), archer.getYRot() + 4f);
-        this.createArrowProperties(archer, bow, this.getKB(), archer.getXRot(), archer.getYRot() - 4f);
+        createArrowProperties(archer, bow, this.getKB(), archer.getXRot(), archer.getYRot() + 4f);
+        createArrowProperties(archer, bow, this.getKB(), archer.getXRot(), archer.getYRot() - 4f);
     }
 
     @Override

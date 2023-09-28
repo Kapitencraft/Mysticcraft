@@ -50,10 +50,8 @@ public class ReforgingAnvilBlockEntity extends BlockEntity implements MenuProvid
 
     public String updateButtonPress() {
         ItemStack stack = this.handler.getStackInSlot(0);
-        if (stack.getItem() instanceof TieredItem || stack.getItem() instanceof ArmorItem) {
-            Reforge reforge = Reforges.applyRandom(false, stack);
-            reforge.saveToStack(stack);
-            return reforge.getRegistryName();
+        if (Reforge.reforgeAble(stack)) {
+            return Reforges.applyRandom(false, stack).getRegistryName();
         }
         return null;
     }

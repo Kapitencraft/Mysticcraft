@@ -2,14 +2,14 @@ package net.kapitencraft.mysticcraft.item.item_bonus.fullset;
 
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.item.item_bonus.FullSetBonus;
-import net.kapitencraft.mysticcraft.misc.utils.AttributeUtils;
-import net.kapitencraft.mysticcraft.misc.utils.MiscUtils;
+import net.kapitencraft.mysticcraft.utils.AttributeUtils;
+import net.kapitencraft.mysticcraft.utils.MiscUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 public class SoulMageArmorFullSetBonus extends FullSetBonus {
     public SoulMageArmorFullSetBonus() {
@@ -25,9 +25,7 @@ public class SoulMageArmorFullSetBonus extends FullSetBonus {
     }
 
     @Override
-    public List<Component> getDisplay() {
-        ArrayList<Component> list = new ArrayList<>();
-        list.add(Component.literal("Regenerate 10 Mana on kill"));
-        return list;
+    public Consumer<List<Component>> getDisplay() {
+        return list -> list.add(Component.literal("Regenerate 10 Mana on kill"));
     }
 }

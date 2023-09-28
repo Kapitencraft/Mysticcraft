@@ -1,8 +1,8 @@
 package net.kapitencraft.mysticcraft.entity.renderer;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.entity.SkeletonMaster;
 import net.kapitencraft.mysticcraft.entity.model.SkeletonMasterModel;
+import net.kapitencraft.mysticcraft.entity.skeleton_master.SkeletonMaster;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;

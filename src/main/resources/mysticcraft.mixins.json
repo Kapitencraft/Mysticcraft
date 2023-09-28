@@ -13,7 +13,11 @@
     "LivingEntityMixin",
     "AttributesMixin",
     "ItemMixin",
-    "ProjectileMixin"
+    "ProjectileMixin",
+    "KeyMappingMixin",
+    "WitherSkullMixin",
+    "ShapedRecipeSerializerMixin",
+    "ResultSlotMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -1,13 +1,13 @@
 package net.kapitencraft.mysticcraft.item.combat.spells.necron_sword;
 
-import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.item.combat.spells.SpellItem;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneSlot;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
+import net.kapitencraft.mysticcraft.utils.AttributeUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -28,7 +28,7 @@ public abstract class NecronSword extends SpellItem implements IGemstoneApplicab
     @Override
     public GemstoneSlot[] getDefaultSlots() {
         GemstoneSlot.Type type = (this instanceof Valkyrie ? GemstoneSlot.Type.STRENGTH : this instanceof Hyperion ? GemstoneSlot.Type.INTELLIGENCE : this instanceof Scylla ? GemstoneSlot.Type.COMBAT : this instanceof Astraea ? GemstoneSlot.Type.DEFENCE : null);
-        return type == null ? null : new GemstoneSlot.Builder(GemstoneSlot.Type.COMBAT, type).build();
+        return type == null ? new GemstoneSlot.Builder(GemstoneSlot.Type.COMBAT).build() : new GemstoneSlot.Builder(GemstoneSlot.Type.COMBAT, type).build();
     }
 
     public NecronSword(int damage, int intelligence, double ferocity, double strenght) {
@@ -39,16 +39,16 @@ public abstract class NecronSword extends SpellItem implements IGemstoneApplicab
 
     @Override
     public @NotNull Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(@NotNull EquipmentSlot slot) {
-        ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = new ImmutableMultimap.Builder<>();
-        builder.putAll(super.getDefaultAttributeModifiers(slot));
+        HashMultimap<Attribute, AttributeModifier> multimap = HashMultimap.create();
+        multimap.putAll(super.getDefaultAttributeModifiers(slot));
         if (slot == EquipmentSlot.MAINHAND) {
-            builder.put(ModAttributes.FEROCITY.get(), MysticcraftMod.createModifier(AttributeModifier.Operation.ADDITION, this.FEROCITY, EquipmentSlot.MAINHAND));
-            builder.put(ModAttributes.STRENGTH.get(), MysticcraftMod.createModifier(AttributeModifier.Operation.ADDITION, this.STRENGHT, EquipmentSlot.MAINHAND));
+            multimap.put(ModAttributes.FEROCITY.get(), AttributeUtils.createModifier("Necron Modifier", AttributeModifier.Operation.ADDITION, this.FEROCITY));
+            multimap.put(ModAttributes.STRENGTH.get(), AttributeUtils.createModifier("Necron Modifier", AttributeModifier.Operation.ADDITION, this.STRENGHT));
             if (this.getAdditionalModifiers() != null) {
-                builder.putAll(this.getAdditionalModifiers());
+                multimap.putAll(this.getAdditionalModifiers());
             }
         }
-        return super.getDefaultAttributeModifiers(slot);
+        return multimap;
     }
 
     protected abstract Multimap<Attribute, AttributeModifier> getAdditionalModifiers();

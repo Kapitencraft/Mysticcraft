@@ -1,38 +1,40 @@
 package net.kapitencraft.mysticcraft;
 
 import com.mojang.logging.LogUtils;
+import net.kapitencraft.mysticcraft.config.ClientModConfig;
+import net.kapitencraft.mysticcraft.config.CommonModConfig;
 import net.kapitencraft.mysticcraft.gui.gemstone_grinder.GemstoneGrinderScreen;
 import net.kapitencraft.mysticcraft.gui.reforging_anvil.ReforgingAnvilScreen;
 import net.kapitencraft.mysticcraft.init.ModEntityTypes;
 import net.kapitencraft.mysticcraft.init.ModFluids;
 import net.kapitencraft.mysticcraft.init.ModMenuTypes;
 import net.kapitencraft.mysticcraft.init.ModRegistryInit;
+import net.kapitencraft.mysticcraft.item.AnvilUses;
 import net.kapitencraft.mysticcraft.item.reforging.Reforges;
 import net.kapitencraft.mysticcraft.misc.ModItemProperties;
-import net.kapitencraft.mysticcraft.misc.utils.MiscUtils;
 import net.kapitencraft.mysticcraft.networking.ModMessages;
+import net.kapitencraft.mysticcraft.potion.ModPotionRecipe;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.SpawnPlacements;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
+import org.slf4j.Marker;
 import software.bernie.geckolib.GeckoLib;
 
 import java.text.DecimalFormat;
@@ -55,28 +57,20 @@ public class MysticcraftMod {
     {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         ModRegistryInit.register(modEventBus);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientModConfig.SPEC);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, CommonModConfig.SPEC);
 
         MinecraftForge.EVENT_BUS.register(this);
         GeckoLib.initialize();
-    }
-
-    public static final ResourceKey<Level> DUNGEON_INSTANCE = ResourceKey.create(Registries.DIMENSION, new ResourceLocation(MOD_ID, "dungeon_instance"));
-
-    public static AttributeModifier createModifier(AttributeModifier.Operation operation, double value, EquipmentSlot slot) {
-        if (operation == AttributeModifier.Operation.ADDITION) {
-            return new AttributeModifier(ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[MiscUtils.createCustomIndex(slot)], "Modded Mod", value, operation);
-        } else {
-            return new AttributeModifier(ITEM_ATTRIBUTE_MODIFIER_MUL_FOR_SLOT[MiscUtils.createCustomIndex(slot)], "Modded Mod", value, operation);
-        }
     }
 
     @Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class ClientModEvents {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
-            sendInfo("Registering Item Properties...");
+            sendRegisterDisplay("Item Properties");
             ModItemProperties.addCustomItemProperties();
-            sendInfo("Registering Menu Screens");
+            sendRegisterDisplay("Menu Screens");
             registerMenuScreens();
             sendInfo("rendering Mana Fluid");
             ItemBlockRenderTypes.setRenderLayer(ModFluids.SOURCE_MANA_FLUID.get(), RenderType.translucent());
@@ -88,15 +82,22 @@ public class MysticcraftMod {
             MenuScreens.register(ModMenuTypes.REFORGING_ANVIL.get(), ReforgingAnvilScreen::new);
         }
 
+        private static void registerAll() {
+        }
+
         @SubscribeEvent
         public static void onCommonSetup(FMLCommonSetupEvent event) {
-            sendInfo("Registering Entity World Generation...");
+            sendRegisterDisplay("custom Potion Recipes");
+            BrewingRecipeRegistry.addRecipe(new ModPotionRecipe());
+            sendRegisterDisplay("Entity World Generation");
             registerSpawnPlacements();
-            sendInfo("Registering Rarities...");
+            sendRegisterDisplay("Rarities");
             Reforges.registerRarities();
-            sendInfo("Registering Reforges...");
+            sendRegisterDisplay("Reforges");
             Reforges.register();
-            sendInfo("Registering Packet Handling");
+            sendRegisterDisplay("Anvil Uses");
+            AnvilUses.registerUses();
+            sendRegisterDisplay("Packet Handling");
             ModMessages.register();
         }
 
@@ -105,8 +106,6 @@ public class MysticcraftMod {
                     Mob::checkMobSpawnRules);
             SpawnPlacements.register(ModEntityTypes.FROZEN_BLAZE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                     Monster::checkAnyLightMonsterSpawnRules);
-            SpawnPlacements.register(ModEntityTypes.SKELETON_MASTER.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                    Monster::checkMonsterSpawnRules);
         }
     }
 
@@ -115,23 +114,39 @@ public class MysticcraftMod {
         return new DecimalFormat("#.##").format(d);
     }
 
+    public static void sendRegisterDisplay(String nameOfRegistered) {
+        sendInfo("Registering " + nameOfRegistered + "...");
+    }
+
     private static String lastMSG = "";
 
+    public static void sendError(String error) {
+        LOGGER.error(MYSTICCRAFT_MARKER, error);
+    }
+
+    public static void sendFatal(String fatal, Throwable throwable) throws Throwable {
+        sendError(fatal);
+        throw throwable;
+    }
+
     public static void sendInfo(String info) {
-        sendInfo(info, false);
+        sendInfo(info, false, null);
     }
 
-    public static void sendInfo(String info, boolean shouldRepeat) {
-        if (!lastMSG.equals(info) || shouldRepeat) LOGGER.info("[" + MOD_ID.toUpperCase() + "]: " + info);
+    public static void sendInfo(String info, boolean shouldRepeat, @Nullable Marker marker, Object... toAdd) {
+        if (lastMSG == null || !lastMSG.equals(info) || shouldRepeat) LOGGER.info(marker == null ? MYSTICCRAFT_MARKER : marker, info, toAdd);
         lastMSG = info;
     }
+
     public static void sendWarn(String warn) {
-        sendWarn(warn, false);
+        sendWarn(warn, false, null);
     }
 
-    public static void sendWarn(String info, boolean shouldRepeat) {
-        if (!lastMSG.equals(info) || shouldRepeat) LOGGER.info("[" + MOD_ID.toUpperCase() + "]: " + info);
+    public static void sendWarn(String info, boolean shouldRepeat, Marker marker, Object... toAdd) {
+        if (lastMSG == null || !lastMSG.equals(info) || shouldRepeat) LOGGER.info(marker == null ? MYSTICCRAFT_MARKER : marker, info, toAdd);
         lastMSG = info;
     }
+
+    private static final Marker MYSTICCRAFT_MARKER = new ModMarker("MYSTICCRAFT");
 
 }

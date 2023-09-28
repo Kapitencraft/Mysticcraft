@@ -1,10 +1,11 @@
 package net.kapitencraft.mysticcraft.misc;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.config.ClientModConfig;
 import net.kapitencraft.mysticcraft.entity.FrozenBlazeEntity;
 import net.kapitencraft.mysticcraft.entity.SchnauzenPluesch;
-import net.kapitencraft.mysticcraft.entity.SkeletonMaster;
 import net.kapitencraft.mysticcraft.entity.WithermancerLordEntity;
+import net.kapitencraft.mysticcraft.entity.skeleton_master.SkeletonMaster;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModEntityTypes;
 import net.minecraft.world.entity.Entity;
@@ -33,6 +34,7 @@ public class AttributeAdder {
         addAll(event, ModAttributes.TRUE_DEFENCE.get(), ONLY_WITH_BRAIN);
         addAll(event, ModAttributes.BONUS_ATTACK_SPEED.get(), ONLY_WITH_BRAIN);
         addAll(event, ModAttributes.CRIT_CHANCE.get(), ONLY_WITH_BRAIN);
+        addAll(event, ModAttributes.COOLDOWN_REDUCTION.get(), LIVINGS);
         event.add(EntityType.PLAYER, ModAttributes.ABILITY_DAMAGE.get());
         event.add(EntityType.PLAYER, ModAttributes.MANA_COST.get());
         event.add(EntityType.PLAYER, ModAttributes.INTELLIGENCE.get());
@@ -55,6 +57,7 @@ public class AttributeAdder {
     }
 
     private static final isAInstance ONLY_WITH_BRAIN = (entityType)-> (entityType.getCategory() != MobCategory.MISC) || entityType == EntityType.PLAYER;
+    private static final isAInstance LIVINGS = entityType -> true;
 
 
     private static void addAll(EntityAttributeModificationEvent event, Attribute attribute, isAInstance generator) {
@@ -71,7 +74,7 @@ public class AttributeAdder {
 
             }
         }
-        MysticcraftMod.sendInfo("Registering Attribute: [" + attribute.getDescriptionId() + "] to: " + addedList.toString());
+        if (ClientModConfig.extraDebug) MysticcraftMod.sendRegisterDisplay("Attribute: [" + attribute.getDescriptionId() + "] to: " + addedList);
     }
     @SubscribeEvent
     public static void AttributeCreating(EntityAttributeCreationEvent event) {

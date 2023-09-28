@@ -1,9 +1,10 @@
 Skills;
-Reforging;
 Soul-Binding;
-Unbreakability;
 Elemental Magic;
 Alchemy and Potions;
 Injection Magic;
+Collector's Talisman, Ring, Artifact, Relict;
+Frisbee of Destruction;
+
 Biomes?
 Ritual Magic?

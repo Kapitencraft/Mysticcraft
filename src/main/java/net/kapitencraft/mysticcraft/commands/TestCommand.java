@@ -4,6 +4,7 @@ package net.kapitencraft.mysticcraft.commands;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.tree.LiteralCommandNode;
+import net.kapitencraft.mysticcraft.utils.MathUtils;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
@@ -33,7 +34,7 @@ public class TestCommand {
                 while (amount > 0) {
                     for (Enchantment ench : enchantments.keySet()) {
                         if (ench.getMaxLevel() > 1) {
-                            if (Math.random() < 0.1 && amount > 0) {
+                            if (MathUtils.chance(0.1, player) && amount > 0) {
                                 int value = enchantments.get(ench);
                                 enchantments.remove(ench);
                                 enchantments.put(ench, value + 1);

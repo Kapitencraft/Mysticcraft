@@ -7,7 +7,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import org.jetbrains.annotations.NotNull;
 
-public  class  GemstoneItem extends Item implements DyeableLeatherItem {
+public class GemstoneItem extends Item implements DyeableLeatherItem {
     private final GemstoneType.Rarity RARITY;
     public final String gemstoneName;
     public GemstoneItem(GemstoneType.Rarity rarity, String gemstoneName) {
@@ -46,7 +46,7 @@ public  class  GemstoneItem extends Item implements DyeableLeatherItem {
 
 
     public static GemstoneItem of(GemstoneSlot slot) {
-        if (slot.getAppliedGemstone() == null || slot.getType() == null) {
+        if (slot.getAppliedGemstone() == null || slot.getType() == null || slot == GemstoneSlot.BLOCKED) {
             return null;
         }
         return ModItems.GEMSTONES.get(slot.getAppliedGemstone()).get(slot.getGemRarity()).get();

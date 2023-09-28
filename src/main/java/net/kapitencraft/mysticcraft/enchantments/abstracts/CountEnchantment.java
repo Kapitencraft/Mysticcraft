@@ -1,7 +1,6 @@
 package net.kapitencraft.mysticcraft.enchantments.abstracts;
 
-import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.misc.utils.TagUtils;
+import net.kapitencraft.mysticcraft.utils.TagUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -15,8 +14,8 @@ import java.util.UUID;
 public abstract class CountEnchantment extends ExtendedCalculationEnchantment implements IWeaponEnchantment {
     private final String mapName;
     private final CountType type;
-    protected CountEnchantment(Rarity p_44676_, EquipmentSlot[] p_44678_, String mapName, CountType type, CalculationType calculationType, CalculationPriority priority) {
-        super(p_44676_, EnchantmentCategory.WEAPON, p_44678_, calculationType, priority);
+    protected CountEnchantment(Rarity p_44676_, EnchantmentCategory category, EquipmentSlot[] slots, String mapName, CountType type, CalculationType calculationType, ProcessPriority priority) {
+        super(p_44676_, category, slots, calculationType, priority);
         this.mapName = mapName;
         this.type = type;
     }
@@ -31,7 +30,6 @@ public abstract class CountEnchantment extends ExtendedCalculationEnchantment im
             map.put(attacked.getUUID(), 0);
         }
         int i = map.get(attacked.getUUID());
-        MysticcraftMod.sendInfo(String.valueOf(i));
         if (i >= this.getCountAmount(level)) {
             i = 0;
             if (this.type == CountType.NORMAL) {

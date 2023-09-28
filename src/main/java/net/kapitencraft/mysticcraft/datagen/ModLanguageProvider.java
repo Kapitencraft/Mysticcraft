@@ -1,7 +1,6 @@
 package net.kapitencraft.mysticcraft.datagen;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.init.ModItems;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.common.data.LanguageProvider;
@@ -16,7 +15,6 @@ public class ModLanguageProvider extends LanguageProvider {
 
     @Override
     protected void addTranslations() {
-        registerItem(ModItems.UNBREAKING_CORE);
     }
 
     private void registerItem(RegistryObject<Item> object) {

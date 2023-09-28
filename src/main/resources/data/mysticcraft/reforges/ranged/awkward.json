@@ -1,0 +1,13 @@
+{
+  "mods": {
+    "mysticcraft:generic.crit_damage": [
+      5, 10, 15, 22, 30, 35, 50
+    ],
+    "mysticcraft:generic.intelligence": [
+      -5, -10, -18, -32, -50, -72, -100
+    ],
+    "mysticcraft:generic.crit_chance": [
+      10, 12, 15, 20, 25, 30, 37
+    ]
+  }
+}

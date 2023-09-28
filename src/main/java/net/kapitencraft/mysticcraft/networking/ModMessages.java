@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.networking;
 
 import net.kapitencraft.mysticcraft.networking.packets.C2S.ReforgingPacket;
+import net.kapitencraft.mysticcraft.networking.packets.S2C.DamageIndicatorPacket;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -35,6 +36,7 @@ public class ModMessages {
         PACKET_HANDLER.sendToServer(message);
     }
 
+
     public static <MSG> void sendToServer(MSG message, ServerPlayer player) {
         PACKET_HANDLER.send(PacketDistributor.PLAYER.with(()-> player), message);
     }
@@ -53,8 +55,10 @@ public class ModMessages {
                 .encoder(ReforgingPacket::toBytes)
                 .consumerMainThread(ReforgingPacket::handle)
                 .add();
+        net.messageBuilder(DamageIndicatorPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(DamageIndicatorPacket::new)
+                .encoder(DamageIndicatorPacket::toBytes)
+                .consumerMainThread(DamageIndicatorPacket::handle)
+                .add();
     }
-
-
-
 }

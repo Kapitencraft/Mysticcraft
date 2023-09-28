@@ -12,7 +12,7 @@
     "frame": "challenge",
     "hidden": false,
     "icon": {
-      "item": "mysticcraft:spell_shard"
+      "item": "mysticcraft:elemental_shard_of_fire"
     },
     "show_toast": true,
     "title": {

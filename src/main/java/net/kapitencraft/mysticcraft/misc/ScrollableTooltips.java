@@ -1,5 +1,6 @@
 package net.kapitencraft.mysticcraft.misc;
 
+import net.kapitencraft.mysticcraft.config.ClientModConfig;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
@@ -15,7 +16,6 @@ import java.util.List;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class ScrollableTooltips {
-    private static final int scrollScale = 5;
     private static int scrollY = 0;
     private static int initY = 0;
     private static int scale = 1;
@@ -48,11 +48,12 @@ public class ScrollableTooltips {
 
     @SubscribeEvent
     public static void scrollEvent(ScreenEvent.MouseScrolled.Post event) {
+        int scrollScale = ClientModConfig.scrollScale;
         if (stack != ItemStack.EMPTY) {
             if (Screen.hasControlDown()) {
                 scale += event.getScrollDelta() * scrollScale;
             } else {
-                scrollY += event.getScrollDelta() * scrollScale;
+                scrollY -= event.getScrollDelta() * scrollScale;
             }
         }
     }
