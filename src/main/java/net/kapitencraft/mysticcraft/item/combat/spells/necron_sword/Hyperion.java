@@ -5,6 +5,9 @@ import net.kapitencraft.mysticcraft.spell.SpellSlot;
 import net.kapitencraft.mysticcraft.spell.Spells;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.function.Consumer;
 
 public class Hyperion extends NecronSword {
 
@@ -14,7 +17,7 @@ public class Hyperion extends NecronSword {
     }
 
     @Override
-    protected Multimap<Attribute, AttributeModifier> getAdditionalModifiers() {
-        return null;
+    protected @NotNull Consumer<Multimap<Attribute, AttributeModifier>> getAdditionalModifiers() {
+        return multimap -> {};
     }
 }

@@ -102,7 +102,7 @@ public class GemstoneSlot {
 
     @Override
     public String toString() {
-        return "GemstoneSlot{Rarity: " + this.getGemRarity().getId() + ", GemstoneType: " + (this.appliedGemstoneType == null ? "null" : this.appliedGemstoneType.getId()) + "}";
+        return "GemstoneSlot{Rarity: " + this.getGemRarity().getId() + ", applied GemstoneType: " + (this.appliedGemstoneType == null ? "null" : this.appliedGemstoneType.getId()) + "}";
     }
 
     public enum Type {

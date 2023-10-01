@@ -20,12 +20,16 @@ public class Cooldown {
         Cooldowns.addCooldown(this);
     }
 
-    public void applyCooldown(LivingEntity entity) {
+    public void applyCooldown(LivingEntity entity, boolean reduceWithTime) {
         CompoundTag tag = getTag(entity);
         if (tag != null) {
-            int mul = (int) (entity.getAttributeValue(ModAttributes.COOLDOWN_REDUCTION.get()));
+            int mul = reduceWithTime ? (int) (entity.getAttributeValue(ModAttributes.COOLDOWN_REDUCTION.get())) : 0;
             tag.putInt(path.getPath(), defaultTime * (1 - mul / 100));
         }
+    }
+
+    public void onDone(LivingEntity living) {
+        toDo.accept(living);
     }
 
     public CompoundPath getPath() {

@@ -1,9 +1,11 @@
 package net.kapitencraft.mysticcraft.item.combat.spells.necron_sword;
 
-import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.function.Consumer;
 
 public class NecronSwordDefaultImpl extends NecronSword {
     public NecronSwordDefaultImpl() {
@@ -11,7 +13,7 @@ public class NecronSwordDefaultImpl extends NecronSword {
     }
 
     @Override
-    protected Multimap<Attribute, AttributeModifier> getAdditionalModifiers() {
-        return HashMultimap.create();
+    protected @NotNull Consumer<Multimap<Attribute, AttributeModifier>> getAdditionalModifiers() {
+        return multimap -> {};
     }
 }

@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.item.combat.armor;
 
-import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
@@ -46,11 +46,11 @@ public class SoulMageArmorItem extends ModArmorItem implements IArmorBonusItem {
 
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeMods(EquipmentSlot slot) {
-        ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = new ImmutableMultimap.Builder<>();
+        HashMultimap<Attribute, AttributeModifier> builder = HashMultimap.create();
         if (slot == this.getSlot()) {
             builder.put(ModAttributes.INTELLIGENCE.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[MiscUtils.createCustomIndex(slot)], "Intelligence", 345, AttributeModifier.Operation.ADDITION));
         }
-        return builder.build();
+        return builder;
     }
 
     @Override

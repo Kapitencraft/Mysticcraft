@@ -2,7 +2,6 @@ package net.kapitencraft.mysticcraft.item.material;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.init.ModItems;
-import net.kapitencraft.mysticcraft.misc.HealingHelper;
 import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.SaveAbleEnum;
 import net.kapitencraft.mysticcraft.utils.MathUtils;
 import net.kapitencraft.mysticcraft.utils.MiscUtils;
@@ -72,8 +71,6 @@ public class PrecursorRelicItem extends Item {
             if (hp != null) {
                 MysticcraftMod.sendInfo("adding Modifier");
                 hp.addPermanentModifier(new AttributeModifier(HP_BOOST, "Necron's HP Boost", 0.5, AttributeModifier.Operation.MULTIPLY_TOTAL));
-                HealingHelper.setReason(boss, HealingHelper.HealReason.NATURAL);
-                boss.heal(1000);
             }
         }),
         GOLDOR("jolly_pink_rock", "Goldor", boss -> {
@@ -81,8 +78,6 @@ public class PrecursorRelicItem extends Item {
             if (hp != null) {
                 MysticcraftMod.sendInfo("adding Modifier");
                 hp.addPermanentModifier(new AttributeModifier(HP_BOOST, "Goldor's HP Boost", 2, AttributeModifier.Operation.MULTIPLY_TOTAL));
-                HealingHelper.setReason(boss, HealingHelper.HealReason.NATURAL);
-                boss.heal(1000);
             }
         }),
         MAXOR("bigfoots_lasso", "Maxor", boss -> {}),
@@ -122,7 +117,7 @@ public class PrecursorRelicItem extends Item {
         }
 
         public static BossType fromBoss(WitherBoss boss) {
-            return byName(boss.getPersistentData().getString("WitherBoss"));
+            return byName(boss.getPersistentData().getString("WitherType"));
         }
 
         public static BossType byName(String name) {

@@ -32,7 +32,7 @@ public class BonkEnchantment extends ExtendedCalculationEnchantment implements I
             boolean isActive = tag1.getBoolean(name);
             if (isActive) {
                 ParticleUtils.sendParticles(attacked.level, ParticleTypes.EXPLOSION, false, MathUtils.getPosition(attacked), 2, 0, 0, 0, 0);
-                Cooldowns.BONK_ENCHANTMENT(slot).applyCooldown(attacked);
+                Cooldowns.BONK_ENCHANTMENT(slot).applyCooldown(attacked, true);
                 return 0;
             }
         }

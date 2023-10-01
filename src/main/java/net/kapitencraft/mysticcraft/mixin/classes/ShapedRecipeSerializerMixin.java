@@ -113,7 +113,6 @@ public class ShapedRecipeSerializerMixin implements RecipeSerializer<ShapedRecip
     }
 
     private static Ingredient fromJson(JsonElement element) {
-        MysticcraftMod.sendInfo("loading ingredient from object: " + element, false, MARKER);
         if (element != null && !element.isJsonNull()) {
             if (element.isJsonObject()) {
                 return fromValues(Stream.of(valueFromJson(element.getAsJsonObject())));
@@ -206,6 +205,7 @@ public class ShapedRecipeSerializerMixin implements RecipeSerializer<ShapedRecip
 
         return i;
     }
+
     private static int lastNonSpace(String p_44201_) {
         int i;
         for(i = p_44201_.length() - 1; i >= 0 && p_44201_.charAt(i) == ' '; --i) {
@@ -213,7 +213,6 @@ public class ShapedRecipeSerializerMixin implements RecipeSerializer<ShapedRecip
 
         return i;
     }
-
 
     @Override
     public @Nullable ShapedRecipe fromNetwork(ResourceLocation location, FriendlyByteBuf buf) {
@@ -230,7 +229,6 @@ public class ShapedRecipeSerializerMixin implements RecipeSerializer<ShapedRecip
         ItemStack itemstack = buf.readItem();
         return new ShapedRecipe(location, s, craftingbookcategory, i, j, nonnulllist, itemstack);
     }
-
 
     private static Ingredient fromNetwork(FriendlyByteBuf buf) {
         int size = buf.readVarInt();

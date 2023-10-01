@@ -29,20 +29,22 @@ public class BonusUtils {
     public static void useBonuses(LivingEntity living, BiConsumer<Bonus, ItemStack> user) {
         doForSlot((stack, slot) -> {
             if (stack.getItem() instanceof IArmorBonusItem bonusItem) {
-                user.accept(bonusItem.getFullSetBonus(), stack);
-                user.accept(bonusItem.getPieceBonusForSlot(slot), stack);
-                user.accept(bonusItem.getExtraBonus(slot), stack);
+                MiscUtils.giveNullOrElse(bonusItem.getFullSetBonus(), fullSetBonus -> user.accept(fullSetBonus, stack));
+                MiscUtils.giveNullOrElse(bonusItem.getPieceBonusForSlot(slot), pieceBonus -> user.accept(pieceBonus, stack));
+                MiscUtils.giveNullOrElse(bonusItem.getExtraBonus(slot), extraBonus -> user.accept(extraBonus, stack));
             }
             Reforge reforge = Reforges.getReforge(stack);
             if (reforge != null && reforge.getBonus() != null) {
                 user.accept(reforge.getBonus(), stack);
             }
             if (stack.getItem() instanceof IWeaponBonusItem weaponBonusItem) {
-                user.accept(weaponBonusItem.getBonus(), stack);
-                user.accept(weaponBonusItem.getExtraBonus(), stack);
+                MiscUtils.giveNullOrElse(weaponBonusItem.getBonus(), pieceBonus -> user.accept(pieceBonus, stack));
+                MiscUtils.giveNullOrElse(weaponBonusItem.getExtraBonus(), extraBonus -> user.accept(extraBonus, stack));
             }
         }, living);
     }
+
+
 
     private static void doForSlot(BiConsumer<ItemStack, EquipmentSlot> stackConsumer, LivingEntity living) {
         for (EquipmentSlot slot : EquipmentSlot.values()) {

@@ -1,9 +1,13 @@
 package net.kapitencraft.mysticcraft.java_test;
 
 
+import java.io.File;
+import java.io.IOException;
+
 public class JavaTestMain {
 
-    public static void main(String... args) {
-        System.out.println(Math.sqrt((-6 ^ 2) + (16 ^ 2)));
+    public static void main(String... args) throws IOException {
+        String dir = new File(".").getCanonicalPath();
+        System.out.println(dir);
     }
 }

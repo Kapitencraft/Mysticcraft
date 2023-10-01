@@ -23,7 +23,7 @@ import java.util.List;
 public class MathUtils {
 
     public static double round(double no, int num) {
-        return Math.floor(no * (num * 10)) / (num * 10);
+        return  Math.floor(no * Math.pow(10, num)) / (Math.pow(10, num));
     }
 
     public static <T extends Entity> List<T> getEntitiesAround(Class<T> tClass, Entity source, double range) {

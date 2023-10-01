@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.item.item_bonus.piece;
 
-import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.item.item_bonus.PieceBonus;
@@ -24,9 +24,9 @@ public class SoulMageChestplateBonus extends PieceBonus {
     @Nullable
     @Override
     public Multimap<Attribute, AttributeModifier> getModifiers(LivingEntity living) {
-        ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = new ImmutableMultimap.Builder<>();
+        HashMultimap<Attribute, AttributeModifier> builder = HashMultimap.create();
         builder.put(ModAttributes.MAX_MANA.get(), new AttributeModifier(CHESTPLATE_BONUS_ID, "Chestplate Mod", 0.2, AttributeModifier.Operation.MULTIPLY_TOTAL));
-        return builder.build();
+        return builder;
     }
 
     @Override

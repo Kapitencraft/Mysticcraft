@@ -129,7 +129,7 @@ public class GemstoneHelper {
             @Nullable GemstoneType gemstoneType;
             try {
                 for (@Nullable GemstoneSlot slot : this.getGemstoneSlots(stack)) {
-                    if (slot != null && slot != GemstoneSlot.BLOCKED) {
+                    if (slot != null) {
                         gemstoneType = slot.getAppliedGemstone();
                         if (gemstoneType != null) {
                             attribute = gemstoneType.modifiedAttribute.get();

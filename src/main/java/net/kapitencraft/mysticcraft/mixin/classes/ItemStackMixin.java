@@ -9,9 +9,11 @@ import net.kapitencraft.mysticcraft.item.QuiverItem;
 import net.kapitencraft.mysticcraft.item.combat.spells.SpellItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword.LongSwordItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.bow.ShortBowItem;
+import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.item.misc.IModItem;
 import net.kapitencraft.mysticcraft.item.reforging.Reforge;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
+import net.kapitencraft.mysticcraft.utils.MathUtils;
 import net.kapitencraft.mysticcraft.utils.MiscUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
@@ -141,7 +143,6 @@ public abstract class ItemStackMixin {
                 if (!multimap.isEmpty()) {
                     list.add(CommonComponents.EMPTY);
                     list.add(Component.translatable("item.modifiers." + equipmentslot.getName()).withStyle(ChatFormatting.GRAY));
-
                     for(Map.Entry<Attribute, AttributeModifier> entry : multimap.entries()) {
                         AttributeModifier modifier = entry.getValue();
                         double d0 = modifier.getAmount();
@@ -178,7 +179,7 @@ public abstract class ItemStackMixin {
                         } else if (d0 > 0.0D) {
                             if (modifier.getOperation() == AttributeModifier.Operation.MULTIPLY_TOTAL) {
                                 d1+=1;
-                                toAppend.append(MiscUtils.buildComponent(Component.literal(ATTRIBUTE_MODIFIER_FORMAT.format(d1)), Component.literal("x "), Component.translatable(entry.getKey().getDescriptionId())).withStyle(ChatFormatting.BLUE));
+                                toAppend.append(MiscUtils.buildComponent(Component.literal(String.valueOf(MathUtils.round(d1, 2))), Component.literal("x "), Component.translatable(entry.getKey().getDescriptionId())).withStyle(ChatFormatting.BLUE));
                             } else {
                                 toAppend.append(Component.translatable("attribute.modifier.plus." + modifier.getOperation().toValue(), ATTRIBUTE_MODIFIER_FORMAT.format(d1), Component.translatable(entry.getKey().getDescriptionId())).withStyle(ChatFormatting.BLUE));
                             }
@@ -186,15 +187,23 @@ public abstract class ItemStackMixin {
                             d1 *= -1.0D;
                             if (modifier.getOperation() == AttributeModifier.Operation.MULTIPLY_TOTAL) {
                                 d1+=1;
-                                toAppend.append(MiscUtils.buildComponent(Component.literal(ATTRIBUTE_MODIFIER_FORMAT.format(d1)), Component.literal("x "), Component.translatable(entry.getKey().getDescriptionId())).withStyle(ChatFormatting.BLUE));
+                                toAppend.append(MiscUtils.buildComponent(Component.literal(String.valueOf(MathUtils.round(d1, 2))), Component.literal("x "), Component.translatable(entry.getKey().getDescriptionId())).withStyle(ChatFormatting.BLUE));
                             } else {
                                 toAppend.append(Component.translatable("attribute.modifier.take." + modifier.getOperation().toValue(), ATTRIBUTE_MODIFIER_FORMAT.format(d1), Component.translatable(entry.getKey().getDescriptionId())).withStyle(ChatFormatting.RED));
                             }
                         }
-                        if (reforge != null && reforge.hasModifier(entry.getKey()) && modifier.getOperation() == AttributeModifier.Operation.ADDITION) {
-                            Double reforgeValue = reforge.applyModifiers(self().getRarity()).get(entry.getKey());
-                            String reforgeStringValue = reforgeValue > 0 ? "+" + ATTRIBUTE_MODIFIER_FORMAT.format(reforgeValue) : "-" + ATTRIBUTE_MODIFIER_FORMAT.format(reforgeValue);
-                            toAppend.append(Component.literal(" (" + reforgeStringValue + ")").withStyle(ChatFormatting.GREEN));
+                        if (modifier.getOperation() == AttributeModifier.Operation.ADDITION) {
+                            if (reforge != null && reforge.hasModifier(entry.getKey())) {
+                                Double reforgeValue = reforge.applyModifiers(self().getRarity()).get(entry.getKey());
+                                String reforgeStringValue = reforgeValue > 0 ? "+" + ATTRIBUTE_MODIFIER_FORMAT.format(reforgeValue) : "-" + ATTRIBUTE_MODIFIER_FORMAT.format(reforgeValue);
+                                toAppend.append(Component.literal(" (" + reforgeStringValue + ")").withStyle(ChatFormatting.GREEN));
+                            }
+                            if (self().getItem() instanceof IGemstoneApplicable applicable) {
+                                HashMap<Attribute, AttributeModifier> mods = applicable.getAttributeModifiers(self(), equipmentslot);
+                                if (mods.containsKey(entry.getKey())) {
+                                    toAppend.append(Component.literal(" (" + mods.get(entry.getValue().getAmount()) + ")").withStyle(ChatFormatting.LIGHT_PURPLE));
+                                }
+                            }
                         }
                         list.add(toAppend);
                     }

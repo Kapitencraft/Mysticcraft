@@ -14,11 +14,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Stream;
 
 public class RNGDropHelper {
 
@@ -45,7 +41,7 @@ public class RNGDropHelper {
     }
 
     private static double getFinalChance(float chance, double magicFind) {
-        return chance * (1 + magicFind) / 100;
+        return chance * (1 + magicFind / 100);
     }
 
     public static ItemStack dontDrop(Item item, int maxAmount, LivingEntity source, float chance) {
@@ -110,16 +106,14 @@ public class RNGDropHelper {
         }
 
         public static DropRarities getRarity(float chance) {
-            Stream<DropRarities> raritiesStream = Arrays.stream(values());
-            List<DropRarities> sortedList = raritiesStream.sorted(Comparator.comparingDouble(DropRarities::getMaxChance)).toList();
-            for (int i = 0; i < sortedList.size(); i++) {
-                DropRarity rarity = sortedList.get(i);
-                if (rarity.getMaxChance() < chance) {
-                    return sortedList.get(i-1);
+            for (DropRarities rarities : values()) {
+                if (rarities.maxChance >= chance) {
+                    return rarities;
                 }
             }
             return OCCASIONAL;
         }
+
 
         public MutableComponent makeDisplay() {
             return Component.translatable("rng_drop.rarity." + translateKey).withStyle(ChatFormatting.BOLD).withStyle(color);

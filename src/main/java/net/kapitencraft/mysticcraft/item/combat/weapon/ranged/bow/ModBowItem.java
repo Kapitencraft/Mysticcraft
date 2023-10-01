@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.item.combat.weapon.ranged.bow;
 
-import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
@@ -163,11 +163,11 @@ public abstract class ModBowItem extends BowItem implements IModItem {
 
     @Override
     public @NotNull Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(@NotNull EquipmentSlot slot) {
-        ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = new ImmutableMultimap.Builder<>();
+        HashMultimap<Attribute, AttributeModifier> builder = HashMultimap.create();
         if (slot == EquipmentSlot.MAINHAND) {
             builder.put(ModAttributes.RANGED_DAMAGE.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[5], "Damage Modifier", this.getDamage(), AttributeModifier.Operation.ADDITION));
         }
-        return builder.build();
+        return builder;
     }
 
     @Override
@@ -179,11 +179,11 @@ public abstract class ModBowItem extends BowItem implements IModItem {
 
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
-        ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = new ImmutableMultimap.Builder<>();
+        HashMultimap<Attribute, AttributeModifier> builder = HashMultimap.create();
         builder.putAll(super.getAttributeModifiers(slot, stack));
         if (this instanceof IGemstoneApplicable applicable && slot == EquipmentSlot.MAINHAND) {
-            return AttributeUtils.increaseAllByAmount(builder.build(), applicable.getAttributeModifiers(stack, slot));
+            return AttributeUtils.increaseAllByAmount(builder, applicable.getAttributeModifiers(stack, slot));
         }
-        return builder.build();
+        return builder;
     }
 }

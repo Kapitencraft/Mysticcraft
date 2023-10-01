@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.utils.MathUtils;
 import net.kapitencraft.mysticcraft.utils.TextUtils;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
@@ -15,7 +16,6 @@ import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
@@ -27,17 +27,16 @@ import java.util.List;
 public class DamageIndicatorParticle extends Particle {
     private static final List<Float> POSITIONS = List.of(0f, -0.25f, 0.12f, -0.12f, 0.25f);
 
-    protected DamageIndicatorParticle(ClientLevel p_107234_, double p_107235_, double p_107236_, double p_107237_, double amount, double damageType, double index) {
+    protected DamageIndicatorParticle(ClientLevel p_107234_, double p_107235_, double p_107236_, double p_107237_, double amount, String damageType) {
         super(p_107234_, p_107235_, p_107236_, p_107237_);
 
         this.text = MysticcraftMod.doubleFormat(amount);
-        this.color = TextUtils.damageIndicatorColorFromDouble(damageType).getColor();
+        this.color = TextUtils.damageIndicatorColorGenerator(damageType).getColor();
         this.setColor(FastColor.ARGB32.red(color), FastColor.ARGB32.green(color), FastColor.ARGB32.blue(color));
         this.darkColor = FastColor.ARGB32.color(255, (int) (this.rCol * 0.25f), (int) (this.rCol * 0.25f), (int) (this.rCol * 0.25));
 
         this.yd = 1;
-        this.xd = POSITIONS.get((int) (index % POSITIONS.size()));
-
+        this.xd = MathUtils.pickRandom(POSITIONS);
     }
 
     private float fadeout = -1;
@@ -48,7 +47,6 @@ public class DamageIndicatorParticle extends Particle {
     private final String text;
     private final int color;
     private final int darkColor;
-
 
     private float visualDY = 0;
     private float prevVisualDY = 0;
@@ -134,7 +132,6 @@ public class DamageIndicatorParticle extends Particle {
 
             //spawn numbers in a sort of ellipse centered on his torso
             if (Math.sqrt(Math.pow(this.visualDX * 1.5, 2) + Math.pow(this.visualDY - 1, 2)) < 1.9 - 1) {
-
                 this.yd = this.yd / 2;
             } else {
                 this.yd = 0;
@@ -143,7 +140,7 @@ public class DamageIndicatorParticle extends Particle {
         }
     }
 
-    public static class Provider implements ParticleProvider<SimpleParticleType> {
+    public static class Provider implements ParticleProvider<DamageIndicatorParticleType> {
 
         public Provider(SpriteSet ignoredSpriteSet) {
 
@@ -151,8 +148,8 @@ public class DamageIndicatorParticle extends Particle {
 
         @Nullable
         @Override
-        public Particle createParticle(@NotNull SimpleParticleType particleType, @NotNull ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
-            return new DamageIndicatorParticle(level, x, y, z, xSpeed, ySpeed, zSpeed);
+        public DamageIndicatorParticle createParticle(@NotNull DamageIndicatorParticleType particleType, @NotNull ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+            return new DamageIndicatorParticle(level, x, y, z, particleType.getAmount(), particleType.getDamageType());
         }
     }
 }

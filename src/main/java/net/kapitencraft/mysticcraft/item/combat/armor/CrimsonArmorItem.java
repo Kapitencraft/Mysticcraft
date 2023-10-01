@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.item.combat.armor;
 
-import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModParticleTypes;
@@ -54,13 +54,13 @@ public class CrimsonArmorItem extends TieredArmorItem implements GeoItem, IArmor
 
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeMods(EquipmentSlot slot) {
-                ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = new ImmutableMultimap.Builder<>();
+                HashMultimap<Attribute, AttributeModifier> builder = HashMultimap.create();
                 if (slot == this.slot) {
                     builder.put(ModAttributes.STRENGTH.get(), AttributeUtils.createModifier("Crimson Armor", AttributeModifier.Operation.ADDITION, 3 * this.getMaterial().getDefenseForSlot(this.getSlot())));
                     builder.put(ModAttributes.CRIT_DAMAGE.get(), AttributeUtils.createModifier("Crimson Armor", AttributeModifier.Operation.ADDITION, this.getMaterial().getDefenseForSlot(this.getSlot())));
                     builder.put(Attributes.MAX_HEALTH, AttributeUtils.createModifier("Crimson Armor", AttributeModifier.Operation.ADDITION, this.getMaterial().getDefenseForSlot(this.getSlot()) / 2.5));
                 }
-                return builder.build();
+                return builder;
     }
 
     @Override

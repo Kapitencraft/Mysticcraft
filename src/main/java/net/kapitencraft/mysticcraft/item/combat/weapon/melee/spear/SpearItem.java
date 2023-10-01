@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.item.combat.weapon.melee.spear;
 
-import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
@@ -31,13 +31,13 @@ public abstract class SpearItem extends TieredItem implements IModItem {
 
     @Override
     public @NotNull Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(@NotNull EquipmentSlot slot) {
-        ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = new ImmutableMultimap.Builder<>();
+        HashMultimap<Attribute, AttributeModifier> builder = HashMultimap.create();
         if (slot == EquipmentSlot.MAINHAND) {
             builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[5], "Attack Damage Change", this.getDamage(), AttributeModifier.Operation.ADDITION));
             builder.put(ModAttributes.STRENGTH.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[5], "Attack Strenght Change", this.getStrenght(), AttributeModifier.Operation.ADDITION));
             builder.put(ModAttributes.CRIT_DAMAGE.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[5], "Attack Crit Damage Change", this.getCritDamage(), AttributeModifier.Operation.ADDITION));
         }
-        return builder.build();
+        return builder;
     }
 
     @Override

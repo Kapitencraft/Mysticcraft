@@ -3,6 +3,9 @@ package net.kapitencraft.mysticcraft.item.combat.spells.necron_sword;
 import com.google.common.collect.Multimap;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.function.Consumer;
 
 public class Valkyrie extends NecronSword {
     public Valkyrie() {
@@ -10,7 +13,7 @@ public class Valkyrie extends NecronSword {
     }
 
     @Override
-    protected Multimap<Attribute, AttributeModifier> getAdditionalModifiers() {
-        return null;
+    protected @NotNull Consumer<Multimap<Attribute, AttributeModifier>> getAdditionalModifiers() {
+        return multimap -> {};
     }
 }

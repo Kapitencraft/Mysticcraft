@@ -3,11 +3,11 @@ package net.kapitencraft.mysticcraft.utils;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import net.kapitencraft.mysticcraft.ModConstance;
+import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.gui.IGuiHelper;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneItem;
-import net.kapitencraft.mysticcraft.misc.cooldown.Cooldowns;
 import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.Provider;
+import net.kapitencraft.mysticcraft.particle.DamageIndicatorParticleType;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -66,6 +66,12 @@ public class MiscUtils {
 
     public static EquipmentSlot getSlotForStack(ItemStack stack) {
         return stack.getItem() instanceof ArmorItem armorItem ? armorItem.getSlot() : EquipmentSlot.MAINHAND;
+    }
+
+    public static <T> void giveNullOrElse(@Nullable T t, Consumer<T> toDo) {
+        if (t != null) {
+            toDo.accept(t);
+        }
     }
 
     public static Item.Properties rarity(Rarity rarity) {
@@ -305,16 +311,9 @@ public class MiscUtils {
         return sup.get();
     }
 
-    public static ArmorStand createDamageIndicator(LivingEntity entity, double amount, String type) {
-        ArmorStand dmgInc = createMarker(new Vec3(entity.getX() + Math.random() - 0.5, entity.getY() - 1, entity.getZ() + Math.random() - 0.5), entity.level, true);
-        boolean dodge = Objects.equals(type, "dodge");
-        dmgInc.setCustomNameVisible(true);
-        dmgInc.setCustomName(Component.literal(amount == Float.MAX_VALUE ? "\u221E" : !dodge ? String.valueOf(ModConstance.MAIN_FORMAT.format(amount)) : "DODGE").withStyle(TextUtils.damageIndicatorColorGenerator(type)));
-        CompoundTag persistentData = dmgInc.getPersistentData();
-        persistentData.putBoolean("isDamageIndicator", true);
-        Cooldowns.DAMAGE_INDICATOR.applyCooldown(dmgInc);
-        entity.level.addFreshEntity(dmgInc);
-        return dmgInc;
+    public static void createDamageIndicator(LivingEntity entity, double amount, String type) {
+        MysticcraftMod.sendInfo("making damage indicator");
+        ParticleUtils.sendParticles(entity.level, new DamageIndicatorParticleType(amount, type), true, MathUtils.getPosition(entity), 1, 0, 0, 0, 0);
     }
 
     public static final char HEART = '\u2661';
@@ -323,7 +322,7 @@ public class MiscUtils {
         ArmorStand marker = createMarker(MathUtils.getPosition(target).add(0, 0.5, 0), target.getLevel(), true);
         CompoundTag tag = marker.getPersistentData();
         tag.putBoolean("healthMarker", true);
-        marker.setCustomName(Component.literal(HEART + target.getHealth() + "/" + target.getMaxHealth()));
+        marker.setCustomName(Component.literal(HEART + " " + target.getHealth() + "/" + target.getMaxHealth()));
         marker.setCustomNameVisible(true);
         target.getLevel().addFreshEntity(marker);
         return marker;
@@ -333,7 +332,7 @@ public class MiscUtils {
         if (list.isEmpty()) {
             return List.of();
         }
-        return list.stream().sorted(Comparator.comparingDouble(_entcnd -> _entcnd.distanceToSqr(MathUtils.getPosition(source)))).collect(Collectors.toList());
+        return list.stream().sorted(Comparator.comparingDouble(living -> living.distanceToSqr(MathUtils.getPosition(source)))).collect(Collectors.toList());
     }
 
 

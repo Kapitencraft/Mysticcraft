@@ -24,8 +24,8 @@ import java.util.UUID;
 import java.util.function.Consumer;
 
 public class CrimsonArmorFullSetBonus extends FullSetBonus {
-    private static final String COOLDOWN_ID = "DominusCooldown";
-    private static final String DOMINUS_ID = "Dominus";
+    public static final String COOLDOWN_ID = "DominusCooldown";
+    public static final String DOMINUS_ID = "Dominus";
     public CrimsonArmorFullSetBonus() {
         super("Dominus");
     }

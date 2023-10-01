@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.item.combat.armor;
 
-import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
@@ -34,21 +34,21 @@ public class EnderKnightArmorItem extends ModArmorItem implements IGemstoneAppli
 
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
-        ImmutableMultimap<Attribute, AttributeModifier> modifierMultimap = (ImmutableMultimap<Attribute, AttributeModifier>) super.getAttributeModifiers(slot, stack);
+        Multimap<Attribute, AttributeModifier> modifierMultimap = super.getAttributeModifiers(slot, stack);
         if (Objects.equals(this.dimension, MiscUtils.getDimensionRegistries().get(Level.END))) {
             modifierMultimap = AttributeUtils.increaseByPercent(modifierMultimap, 1, new AttributeModifier.Operation[]{AttributeModifier.Operation.ADDITION, AttributeModifier.Operation.MULTIPLY_BASE, AttributeModifier.Operation.MULTIPLY_TOTAL}, null);
         }
         return modifierMultimap;
     }
 
-    public ImmutableMultimap<Attribute, AttributeModifier> getAttributeMods(EquipmentSlot slot) {
-        ImmutableMultimap.Builder<Attribute, AttributeModifier> preReturn = new ImmutableMultimap.Builder<>();
+    public HashMultimap<Attribute, AttributeModifier> getAttributeMods(EquipmentSlot slot) {
+        HashMultimap<Attribute, AttributeModifier> preReturn = HashMultimap.create();
         if (slot == this.slot) {
             preReturn.put(ModAttributes.CRIT_DAMAGE.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[MiscUtils.createCustomIndex(slot)], "Modded Attributes", 27, AttributeModifier.Operation.ADDITION));
             preReturn.put(ModAttributes.STRENGTH.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[MiscUtils.createCustomIndex(slot)], "Modded Attributes", 58, AttributeModifier.Operation.ADDITION));
             preReturn.put(Attributes.MAX_HEALTH, new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[MiscUtils.createCustomIndex(slot)], "Modded Modifier", 4, AttributeModifier.Operation.ADDITION));
         }
-        return preReturn.build();
+        return preReturn;
     }
 
 

@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.item.combat.armor;
 
-import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.init.ModItems;
@@ -134,17 +134,17 @@ public abstract class ModArmorItem extends ArmorItem implements IModItem {
 
     @Override
     public @NotNull Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(@NotNull EquipmentSlot slot) {
-        ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = new ImmutableMultimap.Builder<>();
+        HashMultimap<Attribute, AttributeModifier> builder = HashMultimap.create();
         builder.putAll(super.getDefaultAttributeModifiers(slot));
         if (this.getAttributeMods(slot) != null) {
             builder.putAll(this.getAttributeMods(slot));
         }
-        return builder.build();
+        return builder;
     }
 
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
-        ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = new ImmutableMultimap.Builder<>();
+        HashMultimap<Attribute, AttributeModifier> builder = HashMultimap.create();
         Multimap<Attribute, AttributeModifier> map = null;
         builder.putAll(this.getDefaultAttributeModifiers(slot));
         if (slot == this.getSlot()) {
@@ -172,13 +172,13 @@ public abstract class ModArmorItem extends ArmorItem implements IModItem {
                 }
             }
             if (this instanceof IGemstoneApplicable applicable) {
-                map = AttributeUtils.increaseAllByAmount(builder.build(), applicable.getAttributeModifiers(stack, slot));
+                map = AttributeUtils.increaseAllByAmount(builder, applicable.getAttributeModifiers(stack, slot));
             }
         }
         if (stack.getTag() != null && stack.getTag().getBoolean("isOP")) {
-            return AttributeUtils.increaseByPercent(map == null ? builder.build() : map, 300, new AttributeModifier.Operation[]{AttributeModifier.Operation.ADDITION, AttributeModifier.Operation.MULTIPLY_TOTAL, AttributeModifier.Operation.MULTIPLY_BASE}, null);
+            return AttributeUtils.increaseByPercent(map == null ? builder : map, 300, new AttributeModifier.Operation[]{AttributeModifier.Operation.ADDITION, AttributeModifier.Operation.MULTIPLY_TOTAL, AttributeModifier.Operation.MULTIPLY_BASE}, null);
         }
-        return builder.build();
+        return builder;
     }
 
     protected void updateDimension(Level level) {

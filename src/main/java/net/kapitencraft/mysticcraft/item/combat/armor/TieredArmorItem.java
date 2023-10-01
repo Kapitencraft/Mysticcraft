@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.item.combat.armor;
 
-import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.kapitencraft.mysticcraft.utils.AttributeUtils;
@@ -58,10 +58,10 @@ public abstract class TieredArmorItem extends ModArmorItem {
 
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
-        ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = new ImmutableMultimap.Builder<>();
+        HashMultimap<Attribute, AttributeModifier> builder = HashMultimap.create();
         builder.putAll(super.getAttributeModifiers(slot, stack));
         ArmorTier armorTier = getTier(stack);
-        return AttributeUtils.increaseByPercent(builder.build(), armorTier == null ? 1 : armorTier.valueMul, AttributeModifier.Operation.values(), null);
+        return AttributeUtils.increaseByPercent(builder, armorTier == null ? 1 : armorTier.valueMul, AttributeModifier.Operation.values(), null);
     }
 
     public abstract List<ArmorTier> getAvailableTiers();

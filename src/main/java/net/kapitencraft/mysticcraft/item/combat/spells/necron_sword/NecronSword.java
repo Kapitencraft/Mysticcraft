@@ -15,6 +15,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 public abstract class NecronSword extends SpellItem implements IGemstoneApplicable {
     protected static final int BASE_DAMAGE = 12;
@@ -44,14 +45,12 @@ public abstract class NecronSword extends SpellItem implements IGemstoneApplicab
         if (slot == EquipmentSlot.MAINHAND) {
             multimap.put(ModAttributes.FEROCITY.get(), AttributeUtils.createModifier("Necron Modifier", AttributeModifier.Operation.ADDITION, this.FEROCITY));
             multimap.put(ModAttributes.STRENGTH.get(), AttributeUtils.createModifier("Necron Modifier", AttributeModifier.Operation.ADDITION, this.STRENGHT));
-            if (this.getAdditionalModifiers() != null) {
-                multimap.putAll(this.getAdditionalModifiers());
-            }
+            this.getAdditionalModifiers().accept(multimap);
         }
         return multimap;
     }
 
-    protected abstract Multimap<Attribute, AttributeModifier> getAdditionalModifiers();
+    protected abstract @NotNull Consumer<Multimap<Attribute, AttributeModifier>> getAdditionalModifiers();
 
     @Override
     public List<Component> getItemDescription() {

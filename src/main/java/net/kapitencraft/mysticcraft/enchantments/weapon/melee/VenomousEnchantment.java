@@ -43,7 +43,7 @@ public class VenomousEnchantment extends ExtendedCalculationEnchantment implemen
         try {
             speed.addTransientModifier(new AttributeModifier(ID, "VenomousMod", -0.05 * level, AttributeModifier.Operation.MULTIPLY_TOTAL));
         } catch (Throwable ignored) {}
-        Cooldowns.VENOMOUS.applyCooldown(attacked);
+        Cooldowns.VENOMOUS.applyCooldown(attacked, true);
         return damage;
     }
 

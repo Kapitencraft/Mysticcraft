@@ -2,6 +2,7 @@ package net.kapitencraft.mysticcraft.misc.cooldown;
 
 import net.kapitencraft.mysticcraft.enchantments.armor.BonkEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.weapon.melee.VenomousEnchantment;
+import net.kapitencraft.mysticcraft.item.item_bonus.fullset.CrimsonArmorFullSetBonus;
 import net.kapitencraft.mysticcraft.misc.HealingHelper;
 import net.kapitencraft.mysticcraft.spell.spells.WitherShieldSpell;
 import net.kapitencraft.mysticcraft.utils.TagUtils;
@@ -37,6 +38,10 @@ public interface Cooldowns {
             living.setAbsorptionAmount(living.getAbsorptionAmount() - absorption);
             tag.putFloat(WitherShieldSpell.ABSORPTION_AMOUNT_ID, 0);
         });
+    Cooldown DOMINUS = new Cooldown(new CompoundPath.Builder(CrimsonArmorFullSetBonus.COOLDOWN_ID).build(), 120, living -> {
+        TagUtils.reduceBy1(living.getPersistentData(), CrimsonArmorFullSetBonus.DOMINUS_ID);
+        //Cooldowns.DOMINUS.applyCooldown(living, false);
+    });
     static Cooldown BONK_ENCHANTMENT(EquipmentSlot slot) {
         CompoundPath path = new CompoundPath.Builder(slot.getName() + ".cooldown").withParent(BonkEnchantment.BONK_ID, builder -> {}).build();
         return new Cooldown(path, 1200, living -> {
@@ -50,12 +55,18 @@ public interface Cooldowns {
     }
 
     static void tickCooldowns(LivingEntity entity) {
-        for (Cooldown cooldown : cooldowns) {
+        cooldowns.removeIf(cooldown -> {
             CompoundPath path = cooldown.getPath().getParent();
             CompoundTag tag = path.getTag(entity);
             if (tag != null) {
-                TagUtils.reduceBy1(tag, cooldown.getPath().getPath());
+                String tagName = cooldown.getPath().getPath();
+                TagUtils.reduceBy1(tag, tagName);
+                if (tag.contains(tagName, 3) && tag.getInt(tagName) <= 0) {
+                    cooldown.onDone(entity);
+                    return true;
+                }
             }
-        }
+            return false;
+        });
     }
 }

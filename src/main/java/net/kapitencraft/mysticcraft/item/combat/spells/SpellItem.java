@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.item.combat.spells;
 
-import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
@@ -127,7 +127,7 @@ public abstract class SpellItem extends SwordItem implements IModItem {
     //Creating The Attribute Modifiers for this to work
     @Override
     public @NotNull Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(@NotNull EquipmentSlot slot) {
-        ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = new ImmutableMultimap.Builder<>();
+        HashMultimap<Attribute, AttributeModifier> builder = HashMultimap.create();
         if (slot == EquipmentSlot.MAINHAND) {
             if (this.intelligence > 0) {
                 builder.put(ModAttributes.INTELLIGENCE.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[MiscUtils.createCustomIndex(slot)], "Default Item Modifier", intelligence, AttributeModifier.Operation.ADDITION));
@@ -137,17 +137,14 @@ public abstract class SpellItem extends SwordItem implements IModItem {
             }
         }
         builder.putAll(super.getDefaultAttributeModifiers(slot));
-        return builder.build();
+        return builder;
     }
 
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
-        ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = new ImmutableMultimap.Builder<>();
+        HashMultimap<Attribute, AttributeModifier> builder = HashMultimap.create();
         builder.putAll(super.getAttributeModifiers(slot, stack));
-        if (this instanceof IGemstoneApplicable applicable && slot == EquipmentSlot.MAINHAND) {
-            return AttributeUtils.increaseAllByAmount(builder.build(), applicable.getAttributeModifiers(stack, slot));
-        }
-        return builder.build();
+        return builder;
     }
 
     //The actual logic for the SpellItem

@@ -11,7 +11,6 @@ import net.kapitencraft.mysticcraft.enchantments.abstracts.IToolEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.ModBowEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.StatBoostEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.armor.BasaltWalkerEnchantment;
-import net.kapitencraft.mysticcraft.enchantments.weapon.melee.VenomousEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.weapon.ranged.OverloadEnchantment;
 import net.kapitencraft.mysticcraft.entity.FrozenBlazeEntity;
 import net.kapitencraft.mysticcraft.event.ItemStackEvent;
@@ -80,7 +79,6 @@ import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.event.InputEvent;
-import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.common.BasicItemListing;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.ItemAttributeModifierEvent;
@@ -417,7 +415,6 @@ public class MiscRegister {
             BasaltWalkerEnchantment.onEntityMoved(living, living.blockPosition(), i);
         }
         BonusUtils.useBonuses(living, (bonus, stack) -> bonus.onTick(stack, living.getLevel(), living));
-        final String timer = VenomousEnchantment.TIMER_ID;
         if (AttributeUtils.getSaveAttributeValue(ModAttributes.MANA.get(), living) != -1 && living.level.getBlockState(new BlockPos(living.getX(), living.getY(), living.getZ())).getBlock() == ModBlocks.MANA_FLUID_BLOCK.get()) {
             double overflowMana = tag.getDouble(OVERFLOW_MANA_ID) + tag.getDouble("manaRegen");
             tag.putDouble(OVERFLOW_MANA_ID, overflowMana);
@@ -771,18 +768,7 @@ public class MiscRegister {
         }
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public static void manaRegister(RenderGuiOverlayEvent.Pre event) {
-        int w = event.getWindow().getGuiScaledWidth();
-        int h = event.getWindow().getGuiScaledHeight();
-        int posX = w / 2;
-        int posY = h / 2;
-            Player entity = Minecraft.getInstance().player;
-        if (entity != null) {
-            String builder = FormattingCodes.BLUE + MathUtils.round(entity.getAttributeValue(ModAttributes.MANA.get()), 1) + " [+" + MathUtils.round(entity.getPersistentData().getDouble(MiscRegister.OVERFLOW_MANA_ID), 1) + " Overflow] " + FormattingCodes.RESET + " / " + FormattingCodes.DARK_BLUE + entity.getAttributeValue(ModAttributes.MAX_MANA.get()) + " (+" + MathUtils.round(entity.getPersistentData().getDouble("manaRegen") * 20, 2) + "/s)";
-            Minecraft.getInstance().font.draw(event.getPoseStack(), builder, posX - 203, posY - 116, -1);
-        }
-    }
+
 
     @SubscribeEvent
     public static void entityDeathEvents(LivingDeathEvent event) {

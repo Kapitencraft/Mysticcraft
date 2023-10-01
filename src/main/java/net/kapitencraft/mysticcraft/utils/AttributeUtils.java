@@ -1,7 +1,6 @@
 package net.kapitencraft.mysticcraft.utils;
 
 import com.google.common.collect.HashMultimap;
-import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.misc.ChangingAttributeModifier;
 import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.Provider;
@@ -19,8 +18,8 @@ public class AttributeUtils {
 
     private static final HashMap<UUID, Function<LivingEntity, Double>> map = new HashMap<>();
 
-    public static ImmutableMultimap<Attribute, AttributeModifier> increaseByPercent(Multimap<Attribute, AttributeModifier> multimap, double percent, AttributeModifier.Operation[] operations, @Nullable Attribute attributeReq) {
-        ImmutableMultimap.Builder<Attribute, AttributeModifier> toReturn = new ImmutableMultimap.Builder<>();
+    public static Multimap<Attribute, AttributeModifier> increaseByPercent(Multimap<Attribute, AttributeModifier> multimap, double percent, AttributeModifier.Operation[] operations, @Nullable Attribute attributeReq) {
+        HashMultimap<Attribute, AttributeModifier> toReturn = HashMultimap.create();
         Collection<AttributeModifier> attributeModifiers;
         for (Attribute attribute : multimap.keys()) {
             if (attributeReq == null || attribute == attributeReq) {
@@ -39,11 +38,11 @@ public class AttributeUtils {
                 }
             }
         }
-        return toReturn.build();
+        return toReturn;
     }
 
     public static Multimap<Attribute, AttributeModifier> increaseByAmount(Multimap<Attribute, AttributeModifier> multimap, double amount, AttributeModifier.Operation operation, @Nullable Attribute attributeReq) {
-        ImmutableMultimap.Builder<Attribute, AttributeModifier> toReturn = new ImmutableMultimap.Builder<>();
+        HashMultimap<Attribute, AttributeModifier> toReturn = HashMultimap.create();
         boolean hasBeenAdded = attributeReq == null;
         Collection<AttributeModifier> attributeModifiers;
         for (Attribute attribute : multimap.keys()) {
@@ -64,7 +63,7 @@ public class AttributeUtils {
             }
             toReturn.put(attributeReq, new AttributeModifier(UUID.randomUUID(), "Custom Attribute", amount, operation));
         }
-        multimap = toReturn.build();
+        multimap = toReturn;
         return multimap;
     }
 
