@@ -3,6 +3,9 @@ package net.kapitencraft.mysticcraft.item.combat.armor;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
+import net.kapitencraft.mysticcraft.helpers.MiscHelper;
+import net.kapitencraft.mysticcraft.helpers.TextHelper;
 import net.kapitencraft.mysticcraft.init.ModItems;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.item.item_bonus.ExtraBonus;
@@ -10,9 +13,7 @@ import net.kapitencraft.mysticcraft.item.item_bonus.FullSetBonus;
 import net.kapitencraft.mysticcraft.item.item_bonus.IArmorBonusItem;
 import net.kapitencraft.mysticcraft.item.item_bonus.PieceBonus;
 import net.kapitencraft.mysticcraft.item.misc.IModItem;
-import net.kapitencraft.mysticcraft.utils.AttributeUtils;
-import net.kapitencraft.mysticcraft.utils.MiscUtils;
-import net.kapitencraft.mysticcraft.utils.TextUtils;
+import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
@@ -48,8 +49,8 @@ public abstract class ModArmorItem extends ArmorItem implements IModItem {
         ModArmorItem create(EquipmentSlot slot);
     }
 
-    public static HashMap<EquipmentSlot, RegistryObject<Item>> createRegistry(String registryName, Creator creator) {
-        return ModItems.createRegistry(creator::create, slot -> registryName + "_" + TextUtils.getRegistryNameForSlot(slot), List.of(MiscUtils.ARMOR_EQUIPMENT), ModItems.TabTypes.WEAPONS_AND_TOOLS);
+    public static HashMap<EquipmentSlot, RegistryObject<ModArmorItem>> createRegistry(String registryName, Creator creator, TabGroup group) {
+        return ModItems.createRegistry(creator::create, slot -> registryName + "_" + TextHelper.getRegistryNameForSlot(slot), List.of(MiscHelper.ARMOR_EQUIPMENT), group);
     }
 
     public static boolean hadFullSet(ModArmorMaterials materials, LivingEntity living) {
@@ -172,17 +173,17 @@ public abstract class ModArmorItem extends ArmorItem implements IModItem {
                 }
             }
             if (this instanceof IGemstoneApplicable applicable) {
-                map = AttributeUtils.increaseAllByAmount(builder, applicable.getAttributeModifiers(stack, slot));
+                map = AttributeHelper.increaseAllByAmount(builder, applicable.getAttributeModifiers(stack, slot));
             }
         }
         if (stack.getTag() != null && stack.getTag().getBoolean("isOP")) {
-            return AttributeUtils.increaseByPercent(map == null ? builder : map, 300, new AttributeModifier.Operation[]{AttributeModifier.Operation.ADDITION, AttributeModifier.Operation.MULTIPLY_TOTAL, AttributeModifier.Operation.MULTIPLY_BASE}, null);
+            return AttributeHelper.increaseByPercent(map == null ? builder : map, 300, new AttributeModifier.Operation[]{AttributeModifier.Operation.ADDITION, AttributeModifier.Operation.MULTIPLY_TOTAL, AttributeModifier.Operation.MULTIPLY_BASE}, null);
         }
         return builder;
     }
 
     protected void updateDimension(Level level) {
-        this.dimension = MiscUtils.getDimension(level);
+        this.dimension = MiscHelper.getDimension(level);
     }
 
     private void updateUser(Entity user) {

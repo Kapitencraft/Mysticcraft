@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.enchantments.weapon.melee;
 
 import net.kapitencraft.mysticcraft.enchantments.abstracts.CountEnchantment;
-import net.kapitencraft.mysticcraft.utils.MiscUtils;
+import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
@@ -13,7 +13,7 @@ import net.minecraft.world.phys.Vec3;
 
 public class LightningLordEnchantment extends CountEnchantment {
     public LightningLordEnchantment() {
-        super(Rarity.RARE, EnchantmentCategory.WEAPON, MiscUtils.WEAPON_SLOT, "lightningLordMap", CountType.NORMAL, CalculationType.ALL, ProcessPriority.LOW);
+        super(Rarity.RARE, EnchantmentCategory.WEAPON, MiscHelper.WEAPON_SLOT, "lightningLordMap", CountType.NORMAL, CalculationType.ALL, ProcessPriority.LOW);
     }
 
     @Override
@@ -41,7 +41,7 @@ public class LightningLordEnchantment extends CountEnchantment {
 
 
     @Override
-    public Object[] getDescriptionMods(int level) {
-        return new Object[] {level*10, (int) (3 + level * 0.4)};
+    public String[] getDescriptionMods(int level) {
+        return new String[] {(int) (3 + level * 0.4) + "th", level*10 + "%"};
     }
 }

@@ -2,8 +2,8 @@ package net.kapitencraft.mysticcraft.enchantments.armor;
 
 import net.kapitencraft.mysticcraft.enchantments.abstracts.ExtendedCalculationEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.IToolEnchantment;
+import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
-import net.kapitencraft.mysticcraft.utils.MiscUtils;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -16,7 +16,7 @@ public class ThornyEnchantment extends ExtendedCalculationEnchantment implements
     }
 
     public ThornyEnchantment() {
-        super(Rarity.RARE, FormattingCodes.SHIELD, MiscUtils.WEAPON_SLOT, CalculationType.ALL, ProcessPriority.HIGHEST);
+        super(Rarity.RARE, FormattingCodes.SHIELD, MiscHelper.WEAPON_SLOT, CalculationType.ALL, ProcessPriority.HIGHEST);
     }
 
     @Override
@@ -27,7 +27,7 @@ public class ThornyEnchantment extends ExtendedCalculationEnchantment implements
 
 
     @Override
-    public Object[] getDescriptionMods(int level) {
-        return new Object[] {level};
+    public String[] getDescriptionMods(int level) {
+        return new String[] {""};
     }
 }

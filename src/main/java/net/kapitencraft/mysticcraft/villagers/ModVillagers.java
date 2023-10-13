@@ -20,8 +20,8 @@ import java.lang.reflect.Method;
 import java.util.function.Supplier;
 
 public class ModVillagers {
-    public static final DeferredRegister<PoiType> POI_TYPE_REGISTRY = DeferredRegister.create(ForgeRegistries.POI_TYPES, MysticcraftMod.MOD_ID);
-    public static final DeferredRegister<VillagerProfession> PROFESSION_REGISTRY = DeferredRegister.create(ForgeRegistries.VILLAGER_PROFESSIONS, MysticcraftMod.MOD_ID);
+    public static final DeferredRegister<PoiType> POI_TYPE_REGISTRY = MysticcraftMod.makeRegistry(ForgeRegistries.POI_TYPES);
+    public static final DeferredRegister<VillagerProfession> PROFESSION_REGISTRY = MysticcraftMod.makeRegistry(ForgeRegistries.VILLAGER_PROFESSIONS);
 
     public static void registerPOIs() {
         try {

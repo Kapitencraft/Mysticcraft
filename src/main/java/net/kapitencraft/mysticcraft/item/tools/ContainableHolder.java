@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.item.tools;
 
-import net.kapitencraft.mysticcraft.utils.TextUtils;
+import net.kapitencraft.mysticcraft.helpers.TextHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -52,7 +52,7 @@ public class ContainableHolder<T extends Item> {
 
     public static <T extends Item> ContainableHolder<T> fromTag(CompoundTag tag) {
         int amount = tag.getInt("Amount");
-        T item = (T) TextUtils.getFromId(tag.getString("Item"));
+        T item = (T) TextHelper.getFromId(tag.getString("Item"));
         CompoundTag compoundTag = tag.getCompound("Info");
         if (item != Items.AIR) {
             ContainableHolder<T> holder = new ContainableHolder<>(item);
@@ -67,7 +67,7 @@ public class ContainableHolder<T extends Item> {
     public CompoundTag toTag() {
         CompoundTag tag1 = new CompoundTag();
         tag1.putInt("Amount", this.amount);
-        tag1.putString("Item", TextUtils.getTextId(this.item));
+        tag1.putString("Item", TextHelper.getTextId(this.item));
         tag1.put("Info", this.getTag());
         tag1.putBoolean("don't Ask", this.dontAsk);
         return tag1;

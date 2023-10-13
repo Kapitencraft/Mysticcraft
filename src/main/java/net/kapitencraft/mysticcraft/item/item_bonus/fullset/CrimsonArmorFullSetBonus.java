@@ -3,10 +3,10 @@ package net.kapitencraft.mysticcraft.item.item_bonus.fullset;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.entity.CrimsonDeathRayProjectile;
+import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
+import net.kapitencraft.mysticcraft.helpers.MiscHelper;
+import net.kapitencraft.mysticcraft.helpers.TagHelper;
 import net.kapitencraft.mysticcraft.item.item_bonus.FullSetBonus;
-import net.kapitencraft.mysticcraft.utils.AttributeUtils;
-import net.kapitencraft.mysticcraft.utils.MiscUtils;
-import net.kapitencraft.mysticcraft.utils.TagUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
@@ -31,11 +31,11 @@ public class CrimsonArmorFullSetBonus extends FullSetBonus {
     }
 
     @Override
-    public void onEntityKilled(LivingEntity killed, LivingEntity user, MiscUtils.DamageType type) {
-        if (type != MiscUtils.DamageType.MELEE) return;
+    public void onEntityKilled(LivingEntity killed, LivingEntity user, MiscHelper.DamageType type) {
+        if (type != MiscHelper.DamageType.MELEE) return;
         CompoundTag data = user.getPersistentData();
         if (data.getInt(DOMINUS_ID) < 10) {
-            TagUtils.increaseIntegerTagValue(user.getPersistentData(), DOMINUS_ID, 1);
+            TagHelper.increaseIntegerTagValue(user.getPersistentData(), DOMINUS_ID, 1);
         } else {
             float YRot = user.getYRot();
             for (int i = 0; i < 3; i++) {
@@ -78,7 +78,7 @@ public class CrimsonArmorFullSetBonus extends FullSetBonus {
     @Override
     public Multimap<Attribute, AttributeModifier> getModifiers(LivingEntity living) {
         HashMultimap<Attribute, AttributeModifier> multimap = HashMultimap.create();
-        multimap.put(ForgeMod.ATTACK_RANGE.get(), AttributeUtils.addLiquidModifier(UUID.randomUUID(), "Dominus Modifier", AttributeModifier.Operation.ADDITION, value -> value.getPersistentData().getInt(DOMINUS_ID) * 0.1, living));
+        multimap.put(ForgeMod.ATTACK_RANGE.get(), AttributeHelper.addLiquidModifier(UUID.randomUUID(), "Dominus Modifier", AttributeModifier.Operation.ADDITION, value -> value.getPersistentData().getInt(DOMINUS_ID) * 0.1, living));
         return super.getModifiers(living);
     }
 }

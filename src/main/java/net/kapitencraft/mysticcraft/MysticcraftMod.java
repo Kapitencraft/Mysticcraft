@@ -17,6 +17,7 @@ import net.kapitencraft.mysticcraft.potion.ModPotionRecipe;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.SpawnPlacements;
@@ -32,6 +33,8 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.IForgeRegistry;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.Marker;
@@ -44,6 +47,14 @@ import java.util.UUID;
 @Mod(MysticcraftMod.MOD_ID)
 public class MysticcraftMod {
     public static final String MOD_ID = "mysticcraft";
+
+    public static ResourceLocation res(String name) {
+        return new ResourceLocation(MOD_ID, name);
+    }
+
+    public static <T> DeferredRegister<T> makeRegistry(IForgeRegistry<T> registry) {
+        return DeferredRegister.create(registry, MOD_ID);
+    }
     public static final double DAMAGE_CALCULATION_VALUE = 50;
 
     public static final RandomSource RANDOM_SOURCE = RandomSource.create();

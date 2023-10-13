@@ -32,7 +32,7 @@ public class DivineGiftEnchantment extends WeaponStatBoostEnchantment {
     }
 
     @Override
-    public Object[] getDescriptionMods(int level) {
-        return new Object[] {level*2};
+    public String[] getDescriptionMods(int level) {
+        return new String[] {"+" + level*2};
     }
 }

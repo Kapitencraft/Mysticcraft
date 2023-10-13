@@ -2,7 +2,7 @@ package net.kapitencraft.mysticcraft.enchantments.armor;
 
 import net.kapitencraft.mysticcraft.enchantments.abstracts.ExtendedCalculationEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.IArmorEnchantment;
-import net.kapitencraft.mysticcraft.utils.MiscUtils;
+import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 public class YeetThornsEnchantment extends ExtendedCalculationEnchantment implements IArmorEnchantment {
 
     public YeetThornsEnchantment() {
-        super(Rarity.VERY_RARE, EnchantmentCategory.ARMOR, MiscUtils.ARMOR_EQUIPMENT, CalculationType.ALL, ProcessPriority.LOW);
+        super(Rarity.VERY_RARE, EnchantmentCategory.ARMOR, MiscHelper.ARMOR_EQUIPMENT, CalculationType.ALL, ProcessPriority.LOW);
     }
 
     @Override
@@ -34,7 +34,7 @@ public class YeetThornsEnchantment extends ExtendedCalculationEnchantment implem
     }
 
     @Override
-    public Object[] getDescriptionMods(int level) {
-        return new Object[] {level*10};
+    public String[] getDescriptionMods(int level) {
+        return new String[] {""};
     }
 }

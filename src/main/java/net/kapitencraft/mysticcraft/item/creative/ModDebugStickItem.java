@@ -2,6 +2,8 @@ package net.kapitencraft.mysticcraft.item.creative;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import net.kapitencraft.mysticcraft.item.misc.IModItem;
+import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -15,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
-public class ModDebugStickItem extends Item {
+public class ModDebugStickItem extends Item implements IModItem {
     public ModDebugStickItem() {
         super(new Properties().rarity(Rarity.EPIC));
     }
@@ -43,5 +45,10 @@ public class ModDebugStickItem extends Item {
     @Override
     public int getUseDuration(@NotNull ItemStack p_41454_) {
         return 72;
+    }
+
+    @Override
+    public TabGroup getGroup() {
+        return null;
     }
 }

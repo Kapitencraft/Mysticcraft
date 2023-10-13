@@ -1,5 +1,6 @@
 package net.kapitencraft.mysticcraft.item.misc;
 
+import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -13,4 +14,6 @@ import java.util.List;
 public interface IModItem {
     default void appendHoverTextWithPlayer(@Nonnull ItemStack itemStack, @Nullable Level level, @Nonnull List<Component> list, @Nonnull TooltipFlag flag, Player player) {
     }
+
+    TabGroup getGroup();
 }

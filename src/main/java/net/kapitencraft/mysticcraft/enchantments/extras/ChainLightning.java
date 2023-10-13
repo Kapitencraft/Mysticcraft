@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.enchantments.extras;
 
-import net.kapitencraft.mysticcraft.utils.MathUtils;
+import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.entity.LivingEntity;
 
@@ -30,7 +30,7 @@ public class ChainLightning {
     }
 
     private void updateTarget() {
-        LivingEntity newTarget = MathUtils.getClosestLiving(target, 5);
+        LivingEntity newTarget = MathHelper.getClosestLiving(target, 5);
         if (newTarget != null) {
             target = newTarget;
         } else {

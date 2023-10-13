@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.entity.skeleton_master;
 
-import net.kapitencraft.mysticcraft.utils.MiscUtils;
+import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 
 public class KeeperHolder {
 
@@ -9,7 +9,7 @@ public class KeeperHolder {
 
     public KeeperHolder(SkeletonMaster master) {
         this.master = master;
-        MiscUtils.repeatXTimes(4, integer -> arrowKeepers[integer] = new ArrowKeeper(integer * 90));
+        MiscHelper.repeatXTimes(4, integer -> arrowKeepers[integer] = new ArrowKeeper(integer * 90));
         chargeAll();
     }
 

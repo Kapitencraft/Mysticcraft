@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.api;
 
-import net.kapitencraft.mysticcraft.utils.MiscUtils;
+import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 
@@ -11,7 +11,7 @@ import java.util.List;
 public class APITools {
     public static @NotNull LivingEntity[] entityListToArray(@NotNull List<LivingEntity> list) {
         LivingEntity[] ret = new LivingEntity[list.size()];
-        MiscUtils.repeatXTimes(list.size(), integer -> ret[integer] = list.get(integer));
+        MiscHelper.repeatXTimes(list.size(), integer -> ret[integer] = list.get(integer));
         return ret;
     }
 

@@ -2,10 +2,10 @@ package net.kapitencraft.mysticcraft.misc.cooldown;
 
 import net.kapitencraft.mysticcraft.enchantments.armor.BonkEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.weapon.melee.VenomousEnchantment;
+import net.kapitencraft.mysticcraft.helpers.TagHelper;
 import net.kapitencraft.mysticcraft.item.item_bonus.fullset.CrimsonArmorFullSetBonus;
 import net.kapitencraft.mysticcraft.misc.HealingHelper;
 import net.kapitencraft.mysticcraft.spell.spells.WitherShieldSpell;
-import net.kapitencraft.mysticcraft.utils.TagUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -39,7 +39,7 @@ public interface Cooldowns {
             tag.putFloat(WitherShieldSpell.ABSORPTION_AMOUNT_ID, 0);
         });
     Cooldown DOMINUS = new Cooldown(new CompoundPath.Builder(CrimsonArmorFullSetBonus.COOLDOWN_ID).build(), 120, living -> {
-        TagUtils.reduceBy1(living.getPersistentData(), CrimsonArmorFullSetBonus.DOMINUS_ID);
+        TagHelper.reduceBy1(living.getPersistentData(), CrimsonArmorFullSetBonus.DOMINUS_ID);
         //Cooldowns.DOMINUS.applyCooldown(living, false);
     });
     static Cooldown BONK_ENCHANTMENT(EquipmentSlot slot) {
@@ -60,7 +60,7 @@ public interface Cooldowns {
             CompoundTag tag = path.getTag(entity);
             if (tag != null) {
                 String tagName = cooldown.getPath().getPath();
-                TagUtils.reduceBy1(tag, tagName);
+                TagHelper.reduceBy1(tag, tagName);
                 if (tag.contains(tagName, 3) && tag.getInt(tagName) <= 0) {
                     cooldown.onDone(entity);
                     return true;

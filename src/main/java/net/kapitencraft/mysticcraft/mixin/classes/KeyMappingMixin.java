@@ -22,6 +22,10 @@ public abstract class KeyMappingMixin implements IForgeKeyMapping {
         return false;
     }
 
+    /**
+     * @reason stun effect
+     * @author Kapitencraft
+     */
     @Overwrite
     public boolean consumeClick() {
         if (isStunned()) {
@@ -37,6 +41,11 @@ public abstract class KeyMappingMixin implements IForgeKeyMapping {
 
     }
 
+
+    /**
+     * @reason stun effect
+     * @author Kapitencraft
+     */
     @Overwrite
     public boolean isDown() {
         return !isStunned() && this.getIsDown() && isConflictContextAndModifierActive();

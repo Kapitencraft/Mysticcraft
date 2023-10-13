@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.init;
 
-import net.minecraft.world.item.Item;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.registries.RegistryObject;
 
@@ -8,14 +8,14 @@ import java.util.function.Supplier;
 
 public class BlockRegistryHolder {
     private final RegistryObject<Block> block;
-    private final RegistryObject<Item> item;
+    private final RegistryObject<BlockItem> item;
 
-    public BlockRegistryHolder(RegistryObject<Block> block, RegistryObject<Item> item) {
+    public BlockRegistryHolder(RegistryObject<Block> block, RegistryObject<BlockItem> item) {
         this.block = block;
         this.item = item;
     }
 
-    public Item getItem() {
+    public BlockItem getItem() {
         return item.get();
     }
 

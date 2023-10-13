@@ -3,12 +3,14 @@ package net.kapitencraft.mysticcraft.item.combat.armor;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
+import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneSlot;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
+import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
+import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
-import net.kapitencraft.mysticcraft.utils.AttributeUtils;
-import net.kapitencraft.mysticcraft.utils.MiscUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -24,6 +26,13 @@ import java.util.List;
 import java.util.Objects;
 
 public class EnderKnightArmorItem extends ModArmorItem implements IGemstoneApplicable {
+    public static final TabGroup ENDER_KNIGHT_GROUP = new TabGroup(TabRegister.TabTypes.WEAPONS_AND_TOOLS);
+
+    @Override
+    public TabGroup getGroup() {
+        return ENDER_KNIGHT_GROUP;
+    }
+
     public EnderKnightArmorItem(EquipmentSlot p_40387_) {
         super(ModArmorMaterials.ENDER_KNIGHT, p_40387_, new Properties().rarity(FormattingCodes.LEGENDARY).fireResistant());
     }
@@ -35,8 +44,8 @@ public class EnderKnightArmorItem extends ModArmorItem implements IGemstoneAppli
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
         Multimap<Attribute, AttributeModifier> modifierMultimap = super.getAttributeModifiers(slot, stack);
-        if (Objects.equals(this.dimension, MiscUtils.getDimensionRegistries().get(Level.END))) {
-            modifierMultimap = AttributeUtils.increaseByPercent(modifierMultimap, 1, new AttributeModifier.Operation[]{AttributeModifier.Operation.ADDITION, AttributeModifier.Operation.MULTIPLY_BASE, AttributeModifier.Operation.MULTIPLY_TOTAL}, null);
+        if (Objects.equals(this.dimension, MiscHelper.getDimensionRegistries().get(Level.END))) {
+            modifierMultimap = AttributeHelper.increaseByPercent(modifierMultimap, 1, new AttributeModifier.Operation[]{AttributeModifier.Operation.ADDITION, AttributeModifier.Operation.MULTIPLY_BASE, AttributeModifier.Operation.MULTIPLY_TOTAL}, null);
         }
         return modifierMultimap;
     }
@@ -44,9 +53,9 @@ public class EnderKnightArmorItem extends ModArmorItem implements IGemstoneAppli
     public HashMultimap<Attribute, AttributeModifier> getAttributeMods(EquipmentSlot slot) {
         HashMultimap<Attribute, AttributeModifier> preReturn = HashMultimap.create();
         if (slot == this.slot) {
-            preReturn.put(ModAttributes.CRIT_DAMAGE.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[MiscUtils.createCustomIndex(slot)], "Modded Attributes", 27, AttributeModifier.Operation.ADDITION));
-            preReturn.put(ModAttributes.STRENGTH.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[MiscUtils.createCustomIndex(slot)], "Modded Attributes", 58, AttributeModifier.Operation.ADDITION));
-            preReturn.put(Attributes.MAX_HEALTH, new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[MiscUtils.createCustomIndex(slot)], "Modded Modifier", 4, AttributeModifier.Operation.ADDITION));
+            preReturn.put(ModAttributes.CRIT_DAMAGE.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[MiscHelper.createCustomIndex(slot)], "Modded Attributes", 27, AttributeModifier.Operation.ADDITION));
+            preReturn.put(ModAttributes.STRENGTH.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[MiscHelper.createCustomIndex(slot)], "Modded Attributes", 58, AttributeModifier.Operation.ADDITION));
+            preReturn.put(Attributes.MAX_HEALTH, new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[MiscHelper.createCustomIndex(slot)], "Modded Modifier", 4, AttributeModifier.Operation.ADDITION));
         }
         return preReturn;
     }

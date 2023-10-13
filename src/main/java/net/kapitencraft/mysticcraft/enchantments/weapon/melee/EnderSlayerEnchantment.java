@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.enchantments.weapon.melee;
 
 import net.kapitencraft.mysticcraft.enchantments.abstracts.ExtendedCalculationEnchantment;
-import net.kapitencraft.mysticcraft.utils.MiscUtils;
+import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.EnderMan;
@@ -10,7 +10,7 @@ import net.minecraft.world.item.enchantment.EnchantmentCategory;
 
 public class EnderSlayerEnchantment extends ExtendedCalculationEnchantment {
     public EnderSlayerEnchantment() {
-        super(Rarity.UNCOMMON, EnchantmentCategory.WEAPON, MiscUtils.WEAPON_SLOT, CalculationType.ONLY_MELEE, ProcessPriority.HIGHEST);
+        super(Rarity.UNCOMMON, EnchantmentCategory.WEAPON, MiscHelper.WEAPON_SLOT, CalculationType.ONLY_MELEE, ProcessPriority.HIGHEST);
     }
 
     @Override
@@ -19,7 +19,7 @@ public class EnderSlayerEnchantment extends ExtendedCalculationEnchantment {
     }
 
     @Override
-    public Object[] getDescriptionMods(int level) {
-        return new Object[]{level / 4};
+    public String[] getDescriptionMods(int level) {
+        return new String[]{"+" + level / 4 + "%"};
     }
 }

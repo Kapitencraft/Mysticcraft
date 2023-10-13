@@ -27,8 +27,9 @@ public class DataGenerators {
         ExistingFileHelper helper = event.getExistingFileHelper();
         ModLanguageProvider provider = new ModLanguageProvider(output);
         generator.addProvider(false, new ModBlockStateProvider(output, helper));
-        generator.addProvider(true, new ModRecipeProvider(output));
-        generator.addProvider(false, new ModItemModelProvider(output, helper));
+        generator.addProvider(false, new ModRecipeProvider(output));
+        generator.addProvider(false, ModLootTableProvider.create(output));
+        generator.addProvider(true, new ModItemModelProvider(output, helper));
         generator.addProvider(false, new ModBestiaryProvider(output, provider));
         generator.addProvider(false, new ReforgeProvider(output));
         generator.addProvider(false, provider);

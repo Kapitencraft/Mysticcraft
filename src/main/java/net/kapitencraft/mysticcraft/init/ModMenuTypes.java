@@ -12,7 +12,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 public interface ModMenuTypes {
-    DeferredRegister<MenuType<?>> REGISTRY = DeferredRegister.create(ForgeRegistries.MENU_TYPES, MysticcraftMod.MOD_ID);
+    DeferredRegister<MenuType<?>> REGISTRY = MysticcraftMod.makeRegistry(ForgeRegistries.MENU_TYPES);
 
     RegistryObject<MenuType<GemstoneGrinderMenu>> GEM_GRINDER = registerMenuType(GemstoneGrinderMenu::new, "gem_grinder_menu");
     RegistryObject<MenuType<ReforgingAnvilMenu>> REFORGING_ANVIL = registerMenuType(ReforgingAnvilMenu::new, "reforging_anvil");

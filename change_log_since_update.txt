@@ -1,3 +1,16 @@
 added a display for defence and effective hp;
+added higher amount crafting ingredients for shapeless recipes;
+added loot-tables for most blocks;
+added sound to ferocity;
+added Packet "Infrastructure";
+
+[IN-DEV] added java-docs for @Overwrite
+
+changed damage indicator to be particle;
 
 fixed cooldowns ig?
+fixed enchantment descriptions not showing as intended;
+fixed armor tiers translation not working;
+fixed creative mode tabs being unsorted;
+fixed stat mod enchantments not working;
+fixed negative multiplicative modifiers being shown as + not -;

@@ -1,9 +1,12 @@
 package net.kapitencraft.mysticcraft.networking;
 
+import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.networking.packets.C2S.ReforgingPacket;
+import net.kapitencraft.mysticcraft.networking.packets.S2C.CircleParticlePacket;
 import net.kapitencraft.mysticcraft.networking.packets.S2C.DamageIndicatorPacket;
+import net.kapitencraft.mysticcraft.networking.packets.S2C.MakeParticlePacket;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkEvent;
@@ -14,8 +17,6 @@ import net.minecraftforge.network.simple.SimpleChannel;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
-
-import static net.kapitencraft.mysticcraft.MysticcraftMod.MOD_ID;
 
 public class ModMessages {
     private static final String PROTOCOL_VERSION = "1";
@@ -41,10 +42,18 @@ public class ModMessages {
         PACKET_HANDLER.send(PacketDistributor.PLAYER.with(()-> player), message);
     }
 
+    public static <MSG> void sendToClientPlayer(MSG message, ServerPlayer player) {
+        PACKET_HANDLER.sendTo(message, player.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
+    }
+
+    public static <MSG> void sendToAllConnectedPlayers(MSG message, ServerLevel serverLevel) {
+        serverLevel.getPlayers(serverPlayer -> true).forEach(serverPlayer -> ModMessages.sendToClientPlayer(message, serverPlayer));
+    }
+
 
     public static void register() {
         SimpleChannel net = NetworkRegistry.ChannelBuilder
-                .named(new ResourceLocation(MOD_ID, "messages"))
+                .named(MysticcraftMod.res("messages"))
                 .networkProtocolVersion(()-> PROTOCOL_VERSION)
                 .clientAcceptedVersions(s -> true)
                 .serverAcceptedVersions(s -> true)
@@ -59,6 +68,11 @@ public class ModMessages {
                 .decoder(DamageIndicatorPacket::new)
                 .encoder(DamageIndicatorPacket::toBytes)
                 .consumerMainThread(DamageIndicatorPacket::handle)
+                .add();
+        net.messageBuilder(CircleParticlePacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(CircleParticlePacket::new)
+                .encoder(CircleParticlePacket::toBytes)
+                .consumerMainThread(MakeParticlePacket::handle)
                 .add();
     }
 }

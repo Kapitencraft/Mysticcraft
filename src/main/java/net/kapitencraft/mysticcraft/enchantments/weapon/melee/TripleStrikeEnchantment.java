@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.enchantments.weapon.melee;
 
 import net.kapitencraft.mysticcraft.enchantments.abstracts.CountEnchantment;
-import net.kapitencraft.mysticcraft.utils.MiscUtils;
+import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -9,7 +9,7 @@ import net.minecraft.world.item.enchantment.EnchantmentCategory;
 
 public class TripleStrikeEnchantment extends CountEnchantment {
     public TripleStrikeEnchantment() {
-        super(Rarity.UNCOMMON, EnchantmentCategory.WEAPON, MiscUtils.WEAPON_SLOT, "TripleStrikeMap", CountType.EXCEPT, CalculationType.ALL, ProcessPriority.HIGHEST);
+        super(Rarity.UNCOMMON, EnchantmentCategory.WEAPON, MiscHelper.WEAPON_SLOT, "TripleStrikeMap", CountType.EXCEPT, CalculationType.ALL, ProcessPriority.HIGHEST);
     }
 
     @Override
@@ -40,7 +40,7 @@ public class TripleStrikeEnchantment extends CountEnchantment {
 
 
     @Override
-    public Object[] getDescriptionMods(int level) {
-        return new Object[] {level*20};
+    public String[] getDescriptionMods(int level) {
+        return new String[] {level*20 + "%"};
     }
 }

@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.enchantments.abstracts;
 
-import net.kapitencraft.mysticcraft.utils.MiscUtils;
+import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -28,7 +28,7 @@ public abstract class ExtendedCalculationEnchantment extends Enchantment impleme
         return map;
     }
 
-    public static float runWithPriority(ItemStack enchanted, LivingEntity attacker, LivingEntity attacked, double damage, MiscUtils.DamageType type, boolean isWeapon, DamageSource source) {
+    public static float runWithPriority(ItemStack enchanted, LivingEntity attacker, LivingEntity attacked, double damage, MiscHelper.DamageType type, boolean isWeapon, DamageSource source) {
         Map<ExtendedCalculationEnchantment, Integer> enchantmentIntegerMap = getAllEnchantments(enchanted, isWeapon);
         for (ProcessPriority priority : ProcessPriority.values()) {
             for (ExtendedCalculationEnchantment enchantment : enchantmentIntegerMap.keySet()) {
@@ -50,7 +50,7 @@ public abstract class ExtendedCalculationEnchantment extends Enchantment impleme
         return priority;
     }
 
-    public double tryExecute(int level, ItemStack enchanted, LivingEntity attacker, LivingEntity attacked, double damage, MiscUtils.DamageType type, DamageSource source) {
+    public double tryExecute(int level, ItemStack enchanted, LivingEntity attacker, LivingEntity attacked, double damage, MiscHelper.DamageType type, DamageSource source) {
         if (this.type.contains(type)) {
             return this.execute(level, enchanted, attacker, attacked, damage, source);
         }
@@ -60,20 +60,20 @@ public abstract class ExtendedCalculationEnchantment extends Enchantment impleme
     protected abstract double execute(int level, ItemStack enchanted, LivingEntity attacker, LivingEntity attacked, double damage, DamageSource source);
 
     public enum CalculationType {
-        ONLY_MAGIC(MiscUtils.DamageType.MAGIC),
-        ONLY_MELEE(MiscUtils.DamageType.MELEE),
-        ONLY_RANGED(MiscUtils.DamageType.RANGED),
-        ALL(MiscUtils.DamageType.MAGIC, MiscUtils.DamageType.RANGED, MiscUtils.DamageType.MELEE),
-        ALL_RANGED(MiscUtils.DamageType.RANGED, MiscUtils.DamageType.MAGIC);
+        ONLY_MAGIC(MiscHelper.DamageType.MAGIC),
+        ONLY_MELEE(MiscHelper.DamageType.MELEE),
+        ONLY_RANGED(MiscHelper.DamageType.RANGED),
+        ALL(MiscHelper.DamageType.MAGIC, MiscHelper.DamageType.RANGED, MiscHelper.DamageType.MELEE),
+        ALL_RANGED(MiscHelper.DamageType.RANGED, MiscHelper.DamageType.MAGIC);
 
-        private final MiscUtils.DamageType[] types;
+        private final MiscHelper.DamageType[] types;
 
-        CalculationType(MiscUtils.DamageType... types) {
+        CalculationType(MiscHelper.DamageType... types) {
             this.types = types;
         }
 
-        public boolean contains(MiscUtils.DamageType type) {
-            for (MiscUtils.DamageType type1 : this.types) {
+        public boolean contains(MiscHelper.DamageType type) {
+            for (MiscHelper.DamageType type1 : this.types) {
                 if (type1 == type) {
                     return true;
                 }

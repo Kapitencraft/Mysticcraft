@@ -11,7 +11,7 @@ import net.minecraftforge.registries.RegistryObject;
 import java.util.function.Supplier;
 
 public class ModPotions {
-    public static final DeferredRegister<Potion> REGISTRY = DeferredRegister.create(ForgeRegistries.POTIONS, MysticcraftMod.MOD_ID);
+    public static final DeferredRegister<Potion> REGISTRY = MysticcraftMod.makeRegistry(ForgeRegistries.POTIONS);
 
     private static RegistryObject<Potion> register(String name, Supplier<Potion> potion) {
         return REGISTRY.register(name, potion);

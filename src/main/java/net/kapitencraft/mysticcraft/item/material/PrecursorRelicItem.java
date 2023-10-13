@@ -1,10 +1,13 @@
 package net.kapitencraft.mysticcraft.item.material;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.helpers.MathHelper;
+import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.init.ModItems;
+import net.kapitencraft.mysticcraft.item.misc.IModItem;
+import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
+import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
 import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.SaveAbleEnum;
-import net.kapitencraft.mysticcraft.utils.MathUtils;
-import net.kapitencraft.mysticcraft.utils.MiscUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -26,7 +29,8 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 @Mod.EventBusSubscriber
-public class PrecursorRelicItem extends Item {
+public class PrecursorRelicItem extends Item implements IModItem {
+    public static final TabGroup PRECURSOR_GROUP = new TabGroup(TabRegister.TabTypes.MOD_MATERIALS);
     private static final UUID DAMAGE_BOOST = UUID.fromString("2e00584a-53e6-4ddf-926f-e13a4c229bdb");
     private static final UUID HP_BOOST = UUID.fromString("e8132f3b-d111-41ae-962c-ebd3385aafdf");
 
@@ -37,13 +41,13 @@ public class PrecursorRelicItem extends Item {
     }
 
     public PrecursorRelicItem(String translationKey) {
-        super(MiscUtils.rarity(Rarity.EPIC));
+        super(MiscHelper.rarity(Rarity.EPIC));
         this.translationKey = translationKey;
     }
 
 
     public static HashMap<BossType, RegistryObject<PrecursorRelicItem>> makeRegistry() {
-        return ModItems.createRegistry(PrecursorRelicItem::new, BossType::getItemName, List.of(BossType.values()), ModItems.TabTypes.MOD_MATERIALS);
+        return ModItems.createRegistry(PrecursorRelicItem::new, BossType::getItemName, List.of(BossType.values()), PRECURSOR_GROUP);
     }
 
     @Override
@@ -55,10 +59,15 @@ public class PrecursorRelicItem extends Item {
     public static void registerWitherMods(EntityJoinLevelEvent event) {
         if (event.getEntity() instanceof WitherBoss boss) {
             if (!BossType.alreadyAdded(boss)) {
-                BossType type = MathUtils.pickRandom(List.of(BossType.values()));
+                BossType type = MathHelper.pickRandom(List.of(BossType.values()));
                 type.write(boss);
             }
         }
+    }
+
+    @Override
+    public TabGroup getGroup() {
+        return PRECURSOR_GROUP;
     }
 
     public enum BossType implements SaveAbleEnum {
@@ -72,6 +81,7 @@ public class PrecursorRelicItem extends Item {
                 MysticcraftMod.sendInfo("adding Modifier");
                 hp.addPermanentModifier(new AttributeModifier(HP_BOOST, "Necron's HP Boost", 0.5, AttributeModifier.Operation.MULTIPLY_TOTAL));
             }
+            boss.setHealth(boss.getMaxHealth());
         }),
         GOLDOR("jolly_pink_rock", "Goldor", boss -> {
             AttributeInstance hp = boss.getAttribute(Attributes.MAX_HEALTH);
@@ -79,6 +89,7 @@ public class PrecursorRelicItem extends Item {
                 MysticcraftMod.sendInfo("adding Modifier");
                 hp.addPermanentModifier(new AttributeModifier(HP_BOOST, "Goldor's HP Boost", 2, AttributeModifier.Operation.MULTIPLY_TOTAL));
             }
+            boss.setHealth(boss.getMaxHealth());
         }),
         MAXOR("bigfoots_lasso", "Maxor", boss -> {}),
         STORM("lasrs_eye", "Storm", boss -> {});

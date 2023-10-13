@@ -3,13 +3,13 @@ package net.kapitencraft.mysticcraft.block.entity;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.block.entity.render.ItemStackQueue;
 import net.kapitencraft.mysticcraft.gui.gemstone_grinder.GemstoneGrinderMenu;
+import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.init.ModBlockEntities;
 import net.kapitencraft.mysticcraft.init.ModItems;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneItem;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneSlot;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneType;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
-import net.kapitencraft.mysticcraft.utils.MiscUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -127,7 +127,7 @@ public class  GemstoneGrinderBlockEntity extends BlockEntity implements MenuProv
     }
 
     public void drops() {
-        SimpleContainer inventory = MiscUtils.containerOf(this.itemHandler);
+        SimpleContainer inventory = MiscHelper.containerOf(this.itemHandler);
         assert this.level != null;
         Containers.dropContents(this.level, this.worldPosition, inventory);
     }

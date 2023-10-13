@@ -5,6 +5,8 @@ import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.IUltimateEnchantment;
 import net.kapitencraft.mysticcraft.event.ModEventFactory;
 import net.kapitencraft.mysticcraft.gui.IGuiHelper;
+import net.kapitencraft.mysticcraft.helpers.MathHelper;
+import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.item.QuiverItem;
 import net.kapitencraft.mysticcraft.item.combat.spells.SpellItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword.LongSwordItem;
@@ -13,8 +15,6 @@ import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.item.misc.IModItem;
 import net.kapitencraft.mysticcraft.item.reforging.Reforge;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
-import net.kapitencraft.mysticcraft.utils.MathUtils;
-import net.kapitencraft.mysticcraft.utils.MiscUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -65,6 +65,10 @@ public abstract class ItemStackMixin {
         ModEventFactory.onSavingItemStack(self(), tag);
     }
 
+    /**
+     * @reason custom attribute and enchantment description
+     * @author Kapitencraft
+     */
     @Overwrite
     public List<Component> getTooltipLines(@Nullable Player player, TooltipFlag tooltipFlag) {
         List<Component> list = Lists.newArrayList();
@@ -179,23 +183,23 @@ public abstract class ItemStackMixin {
                         } else if (d0 > 0.0D) {
                             if (modifier.getOperation() == AttributeModifier.Operation.MULTIPLY_TOTAL) {
                                 d1+=1;
-                                toAppend.append(MiscUtils.buildComponent(Component.literal(String.valueOf(MathUtils.round(d1, 2))), Component.literal("x "), Component.translatable(entry.getKey().getDescriptionId())).withStyle(ChatFormatting.BLUE));
+                                toAppend.append(MiscHelper.buildComponent(Component.literal(String.valueOf(MathHelper.round(d1, 2))), Component.literal("x "), Component.translatable(entry.getKey().getDescriptionId())).withStyle(ChatFormatting.BLUE));
                             } else {
                                 toAppend.append(Component.translatable("attribute.modifier.plus." + modifier.getOperation().toValue(), ATTRIBUTE_MODIFIER_FORMAT.format(d1), Component.translatable(entry.getKey().getDescriptionId())).withStyle(ChatFormatting.BLUE));
                             }
                         } else if (d0 < 0.0D) {
-                            d1 *= -1.0D;
                             if (modifier.getOperation() == AttributeModifier.Operation.MULTIPLY_TOTAL) {
                                 d1+=1;
-                                toAppend.append(MiscUtils.buildComponent(Component.literal(String.valueOf(MathUtils.round(d1, 2))), Component.literal("x "), Component.translatable(entry.getKey().getDescriptionId())).withStyle(ChatFormatting.BLUE));
+                                toAppend.append(MiscHelper.buildComponent(Component.literal(String.valueOf(MathHelper.round(d1, 2))), Component.literal("x "), Component.translatable(entry.getKey().getDescriptionId())).withStyle(ChatFormatting.BLUE));
                             } else {
+                                d1 *= -1.0D;
                                 toAppend.append(Component.translatable("attribute.modifier.take." + modifier.getOperation().toValue(), ATTRIBUTE_MODIFIER_FORMAT.format(d1), Component.translatable(entry.getKey().getDescriptionId())).withStyle(ChatFormatting.RED));
                             }
                         }
                         if (modifier.getOperation() == AttributeModifier.Operation.ADDITION) {
                             if (reforge != null && reforge.hasModifier(entry.getKey())) {
                                 Double reforgeValue = reforge.applyModifiers(self().getRarity()).get(entry.getKey());
-                                String reforgeStringValue = reforgeValue > 0 ? "+" + ATTRIBUTE_MODIFIER_FORMAT.format(reforgeValue) : "-" + ATTRIBUTE_MODIFIER_FORMAT.format(reforgeValue);
+                                String reforgeStringValue = reforgeValue > 0 ? "+" + ATTRIBUTE_MODIFIER_FORMAT.format(reforgeValue) : ATTRIBUTE_MODIFIER_FORMAT.format(reforgeValue);
                                 toAppend.append(Component.literal(" (" + reforgeStringValue + ")").withStyle(ChatFormatting.GREEN));
                             }
                             if (self().getItem() instanceof IGemstoneApplicable applicable) {
@@ -261,11 +265,11 @@ public abstract class ItemStackMixin {
         ForgeEventFactory.onItemTooltip(self(), player, list, tooltipFlag);
         if (!(item instanceof IGuiHelper)) {
             Rarity rarity = item.getRarity(self());
-            boolean flag = rarity != MiscUtils.getItemRarity(item);
+            boolean flag = rarity != MiscHelper.getItemRarity(item);
             String RarityMod = FormattingCodes.OBFUSCATED + "A" + FormattingCodes.RESET;
             MutableComponent obfuscated = Component.literal(flag ? RarityMod : "");
             list.add(Component.literal(""));
-            list.add(MiscUtils.buildComponent(Component.literal(flag ? RarityMod + " " : "") ,  createNameMod(self()), MiscUtils.SPLIT, obfuscated).withStyle(rarity.getStyleModifier()).withStyle(ChatFormatting.BOLD));
+            list.add(MiscHelper.buildComponent(Component.literal(flag ? RarityMod + " " : "") ,  createNameMod(self()), MiscHelper.SPLIT, obfuscated).withStyle(rarity.getStyleModifier()).withStyle(ChatFormatting.BOLD));
         }
 
         return list;
@@ -339,6 +343,10 @@ public abstract class ItemStackMixin {
     }
 
 
+    /**
+     * @reason reforge name
+     * @author Kapitencraft
+     */
     @Overwrite
     public Component getHoverName() {
         Reforge reforge = Reforge.getFromStack(self());

@@ -1,9 +1,8 @@
 package net.kapitencraft.mysticcraft.misc.particle_help;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.utils.MathUtils;
-import net.kapitencraft.mysticcraft.utils.ParticleUtils;
-import net.kapitencraft.mysticcraft.utils.TagUtils;
+import net.kapitencraft.mysticcraft.helpers.MathHelper;
+import net.kapitencraft.mysticcraft.helpers.TagHelper;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
@@ -193,7 +192,7 @@ public class ParticleHelper {
 
     public void tick(int ticks) {
         int cooldown = this.properties.getInt(COOLDOWN_ID);
-        if (!(TagUtils.increaseIntegerTagValue(this.properties, TICKS_ALIVE_ID, 1) > this.properties.getInt(MAX_TICKS_ALIVE_ID) && this.target.isRemoved()) || this.liveUntilTargetDeath && (cooldown == 0 || ticks % cooldown == 0) && !this.isRemoved) {
+        if (!(TagHelper.increaseIntegerTagValue(this.properties, TICKS_ALIVE_ID, 1) > this.properties.getInt(MAX_TICKS_ALIVE_ID) && this.target.isRemoved()) || this.liveUntilTargetDeath && (cooldown == 0 || ticks % cooldown == 0) && !this.isRemoved) {
             Level level = this.target.level;
             if (this.currentTick++ >= this.ticksPerCycle) {
                 this.currentTick = 0;
@@ -211,15 +210,15 @@ public class ParticleHelper {
     }
 
     private void tickOrbit(Level level) {
-        float currentRot = TagUtils.increaseFloatTagValue(this.properties, CURRENT_ROTATION_ID, this.properties.getFloat(ROTATION_PER_TICK_ID));
+        float currentRot = TagHelper.increaseFloatTagValue(this.properties, CURRENT_ROTATION_ID, this.properties.getFloat(ROTATION_PER_TICK_ID));
         Vec3 targetPos;
         if (this.target instanceof Projectile) {
-            targetPos = MathUtils.setLength(MathUtils.calculateViewVector(currentRot, 0), this.properties.getFloat(DISTANCE_ID)).add(MathUtils.getPosition(target));
+            targetPos = MathHelper.setLength(MathHelper.calculateViewVector(currentRot, 0), this.properties.getFloat(DISTANCE_ID)).add(MathHelper.getPosition(target));
         } else {
-            TagUtils.increaseFloatTagValue(this.properties, Y_OFFSET_ID, (currentTick >= (ticksPerCycle / 2)) ? -this.heightChange : this.heightChange);
-            targetPos = MathUtils.setLength(MathUtils.calculateViewVector(0, currentRot), this.properties.getFloat(DISTANCE_ID)).add(target.getX(), target.getY() +  this.properties.getFloat(Y_OFFSET_ID), target.getZ());
+            TagHelper.increaseFloatTagValue(this.properties, Y_OFFSET_ID, (currentTick >= (ticksPerCycle / 2)) ? -this.heightChange : this.heightChange);
+            targetPos = MathHelper.setLength(MathHelper.calculateViewVector(0, currentRot), this.properties.getFloat(DISTANCE_ID)).add(target.getX(), target.getY() +  this.properties.getFloat(Y_OFFSET_ID), target.getZ());
         }
-        ParticleUtils.sendParticles(level, getFromTag(this.properties.getString("particleType")), false, targetPos, 2, 0,0, 0, 0);
+        net.kapitencraft.mysticcraft.helpers.ParticleHelper.sendParticles(level, getFromTag(this.properties.getString("particleType")), false, targetPos, 2, 0,0, 0, 0);
     }
 
     private void tickArrowHead(Level level) {
@@ -227,8 +226,8 @@ public class ParticleHelper {
             ParticleGradientHolder[] gradientHolders = new ParticleGradient(this.properties.getInt("maxSteps"), this.properties.getInt("maxParticle"), getFromTag(this.properties.getString("type1")), getFromTag(this.properties.getString("type2"))).generate();
             for (int y = 0; y < 2; y++) {
                 for (int i = y; i < 10; i++) {
-                    Vec3 targetLoc = MathUtils.calculateViewVector(target.getXRot(), target.getYRot() + (y == 0 ? 160 : -160)).scale(i * 0.05).add(target.getX(), target.getY() + 0.1f, target.getZ());
-                    ParticleUtils.sendParticles(level, false, targetLoc, 0, 0, 0, 0, gradientHolders[i]);
+                    Vec3 targetLoc = MathHelper.calculateViewVector(target.getXRot(), target.getYRot() + (y == 0 ? 160 : -160)).scale(i * 0.05).add(target.getX(), target.getY() + 0.1f, target.getZ());
+                    net.kapitencraft.mysticcraft.helpers.ParticleHelper.sendParticles(level, false, targetLoc, 0, 0, 0, 0, gradientHolders[i]);
                 }
             }
         }

@@ -2,7 +2,6 @@ package net.kapitencraft.mysticcraft.fluid;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.material.Fluid;
@@ -13,8 +12,8 @@ import java.util.Objects;
 public class ModFluidTags {
     public static final TagKey<Fluid> MANA_FLUID = create("mana_fluid");
 
-    private static TagKey<Fluid> create(String p_203851_) {
-        return TagKey.create(Registries.FLUID, new ResourceLocation(MysticcraftMod.MOD_ID, p_203851_));
+    private static TagKey<Fluid> create(String name) {
+        return TagKey.create(Registries.FLUID, MysticcraftMod.res(name));
     }
 
     public static @Nullable TagKey<Fluid> getByName(String name) {

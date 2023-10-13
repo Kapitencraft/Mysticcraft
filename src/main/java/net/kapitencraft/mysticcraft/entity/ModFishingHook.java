@@ -3,8 +3,8 @@ package net.kapitencraft.mysticcraft.entity;
 import com.mojang.logging.LogUtils;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.fluid.ModFluidTags;
+import net.kapitencraft.mysticcraft.helpers.FishingHookHelper;
 import net.kapitencraft.mysticcraft.misc.loot_table.ModLootTables;
-import net.kapitencraft.mysticcraft.utils.FishingHookUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -439,7 +439,7 @@ public class ModFishingHook extends Projectile {
             }
 
             this.discard();
-            FishingHookUtils.removeHook(player);
+            FishingHookHelper.removeHook(player);
             return i;
         } else {
             return 0;
@@ -484,9 +484,9 @@ public class ModFishingHook extends Projectile {
         Player player = this.getPlayerOwner();
         if (player != null) {
             if (modFishingHook == null) {
-                FishingHookUtils.removeHook(player);
+                FishingHookHelper.removeHook(player);
             } else {
-                FishingHookUtils.setActiveHook(player, modFishingHook);
+                FishingHookHelper.setActiveHook(player, modFishingHook);
             }
         }
     }

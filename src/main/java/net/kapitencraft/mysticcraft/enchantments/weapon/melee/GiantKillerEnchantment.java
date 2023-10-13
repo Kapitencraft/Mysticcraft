@@ -28,7 +28,7 @@ public class GiantKillerEnchantment extends ExtendedCalculationEnchantment imple
 
 
     @Override
-    public Object[] getDescriptionMods(int level) {
-        return new Object[] {level};
+    public String[] getDescriptionMods(int level) {
+        return new String[] {level + "%", "50%"};
     }
 }

@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.mixin.classes;
 
+import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
-import net.kapitencraft.mysticcraft.utils.AttributeUtils;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -20,10 +20,14 @@ public abstract class ProjectileMixin extends Entity {
         super(p_19870_, p_19871_);
     }
 
+    /**
+     * @reason arrow speed attribute
+     * @author Kapitencraft
+     */
     @Overwrite
     public void shootFromRotation(Entity entity, float p_37253_, float p_37254_, float p_37255_, float speed, float p_37257_) {
         if (entity instanceof LivingEntity living) {
-            speed *= 1 + AttributeUtils.getSaveAttributeValue(ModAttributes.ARROW_SPEED.get(), living) / 100;
+            speed *= 1 + AttributeHelper.getSaveAttributeValue(ModAttributes.ARROW_SPEED.get(), living) / 100;
         }
         float f = -Mth.sin(p_37254_ * ((float)Math.PI / 180F)) * Mth.cos(p_37253_ * ((float)Math.PI / 180F));
         float f1 = -Mth.sin((p_37253_ + p_37255_) * ((float)Math.PI / 180F));

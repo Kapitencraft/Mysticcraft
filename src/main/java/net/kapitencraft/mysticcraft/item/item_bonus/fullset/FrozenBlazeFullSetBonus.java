@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.item.item_bonus.fullset;
 
+import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.item.item_bonus.FullSetBonus;
-import net.kapitencraft.mysticcraft.utils.MathUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.entity.Entity;
@@ -21,7 +21,7 @@ public class FrozenBlazeFullSetBonus extends FullSetBonus {
 
     @Override
     public void onTick(@NotNull ItemStack stack, Level level, @NotNull Entity entity) {
-        List<LivingEntity> entities = MathUtils.getLivingAround(entity, 3);
+        List<LivingEntity> entities = MathHelper.getLivingAround(entity, 3);
         entities.forEach(living -> {
             if (!(living.isDeadOrDying() || living == entity) && i % 20 == 0) {
                 living.hurt(new EntityDamageSource("freeze", entity).bypassArmor(), 2);

@@ -18,11 +18,12 @@ import net.minecraftforge.registries.RegistryObject;
 import java.util.function.Supplier;
 
 public interface ModEnchantments {
-    DeferredRegister<Enchantment> REGISTRY = DeferredRegister.create(ForgeRegistries.ENCHANTMENTS, MysticcraftMod.MOD_ID);
+    DeferredRegister<Enchantment> REGISTRY = MysticcraftMod.makeRegistry(ForgeRegistries.ENCHANTMENTS);
     private static RegistryObject<Enchantment> register(String name, Supplier<Enchantment> supplier) {
         return REGISTRY.register(name, supplier);
     }
 
+    RegistryObject<Enchantment> TANK = register("tank", TankEnchantment::new);
     RegistryObject<Enchantment> SCAVENGER = register("scavenger", ScavengerEnchantment::new);
     RegistryObject<Enchantment> ENDER_SLAYER = register("ender_slayer", EnderSlayerEnchantment::new);
     RegistryObject<Enchantment> INFINITE_QUIVER = register("infinite_quiver", InfiniteQuiverEnchantment::new);

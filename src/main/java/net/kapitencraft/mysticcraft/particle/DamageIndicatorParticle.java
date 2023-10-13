@@ -4,8 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.utils.MathUtils;
-import net.kapitencraft.mysticcraft.utils.TextUtils;
+import net.kapitencraft.mysticcraft.helpers.TextHelper;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -16,27 +15,28 @@ import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-
 public class DamageIndicatorParticle extends Particle {
-    private static final List<Float> POSITIONS = List.of(0f, -0.25f, 0.12f, -0.12f, 0.25f);
+    public static final double MAX_MOVEMENT = 0.35;
 
-    protected DamageIndicatorParticle(ClientLevel p_107234_, double p_107235_, double p_107236_, double p_107237_, double amount, String damageType) {
+    protected DamageIndicatorParticle(ClientLevel p_107234_, double p_107235_, double p_107236_, double p_107237_, double amount, double damageType) {
         super(p_107234_, p_107235_, p_107236_, p_107237_);
 
         this.text = MysticcraftMod.doubleFormat(amount);
-        this.color = TextUtils.damageIndicatorColorGenerator(damageType).getColor();
+        this.color = TextHelper.damageIndicatorColorFromDouble(damageType).getColor();
         this.setColor(FastColor.ARGB32.red(color), FastColor.ARGB32.green(color), FastColor.ARGB32.blue(color));
         this.darkColor = FastColor.ARGB32.color(255, (int) (this.rCol * 0.25f), (int) (this.rCol * 0.25f), (int) (this.rCol * 0.25));
+        this.lifetime = 35;
 
         this.yd = 1;
-        this.xd = MathUtils.pickRandom(POSITIONS);
+        this.xd = Mth.nextDouble(RandomSource.createNewThreadLocalInstance(), -MAX_MOVEMENT, MAX_MOVEMENT);
     }
 
     private float fadeout = -1;
@@ -83,7 +83,7 @@ public class DamageIndicatorParticle extends Particle {
         poseStack.scale(-scale, -scale, scale);
         poseStack.translate(0, (4d * (1 - fadeout)), 0);
         poseStack.scale(fadeout, fadeout, fadeout);
-        poseStack.translate(0, -distanceFromCam / 10d, 0);
+        poseStack.translate(0, -distanceFromCam / 8d, 0);
 
         MultiBufferSource.BufferSource buffer =  Minecraft.getInstance().renderBuffers().bufferSource();
 
@@ -140,7 +140,7 @@ public class DamageIndicatorParticle extends Particle {
         }
     }
 
-    public static class Provider implements ParticleProvider<DamageIndicatorParticleType> {
+    public static class Provider implements ParticleProvider<SimpleParticleType> {
 
         public Provider(SpriteSet ignoredSpriteSet) {
 
@@ -148,8 +148,8 @@ public class DamageIndicatorParticle extends Particle {
 
         @Nullable
         @Override
-        public DamageIndicatorParticle createParticle(@NotNull DamageIndicatorParticleType particleType, @NotNull ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
-            return new DamageIndicatorParticle(level, x, y, z, particleType.getAmount(), particleType.getDamageType());
+        public DamageIndicatorParticle createParticle(@NotNull SimpleParticleType particleType, @NotNull ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+            return new DamageIndicatorParticle(level, x, y, z, xSpeed, ySpeed);
         }
     }
 }

@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.enchantments.abstracts;
 
-import net.kapitencraft.mysticcraft.utils.MathUtils;
-import net.kapitencraft.mysticcraft.utils.MiscUtils;
+import net.kapitencraft.mysticcraft.helpers.MathHelper;
+import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -23,15 +23,15 @@ public abstract class EffectApplicationEnchantment extends ExtendedCalculationEn
 
     @Override
     public double execute(int level, ItemStack enchanted, LivingEntity attacker, LivingEntity attacked, double damage, DamageSource source) {
-        if (!MiscUtils.increaseEffectDuration(attacked, getEffect(), level * getScale()) && MathUtils.chance(getChance(level) / 100., attacker)) {
+        if (!MiscHelper.increaseEffectDuration(attacked, getEffect(), level * getScale()) && MathHelper.chance(getChance(level) / 100., attacker)) {
             attacked.addEffect(new MobEffectInstance(getEffect(), level * getScale(), 1));
         }
         return damage;
     }
 
     @Override
-    public Object[] getDescriptionMods(int level) {
-        return new Object[] {getChance(level), level*getScale()};
+    public String[] getDescriptionMods(int level) {
+        return new String[] {getChance(level) + "%", "" + level*getScale()};
     }
 
 }

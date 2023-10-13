@@ -3,6 +3,7 @@ package net.kapitencraft.mysticcraft.misc;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModItems;
 import net.kapitencraft.mysticcraft.item.QuiverItem;
+import net.kapitencraft.mysticcraft.item.combat.armor.ModArmorItem;
 import net.kapitencraft.mysticcraft.item.combat.shield.ModShieldItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.bow.ModBowItem;
 import net.minecraft.client.renderer.item.ItemProperties;
@@ -26,7 +27,7 @@ public class ModItemProperties {
         registerBlocking(ModItems.GOLDEN_SHIELD);
         makeQuiver(ModItems.AMETHYST_QUIVER);
         ItemProperties.register(Items.BOW, new ResourceLocation("pull"), (stack, p_174677_, living, p_174679_) -> {
-            if (living == null) {
+            if (living == null || living.getAttribute(ModAttributes.DRAW_SPEED.get()) == null) {
                 return 0.0F;
             } else {
                 return living.getUseItem() != stack ? 0.0F : (float)((stack.getUseDuration() * living.getAttributeValue(ModAttributes.DRAW_SPEED.get()) / 100) - living.getUseItemRemainingTicks()) / 20.0F;
@@ -49,8 +50,8 @@ public class ModItemProperties {
          });
     }
 
-    private static void createArmor(HashMap<EquipmentSlot, RegistryObject<Item>> armorHashMap) {
-        for (RegistryObject<Item> registryObject : armorHashMap.values()) {
+    private static void createArmor(HashMap<EquipmentSlot, RegistryObject<ModArmorItem>> armorHashMap) {
+        for (RegistryObject<ModArmorItem> registryObject : armorHashMap.values()) {
             Item armorItem = registryObject.get();
             ItemProperties.register(armorItem, new ResourceLocation("dimension"), ((stack, level, living, i) -> {
                 ResourceKey<Level> dimension = living.level.dimension();

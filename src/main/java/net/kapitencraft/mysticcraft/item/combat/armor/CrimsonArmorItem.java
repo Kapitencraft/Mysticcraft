@@ -2,6 +2,7 @@ package net.kapitencraft.mysticcraft.item.combat.armor;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModParticleTypes;
 import net.kapitencraft.mysticcraft.item.combat.armor.client.CrimsonArmorRenderer;
@@ -10,8 +11,9 @@ import net.kapitencraft.mysticcraft.item.item_bonus.FullSetBonus;
 import net.kapitencraft.mysticcraft.item.item_bonus.IArmorBonusItem;
 import net.kapitencraft.mysticcraft.item.item_bonus.PieceBonus;
 import net.kapitencraft.mysticcraft.item.item_bonus.fullset.CrimsonArmorFullSetBonus;
+import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
+import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
 import net.kapitencraft.mysticcraft.misc.particle_help.ParticleHelper;
-import net.kapitencraft.mysticcraft.utils.AttributeUtils;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -33,6 +35,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class CrimsonArmorItem extends TieredArmorItem implements GeoItem, IArmorBonusItem {
+    public static final TabGroup CRIMSON_ARMOR_GROUP = new TabGroup(TabRegister.TabTypes.WEAPONS_AND_TOOLS);
     private static final String helperString = "crimsonParticles";
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private static final FullSetBonus FULL_SET_BONUS = new CrimsonArmorFullSetBonus();
@@ -56,9 +59,9 @@ public class CrimsonArmorItem extends TieredArmorItem implements GeoItem, IArmor
     public Multimap<Attribute, AttributeModifier> getAttributeMods(EquipmentSlot slot) {
                 HashMultimap<Attribute, AttributeModifier> builder = HashMultimap.create();
                 if (slot == this.slot) {
-                    builder.put(ModAttributes.STRENGTH.get(), AttributeUtils.createModifier("Crimson Armor", AttributeModifier.Operation.ADDITION, 3 * this.getMaterial().getDefenseForSlot(this.getSlot())));
-                    builder.put(ModAttributes.CRIT_DAMAGE.get(), AttributeUtils.createModifier("Crimson Armor", AttributeModifier.Operation.ADDITION, this.getMaterial().getDefenseForSlot(this.getSlot())));
-                    builder.put(Attributes.MAX_HEALTH, AttributeUtils.createModifier("Crimson Armor", AttributeModifier.Operation.ADDITION, this.getMaterial().getDefenseForSlot(this.getSlot()) / 2.5));
+                    builder.put(ModAttributes.STRENGTH.get(), AttributeHelper.createModifierForSlot("Crimson Armor", AttributeModifier.Operation.ADDITION, 3 * this.getMaterial().getDefenseForSlot(this.getSlot()), slot));
+                    builder.put(ModAttributes.CRIT_DAMAGE.get(), AttributeHelper.createModifierForSlot("Crimson Armor", AttributeModifier.Operation.ADDITION, this.getMaterial().getDefenseForSlot(this.getSlot()), slot));
+                    builder.put(Attributes.MAX_HEALTH, AttributeHelper.createModifierForSlot("Crimson Armor", AttributeModifier.Operation.ADDITION, this.getMaterial().getDefenseForSlot(this.getSlot()) / 2.5, slot));
                 }
                 return builder;
     }
@@ -107,5 +110,10 @@ public class CrimsonArmorItem extends TieredArmorItem implements GeoItem, IArmor
     @Override
     public List<ArmorTier> getAvailableTiers() {
         return ArmorTier.NETHER_ARMOR_TIERS;
+    }
+
+    @Override
+    public TabGroup getGroup() {
+        return CRIMSON_ARMOR_GROUP;
     }
 }

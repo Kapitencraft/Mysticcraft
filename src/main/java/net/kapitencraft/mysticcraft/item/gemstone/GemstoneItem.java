@@ -1,13 +1,17 @@
 package net.kapitencraft.mysticcraft.item.gemstone;
 
 import net.kapitencraft.mysticcraft.init.ModItems;
+import net.kapitencraft.mysticcraft.item.misc.IModItem;
+import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
+import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
 import net.minecraft.world.item.DyeableLeatherItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import org.jetbrains.annotations.NotNull;
 
-public class GemstoneItem extends Item implements DyeableLeatherItem {
+public class GemstoneItem extends Item implements DyeableLeatherItem, IModItem {
+    public static final TabGroup group = new TabGroup(TabRegister.TabTypes.SPELL_AND_GEMSTONE);
     private final GemstoneType.Rarity RARITY;
     public final String gemstoneName;
     public GemstoneItem(GemstoneType.Rarity rarity, String gemstoneName) {
@@ -60,4 +64,8 @@ public class GemstoneItem extends Item implements DyeableLeatherItem {
         return GemstoneType.getById(this.gemstoneName);
     }
 
+    @Override
+    public TabGroup getGroup() {
+        return null;
+    }
 }

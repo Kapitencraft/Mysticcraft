@@ -2,7 +2,8 @@ package net.kapitencraft.mysticcraft.enchantments.armor;
 
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.StatBoostEnchantment;
-import net.kapitencraft.mysticcraft.utils.MiscUtils;
+import net.kapitencraft.mysticcraft.helpers.CollectionHelper;
+import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -30,11 +31,11 @@ public class FirmStandEnchantment extends StatBoostEnchantment {
 
     @Override
     public boolean hasModifiersForThatSlot(EquipmentSlot slot) {
-        return MiscUtils.arrayContains(MiscUtils.ARMOR_EQUIPMENT, slot);
+        return CollectionHelper.arrayContains(MiscHelper.ARMOR_EQUIPMENT, slot);
     }
 
     @Override
-    public Object[] getDescriptionMods(int level) {
-        return new Object[]{level*0.1};
+    public String[] getDescriptionMods(int level) {
+        return new String[]{"+" + level*0.1};
     }
 }

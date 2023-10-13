@@ -13,7 +13,7 @@ import org.joml.Vector3f;
 public interface ModFluidTypes {
     ResourceLocation WATER_STILL = new ResourceLocation("block/water_still");
     ResourceLocation WATER_FLOW = new ResourceLocation("block/water_flow");
-    ResourceLocation MANA_FLUID_OVERLAY = new ResourceLocation(MysticcraftMod.MOD_ID, "block/mana_fluid");
+    ResourceLocation MANA_FLUID_OVERLAY = MysticcraftMod.res("block/mana_fluid");
 
     DeferredRegister<FluidType> REGISTRY = DeferredRegister.create(ForgeRegistries.Keys.FLUID_TYPES, MysticcraftMod.MOD_ID);
 

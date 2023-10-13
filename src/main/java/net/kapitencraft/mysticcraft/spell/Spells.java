@@ -1,13 +1,15 @@
 package net.kapitencraft.mysticcraft.spell;
 
+import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
+import net.kapitencraft.mysticcraft.helpers.TextHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModItems;
 import net.kapitencraft.mysticcraft.item.combat.spells.*;
 import net.kapitencraft.mysticcraft.item.combat.spells.necron_sword.NecronSword;
+import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
+import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.kapitencraft.mysticcraft.spell.spells.*;
-import net.kapitencraft.mysticcraft.utils.AttributeUtils;
-import net.kapitencraft.mysticcraft.utils.TextUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
@@ -40,8 +42,9 @@ public enum Spells implements Spell {
     FIRE_BOLT_4("Fire Bolt 4", "0110011", Type.RELEASE, 50, createFireBold(5.2, true), item -> item instanceof IFireScytheItem, createFireBoldDesc(5.2f), Rarity.UNCOMMON, true, Elements.FIRE),
     FIRE_LANCE("Fire Lance", "1011100", Type.CYCLE, 5, FireLanceSpell::execute, item -> item instanceof FireLance, FireLanceSpell::getDescription, Rarity.UNCOMMON, true, Elements.FIRE, Elements.AIR);
 
-    public static HashMap<Spells, RegistryObject<Item>> registerAll() {
-        return ModItems.createRegistry(SpellScrollItem::new, (spell) -> spell.REGISTRY_NAME + "_spell", List.of(values()), ModItems.TabTypes.SPELL_AND_GEMSTONE);
+    private static final TabGroup SPELL_GROUP = new TabGroup(TabRegister.TabTypes.SPELL_AND_GEMSTONE);
+    public static HashMap<Spells, RegistryObject<SpellScrollItem>> registerAll() {
+        return ModItems.createRegistry(SpellScrollItem::new, (spell) -> spell.REGISTRY_NAME + "_spell_scroll", List.of(values()), SPELL_GROUP);
     }
 
 
@@ -56,11 +59,6 @@ public enum Spells implements Spell {
     private static Supplier<List<Component>> createFireBoldDesc(float damage) {
         return ()-> List.of(Component.literal("Fires a Fire Bolt dealing"), Component.literal(FormattingCodes.RED + damage + FormattingCodes.RESET + " Base Ability Damage"));
     }
-    private static class Functions {
-        private interface SpellRun {
-            void execute(LivingEntity user, ItemStack stack);
-        }
-    }
     private final String castingType, name;
     public final Type TYPE;
     public final double MANA_COST;
@@ -74,7 +72,7 @@ public enum Spells implements Spell {
 
     Spells(String name, String castingType, Type type, double manaCost, BiConsumer<LivingEntity, ItemStack> toRun, Predicate<Item> helper, Supplier<List<Component>> description, Rarity rarity, boolean shouldBeItem, Element... elements) {
         this.shouldBeItem = shouldBeItem;
-        this.name = TextUtils.removeNumbers(name);
+        this.name = TextHelper.removeNumbers(name);
         this.TYPE = type;
         this.MANA_COST = manaCost;
         this.run = toRun;
@@ -135,7 +133,7 @@ public enum Spells implements Spell {
 
     public double getManaCostForPlayer(Player player) {
         AttributeInstance instance = player.getAttribute(ModAttributes.MANA_COST.get());
-        return AttributeUtils.getAttributeValue(instance, this.MANA_COST);
+        return AttributeHelper.getAttributeValue(instance, this.MANA_COST);
     }
 
     public static Spells get(String pattern) {

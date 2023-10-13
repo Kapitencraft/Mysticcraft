@@ -1,10 +1,10 @@
 package net.kapitencraft.mysticcraft.spell.spells;
 
 import net.kapitencraft.mysticcraft.ModConstance;
+import net.kapitencraft.mysticcraft.helpers.MiscHelper;
+import net.kapitencraft.mysticcraft.helpers.ParticleHelper;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.kapitencraft.mysticcraft.misc.damage_source.AbilityDamageSource;
-import net.kapitencraft.mysticcraft.utils.MiscUtils;
-import net.kapitencraft.mysticcraft.utils.ParticleUtils;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
@@ -21,8 +21,8 @@ public class WitherImpactSpell {
     private static final Component[] description = {Component.literal("Teleports you 10 blocks ahead"), Component.literal("and deals damage to all entities around")};
     public static void execute(LivingEntity user, ItemStack stack) {
         WitherShieldSpell.execute(user, stack);
-        MiscUtils.saveTeleport(user, 10);
-        ParticleUtils.sendParticles(user.level, ParticleTypes.ASH, false, user.getX(), user.getY(), user.getZ(), 1000, 1, 1, 1, 0.01);
+        MiscHelper.saveTeleport(user, 10);
+        ParticleHelper.sendParticles(user.level, ParticleTypes.ASH, false, user.getX(), user.getY(), user.getZ(), 1000, 1, 1, 1, 0.01);
         final Vec3 center = new Vec3((user.getX()), (user.getY()), (user.getZ()));
         List<LivingEntity> entFound = user.level.getEntitiesOfClass(LivingEntity.class, new AABB(center, center).inflate(5), e -> true).stream().sorted(Comparator.comparingDouble(entCnd -> entCnd.distanceToSqr(center))).collect(Collectors.toList());
         double damageInflicted = 0; double EnemyHealth; int damaged = 0;

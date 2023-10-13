@@ -2,9 +2,9 @@ package net.kapitencraft.mysticcraft.item.combat.armor;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
+import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
-import net.kapitencraft.mysticcraft.utils.AttributeUtils;
-import net.kapitencraft.mysticcraft.utils.MiscUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -26,7 +26,7 @@ public abstract class TieredArmorItem extends ModArmorItem {
     }
 
     public static boolean hasFullSetActive(ArmorTier armorTier, ArmorMaterial material, LivingEntity living) {
-        for (EquipmentSlot slot : MiscUtils.ARMOR_EQUIPMENT) {
+        for (EquipmentSlot slot : MiscHelper.ARMOR_EQUIPMENT) {
             ItemStack itemStack = living.getItemBySlot(slot);
             ArmorTier armorTier1 = getTier(itemStack);
             if (armorTier != armorTier1) {
@@ -37,8 +37,10 @@ public abstract class TieredArmorItem extends ModArmorItem {
     }
 
 
-
-
+    @Override
+    public int getMaxDamage(ItemStack stack) {
+        return (int) (this.getMaxDamage() * (1 + getTier(stack).valueMul * 2));
+    }
 
     @Override
     public @NotNull Component getName(@NotNull ItemStack stack) {
@@ -61,7 +63,7 @@ public abstract class TieredArmorItem extends ModArmorItem {
         HashMultimap<Attribute, AttributeModifier> builder = HashMultimap.create();
         builder.putAll(super.getAttributeModifiers(slot, stack));
         ArmorTier armorTier = getTier(stack);
-        return AttributeUtils.increaseByPercent(builder, armorTier == null ? 1 : armorTier.valueMul, AttributeModifier.Operation.values(), null);
+        return AttributeHelper.increaseByPercent(builder, armorTier == null ? 1 : armorTier.valueMul, AttributeModifier.Operation.values(), null);
     }
 
     public abstract List<ArmorTier> getAvailableTiers();
@@ -87,7 +89,7 @@ public abstract class TieredArmorItem extends ModArmorItem {
         }
 
         public MutableComponent getName() {
-            return Component.translatable(this.name);
+            return Component.translatable("armor_tier." + this.name);
         }
 
         public static ArmorTier getByName(String name) {

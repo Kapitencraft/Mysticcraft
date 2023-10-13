@@ -7,8 +7,10 @@ import net.kapitencraft.mysticcraft.guild.GuildHandler;
 import net.kapitencraft.mysticcraft.init.ModEntityTypes;
 import net.kapitencraft.mysticcraft.init.ModItems;
 import net.kapitencraft.mysticcraft.init.ModParticleTypes;
+import net.kapitencraft.mysticcraft.item.combat.duel.DuelHandler;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneItem;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneType;
+import net.kapitencraft.mysticcraft.particle.CircleParticle;
 import net.kapitencraft.mysticcraft.particle.DamageIndicatorParticle;
 import net.kapitencraft.mysticcraft.particle.FireNormalParticle;
 import net.kapitencraft.mysticcraft.particle.MagicCircleParticle;
@@ -43,6 +45,7 @@ public class MiscEvents {
             event.register((SimpleParticleType) ModParticleTypes.PURPLE_FLAME.get(), PurpleFlame.RisingFlameParticleProvider::new);
             event.register(ModParticleTypes.MAGIC_CIRCLE.get(), MagicCircleParticle.MagicCircleParticleProvider::new);
             event.register(ModParticleTypes.DAMAGE_INDICATOR.get(), DamageIndicatorParticle.Provider::new);
+            event.register(ModParticleTypes.CIRCLE.get(), CircleParticle.Provider::new);
         }
 
         @SubscribeEvent
@@ -62,9 +65,6 @@ public class MiscEvents {
     public static class ClientModEvents {
         @SubscribeEvent
         public static void onKeyRegister(RegisterKeyMappingsEvent event) {
-            event.register(ModKeyMappings.NEXT);
-            event.register(ModKeyMappings.PREVIOUS);
-            event.register(ModKeyMappings.STASH);
         }
 
         @SubscribeEvent
@@ -87,6 +87,7 @@ public class MiscEvents {
         public static void loadingLevel(LevelEvent.Load event) {
             if (event.getLevel() instanceof ServerLevel serverLevel && serverLevel.dimension() == Level.OVERWORLD) {
                 GuildHandler.setInstance(serverLevel.getDataStorage().computeIfAbsent((tag -> GuildHandler.load(tag, serverLevel.getServer())), GuildHandler::createDefault, "guilds"));
+                DuelHandler.setInstance(serverLevel.getDataStorage().computeIfAbsent(tag -> DuelHandler.load(tag, serverLevel.getServer()), DuelHandler::new, "duels"));
             }
         }
     }

@@ -1,11 +1,11 @@
 package net.kapitencraft.mysticcraft.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.kapitencraft.mysticcraft.misc.MiscRegister;
 import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.Provider;
-import net.kapitencraft.mysticcraft.utils.MathUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec2;
@@ -16,6 +16,7 @@ import net.minecraftforge.fml.common.Mod;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 @Mod.EventBusSubscriber
 public class Rendering {
@@ -29,8 +30,8 @@ public class Rendering {
         MEDIUM_SYMBOLS.scale(0.75f, 0.75f, 0.75f);
         SMALL_SYMBOLS.scale(0.5f, 0.5f, 0.5f);
         addRenderer(new RenderHolder(
-                new Vec2(-203, -116),
-                value -> FormattingCodes.BLUE + MathUtils.round(value.getAttributeValue(ModAttributes.MANA.get()), 1) + " [+" + MathUtils.round(value.getPersistentData().getDouble(MiscRegister.OVERFLOW_MANA_ID), 1) + " Overflow] " + FormattingCodes.RESET + " / " + FormattingCodes.DARK_BLUE + value.getAttributeValue(ModAttributes.MAX_MANA.get()) + " (+" + MathUtils.round(value.getPersistentData().getDouble("manaRegen") * 20, 2) + "/s)",
+                new PositionHolder(-203, -116),
+                value -> FormattingCodes.BLUE + MathHelper.round(value.getAttributeValue(ModAttributes.MANA.get()), 1) + " [+" + MathHelper.round(value.getPersistentData().getDouble(MiscRegister.OVERFLOW_MANA_ID), 1) + " Overflow] " + FormattingCodes.RESET + " / " + FormattingCodes.DARK_BLUE + value.getAttributeValue(ModAttributes.MAX_MANA.get()) + " (+" + MathHelper.round(value.getPersistentData().getDouble("manaRegen") * 20, 2) + "/s)",
                 RenderType.BIG
         ));
     }
@@ -45,7 +46,8 @@ public class Rendering {
         Player entity = Minecraft.getInstance().player;
         if (entity != null) {
             list.forEach(renderHolder -> {
-                render(getStack(renderHolder.type), renderHolder.provider.provide(entity), posX + renderHolder.pos.x, posY + renderHolder.pos.y, -1);
+                Vec2 pos = renderHolder.pos.makePos();
+                render(getStack(renderHolder.type), renderHolder.provider.provide(entity), posX + pos.x, posY + pos.y, -1);
             });
         }
     }
@@ -68,14 +70,33 @@ public class Rendering {
 
 
     public static class RenderHolder {
-        private final Vec2 pos;
+        private final PositionHolder pos;
         private final Provider<String, Player> provider;
         private final RenderType type;
 
-        public RenderHolder(Vec2 pos, Provider<String, Player> provider, RenderType type) {
+        public RenderHolder(PositionHolder pos, Provider<String, Player> provider, RenderType type) {
             this.pos = pos;
             this.provider = provider;
             this.type = type;
+        }
+    }
+
+    public static class PositionHolder {
+        private final Supplier<Float> x;
+        private final Supplier<Float> y;
+
+        public PositionHolder(Supplier<Float> x, Supplier<Float> y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        public PositionHolder(float x, float y) {
+            this.x = () -> x;
+            this.y = () -> y;
+        }
+
+        public Vec2 makePos() {
+            return new Vec2(x.get(), y.get());
         }
     }
 

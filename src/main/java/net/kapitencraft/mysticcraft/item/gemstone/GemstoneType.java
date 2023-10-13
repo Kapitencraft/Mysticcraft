@@ -3,6 +3,8 @@ package net.kapitencraft.mysticcraft.item.gemstone;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModItems;
+import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
+import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
 import net.minecraft.ChatFormatting;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -20,6 +22,7 @@ public enum GemstoneType {
     AQUAMARINE(getColorFromChatFormatting(ChatFormatting.AQUA), ModAttributes.FISHING_SPEED, 3.1, "aquamarine"),
     MOON_STONE(getColorFromChatFormatting(ChatFormatting.WHITE), ModAttributes.DRAW_SPEED, 0.5, "moon_stone");
 
+    public static final TabGroup GEMSTONE_GROUP = new TabGroup(TabRegister.TabTypes.SPELL_AND_GEMSTONE);
     private final int COLOR;
     public final Supplier<Attribute>  modifiedAttribute;
     public final double BASE_VALUE;
@@ -59,7 +62,7 @@ public enum GemstoneType {
         HashMap<Rarity, RegistryObject<GemstoneItem>> toReturn = new HashMap<>();
         for (Rarity rarity : Rarity.values()) {
             if (rarity != Rarity.EMPTY) {
-                toReturn.put(rarity, ModItems.register(rarity.id + "_" + this.getId() + "_gemstone", () -> new GemstoneItem(rarity, this.getId()), ModItems.TabTypes.SPELL_AND_GEMSTONE));
+                toReturn.put(rarity, ModItems.register(rarity.id + "_" + this.getId() + "_gemstone", () -> new GemstoneItem(rarity, this.getId()), GEMSTONE_GROUP));
             }
         }
         return toReturn;

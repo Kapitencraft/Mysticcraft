@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword;
 
 import net.kapitencraft.mysticcraft.item.misc.ModTiers;
+import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -37,5 +38,10 @@ public class ManaSteelSwordItem extends LongSwordItem {
         super.appendHoverText(p_41421_, p_41422_, list, p_41424_);
         list.add(Component.literal("Regenerate 2 hp on hit").withStyle(ChatFormatting.GREEN));
         list.add(Component.literal(""));
+    }
+
+    @Override
+    public TabGroup getGroup() {
+        return null;
     }
 }

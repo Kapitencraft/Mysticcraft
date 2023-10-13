@@ -1,7 +1,8 @@
 package net.kapitencraft.mysticcraft.item.tools;
 
+import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.init.ModEnchantments;
-import net.kapitencraft.mysticcraft.utils.MathUtils;
+import net.kapitencraft.mysticcraft.item.misc.IModItem;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
@@ -18,7 +19,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class ContainableItem<T extends Item> extends Item {
+public abstract class ContainableItem<T extends Item> extends Item implements IModItem {
+
     private final int stackSize;
     public ContainableItem(Properties p_41383_, int stackSize) {
         super(p_41383_.stacksTo(1));
@@ -26,7 +28,7 @@ public abstract class ContainableItem<T extends Item> extends Item {
     }
 
     public int getUsedCapacity(ItemStack stack) {
-        return MathUtils.count(getContents(stack).stream().map(ContainableHolder::getAmount).toList());
+        return MathHelper.count(getContents(stack).stream().map(ContainableHolder::getAmount).toList());
     }
 
 

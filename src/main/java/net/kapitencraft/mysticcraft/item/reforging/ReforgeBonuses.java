@@ -1,9 +1,9 @@
 package net.kapitencraft.mysticcraft.item.reforging;
 
+import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.item.item_bonus.ReforgingBonus;
 import net.kapitencraft.mysticcraft.item.reforging.bonuses.SacredBonus;
 import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.SaveAbleEnum;
-import net.kapitencraft.mysticcraft.utils.MiscUtils;
 import net.minecraft.network.chat.Component;
 
 import java.util.List;
@@ -33,7 +33,7 @@ public enum ReforgeBonuses implements SaveAbleEnum {
     }
 
     public static ReforgeBonuses byBonus(ReforgingBonus bonus) {
-        return MiscUtils.getValue(ReforgeBonuses::getBonus, EMPTY_BONUS, bonus, values());
+        return MiscHelper.getValue(ReforgeBonuses::getBonus, EMPTY_BONUS, bonus, values());
     }
 
     public ReforgingBonus getBonus() {

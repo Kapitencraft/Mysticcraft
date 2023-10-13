@@ -15,7 +15,7 @@ public class ModItemTags {
 
 
     private static TagKey<Item> create(String s) {
-        return TagKey.create(Registries.ITEM , new ResourceLocation(MysticcraftMod.MOD_ID, s));
+        return TagKey.create(Registries.ITEM , MysticcraftMod.res(s));
     }
 
     private static TagKey<Item> forge(String s) {

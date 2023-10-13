@@ -3,7 +3,7 @@ package net.kapitencraft.mysticcraft.datagen;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.kapitencraft.mysticcraft.bestiary.Bestiary;
-import net.kapitencraft.mysticcraft.utils.MiscUtils;
+import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
@@ -57,7 +57,7 @@ public class ModBestiaryProvider implements DataProvider {
         JsonArray array = new JsonArray();
         List<String> translation = bestiaryStore.translations;
         int descLength = translation.size();
-        MiscUtils.repeatXTimes(descLength, integer -> {
+        MiscHelper.repeatXTimes(descLength, integer -> {
             String translationId = "best." + entityName + "." + (integer + 1);
             array.add(translationId);
             if (provider != null) provider.add(translationId, translation.get(integer));

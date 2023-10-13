@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.enchantments.weapon.ranged;
 
 import net.kapitencraft.mysticcraft.enchantments.abstracts.ModBowEnchantment;
-import net.kapitencraft.mysticcraft.utils.MiscUtils;
+import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.AbstractArrow;
@@ -10,7 +10,7 @@ import net.minecraft.world.item.enchantment.EnchantmentCategory;
 
 public class FrozenArrowsEnchantment extends ModBowEnchantment {
     public FrozenArrowsEnchantment() {
-        super(Rarity.VERY_RARE, EnchantmentCategory.BOW, MiscUtils.WEAPON_SLOT, "FrozenArrow");
+        super(Rarity.VERY_RARE, EnchantmentCategory.BOW, MiscHelper.WEAPON_SLOT, "FrozenArrow");
     }
 
     @Override
@@ -38,7 +38,7 @@ public class FrozenArrowsEnchantment extends ModBowEnchantment {
 
 
     @Override
-    public Object[] getDescriptionMods(int level) {
-        return new Object[] {level*2};
+    public String[] getDescriptionMods(int level) {
+        return new String[] {"" + level*40};
     }
 }

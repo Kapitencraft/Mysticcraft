@@ -8,10 +8,7 @@ import net.minecraft.world.inventory.ResultSlot;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.CraftingRecipe;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.crafting.ShapedRecipe;
+import net.minecraft.world.item.crafting.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
@@ -36,9 +33,9 @@ public abstract class ResultSlotMixin extends Slot {
             if (!itemstack.isEmpty() && recipe.isPresent()) {
                 CraftingRecipe recipe1 = recipe.get();
                 int a = 1;
-                if (recipe1 instanceof ShapedRecipe shapedRecipe) {
+                if (recipe1 instanceof ShapedRecipe || recipe1 instanceof ShapelessRecipe) {
                     Item item = itemstack.getItem();
-                    NonNullList<Ingredient> ingredients = shapedRecipe.getIngredients();
+                    NonNullList<Ingredient> ingredients = recipe1.getIngredients();
                     for (Ingredient ingredient : ingredients) {
                         for (ItemStack stack1 : ingredient.getItems()) {
                             if (stack1.is(item)) {

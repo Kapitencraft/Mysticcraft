@@ -2,10 +2,10 @@ package net.kapitencraft.mysticcraft.item.item_bonus.piece;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.item.item_bonus.PieceBonus;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
-import net.kapitencraft.mysticcraft.utils.AttributeUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -31,7 +31,7 @@ public class SoulMageHelmetBonus extends PieceBonus {
     @Override
     public Multimap<Attribute, AttributeModifier> getModifiers(LivingEntity living) {
         HashMultimap<Attribute, AttributeModifier> builder = HashMultimap.create();
-        builder.put(ModAttributes.ABILITY_DAMAGE.get(), AttributeUtils.addLiquidModifier(ID, "Soul Mage Helmet Bonus",AttributeModifier.Operation.ADDITION, (living1 -> living1.getAttributeValue(ModAttributes.INTELLIGENCE.get()) / 25), living));
+        builder.put(ModAttributes.ABILITY_DAMAGE.get(), AttributeHelper.addLiquidModifier(ID, "Soul Mage Helmet Bonus",AttributeModifier.Operation.ADDITION, (living1 -> living1.getAttributeValue(ModAttributes.INTELLIGENCE.get()) / 25), living));
         return builder;
     }
 }

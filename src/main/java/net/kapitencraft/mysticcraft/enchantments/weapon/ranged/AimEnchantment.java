@@ -2,7 +2,7 @@ package net.kapitencraft.mysticcraft.enchantments.weapon.ranged;
 
 import net.kapitencraft.mysticcraft.enchantments.abstracts.IWeaponEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.ModBowEnchantment;
-import net.kapitencraft.mysticcraft.utils.MathUtils;
+import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -32,10 +32,10 @@ public class AimEnchantment extends ModBowEnchantment implements IWeaponEnchantm
     @Override
     public float execute(LivingEntity target, CompoundTag tag, ExecuteType type, float oldDamage, AbstractArrow arrow) {
         if (type == ExecuteType.TICK) {
-            List<LivingEntity> livingEntities = MathUtils.getLivingAround(arrow, tag.getInt("Level"));
+            List<LivingEntity> livingEntities = MathHelper.getLivingAround(arrow, tag.getInt("Level"));
             for (LivingEntity living : livingEntities) {
                 if (arrow.getOwner() != living && !living.isDeadOrDying()) {
-                    arrow.setDeltaMovement(MathUtils.setLength(MathUtils.getPosition(living).subtract(MathUtils.getPosition(arrow)), arrow.getDeltaMovement().length()));
+                    arrow.setDeltaMovement(MathHelper.setLength(MathHelper.getPosition(living).subtract(MathHelper.getPosition(arrow)), arrow.getDeltaMovement().length()));
                     break;
                 }
             }
@@ -50,7 +50,7 @@ public class AimEnchantment extends ModBowEnchantment implements IWeaponEnchantm
 
 
     @Override
-    public Object[] getDescriptionMods(int level) {
-        return new Object[] {2*level};
+    public String[] getDescriptionMods(int level) {
+        return new String[] {"" + 2*level};
     }
 }

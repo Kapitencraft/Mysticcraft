@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.guild;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.utils.TextUtils;
+import net.kapitencraft.mysticcraft.helpers.TextHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.player.Player;
@@ -89,7 +89,7 @@ public class GuildHandler extends SavedData {
         GuildHandler guildHandler = new GuildHandler();
         while (tag.contains("Guild" + i, 10)) {
             Guild guild = Guild.loadFromTag(tag.getCompound("Guild" + i), server);
-            MysticcraftMod.sendInfo("Loaded Guild called " + TextUtils.wrapInNameMarkers(guild.getName()));
+            MysticcraftMod.sendInfo("Loaded Guild called " + TextHelper.wrapInNameMarkers(guild.getName()));
             guildHandler.addGuild(guild);
             i++;
         }

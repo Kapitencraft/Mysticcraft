@@ -1,9 +1,11 @@
 package net.kapitencraft.mysticcraft.item.combat.armor;
 
 import com.google.common.collect.Multimap;
+import net.kapitencraft.mysticcraft.helpers.ParticleHelper;
 import net.kapitencraft.mysticcraft.item.combat.armor.client.ShadowAssassinArmorRenderer;
 import net.kapitencraft.mysticcraft.item.combat.armor.client.ShadowAssassinEmptyRenderer;
-import net.kapitencraft.mysticcraft.utils.ParticleUtils;
+import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
+import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.nbt.CompoundTag;
@@ -25,6 +27,13 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.function.Consumer;
 
 public class ShadowAssassinArmorItem extends ModArmorItem implements GeoItem {
+    public static final TabGroup SA_ARMOR_GROUP = new TabGroup(TabRegister.TabTypes.WEAPONS_AND_TOOLS);
+
+    @Override
+    public TabGroup getGroup() {
+        return SA_ARMOR_GROUP;
+    }
+
     private final DustParticleOptions SHADOW_OPTIONS = new DustParticleOptions(Vec3.fromRGB24(0).toVector3f(), 2);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public ShadowAssassinArmorItem(EquipmentSlot p_40387_) {
@@ -47,7 +56,7 @@ public class ShadowAssassinArmorItem extends ModArmorItem implements GeoItem {
                 tag.putBoolean("isCrouching", true);
                 tag.putBoolean("Invisible", living.isInvisible());
                 if (living.isInvisible()) {
-                    ParticleUtils.sendParticles(SHADOW_OPTIONS, false, living, 100 , 1.5, 1.5, 1.5, 0.01);
+                    ParticleHelper.sendParticles(SHADOW_OPTIONS, false, living, 100 , 1.5, 1.5, 1.5, 0.01);
                 }
             }
         } else {

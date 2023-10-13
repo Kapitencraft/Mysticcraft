@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.gui;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.utils.MiscUtils;
+import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -37,10 +37,10 @@ public abstract class ModMenu<T extends BlockEntity> extends AbstractContainerMe
     }
 
     private void addPlayerInventory(Inventory playerInventory, int xOffset, int yOffSet) {
-        MiscUtils.repeatXTimes(3, i -> MiscUtils.repeatXTimes(9, l -> this.addSlot(new Slot(playerInventory, l + i * 9 + 9, xOffset + 8 + l * 18, yOffSet + 84 + i * 18))));
+        MiscHelper.repeatXTimes(3, i -> MiscHelper.repeatXTimes(9, l -> this.addSlot(new Slot(playerInventory, l + i * 9 + 9, xOffset + 8 + l * 18, yOffSet + 84 + i * 18))));
     }
     private void addPlayerHotbar(Inventory playerInventory, int xOffset, int yOffSet) {
-        MiscUtils.repeatXTimes(9, i -> this.addSlot(new Slot(playerInventory, i, xOffset + 8 + i * 18, yOffSet + 142)));
+        MiscHelper.repeatXTimes(9, i -> this.addSlot(new Slot(playerInventory, i, xOffset + 8 + i * 18, yOffSet + 142)));
     }
 
 

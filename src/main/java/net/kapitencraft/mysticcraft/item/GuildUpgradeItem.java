@@ -3,6 +3,9 @@ package net.kapitencraft.mysticcraft.item;
 import net.kapitencraft.mysticcraft.guild.Guild;
 import net.kapitencraft.mysticcraft.guild.GuildHandler;
 import net.kapitencraft.mysticcraft.guild.GuildUpgrade;
+import net.kapitencraft.mysticcraft.item.misc.IModItem;
+import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
+import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -14,7 +17,8 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-public class GuildUpgradeItem extends Item {
+public class GuildUpgradeItem extends Item implements IModItem {
+    public static final TabGroup group = new TabGroup(TabRegister.TabTypes.TOOLS_AND_UTILITIES);
     private final GuildUpgrade upgrade;
 
     public GuildUpgradeItem(GuildUpgrade upgrade) {
@@ -32,5 +36,10 @@ public class GuildUpgradeItem extends Item {
             player.sendSystemMessage(Component.translatable("guild.upgrade.gain.failed").withStyle(ChatFormatting.RED));
             return InteractionResultHolder.fail(player.getItemInHand(hand));
         }
+    }
+
+    @Override
+    public TabGroup getGroup() {
+        return group;
     }
 }

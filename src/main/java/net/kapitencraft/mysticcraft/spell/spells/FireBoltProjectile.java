@@ -1,11 +1,11 @@
 package net.kapitencraft.mysticcraft.spell.spells;
 
+import net.kapitencraft.mysticcraft.helpers.MathHelper;
+import net.kapitencraft.mysticcraft.helpers.ParticleHelper;
 import net.kapitencraft.mysticcraft.init.ModEntityTypes;
 import net.kapitencraft.mysticcraft.init.ModParticleTypes;
 import net.kapitencraft.mysticcraft.misc.damage_source.IndirectAbilityDamageSource;
 import net.kapitencraft.mysticcraft.spell.Spells;
-import net.kapitencraft.mysticcraft.utils.MathUtils;
-import net.kapitencraft.mysticcraft.utils.ParticleUtils;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.nbt.CompoundTag;
@@ -63,8 +63,8 @@ public class FireBoltProjectile extends SpellProjectile {
     @Override
     public void tick() {
         super.tick();
-        ParticleUtils.sendParticles(this.level, (SimpleParticleType) ModParticleTypes.FIRE_NORMAL.get(), true, this.getX() - this.getDeltaMovement().x / 5, this.getY() - this.getDeltaMovement().y / 5, this.getZ() - this.getDeltaMovement().z / 5, ParticleAmount, 0.125, 0.125, 0.125, 0);
-        ParticleUtils.sendParticles(this.level, (SimpleParticleType) ModParticleTypes.FIRE_NORMAL.get(), true, this.getX(), this.getY(), this.getZ(), ParticleAmount, 0.125, 0.125, 0.125, 0);
+        ParticleHelper.sendParticles(this.level, (SimpleParticleType) ModParticleTypes.FIRE_NORMAL.get(), true, this.getX() - this.getDeltaMovement().x / 5, this.getY() - this.getDeltaMovement().y / 5, this.getZ() - this.getDeltaMovement().z / 5, ParticleAmount, 0.125, 0.125, 0.125, 0);
+        ParticleHelper.sendParticles(this.level, (SimpleParticleType) ModParticleTypes.FIRE_NORMAL.get(), true, this.getX(), this.getY(), this.getZ(), ParticleAmount, 0.125, 0.125, 0.125, 0);
     }
 
     @Override
@@ -79,12 +79,12 @@ public class FireBoltProjectile extends SpellProjectile {
     @Override
     protected void onHitBlock(@NotNull BlockHitResult hitResult) {
         if (this.explosive) {
-            List<LivingEntity> livingEntities = MathUtils.getLivingAround(this, 3);
+            List<LivingEntity> livingEntities = MathHelper.getLivingAround(this, 3);
             for (LivingEntity living : livingEntities) {
                 damage(living);
             }
-            ParticleUtils.sendParticles(this.level, (SimpleParticleType) ModParticleTypes.FIRE_NORMAL.get(), true, this.getX(), this.getY(), this.getZ(), ParticleAmount * 10, 0.125, 0.125, 0.125, 1.25);
-            ParticleUtils.sendParticles(this.level, ParticleTypes.EXPLOSION, true, this.getX(), this.getY(), this.getZ(), ParticleAmount / 2, 0.125, 0.125, 0.125, 0);
+            ParticleHelper.sendParticles(this.level, (SimpleParticleType) ModParticleTypes.FIRE_NORMAL.get(), true, this.getX(), this.getY(), this.getZ(), ParticleAmount * 10, 0.125, 0.125, 0.125, 1.25);
+            ParticleHelper.sendParticles(this.level, ParticleTypes.EXPLOSION, true, this.getX(), this.getY(), this.getZ(), ParticleAmount / 2, 0.125, 0.125, 0.125, 0);
             if (this.getOwner() instanceof Player player) {
                 this.level.playSound(player, hitResult.getBlockPos(), SoundEvents.GENERIC_EXPLODE, SoundSource.PLAYERS, 4.0F, (1.0F + (this.level.random.nextFloat() - this.level.random.nextFloat()) * 0.2F) * 0.7F);
             }

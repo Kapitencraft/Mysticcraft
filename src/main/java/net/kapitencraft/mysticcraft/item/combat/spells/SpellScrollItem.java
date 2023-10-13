@@ -1,5 +1,7 @@
 package net.kapitencraft.mysticcraft.item.combat.spells;
 
+import net.kapitencraft.mysticcraft.item.misc.IModItem;
+import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.spell.spells.Spell;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -12,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class SpellScrollItem extends Item {
+public class SpellScrollItem extends Item implements IModItem {
     private final Spell SPELL;
     public SpellScrollItem(Spell spell) {
         super(new Properties().rarity(spell.getRarity()));
@@ -27,5 +29,10 @@ public class SpellScrollItem extends Item {
     public void appendHoverText(@NotNull ItemStack stack, @Nullable Level level, @NotNull List<Component> list, @NotNull TooltipFlag tooltipFlag) {
         list.add(Component.literal("Spell Ability: " + this.SPELL.getName()).withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.GOLD));
         list.addAll(this.SPELL.getDescription());
+    }
+
+    @Override
+    public TabGroup getGroup() {
+        return null;
     }
 }

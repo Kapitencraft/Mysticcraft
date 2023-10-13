@@ -17,6 +17,7 @@
     "KeyMappingMixin",
     "WitherSkullMixin",
     "ShapedRecipeSerializerMixin",
+    "ShapelessRecipeSerializerMixin",
     "ResultSlotMixin"
   ],
   "injectors": {

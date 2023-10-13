@@ -1,5 +1,7 @@
 package net.kapitencraft.mysticcraft.gui;
 
+import net.kapitencraft.mysticcraft.item.misc.IModItem;
+import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -9,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class GUISlotBlockItem extends Item implements IGuiHelper {
+public class GUISlotBlockItem extends Item implements IGuiHelper, IModItem {
     private List<Component> tooltip;
 
     public GUISlotBlockItem() {
@@ -24,5 +26,10 @@ public class GUISlotBlockItem extends Item implements IGuiHelper {
     @Override
     public void appendHoverText(ItemStack p_41421_, @Nullable Level p_41422_, List<Component> list, TooltipFlag p_41424_) {
         list.addAll(this.tooltip);
+    }
+
+    @Override
+    public TabGroup getGroup() {
+        return null;
     }
 }

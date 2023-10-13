@@ -17,6 +17,6 @@ public class SchnauzenPlueschRenderer extends GeoEntityRenderer<SchnauzenPluesch
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(SchnauzenPluesch pluesch) {
-            return new ResourceLocation(MysticcraftMod.MOD_ID, "textures/entity/schnauzen_pluesch/schnauzen_pluesch_" + pluesch.getColor() + ".png");
+            return MysticcraftMod.res("textures/entity/schnauzen_pluesch/schnauzen_pluesch_" + pluesch.getColor() + ".png");
     }
 }

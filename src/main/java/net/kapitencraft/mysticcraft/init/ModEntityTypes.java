@@ -6,7 +6,6 @@ import net.kapitencraft.mysticcraft.entity.skeleton_master.SkeletonMaster;
 import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.firework.NapalmRocketEntity;
 import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.Provider;
 import net.kapitencraft.mysticcraft.spell.spells.FireBoltProjectile;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -15,10 +14,10 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 public interface ModEntityTypes {
-    DeferredRegister<EntityType<?>> REGISTRY = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, MysticcraftMod.MOD_ID);
+    DeferredRegister<EntityType<?>> REGISTRY = MysticcraftMod.makeRegistry(ForgeRegistries.ENTITY_TYPES);
 
     private static <T extends Entity> RegistryObject<EntityType<T>> register(String name, EntityType.EntityFactory<T> factory, MobCategory category, Provider<EntityType.Builder<T>, EntityType.Builder<T>> provider) {
-        return REGISTRY.register(name, ()-> provider.provide(EntityType.Builder.of(factory, category)).build(new ResourceLocation(MysticcraftMod.MOD_ID, name).toString()));
+        return REGISTRY.register(name, ()-> provider.provide(EntityType.Builder.of(factory, category)).build(MysticcraftMod.res(name).toString()));
     }
 
     RegistryObject<EntityType<FrozenBlazeEntity>> FROZEN_BLAZE = register("frozen_blaze", FrozenBlazeEntity::new, MobCategory.MONSTER, (builder) -> builder.fireImmune().sized(0.6f, 1.8f));

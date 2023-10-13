@@ -1,10 +1,12 @@
 package net.kapitencraft.mysticcraft.item.combat.armor;
 
 import com.google.common.collect.Multimap;
+import net.kapitencraft.mysticcraft.helpers.MathHelper;
+import net.kapitencraft.mysticcraft.helpers.ParticleHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
+import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
+import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
 import net.kapitencraft.mysticcraft.particle.MagicCircleParticleType;
-import net.kapitencraft.mysticcraft.utils.MathUtils;
-import net.kapitencraft.mysticcraft.utils.ParticleUtils;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -15,6 +17,13 @@ import net.minecraft.world.level.Level;
 import java.util.List;
 
 public class WarpedArmorItem extends TieredArmorItem {
+    public static final TabGroup WARPED_GROUP = new TabGroup(TabRegister.TabTypes.WEAPONS_AND_TOOLS);
+
+    @Override
+    public TabGroup getGroup() {
+        return WARPED_GROUP;
+    }
+
     public static final String SHIELD_ID = "magicallyProtected";
 
     int magicalShieldCooldown = 0;
@@ -29,7 +38,7 @@ public class WarpedArmorItem extends TieredArmorItem {
         if (magicalShieldCooldown <= 0) {
             if (!hasSpawned) {
                 living.getPersistentData().putBoolean(SHIELD_ID, true);
-                ParticleUtils.sendParticles(level, new MagicCircleParticleType(living), true, MathUtils.getPosition(living), 1, 0, 0, 0, 0);
+                ParticleHelper.sendParticles(level, new MagicCircleParticleType(living), true, MathHelper.getPosition(living), 1, 0, 0, 0, 0);
                 hasSpawned = true;
             }
             if (living.getAttributeValue(ModAttributes.MANA.get()) == 0) {

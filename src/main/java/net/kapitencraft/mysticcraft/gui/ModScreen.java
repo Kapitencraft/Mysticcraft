@@ -6,7 +6,6 @@ import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.NotNull;
@@ -24,7 +23,7 @@ public abstract class ModScreen<K extends BlockEntity, T extends ModMenu<K>> ext
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
-        RenderSystem.setShaderTexture(0, new ResourceLocation(MysticcraftMod.MOD_ID, "textures/gui/" + getTextureName() + ".png"));
+        RenderSystem.setShaderTexture(0, MysticcraftMod.res("textures/gui/" + getTextureName() + ".png"));
         blit(pPoseStack, this.leftPos, this.topPos, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
         RenderSystem.disableBlend();
     }

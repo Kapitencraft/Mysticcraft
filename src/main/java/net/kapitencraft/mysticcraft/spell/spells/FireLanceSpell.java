@@ -1,8 +1,8 @@
 package net.kapitencraft.mysticcraft.spell.spells;
 
+import net.kapitencraft.mysticcraft.helpers.MathHelper;
+import net.kapitencraft.mysticcraft.helpers.ParticleHelper;
 import net.kapitencraft.mysticcraft.misc.damage_source.AbilityDamageSource;
-import net.kapitencraft.mysticcraft.utils.MathUtils;
-import net.kapitencraft.mysticcraft.utils.ParticleUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
@@ -18,13 +18,13 @@ import java.util.Objects;
 
 public class FireLanceSpell {
     public static void execute(LivingEntity user, ItemStack stack) {
-        ArrayList<Vec3> lineOfSight = MathUtils.lineOfSight(user, 10, 0.05);
+        ArrayList<Vec3> lineOfSight = MathHelper.lineOfSight(user, 10, 0.05);
         for (Vec3 vec3 : lineOfSight) {
             if (user.level.getBlockState(new BlockPos(vec3)).canOcclude()) {
                 break;
             }
             List<LivingEntity> entities = user.level.getEntitiesOfClass(LivingEntity.class, new AABB(vec3.x - 0.1, vec3.y - 0.1, vec3.z - 0.1, vec3.x + 0.1, vec3.y + 0.1, vec3.z + 0.1));
-            ParticleUtils.sendParticles(user.level, ParticleTypes.SMALL_FLAME, false, vec3, 10, 0.1/8, 0.1/8, 0.1/8, 0);
+            ParticleHelper.sendParticles(user.level, ParticleTypes.SMALL_FLAME, false, vec3, 10, 0.1/8, 0.1/8, 0.1/8, 0);
             for (LivingEntity living : entities) {
                 if (living != user) {
                     if (living.getLastDamageSource() instanceof AbilityDamageSource abilitySource && Objects.equals(abilitySource.getSpellType(), "fire_lance")) {

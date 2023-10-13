@@ -1,7 +1,8 @@
 package net.kapitencraft.mysticcraft.enchantments.abstracts;
 
 import com.google.common.collect.Multimap;
-import net.kapitencraft.mysticcraft.utils.MiscUtils;
+import net.kapitencraft.mysticcraft.helpers.CollectionHelper;
+import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -28,6 +29,6 @@ public abstract class ArmorStatBoostEnchantment extends StatBoostEnchantment imp
 
     @Override
     public boolean hasModifiersForThatSlot(EquipmentSlot slot) {
-        return MiscUtils.arrayContains(MiscUtils.ARMOR_EQUIPMENT, slot);
+        return CollectionHelper.arrayContains(MiscHelper.ARMOR_EQUIPMENT, slot);
     }
 }

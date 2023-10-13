@@ -16,6 +16,6 @@ public class SkeletonMasterRenderer extends MobRenderer<SkeletonMaster, Skeleton
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull SkeletonMaster p_115941_) {
-        return new ResourceLocation(MysticcraftMod.MOD_ID, "textures/entity/skeleton_master.png");
+        return MysticcraftMod.res("textures/entity/skeleton_master.png");
     }
 }

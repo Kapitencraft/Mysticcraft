@@ -19,6 +19,7 @@ public class ScrollableTooltips {
     private static int scrollY = 0;
     private static int initY = 0;
     private static int scale = 1;
+    private static int oldTooltipSize = 0;
     private static ItemStack stack = ItemStack.EMPTY;
 
     @SubscribeEvent
@@ -39,6 +40,10 @@ public class ScrollableTooltips {
             }
         }
         if (isHigherThanScreen) {
+            if (oldTooltipSize != toolTipSize.y && oldTooltipSize != 0) {
+                scrollY *= toolTipSize.y / oldTooltipSize * 1.;
+                oldTooltipSize = toolTipSize.y;
+            }
             if (scrollY == 0) initY = height;
             event.setY(initY + scrollY);
             return;

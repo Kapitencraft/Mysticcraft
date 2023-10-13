@@ -4,7 +4,7 @@ import org.slf4j.Marker;
 
 import java.util.Iterator;
 
-public class ModMarker implements Marker {
+public final class ModMarker implements Marker {
     private final String name;
 
     public ModMarker(String name) {

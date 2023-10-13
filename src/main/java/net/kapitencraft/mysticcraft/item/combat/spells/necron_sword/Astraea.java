@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.item.combat.spells.necron_sword;
 
 import com.google.common.collect.Multimap;
-import net.kapitencraft.mysticcraft.utils.AttributeUtils;
+import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -16,6 +16,6 @@ public class Astraea extends NecronSword {
 
     @Override
     protected @NotNull Consumer<Multimap<Attribute, AttributeModifier>> getAdditionalModifiers() {
-        return multimap -> multimap.put(Attributes.ARMOR, AttributeUtils.createModifier("Astraea Modifiers", AttributeModifier.Operation.ADDITION, 7));
+        return multimap -> multimap.put(Attributes.ARMOR, AttributeHelper.createModifier("Astraea Modifiers", AttributeModifier.Operation.ADDITION, 7));
     }
 }

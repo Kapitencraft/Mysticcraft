@@ -10,10 +10,10 @@ import net.minecraft.world.item.crafting.RecipeType;
 public interface ModRecipeTypes {
     RecipeType<LargeCraftingRecipe> LARGE_CRAFTING = register("large_crafting");
 
-    static <T extends Recipe<?>> RecipeType<T> register(final String p_44120_) {
-        return Registry.register(BuiltInRegistries.RECIPE_TYPE, new ResourceLocation(MysticcraftMod.MOD_ID, p_44120_), new RecipeType<T>() {
+    static <T extends Recipe<?>> RecipeType<T> register(final String name) {
+        return Registry.register(BuiltInRegistries.RECIPE_TYPE, MysticcraftMod.res(name), new RecipeType<T>() {
             public String toString() {
-                return p_44120_;
+                return name;
             }
         });
     }

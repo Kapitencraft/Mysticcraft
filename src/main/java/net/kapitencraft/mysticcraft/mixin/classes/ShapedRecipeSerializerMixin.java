@@ -2,17 +2,16 @@ package net.kapitencraft.mysticcraft.mixin.classes;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.google.gson.*;
-import net.kapitencraft.mysticcraft.ModMarker;
-import net.kapitencraft.mysticcraft.MysticcraftMod;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import net.kapitencraft.mysticcraft.block.entity.crafting.CraftingUtils;
+import net.kapitencraft.mysticcraft.mixin.MixinUtils;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
 import net.minecraft.util.GsonHelper;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -20,13 +19,11 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import org.jetbrains.annotations.Nullable;
-import org.slf4j.Marker;
 import org.spongepowered.asm.mixin.Mixin;
 
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 @Mixin(ShapedRecipe.Serializer.class)
 public class ShapedRecipeSerializerMixin implements RecipeSerializer<ShapedRecipe> {
@@ -105,62 +102,12 @@ public class ShapedRecipeSerializerMixin implements RecipeSerializer<ShapedRecip
                 throw new JsonSyntaxException("Invalid key entry: ' ' is a reserved symbol.");
             }
 
-            map.put(entry.getKey(), fromJson(entry.getValue()));
+            map.put(entry.getKey(), MixinUtils.fromJson(entry.getValue()));
         }
 
         map.put(" ", Ingredient.EMPTY);
         return map;
     }
-
-    private static Ingredient fromJson(JsonElement element) {
-        if (element != null && !element.isJsonNull()) {
-            if (element.isJsonObject()) {
-                return fromValues(Stream.of(valueFromJson(element.getAsJsonObject())));
-            } else if (element.isJsonArray()) {
-                JsonArray jsonarray = element.getAsJsonArray();
-                if (jsonarray.size() == 0) {
-                    throw new JsonSyntaxException("Item array cannot be empty, at least one item must be defined");
-                } else {
-                    return fromValues(StreamSupport.stream(jsonarray.spliterator(), false).map((p_151264_) -> valueFromJson(GsonHelper.convertToJsonObject(p_151264_, "item"))));
-                }
-            } else {
-                throw new JsonSyntaxException("Expected item to be object or array of objects");
-            }
-        } else {
-            throw new JsonSyntaxException("Item cannot be null");
-        }
-    }
-
-    private static Ingredient fromValues(Stream<? extends Ingredient.Value> p_43939_) {
-        Ingredient ingredient = new CraftingUtils.AmountIngredient(p_43939_);
-        return ingredient.isEmpty() ? Ingredient.EMPTY : ingredient;
-    }
-
-    private static Ingredient.Value valueFromJson(JsonObject object) {
-        if (object.has("item") && object.has("tag")) {
-            throw new JsonParseException("An ingredient entry is either a tag or an item, not both");
-        } else if (object.has("item")) {
-            Item item = ShapedRecipe.itemFromJson(object);
-            return new CraftingUtils.ItemAmountValue(item, getAmount(object));
-        } else if (object.has("tag")) {
-            ResourceLocation resourcelocation = new ResourceLocation(GsonHelper.getAsString(object, "tag"));
-            TagKey<Item> tagkey = TagKey.create(Registries.ITEM, resourcelocation);
-            return new CraftingUtils.TagAmountValue(tagkey, getAmount(object));
-        } else {
-            throw new JsonParseException("An ingredient entry needs either a tag or an item");
-        }
-    }
-
-    private static int getAmount(JsonObject object) {
-        int amount = object.has("amount") ? object.getAsJsonPrimitive("amount").getAsInt() : 1;
-        if (amount != 1) {
-            MysticcraftMod.sendInfo("read not-1 value amount: " + amount, false, MARKER);
-        }
-        return amount;
-    }
-
-
-    private static final Marker MARKER = new ModMarker("ShapedRecipeModifier");
 
     private static String[] shrink(String[] array) {
         int i = Integer.MAX_VALUE;
@@ -233,7 +180,7 @@ public class ShapedRecipeSerializerMixin implements RecipeSerializer<ShapedRecip
     private static Ingredient fromNetwork(FriendlyByteBuf buf) {
         int size = buf.readVarInt();
         if (size == -1) return CraftingHelper.getIngredient(buf.readResourceLocation(), buf);
-        return fromValues(Stream.generate(() -> new CraftingUtils.ItemAmountValue(buf.readItem())).limit(size));
+        return MixinUtils.fromValues(Stream.generate(() -> new CraftingUtils.ItemAmountValue(buf.readItem())).limit(size));
     }
 
     @Override

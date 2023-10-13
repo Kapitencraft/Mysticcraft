@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.enchantments.abstracts;
 
-import net.kapitencraft.mysticcraft.utils.TagUtils;
+import net.kapitencraft.mysticcraft.helpers.TagHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -25,7 +25,7 @@ public abstract class CountEnchantment extends ExtendedCalculationEnchantment im
     @Override
     public double execute(int level, ItemStack enchanted, LivingEntity attacker, LivingEntity attacked, double damageAmount, DamageSource source) {
         CompoundTag attackerTag = attacker.getPersistentData();
-        HashMap<UUID, Integer> map = !attackerTag.getCompound(this.mapName).isEmpty() ? TagUtils.getHashMapTag(attackerTag.getCompound(this.mapName)) : new HashMap<>();
+        HashMap<UUID, Integer> map = !attackerTag.getCompound(this.mapName).isEmpty() ? TagHelper.getHashMapTag(attackerTag.getCompound(this.mapName)) : new HashMap<>();
         if (!map.containsKey(attacked.getUUID())) {
             map.put(attacked.getUUID(), 0);
         }
@@ -42,7 +42,7 @@ public abstract class CountEnchantment extends ExtendedCalculationEnchantment im
             }
         }
         map.put(attacked.getUUID(), i);
-        attackerTag.put(this.mapName, TagUtils.putHashMapTag(map));
+        attackerTag.put(this.mapName, TagHelper.putHashMapTag(map));
         return damageAmount;
     }
 

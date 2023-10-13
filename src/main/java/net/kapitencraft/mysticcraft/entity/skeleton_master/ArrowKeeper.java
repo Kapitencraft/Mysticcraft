@@ -1,8 +1,8 @@
 package net.kapitencraft.mysticcraft.entity.skeleton_master;
 
-import net.kapitencraft.mysticcraft.utils.MathUtils;
-import net.kapitencraft.mysticcraft.utils.MiscUtils;
-import net.kapitencraft.mysticcraft.utils.ParticleUtils;
+import net.kapitencraft.mysticcraft.helpers.MathHelper;
+import net.kapitencraft.mysticcraft.helpers.MiscHelper;
+import net.kapitencraft.mysticcraft.helpers.ParticleHelper;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.world.phys.Vec3;
 
@@ -58,17 +58,17 @@ public class ArrowKeeper {
     }
 
     private void updatePosition(SkeletonMaster master) {
-        MiscUtils.repeatXTimes(arrowMatrix.length, integer -> MiscUtils.repeatXTimes(arrowMatrix[integer].length, integer1 -> {
+        MiscHelper.repeatXTimes(arrowMatrix.length, integer -> MiscHelper.repeatXTimes(arrowMatrix[integer].length, integer1 -> {
                     double offset1 = integer1 * 0.25;
                     double offset2 = integer * 0.25;
-                    Vec3 pos = MathUtils.calculateViewVector(master.getXRot(), master.getYRot() + rotation);
+                    Vec3 pos = MathHelper.calculateViewVector(master.getXRot(), master.getYRot() + rotation);
                     pos.scale(1 + offset1);
                     pos.add(master.getX(), master.getY() + offset2, master.getZ());
                     ControlledArrow arrow = arrowMatrix[integer][integer1];
                     if (arrow != null) {
                         arrow.setPos(pos);
                     }
-                    ParticleUtils.sendParticles(master.level, DustParticleOptions.REDSTONE, true, pos, 2, 0, 0, 0, 0);
+                    ParticleHelper.sendParticles(master.level, DustParticleOptions.REDSTONE, true, pos, 2, 0, 0, 0, 0);
                 })
         );
     }

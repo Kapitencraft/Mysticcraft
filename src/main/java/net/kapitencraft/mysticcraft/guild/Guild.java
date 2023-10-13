@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.guild;
 
-import net.kapitencraft.mysticcraft.utils.TextUtils;
+import net.kapitencraft.mysticcraft.helpers.TextHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
@@ -63,7 +63,7 @@ public class Guild {
             } else if (invites.containsKey(player)) {
                 return "isInvited";
             }
-            String inviteKey = TextUtils.createRandom(8);
+            String inviteKey = TextHelper.createRandom(8);
             invites.put(player, inviteKey);
             return inviteKey;
         }

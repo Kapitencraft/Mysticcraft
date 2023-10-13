@@ -1,8 +1,8 @@
 package net.kapitencraft.mysticcraft.item.gemstone;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
 import net.kapitencraft.mysticcraft.init.ModEnchantments;
-import net.kapitencraft.mysticcraft.utils.AttributeUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.nbt.CompoundTag;
@@ -146,7 +146,7 @@ public class GemstoneHelper {
                 MysticcraftMod.sendWarn("unable to read Gemstone slots: " + e.getMessage());
             }
             for (Attribute attribute1 : attributeModifier.keySet()) {
-                modifierHashMap.put(attribute1, AttributeUtils.createModifier("Gemstone Modifications", AttributeModifier.Operation.ADDITION, attributeModifier.get(attribute1)));
+                modifierHashMap.put(attribute1, AttributeHelper.createModifier("Gemstone Modifications", AttributeModifier.Operation.ADDITION, attributeModifier.get(attribute1)));
             }
         }
         return modifierHashMap;

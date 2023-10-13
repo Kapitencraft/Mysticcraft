@@ -1,8 +1,9 @@
 package net.kapitencraft.mysticcraft.item.tools.fishing_rods;
 
 import net.kapitencraft.mysticcraft.entity.ModFishingHook;
+import net.kapitencraft.mysticcraft.helpers.FishingHookHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
-import net.kapitencraft.mysticcraft.utils.FishingHookUtils;
+import net.kapitencraft.mysticcraft.item.misc.IModItem;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
@@ -16,7 +17,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class ModFishingRod extends FishingRodItem {
+public abstract class ModFishingRod extends FishingRodItem implements IModItem {
     public ModFishingRod(Properties p_41285_) {
         super(p_41285_);
     }
@@ -30,7 +31,7 @@ public abstract class ModFishingRod extends FishingRodItem {
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, Player player, @NotNull InteractionHand p_41292_) {
         ItemStack itemstack = player.getItemInHand(p_41292_);
-        ModFishingHook hook = FishingHookUtils.getActiveHook(player);
+        ModFishingHook hook = FishingHookHelper.getActiveHook(player);
         boolean retrieve = hook != null;
         if (!level.isClientSide) {
             if (retrieve) {

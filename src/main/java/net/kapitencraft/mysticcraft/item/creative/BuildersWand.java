@@ -3,12 +3,14 @@ package net.kapitencraft.mysticcraft.item.creative;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.config.CommonModConfig;
+import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
+import net.kapitencraft.mysticcraft.helpers.MathHelper;
+import net.kapitencraft.mysticcraft.helpers.MiscHelper;
+import net.kapitencraft.mysticcraft.helpers.TextHelper;
+import net.kapitencraft.mysticcraft.item.misc.IModItem;
+import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.QuadConsumer;
-import net.kapitencraft.mysticcraft.utils.AttributeUtils;
-import net.kapitencraft.mysticcraft.utils.MathUtils;
-import net.kapitencraft.mysticcraft.utils.MiscUtils;
-import net.kapitencraft.mysticcraft.utils.TextUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
@@ -36,7 +38,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BuildersWand extends Item {
+public class BuildersWand extends Item implements IModItem {
     private BuildType type = BuildType.LINE;
     private Block requiredBlock = Blocks.AIR;
 
@@ -49,7 +51,7 @@ public class BuildersWand extends Item {
     int test = 0;
 
     public BuildersWand() {
-        super(MiscUtils.rarity(FormattingCodes.LEGENDARY).stacksTo(1));
+        super(MiscHelper.rarity(FormattingCodes.LEGENDARY).stacksTo(1));
     }
 
     @Override
@@ -66,8 +68,8 @@ public class BuildersWand extends Item {
 
     @Override
     public void appendHoverText(ItemStack p_41421_, @Nullable Level p_41422_, List<Component> list, TooltipFlag p_41424_) {
-        String s = TextUtils.makeList(posList, TextUtils::fromBlockPos);
-        Component component = TextUtils.makeList(useAbles, Component::empty, Block::getName, MutableComponent::append);
+        String s = TextHelper.makeList(posList, TextHelper::fromBlockPos);
+        Component component = TextHelper.makeList(useAbles, Component::empty, Block::getName, MutableComponent::append);
         list.add(Component.literal("saved positions: " + s).withStyle(ChatFormatting.GREEN));
         list.add(Component.literal("active blocks: ").append(component).withStyle(ChatFormatting.GREEN));
         if (Screen.hasControlDown()) {
@@ -101,7 +103,7 @@ public class BuildersWand extends Item {
             } else if (Screen.hasShiftDown()) {
                 if (posList.size() < type.getPosAmount()) {
                     posList.add(context.getClickedPos());
-                    setMsg(Component.literal("added " + TextUtils.fromBlockPos(context.getClickedPos()) + " to the list"));
+                    setMsg(Component.literal("added " + TextHelper.fromBlockPos(context.getClickedPos()) + " to the list"));
                     if (posList.size() == type.getPosAmount() && CommonModConfig.useOnComplete) {
                         use(context.getLevel());
                     }
@@ -147,7 +149,7 @@ public class BuildersWand extends Item {
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
         HashMultimap<Attribute, AttributeModifier> multimap = HashMultimap.create();
-        multimap.put(ForgeMod.REACH_DISTANCE.get(), AttributeUtils.createModifier("Builder's Wand Modifier", AttributeModifier.Operation.ADDITION, 100));
+        multimap.put(ForgeMod.REACH_DISTANCE.get(), AttributeHelper.createModifier("Builder's Wand Modifier", AttributeModifier.Operation.ADDITION, 100));
         return slot == EquipmentSlot.MAINHAND ? multimap : super.getAttributeModifiers(slot, stack);
     }
 
@@ -163,20 +165,25 @@ public class BuildersWand extends Item {
         }
     }
 
+    @Override
+    public TabGroup getGroup() {
+        return null;
+    }
+
     public enum BuildType {
         LINE(1, false, 2, (block, blocks, blockPos, level) -> {
             BlockPos pos1 = blockPos.get(0);
             BlockPos pos2 = blockPos.get(1);
-            List<BlockPos> line = MathUtils.makeLine(pos1, pos2, MathUtils.LineSize.THIN);
+            List<BlockPos> line = MathHelper.makeLine(pos1, pos2, MathHelper.LineSize.THIN);
             line.forEach(pos3 -> checkAndPlaceBlock(level, block, pos3, blocks));
         }, "builders_wand.line"),
         CUBOID(2, false, 2, (block, blocks, blockPos, level) -> {
             BlockPos pos1 = blockPos.get(0);
             BlockPos pos2 = blockPos.get(1);
             BlockPos diff = pos2.subtract(pos1);
-            MathUtils.forCube(diff, (integer, integer2, integer3) -> {
+            MathHelper.forCube(diff, (integer, integer2, integer3) -> {
                 BlockPos pos3 = diff.offset(pos1.getX() + integer, pos1.getY() + integer2, pos1.getZ() + integer3);
-                level.setBlock(pos3, MathUtils.pickRandom(blocks).defaultBlockState(), 3);
+                level.setBlock(pos3, MathHelper.pickRandom(blocks).defaultBlockState(), 3);
             });
         }, "builders_wand.cuboid"),
         SPHERE(3, false, 2, (block, blocks, blockPos, level) -> {}, "builders_wand.sphere"),
@@ -197,7 +204,7 @@ public class BuildersWand extends Item {
 
         private static void checkAndPlaceBlock(Level level, Block block, BlockPos pos, List<Block> blocks) {
             if ((block == null || level.getBlockState(pos).getBlock() == block)) {
-                level.setBlock(pos, MathUtils.pickRandom(blocks).defaultBlockState(), 3);
+                level.setBlock(pos, MathHelper.pickRandom(blocks).defaultBlockState(), 3);
             }
         }
 
@@ -219,7 +226,7 @@ public class BuildersWand extends Item {
         }
 
         public BuildType getById(int id) {
-            return MiscUtils.getValue(BuildType::getPos, LINE, id, values());
+            return MiscHelper.getValue(BuildType::getPos, LINE, id, values());
         }
 
 

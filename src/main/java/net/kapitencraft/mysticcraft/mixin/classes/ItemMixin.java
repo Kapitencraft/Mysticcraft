@@ -1,10 +1,10 @@
 package net.kapitencraft.mysticcraft.mixin.classes;
 
 import com.google.common.collect.Multimap;
+import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.item.reforging.Reforge;
 import net.kapitencraft.mysticcraft.mixin.IItemMixin;
-import net.kapitencraft.mysticcraft.utils.AttributeUtils;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -21,13 +21,13 @@ public abstract class ItemMixin implements IItemMixin {
 
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
-        AttributeUtils.AttributeBuilder builder = new AttributeUtils.AttributeBuilder(self().getDefaultAttributeModifiers(slot));
+        AttributeHelper.AttributeBuilder builder = new AttributeHelper.AttributeBuilder(self().getDefaultAttributeModifiers(slot));
         Reforge reforge = Reforge.getFromStack(stack);
         if (((stack.getItem() instanceof TieredItem && slot == EquipmentSlot.MAINHAND) || stack.getItem() instanceof ArmorItem armorItem && slot == armorItem.getSlot()) && reforge != null) {
             builder.merge(reforge.applyModifiers(self().getRarity(stack)), AttributeModifier.Operation.ADDITION);
         }
         if (self() instanceof IGemstoneApplicable applicable) {
-            builder.merge(AttributeUtils.fromMap(applicable.getAttributeModifiers(stack, slot)));
+            builder.merge(AttributeHelper.fromMap(applicable.getAttributeModifiers(stack, slot)));
         }
         return builder.build();
     }

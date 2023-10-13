@@ -3,13 +3,15 @@ package net.kapitencraft.mysticcraft.item.combat.weapon.ranged.bow;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
+import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModEnchantments;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.item.misc.IModItem;
+import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
+import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
-import net.kapitencraft.mysticcraft.utils.AttributeUtils;
-import net.kapitencraft.mysticcraft.utils.MiscUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -29,6 +31,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public abstract class ModBowItem extends BowItem implements IModItem {
+    public static final TabGroup BOW_GROUP = new TabGroup(TabRegister.TabTypes.WEAPONS_AND_TOOLS);
+
+    @Override
+    public TabGroup getGroup() {
+        return BOW_GROUP;
+    }
 
     public abstract double getDivider();
 
@@ -140,7 +148,7 @@ public abstract class ModBowItem extends BowItem implements IModItem {
         if (!p_41461_.isEnchanted()) {
             return super.getRarity(p_41461_);
         } else {
-            final Rarity rarity = MiscUtils.getItemRarity(this);
+            final Rarity rarity = MiscHelper.getItemRarity(this);
             if (rarity == Rarity.COMMON) {
                 return Rarity.UNCOMMON;
             } else if (rarity == Rarity.UNCOMMON) {
@@ -182,7 +190,7 @@ public abstract class ModBowItem extends BowItem implements IModItem {
         HashMultimap<Attribute, AttributeModifier> builder = HashMultimap.create();
         builder.putAll(super.getAttributeModifiers(slot, stack));
         if (this instanceof IGemstoneApplicable applicable && slot == EquipmentSlot.MAINHAND) {
-            return AttributeUtils.increaseAllByAmount(builder, applicable.getAttributeModifiers(stack, slot));
+            return AttributeHelper.increaseAllByAmount(builder, applicable.getAttributeModifiers(stack, slot));
         }
         return builder;
     }

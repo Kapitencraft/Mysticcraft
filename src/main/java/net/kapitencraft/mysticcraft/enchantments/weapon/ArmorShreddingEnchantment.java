@@ -3,8 +3,8 @@ package net.kapitencraft.mysticcraft.enchantments.weapon;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.WeaponStatBoostEnchantment;
+import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
-import net.kapitencraft.mysticcraft.utils.MiscUtils;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -19,10 +19,10 @@ public class ArmorShreddingEnchantment extends WeaponStatBoostEnchantment {
 
     @Override
     public Consumer<Multimap<Attribute, AttributeModifier>> getModifiers(int level, ItemStack enchanted, EquipmentSlot slot) {
-        return multimap -> multimap.put(ModAttributes.ARMOR_SHREDDER.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[MiscUtils.createCustomIndex(slot)], "Armor Shredder Enchant Mod", level, AttributeModifier.Operation.ADDITION));
+        return multimap -> multimap.put(ModAttributes.ARMOR_SHREDDER.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[MiscHelper.createCustomIndex(slot)], "Armor Shredder Enchant Mod", level, AttributeModifier.Operation.ADDITION));
     }
     @Override
-    public Object[] getDescriptionMods(int level) {
-        return new Object[] {"+" + level};
+    public String[] getDescriptionMods(int level) {
+        return new String[] {"+" + level};
     }
 }

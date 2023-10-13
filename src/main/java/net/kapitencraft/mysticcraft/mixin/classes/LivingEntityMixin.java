@@ -3,18 +3,17 @@ package net.kapitencraft.mysticcraft.mixin.classes;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.client.Rendering;
+import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
+import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.kapitencraft.mysticcraft.misc.damage_source.IAbilitySource;
-import net.kapitencraft.mysticcraft.utils.AttributeUtils;
-import net.kapitencraft.mysticcraft.utils.MathUtils;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec2;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.gen.Invoker;
@@ -36,25 +35,29 @@ public abstract class LivingEntityMixin extends Entity {
 
     static {
         Rendering.addRenderer(new Rendering.RenderHolder(
-                new Vec2(50, 180),
+                new Rendering.PositionHolder(-90, 340),
                 value -> FormattingCodes.DARK_BLUE + "Protection: " + getDamageProtection(value) + "%",
                 Rendering.RenderType.SMALL
         ));
         Rendering.addRenderer(new Rendering.RenderHolder(
-                new Vec2(50, 200),
-                value -> FormattingCodes.DARK_AQUA + "Effective HP: " + MathUtils.round(value.getHealth() * 100 / (100 - getDamageProtection(value)), 2),
+                new Rendering.PositionHolder(-90, 350),
+                value -> FormattingCodes.DARK_AQUA + "Effective HP: " + MathHelper.round(value.getHealth() * 100 / (100 - getDamageProtection(value)), 2),
                 Rendering.RenderType.SMALL
         ));
     }
 
     private static double getDamageProtection(LivingEntity living) {
-        return MathUtils.round(100 - calculateDamage(100, living.getAttributeValue(Attributes.ARMOR), living.getAttributeValue(Attributes.ARMOR_TOUGHNESS)), 2);
+        return MathHelper.round(100 - calculateDamage(100, living.getAttributeValue(Attributes.ARMOR), living.getAttributeValue(Attributes.ARMOR_TOUGHNESS)), 2);
     }
 
+    /**
+     * @reason armor-shredder attribute
+     * @author Kapitencraft
+     */
     @Overwrite
     public float getDamageAfterArmorAbsorb(DamageSource source, float damage) {
         if (!source.isBypassArmor()) {
-            double armorShredValue = source.getEntity() instanceof LivingEntity living ? AttributeUtils.getSaveAttributeValue(ModAttributes.ARMOR_SHREDDER.get(), living) : 0;
+            double armorShredValue = source.getEntity() instanceof LivingEntity living ? AttributeHelper.getSaveAttributeValue(ModAttributes.ARMOR_SHREDDER.get(), living) : 0;
             this.callHurtArmor(source, damage);
             double armorValue = Math.max(0, getArmorValue(source) - armorShredValue);
             return calculateDamage(damage, (float) armorValue, (float) own().getAttributeValue(Attributes.ARMOR_TOUGHNESS));
@@ -85,7 +88,7 @@ public abstract class LivingEntityMixin extends Entity {
     @Inject(method = "hurt", at = @At(value = "RETURN", ordinal = 6))
     public void hurt(DamageSource source, float amount, CallbackInfoReturnable<Boolean> info) {
         if (source.getEntity() != null && source.getEntity() instanceof LivingEntity living) {
-            double attackSpeed = living.getAttributeValue(ModAttributes.BONUS_ATTACK_SPEED.get());
+            double attackSpeed = AttributeHelper.getSaveAttributeValue(ModAttributes.BONUS_ATTACK_SPEED.get(), living);
             if (attackSpeed > 0) {
                 own().invulnerableTime = (int) (20 - (attackSpeed * 0.15));
             }

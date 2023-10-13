@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.mob_effects;
 
-import net.kapitencraft.mysticcraft.utils.TextUtils;
+import net.kapitencraft.mysticcraft.helpers.TextHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffect;
@@ -24,7 +24,7 @@ public class StunMobEffect extends MobEffect {
     public void removeAttributeModifiers(@NotNull LivingEntity living, @NotNull AttributeMap p_19470_, int p_19471_) {
         super.removeAttributeModifiers(living, p_19470_, p_19471_);
         if (living instanceof Player player) {
-            TextUtils.setHotbarDisplay(player, Component.translatable("effect.stun.released").withStyle(ChatFormatting.GREEN));
+            TextHelper.setHotbarDisplay(player, Component.translatable("effect.stun.released").withStyle(ChatFormatting.GREEN));
         }
     }
 }

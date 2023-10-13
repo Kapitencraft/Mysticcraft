@@ -6,6 +6,7 @@ import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.item.combat.armor.client.WizardHatRenderer;
 import net.kapitencraft.mysticcraft.item.misc.IModItem;
+import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -66,5 +67,10 @@ public class WizardHatItem extends ArmorItem implements GeoItem, IModItem {
                 return this.renderer;
             }
         });
+    }
+
+    @Override
+    public TabGroup getGroup() {
+        return null;
     }
 }

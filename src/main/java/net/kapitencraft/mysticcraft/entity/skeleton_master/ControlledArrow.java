@@ -1,8 +1,8 @@
 package net.kapitencraft.mysticcraft.entity.skeleton_master;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.utils.MathUtils;
-import net.kapitencraft.mysticcraft.utils.ParticleUtils;
+import net.kapitencraft.mysticcraft.helpers.MathHelper;
+import net.kapitencraft.mysticcraft.helpers.ParticleHelper;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Arrow;
@@ -46,7 +46,7 @@ public class ControlledArrow extends Arrow {
 
     @Override
     public void tick() {
-        ParticleUtils.sendParticles(ParticleTypes.FLAME, true, this, 1, 0, 0, 0, 0);
+        ParticleHelper.sendParticles(ParticleTypes.FLAME, true, this, 1, 0, 0, 0, 0);
         super.tick();
         if (((this.getDeltaMovement() == Vec3.ZERO || this.isInFluidType()) && this.hasBeenFired) || this.getOwner() == null || !this.getOwner().isAlive()) {
             MysticcraftMod.sendInfo("discarded due to tick");
@@ -59,7 +59,7 @@ public class ControlledArrow extends Arrow {
     private void updatePos() {
         if (this.getOwner() != null) {
             int index = this.volleyVal % ARROW_AMOUNT;
-            Vec3 deltaPos = MathUtils.calculateViewVector(0, this.getYRot() + 90);
+            Vec3 deltaPos = MathHelper.calculateViewVector(0, this.getYRot() + 90);
             double offSetPerArrow = ARROW_SPAWN_LENGTH / ARROW_AMOUNT;
             double arrowOffset = offSetPerArrow * (index % 2 == 0 ? index : index - 1);
             double height = (this.volleyVal - index) * offSetPerArrow;
@@ -69,7 +69,7 @@ public class ControlledArrow extends Arrow {
                 deltaPos.scale(-2);
             }
             deltaPos.scale(1 + (arrowOffset - ARROW_SPAWN_LENGTH / 2));
-            this.setPos(new Vec3(deltaPos.x, 0.5 + height, deltaPos.z).add(MathUtils.getPosition(this.getOwner())));
+            this.setPos(new Vec3(deltaPos.x, 0.5 + height, deltaPos.z).add(MathHelper.getPosition(this.getOwner())));
             this.setRot(this.getOwner().getXRot(), this.getOwner().getYRot());
         }
     }

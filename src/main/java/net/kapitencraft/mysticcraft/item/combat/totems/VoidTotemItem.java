@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.item.combat.totems;
 
-import net.kapitencraft.mysticcraft.utils.MathUtils;
+import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
@@ -23,7 +23,7 @@ public class VoidTotemItem extends ModTotemItem {
                 }
             }
             if (!handled) {
-                living.setPos(MathUtils.getPosition(living).add(0, 300, 0));
+                living.setPos(MathHelper.getPosition(living).add(0, 300, 0));
             }
             return true;
         }

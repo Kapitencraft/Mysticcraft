@@ -7,6 +7,8 @@ import net.kapitencraft.mysticcraft.item.item_bonus.FullSetBonus;
 import net.kapitencraft.mysticcraft.item.item_bonus.IArmorBonusItem;
 import net.kapitencraft.mysticcraft.item.item_bonus.PieceBonus;
 import net.kapitencraft.mysticcraft.item.item_bonus.fullset.FrozenBlazeFullSetBonus;
+import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
+import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.kapitencraft.mysticcraft.misc.damage_source.FrozenDamageSource;
 import net.minecraft.client.model.HumanoidModel;
@@ -31,6 +33,13 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public class FrozenBlazeArmorItem extends ModArmorItem implements GeoItem, IArmorBonusItem {
+    public static final TabGroup FROZEN_BLAZE_ARMOR_GROUP = new TabGroup(TabRegister.TabTypes.WEAPONS_AND_TOOLS);
+
+    @Override
+    public TabGroup getGroup() {
+        return FROZEN_BLAZE_ARMOR_GROUP;
+    }
+
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private static final FrozenBlazeFullSetBonus FULL_SET_BONUS = new FrozenBlazeFullSetBonus();
     public FrozenBlazeArmorItem(EquipmentSlot p_40387_) {

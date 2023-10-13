@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.spell.spells;
 
+import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
-import net.kapitencraft.mysticcraft.utils.MathUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
@@ -61,7 +61,7 @@ public abstract class SpellProjectile extends AbstractArrow {
     protected void sendDamageMessage() {
         if (!this.level.isClientSide() && this.getOwner() instanceof Player player && attacked.size() > 0 && damageInflicted > 0) {
             String red = FormattingCodes.RED;
-            player.sendSystemMessage(Component.literal("Your " + this.name + " hit " + red + attacked.size() + FormattingCodes.RESET + " Enemies for " + red + MathUtils.round(this.damageInflicted, 3) + " Damage"));
+            player.sendSystemMessage(Component.literal("Your " + this.name + " hit " + red + attacked.size() + FormattingCodes.RESET + " Enemies for " + red + MathHelper.round(this.damageInflicted, 3) + " Damage"));
         }
     }
     @Override

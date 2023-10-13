@@ -1,11 +1,11 @@
 package net.kapitencraft.mysticcraft.mixin.classes;
 
 
+import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.init.ModEnchantments;
 import net.kapitencraft.mysticcraft.item.QuiverItem;
 import net.kapitencraft.mysticcraft.item.tools.ContainableHolder;
 import net.kapitencraft.mysticcraft.misc.HealingHelper;
-import net.kapitencraft.mysticcraft.utils.MathUtils;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -45,6 +45,11 @@ public abstract class PlayerMixin extends LivingEntity {
     public void aiStep(CallbackInfo info) {
         HealingHelper.setReason(own(), HealingHelper.HealReason.NATURAL);
     }
+
+    /**
+     * @reason quiver usage
+     * @author Kapitencraft
+     */
     @Overwrite
     public @NotNull ItemStack getProjectile(ItemStack stack) {
         if (!(stack.getItem() instanceof ProjectileWeaponItem)) {
@@ -64,7 +69,7 @@ public abstract class PlayerMixin extends LivingEntity {
                             ArrowItem arrowItem = holder.getItem();
                             if (predicate.test(new ItemStack(arrowItem)) && holder.getAmount() > 0) {
                                 int enchLevel = stack1.getEnchantmentLevel(ModEnchantments.INFINITE_QUIVER.get());
-                                if (!(MathUtils.chance(0.01 * enchLevel, own()))) {
+                                if (!(MathHelper.chance(0.01 * enchLevel, own()))) {
                                     holder.grow(-1);
                                 }
                                 quiverItem.saveContents(stack1, quiverContents);

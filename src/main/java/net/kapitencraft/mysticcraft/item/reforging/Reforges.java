@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.item.reforging;
 
 import net.kapitencraft.mysticcraft.event.ModEventFactory;
-import net.kapitencraft.mysticcraft.utils.MathUtils;
+import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import org.jetbrains.annotations.Nullable;
@@ -45,10 +45,10 @@ public class Reforges {
     public static Reforge makeRandom(boolean withStones, ItemStack stack) {
         List<Reforge> list = reforges.values().stream().filter(reforge -> reforge.getType().mayApply(stack)).toList();
         if (withStones) {
-            return MathUtils.pickRandom(list);
+            return MathHelper.pickRandom(list);
         } else {
             List<Reforge> withoutStones = list.stream().filter(reforge -> !reforge.isOnlyFromStone()).toList();
-            return MathUtils.pickRandom(withoutStones);
+            return MathHelper.pickRandom(withoutStones);
         }
     }
 

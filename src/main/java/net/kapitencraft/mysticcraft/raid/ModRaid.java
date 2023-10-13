@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.raid;
 
 import com.google.common.collect.HashMultimap;
-import net.kapitencraft.mysticcraft.utils.MathUtils;
+import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerBossEvent;
 import net.minecraft.world.BossEvent;
@@ -56,8 +56,8 @@ public abstract class ModRaid {
                 if (i <= weight) {
                     List<LivingEntity> mobs = weights.get(i).stream().toList();
                     if (!mobs.isEmpty()) {
-                        if (MathUtils.chance(0.6, null)) {
-                            toSpawn.add(MathUtils.pickRandom(mobs));
+                        if (MathHelper.chance(0.6, null)) {
+                            toSpawn.add(MathHelper.pickRandom(mobs));
                             weight -= i;
                             break;
                         }

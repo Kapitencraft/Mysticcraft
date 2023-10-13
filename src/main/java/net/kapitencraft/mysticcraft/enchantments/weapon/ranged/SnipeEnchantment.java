@@ -2,8 +2,8 @@ package net.kapitencraft.mysticcraft.enchantments.weapon.ranged;
 
 import net.kapitencraft.mysticcraft.enchantments.abstracts.IWeaponEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.ModBowEnchantment;
+import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.init.ModEnchantments;
-import net.kapitencraft.mysticcraft.utils.MathUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -37,7 +37,7 @@ public class SnipeEnchantment extends ModBowEnchantment implements IWeaponEnchan
     public float execute(LivingEntity target, CompoundTag tag, ExecuteType type, float oldDamage, AbstractArrow arrow) {
         if (type == ExecuteType.HIT) {
             Vec3 start = new Vec3(tag.getDouble("LaunchX"), tag.getDouble("LaunchY"), tag.getDouble("LaunchZ"));
-            Vec3 targetPos = MathUtils.getPosition(target);
+            Vec3 targetPos = MathHelper.getPosition(target);
             double distance = start.distanceTo(targetPos);
             return (float) (oldDamage * (1 + (distance / 10) * 0.01) * tag.getInt("Level"));
         }
@@ -51,7 +51,7 @@ public class SnipeEnchantment extends ModBowEnchantment implements IWeaponEnchan
 
 
     @Override
-    public Object[] getDescriptionMods(int level) {
-        return new Object[] {level};
+    public String[] getDescriptionMods(int level) {
+        return new String[] {level + "%"};
     }
 }

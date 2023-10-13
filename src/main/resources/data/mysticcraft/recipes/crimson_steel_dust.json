@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "mysticcraft:crimsonite_dust",
+      "amount": 2
+    },
+    {
+      "item": "mysticcraft:crimsonium_dust",
+      "amount": 2
+    }
+  ],
+  "result": {
+    "count": 2,
+    "item": "mysticcraft:crimson_steel_dust"
+  }
+}

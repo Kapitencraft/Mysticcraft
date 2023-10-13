@@ -1,9 +1,11 @@
 package net.kapitencraft.mysticcraft.item;
 
+import net.kapitencraft.mysticcraft.helpers.MiscHelper;
+import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
+import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
 import net.kapitencraft.mysticcraft.item.tools.ContainableHolder;
 import net.kapitencraft.mysticcraft.item.tools.ContainableItem;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
-import net.kapitencraft.mysticcraft.utils.MiscUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -19,6 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class QuiverItem extends ContainableItem<ArrowItem> {
+    public static TabGroup QUIVER_GROUP = new TabGroup(TabRegister.TabTypes.WEAPONS_AND_TOOLS);
     private static final int BAR_COLOR = Mth.color(0, 1f, 0.088f);
 
     public QuiverItem(Properties p_41383_, int quiverSize) {
@@ -39,7 +42,7 @@ public class QuiverItem extends ContainableItem<ArrowItem> {
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @org.jetbrains.annotations.Nullable Level level, @NotNull List<Component> tooltip, @NotNull TooltipFlag tooltipFlag) {
         List<ContainableHolder<ArrowItem>> contents = getContents(stack);
-        contents.forEach((holder) -> tooltip.add(((MutableComponent) holder.getDefaultStack().getHoverName()).withStyle(MiscUtils.getItemRarity(holder.getItem()).getStyleModifier()).append(": " + holder.getAmount())));
+        contents.forEach((holder) -> tooltip.add(((MutableComponent) holder.getDefaultStack().getHoverName()).withStyle(MiscHelper.getItemRarity(holder.getItem()).getStyleModifier()).append(": " + holder.getAmount())));
         double percentage = getUsedCapacity(stack)  * 1. / getCapacity(stack);
         TextColor color = TextColor.fromLegacyFormat(ChatFormatting.GREEN);
         if (percentage > 0.9) {
@@ -55,5 +58,10 @@ public class QuiverItem extends ContainableItem<ArrowItem> {
     @Override
     public boolean isBarVisible(@NotNull ItemStack stack) {
         return getUsedCapacity(stack) > 0;
+    }
+
+    @Override
+    public TabGroup getGroup() {
+        return QUIVER_GROUP;
     }
 }

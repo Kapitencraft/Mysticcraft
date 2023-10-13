@@ -3,12 +3,14 @@ package net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
+import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.item.misc.IModItem;
+import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
+import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
-import net.kapitencraft.mysticcraft.utils.AttributeUtils;
-import net.kapitencraft.mysticcraft.utils.MiscUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -25,6 +27,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public abstract class ModSwordItem extends SwordItem implements IModItem {
+    public static final float DEFAULT_ATTACK_SPEED = -2.4f;
+    public static final TabGroup SWORD_GROUP = new TabGroup(TabRegister.TabTypes.WEAPONS_AND_TOOLS);
     public ModSwordItem(Tier p_43269_, int attackDamage, float attackSpeed, Properties p_43272_) {
         super(p_43269_, attackDamage, attackSpeed, p_43272_);
     }
@@ -33,11 +37,16 @@ public abstract class ModSwordItem extends SwordItem implements IModItem {
     public abstract double getCritDamage();
 
     @Override
+    public TabGroup getGroup() {
+        return SWORD_GROUP;
+    }
+
+    @Override
     public @NotNull Rarity getRarity(ItemStack stack) {
         if (!stack.isEnchanted()) {
             return super.getRarity(stack);
         } else {
-            final Rarity rarity = MiscUtils.getItemRarity(this);
+            final Rarity rarity = MiscHelper.getItemRarity(this);
             if (rarity == Rarity.COMMON) {
                 return Rarity.UNCOMMON;
             } else if (rarity == Rarity.UNCOMMON) {
@@ -86,7 +95,7 @@ public abstract class ModSwordItem extends SwordItem implements IModItem {
         HashMultimap<Attribute, AttributeModifier> builder = HashMultimap.create();
         builder.putAll(super.getAttributeModifiers(slot, stack));
         if (this instanceof IGemstoneApplicable applicable && slot == EquipmentSlot.MAINHAND) {
-            return AttributeUtils.increaseAllByAmount(builder, applicable.getAttributeModifiers(stack, slot));
+            return AttributeHelper.increaseAllByAmount(builder, applicable.getAttributeModifiers(stack, slot));
         }
         return builder;
     }

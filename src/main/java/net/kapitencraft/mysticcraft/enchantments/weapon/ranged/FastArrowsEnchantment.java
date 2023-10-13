@@ -4,8 +4,8 @@ import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.IWeaponEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.StatBoostEnchantment;
+import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
-import net.kapitencraft.mysticcraft.utils.MiscUtils;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -18,7 +18,7 @@ import java.util.function.Consumer;
 public class FastArrowsEnchantment extends StatBoostEnchantment implements IWeaponEnchantment {
 
     public FastArrowsEnchantment() {
-        super(Enchantment.Rarity.RARE, EnchantmentCategory.BOW, MiscUtils.WEAPON_SLOT);
+        super(Enchantment.Rarity.RARE, EnchantmentCategory.BOW, MiscHelper.WEAPON_SLOT);
     }
 
     @Override
@@ -28,7 +28,7 @@ public class FastArrowsEnchantment extends StatBoostEnchantment implements IWeap
 
     @Override
     public Consumer<Multimap<Attribute, AttributeModifier>> getModifiers(int level, ItemStack enchanted, EquipmentSlot slot) {
-        return multimap -> multimap.put(ModAttributes.ARROW_SPEED.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[MiscUtils.createCustomIndex(slot)], "Arrow Speed Mod", 10 * level, AttributeModifier.Operation.ADDITION));
+        return multimap -> multimap.put(ModAttributes.ARROW_SPEED.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[MiscHelper.createCustomIndex(slot)], "Arrow Speed Mod", 10 * level, AttributeModifier.Operation.ADDITION));
     }
 
     @Override
@@ -37,7 +37,7 @@ public class FastArrowsEnchantment extends StatBoostEnchantment implements IWeap
     }
 
     @Override
-    public Object[] getDescriptionMods(int level) {
-        return new Object[]{10*level};
+    public String[] getDescriptionMods(int level) {
+        return new String[]{"+" + 10*level};
     }
 }

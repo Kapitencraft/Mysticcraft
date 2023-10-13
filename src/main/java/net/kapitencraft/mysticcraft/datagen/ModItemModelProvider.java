@@ -2,6 +2,7 @@ package net.kapitencraft.mysticcraft.datagen;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.init.ModItems;
+import net.kapitencraft.mysticcraft.item.combat.spells.SpellScrollItem;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneItem;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneType;
 import net.minecraft.data.PackOutput;
@@ -27,7 +28,7 @@ public class ModItemModelProvider extends ItemModelProvider {
 
     @Override
     protected void registerModels() {
-        //registerScrolls();
+        registerScrolls();
         //registerGemstones();
 
 
@@ -48,18 +49,18 @@ public class ModItemModelProvider extends ItemModelProvider {
     private ItemModelBuilder simpleItem(RegistryObject<? extends Item> item, @Nullable ResourceLocation texture) {
         return withExistingParent(item.getId().getPath(),
                 new ResourceLocation("item/generated")).texture("layer0",
-                 (texture == null ? new ResourceLocation(MysticcraftMod.MOD_ID, "item/" + item.getId().getPath()) : texture));
+                 (texture == null ? MysticcraftMod.res("item/" + item.getId().getPath()) : texture));
     }
 
     private ItemModelBuilder handHeldItem(RegistryObject<? extends Item> item, @Nullable ResourceLocation texture) {
         return withExistingParent(item.getId().getPath(),
                 new ResourceLocation("item/handheld")).texture("layer0",
-                (texture == null ? new ResourceLocation(MysticcraftMod.MOD_ID, "item/" + item.getId().getPath()) : texture));
+                (texture == null ? MysticcraftMod.res("item/" + item.getId().getPath()) : texture));
     }
 
     private void registerScrolls() {
-        for (RegistryObject<Item> item : ModItems.SCROLLS.values()) {
-            simpleItem(item, new ResourceLocation(MysticcraftMod.MOD_ID, "item/scroll"));
+        for (RegistryObject<SpellScrollItem> item : ModItems.SCROLLS.values()) {
+            simpleItem(item, MysticcraftMod.res("item/scroll"));
         }
     }
 
@@ -77,10 +78,10 @@ public class ModItemModelProvider extends ItemModelProvider {
     }
 
     private ResourceLocation getGemstoneTextureForRarity(GemstoneType.Rarity rarity) {
-        return new ResourceLocation(MysticcraftMod.MOD_ID, "item/" + rarity.getId() + "_gemstone");
+        return MysticcraftMod.res("item/" + rarity.getId() + "_gemstone");
     }
 
     private ItemModelBuilder registerWithColor(RegistryObject<? extends Item> item, ResourceLocation texture) {
-        return simpleItem(item, texture).texture("layer1", new ResourceLocation(MysticcraftMod.MOD_ID, "item/empty_dyed_overlay"));
+        return simpleItem(item, texture).texture("layer1", MysticcraftMod.res("item/empty_dyed_overlay"));
     }
 }

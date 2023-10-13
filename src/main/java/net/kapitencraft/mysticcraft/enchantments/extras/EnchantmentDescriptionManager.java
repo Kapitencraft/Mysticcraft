@@ -18,13 +18,14 @@ import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
 
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class EnchantmentDescriptionManager {
-    private static final Map<String, Object[]> descriptions = new HashMap<>();
 
     @SubscribeEvent
     public static void registerTooltip(ItemTooltipEvent event) {
@@ -64,8 +65,8 @@ public class EnchantmentDescriptionManager {
             descriptionKey = ench.getDescriptionId() + ".description";
         }
         int level = stack.getItem() instanceof EnchantedBookItem ? (EnchantmentHelper.deserializeEnchantments(EnchantedBookItem.getEnchantments(stack)).get(ench)) : EnchantmentHelper.getTagEnchantmentLevel(ench, stack);
-        Object[] objects = ench instanceof ModEnchantment modEnchantment ? modEnchantment.getDescriptionMods(level) : new Object[]{level};
-        Stream<Object> stream = Arrays.stream(objects);
+        String[] objects = ench instanceof ModEnchantment modEnchantment ? modEnchantment.getDescriptionMods(level) : new String[]{String.valueOf(level)};
+        Stream<String> stream = Arrays.stream(objects);
         return Component.translatable(descriptionKey, stream.map(o -> "§c" + o + "§r").toArray()).withStyle(ChatFormatting.DARK_GRAY);
     }
 }
