@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.particle.flame;
+package net.kapitencraft.mysticcraft.client.particle.flame;
 
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
@@ -8,8 +8,8 @@ import net.minecraft.core.particles.SimpleParticleType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class PurpleFlame extends ModFlameParticle {
-    protected PurpleFlame(ClientLevel p_108323_, double p_108324_, double p_108325_, double p_108326_, SpriteSet spriteSet) {
+public class RedFlameParticle extends ModFlameParticle {
+    protected RedFlameParticle(ClientLevel p_108323_, double p_108324_, double p_108325_, double p_108326_, SpriteSet spriteSet) {
         super(p_108323_, p_108324_, p_108325_, p_108326_, spriteSet);
     }
 
@@ -23,7 +23,7 @@ public class PurpleFlame extends ModFlameParticle {
         @Nullable
         @Override
         public Particle createParticle(@NotNull SimpleParticleType particleType, @NotNull ClientLevel clientLevel, double x, double y, double z, double vx, double vy, double vz) {
-            return new PurpleFlame(clientLevel, x, y, z, SPRITE_SET);
+            return new RedFlameParticle(clientLevel, x, y, z, SPRITE_SET);
         }
     }
 }

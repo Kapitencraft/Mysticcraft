@@ -66,6 +66,11 @@ public abstract class LivingEntityMixin extends Entity {
         return damage;
     }
 
+    @Overwrite
+    public void knockback(double strenght, double xSpeed, double ySpeed) {
+
+    }
+
     private double getArmorValue(DamageSource source) {
         if (source.getMsgId().equals("true_damage")) {
             return own().getAttributeValue(ModAttributes.TRUE_DEFENCE.get());

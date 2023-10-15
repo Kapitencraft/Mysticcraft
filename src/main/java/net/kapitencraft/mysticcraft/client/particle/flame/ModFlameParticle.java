@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.particle.flame;
+package net.kapitencraft.mysticcraft.client.particle.flame;
 
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.ParticleRenderType;

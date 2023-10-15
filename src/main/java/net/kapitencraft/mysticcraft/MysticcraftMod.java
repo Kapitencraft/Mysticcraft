@@ -93,9 +93,6 @@ public class MysticcraftMod {
             MenuScreens.register(ModMenuTypes.REFORGING_ANVIL.get(), ReforgingAnvilScreen::new);
         }
 
-        private static void registerAll() {
-        }
-
         @SubscribeEvent
         public static void onCommonSetup(FMLCommonSetupEvent event) {
             sendRegisterDisplay("custom Potion Recipes");
@@ -158,6 +155,6 @@ public class MysticcraftMod {
         lastMSG = info;
     }
 
-    private static final Marker MYSTICCRAFT_MARKER = new ModMarker("MYSTICCRAFT");
+    public static final Marker MYSTICCRAFT_MARKER = new ModMarker("MYSTICCRAFT");
 
 }

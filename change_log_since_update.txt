@@ -3,6 +3,7 @@ added higher amount crafting ingredients for shapeless recipes;
 added loot-tables for most blocks;
 added sound to ferocity;
 added Packet "Infrastructure";
+added Cromatic Enchantment Names;
 
 [IN-DEV] added java-docs for @Overwrite
 

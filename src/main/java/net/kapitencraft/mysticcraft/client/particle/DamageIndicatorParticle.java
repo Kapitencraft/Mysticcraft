@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.particle;
+package net.kapitencraft.mysticcraft.client.particle;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -15,7 +15,6 @@ import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -23,6 +22,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@SuppressWarnings("ALL")
 public class DamageIndicatorParticle extends Particle {
     public static final double MAX_MOVEMENT = 0.35;
 
@@ -38,6 +38,8 @@ public class DamageIndicatorParticle extends Particle {
         this.yd = 1;
         this.xd = Mth.nextDouble(RandomSource.createNewThreadLocalInstance(), -MAX_MOVEMENT, MAX_MOVEMENT);
     }
+
+    private static final char CRIT_CHAR = ' ';
 
     private float fadeout = -1;
     private float prevFadeout = -1;
@@ -140,7 +142,7 @@ public class DamageIndicatorParticle extends Particle {
         }
     }
 
-    public static class Provider implements ParticleProvider<SimpleParticleType> {
+    public static class Provider implements ParticleProvider<DamageIndicatorParticleOptions> {
 
         public Provider(SpriteSet ignoredSpriteSet) {
 
@@ -148,8 +150,8 @@ public class DamageIndicatorParticle extends Particle {
 
         @Nullable
         @Override
-        public DamageIndicatorParticle createParticle(@NotNull SimpleParticleType particleType, @NotNull ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
-            return new DamageIndicatorParticle(level, x, y, z, xSpeed, ySpeed);
+        public DamageIndicatorParticle createParticle(@NotNull DamageIndicatorParticleOptions particleType, @NotNull ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+            return new DamageIndicatorParticle(level, x, y, z, particleType.getDamage(), particleType.getDamageType());
         }
     }
 }

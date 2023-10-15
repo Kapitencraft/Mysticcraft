@@ -3,6 +3,8 @@
   "advancements.mysticcraft.archmage.title": "Archmage",
   "advancements.mysticcraft.infernal_armor": "obtain a full-set of Infernal Armor",
   "advancements.mysticcraft.infernal_armor.title": "Infernal Looks",
+  "advancements.mysticcraft.prot_5_wait_what.title": "Above and Beyond",
+  "advancements.mysticcraft.prot_5_wait_what": "Protection 4, Protection 4, Protection 4, Protection 5? wait what???",
 
   "armor_tier.burning": "Burning",
   "armor_tier.default": "",
@@ -155,7 +157,7 @@
   "enchantment.mysticcraft.ender_friend": "Ender Friend",
   "enchantment.mysticcraft.ender_friend.desc": "endermans will no longer target you, if you look at them",
   "enchantment.mysticcraft.ender_slayer": "Ender Slayer",
-  "enchantment.mysticcraft.ender_slayer.desc": "increases damage dealt by %1$s",
+  "enchantment.mysticcraft.ender_slayer.desc": "increases damage dealt by %1$s against ender mobs",
   "enchantment.mysticcraft.fast_arrows": "Faster Arrows",
   "enchantment.mysticcraft.fast_arrows.desc": "grants %1$s Arrow Speed",
   "enchantment.mysticcraft.firm_stand": "Firm Stand",

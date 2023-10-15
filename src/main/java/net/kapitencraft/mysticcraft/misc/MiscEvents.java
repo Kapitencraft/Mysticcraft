@@ -2,6 +2,11 @@ package net.kapitencraft.mysticcraft.misc;
 
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.client.particle.CircleParticle;
+import net.kapitencraft.mysticcraft.client.particle.DamageIndicatorParticle;
+import net.kapitencraft.mysticcraft.client.particle.FireNormalParticle;
+import net.kapitencraft.mysticcraft.client.particle.MagicCircleParticle;
+import net.kapitencraft.mysticcraft.client.particle.flame.*;
 import net.kapitencraft.mysticcraft.entity.renderer.*;
 import net.kapitencraft.mysticcraft.guild.GuildHandler;
 import net.kapitencraft.mysticcraft.init.ModEntityTypes;
@@ -10,11 +15,6 @@ import net.kapitencraft.mysticcraft.init.ModParticleTypes;
 import net.kapitencraft.mysticcraft.item.combat.duel.DuelHandler;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneItem;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneType;
-import net.kapitencraft.mysticcraft.particle.CircleParticle;
-import net.kapitencraft.mysticcraft.particle.DamageIndicatorParticle;
-import net.kapitencraft.mysticcraft.particle.FireNormalParticle;
-import net.kapitencraft.mysticcraft.particle.MagicCircleParticle;
-import net.kapitencraft.mysticcraft.particle.flame.*;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.DyeableLeatherItem;

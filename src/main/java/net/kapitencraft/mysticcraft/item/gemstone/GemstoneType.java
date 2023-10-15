@@ -18,8 +18,9 @@ public enum GemstoneType {
     ALMANDINE(getColorFromChatFormatting(ChatFormatting.LIGHT_PURPLE), ModAttributes.ABILITY_DAMAGE, 0.3, "almandine"),
     JASPER(getColorFromChatFormatting(ChatFormatting.DARK_RED), ModAttributes.STRENGTH, 2, "jasper"),
     RUBY(getColorFromChatFormatting(ChatFormatting.RED), () -> Attributes.MAX_HEALTH, 1.2, "ruby"),
+    AMETHYST(getColorFromChatFormatting(ChatFormatting.DARK_PURPLE), () -> Attributes.ARMOR, 2.3, "amethyst"),
     SAPPHIRE(getColorFromChatFormatting(ChatFormatting.BLUE), ModAttributes.INTELLIGENCE, 2.7, "sapphire"),
-    AQUAMARINE(getColorFromChatFormatting(ChatFormatting.AQUA), ModAttributes.FISHING_SPEED, 3.1, "aquamarine"),
+    AQUAMARINE(getColorFromChatFormatting(ChatFormatting.AQUA), ModAttributes.FISHING_SPEED, 2.9, "aquamarine"),
     MOON_STONE(getColorFromChatFormatting(ChatFormatting.WHITE), ModAttributes.DRAW_SPEED, 0.5, "moon_stone");
 
     public static final TabGroup GEMSTONE_GROUP = new TabGroup(TabRegister.TabTypes.SPELL_AND_GEMSTONE);

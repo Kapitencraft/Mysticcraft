@@ -422,11 +422,11 @@ public class MiscRegister {
         if (AttributeHelper.getSaveAttributeValue(ModAttributes.MANA.get(), living) != -1 && living.level.getBlockState(new BlockPos(living.getX(), living.getY(), living.getZ())).getBlock() == ModBlocks.MANA_FLUID_BLOCK.get()) {
             double overflowMana = tag.getDouble(OVERFLOW_MANA_ID) + tag.getDouble("manaRegen");
             tag.putDouble(OVERFLOW_MANA_ID, overflowMana);
-            if (overflowMana >= living.getAttributeValue(ModAttributes.MAX_MANA.get())) {
+            if (overflowMana >= AttributeHelper.getSaveAttributeValue(ModAttributes.MAX_MANA.get(), living)) {
                 living.hurt(new DamageSource(OVERFLOW_MANA_ID).bypassInvul().bypassMagic().bypassEnchantments().bypassArmor(), Float.MAX_VALUE);
                 List<LivingEntity> livings = MathHelper.getLivingAround(living, 5);
                 for (LivingEntity living1 : livings) {
-                    living1.hurt(new EntityDamageSource(OVERFLOW_MANA_ID, living).bypassArmor().bypassMagic().bypassEnchantments().bypassInvul(), (float) (Float.MAX_VALUE * (0.01 * Math.max(1 - living1.distanceTo(living), 0))));
+                    living1.hurt(new EntityDamageSource(OVERFLOW_MANA_ID, living).bypassArmor().bypassMagic().bypassEnchantments().bypassInvul(), (float) (Float.MAX_VALUE * (0.01 * Math.max(5 - living1.distanceTo(living), 0))));
                 }
             }
         }

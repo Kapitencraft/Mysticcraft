@@ -6,7 +6,6 @@ import net.kapitencraft.mysticcraft.misc.damage_source.AbilityDamageSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
@@ -30,8 +29,7 @@ public class FireLanceSpell {
                     if (living.getLastDamageSource() instanceof AbilityDamageSource abilitySource && Objects.equals(abilitySource.getSpellType(), "fire_lance")) {
                         living.invulnerableTime = 0;
                     }
-                    living.hurt(DamageSource.MAGIC, 10);
-                    living.hurt(new AbilityDamageSource(user, 0.2f, "fire_lance"), 2);
+                    living.hurt(new AbilityDamageSource(user, 0.2f, "fire_lance"), 4);
                     living.setSecondsOnFire(2);
                 }
             }

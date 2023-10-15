@@ -106,17 +106,18 @@ public class GemstoneSlot {
     }
 
     public enum Type {
-        COMBAT("\u2694", "combat", GemstoneType.JASPER, GemstoneType.SAPPHIRE, GemstoneType.RUBY, GemstoneType.ALMANDINE),
-        OFFENCE("\uF005", "offence", GemstoneType.JASPER, GemstoneType.SAPPHIRE, GemstoneType.ALMANDINE),
-        DEFENCE("\uF002", "defence", GemstoneType.RUBY),
-        MAGIC("\uF003", "magic", GemstoneType.SAPPHIRE, GemstoneType.ALMANDINE),
         INTELLIGENCE("\uF000", "intel", GemstoneType.SAPPHIRE),
         STRENGTH("\u2741", "strength", GemstoneType.JASPER),
         HEALTH("\u2764", "health", GemstoneType.RUBY),
         ABILITY_DAMAGE("\uF001", "ability_damage", GemstoneType.ALMANDINE),
         EMPTY("", "empty", (GemstoneType) null),
         FISHING_SPEED("\uF006", "fishing_speed", GemstoneType.AQUAMARINE),
-        DRAW_SPEED("\uF004", "draw_speed", GemstoneType.MOON_STONE);
+        DRAW_SPEED("\uF004", "draw_speed", GemstoneType.MOON_STONE),
+        ARMOR("\uF000", "armor", GemstoneType.AMETHYST),
+        OFFENCE("\uF005", "offence", GemstoneType.JASPER, GemstoneType.SAPPHIRE, GemstoneType.ALMANDINE, GemstoneType.MOON_STONE),
+        DEFENCE("\uF002", "defence", GemstoneType.RUBY, GemstoneType.AMETHYST),
+        MAGIC("\uF003", "magic", GemstoneType.SAPPHIRE, GemstoneType.ALMANDINE),
+        COMBAT("\u2694", "combat", GemstoneType.JASPER, GemstoneType.SAPPHIRE, GemstoneType.ALMANDINE, GemstoneType.MOON_STONE, GemstoneType.RUBY, GemstoneType.AMETHYST);
 
         public final String UNICODE;
         public final String id;

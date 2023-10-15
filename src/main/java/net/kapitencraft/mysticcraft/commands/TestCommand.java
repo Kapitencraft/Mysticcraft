@@ -3,12 +3,14 @@ package net.kapitencraft.mysticcraft.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.tree.LiteralCommandNode;
-import net.kapitencraft.mysticcraft.helpers.MathHelper;
-import net.kapitencraft.mysticcraft.networking.ModMessages;
-import net.kapitencraft.mysticcraft.networking.packets.S2C.CircleParticlePacket;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantment;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class TestCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
@@ -20,8 +22,22 @@ public class TestCommand {
     }
 
     private static int exeEnchantmentUpgrades(CommandSourceStack stack) {
-        ServerPlayer player = stack.getPlayer();
-        if (player != null) ModMessages.sendToClientPlayer(new CircleParticlePacket(MathHelper.getEyePosition(player).add(0, 1, 0), MathHelper.RGBtoInt(255, 0, 0), 50, 50), player);
+        ServerPlayer serverPlayer = stack.getPlayer();
+        if (serverPlayer != null) {
+            ItemStack mainHandItem = serverPlayer.getMainHandItem();
+            Map<Enchantment, Integer> enchantments = mainHandItem.getAllEnchantments();
+            Map<Enchantment, Integer> newEnchantments = new HashMap<>();
+            for (Map.Entry<Enchantment, Integer> entry : enchantments.entrySet()) {
+                Enchantment key = entry.getKey();
+                if (Math.random() > 0.5) {
+                    newEnchantments.put(key, entry.getValue() + 1);
+                } else {
+                    newEnchantments.put(key, entry.getValue());
+                }
+            }
+            mainHandItem.getOrCreateTag().remove("Enchantments");
+            newEnchantments.forEach(mainHandItem::enchant);
+        }
         return 1;
     }
 }

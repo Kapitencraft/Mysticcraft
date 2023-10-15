@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.particle;
+package net.kapitencraft.mysticcraft.client.particle;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;

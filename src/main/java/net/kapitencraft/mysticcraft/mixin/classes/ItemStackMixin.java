@@ -2,6 +2,9 @@ package net.kapitencraft.mysticcraft.mixin.classes;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
+import net.kapitencraft.mysticcraft.client.ServerData;
+import net.kapitencraft.mysticcraft.client.render.ColorAnimator;
+import net.kapitencraft.mysticcraft.config.ClientModConfig;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.IUltimateEnchantment;
 import net.kapitencraft.mysticcraft.event.ModEventFactory;
 import net.kapitencraft.mysticcraft.gui.IGuiHelper;
@@ -48,8 +51,8 @@ import static net.minecraft.world.item.ItemStack.ATTRIBUTE_MODIFIER_FORMAT;
 
 @Mixin(ItemStack.class)
 public abstract class ItemStackMixin {
-
     private static final Style LORE_STYLE = Style.EMPTY.withColor(ChatFormatting.DARK_PURPLE).withItalic(true);
+    private static final ColorAnimator RAINBOW_ANIMATOR = ColorAnimator.createRainbow(30 * ClientModConfig.rgbSpeed);
 
     private ItemStack self() {
         return (ItemStack) (Object) this;
@@ -109,8 +112,10 @@ public abstract class ItemStackMixin {
                         MutableComponent component = components[0];
                         if (enchantment instanceof IUltimateEnchantment) {
                             component.withStyle(ChatFormatting.LIGHT_PURPLE).withStyle(ChatFormatting.BOLD);
-                        } else if (level >= enchantment.getMaxLevel()) {
+                        } else if (level == enchantment.getMaxLevel()) {
                             component.withStyle(ChatFormatting.GOLD);
+                        } else if (level > enchantment.getMaxLevel()) {
+                            component.withStyle(Style.EMPTY.withColor(RAINBOW_ANIMATOR.makeTextColor(ServerData.getTime())));
                         }
                         list.add(component);
                     }
@@ -205,7 +210,8 @@ public abstract class ItemStackMixin {
                             if (self().getItem() instanceof IGemstoneApplicable applicable) {
                                 HashMap<Attribute, AttributeModifier> mods = applicable.getAttributeModifiers(self(), equipmentslot);
                                 if (mods.containsKey(entry.getKey())) {
-                                    toAppend.append(Component.literal(" (" + mods.get(entry.getValue().getAmount()) + ")").withStyle(ChatFormatting.LIGHT_PURPLE));
+                                    double value = mods.get(entry.getKey()).getAmount();
+                                    toAppend.append(Component.literal(" (+" + value + ")").withStyle(ChatFormatting.LIGHT_PURPLE));
                                 }
                             }
                         }

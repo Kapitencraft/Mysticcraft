@@ -3,11 +3,10 @@ package net.kapitencraft.mysticcraft.helpers;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import net.kapitencraft.mysticcraft.client.particle.DamageIndicatorParticleOptions;
 import net.kapitencraft.mysticcraft.gui.IGuiHelper;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneItem;
 import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.Provider;
-import net.kapitencraft.mysticcraft.networking.ModMessages;
-import net.kapitencraft.mysticcraft.networking.packets.S2C.DamageIndicatorPacket;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -15,7 +14,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
@@ -81,11 +79,6 @@ public class MiscHelper {
         };
     }
 
-    public static void writeVec3(FriendlyByteBuf buf, Vec3 vec3) {
-        buf.writeDouble(vec3.x);
-        buf.writeDouble(vec3.y);
-        buf.writeDouble(vec3.z);
-    }
     public static <T> void giveNullOrElse(@Nullable T t, Consumer<T> toDo) {
         if (t != null) {
             toDo.accept(t);
@@ -314,8 +307,14 @@ public class MiscHelper {
 
     public static void createDamageIndicator(LivingEntity entity, double amount, String type) {
         if (entity.getLevel() instanceof ServerLevel serverLevel) {
-            ModMessages.sendToAllConnectedPlayers(new DamageIndicatorPacket(entity.getId(), (float) amount, TextHelper.damageIndicatorCoder(type)), serverLevel);
+            ParticleHelper.sendParticles(serverLevel, new DamageIndicatorParticleOptions(TextHelper.damageIndicatorCoder(type), (float) amount), false, entity.getX(), entity.getY(), entity.getZ(), 1, 0, 0, 0, 0);
         }
+    }
+
+    private static Vec3 getUpdateForPos(Vec3 cam, LivingEntity living) {
+        Vec3 livingPos = MathHelper.getPosition(living);
+        Vec3 delta = cam.subtract(livingPos);
+        return MathHelper.setLength(delta, 0.5);
     }
 
     public static final char HEART = '\u2661';

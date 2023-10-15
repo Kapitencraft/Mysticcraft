@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.particle;
+package net.kapitencraft.mysticcraft.client.particle;
 
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.minecraft.client.multiplayer.ClientLevel;

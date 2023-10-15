@@ -18,6 +18,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,6 +42,10 @@ public class TextHelper {
     }
     public static String wrapInNameMarkers(String name) {
         return "'" + name + "'";
+    }
+
+    public static String wrapInRed(String toWrap) {
+        return "§c" + toWrap + "§r";
     }
 
     public static void setHotbarDisplay(Player player, Component display) {
@@ -118,7 +123,7 @@ public class TextHelper {
         };
     }
 
-    public static ChatFormatting damageIndicatorColorFromDouble(double in) {
+    public static @NotNull ChatFormatting damageIndicatorColorFromDouble(double in) {
         return damageIndicatorColorGenerator(damageIndicatorDecoder(in));
     }
 

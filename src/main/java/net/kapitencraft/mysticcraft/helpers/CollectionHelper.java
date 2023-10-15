@@ -10,9 +10,26 @@ import java.util.stream.Collectors;
 
 public class CollectionHelper {
 
-    public static <T> T getFirst(Collection<T> collection) {
-        for (T t : collection) {
-            return t;
+    public static <T, K> T getFirstKey(Map<T, K> collection) {
+        for (Map.Entry<T, K> entry : collection.entrySet()) {
+            return entry.getKey();
+        }
+        return null;
+    }
+
+    public static <T> ArrayList<T> colToList(Collection<T> collection) {
+        return new ArrayList<>(collection);
+    }
+
+    public static <T> ArrayList<T> toList(T ts) {
+        ArrayList<T> target = new ArrayList<>();
+        Collections.addAll(target, ts);
+        return target;
+    }
+
+    public static <T, K> K getFirstValue(Map<T, K> map) {
+        for (Map.Entry<T, K> entry : map.entrySet()) {
+            return entry.getValue();
         }
         return null;
     }

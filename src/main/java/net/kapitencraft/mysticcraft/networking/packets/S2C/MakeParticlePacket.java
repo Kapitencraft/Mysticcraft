@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.networking.packets.S2C;
 
-import net.kapitencraft.mysticcraft.helpers.MiscHelper;
+import net.kapitencraft.mysticcraft.helpers.NetworkingHelper;
 import net.kapitencraft.mysticcraft.networking.packets.ModPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -33,8 +33,8 @@ public abstract class MakeParticlePacket implements ModPacket {
 
     @Override
     public void toBytes(FriendlyByteBuf buf) {
-        MiscHelper.writeVec3(buf, pos);
-        MiscHelper.writeVec3(buf, delta);
+        NetworkingHelper.writeVec3(buf, pos);
+        NetworkingHelper.writeVec3(buf, delta);
         buf.writeId(BuiltInRegistries.PARTICLE_TYPE, this.options.getType());
         options.writeToNetwork(buf);
     }

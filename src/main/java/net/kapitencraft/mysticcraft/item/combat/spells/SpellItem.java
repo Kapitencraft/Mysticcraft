@@ -25,7 +25,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -37,7 +36,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
@@ -187,10 +185,6 @@ public abstract class SpellItem extends SwordItem implements IModItem {
     public int getSpellSlotAmount() {
         return this.spellSlots.length;
     }
-    public int getActiveSpellIndex() {
-        return 0;
-    }
-
     public SpellSlot getActiveSpellSlot() {
         if (this.spellSlots.length == 1) {
             SpellSlot activeSpellSlot = this.spellSlots[0];
@@ -261,16 +255,17 @@ public abstract class SpellItem extends SwordItem implements IModItem {
                 TextHelper.sendSubTitle(player, Component.literal(FormattingCodes.ORANGE + "\u27A4 " + this.getClosestSpell(tag.getString(SPELL_EXE)).getName()));
             }
             tag.putByte(SPELL_EXECUTION_DUR, (byte) 20);
-            return InteractionResultHolder.success(itemstack);
+            return InteractionResultHolder.consume(itemstack);
         } else {
             if (this.getActiveSpell().getType() == Spells.Type.RELEASE) {
+                MysticcraftMod.sendInfo("use");
                 if (handleMana(player, this.getActiveSpell())) {
                     this.getActiveSpell().execute(player, itemstack);
-                    return InteractionResultHolder.success(itemstack);
+                    return InteractionResultHolder.consume(itemstack);
                 }
             } else {
                 player.startUsingItem(hand);
-                return InteractionResultHolder.success(itemstack);
+                return InteractionResultHolder.consume(itemstack);
             }
         }
         return InteractionResultHolder.fail(itemstack);
@@ -288,20 +283,10 @@ public abstract class SpellItem extends SwordItem implements IModItem {
             }
         }
         return false;
-        }
-
-
-
-    @Override
-    public @NotNull InteractionResult useOn(UseOnContext context) {
-        if (context.getPlayer() != null) {
-            use(context.getLevel(), context.getPlayer(), context.getHand());
-        }
-        return super.useOn(context);
     }
 
     private boolean handleMana(LivingEntity user, Spell spell) {
-        if (user.getAttribute(ModAttributes.INTELLIGENCE.get()) == null || user.level.isClientSide()) {
+        if (user.getAttribute(ModAttributes.INTELLIGENCE.get()) == null) {
             return false;
         }
         double manaToUse = AttributeHelper.getAttributeValue(user.getAttribute(ModAttributes.MANA_COST.get()), spell.getDefaultManaCost());
@@ -321,9 +306,9 @@ public abstract class SpellItem extends SwordItem implements IModItem {
                     manaToUse -= overflowMana;
                 }
                 if (manaToUse > 0) {
-                    manaInstance.setBaseValue(user.getAttributeBaseValue(ModAttributes.MANA.get()) - manaToUse);
+                    manaInstance.setBaseValue(manaInstance.getBaseValue() - manaToUse);
                     if (user instanceof Player player) {
-                        player.displayClientMessage(Component.literal("Used " + spell.getName() + ": " + FormattingCodes.RED + "-" + AttributeHelper.getAttributeValue(player.getAttribute(ModAttributes.MANA_COST.get()), this.getActiveSpell().getDefaultManaCost()) + " Mana"), true);
+                        player.displayClientMessage(Component.literal("Used " + spell.getName() + ": " + FormattingCodes.RED + "-" + AttributeHelper.getAttributeValue(player.getAttribute(ModAttributes.MANA_COST.get()), spell.getDefaultManaCost()) + " Mana"), true);
                     }
                 }
                 List<Element> elements = spell.elements();

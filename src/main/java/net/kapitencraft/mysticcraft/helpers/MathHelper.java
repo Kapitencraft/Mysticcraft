@@ -13,6 +13,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
 import org.joml.Vector3i;
 
 import java.util.ArrayList;
@@ -234,8 +235,16 @@ public class MathHelper {
         return RGBtoInt(r, g, b);
     }
 
+    public static int RGBtoInt(Vector3f in) {
+        return RGBtoInt(fromFloat(in, 255));
+    }
+
     public static int RGBtoInt(int r, int g, int b) {
         int returnable = (r << 8) + g;
         return (returnable << 8) + b;
+    }
+
+    public static Vector3i fromFloat(Vector3f floatValue, int mul) {
+        return new Vector3i((int) (floatValue.x * mul), (int) (floatValue.y * mul), (int) (floatValue.z * mul));
     }
 }

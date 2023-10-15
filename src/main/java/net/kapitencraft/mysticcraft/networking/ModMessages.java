@@ -1,10 +1,9 @@
 package net.kapitencraft.mysticcraft.networking;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.Provider;
 import net.kapitencraft.mysticcraft.networking.packets.C2S.ReforgingPacket;
-import net.kapitencraft.mysticcraft.networking.packets.S2C.CircleParticlePacket;
-import net.kapitencraft.mysticcraft.networking.packets.S2C.DamageIndicatorPacket;
-import net.kapitencraft.mysticcraft.networking.packets.S2C.MakeParticlePacket;
+import net.kapitencraft.mysticcraft.networking.packets.SendCompoundTagPacket;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -46,8 +45,8 @@ public class ModMessages {
         PACKET_HANDLER.sendTo(message, player.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
     }
 
-    public static <MSG> void sendToAllConnectedPlayers(MSG message, ServerLevel serverLevel) {
-        serverLevel.getPlayers(serverPlayer -> true).forEach(serverPlayer -> ModMessages.sendToClientPlayer(message, serverPlayer));
+    public static <MSG> void sendToAllConnectedPlayers(Provider<MSG, ServerPlayer> provider, ServerLevel serverLevel) {
+        serverLevel.getPlayers(serverPlayer -> true).forEach(serverPlayer -> ModMessages.sendToClientPlayer(provider.provide(serverPlayer), serverPlayer));
     }
 
 
@@ -64,15 +63,15 @@ public class ModMessages {
                 .encoder(ReforgingPacket::toBytes)
                 .consumerMainThread(ReforgingPacket::handle)
                 .add();
-        net.messageBuilder(DamageIndicatorPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
-                .decoder(DamageIndicatorPacket::new)
-                .encoder(DamageIndicatorPacket::toBytes)
-                .consumerMainThread(DamageIndicatorPacket::handle)
+        net.messageBuilder(SendCompoundTagPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(SendCompoundTagPacket::new)
+                .encoder(SendCompoundTagPacket::toBytes)
+                .consumerMainThread(SendCompoundTagPacket::handle)
                 .add();
-        net.messageBuilder(CircleParticlePacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
-                .decoder(CircleParticlePacket::new)
-                .encoder(CircleParticlePacket::toBytes)
-                .consumerMainThread(MakeParticlePacket::handle)
+        net.messageBuilder(SendCompoundTagPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(SendCompoundTagPacket::new)
+                .encoder(SendCompoundTagPacket::toBytes)
+                .consumerMainThread(SendCompoundTagPacket::handle)
                 .add();
     }
 }

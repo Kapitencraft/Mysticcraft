@@ -1,11 +1,10 @@
-package net.kapitencraft.mysticcraft.particle;
+package net.kapitencraft.mysticcraft.client.particle;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
-import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -14,15 +13,15 @@ import org.joml.Vector3f;
 import org.joml.Vector3i;
 
 public class CircleParticle extends TextureSheetParticle {
-    private final double riseSpeed;
     private final double riseSize;
     private final int startColor;
-    protected CircleParticle(ClientLevel level, double x, double y, double z, double startColor, double riseSpeed, double riseSize) {
+    private final double riseSpeed;
+    public CircleParticle(ClientLevel level, double x, double y, double z, Vector3f startColor, double riseSize, double riseSpeed) {
         super(level, x, y, z);
-        this.startColor = (int) startColor;
-        this.riseSpeed = riseSpeed;
+        this.startColor = MathHelper.RGBtoInt(startColor);
         this.riseSize = riseSize;
         this.lifetime = 100;
+        this.riseSpeed = riseSpeed;
     }
 
     private CircleParticle withTexture(SpriteSet spriteSet) {
@@ -37,14 +36,14 @@ public class CircleParticle extends TextureSheetParticle {
 
     @Override
     public void tick() {
-        super.tick();
         float lifePercentage = MathHelper.makePercentage(age, lifetime);
         this.setAlpha(1f - lifePercentage);
         Vector3i color = MathHelper.intToRGB(startColor);
         float r = MathHelper.makePercentage(color.x, 255);
         float g = MathHelper.makePercentage(color.y, 255);
         float b = MathHelper.makePercentage(color.z, 255);
-        this.setColor(r * (1 - lifePercentage), g * (1 - lifePercentage), b * (1 -lifePercentage));
+        this.setColor(r, g, b);
+        super.tick();
     }
 
     @Override
@@ -54,13 +53,14 @@ public class CircleParticle extends TextureSheetParticle {
         float f1 = (float)(Mth.lerp(time, this.yo, this.y) - vec3.y);
         float f2 = (float)(Mth.lerp(time, this.zo, this.z) - vec3.z);
         float x = 1;
-        float y = 0;
-        float z = 1;
+        float y = 1;
+        float z = 0;
         Vector3f[] vertexPos = new Vector3f[]{new Vector3f(-x, -y, -z), new Vector3f(-x, y, z), new Vector3f(x, y, -z), new Vector3f(x, -y, z)};
         float f3 = this.getQuadSize(time);
 
         for(int i = 0; i < 4; ++i) {
             Vector3f vector3f = vertexPos[i];
+            vector3f.rotateX((float) Math.toRadians(90));
             vector3f.mul(f3);
             vector3f.add(f, f1, f2);
         }
@@ -81,10 +81,10 @@ public class CircleParticle extends TextureSheetParticle {
 
     @Override
     public float getQuadSize(float p_107681_) {
-        return 0.5f * (float) (this.riseSize * age * 0.25);
+        return (float) (this.riseSize * (age / (age + riseSpeed * 10)));
     }
 
-    public static class Provider implements ParticleProvider<SimpleParticleType> {
+    public static class Provider implements ParticleProvider<CircleParticleOptions> {
         private final SpriteSet spriteSet;
 
         public Provider(SpriteSet spriteSet) {
@@ -92,8 +92,8 @@ public class CircleParticle extends TextureSheetParticle {
         }
         @Nullable
         @Override
-        public Particle createParticle(@NotNull SimpleParticleType p_107421_, @NotNull ClientLevel level, double x, double y, double z, double a, double b, double c) {
-            return new CircleParticle(level, x, y, z, a, b, c).withTexture(spriteSet);
+        public Particle createParticle(@NotNull CircleParticleOptions op, @NotNull ClientLevel level, double x, double y, double z, double a, double b, double c) {
+            return new CircleParticle(level, x, y, z, op.getColor(), op.getSize(), op.getSize()).withTexture(spriteSet);
         }
     }
 }

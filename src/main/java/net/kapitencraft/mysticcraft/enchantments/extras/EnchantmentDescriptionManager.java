@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.enchantments.extras;
 
 import net.kapitencraft.mysticcraft.enchantments.abstracts.ModEnchantment;
+import net.kapitencraft.mysticcraft.helpers.TextHelper;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
@@ -67,6 +68,6 @@ public class EnchantmentDescriptionManager {
         int level = stack.getItem() instanceof EnchantedBookItem ? (EnchantmentHelper.deserializeEnchantments(EnchantedBookItem.getEnchantments(stack)).get(ench)) : EnchantmentHelper.getTagEnchantmentLevel(ench, stack);
         String[] objects = ench instanceof ModEnchantment modEnchantment ? modEnchantment.getDescriptionMods(level) : new String[]{String.valueOf(level)};
         Stream<String> stream = Arrays.stream(objects);
-        return Component.translatable(descriptionKey, stream.map(o -> "§c" + o + "§r").toArray()).withStyle(ChatFormatting.DARK_GRAY);
+        return Component.translatable(descriptionKey, stream.map(TextHelper::wrapInRed).toArray()).withStyle(ChatFormatting.DARK_GRAY);
     }
 }

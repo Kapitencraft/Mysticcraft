@@ -7,22 +7,21 @@
   "display": {
     "announce_to_chat": true,
     "description": {
-      "translate": "advancements.mysticcraft.infernal_armor"
+      "translate": "advancements.mysticcraft.prot_5_wait_what"
     },
     "frame": "challenge",
-    "hidden": false,
+    "hidden": true,
     "icon": {
-      "item": "mysticcraft:crimson_chestplate",
-      "nbt": "{tier:armor_tier.infernal}"
+      "item": "minecraft:enchanted_book"
     },
     "show_toast": true,
     "title": {
-      "translate": "advancements.mysticcraft.infernal_armor.title"
+      "translate": "advancements.mysticcraft.prot_5_wait_what.title"
     }
   },
   "requirements": [
     [
-      "infernal_armor"
+      "prot_5_wait_what"
     ]
   ],
   "rewards": {

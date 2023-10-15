@@ -1,12 +1,12 @@
 package net.kapitencraft.mysticcraft.item.combat.armor;
 
 import com.google.common.collect.Multimap;
+import net.kapitencraft.mysticcraft.client.particle.MagicCircleParticleType;
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.helpers.ParticleHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
-import net.kapitencraft.mysticcraft.particle.MagicCircleParticleType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;

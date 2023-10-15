@@ -1,8 +1,13 @@
 package net.kapitencraft.mysticcraft.helpers;
 
 import com.google.common.collect.Multimap;
+import com.mojang.brigadier.StringReader;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.StringTagVisitor;
+import net.minecraft.nbt.TagParser;
+import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -41,12 +46,35 @@ public class TagHelper {
 
     public static @NotNull CompoundTag putHashMapTag(@NotNull HashMap<UUID, Integer> hashMap) {
         CompoundTag mapTag = new CompoundTag();
-        List<Integer> IntArray = colToList(hashMap.values());
-        mapTag.put("Uuids", putUuidList(colToList(hashMap.keySet())));
+        List<Integer> IntArray = CollectionHelper.colToList(hashMap.values());
+        mapTag.put("Uuids", putUuidList(CollectionHelper.colToList(hashMap.keySet())));
         mapTag.putIntArray("Ints", IntArray);
         mapTag.putInt(LENGTH_ID, hashMap.size());
         return mapTag;
     }
+
+    @SuppressWarnings("ALL")
+    public static void injectCompoundTag(Entity toInject, CompoundTag tag) {
+        CompoundTag data = toInject.getPersistentData();
+        Set<String> allKeys = tag.getAllKeys();
+        allKeys.forEach(s -> {
+            if (tag.get(s) != null) data.put(s, tag.get(s));
+        });
+    }
+
+    public static String fromCompoundTag(CompoundTag tag) {
+        return new StringTagVisitor().visit(tag);
+    }
+
+    public static CompoundTag fromString(String s) {
+        try {
+            return new TagParser(new StringReader(s)).readStruct();
+        } catch (CommandSyntaxException e) {
+            MysticcraftMod.sendWarn("unable to read Tag '" + s + "': " + e.getMessage());
+            return new CompoundTag();
+        }
+    }
+
 
     public static @NotNull HashMap<UUID, Integer> getHashMapTag(@Nullable CompoundTag tag) {
         HashMap<UUID, Integer> hashMap = new HashMap<>();
@@ -63,15 +91,6 @@ public class TagHelper {
         return hashMap;
     }
 
-    public static <T> ArrayList<T> colToList(Collection<T> collection) {
-        return new ArrayList<>(collection);
-    }
-
-    public static <T> ArrayList<T> toList(T ts) {
-        ArrayList<T> target = new ArrayList<>();
-        Collections.addAll(target, ts);
-        return target;
-    }
 
     public static int @NotNull [] getIntArray(CompoundTag tag) {
         if (!tag.contains(LENGTH_ID)) {

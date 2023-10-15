@@ -1,12 +1,16 @@
 package net.kapitencraft.mysticcraft.init;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.particle.MagicCircleParticleType;
+import net.kapitencraft.mysticcraft.client.particle.CircleParticleOptions;
+import net.kapitencraft.mysticcraft.client.particle.DamageIndicatorParticleOptions;
+import net.kapitencraft.mysticcraft.client.particle.MagicCircleParticleType;
+import net.kapitencraft.mysticcraft.helpers.TextHelper;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+import org.joml.Vector3f;
 
 public interface ModParticleTypes {
     DeferredRegister<ParticleType<?>> REGISTRY = MysticcraftMod.makeRegistry(ForgeRegistries.PARTICLE_TYPES);
@@ -18,6 +22,6 @@ public interface ModParticleTypes {
     RegistryObject<ParticleType<?>> DARK_BLUE_FLAME = REGISTRY.register("dark_blue_flame", () -> new SimpleParticleType(true));
     RegistryObject<ParticleType<?>> PURPLE_FLAME = REGISTRY.register("purple_flame", () -> new SimpleParticleType(true));
     RegistryObject<MagicCircleParticleType> MAGIC_CIRCLE = REGISTRY.register("magic_circle", ()-> new MagicCircleParticleType(null));
-    RegistryObject<SimpleParticleType> DAMAGE_INDICATOR = REGISTRY.register("damage_indicator", ()-> new SimpleParticleType(true));
-    RegistryObject<SimpleParticleType> CIRCLE = REGISTRY.register("circle_particle", ()-> new SimpleParticleType(true));
+    RegistryObject<DamageIndicatorParticleOptions> DAMAGE_INDICATOR = REGISTRY.register("damage_indicator", () -> new DamageIndicatorParticleOptions(TextHelper.damageIndicatorCoder("heal"), 1));
+    RegistryObject<CircleParticleOptions> CIRCLE = REGISTRY.register("circle_particle", () -> new CircleParticleOptions(new Vector3f(1, 0, 0), 4, 7));
 }
