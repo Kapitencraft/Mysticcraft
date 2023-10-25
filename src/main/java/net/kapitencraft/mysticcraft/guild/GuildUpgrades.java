@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.guild;
 
 import net.kapitencraft.mysticcraft.init.ModItems;
-import net.kapitencraft.mysticcraft.item.GuildUpgradeItem;
+import net.kapitencraft.mysticcraft.item.material.GuildUpgradeItem;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
 import net.minecraft.nbt.CompoundTag;

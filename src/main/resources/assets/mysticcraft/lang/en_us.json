@@ -1,7 +1,7 @@
 {
   "advancements.mysticcraft.archmage": "use at least 10000 mana at once",
   "advancements.mysticcraft.archmage.title": "Archmage",
-  "advancements.mysticcraft.infernal_armor": "obtain a full-set of Infernal Armor",
+  "advancements.mysticcraft.infernal_armor": "obtain a full suit of Infernal armor",
   "advancements.mysticcraft.infernal_armor.title": "Infernal Looks",
   "advancements.mysticcraft.prot_5_wait_what.title": "Above and Beyond",
   "advancements.mysticcraft.prot_5_wait_what": "Protection 4, Protection 4, Protection 4, Protection 5? wait what???",
@@ -94,6 +94,7 @@
   "attribute.name.generic.mana_regen": "§9Mana Regeneration",
   "attribute.name.generic.max_mana": "§3Max Mana",
   "attribute.name.generic.strenght": "§gStrenght",
+  "attribute.name.generic.mining_speed": "Mining Speed",
 
   "block.mysticcraft.gemstone_grinder": "Gemstone Grinder",
   "block.mysticcraft.mangatic_stone": "Mangatic Stone",
@@ -106,6 +107,13 @@
   "block.mysticcraft.golden_wall": "Golden Wall",
   "block.mysticcraft.guild_board": "Guild Board",
   "block.mysticcraft.lapis_button": "Lapis Button",
+  "block.mysticcraft.almandine_gemstone_block": "Almandine Crystal",
+  "block.mysticcraft.amethyst_gemstone_block": "Amethyst Crystal",
+  "block.mysticcraft.aquamarine_gemstone_block": "Aquamarine Crystal",
+  "block.mysticcraft.jasper_gemstone_block": "Jasper Crystal",
+  "block.mysticcraft.moon_stone_gemstone_block": "Moon Stone Crystal",
+  "block.mysticcraft.ruby_gemstone_block": "Ruby Crystal",
+  "block.mysticcraft.sapphire_gemstone_block": "Sapphire Crystal",
 
   "command.guild.add.failed": "Couldn't create guild: Name already existing",
   "command.guild.add.success": "Successfully created a new Guild called %1$s",
@@ -146,6 +154,8 @@
   "enchantment.mysticcraft.combat_knowledge.desc": "Grant's a %1$s chance to instantly kill an enemy on hit",
   "enchantment.mysticcraft.critical": "Critical",
   "enchantment.mysticcraft.critical.desc": "grants %1$s Crit Damage",
+  "enchantment.mysticcraft.delicate": "Delicate",
+  "enchantment.mysticcraft.delicate.desc": "avoids breaking baby crops",
   "enchantment.mysticcraft.divine_gift": "Divine Gift",
   "enchantment.mysticcraft.divine_gift.desc": "grants %1$s Magic Find",
   "enchantment.mysticcraft.double_jump": "Double Jump",
@@ -252,6 +262,7 @@
   "generic.max_mana": "§3Max Mana",
   "generic.ranged_damage": "Ranged Damage",
   "generic.strenght": "§gStrenght",
+  "generic.mining_speed": "Mining Speed",
 
   "guild.banner.name": "%1$s's Banner",
 
@@ -295,6 +306,7 @@
   "item.mysticcraft.fine_ruby_gemstone": "Fine Ruby Gemstone",
   "item.mysticcraft.fine_sapphire_gemstone": "Fine Sapphire Gemstone",
   "item.mysticcraft.fire_lance": "Fire Lance",
+  "item.mysticcraft.diamond_double_sword": "Diamond Double Sword",
   "item.mysticcraft.flawed_almandine_gemstone": "Flawed Almandine Gemstone",
   "item.mysticcraft.flawed_aquamarine_gemstone": "Flawed Aquamarine Gemstone",
   "item.mysticcraft.flawed_jasper_gemstone": "Flawed Jasper Gemstone",
@@ -372,9 +384,10 @@
   "item.mysticcraft.orb_of_consumption": "Orb of Consumption",
   "item.mysticcraft.golden_shield": "Golden Shield  ",
 
-  "itemGroup.materials_mm": "Mysticcraft Materials",
-  "itemGroup.spell_and_gemstone": "Spell- & Gemstone-Stuff",
-  "itemGroup.weapons_and_tools_mm": "Weapons and Tools from Mysticcraft",
+  "itemGroup.mysticcraft.materials": "Mysticcraft Materials",
+  "itemGroup.mysticcraft.spell_and_gemstone": "Spell- & Gemstone-Stuff",
+  "itemGroup.mysticcraft.weapons_and_tools": "Weapons and Tools from Mysticcraft",
+  "itemGroup.mysticcraft.deco": "Mysticcraft's Decoration",
 
   "element.air": "Air",
   "element.fire": "Fire",
@@ -382,6 +395,7 @@
   "element.water": "Water",
   "element.void": "Void",
   "element.shadow": "Shadow",
+  "element.rainbow": "Rainbow",
 
   "key.category.mysticcraft.spell": "Spell Misc",
   "key.mysticcraft.next_spell": "Next Spell",

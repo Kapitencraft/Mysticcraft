@@ -2,7 +2,7 @@ package net.kapitencraft.mysticcraft.mixin.classes;
 
 
 import net.kapitencraft.mysticcraft.init.ModMobEffects;
-import net.kapitencraft.mysticcraft.mixin.MixinUtils;
+import net.kapitencraft.mysticcraft.mixin.MixinHelper;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -35,7 +35,7 @@ public abstract class KeyMappingMixin implements IForgeKeyMapping {
         if (this.getClickCount() == 0) {
             return false;
         } else {
-            MixinUtils.add(this::getClickCount, this::setClickCount, -1);
+            MixinHelper.add(this::getClickCount, this::setClickCount, -1);
             return true;
         }
 

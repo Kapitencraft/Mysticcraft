@@ -1,6 +1,7 @@
 {
+  "parent": "minecraft:nether/netherite_armor",
   "criteria": {
-    "prot_5_wait_what": {
+    "infernal_armor": {
       "trigger": "minecraft:impossible"
     }
   },

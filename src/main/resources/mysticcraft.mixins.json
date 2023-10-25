@@ -18,7 +18,9 @@
     "WitherSkullMixin",
     "ShapedRecipeSerializerMixin",
     "ShapelessRecipeSerializerMixin",
-    "ResultSlotMixin"
+    "ResultSlotMixin",
+    "DiggerItemMixin",
+    "InventoryMixin"
   ],
   "injectors": {
     "defaultRequire": 1

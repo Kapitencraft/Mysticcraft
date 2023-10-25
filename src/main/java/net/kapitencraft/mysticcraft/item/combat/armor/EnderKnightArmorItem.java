@@ -16,6 +16,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -35,6 +36,11 @@ public class EnderKnightArmorItem extends ModArmorItem implements IGemstoneAppli
 
     public EnderKnightArmorItem(EquipmentSlot p_40387_) {
         super(ModArmorMaterials.ENDER_KNIGHT, p_40387_, new Properties().rarity(FormattingCodes.LEGENDARY).fireResistant());
+    }
+
+    @Override
+    boolean withCustomModel() {
+        return false;
     }
 
     public static EnderKnightArmorItem create(EquipmentSlot slot) {
@@ -62,8 +68,8 @@ public class EnderKnightArmorItem extends ModArmorItem implements IGemstoneAppli
 
 
     @Override
-    public void appendHoverText(@NotNull ItemStack p_41421_, @Nullable Level p_41422_, @NotNull List<Component> list, @NotNull TooltipFlag p_41424_) {
-        super.appendHoverText(p_41421_, p_41422_, list, p_41424_);
+    public void appendHoverTextWithPlayer(@NotNull ItemStack p_41421_, @Nullable Level p_41422_, @NotNull List<Component> list, @NotNull TooltipFlag flag, Player player) {
+        super.appendHoverTextWithPlayer(p_41421_, p_41422_, list, flag, player);
         list.add(Component.literal(""));
         list.add(Component.literal("This Armor get`s double stats in the End"));
         list.add(Component.literal(""));

@@ -164,6 +164,23 @@ public abstract class SpellItem extends SwordItem implements IModItem {
         return false;
     }
 
+    public boolean removeSlot(int slotIndex) {
+        if (this.spellSlots != null) {
+            if (this.spellSlots.length == 1) {
+                this.spellSlots[0] = null;
+                return true;
+            }
+            try {
+                this.spellSlots[slotIndex] = null;
+                return true;
+            } catch (ArrayIndexOutOfBoundsException e) {
+                MysticcraftMod.sendWarn("unable to change slot: index out of bounds");
+            }
+
+        }
+        return false;
+    }
+
     private void setSlot(SpellSlot slot, int index) {
         if (this.spellSlots != null) {
             MysticcraftMod.sendInfo("Successfully added Spell: " + slot.getSpell().getName() + " in Index: " + index);
@@ -276,9 +293,6 @@ public abstract class SpellItem extends SwordItem implements IModItem {
             Spell spell = Spells.get(executionId);
             if (this.containsSpell(spell) && handleMana(user, spell)) {
                 spell.execute(user, stack);
-                if (user instanceof Player player) {
-                    player.displayClientMessage(Component.literal("Used " + spell.getName() + ": " + FormattingCodes.RED + "-" + AttributeHelper.getAttributeValue(user.getAttribute(ModAttributes.MANA_COST.get()), spell.getDefaultManaCost()) + " Mana"), true);
-                }
                 return true;
             }
         }
@@ -307,9 +321,7 @@ public abstract class SpellItem extends SwordItem implements IModItem {
                 }
                 if (manaToUse > 0) {
                     manaInstance.setBaseValue(manaInstance.getBaseValue() - manaToUse);
-                    if (user instanceof Player player) {
-                        player.displayClientMessage(Component.literal("Used " + spell.getName() + ": " + FormattingCodes.RED + "-" + AttributeHelper.getAttributeValue(player.getAttribute(ModAttributes.MANA_COST.get()), spell.getDefaultManaCost()) + " Mana"), true);
-                    }
+                    sendUseDisplay(user, spell);
                 }
                 List<Element> elements = spell.elements();
                 ItemStack spellShardRNG = new ItemStack(ModItems.ELEMENTAL_SHARDS.get(MathHelper.pickRandom(elements)).get());
@@ -318,6 +330,12 @@ public abstract class SpellItem extends SwordItem implements IModItem {
             }
         }
         return false;
+    }
+
+    private static void sendUseDisplay(LivingEntity user, Spell spell) {
+        if (user instanceof Player player) {
+            player.displayClientMessage(Component.literal("Used " + spell.getName() + ": " + FormattingCodes.RED + "-" + AttributeHelper.getAttributeValue(player.getAttribute(ModAttributes.MANA_COST.get()), spell.getDefaultManaCost()) + " Mana"), true);
+        }
     }
 
 

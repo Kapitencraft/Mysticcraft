@@ -2,6 +2,7 @@ package net.kapitencraft.mysticcraft.item.misc.creative_tab;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
+import net.kapitencraft.mysticcraft.init.ModBlocks;
 import net.kapitencraft.mysticcraft.init.ModItems;
 import net.kapitencraft.mysticcraft.spell.Elements;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -23,11 +24,14 @@ public class TabRegister {
     @SubscribeEvent
     public static void registerTabs(CreativeModeTabEvent.Register event) {
         event.registerCreativeModeTab(MysticcraftMod.res("spell_and_gemstone"), builder ->
-                builder.title(Component.translatable("itemGroup.spell_and_gemstone"))
-                        .icon(() -> new ItemStack(ModItems.STAFF_OF_THE_WILD.get()))
-                        .displayItems((featureFlagSet, output, flag) -> TabGroup.registerAll(TabTypes.SPELL_AND_GEMSTONE, output::acceptAll)));
+                builder.title(Component.translatable("itemGroup.mysticcraft.spell_and_gemstone"))
+                        .icon(() -> new ItemStack(ModItems.SCYLLA.get()))
+                        .displayItems((featureFlagSet, output, flag) ->
+                                TabGroup.registerAll(TabTypes.SPELL_AND_GEMSTONE, output::acceptAll)
+                        )
+        );
         event.registerCreativeModeTab(MysticcraftMod.res("materials"), builder ->
-                builder.title(Component.translatable("itemGroup.materials_mm"))
+                builder.title(Component.translatable("itemGroup.mysticcraft.materials"))
                         .icon(()-> new ItemStack(ModItems.ELEMENTAL_SHARDS.get(Elements.FIRE).get()))
                         .displayItems((featureFlagSet, output, flag) -> {
                             output.accept(MiscHelper.of(() -> {
@@ -43,11 +47,18 @@ public class TabRegister {
                                 return stack;
                             }));
                             TabGroup.registerAll(TabTypes.MOD_MATERIALS, output::acceptAll);
-                        }));
+                        })
+        );
         event.registerCreativeModeTab(MysticcraftMod.res("weapons_and_tools"), builder ->
-                builder.title(Component.translatable("itemGroup.weapons_and_tools_mm"))
+                builder.title(Component.translatable("itemGroup.mysticcraft.weapons_and_tools"))
                         .icon(()-> new ItemStack(ModItems.MANA_STEEL_SWORD.get()))
-                        .displayItems((featureFlagSet, output, flag) -> TabGroup.registerAll(TabTypes.WEAPONS_AND_TOOLS, output::acceptAll)));
+                        .displayItems((featureFlagSet, output, flag) -> TabGroup.registerAll(TabTypes.WEAPONS_AND_TOOLS, output::acceptAll))
+        );
+        event.registerCreativeModeTab(MysticcraftMod.res("deco"), builder ->
+                builder.title(Component.translatable("itemGroup.mysticcraft.deco"))
+                        .icon(()-> new ItemStack(ModBlocks.GOLDEN_WALL.getItem()))
+                        .displayItems((featureFlagSet, output, fl) -> TabGroup.registerAll(TabTypes.DECO, output::acceptAll))
+        );
     }
 
 
@@ -67,6 +78,7 @@ public class TabRegister {
         WEAPONS_AND_TOOLS,
         SPAWN_EGGS,
         FOOD_AND_DRINK,
-        TOOLS_AND_UTILITIES
+        TOOLS_AND_UTILITIES,
+        DECO
     }
 }

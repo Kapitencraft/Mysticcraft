@@ -4,7 +4,11 @@ added loot-tables for most blocks;
 added sound to ferocity;
 added Packet "Infrastructure";
 added Cromatic Enchantment Names;
-
+added Deco Creative mode tab;
+added Delicate Enchantment;
+added Blocks to Creative - Mode Tabs;
+added Gemstone Blocks;
+added Pristine Stat;
 [IN-DEV] added java-docs for @Overwrite
 
 changed damage indicator to be particle;
@@ -15,3 +19,11 @@ fixed armor tiers translation not working;
 fixed creative mode tabs being unsorted;
 fixed stat mod enchantments not working;
 fixed negative multiplicative modifiers being shown as + not -;
+fixed Bow Gemstone Mods being applied 2x;
+fixed Enchantment Modifiers causing display lag with other mods;
+fixed some textures not showing;
+
+removed the gemstone mod display, since added to attribute mods themselves
+removed staff of the wild item, since no usage
+removed "Schnauzen Plüsch", since no usage or translation
+[IMPORTANT] removed necessity for geckolib library;

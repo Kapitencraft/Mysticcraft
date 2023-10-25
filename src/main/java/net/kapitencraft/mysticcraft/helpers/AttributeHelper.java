@@ -116,7 +116,11 @@ public class AttributeHelper {
     }
 
     public static AttributeModifier addLiquidModifier(@Nullable UUID uuid, String name, AttributeModifier.Operation operation, Provider<Double, LivingEntity> transfer, LivingEntity living) {
-        return new ChangingAttributeModifier(uuid, name, operation, living, transfer);
+        if (modUUIDs.containsKey(name) && modUUIDs.get(name) == uuid) return new ChangingAttributeModifier(uuid, name, operation, living, transfer);
+        else {
+            modUUIDs.put(name, Objects.requireNonNullElseGet(uuid, UUID::randomUUID));
+        }
+        return new ChangingAttributeModifier(modUUIDs.get(name), name, operation, living, transfer);
     }
 
     public static <T, K> Multimap<T, K> fromMap(Map<T, K> map) {
@@ -129,6 +133,10 @@ public class AttributeHelper {
 
     private static final HashMap<String, UUID> modUUIDs = new HashMap<>();
     private static final HashMap<EquipmentSlot, HashMap<String, UUID>> slotModUUIDs = new HashMap<>();
+
+    public static UUID getByName(String name) {
+        return modUUIDs.get(name);
+    }
 
     public static AttributeModifier createModifier(String name, AttributeModifier.Operation operation, double amount) {
         if (!modUUIDs.containsKey(name)) {

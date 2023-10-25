@@ -17,6 +17,11 @@ public class ManaSteelArmor extends ModArmorItem {
     }
 
     @Override
+    boolean withCustomModel() {
+        return false;
+    }
+
+    @Override
     public Multimap<Attribute, AttributeModifier> getAttributeMods(EquipmentSlot slot) {
         HashMultimap<Attribute, AttributeModifier> builder = HashMultimap.create();
         builder.put(ModAttributes.INTELLIGENCE.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[MiscHelper.createCustomIndex(this.slot)], "Intelligence", 300, AttributeModifier.Operation.ADDITION));

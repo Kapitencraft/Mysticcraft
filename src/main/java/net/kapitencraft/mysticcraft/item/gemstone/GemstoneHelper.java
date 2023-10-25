@@ -6,6 +6,8 @@ import net.kapitencraft.mysticcraft.init.ModEnchantments;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -69,10 +71,11 @@ public class GemstoneHelper {
                 throw new IllegalStateException("Found Modification Data without Size");
             }
             GemstoneSlot[] slots = new GemstoneSlot[tag.getShort("Size")];
-            for (int i = 0; i < tag.getShort("Size"); i++) {
-                if (!(tag.get("slot" + i) == null)) {
-                    slots[i] = GemstoneSlot.fromNBT((CompoundTag) tag.get("slot" + i));
-                }
+            ListTag slotTag = tag.getList("slots", Tag.TAG_COMPOUND);
+            if (slotTag.size() < tag.getShort("Size")) {
+                MysticcraftMod.sendWarn("tried loading malformed gemstone helper");
+            } else for (int i = 0; i < tag.getShort("Size"); i++) {
+                slots[i] = GemstoneSlot.fromNBT(slotTag.getCompound(i));
             }
             this.putGemstones(slots, current);
             return slots;
@@ -83,11 +86,13 @@ public class GemstoneHelper {
 
     private void saveData(ItemStack current, GemstoneSlot[] slots) {
         CompoundTag tag = new CompoundTag();
+        ListTag slotsTag = new ListTag();
         for (int i = 0; i < slots.length; i++) {
             GemstoneSlot slot = slots[i];
-            tag.put("slot" + i, slot.toNBT());
+            slotsTag.add(i, slot.toNBT());
         }
         tag.putShort("Size", (short) slots.length);
+        tag.put("slots", slotsTag);
         current.addTagElement(DATA_ID, tag);
     }
 
@@ -181,9 +186,5 @@ public class GemstoneHelper {
 
     private EquipmentSlot getSlotForStack(ItemStack stack) {
         return stack.getItem() instanceof ArmorItem armorItem ? armorItem.getSlot() : EquipmentSlot.MAINHAND;
-    }
-
-    public ArrayList<Attribute> getAttributesModified(ItemStack stack) {
-        return new ArrayList<>(getAttributeModifiers(stack, getSlotForStack(stack)).keySet());
     }
 }

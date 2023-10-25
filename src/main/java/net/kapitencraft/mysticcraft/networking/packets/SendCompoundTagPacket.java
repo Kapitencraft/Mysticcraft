@@ -30,6 +30,8 @@ public class SendCompoundTagPacket implements ModPacket {
     @Override
     public void toBytes(FriendlyByteBuf buf) {
         buf.writeUtf(TagHelper.fromCompoundTag(toSend));
+        buf.writeInt(entityIdToReceive);
+        buf.writeBoolean(toServer);
     }
 
     @Override

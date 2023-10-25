@@ -5,7 +5,8 @@ import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModParticleTypes;
-import net.kapitencraft.mysticcraft.item.combat.armor.client.CrimsonArmorRenderer;
+import net.kapitencraft.mysticcraft.item.combat.armor.client.model.CrimsonArmorModel;
+import net.kapitencraft.mysticcraft.item.combat.armor.client.renderer.ArmorRenderer;
 import net.kapitencraft.mysticcraft.item.item_bonus.ExtraBonus;
 import net.kapitencraft.mysticcraft.item.item_bonus.FullSetBonus;
 import net.kapitencraft.mysticcraft.item.item_bonus.IArmorBonusItem;
@@ -14,8 +15,8 @@ import net.kapitencraft.mysticcraft.item.item_bonus.fullset.CrimsonArmorFullSetB
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
 import net.kapitencraft.mysticcraft.misc.particle_help.ParticleHelper;
-import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -23,21 +24,13 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.animatable.GeoItem;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
-import java.util.function.Consumer;
 
-public class CrimsonArmorItem extends TieredArmorItem implements GeoItem, IArmorBonusItem {
+public class CrimsonArmorItem extends TieredArmorItem implements IArmorBonusItem {
     public static final TabGroup CRIMSON_ARMOR_GROUP = new TabGroup(TabRegister.TabTypes.WEAPONS_AND_TOOLS);
     private static final String helperString = "crimsonParticles";
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private static final FullSetBonus FULL_SET_BONUS = new CrimsonArmorFullSetBonus();
     public CrimsonArmorItem(EquipmentSlot p_40387_) {
         super(ModArmorMaterials.CRIMSON, p_40387_, NETHER_ARMOR_PROPERTIES);
@@ -67,16 +60,6 @@ public class CrimsonArmorItem extends TieredArmorItem implements GeoItem, IArmor
     }
 
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-
-    }
-
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return cache;
-    }
-
-    @Override
     public FullSetBonus getFullSetBonus() {
         return FULL_SET_BONUS;
     }
@@ -93,18 +76,18 @@ public class CrimsonArmorItem extends TieredArmorItem implements GeoItem, IArmor
     }
 
     @Override
-    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-        consumer.accept(new IClientItemExtensions() {
-            private CrimsonArmorRenderer renderer;
-            @Override
-            public @NotNull HumanoidModel<?> getHumanoidArmorModel(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, HumanoidModel<?> original) {
-                if (renderer == null) {
-                    renderer = new CrimsonArmorRenderer();
-                }
-                renderer.prepForRender(livingEntity, itemStack, equipmentSlot, original);
-                return renderer;
-            }
-        });
+    boolean withCustomModel() {
+        return true;
+    }
+
+    @Override
+    protected ArmorRenderer<?> getRenderer(LivingEntity living, ItemStack stack, EquipmentSlot slot) {
+        return new ArmorRenderer<>(CrimsonArmorModel::createBodyLayer, CrimsonArmorModel::new);
+    }
+
+    @Override
+    public @Nullable String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
+        return makeCustomTextureLocation("crimson_armor");
     }
 
     @Override

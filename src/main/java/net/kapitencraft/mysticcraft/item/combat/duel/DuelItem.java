@@ -23,7 +23,7 @@ public class DuelItem extends Item implements IModItem {
 
     @Override
     public TabGroup getGroup() {
-        return TabGroup.WEAPON;
+        return TabGroup.COMBAT;
     }
 
     @Override

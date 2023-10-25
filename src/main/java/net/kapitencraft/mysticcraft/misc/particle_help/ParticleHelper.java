@@ -8,6 +8,8 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -41,15 +43,15 @@ public class ParticleHelper {
     public static void clearAllHelpers(@Nullable String helperReason, LivingEntity target) {
         worker.remove(target.getUUID(), helperReason);
         CompoundTag tag = target.getPersistentData();
-        int i = 0;
-        @Nullable CompoundTag helperTag;
-        while (tag.contains("ParticleHelper" + i, 10)) {
-             helperTag = (CompoundTag) tag.get("ParticleHelper" + i);
-            if (helperReason == null || helperTag != null &&  helperTag.getString("helperReason").equals(helperReason)) {
-                tag.remove("ParticleHelper" + i);
+        ListTag helpers = tag.getList("ParticleHelpers", Tag.TAG_COMPOUND);
+        helpers.removeIf(tag1 -> {
+            if (tag1 instanceof CompoundTag helperTag) {
+                if (helperReason == null || helperTag.getString("helperReason").equals(helperReason)) {
+                    return true;
+                }
             }
-        }
-
+            return false;
+        });
     }
 
     public static CompoundTag createArrowHeadProperties(int maxSteps, int maxParticle, SimpleParticleType particleType, SimpleParticleType particleType1) {
@@ -82,9 +84,9 @@ public class ParticleHelper {
 
     private static void loadAllHelpers(Entity target) {
         CompoundTag tag = target.getPersistentData();
-        int i = 0;
-        while (tag.contains("ParticleHelper" + i, 10)) {
-            worker.add(target.getUUID(), of((CompoundTag) tag.get("ParticleHelper" + i), target, i));
+        ListTag helpers = tag.getList("ParticleHelpers", Tag.TAG_COMPOUND);
+        for (int i = 0; i < helpers.size(); i++) {
+            worker.add(target.getUUID(), of(helpers.getCompound(i), target, i));
         }
     }
 

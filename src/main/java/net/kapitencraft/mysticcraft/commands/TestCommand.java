@@ -14,7 +14,7 @@ import java.util.Map;
 
 public class TestCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        LiteralCommandNode<CommandSourceStack> main = dispatcher.register(Commands.literal("my_test")
+        LiteralCommandNode<CommandSourceStack> main = dispatcher.register(Commands.literal("my_test").requires(stack -> stack.hasPermission(2))
                 .then(Commands.literal("main_test")
                         .executes(context -> exeEnchantmentUpgrades(context.getSource()))
                 )
@@ -29,7 +29,7 @@ public class TestCommand {
             Map<Enchantment, Integer> newEnchantments = new HashMap<>();
             for (Map.Entry<Enchantment, Integer> entry : enchantments.entrySet()) {
                 Enchantment key = entry.getKey();
-                if (Math.random() > 0.5) {
+                if (Math.random() > 0.5 && entry.getValue() < Math.floor(key.getMaxLevel() * 1.5)) {
                     newEnchantments.put(key, entry.getValue() + 1);
                 } else {
                     newEnchantments.put(key, entry.getValue());

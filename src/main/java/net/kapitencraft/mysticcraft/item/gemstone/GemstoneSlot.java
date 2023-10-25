@@ -51,7 +51,7 @@ public class GemstoneSlot {
         return new GemstoneSlot(type, null, GemstoneType.Rarity.EMPTY);
     }
     private int getColorForRarity() {
-        return this.gemRarity.COLOUR;
+        return this.gemRarity.colour;
     }
 
     public GemstoneType.Rarity getGemRarity() {

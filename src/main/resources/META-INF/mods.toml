@@ -72,9 +72,3 @@ A very magical mod
     versionRange="[1.19.1,1.20)"
     ordering="NONE"
     side="BOTH"
-[[dependencies.mysticcraft]]
-    modId="geckolib"
-    mandatory=true
-    versionRange="[4.0.3,)"
-    ordering="NONE"
-    side="BOTH"

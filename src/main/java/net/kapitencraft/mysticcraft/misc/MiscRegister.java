@@ -1,7 +1,5 @@
 package net.kapitencraft.mysticcraft.misc;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.bestiary.BestiaryManager;
@@ -9,7 +7,6 @@ import net.kapitencraft.mysticcraft.enchantments.HealthMendingEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.ExtendedCalculationEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.IToolEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.ModBowEnchantment;
-import net.kapitencraft.mysticcraft.enchantments.abstracts.StatBoostEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.armor.BasaltWalkerEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.weapon.ranged.OverloadEnchantment;
 import net.kapitencraft.mysticcraft.entity.FrozenBlazeEntity;
@@ -23,7 +20,6 @@ import net.kapitencraft.mysticcraft.item.combat.spells.SpellItem;
 import net.kapitencraft.mysticcraft.item.combat.totems.ModTotemItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword.ManaSteelSwordItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.bow.ModBowItem;
-import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.item.item_bonus.IArmorBonusItem;
 import net.kapitencraft.mysticcraft.item.material.PrecursorRelicItem;
 import net.kapitencraft.mysticcraft.item.misc.RNGDropHelper;
@@ -32,7 +28,7 @@ import net.kapitencraft.mysticcraft.item.reforging.ReforgeManager;
 import net.kapitencraft.mysticcraft.misc.cooldown.Cooldowns;
 import net.kapitencraft.mysticcraft.misc.damage_source.FerociousDamageSource;
 import net.kapitencraft.mysticcraft.misc.damage_source.IAbilitySource;
-import net.kapitencraft.mysticcraft.mixin.MixinUtils;
+import net.kapitencraft.mysticcraft.mixin.MixinHelper;
 import net.kapitencraft.mysticcraft.mixin.classes.LivingEntityAccessor;
 import net.kapitencraft.mysticcraft.mob_effects.NumbnessMobEffect;
 import net.kapitencraft.mysticcraft.spell.spells.WitherShieldSpell;
@@ -56,7 +52,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -68,7 +63,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.entity.projectile.SmallFireball;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.ArrowItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -76,20 +73,22 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CropBlock;
+import net.minecraft.world.level.block.NetherWartBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.common.BasicItemListing;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.event.AddReloadListenerEvent;
-import net.minecraftforge.event.ItemAttributeModifierEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.ArrowLooseEvent;
 import net.minecraftforge.event.entity.player.CriticalHitEvent;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.event.village.VillagerTradesEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -131,6 +130,12 @@ public class MiscRegister {
             double live_steel = (int) AttributeHelper.getSaveAttributeValue(ModAttributes.LIVE_STEAL.get(), attacker);
             HealingHelper.setEffectReason(attacked);
             attacker.heal(Math.min((float) live_steel, event.getAmount()));
+        }
+        if (AttributeHelper.getSaveAttributeValue(ModAttributes.CRIT_CHANCE.get(), attacker) / 100 > Math.random() && attacker instanceof Player player) {
+            CriticalHitEvent event1 = ForgeHooks.getCriticalHit(player, attacked, false, 1.5f);
+            if (event1 != null) {
+                MixinHelper.mul(event::getAmount, event::setAmount, event1.getDamageModifier());
+            }
         }
     }
 
@@ -269,43 +274,6 @@ public class MiscRegister {
         }
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public static void StatModEnchantmentRegister(ItemAttributeModifierEvent event) {
-        ItemStack stack = event.getItemStack();
-        EquipmentSlot slot = event.getSlotType();
-        Map<Enchantment, Integer> enchantments = stack.getAllEnchantments();
-        for (Enchantment enchantment : enchantments.keySet()) {
-            if (enchantment instanceof StatBoostEnchantment statBoostEnchantment && statBoostEnchantment.hasModifiersForThatSlot(slot)) {
-                HashMultimap<Attribute, AttributeModifier> modifiersMultimap = HashMultimap.create();
-                Multimap<Attribute, AttributeModifier> modifiableMap = event.getModifiers();
-                statBoostEnchantment.getModifiers(enchantments.get(enchantment), stack, slot).accept(modifiersMultimap);
-                if (!modifiersMultimap.isEmpty()) {
-                    for (Attribute attribute : modifiersMultimap.keys()) {
-                        if (modifiableMap.keys().contains(attribute)) {
-                            for (AttributeModifier modifierToAdd : modifiersMultimap.get(attribute)) {
-                                if (getOperations(modifiableMap.get(attribute)).contains(modifierToAdd.getOperation())) {
-                                    List<AttributeModifier> originalModifiers = new ArrayList<>(modifiableMap.get(attribute));
-                                    AttributeModifier originalModifier = originalModifiers.get(getOperations(modifiableMap.get(attribute)).indexOf(modifierToAdd.getOperation()));
-                                    double amount = modifierToAdd.getAmount();
-                                    event.removeModifier(attribute, modifierToAdd);
-                                    event.addModifier(attribute, new AttributeModifier(modifierToAdd.getId(), modifierToAdd.getName(), amount + originalModifier.getAmount(), modifierToAdd.getOperation()));
-                                } else {
-                                    event.addModifier(attribute, modifierToAdd);
-                                }
-                            }
-                        } else {
-                            for (AttributeModifier modifier : modifiersMultimap.get(attribute)) {
-                                event.addModifier(attribute, modifier);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-
-
     private static List<AttributeModifier.Operation> getOperations(Collection<AttributeModifier> attributeModifiers) {
         ArrayList<AttributeModifier.Operation> operations = new ArrayList<>();
         for (AttributeModifier modifier : attributeModifiers) {
@@ -349,7 +317,7 @@ public class MiscRegister {
     @SubscribeEvent
     public static void critDamageRegister(CriticalHitEvent event) {
         Player attacker = event.getEntity();
-        event.setDamageModifier((float) (1 + attacker.getAttributeValue(ModAttributes.CRIT_DAMAGE.get()) / 100));
+        event.setDamageModifier((float) (1 + AttributeHelper.getSaveAttributeValue(ModAttributes.CRIT_DAMAGE.get(), attacker) / 100));
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
@@ -378,7 +346,7 @@ public class MiscRegister {
         LivingEntity attacker = MiscHelper.getAttacker(event.getSource());
         CompoundTag tag = attacked.getPersistentData();
         if (TagHelper.checkForIntAbove0(tag, WitherShieldSpell.DAMAGE_REDUCTION_TIME)) {
-            MixinUtils.mul(event::getAmount, event::setAmount, 0.9f);
+            MixinHelper.mul(event::getAmount, event::setAmount, 0.9f);
             }
         if (attacker != null) {
             ItemStack mainHand = attacker.getMainHandItem();
@@ -402,6 +370,7 @@ public class MiscRegister {
             }
         }
         MiscHelper.createDamageIndicator(attacked, event.getAmount(), dodge ? "dodge" : source.getMsgId());
+        DamageCounter.increaseDamage(event.getAmount());
     }
 
     private static final ArrowQueueHelper helper = new ArrowQueueHelper();
@@ -539,16 +508,6 @@ public class MiscRegister {
             }
         }
     }
-    @SubscribeEvent
-    public static void descriptionRegister(ItemTooltipEvent event) {
-        ItemStack stack = event.getItemStack();
-        List<Component> toolTip = event.getToolTip();
-        Item item = stack.getItem();
-        if (item instanceof IGemstoneApplicable gemstoneApplicable) {
-            gemstoneApplicable.addModInfo(stack, toolTip);
-            toolTip.add(Component.literal(""));
-        }
-    }
 
     @SubscribeEvent
     public static void stunEffectRegister(InputEvent.Key event) {
@@ -571,29 +530,6 @@ public class MiscRegister {
         }
         if (living instanceof Player player) event.setAmount(HealthMendingEnchantment.repairPlayerItems(player, event.getAmount()));
         if (event.getAmount() > 0) MiscHelper.createDamageIndicator(living, event.getAmount(), "heal");
-    }
-
-    @SubscribeEvent
-    public static void gemstoneAttributeModifications(ItemAttributeModifierEvent event) {
-        ItemStack stack = event.getItemStack();
-        Item item = stack.getItem();
-        EquipmentSlot slot = event.getSlotType();
-        if (item instanceof IGemstoneApplicable applicable) {
-            HashMap<Attribute, AttributeModifier> modifierHashMap = applicable.getAttributeModifiers(stack, slot);
-            if (item instanceof ArmorItem armorItem) {
-                if (event.getSlotType() == armorItem.getSlot() && modifierHashMap != null) {
-                    for (Attribute attribute : modifierHashMap.keySet()) {
-                        event.addModifier(attribute, modifierHashMap.get(attribute));
-                    }
-                }
-            } else if (item instanceof TieredItem && event.getSlotType() == EquipmentSlot.MAINHAND) {
-                if (applicable.getAttributesModified(stack) != null) {
-                    for (Attribute attribute : modifierHashMap.keySet()) {
-                        event.addModifier(attribute, modifierHashMap.get(attribute));
-                    }
-                }
-            }
-        }
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -658,29 +594,25 @@ public class MiscRegister {
         assert serverLevel != null;
         LootContext.Builder context = (new LootContext.Builder(serverLevel)).withRandom(serverLevel.random).withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(pos)).withParameter(LootContextParams.TOOL, mainHandItem).withOptionalParameter(LootContextParams.THIS_ENTITY, player);
         boolean hasTelekinesis = mainHandItem.getEnchantmentLevel(ModEnchantments.TELEKINESIS.get()) > 0;
-        boolean hasReplenish = mainHandItem.getEnchantmentLevel(ModEnchantments.REPLENISH.get()) > 0;
         List<ItemStack> drops = state.getDrops(context);
-        List<ItemStack> extraItems = new ArrayList<>();
         if (block == Blocks.CRIMSON_NYLIUM) {
-            extraItems.add(RNGDropHelper.dontDrop(ModItems.CRIMSONITE_CLUSTER.get(), 5, player, 0.00005f));
+            drops.add(RNGDropHelper.dontDrop(ModItems.CRIMSONITE_CLUSTER.get(), 5, player, 0.00005f));
         }
-        if (hasReplenish) {
-            MiscHelper.shrinkDrops(drops, Items.WHEAT_SEEDS, 1);
-        }
-        if (hasTelekinesis) {
-            drops.forEach(stack -> player.getInventory().add(stack));
-            extraItems.forEach(stack -> player.getInventory().add(stack));
-            event.setCanceled(true);
-            serverLevel.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
-        }
-        if (hasReplenish && block instanceof CropBlock cropBlock) {
-            state.setValue(cropBlock.getAgeProperty(), 0);
-            if (!hasTelekinesis) {
-                drops.forEach(stack -> level.addFreshEntity(new ItemEntity(level, pos.getX(), pos.getY(), pos.getZ(), stack)));
+        if (block instanceof CropBlock || block instanceof NetherWartBlock) {
+            IntegerProperty ageProperty = block instanceof CropBlock cropBlock ? cropBlock.getAgeProperty() : BlockStateProperties.AGE_3;
+            MiscHelper.shrinkDrops(drops, block.asItem(), 1);
+            if (mainHandItem.getEnchantmentLevel(ModEnchantments.DELICATE.get()) > 0) {
+                if (state.getValue(ageProperty) < MathHelper.getHighest(ageProperty.getPossibleValues())) {
+                    event.setCanceled(true);
+                    return;
+                }
             }
-            BlockState newState = cropBlock.getStateForAge(0);
-            event.setCanceled(true);
-            level.setBlock(pos, newState, 3);
+            if (mainHandItem.getEnchantmentLevel(ModEnchantments.REPLENISH.get()) > 0) {
+                BlockState newState = block.defaultBlockState();
+                newState.setValue(ageProperty, 0);
+                event.setCanceled(true);
+                level.setBlock(pos, newState, 3);
+            }
         }
         if (mainHandItem.getEnchantmentLevel(ModEnchantments.LUMBERJACK.get()) > 0 && state.is(BlockTags.LOGS)) {
             BlockPos extraPos = pos;
@@ -693,7 +625,7 @@ public class MiscRegister {
                     if (!(blockPos.getX() != 0 && blockPos.getY() != 0 && blockPos.getZ() != 0)) {
                         BlockPos pos1 = new BlockPos(blockPos.getX() + extraPos.getX(), blockPos.getY() + extraPos.getY(), blockPos.getZ() + extraPos.getZ());
                         if (block == player.level.getBlockState(pos1).getBlock()) {
-                            breakBlock(pos1, player.level, context);
+                            breakBlock(pos1, player.level, context, drops);
                             iterator.add(pos1);
                         }
                     }
@@ -714,7 +646,7 @@ public class MiscRegister {
                         BlockPos pos1 = new BlockPos(blockPos.getX() + newPos.getX(), blockPos.getY() + newPos.getY(), blockPos.getZ() + newPos.getZ());
                         if (brokenBlocks >= maximalBrokenBlocks) break;
                         if (block == player.level.getBlockState(pos1).getBlock()) {
-                            breakBlock(pos1, player.level, context);
+                            breakBlock(pos1, player.level, context, drops);
                             brokenBlocks++;
                             iterator.add(pos1);
                         }
@@ -723,7 +655,11 @@ public class MiscRegister {
                 if (brokenBlocks >= maximalBrokenBlocks) break;
             }
         }
-        extraItems.forEach(stack -> level.addFreshEntity(new ItemEntity(level, pos.getX(), pos.getY(), pos.getZ(), stack)));
+        if (hasTelekinesis) {
+            drops.forEach(stack -> player.getInventory().add(stack));
+            event.setCanceled(true);
+            serverLevel.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+        } else drops.forEach(stack -> Block.popResource(level, pos, stack));
     }
 
     public static BlockPos[] Values() {
@@ -740,7 +676,7 @@ public class MiscRegister {
         return returnValue;
     }
 
-    private static void breakBlock(BlockPos pos, Level level, LootContext.Builder builder) {
+    private static void breakBlock(BlockPos pos, Level level, LootContext.Builder builder, List<ItemStack> drops) {
         BlockState state = level.getBlockState(pos);
         level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
         for (ItemStack stack : state.getDrops(builder)) {

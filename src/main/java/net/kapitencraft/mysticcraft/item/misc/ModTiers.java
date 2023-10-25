@@ -1,10 +1,10 @@
 package net.kapitencraft.mysticcraft.item.misc;
 
 import net.kapitencraft.mysticcraft.init.ModItems;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 
@@ -68,7 +68,7 @@ public class ModTiers {
 
         @Override
         public @NotNull Ingredient getRepairIngredient() {
-            return Ingredient.of((ItemLike) ModItems.ELEMENTAL_SHARDS.values().stream().map(RegistryObject::get).toList());
+            return Ingredient.of(ModItems.ELEMENTAL_SHARDS.values().stream().map(RegistryObject::get).map(ItemStack::new));
         }
     };
     public static final Tier GHOSTLY_TIER = new Tier() {

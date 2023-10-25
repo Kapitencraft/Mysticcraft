@@ -1,5 +1,6 @@
 package net.kapitencraft.mysticcraft.enchantments.abstracts;
 
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -9,6 +10,7 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
 
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 public abstract class StatBoostEnchantment extends Enchantment implements ModEnchantment {
@@ -21,5 +23,16 @@ public abstract class StatBoostEnchantment extends Enchantment implements ModEnc
     public abstract Consumer<Multimap<Attribute, AttributeModifier>> getModifiers(int level, ItemStack enchanted, EquipmentSlot slot);
     public boolean hasModifiersForThatSlot(EquipmentSlot slot) {
         return this.slots.contains(slot);
-    };
+    }
+
+    public static Multimap<Attribute, AttributeModifier> getAllModifiers(ItemStack stack, EquipmentSlot slot) {
+        Map<Enchantment, Integer> enchantments = stack.getAllEnchantments();
+        Multimap<Attribute, AttributeModifier> multimap = HashMultimap.create();
+        enchantments.forEach((enchantment, integer) -> {
+            if (enchantment instanceof StatBoostEnchantment boostEnchantment && boostEnchantment.hasModifiersForThatSlot(slot)) {
+                boostEnchantment.getModifiers(integer, stack, slot).accept(multimap);
+            }
+        });
+        return multimap;
+    }
 }

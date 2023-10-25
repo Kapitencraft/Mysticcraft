@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.spell;
 
 import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
+import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.helpers.TextHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModItems;
@@ -133,7 +134,7 @@ public enum Spells implements Spell {
 
     public double getManaCostForPlayer(Player player) {
         AttributeInstance instance = player.getAttribute(ModAttributes.MANA_COST.get());
-        return AttributeHelper.getAttributeValue(instance, this.MANA_COST);
+        return MathHelper.round(AttributeHelper.getAttributeValue(instance, this.MANA_COST), 2);
     }
 
     public static Spells get(String pattern) {

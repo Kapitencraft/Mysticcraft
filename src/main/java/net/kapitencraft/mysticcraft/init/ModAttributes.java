@@ -25,7 +25,7 @@ public interface ModAttributes {
     RegistryObject<Attribute> VITALITY = register0Max("vitality", 0);
     RegistryObject<Attribute> HEALTH_REGEN = register0Max("health_regen", 0);
 
-    //Aggressive Stats
+    //Offensive Stats
     RegistryObject<Attribute> BONUS_ATTACK_SPEED = register("bonus_attack_speed", 0, 0, 100);
     RegistryObject<Attribute> INTELLIGENCE = register0Max("intel", 0);
     RegistryObject<Attribute> STRENGTH = register0Max("strenght", 0);
@@ -36,6 +36,10 @@ public interface ModAttributes {
     RegistryObject<Attribute> FEROCITY = register("ferocity", 0, 0, 500);
     RegistryObject<Attribute> ABILITY_DAMAGE = register0Max("ability_damage", 0);
     RegistryObject<Attribute> RANGED_DAMAGE = register("ranged_damage", 0, 0, 100);
+
+    //Mining
+    RegistryObject<Attribute> MINING_SPEED = register0Max("mining_speed", 0);
+    RegistryObject<Attribute> PRISTINE = register("pristine", 0, 0, 400);
 
     //Misc
     RegistryObject<Attribute> COOLDOWN_REDUCTION = register("cooldown_reduction", 0, 0, 100);

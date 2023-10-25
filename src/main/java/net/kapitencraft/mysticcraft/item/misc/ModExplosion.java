@@ -3,9 +3,13 @@ package net.kapitencraft.mysticcraft.item.misc;
 import com.google.common.collect.Sets;
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.kapitencraft.mysticcraft.helpers.MathHelper;
+import net.kapitencraft.mysticcraft.helpers.TextHelper;
+import net.kapitencraft.mysticcraft.misc.DamageCounter;
 import net.kapitencraft.mysticcraft.networking.ModMessages;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundExplodePacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -185,15 +189,21 @@ public abstract class ModExplosion {
         }
     }
 
-    public void completeExplode() {
+    public void completeExplode(String name) {
         explode();
         finalizeExplosion(false);
-        sendToClient();
+        sendToClient(name);
     }
 
-    private void sendToClient() {
+    protected abstract boolean shouldSendDamageValue();
+
+    private void sendToClient(String name) {
         if (this.level instanceof ServerLevel serverLevel) {
             ModMessages.sendToAllConnectedPlayers(value -> new ClientboundExplodePacket(pos.x, pos.y, pos.z, this.radius, this.toBlow, this.hitPlayers.get(value)), serverLevel);
+        }
+        if (shouldSendDamageValue() && this.source instanceof Player player) {
+            DamageCounter.DamageHolder holder = DamageCounter.getDamage(true);
+            player.sendSystemMessage(Component.literal("Your " + name + " hit " + TextHelper.wrapInRed(holder.hit()) + " Enemies for §c" + MathHelper.round(holder.damage(), 2) + " Damage"));
         }
     }
 

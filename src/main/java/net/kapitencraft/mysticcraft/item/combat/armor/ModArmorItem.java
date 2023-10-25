@@ -7,6 +7,7 @@ import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.helpers.TextHelper;
 import net.kapitencraft.mysticcraft.init.ModItems;
+import net.kapitencraft.mysticcraft.item.combat.armor.client.renderer.ArmorRenderer;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.item.item_bonus.ExtraBonus;
 import net.kapitencraft.mysticcraft.item.item_bonus.FullSetBonus;
@@ -14,6 +15,7 @@ import net.kapitencraft.mysticcraft.item.item_bonus.IArmorBonusItem;
 import net.kapitencraft.mysticcraft.item.item_bonus.PieceBonus;
 import net.kapitencraft.mysticcraft.item.misc.IModItem;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
+import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
@@ -24,12 +26,14 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Consumer;
 
 public abstract class ModArmorItem extends ArmorItem implements IModItem {
     private static final String FULL_SET_ID = "hadFullSet";
@@ -57,7 +61,6 @@ public abstract class ModArmorItem extends ArmorItem implements IModItem {
         return !ModArmorItem.isFullSetActive(living, materials) && living.getPersistentData().getString("lastFullSet").equals(materials.getName());
     }
 
-
     @Override
     public void appendHoverTextWithPlayer(@NotNull ItemStack stack, @Nullable Level level, @NotNull List<Component> toolTip, @NotNull TooltipFlag flag, Player player) {
         if (stack.getItem() instanceof IGemstoneApplicable gemstoneApplicable) {
@@ -68,10 +71,6 @@ public abstract class ModArmorItem extends ArmorItem implements IModItem {
             bonusItem.addDisplay(toolTip, this.getSlot());
             toolTip.add(Component.literal(""));
         }
-    }
-
-    @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level p_41422_, @NotNull List<Component> toolTip, @NotNull TooltipFlag p_41424_) {
     }
 
     @Override
@@ -143,6 +142,31 @@ public abstract class ModArmorItem extends ArmorItem implements IModItem {
         return builder;
     }
 
+    // display / model START
+
+    abstract boolean withCustomModel();
+    protected ArmorRenderer<?> getRenderer(LivingEntity living, ItemStack stack, EquipmentSlot slot) { return null;}
+
+    @Override
+    public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
+        if (!withCustomModel()) return;
+        consumer.accept(new IClientItemExtensions() {
+            @Override
+            public @NotNull HumanoidModel<?> getHumanoidArmorModel(LivingEntity living, ItemStack stack, EquipmentSlot slot, HumanoidModel<?> original) {
+                HumanoidModel<?> armorModel = new HumanoidModel<>(getRenderer(living, stack, slot).makeArmorParts(slot));
+                armorModel.crouching = living.isShiftKeyDown();
+                armorModel.riding = original.riding;
+                armorModel.young = living.isBaby();
+                return armorModel;
+            }
+        });
+    }
+
+    public static String makeCustomTextureLocation(String id) {
+        return MysticcraftMod.res("textures/models/armor/custom/" + id + ".png").toString();
+    }
+
+    // display / model END
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
         HashMultimap<Attribute, AttributeModifier> builder = HashMultimap.create();

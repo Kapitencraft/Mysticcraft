@@ -6,7 +6,6 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -22,10 +21,6 @@ public interface IGemstoneApplicable {
     }
     default GemstoneSlot[] getGemstoneSlots(ItemStack stack) {
         return this.getHelper(stack).getGemstoneSlots(stack);
-    }
-
-    default ArrayList<Attribute> getAttributesModified(ItemStack stack) {
-        return getHelper(stack).getAttributesModified(stack);
     }
 
     default HashMap<Attribute, AttributeModifier> getAttributeModifiers(ItemStack stack, EquipmentSlot slot) {

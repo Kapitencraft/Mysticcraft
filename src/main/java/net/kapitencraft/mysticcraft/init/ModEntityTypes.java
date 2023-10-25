@@ -23,11 +23,11 @@ public interface ModEntityTypes {
     RegistryObject<EntityType<FrozenBlazeEntity>> FROZEN_BLAZE = register("frozen_blaze", FrozenBlazeEntity::new, MobCategory.MONSTER, (builder) -> builder.fireImmune().sized(0.6f, 1.8f));
     RegistryObject<EntityType<WithermancerLordEntity>> WITHERMANCER_LORD = register("withermancer_lord", WithermancerLordEntity::new, MobCategory.MONSTER, (builder) -> builder.sized(0.6f, 1.95f));
     RegistryObject<EntityType<FireBoltProjectile>> FIRE_BOLD = register("fire_bolt", FireBoltProjectile::new, MobCategory.MISC, (builder) -> builder.sized(0.5F, 0.5F));
+    RegistryObject<EntityType<VampireBat>> VAMPIRE_BAT = register("vampire_bat", VampireBat::new, MobCategory.MONSTER, value -> value.sized(0.5f, 0.9f));
     RegistryObject<EntityType<CrimsonDeathRayProjectile>> CRIMSON_DEATH_RAY = register("crimson_death_ray", CrimsonDeathRayProjectile::new, MobCategory.MISC, (builder) -> builder.sized(0.5f, 0.5f));
     RegistryObject<EntityType<NapalmRocketEntity>> NAPALM_ROCKET = register("napalm_rocket", NapalmRocketEntity::new, MobCategory.MISC, (builder) -> builder.sized(0.25F, 0.25F));
     RegistryObject<EntityType<LavaFishingHook>> LAVA_FISHING_HOOK = register("lava_fishing_hook", LavaFishingHook::new, MobCategory.MISC, (builder) -> builder.sized(0.25f, 0.25f));
     RegistryObject<EntityType<DamageIndicator>> DAMAGE_INDICATOR = register("damage_indicator", DamageIndicator::new, MobCategory.MISC, (builder) -> builder.sized(0f ,0f));
-    RegistryObject<EntityType<SchnauzenPluesch>> SCHNAUZEN_PLUESCH = register("schnauzen_pluesch", SchnauzenPluesch::new, MobCategory.AMBIENT, (builder) -> builder.sized(1.5f, 0.5f));
     RegistryObject<EntityType<SkeletonMaster>> SKELETON_MASTER = register("skeleton_master", SkeletonMaster::new, MobCategory.MONSTER, (builder) -> builder.sized(0.6F, 1.99F));
     RegistryObject<EntityType<RifleProjectile>> RIFLE_PROJECTILE = register("rifle_projectile", RifleProjectile::new, MobCategory.MISC, value -> value.sized(0.5f, 0.5f));
 }

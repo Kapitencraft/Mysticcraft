@@ -19,7 +19,7 @@ public class ClientModConfig {
             .define("extra_debug", false);
     private static final ForgeConfigSpec.IntValue RGB_SPEED = BUILDER
             .comment("the speed of rgb text")
-            .defineInRange("rgb_speed", 1, 1, 5);
+            .defineInRange("rgb_speed", 1, 1, 10);
 
     public static final ForgeConfigSpec SPEC = BUILDER.build();
 

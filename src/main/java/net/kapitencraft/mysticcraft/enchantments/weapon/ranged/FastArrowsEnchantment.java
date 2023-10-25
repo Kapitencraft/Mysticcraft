@@ -1,9 +1,9 @@
 package net.kapitencraft.mysticcraft.enchantments.weapon.ranged;
 
 import com.google.common.collect.Multimap;
-import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.IWeaponEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.StatBoostEnchantment;
+import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -28,7 +28,7 @@ public class FastArrowsEnchantment extends StatBoostEnchantment implements IWeap
 
     @Override
     public Consumer<Multimap<Attribute, AttributeModifier>> getModifiers(int level, ItemStack enchanted, EquipmentSlot slot) {
-        return multimap -> multimap.put(ModAttributes.ARROW_SPEED.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[MiscHelper.createCustomIndex(slot)], "Arrow Speed Mod", 10 * level, AttributeModifier.Operation.ADDITION));
+        return multimap -> multimap.put(ModAttributes.ARROW_SPEED.get(), AttributeHelper.createModifier("Fast Arrows Enchantment", AttributeModifier.Operation.ADDITION, level * 10));
     }
 
     @Override

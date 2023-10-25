@@ -4,6 +4,8 @@ import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.kapitencraft.mysticcraft.client.particle.options.ColoredParticleOptions;
+import net.kapitencraft.mysticcraft.client.render.ColorAnimator;
 import net.kapitencraft.mysticcraft.helpers.NetworkingHelper;
 import net.kapitencraft.mysticcraft.init.ModParticleTypes;
 import net.minecraft.core.particles.DustParticleOptionsBase;
@@ -15,7 +17,7 @@ import net.minecraft.util.ExtraCodecs;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
-public class CircleParticleOptions extends ParticleType<CircleParticleOptions> implements ParticleOptions {
+public class CircleParticleOptions extends ColoredParticleOptions<CircleParticleOptions> {
     private static final Codec<CircleParticleOptions> CODEC = RecordCodecBuilder.create(optionsInstance ->
             optionsInstance.group(
                 ExtraCodecs.VECTOR3F.fieldOf("color")
@@ -30,7 +32,7 @@ public class CircleParticleOptions extends ParticleType<CircleParticleOptions> i
     private final double expandSpeed;
 
     public CircleParticleOptions(Vector3f color, double size, double expandSpeed) {
-        super(true, new Deserializer());
+        super(true, new Deserializer(), ColorAnimator.simple(color));
         this.color = color;
         this.size = size;
         this.expandSpeed = expandSpeed;

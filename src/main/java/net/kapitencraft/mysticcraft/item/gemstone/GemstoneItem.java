@@ -11,7 +11,7 @@ import net.minecraft.world.item.Rarity;
 import org.jetbrains.annotations.NotNull;
 
 public class GemstoneItem extends Item implements DyeableLeatherItem, IModItem {
-    public static final TabGroup group = new TabGroup(TabRegister.TabTypes.SPELL_AND_GEMSTONE);
+    public static final TabGroup GROUP = new TabGroup(TabRegister.TabTypes.SPELL_AND_GEMSTONE);
     private final GemstoneType.Rarity RARITY;
     public final String gemstoneName;
     public GemstoneItem(GemstoneType.Rarity rarity, String gemstoneName) {

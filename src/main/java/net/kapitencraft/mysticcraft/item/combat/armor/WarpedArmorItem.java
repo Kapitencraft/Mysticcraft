@@ -34,6 +34,11 @@ public class WarpedArmorItem extends TieredArmorItem {
     }
 
     @Override
+    boolean withCustomModel() {
+        return false;
+    }
+
+    @Override
     protected void fullSetTick(ItemStack stack, Level level, LivingEntity living) {
         if (magicalShieldCooldown <= 0) {
             if (!hasSpawned) {

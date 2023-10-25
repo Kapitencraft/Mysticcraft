@@ -8,3 +8,25 @@ Frisbee of Destruction;
 
 Biomes?
 Ritual Magic?
+
+{
+    Vampire Bat: A large, blood-sucking bat that spawns at night, latching onto players to drain their health.
+
+    Nosferatroll: A troll-like creature that regenerates health when exposed to moonlight and becomes stronger during nighttime.
+
+    Vampire Lord: A powerful vampire boss that can summon swarms of bats, teleport, and transform into a bat to escape danger.
+
+    Bloodsucking Wraith: A ghostly mob that feeds on the life force of players, temporarily weakening them in the process.
+
+    Bloodhound: A dog-like vampire minion that hunts players at night, tracking their scent and draining their health with each bite.
+
+    Vampire Batswarm: A group of smaller vampire bats that travel in a swarm, attacking players en masse and draining their health.
+
+    Blood Mage: A hostile magic-wielding vampire that can cast spells to debuff and damage players, making them vulnerable.
+
+    Crypt Keeper: A skeleton-like vampire mob that guards crypts and catacombs, emerging at night to protect its resting place.
+
+    Shadow Stalker: A stealthy vampire mob that can turn invisible and surprise players with sudden attacks, leeching their health.
+
+    Vampire Hunter: An NPC mob that assists players during the night, offering powerful weapons and supplies to help them combat other vampire-like mobs.
+}

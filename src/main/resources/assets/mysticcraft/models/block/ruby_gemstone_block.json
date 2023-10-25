@@ -1,0 +1,6 @@
+{
+  "parent": "mysticcraft:block/colored_block",
+  "textures": {
+    "all": "mysticcraft:block/gemstone_crystal"
+  }
+}

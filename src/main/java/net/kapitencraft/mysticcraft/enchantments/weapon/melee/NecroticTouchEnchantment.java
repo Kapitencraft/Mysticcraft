@@ -1,9 +1,9 @@
 package net.kapitencraft.mysticcraft.enchantments.weapon.melee;
 
 import com.google.common.collect.Multimap;
-import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.IWeaponEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.StatBoostEnchantment;
+import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -25,7 +25,7 @@ public class NecroticTouchEnchantment extends StatBoostEnchantment implements IW
 
     @Override
     public Consumer<Multimap<Attribute, AttributeModifier>> getModifiers(int level, ItemStack enchanted, EquipmentSlot slot) {
-        return multimap -> multimap.put(ModAttributes.LIVE_STEAL.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[5], "Live Steal Mod", level, AttributeModifier.Operation.ADDITION));
+        return multimap -> multimap.put(ModAttributes.LIVE_STEAL.get(), AttributeHelper.createModifier("Necrotic Touch Enchantment", AttributeModifier.Operation.ADDITION, level));
     }
 
     @Override

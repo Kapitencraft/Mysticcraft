@@ -22,7 +22,7 @@ public abstract class ArmorStatBoostEnchantment extends StatBoostEnchantment imp
         if (enchanted.getItem() instanceof ArmorItem armorItem && armorItem.getSlot() == slot) {
             return getArmorModifiers(level, enchanted, slot);
         }
-        return null;
+        return multimap -> {};
     }
 
     public abstract Consumer<Multimap<Attribute, AttributeModifier>> getArmorModifiers(int level, ItemStack enchanted, EquipmentSlot slot);

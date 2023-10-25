@@ -3,7 +3,6 @@ package net.kapitencraft.mysticcraft.item.combat.weapon.ranged.bow;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModEnchantments;
@@ -183,15 +182,5 @@ public abstract class ModBowItem extends BowItem implements IModItem {
         if (stack.getItem() instanceof IGemstoneApplicable gemstoneApplicable) {
             gemstoneApplicable.appendDisplay(stack, list);
         }
-    }
-
-    @Override
-    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
-        HashMultimap<Attribute, AttributeModifier> builder = HashMultimap.create();
-        builder.putAll(super.getAttributeModifiers(slot, stack));
-        if (this instanceof IGemstoneApplicable applicable && slot == EquipmentSlot.MAINHAND) {
-            return AttributeHelper.increaseAllByAmount(builder, applicable.getAttributeModifiers(stack, slot));
-        }
-        return builder;
     }
 }

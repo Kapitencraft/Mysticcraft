@@ -23,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -40,11 +41,12 @@ public class TextHelper {
     public static String makeDescriptionId(Item item) {
         return Util.makeDescriptionId("item", BuiltInRegistries.ITEM.getKey(item));
     }
+
     public static String wrapInNameMarkers(String name) {
         return "'" + name + "'";
     }
 
-    public static String wrapInRed(String toWrap) {
+    public static String wrapInRed(Object toWrap) {
         return "§c" + toWrap + "§r";
     }
 
@@ -66,13 +68,13 @@ public class TextHelper {
     public static Item getFromId(String id) {
         return BuiltInRegistries.ITEM.get(new ResourceLocation(id));
     }
+
     public static void clearTitle(Player player) {
         if (player instanceof ServerPlayer serverPlayer) {
             ClientboundClearTitlesPacket clearTitlesPacket = new ClientboundClearTitlesPacket(true);
             serverPlayer.connection.send(clearTitlesPacket);
         }
     }
-
 
 
     private static final List<String> NUMBERS = List.of("0", "1", "2", "3", "4", "5", "6", "7", "8", "9");
@@ -189,5 +191,45 @@ public class TextHelper {
         hashMap.put(EquipmentSlot.MAINHAND, "mainhand");
         hashMap.put(EquipmentSlot.OFFHAND, "offhand");
         return hashMap.get(slot);
+    }
+
+    public static String makeGrammar(String toName) {
+        String val1 = toName.replace("_", " ");
+        char[] chars = val1.toCharArray();
+        return fromStrings(makeCapital(fromChars(chars)));
+    }
+
+    private static String[] fromChars(char[] chars) {
+        String[] strings = new String[chars.length];
+        for (int i = 0; i < chars.length; i++) {
+            strings[i] = String.valueOf(chars[i]);
+        }
+        return strings;
+    }
+
+    private static String fromStrings(String[] strings) {
+        StringBuilder builder = new StringBuilder();
+        for (String s : strings) {
+            builder.append(s);
+        }
+        return builder.toString();
+    }
+
+    private static String[] makeCapital(String[] input) {
+        boolean nextCapital = false;
+        for (int i = 0; i < input.length; i++) {
+            if (Objects.equals(input[i], " ")) {
+                nextCapital = true;
+            } else if (nextCapital || i == 0) {
+                input[i] = input[i].toUpperCase();
+                nextCapital = false;
+            }
+        }
+        if (nextCapital) {
+            String[] toReturn = new String[input.length - 1];
+            System.arraycopy(input, 0, toReturn, 0, toReturn.length);
+            return toReturn;
+        }
+        return input;
     }
 }

@@ -2,16 +2,15 @@ package net.kapitencraft.mysticcraft.misc;
 
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.block.GemstoneBlock;
 import net.kapitencraft.mysticcraft.client.particle.CircleParticle;
 import net.kapitencraft.mysticcraft.client.particle.DamageIndicatorParticle;
 import net.kapitencraft.mysticcraft.client.particle.FireNormalParticle;
 import net.kapitencraft.mysticcraft.client.particle.MagicCircleParticle;
 import net.kapitencraft.mysticcraft.client.particle.flame.*;
-import net.kapitencraft.mysticcraft.entity.renderer.*;
+import net.kapitencraft.mysticcraft.entity.client.renderer.*;
 import net.kapitencraft.mysticcraft.guild.GuildHandler;
-import net.kapitencraft.mysticcraft.init.ModEntityTypes;
-import net.kapitencraft.mysticcraft.init.ModItems;
-import net.kapitencraft.mysticcraft.init.ModParticleTypes;
+import net.kapitencraft.mysticcraft.init.*;
 import net.kapitencraft.mysticcraft.item.combat.duel.DuelHandler;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneItem;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneType;
@@ -30,6 +29,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class MiscEvents {
     @Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -50,16 +50,26 @@ public class MiscEvents {
 
         @SubscribeEvent
         public static void registerColors(RegisterColorHandlersEvent.Item event) {
-            MysticcraftMod.sendRegisterDisplay("Custom Colors");
-            event.register((p_92708_, p_92709_) -> p_92709_ > 0 ? -1 : ((DyeableLeatherItem) p_92708_.getItem()).getColor(p_92708_), ModItems.DYED_LEATHER.get());
+            MysticcraftMod.sendRegisterDisplay("Custom Item Colors");
+            event.register((stack, i) -> i > 0 ? -1 : ((DyeableLeatherItem) stack.getItem()).getColor(stack), ModItems.DYED_LEATHER.get());
+            event.register((stack, i) -> i > 0 ? -1 : ((DyeableLeatherItem) stack.getItem()).getColor(stack), ModItems.RAINBOW_ELEMENTAL_SHARD.get());
             for (HashMap<GemstoneType.Rarity, RegistryObject<GemstoneItem>> item : ModItems.GEMSTONES.values()) {
-                for (GemstoneItem item1 : item.values().stream().map(RegistryObject::get).toList()) {
-                    event.register((p_92708_, p_92709_) -> p_92709_ > 0 ? -1 : ((DyeableLeatherItem) p_92708_.getItem()).getColor(p_92708_), item1);
+                 for (GemstoneItem item1 : item.values().stream().map(RegistryObject::get).toList()) {
+                    event.register((p_92708_, p_92709_) -> p_92709_ > 0 ? -1 : ((GemstoneItem) p_92708_.getItem()).getColor(p_92708_), item1);
                 }
+            }
+            for (Map.Entry<GemstoneType, BlockRegistryHolder<GemstoneBlock>> entry : ModBlocks.GEMSTONE_BLOCKS.entrySet()) {
+                event.register((stack, i) -> entry.getKey().getColour(), entry.getValue().getBlock());
             }
         }
 
+        @SubscribeEvent
+        public static void registerBlockColors(RegisterColorHandlersEvent.Block event) {
+            MysticcraftMod.sendRegisterDisplay("Custom Block Colors");
+            ModBlocks.GEMSTONE_BLOCKS.forEach((type, blockRegistryHolder) -> event.register((state, tintGetter, pos, i) -> type.getColour(), blockRegistryHolder.getBlock()));
+        }
     }
+
 
     @Mod.EventBusSubscriber(modid = MysticcraftMod.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class ClientModEvents {
@@ -70,8 +80,8 @@ public class MiscEvents {
         @SubscribeEvent
         public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
             event.registerEntityRenderer(ModEntityTypes.FROZEN_BLAZE.get(), FrozenBlazeRenderer::new);
-            event.registerEntityRenderer(ModEntityTypes.SCHNAUZEN_PLUESCH.get(), SchnauzenPlueschRenderer::new);
             event.registerEntityRenderer(ModEntityTypes.SKELETON_MASTER.get(), SkeletonMasterRenderer::new);
+            event.registerEntityRenderer(ModEntityTypes.VAMPIRE_BAT.get(), VampireBatRenderer::new);
 
             event.registerEntityRenderer(ModEntityTypes.FIRE_BOLD.get(), FireBoltRenderer::new);
             event.registerEntityRenderer(ModEntityTypes.CRIMSON_DEATH_RAY.get(), CrimsonDeathRayRenderer::new);

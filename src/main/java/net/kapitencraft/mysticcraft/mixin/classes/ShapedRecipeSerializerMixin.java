@@ -6,29 +6,24 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import net.kapitencraft.mysticcraft.block.entity.crafting.CraftingUtils;
-import net.kapitencraft.mysticcraft.mixin.MixinUtils;
+import net.kapitencraft.mysticcraft.mixin.MixinHelper;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.CraftingBookCategory;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.ShapedRecipe;
-import net.minecraftforge.common.crafting.CraftingHelper;
+import net.minecraft.world.item.crafting.*;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Stream;
 
 @Mixin(ShapedRecipe.Serializer.class)
-public class ShapedRecipeSerializerMixin implements RecipeSerializer<ShapedRecipe> {
+public abstract class ShapedRecipeSerializerMixin<T extends Recipe<?>> implements RecipeSerializer<T> {
     @Override
-    public ShapedRecipe fromJson(ResourceLocation location, JsonObject jsonObject) {
+    public @NotNull T fromJson(@NotNull ResourceLocation location, @NotNull JsonObject jsonObject) {
         String s = GsonHelper.getAsString(jsonObject, "group", "");
         CraftingBookCategory craftingbookcategory = CraftingBookCategory.CODEC.byName(GsonHelper.getAsString(jsonObject, "category", null), CraftingBookCategory.MISC);
         Map<String, Ingredient> map = keyFromJson(GsonHelper.getAsJsonObject(jsonObject, "key"));
@@ -37,7 +32,7 @@ public class ShapedRecipeSerializerMixin implements RecipeSerializer<ShapedRecip
         int j = astring.length;
         NonNullList<Ingredient> nonnulllist = dissolvePattern(astring, map, i, j);
         ItemStack itemstack = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(jsonObject, "result"));
-        return new ShapedRecipe(location, s, craftingbookcategory, i, j, nonnulllist, itemstack);
+        return (T) new ShapedRecipe(location, s, craftingbookcategory, i, j, nonnulllist, itemstack);
     }
 
     private static NonNullList<Ingredient> dissolvePattern(String[] aString, Map<String, Ingredient> map, int x, int y) {
@@ -102,7 +97,7 @@ public class ShapedRecipeSerializerMixin implements RecipeSerializer<ShapedRecip
                 throw new JsonSyntaxException("Invalid key entry: ' ' is a reserved symbol.");
             }
 
-            map.put(entry.getKey(), MixinUtils.fromJson(entry.getValue()));
+            map.put(entry.getKey(), MixinHelper.fromJson(entry.getValue(), false).get(0));
         }
 
         map.put(" ", Ingredient.EMPTY);
@@ -162,36 +157,20 @@ public class ShapedRecipeSerializerMixin implements RecipeSerializer<ShapedRecip
     }
 
     @Override
-    public @Nullable ShapedRecipe fromNetwork(ResourceLocation location, FriendlyByteBuf buf) {
+    public @Nullable T fromNetwork(@NotNull ResourceLocation location, FriendlyByteBuf buf) {
         int i = buf.readVarInt();
         int j = buf.readVarInt();
         String s = buf.readUtf();
         CraftingBookCategory craftingbookcategory = buf.readEnum(CraftingBookCategory.class);
         NonNullList<Ingredient> nonnulllist = NonNullList.withSize(i * j, Ingredient.EMPTY);
 
-        for(int k = 0; k < nonnulllist.size(); ++k) {
-            nonnulllist.set(k, fromNetwork(buf));
-        }
+        nonnulllist.replaceAll(ignored -> MixinHelper.fromNetwork(buf));
 
         ItemStack itemstack = buf.readItem();
-        return new ShapedRecipe(location, s, craftingbookcategory, i, j, nonnulllist, itemstack);
+        return (T) new ShapedRecipe(location, s, craftingbookcategory, i, j, nonnulllist, itemstack);
     }
 
-    private static Ingredient fromNetwork(FriendlyByteBuf buf) {
-        int size = buf.readVarInt();
-        if (size == -1) return CraftingHelper.getIngredient(buf.readResourceLocation(), buf);
-        return MixinUtils.fromValues(Stream.generate(() -> new CraftingUtils.ItemAmountValue(buf.readItem())).limit(size));
-    }
 
-    @Override
-    public void toNetwork(FriendlyByteBuf buf, ShapedRecipe recipe) {
-        buf.writeVarInt(recipe.getRecipeWidth());
-        buf.writeVarInt(recipe.getRecipeHeight());
-        buf.writeUtf(recipe.getGroup());
-        buf.writeEnum(recipe.category());
-        for(Ingredient ingredient : recipe.getIngredients()) {
-            ingredient.toNetwork(buf);
-        }
-        buf.writeItem(recipe.getResultItem());
-    }
+
+
 }

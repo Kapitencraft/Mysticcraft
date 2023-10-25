@@ -3,7 +3,7 @@ package net.kapitencraft.mysticcraft.misc;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.config.ClientModConfig;
 import net.kapitencraft.mysticcraft.entity.FrozenBlazeEntity;
-import net.kapitencraft.mysticcraft.entity.SchnauzenPluesch;
+import net.kapitencraft.mysticcraft.entity.VampireBat;
 import net.kapitencraft.mysticcraft.entity.WithermancerLordEntity;
 import net.kapitencraft.mysticcraft.entity.skeleton_master.SkeletonMaster;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
@@ -21,6 +21,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 @EventBusSubscriber(modid = MysticcraftMod.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public class AttributeAdder {
@@ -35,21 +36,25 @@ public class AttributeAdder {
         addAll(event, ModAttributes.BONUS_ATTACK_SPEED.get(), ONLY_WITH_BRAIN);
         addAll(event, ModAttributes.CRIT_CHANCE.get(), ONLY_WITH_BRAIN);
         addAll(event, ModAttributes.COOLDOWN_REDUCTION.get(), LIVINGS);
-        event.add(EntityType.PLAYER, ModAttributes.ABILITY_DAMAGE.get());
-        event.add(EntityType.PLAYER, ModAttributes.MANA_COST.get());
-        event.add(EntityType.PLAYER, ModAttributes.INTELLIGENCE.get());
-        event.add(EntityType.PLAYER, ModAttributes.MAGIC_FIND.get());
-        event.add(EntityType.PLAYER, ModAttributes.FEROCITY.get());
-        event.add(EntityType.PLAYER, ModAttributes.MAX_MANA.get());
-        event.add(EntityType.PLAYER, ModAttributes.MANA_REGEN.get());
-        event.add(EntityType.PLAYER, ModAttributes.MANA.get());
-        event.add(EntityType.PLAYER, ModAttributes.DODGE.get());
-        event.add(EntityType.PLAYER, ModAttributes.LIVE_STEAL.get());
-        event.add(EntityType.PLAYER, ModAttributes.DRAW_SPEED.get());
-        event.add(EntityType.PLAYER, ModAttributes.ARROW_SPEED.get());
-        event.add(EntityType.PLAYER, ModAttributes.ARMOR_SHREDDER.get());
-        event.add(EntityType.PLAYER, ModAttributes.DOUBLE_JUMP.get());
-        event.add(EntityType.PLAYER, ModAttributes.FISHING_SPEED.get());
+        addToPlayer(event,
+                ModAttributes.PRISTINE,
+                ModAttributes.MINING_SPEED,
+                ModAttributes.ABILITY_DAMAGE,
+                ModAttributes.MANA_COST,
+                ModAttributes.INTELLIGENCE,
+                ModAttributes.MAGIC_FIND,
+                ModAttributes.FEROCITY,
+                ModAttributes.MAX_MANA,
+                ModAttributes.MANA_REGEN,
+                ModAttributes.MANA,
+                ModAttributes.DODGE,
+                ModAttributes.LIVE_STEAL,
+                ModAttributes.DRAW_SPEED,
+                ModAttributes.ARROW_SPEED,
+                ModAttributes.ARMOR_SHREDDER,
+                ModAttributes.DOUBLE_JUMP,
+                ModAttributes.FISHING_SPEED
+        );
     }
 
     private interface isAInstance {
@@ -58,6 +63,14 @@ public class AttributeAdder {
 
     private static final isAInstance ONLY_WITH_BRAIN = (entityType)-> (entityType.getCategory() != MobCategory.MISC) || entityType == EntityType.PLAYER;
     private static final isAInstance LIVINGS = entityType -> true;
+
+
+    @SafeVarargs
+    private static void addToPlayer(EntityAttributeModificationEvent event, Supplier<Attribute>... attributes) {
+        for (Supplier<Attribute> attribute : attributes) {
+            event.add(EntityType.PLAYER, attribute.get());
+        }
+    }
 
 
     private static void addAll(EntityAttributeModificationEvent event, Attribute attribute, isAInstance generator) {
@@ -80,7 +93,7 @@ public class AttributeAdder {
     public static void AttributeCreating(EntityAttributeCreationEvent event) {
         event.put(ModEntityTypes.FROZEN_BLAZE.get(), FrozenBlazeEntity.createAttributes().build());
         event.put(ModEntityTypes.WITHERMANCER_LORD.get(), WithermancerLordEntity.createAttributes().build());
-        event.put(ModEntityTypes.SCHNAUZEN_PLUESCH.get(), SchnauzenPluesch.createAttributes().build());
         event.put(ModEntityTypes.SKELETON_MASTER.get(), SkeletonMaster.createAttributes().build());
+        event.put(ModEntityTypes.VAMPIRE_BAT.get(), VampireBat.createAttributes().build());
     }
 }

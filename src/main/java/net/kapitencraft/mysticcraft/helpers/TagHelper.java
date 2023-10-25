@@ -58,7 +58,11 @@ public class TagHelper {
         CompoundTag data = toInject.getPersistentData();
         Set<String> allKeys = tag.getAllKeys();
         allKeys.forEach(s -> {
-            if (tag.get(s) != null) data.put(s, tag.get(s));
+            if (tag.get(s) != null) {
+                if (tag.get(s) instanceof CompoundTag cTag)
+                    injectCompoundTag(toInject, cTag);
+                else data.put(s, tag.get(s));
+            }
         });
     }
 

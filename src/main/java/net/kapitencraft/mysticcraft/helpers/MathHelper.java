@@ -50,6 +50,16 @@ public class MathHelper {
         return count;
     }
 
+    public static int getHighest(Collection<Integer> collection) {
+        int value = 0;
+        for (int t : collection) {
+            if (t > value) {
+                value = t;
+            }
+        }
+        return value;
+    }
+
     public static List<BlockPos> makeLine(BlockPos a, BlockPos b, LineSize size) {
         List<BlockPos> list = new ArrayList<>();
         BlockPos diff = b.subtract(a);
@@ -83,6 +93,12 @@ public class MathHelper {
     public enum LineSize {
         THIN,
         THICK
+    }
+
+    public static Vec3 moveTowards(Vec3 source, Vec3 target, double range, boolean percentage) {
+        Vec3 change = source.subtract(target);
+        double dist = source.distanceTo(target);
+        return percentage ? setLength(change, dist * range) : setLength(change, range);
     }
 
     public static <T> T pickRandom(List<T> list) {

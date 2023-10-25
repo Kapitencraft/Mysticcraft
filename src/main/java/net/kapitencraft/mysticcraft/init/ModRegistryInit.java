@@ -4,7 +4,9 @@ import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.potion.ModPotions;
 import net.kapitencraft.mysticcraft.villagers.ModVillagers;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.common.Mod;
 
+@Mod.EventBusSubscriber
 public class ModRegistryInit {
 
     public static void register(IEventBus bus) {
@@ -37,4 +39,5 @@ public class ModRegistryInit {
         MysticcraftMod.sendRegisterDisplay("POI Types");
         ModVillagers.POI_TYPE_REGISTRY.register(bus);
     }
+
 }

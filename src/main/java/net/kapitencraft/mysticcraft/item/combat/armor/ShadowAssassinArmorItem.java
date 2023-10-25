@@ -2,13 +2,13 @@ package net.kapitencraft.mysticcraft.item.combat.armor;
 
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.helpers.ParticleHelper;
-import net.kapitencraft.mysticcraft.item.combat.armor.client.ShadowAssassinArmorRenderer;
-import net.kapitencraft.mysticcraft.item.combat.armor.client.ShadowAssassinEmptyRenderer;
+import net.kapitencraft.mysticcraft.item.combat.armor.client.model.ShadowAssassinArmorModel;
+import net.kapitencraft.mysticcraft.item.combat.armor.client.renderer.ArmorRenderer;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
-import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -17,16 +17,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import org.jetbrains.annotations.NotNull;
-import software.bernie.geckolib.animatable.GeoItem;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.util.GeckoLibUtil;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.function.Consumer;
-
-public class ShadowAssassinArmorItem extends ModArmorItem implements GeoItem {
+public class ShadowAssassinArmorItem extends ModArmorItem {
     public static final TabGroup SA_ARMOR_GROUP = new TabGroup(TabRegister.TabTypes.WEAPONS_AND_TOOLS);
 
     @Override
@@ -35,7 +28,6 @@ public class ShadowAssassinArmorItem extends ModArmorItem implements GeoItem {
     }
 
     private final DustParticleOptions SHADOW_OPTIONS = new DustParticleOptions(Vec3.fromRGB24(0).toVector3f(), 2);
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public ShadowAssassinArmorItem(EquipmentSlot p_40387_) {
         super(ModArmorMaterials.SHADOW_ASSASSIN, p_40387_, new Properties().rarity(Rarity.EPIC));
     }
@@ -73,35 +65,17 @@ public class ShadowAssassinArmorItem extends ModArmorItem implements GeoItem {
     }
 
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-
+    boolean withCustomModel() {
+        return true;
     }
 
     @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return cache;
+    protected ArmorRenderer<?> getRenderer(LivingEntity living, ItemStack stack, EquipmentSlot slot) {
+        return new ArmorRenderer<>(ShadowAssassinArmorModel::createBodyLayer, ShadowAssassinArmorModel::new);
     }
 
     @Override
-    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-        consumer.accept(new IClientItemExtensions() {
-            private ShadowAssassinArmorRenderer renderer;
-            private ShadowAssassinEmptyRenderer emptyRenderer;
-            @Override
-            public @NotNull HumanoidModel<?> getHumanoidArmorModel(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, HumanoidModel<?> original) {
-                if (livingEntity.isInvisible()) {
-                    if (emptyRenderer == null) {
-                        emptyRenderer = new ShadowAssassinEmptyRenderer();
-                    }
-                    emptyRenderer.prepForRender(livingEntity, itemStack, equipmentSlot, original);
-                    return emptyRenderer;
-                }
-                if (renderer == null) {
-                    renderer = new ShadowAssassinArmorRenderer();
-                }
-                renderer.prepForRender(livingEntity, itemStack, equipmentSlot, original);
-                return renderer;
-            }
-        });
+    public @Nullable String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
+        return makeCustomTextureLocation(entity.getPersistentData().getBoolean("Invisible") ? "shadow_assassin_empty" : "shadow_assassin_armor");
     }
 }

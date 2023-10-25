@@ -32,6 +32,12 @@ public class SoulMageArmorItem extends ModArmorItem implements IArmorBonusItem {
     private static final PieceBonus HELMET_BONUS = new SoulMageHelmetBonus();
     private static final PieceBonus CHEST_BONUS = new SoulMageChestplateBonus();
     private static final FullSetBonus SET_BONUS = new SoulMageArmorFullSetBonus();
+
+    @Override
+    boolean withCustomModel() {
+        return false;
+    }
+
     public SoulMageArmorItem(EquipmentSlot p_40387_) {
         super(ModArmorMaterials.SOUL_MAGE, p_40387_, new Properties().rarity(FormattingCodes.LEGENDARY));
     }

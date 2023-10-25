@@ -2,17 +2,19 @@ package net.kapitencraft.mysticcraft.mixin.classes;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
-import net.kapitencraft.mysticcraft.client.ServerData;
+import net.kapitencraft.mysticcraft.ServerData;
 import net.kapitencraft.mysticcraft.client.render.ColorAnimator;
 import net.kapitencraft.mysticcraft.config.ClientModConfig;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.IUltimateEnchantment;
 import net.kapitencraft.mysticcraft.event.ModEventFactory;
 import net.kapitencraft.mysticcraft.gui.IGuiHelper;
+import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
-import net.kapitencraft.mysticcraft.item.QuiverItem;
+import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.item.combat.spells.SpellItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword.LongSwordItem;
+import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.QuiverItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.bow.ShortBowItem;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.item.misc.IModItem;
@@ -52,7 +54,7 @@ import static net.minecraft.world.item.ItemStack.ATTRIBUTE_MODIFIER_FORMAT;
 @Mixin(ItemStack.class)
 public abstract class ItemStackMixin {
     private static final Style LORE_STYLE = Style.EMPTY.withColor(ChatFormatting.DARK_PURPLE).withItalic(true);
-    private static final ColorAnimator RAINBOW_ANIMATOR = ColorAnimator.createRainbow(30 * ClientModConfig.rgbSpeed);
+    private static final ColorAnimator RAINBOW_ANIMATOR = ColorAnimator.createRainbow(30 * (10 - ClientModConfig.rgbSpeed));
 
     private ItemStack self() {
         return (ItemStack) (Object) this;
@@ -142,7 +144,7 @@ public abstract class ItemStackMixin {
                     } catch (Exception exception) {
                         compoundtag.remove("Lore");
                     }
-                }
+                 }
             }
         }
         if (shouldShowInTooltip(j, ItemStack.TooltipPart.MODIFIERS)) {
@@ -166,6 +168,9 @@ public abstract class ItemStackMixin {
                                 flag = true;
                             } else if (modifier.getId() == LongSwordItem.ATTACK_RANGE_ID) {
                                 d0 += player.getAttributeBaseValue(ForgeMod.ATTACK_RANGE.get());
+                                flag = true;
+                            } else if (modifier.getId() == AttributeHelper.getByName("Digger Item Speed Modifier")) {
+                                d0 += player.getAttributeBaseValue(ModAttributes.MINING_SPEED.get());
                                 flag = true;
                             }
                         }

@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.mixin.classes;
 
 import com.google.common.collect.Multimap;
+import net.kapitencraft.mysticcraft.enchantments.abstracts.StatBoostEnchantment;
 import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.item.reforging.Reforge;
@@ -29,6 +30,7 @@ public abstract class ItemMixin implements IItemMixin {
         if (self() instanceof IGemstoneApplicable applicable) {
             builder.merge(AttributeHelper.fromMap(applicable.getAttributeModifiers(stack, slot)));
         }
+        builder.merge(StatBoostEnchantment.getAllModifiers(stack, slot));
         return builder.build();
     }
 }

@@ -29,7 +29,7 @@ public class ModItemModelProvider extends ItemModelProvider {
     @Override
     protected void registerModels() {
         //registerScrolls();
-        registerGemstones();
+        //registerGemstones();
 
 
         List<RegistryObject<Item>> items = List.of();

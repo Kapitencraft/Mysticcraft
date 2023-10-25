@@ -14,6 +14,9 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.gen.Invoker;
@@ -68,7 +71,17 @@ public abstract class LivingEntityMixin extends Entity {
 
     @Overwrite
     public void knockback(double strenght, double xSpeed, double ySpeed) {
-
+        LivingKnockBackEvent event = ForgeHooks.onLivingKnockBack(own(), (float) strenght, xSpeed, ySpeed);
+        if(event.isCanceled()) return;
+        strenght = event.getStrength();
+        xSpeed = event.getRatioX();
+        ySpeed = event.getRatioZ();
+        double kbResistance = own().getAttributeValue(Attributes.KNOCKBACK_RESISTANCE);
+        strenght *= 1.0D - kbResistance / (100 + kbResistance);
+        this.hasImpulse = true;
+        Vec3 vec3 = this.getDeltaMovement();
+        Vec3 vec31 = (new Vec3(xSpeed, 0.0D, ySpeed)).normalize().scale(strenght);
+        this.setDeltaMovement(vec3.x / 2.0D - vec31.x, this.onGround ? Math.min(0.4D, vec3.y / 2.0D + strenght) : vec3.y, vec3.z / 2.0D - vec31.z);
     }
 
     private double getArmorValue(DamageSource source) {

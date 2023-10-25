@@ -30,4 +30,9 @@ public class ManaExplosion extends ModExplosion {
     DamageSource getDamageSource() {
         return new AbilityDamageSource(source, intScaling, spellName);
     }
+
+    @Override
+    protected boolean shouldSendDamageValue() {
+        return true;
+    }
 }

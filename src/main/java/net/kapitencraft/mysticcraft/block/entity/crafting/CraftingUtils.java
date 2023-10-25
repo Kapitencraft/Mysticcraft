@@ -19,7 +19,6 @@ import java.util.stream.Stream;
 
 public class CraftingUtils {
 
-
     public interface AmountValue {
         int getAmount();
     }

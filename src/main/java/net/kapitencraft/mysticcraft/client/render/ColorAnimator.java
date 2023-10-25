@@ -23,6 +23,7 @@ public class ColorAnimator {
         return create(cooldown).addFrame(new Vector3f(1, 0, 0)).addFrame(new Vector3f(0, 1, 0)).addFrame(new Vector3f(0, 0, 1));
     }
 
+
     public static ColorAnimator simple(Vector3f color) {
         return create(0).addFrame(color);
     }

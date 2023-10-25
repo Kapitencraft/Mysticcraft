@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-@Mod.EventBusSubscriber
+@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class Rendering {
     private static final PoseStack BIG_SYMBOLS = new PoseStack();
     private static final PoseStack MEDIUM_SYMBOLS = new PoseStack();

@@ -1,0 +1,6 @@
+{
+  "parent": "mysticcraft:item/double_sword",
+  "textures": {
+    "layer0": "mysticcraft:item/double_diamond_sword"
+  }
+}

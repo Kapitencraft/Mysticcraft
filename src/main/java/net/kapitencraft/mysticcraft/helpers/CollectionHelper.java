@@ -27,6 +27,12 @@ public class CollectionHelper {
         return target;
     }
 
+    public static <T> List<T> merge(List<List<T>> toMerge) {
+        List<T> list = new ArrayList<>();
+        toMerge.forEach(list::addAll);
+        return list;
+    }
+
     public static <T, K> K getFirstValue(Map<T, K> map) {
         for (Map.Entry<T, K> entry : map.entrySet()) {
             return entry.getValue();

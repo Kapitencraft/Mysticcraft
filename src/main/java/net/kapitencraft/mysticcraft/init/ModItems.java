@@ -5,18 +5,17 @@ import net.kapitencraft.mysticcraft.gui.GUISlotBlockItem;
 import net.kapitencraft.mysticcraft.guild.GuildUpgrade;
 import net.kapitencraft.mysticcraft.guild.GuildUpgrades;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
-import net.kapitencraft.mysticcraft.item.ElementalShard;
-import net.kapitencraft.mysticcraft.item.GuildUpgradeItem;
-import net.kapitencraft.mysticcraft.item.QuiverItem;
 import net.kapitencraft.mysticcraft.item.combat.armor.*;
 import net.kapitencraft.mysticcraft.item.combat.shield.GoldenShield;
 import net.kapitencraft.mysticcraft.item.combat.shield.IronShield;
 import net.kapitencraft.mysticcraft.item.combat.shield.ModShieldItem;
 import net.kapitencraft.mysticcraft.item.combat.spells.*;
 import net.kapitencraft.mysticcraft.item.combat.spells.necron_sword.*;
+import net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword.DoubleSword;
 import net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword.GhostlySword;
 import net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword.ManaSteelSwordItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword.ModSwordItem;
+import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.QuiverItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.bow.LongBowItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.bow.ModBowItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.bow.TallinBow;
@@ -24,10 +23,7 @@ import net.kapitencraft.mysticcraft.item.creative.BuildersWand;
 import net.kapitencraft.mysticcraft.item.creative.ModDebugStickItem;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneItem;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneType;
-import net.kapitencraft.mysticcraft.item.material.DyedLeatherItem;
-import net.kapitencraft.mysticcraft.item.material.LavaFishItem;
-import net.kapitencraft.mysticcraft.item.material.PrecursorRelicItem;
-import net.kapitencraft.mysticcraft.item.material.UnbreakingCore;
+import net.kapitencraft.mysticcraft.item.material.*;
 import net.kapitencraft.mysticcraft.item.misc.IModItem;
 import net.kapitencraft.mysticcraft.item.misc.MaterialModItem;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
@@ -45,6 +41,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.Tiers;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
@@ -55,7 +52,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.Supplier;
-
+@SuppressWarnings("unused")
 public interface ModItems {
 
     static <T extends Item & IModItem> RegistryObject<T> register(String name, Supplier<T> supplier, TabGroup group) {
@@ -96,7 +93,7 @@ public interface ModItems {
     RegistryObject<LongBowItem> LONGBOW = register("longbow", LongBowItem::new, ModBowItem.BOW_GROUP);
     RegistryObject<WizardHatItem> WIZARD_HAT = register("wizard_hat", WizardHatItem::new, ModBowItem.BOW_GROUP);
     RegistryObject<TheStaffOfDestruction> THE_STAFF_DESTRUCTION = register("staff_of_destruction", TheStaffOfDestruction::new, SpellItem.SPELL_GROUP);
-    RegistryObject<GhostlySword> GHOSTLY_SWORD = register("ghostly_sword", GhostlySword::new, TabGroup.WEAPON);
+    RegistryObject<GhostlySword> GHOSTLY_SWORD = register("ghostly_sword", GhostlySword::new, TabGroup.COMBAT);
     RegistryObject<NecronSword> NECRON_SWORD = register("necron_sword", NecronSwordDefaultImpl::new, NecronSword.NECRON_GROUP);
     RegistryObject<Hyperion> HYPERION = register("hyperion", Hyperion::new, NecronSword.NECRON_GROUP);
     RegistryObject<Scylla> SCYLLA = register("scylla", Scylla::new, NecronSword.NECRON_GROUP);
@@ -109,7 +106,6 @@ public interface ModItems {
     RegistryObject<BurningScythe> BURNING_SCYTHE = register("burning_scythe", BurningScythe::new, IFireScytheItem.FIRE_SCYTHE_GROUP);
     RegistryObject<InfernalScythe> INFERNAL_SCYTHE = register("infernal_scythe", InfernalScythe::new, IFireScytheItem.FIRE_SCYTHE_GROUP);
     RegistryObject<FireLance> FIRE_LANCE = register("fire_lance", FireLance::new, SpellItem.SPELL_GROUP);
-    RegistryObject<StaffOfTheWildItem> STAFF_OF_THE_WILD = register("staff_of_the_wild", StaffOfTheWildItem::new, SpellItem.SPELL_GROUP);
     RegistryObject<LavaFishingRod> LAVA_FISHING_ROD_TEST = register("lava_fishing_rod", () -> new LavaFishingRod(Rarity.RARE), TabGroup.MATERIAL);
     HashMap<Spells, RegistryObject<SpellScrollItem>> SCROLLS = Spells.registerAll();
     RegistryObject<MaterialModItem> ORB_OF_CONSUMPTION = registerNonStackableMaterial("orb_of_consumption", Rarity.EPIC, TabGroup.MATERIAL);
@@ -133,8 +129,10 @@ public interface ModItems {
     RegistryObject<HammerItem> IRON_HAMMER = register("iron_hammer", ()-> new HammerItem(MiscHelper.rarity(Rarity.UNCOMMON), 530), HammerItem.HAMMER_GROUP);
     RegistryObject<HammerItem> DIAMOND_HAMMER = register("diamond_hammer", ()-> new HammerItem(MiscHelper.rarity(Rarity.RARE), 846), HammerItem.HAMMER_GROUP);
     HashMap<Element, RegistryObject<ElementalShard>> ELEMENTAL_SHARDS = ElementalShard.registerElementShards();
+    RegistryObject<RainbowElementalShard> RAINBOW_ELEMENTAL_SHARD = register("elemental_shard_of_rainbow", RainbowElementalShard::new, ElementalShard.ELEMENTS_GROUP);
     RegistryObject<MaterialModItem> FROZEN_BLAZE_ROD = registerMaterial("frozen_blaze_rod", Rarity.RARE, TabGroup.MATERIAL);
     RegistryObject<TallinBow> TALLIN_BOW = register("tallin_bow", TallinBow::new, ModBowItem.BOW_GROUP);
+    RegistryObject<DoubleSword> DIAMOND_DOUBLE_SWORD = register("diamond_double_sword", () -> new DoubleSword(Tiers.DIAMOND, MiscHelper.rarity(Rarity.UNCOMMON)), DoubleSword.DOUBLE_SWORD_GROUP);
     RegistryObject<ManaSteelSwordItem> MANA_STEEL_SWORD = register("mana_steel_sword", ManaSteelSwordItem::new, ModSwordItem.SWORD_GROUP);
     RegistryObject<IronShield> IRON_SHIELD = register("iron_shield", IronShield::new, ModShieldItem.SHIELD_GROUP);
     RegistryObject<GoldenShield> GOLDEN_SHIELD = register("golden_shield", GoldenShield::new, ModShieldItem.SHIELD_GROUP);
