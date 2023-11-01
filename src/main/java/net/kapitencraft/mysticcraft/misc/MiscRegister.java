@@ -545,7 +545,7 @@ public class MiscRegister {
         ServerLevel serverLevel = level instanceof ServerLevel serverLevel1 ? serverLevel1 : null;
         ServerPlayer serverPlayer = (ServerPlayer) player;
         if (serverLevel == null) return;
-        LootContext.Builder context = (new LootContext.Builder(serverLevel)).withRandom(level.random).withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(pos)).withParameter(LootContextParams.TOOL, mainHandItem).withOptionalParameter(LootContextParams.THIS_ENTITY, serverPlayer);
+        LootContext.Builder context = (new LootContext.Builder(serverLevel)).withRandom(level.random).withParameter(LootContextParams.ORIGIN, new Vec3(pos.getX(), pos.getY(), pos.getZ())).withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(pos)).withParameter(LootContextParams.TOOL, mainHandItem).withOptionalParameter(LootContextParams.THIS_ENTITY, serverPlayer);
         if (block instanceof CropBlock || block instanceof NetherWartBlock) {
             IntegerProperty ageProperty = block instanceof CropBlock cropBlock ? cropBlock.getAgeProperty() : BlockStateProperties.AGE_3;
             if (mainHandItem.getEnchantmentLevel(ModEnchantments.DELICATE.get()) > 0) {
