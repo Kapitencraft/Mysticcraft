@@ -21,6 +21,7 @@ import net.kapitencraft.mysticcraft.spell.Element;
 import net.kapitencraft.mysticcraft.spell.SpellSlot;
 import net.kapitencraft.mysticcraft.spell.Spells;
 import net.kapitencraft.mysticcraft.spell.spells.Spell;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -334,7 +335,9 @@ public abstract class SpellItem extends SwordItem implements IModItem {
 
     private static void sendUseDisplay(LivingEntity user, Spell spell) {
         if (user instanceof Player player) {
-            player.displayClientMessage(Component.literal("Used " + spell.getName() + ": " + FormattingCodes.RED + "-" + AttributeHelper.getAttributeValue(player.getAttribute(ModAttributes.MANA_COST.get()), spell.getDefaultManaCost()) + " Mana"), true);
+            double mana_cost = AttributeHelper.getAttributeValue(player.getAttribute(ModAttributes.MANA_COST.get()), spell.getDefaultManaCost());
+            if (spell.getType() == Spell.Type.RELEASE) TextHelper.setHotbarDisplay(player, Component.literal("Used " + spell.getName() + ": " + TextHelper.wrapInRed("-" + mana_cost + " Mana")).withStyle(ChatFormatting.AQUA));
+            else TextHelper.setHotbarDisplay(player, Component.literal("Using " + spell.getName() + ": " + TextHelper.wrapInRed("-" + (mana_cost * 20) + " Mana" + "/s")).withStyle(ChatFormatting.AQUA));
         }
     }
 
@@ -365,7 +368,6 @@ public abstract class SpellItem extends SwordItem implements IModItem {
             spell.execute(user, stack);
             double mana_cost = AttributeHelper.getAttributeValue(user.getAttribute(ModAttributes.MANA_COST.get()), spell.getDefaultManaCost());
             if (Integer.MAX_VALUE - count == 0 && user instanceof Player player) {
-                player.sendSystemMessage(Component.literal("Started Using " + spell.getName() + ": " + FormattingCodes.RED + "-" + (mana_cost * 20) + " Mana" + "/s"));
             }
         }
     }

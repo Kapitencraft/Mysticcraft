@@ -4,7 +4,7 @@ import com.mojang.logging.LogUtils;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.fluid.ModFluidTags;
 import net.kapitencraft.mysticcraft.helpers.FishingHookHelper;
-import net.kapitencraft.mysticcraft.misc.loot_table.ModLootTables;
+import net.kapitencraft.mysticcraft.item.storage.loot_table.ModLootTables;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;

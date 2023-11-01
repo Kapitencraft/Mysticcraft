@@ -13,5 +13,4 @@ public interface SaveAbleEnum {
         }
         return defaultValue;
     }
-
 }

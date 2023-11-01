@@ -11,6 +11,7 @@ import net.kapitencraft.mysticcraft.item.combat.shield.IronShield;
 import net.kapitencraft.mysticcraft.item.combat.shield.ModShieldItem;
 import net.kapitencraft.mysticcraft.item.combat.spells.*;
 import net.kapitencraft.mysticcraft.item.combat.spells.necron_sword.*;
+import net.kapitencraft.mysticcraft.item.combat.totems.VoidTotemItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword.DoubleSword;
 import net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword.GhostlySword;
 import net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword.ManaSteelSwordItem;
@@ -43,7 +44,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.Tiers;
 import net.minecraftforge.common.ForgeSpawnEggItem;
-import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -82,12 +82,9 @@ public interface ModItems {
         return REGISTRY.getEntries();
     }
 
-    static void register(IEventBus eventBus) {
-        REGISTRY.register(eventBus);
-    }
-
     DeferredRegister<Item> REGISTRY = MysticcraftMod.makeRegistry(ForgeRegistries.ITEMS);
 
+    RegistryObject<VoidTotemItem> VOID_TOTEM_ITEM = register("void_totem", VoidTotemItem::new, TabGroup.COMBAT);
     RegistryObject<ModDebugStickItem> MOD_DEBUG_STICK = register("mod_debug_stick", ModDebugStickItem::new, TabGroup.UTILITIES);
     RegistryObject<BuildersWand> BUILDERS_WAND = register("builders_wand", BuildersWand::new, TabGroup.UTILITIES);
     RegistryObject<LongBowItem> LONGBOW = register("longbow", LongBowItem::new, ModBowItem.BOW_GROUP);

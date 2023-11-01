@@ -48,7 +48,7 @@ public class CompoundPath {
         return useAbles.test(entity);
     }
 
-    public Builder builder(String path) {
+    public static Builder builder(String path) {
         return new Builder(path);
     }
 

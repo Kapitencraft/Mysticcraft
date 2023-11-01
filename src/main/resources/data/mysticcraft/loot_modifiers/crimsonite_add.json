@@ -1,0 +1,12 @@
+{
+  "type": "mysticcraft:add_item",
+  "conditions": [
+    {
+      "condition": "block_state_properties",
+      "block": "minecraft:crimson_nylium"
+    }
+  ],
+  "chance": 0.00005,
+  "item": "mysticcraft:crimsonite_cluster",
+  "maxAmount": 5
+}

@@ -5,6 +5,7 @@ import net.kapitencraft.mysticcraft.client.particle.MagicCircleParticleType;
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.helpers.ParticleHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
+import net.kapitencraft.mysticcraft.item.misc.creative_tab.ArmorTabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -17,7 +18,7 @@ import net.minecraft.world.level.Level;
 import java.util.List;
 
 public class WarpedArmorItem extends TieredArmorItem {
-    public static final TabGroup WARPED_GROUP = new TabGroup(TabRegister.TabTypes.WEAPONS_AND_TOOLS);
+    public static final ArmorTabGroup WARPED_GROUP = new ArmorTabGroup(TabRegister.TabTypes.WEAPONS_AND_TOOLS);
 
     @Override
     public TabGroup getGroup() {

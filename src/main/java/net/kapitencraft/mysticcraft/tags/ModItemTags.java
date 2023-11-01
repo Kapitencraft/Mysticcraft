@@ -1,8 +1,7 @@
-package net.kapitencraft.mysticcraft.item.misc;
+package net.kapitencraft.mysticcraft.tags;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 
@@ -15,10 +14,10 @@ public class ModItemTags {
 
 
     private static TagKey<Item> create(String s) {
-        return TagKey.create(Registries.ITEM , MysticcraftMod.res(s));
+        return Tags.makeKey(Registries.ITEM, MysticcraftMod.MOD_ID + ":" + s);
     }
 
     private static TagKey<Item> forge(String s) {
-        return TagKey.create(Registries.ITEM, new ResourceLocation("forge", s));
+        return Tags.makeKey(Registries.ITEM, "forge:" + s);
     }
 }

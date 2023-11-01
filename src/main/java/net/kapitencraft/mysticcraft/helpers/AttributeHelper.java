@@ -82,8 +82,8 @@ public class AttributeHelper {
         return map;
     }
 
-    public static double getSaveAttributeValue(Attribute attribute, LivingEntity living) {
-        if (living.getAttribute(attribute) != null) {
+    public static double getSaveAttributeValue(Attribute attribute, @Nullable LivingEntity living) {
+        if (living != null && living.getAttribute(attribute) != null) {
             return living.getAttributeValue(attribute);
         }
         return 0;

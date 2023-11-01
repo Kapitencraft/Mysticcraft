@@ -32,6 +32,10 @@ public abstract class Bonus {
     public float onEntityHurt(LivingEntity hurt, LivingEntity user, MiscHelper.DamageType type, float damage) {
         return damage;
     }
+
+    public float onTakeDamage(LivingEntity hurt, LivingEntity source, MiscHelper.DamageType type, float damage) {
+        return damage;
+    }
     public void onTick(@NotNull ItemStack stack, Level level, @NotNull Entity entity) {}
     public abstract Consumer<List<Component>> getDisplay();
 

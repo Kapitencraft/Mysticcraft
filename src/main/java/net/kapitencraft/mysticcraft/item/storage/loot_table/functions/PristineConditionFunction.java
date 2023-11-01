@@ -1,15 +1,15 @@
-package net.kapitencraft.mysticcraft.misc.loot_table.functions;
+package net.kapitencraft.mysticcraft.item.storage.loot_table.functions;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
+import net.kapitencraft.mysticcraft.helpers.TextHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModItems;
+import net.kapitencraft.mysticcraft.init.ModLootItemFunctions;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneItem;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneType;
-import net.kapitencraft.mysticcraft.misc.loot_table.ModLootItemFunctions;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -48,7 +48,7 @@ public class PristineConditionFunction extends LootItemConditionalFunction {
                     GemstoneType.Rarity rarity = GemstoneType.Rarity.byLevel(gemstoneLevel);
                     GemstoneItem item = ModItems.GEMSTONES.get(gemstoneItem.getGemstone()).get(rarity).get();
                     ItemStack pristinedStack = new ItemStack(item).copyWithCount(stack.getCount());
-                    player.sendSystemMessage(Component.literal("PRISTINE").withStyle(ChatFormatting.DARK_PURPLE).append(" you found " + stack.getCount() + " ").withStyle(ChatFormatting.GREEN).append(pristinedStack.getHoverName()));
+                    player.sendSystemMessage(Component.literal("§5PRISTINE§a you found " + stack.getCount() + " ").append(TextHelper.getStackNameWithoutBrackets(pristinedStack)));
                     return pristinedStack;
                 }
             }
@@ -58,7 +58,7 @@ public class PristineConditionFunction extends LootItemConditionalFunction {
 
     @Override
     public @NotNull LootItemFunctionType getType() {
-        return ModLootItemFunctions.PRISTINE_MODIFIER;
+        return ModLootItemFunctions.PRISTINE_MODIFIER.get();
     }
 
     public static class Serializer extends LootItemConditionalFunction.Serializer<PristineConditionFunction> {

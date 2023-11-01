@@ -17,15 +17,19 @@ public class DamageIndicatorParticleOptions extends ParticleType<DamageIndicator
                     Codec.INT.fieldOf("damageType")
                             .forGetter(DamageIndicatorParticleOptions::getDamageType),
                     Codec.FLOAT.fieldOf("damage")
-                            .forGetter(DamageIndicatorParticleOptions::getDamage)
+                            .forGetter(DamageIndicatorParticleOptions::getDamage),
+                    Codec.FLOAT.fieldOf("rangeOffset")
+                            .forGetter(DamageIndicatorParticleOptions::getRangeOffset)
             ).apply(optionsInstance, DamageIndicatorParticleOptions::new));
     private final int damageType;
     private final float damage;
+    private final float rangeOffset;
 
-    public DamageIndicatorParticleOptions(int damageType, float damage) {
+    public DamageIndicatorParticleOptions(int damageType, float damage, float rangeOffset) {
         super(true, new Deserializer());
         this.damageType = damageType;
         this.damage = damage;
+        this.rangeOffset = rangeOffset;
     }
 
     public int getDamageType() {
@@ -36,6 +40,10 @@ public class DamageIndicatorParticleOptions extends ParticleType<DamageIndicator
         return damage;
     }
 
+    public float getRangeOffset() {
+        return rangeOffset;
+    }
+
     @Override
     public @NotNull ParticleType<?> getType() {
         return ModParticleTypes.DAMAGE_INDICATOR.get();
@@ -44,6 +52,8 @@ public class DamageIndicatorParticleOptions extends ParticleType<DamageIndicator
     @Override
     public void writeToNetwork(@NotNull FriendlyByteBuf buf) {
         buf.writeInt(damageType);
+        buf.writeFloat(damage);
+        buf.writeFloat(rangeOffset);
     }
 
     @Override
@@ -63,14 +73,17 @@ public class DamageIndicatorParticleOptions extends ParticleType<DamageIndicator
             int damageType = reader.readInt();
             reader.expect(' ');
             float damage = reader.readFloat();
-            return new DamageIndicatorParticleOptions(damageType, damage);
+            reader.expect(' ');
+            float rangeOffset = reader.readFloat();
+            return new DamageIndicatorParticleOptions(damageType, damage, rangeOffset);
         }
 
         @Override
         public @NotNull DamageIndicatorParticleOptions fromNetwork(@NotNull ParticleType<DamageIndicatorParticleOptions> p_123735_, @NotNull FriendlyByteBuf buf) {
             int damageType = buf.readInt();
             float damage = buf.readFloat();
-            return new DamageIndicatorParticleOptions(damageType, damage);
+            float rangeOffset = buf.readFloat();
+            return new DamageIndicatorParticleOptions(damageType, damage,  rangeOffset);
         }
     }
 }

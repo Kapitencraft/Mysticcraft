@@ -1,0 +1,13 @@
+{
+  "type": "mysticcraft:add_item",
+  "conditions": [
+    {
+      "condition": "entity_properties",
+      "entity": "this",
+      "type": "minecraft:wither",
+      "nbt": "{WitherType:Maxor}"
+    }
+  ],
+  "chance": 0.1,
+  "item": "mysticcraft:bigfoots_lasso"
+}

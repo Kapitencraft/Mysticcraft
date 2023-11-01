@@ -69,6 +69,10 @@ public abstract class LivingEntityMixin extends Entity {
         return damage;
     }
 
+    /**
+     * @reason negative kb
+     * @author Kapitencraft
+     */
     @Overwrite
     public void knockback(double strenght, double xSpeed, double ySpeed) {
         LivingKnockBackEvent event = ForgeHooks.onLivingKnockBack(own(), (float) strenght, xSpeed, ySpeed);
@@ -77,7 +81,8 @@ public abstract class LivingEntityMixin extends Entity {
         xSpeed = event.getRatioX();
         ySpeed = event.getRatioZ();
         double kbResistance = own().getAttributeValue(Attributes.KNOCKBACK_RESISTANCE);
-        strenght *= 1.0D - kbResistance / (100 + kbResistance);
+        double reducePercentage = kbResistance / (100 + kbResistance);
+        strenght *= 1.0D - Math.min(1, reducePercentage);
         this.hasImpulse = true;
         Vec3 vec3 = this.getDeltaMovement();
         Vec3 vec31 = (new Vec3(xSpeed, 0.0D, ySpeed)).normalize().scale(strenght);

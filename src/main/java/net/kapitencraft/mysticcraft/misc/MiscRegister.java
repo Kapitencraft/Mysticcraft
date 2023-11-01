@@ -10,7 +10,6 @@ import net.kapitencraft.mysticcraft.enchantments.abstracts.ModBowEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.armor.BasaltWalkerEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.weapon.ranged.OverloadEnchantment;
 import net.kapitencraft.mysticcraft.entity.FrozenBlazeEntity;
-import net.kapitencraft.mysticcraft.event.ItemStackEvent;
 import net.kapitencraft.mysticcraft.guild.GuildUpgrade;
 import net.kapitencraft.mysticcraft.guild.GuildUpgrades;
 import net.kapitencraft.mysticcraft.helpers.*;
@@ -21,14 +20,13 @@ import net.kapitencraft.mysticcraft.item.combat.totems.ModTotemItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword.ManaSteelSwordItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.bow.ModBowItem;
 import net.kapitencraft.mysticcraft.item.item_bonus.IArmorBonusItem;
-import net.kapitencraft.mysticcraft.item.material.PrecursorRelicItem;
 import net.kapitencraft.mysticcraft.item.misc.RNGDropHelper;
 import net.kapitencraft.mysticcraft.item.reforging.Reforge;
 import net.kapitencraft.mysticcraft.item.reforging.ReforgeManager;
 import net.kapitencraft.mysticcraft.misc.cooldown.Cooldowns;
 import net.kapitencraft.mysticcraft.misc.damage_source.FerociousDamageSource;
 import net.kapitencraft.mysticcraft.misc.damage_source.IAbilitySource;
-import net.kapitencraft.mysticcraft.mixin.MixinHelper;
+import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.Reference;
 import net.kapitencraft.mysticcraft.mixin.classes.LivingEntityAccessor;
 import net.kapitencraft.mysticcraft.mob_effects.NumbnessMobEffect;
 import net.kapitencraft.mysticcraft.spell.spells.WitherShieldSpell;
@@ -55,9 +53,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.monster.Blaze;
 import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
@@ -71,7 +67,6 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.NetherWartBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -80,7 +75,6 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.common.BasicItemListing;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.event.AddReloadListenerEvent;
@@ -134,7 +128,7 @@ public class MiscRegister {
         if (AttributeHelper.getSaveAttributeValue(ModAttributes.CRIT_CHANCE.get(), attacker) / 100 > Math.random() && attacker instanceof Player player) {
             CriticalHitEvent event1 = ForgeHooks.getCriticalHit(player, attacked, false, 1.5f);
             if (event1 != null) {
-                MixinHelper.mul(event::getAmount, event::setAmount, event1.getDamageModifier());
+                MathHelper.mul(event::getAmount, event::setAmount, event1.getDamageModifier());
             }
         }
     }
@@ -210,10 +204,11 @@ public class MiscRegister {
         DamageSource source = event.getSource();
         @Nullable LivingEntity attacker = MiscHelper.getAttacker(source);
         if (attacker == null) { return; }
-        BonusHelper.useBonuses(attacker, (bonus, stack) -> event.setAmount(bonus.onEntityHurt(attacked, attacker, MiscHelper.getDamageType(source), event.getAmount())));
+        MiscHelper.DamageType type = MiscHelper.getDamageType(source);
+        BonusHelper.useBonuses(attacked, (bonus, stack) -> event.setAmount(bonus.onTakeDamage(attacked, attacker, type, event.getAmount())));
+        BonusHelper.useBonuses(attacker, (bonus, stack) -> event.setAmount(bonus.onEntityHurt(attacked, attacker, type, event.getAmount())));
         ItemStack stack = attacker.getMainHandItem();
         Map<Enchantment, Integer> enchantments = stack.getAllEnchantments();
-        MiscHelper.DamageType type = MiscHelper.getDamageType(event.getSource());
         if (enchantments != null) {
             event.setAmount(ExtendedCalculationEnchantment.runWithPriority(stack, attacker, attacked, event.getAmount(), type, true, source));
         }
@@ -346,7 +341,7 @@ public class MiscRegister {
         LivingEntity attacker = MiscHelper.getAttacker(event.getSource());
         CompoundTag tag = attacked.getPersistentData();
         if (TagHelper.checkForIntAbove0(tag, WitherShieldSpell.DAMAGE_REDUCTION_TIME)) {
-            MixinHelper.mul(event::getAmount, event::setAmount, 0.9f);
+            MathHelper.mul(event::getAmount, event::setAmount, 0.9f);
             }
         if (attacker != null) {
             ItemStack mainHand = attacker.getMainHandItem();
@@ -450,15 +445,6 @@ public class MiscRegister {
         }
     }
 
-    @SubscribeEvent
-    public static void itemStackSave(ItemStackEvent.Save event) {
-        ItemStack stack = event.getStack();
-    }
-
-    @SubscribeEvent
-    public static void itemStackLoad(ItemStackEvent.Load event) {
-        ItemStack stack = event.getStack();
-    }
 
     @SubscribeEvent
     public static void endermanEvent(EnderManAngerEvent event) {
@@ -508,14 +494,6 @@ public class MiscRegister {
             }
         }
     }
-
-    @SubscribeEvent
-    public static void stunEffectRegister(InputEvent.Key event) {
-        Player player = Minecraft.getInstance().player;
-        if (player != null && player.getEffect(ModMobEffects.STUN.get()) != null) {
-            event.setCanceled(true);
-        }
-    }
     @SubscribeEvent
     public static void healthRegenRegister(LivingHealEvent event) {
         LivingEntity living = event.getEntity();
@@ -532,7 +510,7 @@ public class MiscRegister {
         if (event.getAmount() > 0) MiscHelper.createDamageIndicator(living, event.getAmount(), "heal");
     }
 
-    @SubscribeEvent(priority = EventPriority.LOWEST)
+    //@SubscribeEvent(priority = EventPriority.LOWEST)
     public static void telekinesis2Register(LivingDropsEvent event) {
         Collection<ItemEntity> entities = event.getDrops();
         if (event.getSource().getEntity() instanceof Player attacker) {
@@ -568,39 +546,23 @@ public class MiscRegister {
         Vec3 pos = new Vec3(attacked.getX(), attacked.getY(), attacked.getZ());
         if (attacker == null) return;
         ItemStack weapon = attacker.getMainHandItem();
-        if (event.getEntity() instanceof Blaze && !(event.getEntity() instanceof FrozenBlazeEntity)) {
-            ItemStack toDrop = new ItemStack(ModItems.HEART_OF_THE_NETHER.get());
-            RNGDropHelper.addToDrops(toDrop, 1/100000f, attacker, pos, drops);
-        }
-        if (event.getEntity() instanceof WitherBoss boss) {
-            PrecursorRelicItem.BossType type = PrecursorRelicItem.BossType.fromBoss(boss);
-            RNGDropHelper.addToDrops(new ItemStack(type.getToDrop().get()), 1/10f, attacker, pos, drops);
-        }
         if (weapon.getEnchantmentLevel(ModEnchantments.SCAVENGER.get()) > 0) {
             float chance = weapon.getEnchantmentLevel(ModEnchantments.SCAVENGER.get()) * 0.2f;
             RNGDropHelper.addToDrops(new ItemStack(Items.EMERALD), chance, attacker, pos, drops);
         }
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void telekinesisRegister(BlockEvent.BreakEvent event) {
-        Player player = event.getPlayer();
-        ItemStack mainHandItem = player.getMainHandItem();
-        BlockState state = event.getState();
-        Block block = state.getBlock();
-        Level level = player.level;
-        final BlockPos pos = event.getPos();
+        Player player = event.getPlayer(); ItemStack mainHandItem = player.getMainHandItem(); BlockState state = event.getState();
+        Block block = state.getBlock(); Level level = player.level; final BlockPos pos = event.getPos();
+
         ServerLevel serverLevel = level instanceof ServerLevel serverLevel1 ? serverLevel1 : null;
-        assert serverLevel != null;
-        LootContext.Builder context = (new LootContext.Builder(serverLevel)).withRandom(serverLevel.random).withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(pos)).withParameter(LootContextParams.TOOL, mainHandItem).withOptionalParameter(LootContextParams.THIS_ENTITY, player);
-        boolean hasTelekinesis = mainHandItem.getEnchantmentLevel(ModEnchantments.TELEKINESIS.get()) > 0;
-        List<ItemStack> drops = state.getDrops(context);
-        if (block == Blocks.CRIMSON_NYLIUM) {
-            drops.add(RNGDropHelper.dontDrop(ModItems.CRIMSONITE_CLUSTER.get(), 5, player, 0.00005f));
-        }
+        ServerPlayer serverPlayer = (ServerPlayer) player;
+        if (serverLevel == null) return;
+        LootContext.Builder context = (new LootContext.Builder(serverLevel)).withRandom(level.random).withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(pos)).withParameter(LootContextParams.TOOL, mainHandItem).withOptionalParameter(LootContextParams.THIS_ENTITY, serverPlayer);
         if (block instanceof CropBlock || block instanceof NetherWartBlock) {
             IntegerProperty ageProperty = block instanceof CropBlock cropBlock ? cropBlock.getAgeProperty() : BlockStateProperties.AGE_3;
-            MiscHelper.shrinkDrops(drops, block.asItem(), 1);
             if (mainHandItem.getEnchantmentLevel(ModEnchantments.DELICATE.get()) > 0) {
                 if (state.getValue(ageProperty) < MathHelper.getHighest(ageProperty.getPossibleValues())) {
                     event.setCanceled(true);
@@ -611,84 +573,30 @@ public class MiscRegister {
                 BlockState newState = block.defaultBlockState();
                 newState.setValue(ageProperty, 0);
                 event.setCanceled(true);
+                Block.dropResources(state, context);
                 level.setBlock(pos, newState, 3);
             }
         }
         if (mainHandItem.getEnchantmentLevel(ModEnchantments.LUMBERJACK.get()) > 0 && state.is(BlockTags.LOGS)) {
-            BlockPos extraPos = pos;
-            List<BlockPos> iterator = new ArrayList<>(1);
-            iterator.add(extraPos);
-            while (iterator.size() > 0 && iterator.get(0) != null) {
-                extraPos = iterator.get(0);
-                iterator.remove(0);
-                for (BlockPos blockPos : Values()) {
-                    if (!(blockPos.getX() != 0 && blockPos.getY() != 0 && blockPos.getZ() != 0)) {
-                        BlockPos pos1 = new BlockPos(blockPos.getX() + extraPos.getX(), blockPos.getY() + extraPos.getY(), blockPos.getZ() + extraPos.getZ());
-                        if (block == player.level.getBlockState(pos1).getBlock()) {
-                            breakBlock(pos1, player.level, context, drops);
-                            iterator.add(pos1);
-                        }
-                    }
-                }
-            }
+            MiscHelper.mineMultiple(pos, serverPlayer, block, pos1 -> {}, state1 -> true, pos1 -> false);
         }
         if (mainHandItem.getEnchantmentLevel(ModEnchantments.VEIN_MINER.get()) > 0 && state.is(BlockTags.MINEABLE_WITH_PICKAXE)) {
-            int brokenBlocks = -1;
+            Reference<Integer> brokenBlocks = Reference.of(-1);
             final int maximalBrokenBlocks = mainHandItem.getEnchantmentLevel(ModEnchantments.VEIN_MINER.get());
-            List<BlockPos> iterator = new ArrayList<>(1);
-            BlockPos newPos = pos;
-            iterator.add(newPos);
-            while (iterator.size() > 0 && iterator.get(0) != null) {
-                newPos = iterator.get(0);
-                iterator.remove(0);
-                for (BlockPos blockPos : Values()) {
-                    if (!(blockPos.getX() != 0 && blockPos.getY() != 0 && blockPos.getZ() != 0)) {
-                        BlockPos pos1 = new BlockPos(blockPos.getX() + newPos.getX(), blockPos.getY() + newPos.getY(), blockPos.getZ() + newPos.getZ());
-                        if (brokenBlocks >= maximalBrokenBlocks) break;
-                        if (block == player.level.getBlockState(pos1).getBlock()) {
-                            breakBlock(pos1, player.level, context, drops);
-                            brokenBlocks++;
-                            iterator.add(pos1);
-                        }
-                    }
-                }
-                if (brokenBlocks >= maximalBrokenBlocks) break;
-            }
+            MiscHelper.mineMultiple(pos, serverPlayer, block, pos1 -> MathHelper.add(brokenBlocks::getValue, brokenBlocks::setValue, 1), state1 -> true, pos1 -> brokenBlocks.getValue() > maximalBrokenBlocks);
         }
-        if (hasTelekinesis) {
-            drops.forEach(stack -> player.getInventory().add(stack));
-            event.setCanceled(true);
-            serverLevel.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
-        } else drops.forEach(stack -> Block.popResource(level, pos, stack));
+        if (mainHandItem.getEnchantmentLevel(ModEnchantments.TELEKINESIS.get()) > 0) {
+            player.giveExperiencePoints(event.getExpToDrop());
+            event.setExpToDrop(0);
+        }
     }
 
-    public static BlockPos[] Values() {
-        BlockPos[] returnValue = new BlockPos[27];
-        int x = 0;
-        for (int i = -1; i <= 1; i++) {
-            for (int j = -1; j <= 1; j++) {
-                for (int k = -1; k <= 1; k++) {
-                    returnValue[x] = new BlockPos(i, j, k);
-                    x++;
-                }
-            }
-        }
-        return returnValue;
-    }
 
-    private static void breakBlock(BlockPos pos, Level level, LootContext.Builder builder, List<ItemStack> drops) {
-        BlockState state = level.getBlockState(pos);
-        level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
-        for (ItemStack stack : state.getDrops(builder)) {
-            level.addFreshEntity(new ItemEntity(level, pos.getX(), pos.getY(), pos.getZ(), stack));
-        }
-    }
 
     @SubscribeEvent
     public static void registerVillagerProfession(VillagerTradesEvent event) {
         Int2ObjectMap<List<VillagerTrades.ItemListing>> trades = event.getTrades();
-        if (event.getType() == ModVillagers.GEMSTONE_MAKER.getProfession().get()) {
-        } else if (event.getType() == ModVillagers.GUILD_MASTER.getProfession().get()) {
+        if (event.getType() == ModVillagers.GUILD_MASTER.getProfession().get()) {
             for (GuildUpgrade upgrade : GuildUpgrades.values()) {
                 trades.put(upgrade.getRarity().getProfessionLevel(),
                         List.of(new BasicItemListing(getEmeraldCost(upgrade.defaultCost()),
@@ -713,7 +621,6 @@ public class MiscRegister {
     @SubscribeEvent
     public static void entityDeathEvents(LivingDeathEvent event) {
         LivingEntity toDie = event.getEntity();
-        Level level = toDie.level;
         if (toDie instanceof Player player) {
             List<ItemStack> totems = InventoryHelper.getByFilter(player, stack -> stack.getItem() instanceof ModTotemItem);
             for (ItemStack stack : totems) {
@@ -722,7 +629,7 @@ public class MiscRegister {
                     event.setCanceled(true);
                     Minecraft.getInstance().gameRenderer.displayItemActivation(stack);
                     stack.shrink(1);
-
+                    break;
                 }
             }
         }

@@ -67,7 +67,8 @@ public class Duel {
         if (!completed) {
             CompoundTag tag = new CompoundTag();
             CompoundTag team1Tag = new CompoundTag();
-            List<String> playerUUIDs = team1.stream().map(ServerPlayer::getStringUUID).toList();
+            List<String> playerUUIDs = team1.stream().filter(player -> !player.is(owner)).map(ServerPlayer::getStringUUID).toList();
+
             for (int i = 0; i < playerUUIDs.size(); i++) {
                 if (Objects.equals(playerUUIDs.get(i), owner.getStringUUID())) {
                     team1Tag.putString("owner", playerUUIDs.get(i));

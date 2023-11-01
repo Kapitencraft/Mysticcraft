@@ -18,6 +18,7 @@
     "WitherSkullMixin",
     "ShapedRecipeSerializerMixin",
     "ShapelessRecipeSerializerMixin",
+    "RandomChanceModifierMixin",
     "ResultSlotMixin",
     "DiggerItemMixin",
     "InventoryMixin"

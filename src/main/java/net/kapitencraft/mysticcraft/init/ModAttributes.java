@@ -40,6 +40,7 @@ public interface ModAttributes {
     //Mining
     RegistryObject<Attribute> MINING_SPEED = register0Max("mining_speed", 0);
     RegistryObject<Attribute> PRISTINE = register("pristine", 0, 0, 400);
+    RegistryObject<Attribute> MINING_FORTUNE = register0Max("mining_fortune", 0);
 
     //Misc
     RegistryObject<Attribute> COOLDOWN_REDUCTION = register("cooldown_reduction", 0, 0, 100);

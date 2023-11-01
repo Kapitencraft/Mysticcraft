@@ -22,6 +22,6 @@ public interface ModParticleTypes {
     RegistryObject<ParticleType<?>> DARK_BLUE_FLAME = REGISTRY.register("dark_blue_flame", () -> new SimpleParticleType(true));
     RegistryObject<ParticleType<?>> PURPLE_FLAME = REGISTRY.register("purple_flame", () -> new SimpleParticleType(true));
     RegistryObject<MagicCircleParticleType> MAGIC_CIRCLE = REGISTRY.register("magic_circle", ()-> new MagicCircleParticleType(null));
-    RegistryObject<DamageIndicatorParticleOptions> DAMAGE_INDICATOR = REGISTRY.register("damage_indicator", () -> new DamageIndicatorParticleOptions(TextHelper.damageIndicatorCoder("heal"), 1));
+    RegistryObject<DamageIndicatorParticleOptions> DAMAGE_INDICATOR = REGISTRY.register("damage_indicator", () -> new DamageIndicatorParticleOptions(TextHelper.damageIndicatorCoder("heal"), 1, 1));
     RegistryObject<CircleParticleOptions> CIRCLE = REGISTRY.register("circle_particle", () -> new CircleParticleOptions(new Vector3f(1, 0, 0), 4, 7));
 }

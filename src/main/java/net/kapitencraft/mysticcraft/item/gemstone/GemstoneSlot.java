@@ -1,22 +1,35 @@
 package net.kapitencraft.mysticcraft.item.gemstone;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.kapitencraft.mysticcraft.event.ModEventFactory;
+import net.kapitencraft.mysticcraft.helpers.TagHelper;
 import net.kapitencraft.mysticcraft.init.ModItems;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.util.StringRepresentable;
 
 import javax.annotation.Nullable;
-import java.util.Objects;
 
 public class GemstoneSlot {
-    public static final GemstoneSlot BLOCKED = new GemstoneSlot(Type.EMPTY, GemstoneType.ALMANDINE, GemstoneType.Rarity.EMPTY);
-
     private static final String TYPE_ID = "type";
     private static final String GEMSTONE_RARITY_ID = "gem_rarity";
     private static final String GEMSTONE_TYPE_ID = "gem";
+
+    public static final Codec<GemstoneSlot> CODEC = RecordCodecBuilder.create(gemstoneSlotInstance ->
+            gemstoneSlotInstance.group(
+                    Type.CODEC.fieldOf(TYPE_ID).forGetter(GemstoneSlot::getType),
+                    GemstoneType.CODEC.fieldOf(GEMSTONE_TYPE_ID).forGetter(GemstoneSlot::getAppliedGemstone),
+                    GemstoneType.Rarity.CODEC.fieldOf(GEMSTONE_RARITY_ID).forGetter(GemstoneSlot::getGemRarity)
+            ).apply(gemstoneSlotInstance, GemstoneSlot::new)
+    );
+    public static final GemstoneSlot BLOCKED = new GemstoneSlot(Type.EMPTY, GemstoneType.ALMANDINE, GemstoneType.Rarity.EMPTY);
+
 
     private GemstoneType.Rarity gemRarity;
     private final Type type;
@@ -28,27 +41,15 @@ public class GemstoneSlot {
         this.gemRarity = rarity;
     }
 
-    public CompoundTag toNBT() {
-        CompoundTag tag = new CompoundTag();
-        tag.putString(GEMSTONE_RARITY_ID, this.gemRarity.getId());
-        tag.putString(TYPE_ID, this.type.id);
-        tag.putString(GEMSTONE_TYPE_ID, this.appliedGemstoneType != null ? this.appliedGemstoneType.getId() : "null");
-        return tag;
+    public Tag toNBT() {
+        return TagHelper.getOrDefault(CODEC.encodeStart(NbtOps.INSTANCE, this), new CompoundTag());
     }
 
     public static GemstoneSlot fromNBT(CompoundTag tag) {
         if (tag == null) {
             return null;
         }
-        return getByType(Type.getById(tag.getString(TYPE_ID))).setGemstone(GemstoneType.getById(tag.getString(GEMSTONE_TYPE_ID)), GemstoneType.Rarity.getById(tag.getString(GEMSTONE_RARITY_ID)));
-    }
-
-    private GemstoneSlot setGemstone(GemstoneType type, GemstoneType.Rarity rarity) {
-        this.putGemstone(type, rarity);
-        return this;
-    }
-    private static GemstoneSlot getByType(Type type) {
-        return new GemstoneSlot(type, null, GemstoneType.Rarity.EMPTY);
+        return TagHelper.getOrDefault(CODEC.parse(NbtOps.INSTANCE, tag), BLOCKED);
     }
     private int getColorForRarity() {
         return this.gemRarity.colour;
@@ -105,7 +106,7 @@ public class GemstoneSlot {
         return "GemstoneSlot{Rarity: " + this.getGemRarity().getId() + ", applied GemstoneType: " + (this.appliedGemstoneType == null ? "null" : this.appliedGemstoneType.getId()) + "}";
     }
 
-    public enum Type {
+    public enum Type implements StringRepresentable {
         INTELLIGENCE("\uF000", "intel", GemstoneType.SAPPHIRE),
         STRENGTH("\u2741", "strength", GemstoneType.JASPER),
         HEALTH("\u2764", "health", GemstoneType.RUBY),
@@ -119,6 +120,8 @@ public class GemstoneSlot {
         MAGIC("\uF003", "magic", GemstoneType.SAPPHIRE, GemstoneType.ALMANDINE),
         COMBAT("\u2694", "combat", GemstoneType.JASPER, GemstoneType.SAPPHIRE, GemstoneType.ALMANDINE, GemstoneType.MOON_STONE, GemstoneType.RUBY, GemstoneType.AMETHYST);
 
+        public static final Codec<Type> CODEC = StringRepresentable.fromEnum(Type::values);
+
         public final String UNICODE;
         public final String id;
         public final GemstoneType[] applicable;
@@ -129,18 +132,14 @@ public class GemstoneSlot {
             this.applicable = applicable;
         }
 
-        public static Type getById(String id) {
-            for (int i = 0; i < values().length; i++) {
-                if (Objects.equals(values()[i].id, id)) {
-                    return values()[i];
-                }
-            }
-            return Type.EMPTY;
-        }
-
 
         public String getUNICODE() {
             return UNICODE;
+        }
+
+        @Override
+        public String getSerializedName() {
+            return id;
         }
     }
 

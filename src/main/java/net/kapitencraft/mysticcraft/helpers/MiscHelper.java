@@ -3,6 +3,7 @@ package net.kapitencraft.mysticcraft.helpers;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.client.particle.DamageIndicatorParticleOptions;
 import net.kapitencraft.mysticcraft.gui.IGuiHelper;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneItem;
@@ -44,6 +45,11 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
@@ -58,6 +64,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public class MiscHelper {
@@ -77,6 +84,53 @@ public class MiscHelper {
             case HARD -> hard;
             case PEACEFUL -> peaceful;
         };
+    }
+
+    public static void mineMultiple(BlockPos pos, ServerPlayer serverPlayer, Block block, Consumer<BlockPos> extra, Predicate<BlockState> shouldMine, Predicate<BlockPos> shouldBreak) {
+        ServerLevel level = serverPlayer.getLevel();
+        ItemStack mainHandItem = serverPlayer.getMainHandItem();
+        LootContext.Builder context = (new LootContext.Builder(level)).withRandom(level.random).withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(pos)).withParameter(LootContextParams.TOOL, mainHandItem).withOptionalParameter(LootContextParams.THIS_ENTITY, serverPlayer);
+        BlockPos extraPos = pos;
+        List<BlockPos> iterator = new ArrayList<>(1);
+        iterator.add(extraPos);
+        while (iterator.size() > 0 && iterator.get(0) != null) {
+            extraPos = iterator.get(0);
+            iterator.remove(0);
+            for (BlockPos blockPos : Values()) {
+                if (!(blockPos.getX() != 0 && blockPos.getY() != 0 && blockPos.getZ() != 0)) {
+                    BlockPos pos1 = new BlockPos(blockPos.getX() + extraPos.getX(), blockPos.getY() + extraPos.getY(), blockPos.getZ() + extraPos.getZ());
+                    BlockState state = level.getBlockState(pos1);
+                    if (block == state.getBlock() && shouldMine.test(state)) {
+                        mainHandItem.hurt(1, MysticcraftMod.RANDOM_SOURCE, serverPlayer);
+                        extra.accept(pos1);
+                        breakBlock(pos1, level, context);
+                        iterator.add(pos1);
+                        if (shouldBreak.test(pos1)) break;
+                    }
+                }
+            }
+        }
+    }
+
+    private static void breakBlock(BlockPos pos, Level level, LootContext.Builder builder) {
+        BlockState state = level.getBlockState(pos);
+        Block.dropResources(state, builder);
+        level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+    }
+
+
+    public static BlockPos[] Values() {
+        BlockPos[] returnValue = new BlockPos[27];
+        int x = 0;
+        for (int i = -1; i <= 1; i++) {
+            for (int j = -1; j <= 1; j++) {
+                for (int k = -1; k <= 1; k++) {
+                    returnValue[x] = new BlockPos(i, j, k);
+                    x++;
+                }
+            }
+        }
+        return returnValue;
     }
 
     public static <T> void giveNullOrElse(@Nullable T t, Consumer<T> toDo) {
@@ -305,9 +359,10 @@ public class MiscHelper {
         return sup.get();
     }
 
-    public static void createDamageIndicator(LivingEntity entity, double amount, String type) {
+    public static void createDamageIndicator(LivingEntity entity, float amount, String type) {
         if (entity.getLevel() instanceof ServerLevel serverLevel) {
-            ParticleHelper.sendParticles(serverLevel, new DamageIndicatorParticleOptions(TextHelper.damageIndicatorCoder(type), (float) amount), false, entity.getX(), entity.getY(), entity.getZ(), 1, 0, 0, 0, 0);
+            float rangeOffset = entity.getBbHeight() / 2;
+            ParticleHelper.sendParticles(serverLevel, new DamageIndicatorParticleOptions(TextHelper.damageIndicatorCoder(type), amount, rangeOffset), false, entity.getX(), entity.getY(), entity.getZ(), 1, 0, 0, 0, 0);
         }
     }
 

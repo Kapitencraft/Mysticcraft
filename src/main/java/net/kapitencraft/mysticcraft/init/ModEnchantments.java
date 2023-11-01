@@ -23,6 +23,7 @@ public interface ModEnchantments {
         return REGISTRY.register(name, supplier);
     }
 
+    RegistryObject<Enchantment> SMELTING_TOUCH = register("smelting_touch", SmeltingTouchEnchantment::new);
     RegistryObject<Enchantment> DELICATE = register("delicate", DelicateEnchantment::new);
     RegistryObject<Enchantment> TANK = register("tank", TankEnchantment::new);
     RegistryObject<Enchantment> SCAVENGER = register("scavenger", ScavengerEnchantment::new);

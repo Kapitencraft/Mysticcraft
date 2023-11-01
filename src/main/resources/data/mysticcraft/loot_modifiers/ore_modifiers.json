@@ -1,0 +1,10 @@
+{
+  "type": "mysticcraft:ore_mods",
+  "conditions": [
+    {
+      "condition": "mysticcraft:tag_key",
+      "type": "block",
+      "id": "forge:ores"
+    }
+  ]
+}

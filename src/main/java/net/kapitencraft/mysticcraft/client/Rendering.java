@@ -39,15 +39,18 @@ public class Rendering {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void overlays(RenderGuiOverlayEvent.Pre event) {
+        net.minecraft.client.Options options = Minecraft.getInstance().options;
+        int guiScale = options.guiScale().get();
         int w = event.getWindow().getGuiScaledWidth();
         int h = event.getWindow().getGuiScaledHeight();
+        int scale = 2 - guiScale == 0 ? 1 : guiScale;
         int posX = w / 2;
         int posY = h / 2;
         Player entity = Minecraft.getInstance().player;
         if (entity != null) {
             list.forEach(renderHolder -> {
                 Vec2 pos = renderHolder.pos.makePos();
-                render(getStack(renderHolder.type), renderHolder.provider.provide(entity), posX + pos.x, posY + pos.y, -1);
+                render(getStack(renderHolder.type), renderHolder.provider.provide(entity), posX - options.guiScale().get() + pos.x, posY - options.guiScale().get() + pos.y, -1);
             });
         }
     }

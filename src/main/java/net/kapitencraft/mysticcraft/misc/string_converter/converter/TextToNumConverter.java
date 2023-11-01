@@ -1,32 +1,29 @@
 package net.kapitencraft.mysticcraft.misc.string_converter.converter;
 
+import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.misc.string_converter.MathArgument;
 import net.kapitencraft.mysticcraft.misc.string_converter.TransferArg;
 import net.kapitencraft.mysticcraft.misc.string_converter.ValueArgument;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
-public abstract class TextToNumConverter<T extends Number> {
-    protected final HashMap<String, Supplier<T>> stringTransfers;
+public abstract class TextToNumConverter<T extends Number> extends TextConverter<T> {
 
-    public TextToNumConverter(HashMap<String, Supplier<T>> stringTransfers) {
-        this.stringTransfers = stringTransfers;
+    public TextToNumConverter(Map<String, Supplier<T>> stringTransfers) {
+        super(stringTransfers);
     }
 
     public T transfer(String s) {
         String[] toTransfer = s.split(" ");
         List<TransferArg<T>> args = new ArrayList<>();
-        for (int i = 0; i < toTransfer.length; i++) {
-            String value = toTransfer[i];
+        for (String value : toTransfer) {
             if (isArg(value)) {
-                System.out.println("Math: " + value);
                 args.add(new MathArgument<>(value));
             } else {
-                System.out.println("Value: " + value);
                 args.add(new ValueArgument<>(createFromString(value)));
             }
         }
@@ -47,7 +44,9 @@ public abstract class TextToNumConverter<T extends Number> {
             }
             cycle++;
         }
-        return currentArgs.get(0).value();
+        T value = currentArgs.get(0).value();
+        MysticcraftMod.sendInfo("sending new Value: " + value + " from args: " + s);
+        return value;
     }
 
     protected abstract T createFromString(String s);

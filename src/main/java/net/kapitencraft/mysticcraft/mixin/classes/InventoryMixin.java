@@ -21,8 +21,13 @@ public abstract class InventoryMixin {
     @Accessor
     abstract int getSelected();
 
+
+    /**
+     * @reason Mining Speed Attribute
+     * @author Kapitencraft
+     */
     @Overwrite
     public float getDestroySpeed(BlockState state) {
-        return this.getItems().get(this.getSelected()).getDestroySpeed(state) == 1 ? (float) this.getPlayer().getAttributeValue(ModAttributes.MINING_SPEED.get()) : 1f;
+        return this.getItems().get(this.getSelected()).getDestroySpeed(state) == 1 ? 1f : (float) this.getPlayer().getAttributeValue(ModAttributes.MINING_SPEED.get());
     }
 }

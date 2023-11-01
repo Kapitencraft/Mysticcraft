@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "entries": [
+    "mysticcraft:goldor_add",
+    "mysticcraft:maxor_add",
+    "mysticcraft:necron_add",
+    "mysticcraft:storm_add",
+    "mysticcraft:replenish_modifier",
+    "mysticcraft:ore_modifiers",
+    "mysticcraft:crimsonite_add",
+    "mysticcraft:telekinesis"
+  ]
+}

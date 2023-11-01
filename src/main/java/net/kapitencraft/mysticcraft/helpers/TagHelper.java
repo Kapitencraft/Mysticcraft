@@ -3,6 +3,9 @@ package net.kapitencraft.mysticcraft.helpers;
 import com.google.common.collect.Multimap;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import net.kapitencraft.mysticcraft.ModMarker;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.StringTagVisitor;
@@ -14,7 +17,11 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 public class TagHelper {
+    private static final ModMarker TRANSFER_MARKER = new ModMarker("DataFormattingHelper");
     private static final String LENGTH_ID = "Length";
+    public static <T, K> Codec<Map<T, K>> makeMapCodec(Codec<T> tCodec, Codec<K> kCodec) {
+        return Codec.unboundedMap(tCodec, kCodec);
+    }
 
 
     public static boolean checkForIntAbove0(CompoundTag tag, String name) {
@@ -25,6 +32,18 @@ public class TagHelper {
         float value = tag.getFloat(name)+f;
         tag.putFloat(name, value);
         return value;
+    }
+
+    public static <T> T getOrDefault(DataResult<T> result, T defaulted) {
+        return result.result().orElse(defaulted);
+    }
+
+
+    public static <T> T getOrLog(DataResult<T> result, String toLog, T defaulted) {
+        Optional<T> optional = result.result();
+        if (optional.isPresent()) return optional.get();
+        MysticcraftMod.sendWarn(toLog, true, TRANSFER_MARKER);
+        return defaulted;
     }
 
     public static int increaseIntegerTagValue(CompoundTag tag, String name, int i) {

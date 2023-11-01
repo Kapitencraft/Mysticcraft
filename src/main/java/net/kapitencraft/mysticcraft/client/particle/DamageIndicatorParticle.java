@@ -26,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
 public class DamageIndicatorParticle extends Particle {
     public static final double MAX_MOVEMENT = 0.35;
 
-    protected DamageIndicatorParticle(ClientLevel p_107234_, double p_107235_, double p_107236_, double p_107237_, double amount, double damageType) {
+    protected DamageIndicatorParticle(ClientLevel p_107234_, double p_107235_, double p_107236_, double p_107237_, double amount, double damageType, float rangeOffset) {
         super(p_107234_, p_107235_, p_107236_, p_107237_);
 
         this.text = MysticcraftMod.doubleFormat(amount);
@@ -35,8 +35,8 @@ public class DamageIndicatorParticle extends Particle {
         this.darkColor = FastColor.ARGB32.color(255, (int) (this.rCol * 0.25f), (int) (this.rCol * 0.25f), (int) (this.rCol * 0.25));
         this.lifetime = 35;
 
-        this.yd = 1;
-        this.xd = Mth.nextDouble(RandomSource.createNewThreadLocalInstance(), -MAX_MOVEMENT, MAX_MOVEMENT);
+        this.yd = rangeOffset;
+        this.xd = Mth.nextDouble(RandomSource.createNewThreadLocalInstance(), -MAX_MOVEMENT, MAX_MOVEMENT) * rangeOffset;
     }
 
     private static final char CRIT_CHAR = ' ';
@@ -151,7 +151,7 @@ public class DamageIndicatorParticle extends Particle {
         @Nullable
         @Override
         public DamageIndicatorParticle createParticle(@NotNull DamageIndicatorParticleOptions particleType, @NotNull ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
-            return new DamageIndicatorParticle(level, x, y, z, particleType.getDamage(), particleType.getDamageType());
+            return new DamageIndicatorParticle(level, x, y, z, particleType.getDamage(), particleType.getDamageType(), particleType.getRangeOffset());
         }
     }
 }

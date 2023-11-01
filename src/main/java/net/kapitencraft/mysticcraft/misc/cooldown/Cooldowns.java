@@ -7,43 +7,39 @@ import net.kapitencraft.mysticcraft.item.item_bonus.fullset.CrimsonArmorFullSetB
 import net.kapitencraft.mysticcraft.misc.HealingHelper;
 import net.kapitencraft.mysticcraft.spell.spells.WitherShieldSpell;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.decoration.ArmorStand;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public interface Cooldowns {
     List<Cooldown> cooldowns = new ArrayList<>();
+    Cooldown VENOMOUS = new Cooldown(CompoundPath.builder("VenomousTimer").build(), 100, living ->  {
+        AttributeInstance speed = living.getAttribute(Attributes.MOVEMENT_SPEED);
+        if (speed != null) {
+            speed.removeModifier(VenomousEnchantment.ID);
+        }
+    });
+    Cooldown WITHER_SHIELD = new Cooldown(CompoundPath.builder(WitherShieldSpell.DAMAGE_REDUCTION_TIME).build(), 100, living -> {
+        CompoundTag tag = living.getPersistentData();
+        float absorption = tag.getFloat(WitherShieldSpell.ABSORPTION_AMOUNT_ID);
+        HealingHelper.setEffectReason(living);
+        living.heal(absorption / 2);
+        living.setAbsorptionAmount(living.getAbsorptionAmount() - absorption);
+        tag.putFloat(WitherShieldSpell.ABSORPTION_AMOUNT_ID, 0);
+    });
+    Cooldown EXPLOSIVE_SIGHT = new Cooldown(CompoundPath.builder("ExplosiveSight").build(), 600, living -> {
 
-    Cooldown DAMAGE_INDICATOR = new Cooldown(new CompoundPath.Builder("time").withUseAbles(entity -> {
-            CompoundTag tag = entity.getPersistentData();
-            return entity instanceof ArmorStand && tag.getBoolean("isDamageIndicator");
-        }).build(), 35, Entity::kill);
-    Cooldown VENOMOUS = new Cooldown(new CompoundPath.Builder("VenomousTimer").build(), 100, living ->  {
-            AttributeInstance speed = living.getAttribute(Attributes.MOVEMENT_SPEED);
-            if (speed != null) {
-                speed.removeModifier(VenomousEnchantment.ID);
-            }
-        });
-    Cooldown WITHER_SHIELD = new Cooldown(new CompoundPath.Builder(WitherShieldSpell.DAMAGE_REDUCTION_TIME).build(), 100, living -> {
-            CompoundTag tag = living.getPersistentData();
-            float absorption = tag.getFloat(WitherShieldSpell.ABSORPTION_AMOUNT_ID);
-            HealingHelper.setEffectReason(living);
-            living.heal(absorption / 2);
-            living.setAbsorptionAmount(living.getAbsorptionAmount() - absorption);
-            tag.putFloat(WitherShieldSpell.ABSORPTION_AMOUNT_ID, 0);
-        });
-    Cooldown DOMINUS = new Cooldown(new CompoundPath.Builder(CrimsonArmorFullSetBonus.COOLDOWN_ID).build(), 120, living -> {
+    });
+    Cooldown DOMINUS = new Cooldown(CompoundPath.builder(CrimsonArmorFullSetBonus.COOLDOWN_ID).build(), 120, living -> {
         TagHelper.reduceBy1(living.getPersistentData(), CrimsonArmorFullSetBonus.DOMINUS_ID);
         //Cooldowns.DOMINUS.applyCooldown(living, false);
     });
     static Cooldown BONK_ENCHANTMENT(EquipmentSlot slot) {
-        CompoundPath path = new CompoundPath.Builder(slot.getName() + ".cooldown").withParent(BonkEnchantment.BONK_ID, builder -> {}).build();
+        CompoundPath path = CompoundPath.builder(slot.getName() + ".cooldown").withParent(BonkEnchantment.BONK_ID, builder -> {}).build();
         return new Cooldown(path, 1200, living -> {
             CompoundTag tag = path.getParent().getTag(living);
             if (tag != null) tag.putBoolean(slot.getName(), true);

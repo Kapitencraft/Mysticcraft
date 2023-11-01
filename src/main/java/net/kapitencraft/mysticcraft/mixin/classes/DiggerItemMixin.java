@@ -26,6 +26,11 @@ public abstract class DiggerItemMixin extends Item {
     @Accessor
     abstract Multimap<Attribute, AttributeModifier> getDefaultModifiers();
 
+
+    /**
+     * @author Kapitencraft
+     * @reason Mining Speed Modifier
+     */
     @Overwrite
     public @NotNull Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(@NotNull EquipmentSlot slot) {
         if (slot == EquipmentSlot.MAINHAND) {

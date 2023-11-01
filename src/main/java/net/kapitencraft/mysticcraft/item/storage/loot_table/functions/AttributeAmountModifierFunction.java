@@ -1,13 +1,15 @@
-package net.kapitencraft.mysticcraft.misc.loot_table.functions;
+package net.kapitencraft.mysticcraft.item.storage.loot_table.functions;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
+import com.mojang.serialization.Codec;
+import net.kapitencraft.mysticcraft.init.ModLootItemFunctions;
 import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.BinaryProvider;
 import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.SaveAbleEnum;
-import net.kapitencraft.mysticcraft.misc.loot_table.ModLootItemFunctions;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -19,13 +21,17 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import org.jetbrains.annotations.NotNull;
 
-public class AttributeAmountModifier extends LootItemConditionalFunction {
+public class AttributeAmountModifierFunction extends LootItemConditionalFunction {
     private final Attribute modifier;
-    private final Formula formula;
-    protected AttributeAmountModifier(LootItemCondition[] p_80678_, Attribute attribute, Formula formula) {
+    private final Formulas formula;
+    private AttributeAmountModifierFunction(LootItemCondition[] p_80678_, Attribute attribute, Formulas formula) {
         super(p_80678_);
         this.modifier = attribute;
         this.formula = formula;
+    }
+
+    public Attribute getModifier() {
+        return modifier;
     }
 
     @Override
@@ -43,9 +49,10 @@ public class AttributeAmountModifier extends LootItemConditionalFunction {
         ItemStack provide(ItemStack stack, double d);
     }
 
-    public enum Formulas implements Formula, SaveAbleEnum {
-        DEFAULT("default", (value1, value2) -> value1);
-        ;
+    public enum Formulas implements Formula, SaveAbleEnum, StringRepresentable {
+        DEFAULT("default", (stack, d) -> stack.copyWithCount((int) (stack.getCount() * (1 + d / 100))));
+
+        public static final Codec<Formulas> CODEC = StringRepresentable.fromEnum(Formulas::values);
 
         private final String name;
         private final BinaryProvider<ItemStack, ItemStack, Double> provider;
@@ -65,19 +72,24 @@ public class AttributeAmountModifier extends LootItemConditionalFunction {
             return provider.provide(stack, d);
         }
 
-        public static Formula byName(String name) {
+        public static Formulas byName(String name) {
             return SaveAbleEnum.getValue(DEFAULT, name, values());
+        }
+
+        @Override
+        public @NotNull String getSerializedName() {
+            return name;
         }
     }
 
     @Override
     public @NotNull LootItemFunctionType getType() {
-        return ModLootItemFunctions.ATTRIBUTE_MODIFIER;
+        return ModLootItemFunctions.ATTRIBUTE_MODIFIER.get();
     }
 
-    public static class Serializer extends LootItemConditionalFunction.Serializer<AttributeAmountModifier> {
+    public static class Serializer extends LootItemConditionalFunction.Serializer<AttributeAmountModifierFunction> {
         @Override
-        public void serialize(@NotNull JsonObject object, @NotNull AttributeAmountModifier modifier, JsonSerializationContext context) {
+        public void serialize(@NotNull JsonObject object, @NotNull AttributeAmountModifierFunction modifier, @NotNull JsonSerializationContext context) {
             super.serialize(object, modifier, context);
             ResourceLocation location = BuiltInRegistries.ATTRIBUTE.getKey(modifier.modifier);
             object.addProperty("attribute", location == null ? "null" : location.toString());
@@ -85,8 +97,9 @@ public class AttributeAmountModifier extends LootItemConditionalFunction {
         }
 
         @Override
-        public AttributeAmountModifier deserialize(JsonObject object, JsonDeserializationContext context, LootItemCondition[] conditions) {
-            return new AttributeAmountModifier(conditions, BuiltInRegistries.ATTRIBUTE.get(new ResourceLocation(object.getAsJsonPrimitive("attribute").getAsString())), Formulas.byName(object.getAsJsonPrimitive("formula").getAsString()));
+        public @NotNull AttributeAmountModifierFunction deserialize(JsonObject object, @NotNull JsonDeserializationContext context, LootItemCondition @NotNull [] conditions) {
+            String attribute = object.getAsJsonPrimitive("attribute").getAsString();
+            return new AttributeAmountModifierFunction(conditions, BuiltInRegistries.ATTRIBUTE.get(new ResourceLocation(attribute)), Formulas.byName(object.getAsJsonPrimitive("formula").getAsString()));
         }
     }
 }

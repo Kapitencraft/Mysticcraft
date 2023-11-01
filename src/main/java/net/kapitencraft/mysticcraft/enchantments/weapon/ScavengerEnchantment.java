@@ -14,4 +14,9 @@ public class ScavengerEnchantment extends Enchantment implements IWeaponEnchantm
     public String[] getDescriptionMods(int level) {
         return new String[] {"" + level * 20};
     }
+
+    @Override
+    public int getMaxLevel() {
+        return 5;
+    }
 }

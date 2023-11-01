@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.helpers;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.TriConsumer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
@@ -20,6 +21,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class MathHelper {
 
@@ -31,6 +34,19 @@ public class MathHelper {
         Level level = source.getLevel();
         return getEntitiesAround(tClass, level, source.getBoundingBox(), range);
     }
+
+    public static void add(Supplier<Integer> getter, Consumer<Integer> setter, int change) {
+        setter.accept(getter.get() + change);
+    }
+
+    public static void mul(Supplier<Integer> getter, Consumer<Integer> setter, int mul) {
+        setter.accept(getter.get() * mul);
+    }
+
+    public static void mul(Supplier<Float> getter, Consumer<Float> setter, float mul) {
+        setter.accept(getter.get() * mul);
+    }
+
 
     public static ArrayList<Vec3> lineOfSight(Entity entity, double range, double scaling) {
         ArrayList<Vec3> line = new ArrayList<>();
@@ -115,6 +131,10 @@ public class MathHelper {
 
     public static boolean chance(double chance, @Nullable LivingEntity living) {
         return Math.random() <= chance * (living != null ? (1 + living.getAttributeValue(Attributes.LUCK) / 100) : 1);
+    }
+
+    public static int cooldown(LivingEntity living, int defaultTime) {
+        return (int) (defaultTime * (1 - living.getAttributeValue(ModAttributes.COOLDOWN_REDUCTION.get()) / 100));
     }
 
     public static <T extends Entity> List<T> getEntitiesAround(Class<T> tClass, Level level, AABB source, double range) {

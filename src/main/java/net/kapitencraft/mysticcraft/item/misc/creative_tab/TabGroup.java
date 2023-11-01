@@ -18,8 +18,8 @@ public class TabGroup {
     public static final TabGroup UTILITIES = new TabGroup(TabRegister.TabTypes.TOOLS_AND_UTILITIES);
     public static final TabGroup DECO = new TabGroup(TabRegister.TabTypes.DECO);
     public static final TabGroup GOLDEN_DECO = new TabGroup(TabRegister.TabTypes.DECO);
-    private final List<TabRegister.TabTypes> types;
-    private final List<RegistryObject<? extends Item>> items = new ArrayList<>();
+    protected final List<TabRegister.TabTypes> types;
+    protected final List<RegistryObject<? extends Item>> items = new ArrayList<>();
 
     public TabGroup(TabRegister.TabTypes... type) {
         this.types = Arrays.asList(type);

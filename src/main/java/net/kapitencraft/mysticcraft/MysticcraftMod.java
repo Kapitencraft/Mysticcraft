@@ -17,6 +17,8 @@ import net.kapitencraft.mysticcraft.potion.ModPotionRecipe;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.SpawnPlacements;
@@ -52,6 +54,10 @@ public class MysticcraftMod {
 
     public static <T> DeferredRegister<T> makeRegistry(IForgeRegistry<T> registry) {
         return DeferredRegister.create(registry, MOD_ID);
+    }
+
+    public static <T> DeferredRegister<T> makeRegistry(ResourceKey<Registry<T>> key) {
+        return DeferredRegister.create(key, MOD_ID);
     }
     public static final double DAMAGE_CALCULATION_VALUE = 50;
 

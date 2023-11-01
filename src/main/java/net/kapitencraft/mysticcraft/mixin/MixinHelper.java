@@ -18,24 +18,11 @@ import org.slf4j.Marker;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 public class MixinHelper {
 
-    public static void add(Supplier<Integer> getter, Consumer<Integer> setter, int change) {
-        setter.accept(getter.get() + change);
-    }
-
-    public static void mul(Supplier<Integer> getter, Consumer<Integer> setter, int mul) {
-        setter.accept(getter.get() * mul);
-    }
-
-    public static void mul(Supplier<Float> getter, Consumer<Float> setter, float mul) {
-        setter.accept(getter.get() * mul);
-    }
 
     public static Ingredient fromNetwork(FriendlyByteBuf buf) {
         int size = buf.readVarInt();

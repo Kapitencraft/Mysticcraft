@@ -37,6 +37,7 @@ public class AttributeAdder {
         addAll(event, ModAttributes.CRIT_CHANCE.get(), ONLY_WITH_BRAIN);
         addAll(event, ModAttributes.COOLDOWN_REDUCTION.get(), LIVINGS);
         addToPlayer(event,
+                ModAttributes.MINING_FORTUNE,
                 ModAttributes.PRISTINE,
                 ModAttributes.MINING_SPEED,
                 ModAttributes.ABILITY_DAMAGE,

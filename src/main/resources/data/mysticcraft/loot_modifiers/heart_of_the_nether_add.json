@@ -1,0 +1,12 @@
+{
+  "type": "mysticcraft:add_item",
+  "conditions": [
+    {
+      "condition": "entity_properties",
+      "entity": "this",
+      "type": "minecraft:blaze"
+    }
+  ],
+  "chance": 0.00001,
+  "item": "mysticcraft:jolly_pink_rock"
+}

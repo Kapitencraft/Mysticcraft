@@ -26,6 +26,7 @@ public interface Spell {
     Type getType();
 
     double getDefaultManaCost();
+    int getCooldown();
 
     enum Type {
         RELEASE("release"),

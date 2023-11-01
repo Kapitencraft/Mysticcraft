@@ -1,11 +1,12 @@
 package net.kapitencraft.mysticcraft.item.misc;
 
+import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
+import net.kapitencraft.mysticcraft.helpers.TextHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModEnchantments;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -13,6 +14,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 
@@ -44,35 +46,28 @@ public class RNGDropHelper {
         return chance * (1 + magicFind / 100);
     }
 
-    public static ItemStack dontDrop(Item item, int maxAmount, LivingEntity source, float chance) {
-        double magicFind = source.getAttributeValue(ModAttributes.MAGIC_FIND.get());
+    public static ItemStack dontDrop(Item item, int maxAmount, @Nullable LivingEntity source, float chance) {
+        double magicFind = (source != null) ? AttributeHelper.getSaveAttributeValue(ModAttributes.MAGIC_FIND.get(), source) : 0;
         int amount = 0;
         for (int i = 0; i < maxAmount; i++) {
             if (Math.random() <= getFinalChance(chance, magicFind)) {
                 amount++;
             }
         }
-        ItemStack stack = new ItemStack(item, amount);
-        trySendDropMessage(stack, magicFind, source, chance);
-        return stack;
-    }
-
-    private static Component getStackNameWithoutBrackets(ItemStack stack) {
-        MutableComponent mutablecomponent = Component.empty().append(stack.getHoverName());
-        if (stack.hasCustomHoverName()) {
-            mutablecomponent.withStyle(ChatFormatting.ITALIC);
+        if (amount > 0) {
+            ItemStack stack = new ItemStack(item, amount);
+            trySendDropMessage(stack, magicFind, source, chance);
+            return stack;
         }
-
-        mutablecomponent.withStyle(stack.getRarity().getStyleModifier()).withStyle((p_220170_) ->
-                p_220170_.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ITEM, new HoverEvent.ItemStackInfo(stack))));
-        return mutablecomponent;
+        return ItemStack.EMPTY;
     }
+
 
     private static Component createRareDropMessage(ItemStack drop, double magic_find, float chance) {
-        return DropRarities.getRarity(chance).makeDisplay().append(FormattingCodes.BOLD + ": " + FormattingCodes.RESET).append(getStackNameWithoutBrackets(drop)).append(FormattingCodes.AQUA + " (+" + magic_find + ")");
+        return DropRarities.getRarity(chance).makeDisplay().append(FormattingCodes.BOLD + ": " + FormattingCodes.RESET).append(TextHelper.getStackNameWithoutBrackets(drop)).append(FormattingCodes.AQUA + " (+" + magic_find + ")");
     }
 
-    private static void trySendDropMessage(ItemStack drop, double magicFind, LivingEntity toSend, float chance) {
+    public static void trySendDropMessage(ItemStack drop, double magicFind, LivingEntity toSend, float chance) {
         if (toSend instanceof Player player && chance < 0.2) {
             player.sendSystemMessage(createRareDropMessage(drop, magicFind, chance));
         }

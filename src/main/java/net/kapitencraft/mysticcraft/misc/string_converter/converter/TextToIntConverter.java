@@ -1,11 +1,11 @@
 package net.kapitencraft.mysticcraft.misc.string_converter.converter;
 
-import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Supplier;
 
 public class TextToIntConverter extends TextToNumConverter<Integer> {
 
-    public TextToIntConverter(HashMap<String, Supplier<Integer>> stringTransfers) {
+    public TextToIntConverter(Map<String, Supplier<Integer>> stringTransfers) {
         super(stringTransfers);
     }
 

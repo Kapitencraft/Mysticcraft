@@ -44,6 +44,6 @@ public class BestiaryManager extends SimpleJsonResourceReloadListener {
                 MysticcraftMod.sendWarn("Unable to load bestiary for '{}': {}", false, MARKER, entry.getKey().toString(), e.getMessage());
             }
         }
-        MysticcraftMod.sendInfo("loaded {} bestiaries", false, MARKER, bestiariesForType.size());
+        MysticcraftMod.sendInfo("Loaded {} bestiaries", false, MARKER, bestiariesForType.size());
     }
 }

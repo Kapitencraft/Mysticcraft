@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.misc.loot_table;
+package net.kapitencraft.mysticcraft.item.storage.loot_table;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.minecraft.resources.ResourceLocation;

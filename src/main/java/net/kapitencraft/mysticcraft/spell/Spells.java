@@ -12,6 +12,7 @@ import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.kapitencraft.mysticcraft.spell.spells.*;
 import net.minecraft.ChatFormatting;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -29,19 +30,19 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public enum Spells implements Spell {
-    WITHER_IMPACT("Wither Impact", "1101110", Type.RELEASE, 300, WitherImpactSpell::execute, item -> item instanceof NecronSword, WitherImpactSpell::getDescription, Rarity.RARE, true, Elements.SHADOW),
-    WITHER_SHIELD("Wither Shield", "1101111", Type.RELEASE, 150, WitherShieldSpell::execute, item -> item instanceof NecronSword, WitherShieldSpell::getDescription, Rarity.RARE, true, Elements.EARTH, Elements.SHADOW),
-    IMPLOSION("Implosion", "0000000", Type.RELEASE, 300, ImplosionSpell::execute, item -> item instanceof NecronSword, ImplosionSpell::getDescription, FormattingCodes.LEGENDARY, true, Elements.FIRE, Elements.SHADOW),
-    INSTANT_TRANSMISSION("Instant Transmission", "1110111", Type.RELEASE, 50, InstantTransmissionSpell::execute, item -> true, InstantTransmissionSpell::getDescription, Rarity.COMMON, true, Elements.VOID),
-    ETHER_WARP("Ether Transmission", "1000111", Type.RELEASE, 50, EtherWarpSpell::execute, item -> item instanceof AspectOfTheVoidItem, EtherWarpSpell::getDescription, Rarity.EPIC, true, Elements.VOID, Elements.AIR),
-    EXPLOSIVE_SIGHT("Explosive Sight", "1010110", Type.RELEASE, 150, ExplosiveSightSpell::execute, item -> true, ExplosiveSightSpell::getDescription, Rarity.UNCOMMON, true, Elements.FIRE),
-    EMPTY_SPELL("Empty Spell", null, Type.RELEASE, 0, (living, itemStack)-> {}, item -> false, EmptySpell::getDescription, Rarity.UNCOMMON, false),
-    HUGE_HEAL("Huge Heal", "0011011", Type.RELEASE, 70, HugeHealSpell::execute, item -> true, HugeHealSpell::getDescription, Rarity.UNCOMMON, true, Elements.WATER),
-    FIRE_BOLT_1("Fire Bolt 1", "0110011", Type.RELEASE, 50, createFireBold(1, false), item -> item instanceof IFireScytheItem, createFireBoldDesc(1f), Rarity.UNCOMMON, true, Elements.FIRE),
-    FIRE_BOLT_2("Fire Bolt 2", "0110011", Type.RELEASE, 50, createFireBold(1.4, false), item -> item instanceof IFireScytheItem, createFireBoldDesc(1.4f), Rarity.UNCOMMON, true, Elements.FIRE),
-    FIRE_BOLT_3("Fire Bolt 3", "0110011", Type.RELEASE, 50, createFireBold(2.8, true), item -> item instanceof IFireScytheItem, createFireBoldDesc(2.8f), Rarity.UNCOMMON, true, Elements.FIRE),
-    FIRE_BOLT_4("Fire Bolt 4", "0110011", Type.RELEASE, 50, createFireBold(5.2, true), item -> item instanceof IFireScytheItem, createFireBoldDesc(5.2f), Rarity.UNCOMMON, true, Elements.FIRE),
-    FIRE_LANCE("Fire Lance", "1011100", Type.CYCLE, 5, FireLanceSpell::execute, item -> item instanceof FireLance, FireLanceSpell::getDescription, Rarity.UNCOMMON, true, Elements.FIRE, Elements.AIR);
+    WITHER_IMPACT("Wither Impact", "1101110", Type.RELEASE, 300, WitherImpactSpell::execute, item -> item instanceof NecronSword, WitherImpactSpell::getDescription, Rarity.RARE, true, 0, Elements.SHADOW),
+    WITHER_SHIELD("Wither Shield", "1101111", Type.RELEASE, 150, WitherShieldSpell::execute, item -> item instanceof NecronSword, WitherShieldSpell::getDescription, Rarity.RARE, true, 0, Elements.EARTH, Elements.SHADOW),
+    IMPLOSION("Implosion", "0000000", Type.RELEASE, 300, ImplosionSpell::execute, item -> item instanceof NecronSword, ImplosionSpell::getDescription, FormattingCodes.LEGENDARY, true, 0, Elements.FIRE, Elements.SHADOW),
+    INSTANT_TRANSMISSION("Instant Transmission", "1110111", Type.RELEASE, 50, InstantTransmissionSpell::execute, item -> true, InstantTransmissionSpell::getDescription, Rarity.COMMON, true, 0, Elements.VOID),
+    ETHER_WARP("Ether Transmission", "1000111", Type.RELEASE, 50, EtherWarpSpell::execute, item -> item instanceof AspectOfTheVoidItem, EtherWarpSpell::getDescription, Rarity.EPIC, true, 20, Elements.VOID, Elements.AIR),
+    EXPLOSIVE_SIGHT("Explosive Sight", "1010110", Type.RELEASE, 150, ExplosiveSightSpell::execute, item -> true, ExplosiveSightSpell::getDescription, Rarity.UNCOMMON, true, 600, Elements.FIRE),
+    EMPTY_SPELL("Empty Spell", null, Type.RELEASE, 0, (living, itemStack)-> {}, item -> false, EmptySpell::getDescription, Rarity.UNCOMMON, false, 0),
+    HUGE_HEAL("Huge Heal", "0011011", Type.RELEASE, 70, HugeHealSpell::execute, item -> true, HugeHealSpell::getDescription, Rarity.UNCOMMON, true, 40, Elements.WATER),
+    FIRE_BOLT_1("Fire Bolt 1", "0110011", Type.RELEASE, 50, createFireBold(1, false), item -> item instanceof IFireScytheItem, createFireBoldDesc(1f), Rarity.UNCOMMON, true, 0, Elements.FIRE),
+    FIRE_BOLT_2("Fire Bolt 2", "0110011", Type.RELEASE, 50, createFireBold(1.4, false), item -> item instanceof IFireScytheItem, createFireBoldDesc(1.4f), Rarity.UNCOMMON, true, 0, Elements.FIRE),
+    FIRE_BOLT_3("Fire Bolt 3", "0110011", Type.RELEASE, 50, createFireBold(2.8, true), item -> item instanceof IFireScytheItem, createFireBoldDesc(2.8f), Rarity.UNCOMMON, true, 0, Elements.FIRE),
+    FIRE_BOLT_4("Fire Bolt 4", "0110011", Type.RELEASE, 50, createFireBold(5.2, true), item -> item instanceof IFireScytheItem, createFireBoldDesc(5.2f), Rarity.UNCOMMON, true, 0, Elements.FIRE),
+    FIRE_LANCE("Fire Lance", "1011100", Type.CYCLE, 5, FireLanceSpell::execute, item -> item instanceof FireLance, FireLanceSpell::getDescription, Rarity.UNCOMMON, true, 0,     Elements.FIRE, Elements.AIR);
 
     private static final TabGroup SPELL_GROUP = new TabGroup(TabRegister.TabTypes.SPELL_AND_GEMSTONE);
     public static HashMap<Spells, RegistryObject<SpellScrollItem>> registerAll() {
@@ -70,8 +71,9 @@ public enum Spells implements Spell {
     private final boolean shouldBeItem;
     public final Rarity RARITY;
     private final List<Element> elements;
+    private final int cooldown;
 
-    Spells(String name, String castingType, Type type, double manaCost, BiConsumer<LivingEntity, ItemStack> toRun, Predicate<Item> helper, Supplier<List<Component>> description, Rarity rarity, boolean shouldBeItem, Element... elements) {
+    Spells(String name, String castingType, Type type, double manaCost, BiConsumer<LivingEntity, ItemStack> toRun, Predicate<Item> helper, Supplier<List<Component>> description, Rarity rarity, boolean shouldBeItem, int cooldown, Element... elements) {
         this.shouldBeItem = shouldBeItem;
         this.name = TextHelper.removeNumbers(name);
         this.TYPE = type;
@@ -82,7 +84,12 @@ public enum Spells implements Spell {
         this.castingType = castingType;
         this.REGISTRY_NAME = name.toLowerCase().replace(" ", "_");
         this.RARITY = rarity;
+        this.cooldown = cooldown;
         this.elements = List.of(elements);
+    }
+
+    private int getRemainingCooldownTicks(LivingEntity player) {
+        return player.getPersistentData().getCompound("SpellCooldowns").getInt(this.name);
     }
 
     @Override
@@ -109,12 +116,25 @@ public enum Spells implements Spell {
     }
 
     @Override
+    public int getCooldown() {
+        return cooldown;
+    }
+
+    @Override
     public Rarity getRarity() {
         return this.RARITY;
     }
 
     public void execute(LivingEntity living, ItemStack stack) {
-        this.run.accept(living, stack);
+        CompoundTag SpellCooldowns = living.getPersistentData().getCompound("SpellCooldowns");
+        int cooldown = SpellCooldowns.getInt(this.name);
+        if (cooldown < 1) {
+            this.run.accept(living, stack);
+            cooldown =MathHelper.cooldown(living, this.cooldown);
+        } else {
+            cooldown--;
+        }
+        SpellCooldowns.putInt(this.name, cooldown);
     }
 
     public List<Component> getDescription() {
@@ -127,9 +147,13 @@ public enum Spells implements Spell {
         list.add(Component.literal("Ability: " + this.getName() + " " + (spellSlotAmount > 1 ? (item.getIndexForSlot(this) + 1) + " / " + item.getSpellSlotAmount() : "")).withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.GOLD));
         if (this.description.get() != null) list.addAll(this.description.get());
         if (this.MANA_COST > 0 && player != null) {
-            list.add(Component.literal(FormattingCodes.GRAY + "Mana-Cost: " + FormattingCodes.DARK_RED + getManaCostForPlayer(player)));
+            list.add(Component.literal("Mana-Cost: " + FormattingCodes.DARK_RED + getManaCostForPlayer(player)).withStyle(ChatFormatting.DARK_GRAY));
         }
         if (this.castingType != null && item.getSpellSlotAmount() > 1) list.add(Component.literal("Pattern: [" + this.getPattern() + FormattingCodes.RESET + "]"));
+        if (this.cooldown != 0 && player != null) {
+            int cooldownTicks = getRemainingCooldownTicks(player);
+            list.add(Component.literal("Cooldown: " + (cooldownTicks > 0 ? TextHelper.wrapInRed("ACTIVE") + "(" + MathHelper.round(cooldownTicks / 20., 1) + "s)" : "INACTIVE, " + MathHelper.round(MathHelper.cooldown(player, this.cooldown) / 20., 1) + "s")).withStyle(ChatFormatting.DARK_GRAY));
+        }
     }
 
     public double getManaCostForPlayer(Player player) {
