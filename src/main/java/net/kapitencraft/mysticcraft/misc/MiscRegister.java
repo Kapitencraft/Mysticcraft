@@ -20,7 +20,6 @@ import net.kapitencraft.mysticcraft.item.combat.totems.ModTotemItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword.ManaSteelSwordItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.bow.ModBowItem;
 import net.kapitencraft.mysticcraft.item.item_bonus.IArmorBonusItem;
-import net.kapitencraft.mysticcraft.item.misc.RNGDropHelper;
 import net.kapitencraft.mysticcraft.item.reforging.Reforge;
 import net.kapitencraft.mysticcraft.item.reforging.ReforgeManager;
 import net.kapitencraft.mysticcraft.misc.cooldown.Cooldowns;
@@ -535,20 +534,6 @@ public class MiscRegister {
                 attacker.giveExperiencePoints(event.getDroppedExperience());
                 event.setCanceled(true);
             }
-        }
-    }
-
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public static void rareDropsRegister(LivingDropsEvent event) {
-        LivingEntity attacker = MiscHelper.getAttacker(event.getSource());
-        LivingEntity attacked = event.getEntity();
-        Collection<ItemEntity> drops = event.getDrops();
-        Vec3 pos = new Vec3(attacked.getX(), attacked.getY(), attacked.getZ());
-        if (attacker == null) return;
-        ItemStack weapon = attacker.getMainHandItem();
-        if (weapon.getEnchantmentLevel(ModEnchantments.SCAVENGER.get()) > 0) {
-            float chance = weapon.getEnchantmentLevel(ModEnchantments.SCAVENGER.get()) * 0.2f;
-            RNGDropHelper.addToDrops(new ItemStack(Items.EMERALD), chance, attacker, pos, drops);
         }
     }
 
