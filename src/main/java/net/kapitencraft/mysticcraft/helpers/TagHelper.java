@@ -1,16 +1,21 @@
 package net.kapitencraft.mysticcraft.helpers;
 
 import com.google.common.collect.Multimap;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSerializationContext;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
+import com.mojang.serialization.JsonOps;
 import net.kapitencraft.mysticcraft.ModMarker;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.StringTagVisitor;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.storage.loot.Serializer;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -23,6 +28,27 @@ public class TagHelper {
         return Codec.unboundedMap(tCodec, kCodec);
     }
 
+    public static <T> CodecSerializer<T> createSerializer(Codec<T> codec, T defaulted) {
+        return new CodecSerializer<>(codec, defaulted);
+    }
+
+    public static <T> CodecSerializer<T> createNullDefaultedSerializer(Codec<T> codec) {
+        return createSerializer(codec, null);
+    }
+
+    public record CodecSerializer<T>(Codec<T> codec, T defaulted) implements Serializer<T> {
+        @Override
+            public void serialize(@NotNull JsonObject object, @NotNull T value, @NotNull JsonSerializationContext p_79327_) {
+                JsonObject element = (JsonObject) TagHelper.getOrLog(codec.encodeStart(JsonOps.INSTANCE, value), new JsonObject());
+                element.asMap().forEach(object::add);
+            }
+
+            @Override
+            public @NotNull T deserialize(@NotNull JsonObject object, @NotNull JsonDeserializationContext context) {
+                return TagHelper.getOrLog(codec.parse(JsonOps.INSTANCE, object), defaulted);
+            }
+        }
+
 
     public static boolean checkForIntAbove0(CompoundTag tag, String name) {
         return tag.contains(name) && tag.getInt(name) > 0;
@@ -34,16 +60,8 @@ public class TagHelper {
         return value;
     }
 
-    public static <T> T getOrDefault(DataResult<T> result, T defaulted) {
-        return result.result().orElse(defaulted);
-    }
-
-
-    public static <T> T getOrLog(DataResult<T> result, String toLog, T defaulted) {
-        Optional<T> optional = result.result();
-        if (optional.isPresent()) return optional.get();
-        MysticcraftMod.sendWarn(toLog, true, TRANSFER_MARKER);
-        return defaulted;
+    public static <T> T getOrLog(DataResult<T> result, T defaulted) {
+        return result.resultOrPartial(MysticcraftMod::sendError).orElse(defaulted);
     }
 
     public static int increaseIntegerTagValue(CompoundTag tag, String name, int i) {

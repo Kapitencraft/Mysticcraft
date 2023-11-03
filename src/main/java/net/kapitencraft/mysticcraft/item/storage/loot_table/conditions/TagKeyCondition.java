@@ -2,6 +2,7 @@ package net.kapitencraft.mysticcraft.item.storage.loot_table.conditions;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.kapitencraft.mysticcraft.helpers.TagHelper;
 import net.kapitencraft.mysticcraft.init.ModLootItemConditions;
 import net.kapitencraft.mysticcraft.item.storage.loot_table.LootContextReader;
 import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.Reference;
@@ -88,7 +89,7 @@ public class TagKeyCondition extends BaseCondition {
         return reference.getValue();
     }
 
-    public static final ConditionSerializer<TagKeyCondition> SERIALIZER = new ConditionSerializer<>(CODEC, EMPTY);
+    public static final TagHelper.CodecSerializer<TagKeyCondition> SERIALIZER = TagHelper.createSerializer(CODEC, EMPTY);
 
     public enum Type implements StringRepresentable {
         ENTITY("entities"),

@@ -1,18 +1,17 @@
 modLoader="javafml" #mandatory
-updateJSONURL = ""
 loaderVersion="[42,)"
 license="MIT License"
 [[mods]] #mandatory
+updateJSONURL = "https://raw.githubusercontent.com/Kapitencraft/Mysticcraft/master/mysticcraft-version.json"
 modId="mysticcraft" #mandatory
-version="0.4.9-1.19.3" #mandatory
+version="0.9.9d-1.19.3" #mandatory
 displayName="Mysticcraft" #mandatory
 logoFile="examplemod.png" #optional
 credits="" #optional
-authors="Kapitencraft: Dev; Lenori, Beefrient: Textures; Lenori: Testing" #optional
+authors="Kapitencraft: Dev; Beefrient, WarpBeat(, Lenori): Textures"
 description='''
 CREDITS:
     Some Textures mad by the author(s) of Necron's Pack Hypixel Skyblock
-    Textures for the elements made by Kraft007
     some Textures made by Beefrient
     some Textures made by Jendrikose08
     heart of the nether texture made by Lenori

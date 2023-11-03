@@ -1,5 +1,6 @@
 package net.kapitencraft.mysticcraft.client;
 
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -10,7 +11,7 @@ public class ClientData {
 
     @SubscribeEvent
     public static void tickEvent(TickEvent.PlayerTickEvent event) {
-        if (event.phase == TickEvent.Phase.END) {
+        if (event.phase == TickEvent.Phase.END && event.player == Minecraft.getInstance().player) {
             time++;
         }
     }

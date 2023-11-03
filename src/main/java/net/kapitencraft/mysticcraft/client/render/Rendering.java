@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.client;
+package net.kapitencraft.mysticcraft.client.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.kapitencraft.mysticcraft.helpers.MathHelper;

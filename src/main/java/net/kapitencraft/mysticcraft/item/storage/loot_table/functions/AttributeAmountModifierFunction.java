@@ -1,14 +1,12 @@
 package net.kapitencraft.mysticcraft.item.storage.loot_table.functions;
 
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSerializationContext;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.kapitencraft.mysticcraft.helpers.TagHelper;
 import net.kapitencraft.mysticcraft.init.ModLootItemFunctions;
+import net.kapitencraft.mysticcraft.item.storage.loot_table.modifiers.ModLootModifier;
 import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.BinaryProvider;
 import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.SaveAbleEnum;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -19,9 +17,18 @@ import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunct
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
 public class AttributeAmountModifierFunction extends LootItemConditionalFunction {
+    private static final Codec<AttributeAmountModifierFunction> CODEC = RecordCodecBuilder.create(attributeAmountModifierFunctionInstance ->
+            attributeAmountModifierFunctionInstance.group(
+                    ModLootModifier.LOOT_CONDITIONS_CODEC.fieldOf("conditions").forGetter(i -> i.predicates),
+                    ForgeRegistries.ATTRIBUTES.getCodec().fieldOf("attribute").forGetter(i -> i.modifier),
+                    Formulas.CODEC.fieldOf("formula").forGetter(i -> i.formula)
+            ).apply(attributeAmountModifierFunctionInstance, AttributeAmountModifierFunction::new)
+    );
+
     private final Attribute modifier;
     private final Formulas formula;
     private AttributeAmountModifierFunction(LootItemCondition[] p_80678_, Attribute attribute, Formulas formula) {
@@ -87,19 +94,5 @@ public class AttributeAmountModifierFunction extends LootItemConditionalFunction
         return ModLootItemFunctions.ATTRIBUTE_MODIFIER.get();
     }
 
-    public static class Serializer extends LootItemConditionalFunction.Serializer<AttributeAmountModifierFunction> {
-        @Override
-        public void serialize(@NotNull JsonObject object, @NotNull AttributeAmountModifierFunction modifier, @NotNull JsonSerializationContext context) {
-            super.serialize(object, modifier, context);
-            ResourceLocation location = BuiltInRegistries.ATTRIBUTE.getKey(modifier.modifier);
-            object.addProperty("attribute", location == null ? "null" : location.toString());
-            object.addProperty("formula", modifier.formula.getName());
-        }
-
-        @Override
-        public @NotNull AttributeAmountModifierFunction deserialize(JsonObject object, @NotNull JsonDeserializationContext context, LootItemCondition @NotNull [] conditions) {
-            String attribute = object.getAsJsonPrimitive("attribute").getAsString();
-            return new AttributeAmountModifierFunction(conditions, BuiltInRegistries.ATTRIBUTE.get(new ResourceLocation(attribute)), Formulas.byName(object.getAsJsonPrimitive("formula").getAsString()));
-        }
-    }
+    public static final TagHelper.CodecSerializer<AttributeAmountModifierFunction> SERIALIZER = TagHelper.createNullDefaultedSerializer(CODEC);
 }

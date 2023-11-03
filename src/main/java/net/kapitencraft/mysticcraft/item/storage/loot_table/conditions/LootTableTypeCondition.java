@@ -2,6 +2,7 @@ package net.kapitencraft.mysticcraft.item.storage.loot_table.conditions;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.kapitencraft.mysticcraft.helpers.TagHelper;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 
@@ -28,5 +29,5 @@ public class LootTableTypeCondition extends BaseCondition {
         return type.is(context);
     }
 
-    public static final ConditionSerializer<LootTableTypeCondition> SERIALIZER = new ConditionSerializer<>(CODEC, EMPTY);
+    public static final TagHelper.CodecSerializer<LootTableTypeCondition> SERIALIZER = TagHelper.createSerializer(CODEC, EMPTY);
 }

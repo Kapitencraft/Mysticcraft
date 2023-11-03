@@ -16,10 +16,7 @@ public abstract class KeyMappingMixin implements IForgeKeyMapping {
 
     private static boolean isStunned() {
         LocalPlayer local = Minecraft.getInstance().player;
-        if (local != null && local.hasEffect(ModMobEffects.STUN.get())) {
-            return true;
-        }
-        return false;
+        return local != null && local.hasEffect(ModMobEffects.STUN.get());
     }
 
     /**

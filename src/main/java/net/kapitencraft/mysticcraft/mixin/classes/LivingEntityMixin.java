@@ -2,7 +2,7 @@ package net.kapitencraft.mysticcraft.mixin.classes;
 
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.client.Rendering;
+import net.kapitencraft.mysticcraft.client.render.Rendering;
 import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;

@@ -42,14 +42,14 @@ public class GemstoneSlot {
     }
 
     public Tag toNBT() {
-        return TagHelper.getOrDefault(CODEC.encodeStart(NbtOps.INSTANCE, this), new CompoundTag());
+        return TagHelper.getOrLog(CODEC.encodeStart(NbtOps.INSTANCE, this), new CompoundTag());
     }
 
     public static GemstoneSlot fromNBT(CompoundTag tag) {
         if (tag == null) {
             return null;
         }
-        return TagHelper.getOrDefault(CODEC.parse(NbtOps.INSTANCE, tag), BLOCKED);
+        return TagHelper.getOrLog(CODEC.parse(NbtOps.INSTANCE, tag), BLOCKED);
     }
     private int getColorForRarity() {
         return this.gemRarity.colour;
