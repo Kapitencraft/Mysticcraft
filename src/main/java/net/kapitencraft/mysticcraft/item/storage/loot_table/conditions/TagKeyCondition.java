@@ -94,7 +94,8 @@ public class TagKeyCondition extends BaseCondition {
     public enum Type implements StringRepresentable {
         ENTITY("entities"),
         BLOCK("blocks"),
-        ITEM("items");
+        ITEM("items"),
+        EMPTY("empty");
         public static final Codec<Type> CODEC = StringRepresentable.fromEnum(Type::values);
 
         public boolean is(LootContext context) {

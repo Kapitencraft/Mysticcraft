@@ -4,7 +4,7 @@ license="MIT License"
 [[mods]] #mandatory
 updateJSONURL = "https://raw.githubusercontent.com/Kapitencraft/Mysticcraft/master/mysticcraft-version.json"
 modId="mysticcraft" #mandatory
-version="0.9.9d-1.19.3" #mandatory
+version="0.9.9e" #mandatory
 displayName="Mysticcraft" #mandatory
 logoFile="examplemod.png" #optional
 credits="" #optional

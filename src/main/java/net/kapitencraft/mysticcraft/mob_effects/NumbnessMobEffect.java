@@ -7,6 +7,7 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeMap;
+import org.jetbrains.annotations.NotNull;
 
 public class NumbnessMobEffect extends MobEffect {
     public static final String NUMBNESS_ID = "numbnessAmount";
@@ -20,7 +21,7 @@ public class NumbnessMobEffect extends MobEffect {
     }
 
     @Override
-    public void removeAttributeModifiers(LivingEntity living, AttributeMap attributeMap, int amplifier) {
+    public void removeAttributeModifiers(LivingEntity living, @NotNull AttributeMap attributeMap, int amplifier) {
         MobEffectInstance numbness = living.getEffect(ModMobEffects.NUMBNESS.get());
         if (numbness != null && numbness.getDuration() < 1) {
             living.hurt(new DamageSource("numbness"), living.getPersistentData().getFloat(NUMBNESS_ID));

@@ -77,6 +77,8 @@
 
   "item.unbreaking_core.desc": "makes an item unbreakable when applied in an anvil",
 
+  "gemstone_item.translation": "Some say when harnessed properly, it can give it's owner extra %1$s",
+
   "attribute.name.generic.ability_damage": "§cAbility Damage",
   "attribute.name.generic.armor_shredder": "Armor Shredding",
   "attribute.name.generic.arrow_speed": "Arrow Speed",
@@ -95,6 +97,7 @@
   "attribute.name.generic.max_mana": "§3Max Mana",
   "attribute.name.generic.strenght": "§gStrenght",
   "attribute.name.generic.mining_speed": "Mining Speed",
+  "attribute.name.generic.fishing_speed": "Fishing Speed",
 
   "block.mysticcraft.gemstone_grinder": "Gemstone Grinder",
   "block.mysticcraft.mangatic_stone": "Mangatic Stone",
@@ -129,6 +132,9 @@
   "command.guild.promote.failed": "Failed to promote %1$s",
   "command.guild.promote.isOwner": "The target Player (%1$s) is the Guild Owner",
   "command.guild.promote.success": "Successfully promoted %1$s to %2$s",
+  "command.failed.console": "This command can not be executed from the console",
+  "command.misc.max_enchant.success": "Successfully enchanted item %1$s with %2$s enchantments",
+  "command.misc.max_enchant.failed": "That item can not be enchanted",
 
   "death.attack.ability": "%1$s was killed by an magical ability from %1$s",
   "death.attack.ferocity": "%2$s was ferocious enough to kill %1$s",
@@ -263,6 +269,7 @@
   "generic.ranged_damage": "Ranged Damage",
   "generic.strenght": "§gStrenght",
   "generic.mining_speed": "Mining Speed",
+  "generic.fishing_speed": "Fishing Speed",
 
   "guild.banner.name": "%1$s's Banner",
 

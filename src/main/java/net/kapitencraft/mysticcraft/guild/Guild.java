@@ -7,9 +7,12 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.*;
 
+@ParametersAreNonnullByDefault
 public class Guild {
 
     private final String name;
@@ -122,7 +125,7 @@ public class Guild {
         return false;
     }
 
-    public void addMember(Player newMember) {
+    public void addMember(@NotNull Player newMember) {
         if (!removed) {
             members.add(newMember);
             ranks.put(newMember, GuildRank.DEFAULT);

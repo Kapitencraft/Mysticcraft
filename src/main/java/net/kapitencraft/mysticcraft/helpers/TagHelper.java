@@ -1,9 +1,7 @@
 package net.kapitencraft.mysticcraft.helpers;
 
 import com.google.common.collect.Multimap;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSerializationContext;
+import com.google.gson.*;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Codec;
@@ -23,6 +21,7 @@ import java.util.*;
 
 public class TagHelper {
     private static final ModMarker TRANSFER_MARKER = new ModMarker("DataFormattingHelper");
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final String LENGTH_ID = "Length";
     public static <T, K> Codec<Map<T, K>> makeMapCodec(Codec<T> tCodec, Codec<K> kCodec) {
         return Codec.unboundedMap(tCodec, kCodec);

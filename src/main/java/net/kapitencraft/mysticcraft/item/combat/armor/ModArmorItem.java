@@ -196,12 +196,9 @@ public abstract class ModArmorItem extends ArmorItem implements IModItem {
                     }
                 }
             }
-            if (this instanceof IGemstoneApplicable applicable) {
-                map = AttributeHelper.increaseAllByAmount(builder, applicable.getAttributeModifiers(stack, slot));
-            }
         }
         if (stack.getTag() != null && stack.getTag().getBoolean("isOP")) {
-            return AttributeHelper.increaseByPercent(map == null ? builder : map, 300, new AttributeModifier.Operation[]{AttributeModifier.Operation.ADDITION, AttributeModifier.Operation.MULTIPLY_TOTAL, AttributeModifier.Operation.MULTIPLY_BASE}, null);
+            return AttributeHelper.increaseByPercent(builder, 300, new AttributeModifier.Operation[]{AttributeModifier.Operation.ADDITION, AttributeModifier.Operation.MULTIPLY_TOTAL, AttributeModifier.Operation.MULTIPLY_BASE}, null);
         }
         return builder;
     }

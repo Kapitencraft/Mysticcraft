@@ -16,10 +16,15 @@ import net.minecraft.world.item.TieredItem;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(Item.class)
+@SuppressWarnings("ALL")
 public abstract class ItemMixin implements IItemMixin {
 
     private Item self() {return (Item) (Object) this;}
 
+    /**
+     * @reason implementation of reforge, gemstone item and stat boost enchantment modifications
+     * @author Kapitencraft
+     */
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
         AttributeHelper.AttributeBuilder builder = new AttributeHelper.AttributeBuilder(self().getDefaultAttributeModifiers(slot));

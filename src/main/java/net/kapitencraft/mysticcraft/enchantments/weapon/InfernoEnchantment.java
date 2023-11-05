@@ -11,6 +11,8 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantment;
+import org.jetbrains.annotations.NotNull;
 
 public class InfernoEnchantment extends CountEnchantment implements IUltimateEnchantment {
     public InfernoEnchantment() {
@@ -46,6 +48,11 @@ public class InfernoEnchantment extends CountEnchantment implements IUltimateEnc
         return 5;
     }
 
+
+    @Override
+    protected boolean checkCompatibility(@NotNull Enchantment ench) {
+        return !(ench instanceof IUltimateEnchantment);
+    }
 
     @Override
     public String[] getDescriptionMods(int level) {

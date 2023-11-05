@@ -1,17 +1,13 @@
 package net.kapitencraft.mysticcraft.item.storage.loot_table.functions;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
-import net.kapitencraft.mysticcraft.helpers.MathHelper;
-import net.kapitencraft.mysticcraft.helpers.TagHelper;
-import net.kapitencraft.mysticcraft.helpers.TextHelper;
+import net.kapitencraft.mysticcraft.helpers.*;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModItems;
 import net.kapitencraft.mysticcraft.init.ModLootItemFunctions;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneItem;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneType;
-import net.kapitencraft.mysticcraft.item.storage.loot_table.modifiers.ModLootModifier;
+import net.kapitencraft.mysticcraft.item.storage.loot_table.IConditional;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -24,12 +20,8 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import org.jetbrains.annotations.NotNull;
 
-public class PristineFunction extends LootItemConditionalFunction {
-    private static final Codec<PristineFunction> CODEC = RecordCodecBuilder.create(pristineFunctionInstance ->
-            pristineFunctionInstance.group(
-                    ModLootModifier.LOOT_CONDITIONS_CODEC.fieldOf("conditions").forGetter(i -> i.predicates)
-            ).apply(pristineFunctionInstance, PristineFunction::new)
-    );
+public class PristineFunction extends LootItemConditionalFunction implements IConditional {
+    private static final Codec<PristineFunction> CODEC = LootTableHelper.simpleCodec(PristineFunction::new);
     protected PristineFunction(LootItemCondition[] p_80678_) {
         super(p_80678_);
     }
@@ -68,5 +60,10 @@ public class PristineFunction extends LootItemConditionalFunction {
     @Override
     public @NotNull LootItemFunctionType getType() {
         return ModLootItemFunctions.PRISTINE_MODIFIER.get();
+    }
+
+    @Override
+    public LootItemCondition[] getConditions() {
+        return predicates;
     }
 }

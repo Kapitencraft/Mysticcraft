@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.kapitencraft.mysticcraft.helpers.TagHelper;
 import net.kapitencraft.mysticcraft.init.ModLootItemFunctions;
+import net.kapitencraft.mysticcraft.item.storage.loot_table.IConditional;
 import net.kapitencraft.mysticcraft.item.storage.loot_table.modifiers.ModLootModifier;
 import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.BinaryProvider;
 import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.SaveAbleEnum;
@@ -20,7 +21,7 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
-public class AttributeAmountModifierFunction extends LootItemConditionalFunction {
+public class AttributeAmountModifierFunction extends LootItemConditionalFunction implements IConditional {
     private static final Codec<AttributeAmountModifierFunction> CODEC = RecordCodecBuilder.create(attributeAmountModifierFunctionInstance ->
             attributeAmountModifierFunctionInstance.group(
                     ModLootModifier.LOOT_CONDITIONS_CODEC.fieldOf("conditions").forGetter(i -> i.predicates),
@@ -49,6 +50,11 @@ public class AttributeAmountModifierFunction extends LootItemConditionalFunction
             return formula.provide(stack, amount);
         }
         return stack;
+    }
+
+    @Override
+    public LootItemCondition[] getConditions() {
+        return predicates;
     }
 
     public interface Formula {

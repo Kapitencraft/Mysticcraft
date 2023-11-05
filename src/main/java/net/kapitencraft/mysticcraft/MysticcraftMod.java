@@ -56,6 +56,10 @@ public class MysticcraftMod {
         return DeferredRegister.create(registry, MOD_ID);
     }
 
+    public static <T> DeferredRegister<T> makeRegistry(String location) {
+        return DeferredRegister.create(res(location), MOD_ID);
+    }
+
     public static <T> DeferredRegister<T> makeRegistry(ResourceKey<Registry<T>> key) {
         return DeferredRegister.create(key, MOD_ID);
     }

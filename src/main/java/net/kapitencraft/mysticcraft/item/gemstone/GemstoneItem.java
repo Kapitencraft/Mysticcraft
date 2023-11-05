@@ -1,14 +1,17 @@
 package net.kapitencraft.mysticcraft.item.gemstone;
 
-import net.kapitencraft.mysticcraft.init.ModItems;
 import net.kapitencraft.mysticcraft.item.misc.IModItem;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
-import net.minecraft.world.item.DyeableLeatherItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Rarity;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.*;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class GemstoneItem extends Item implements DyeableLeatherItem, IModItem {
     public static final TabGroup GROUP = new TabGroup(TabRegister.TabTypes.SPELL_AND_GEMSTONE);
@@ -26,6 +29,15 @@ public class GemstoneItem extends Item implements DyeableLeatherItem, IModItem {
     }
 
     @Override
+    public void appendHoverTextWithPlayer(@NotNull ItemStack itemStack, @Nullable Level level, @NotNull List<Component> list, @NotNull TooltipFlag flag, Player player) {
+        list.add(Component.translatable("gemstone_item.translation", makeAttributeName()).withStyle(ChatFormatting.GREEN));
+    }
+
+    private Component makeAttributeName() {
+        return Component.translatable(this.getGemstone().getModifiedAttribute().get().getDescriptionId());
+    }
+
+    @Override
     public void clearColor(@NotNull ItemStack p_41124_) {
     }
 
@@ -39,21 +51,16 @@ public class GemstoneItem extends Item implements DyeableLeatherItem, IModItem {
     }
 
     public static Rarity getRarity(GemstoneType.Rarity rarity) {
-        net.minecraft.world.item.Rarity rarity1 = net.minecraft.world.item.Rarity.COMMON;
-        if (GemstoneType.Rarity.FINE.equals(rarity) || GemstoneType.Rarity.FLAWLESS.equals(rarity)) {
-            rarity1 = net.minecraft.world.item.Rarity.UNCOMMON;
-        } else if (GemstoneType.Rarity.PERFECT.equals(rarity)) {
-            rarity1 = net.minecraft.world.item.Rarity.RARE;
-        }
-        return rarity1;
+        return switch (rarity) {
+            case FINE, FLAWLESS -> Rarity.UNCOMMON;
+            case PERFECT -> Rarity.RARE;
+            default -> Rarity.COMMON;
+        };
     }
 
 
     public static GemstoneItem of(GemstoneSlot slot) {
-        if (slot.getAppliedGemstone() == null || slot.getType() == null || slot == GemstoneSlot.BLOCKED) {
-            return null;
-        }
-        return ModItems.GEMSTONES.get(slot.getAppliedGemstone()).get(slot.getGemRarity()).get();
+        return slot.toItem();
     }
 
     public GemstoneType.Rarity getRarity() {

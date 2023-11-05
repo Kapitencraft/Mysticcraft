@@ -8,6 +8,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("ALL")
 public class CollectionHelper {
 
     public static <T, K> T getFirstKey(Map<T, K> collection) {
@@ -82,13 +83,13 @@ public class CollectionHelper {
         return Arrays.asList(source);
     }
 
-    public static <T> T[] remove(T[] values, T... toRemove) {
-        return (T[]) Arrays.stream(values).filter(t -> !arrayContains(toRemove, t)).toArray();
+    public static <T> List<T> remove(T[] values, T... toRemove) {
+        return Arrays.stream(values).filter(t -> !arrayContains(toRemove, t)).toList();
     }
 
-    public static <T> T[] add(T[] values, T... toAdd) {
+    public static <T> List<T> add(T[] values, T... toAdd) {
         List<T> source = new ArrayList<>(Arrays.stream(values).toList());
         source.addAll(Arrays.stream(toAdd).toList());
-        return listToArray(source);
+        return source;
     }
 }

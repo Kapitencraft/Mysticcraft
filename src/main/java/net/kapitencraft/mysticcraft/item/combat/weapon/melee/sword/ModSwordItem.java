@@ -3,14 +3,12 @@ package net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.item.misc.IModItem;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
-import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -42,36 +40,17 @@ public abstract class ModSwordItem extends SwordItem implements IModItem {
     }
 
     @Override
-    public @NotNull Rarity getRarity(ItemStack stack) {
-        if (!stack.isEnchanted()) {
-            return super.getRarity(stack);
-        } else {
-            final Rarity rarity = MiscHelper.getItemRarity(this);
-            if (rarity == Rarity.COMMON) {
-                return Rarity.UNCOMMON;
-            } else if (rarity == Rarity.UNCOMMON) {
-                return Rarity.RARE;
-            } else if (rarity == Rarity.RARE) {
-                return Rarity.EPIC;
-            } else if (rarity == Rarity.EPIC) {
-                return FormattingCodes.LEGENDARY;
-            } else if (rarity == FormattingCodes.LEGENDARY) {
-                return FormattingCodes.MYTHIC;
-            } else if (rarity == FormattingCodes.MYTHIC) {
-                return FormattingCodes.DIVINE;
-            } else {
-                return Rarity.COMMON;
-            }
-        }
+    public @NotNull Rarity getRarity(@NotNull ItemStack stack) {
+        return MiscHelper.getFinalRarity(super::getRarity, stack);
     }
 
-    @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level level, @NotNull List<Component> list, @NotNull TooltipFlag flag) {
-        if (stack.getItem() instanceof IGemstoneApplicable applicable) {
-            applicable.appendDisplay(stack, list);
-        }
-        list.add(Component.literal(""));
 
+    @Override
+    public void appendHoverTextWithPlayer(@NotNull ItemStack itemStack, @Nullable Level level, @NotNull List<Component> list, @NotNull TooltipFlag flag, Player player) {
+        if (itemStack.getItem() instanceof IGemstoneApplicable applicable) {
+            applicable.appendDisplay(itemStack, list);
+            list.add(Component.literal(""));
+        }
     }
 
     @Override
@@ -86,16 +65,6 @@ public abstract class ModSwordItem extends SwordItem implements IModItem {
         if (slot == EquipmentSlot.MAINHAND) {
             builder.put(ModAttributes.STRENGTH.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[5], "Default Attribute modification", this.getStrenght(), AttributeModifier.Operation.ADDITION));
             builder.put(ModAttributes.CRIT_DAMAGE.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[5], "Default Attribute modification", this.getCritDamage(), AttributeModifier.Operation.ADDITION));
-        }
-        return builder;
-    }
-
-    @Override
-    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
-        HashMultimap<Attribute, AttributeModifier> builder = HashMultimap.create();
-        builder.putAll(super.getAttributeModifiers(slot, stack));
-        if (this instanceof IGemstoneApplicable applicable && slot == EquipmentSlot.MAINHAND) {
-            return AttributeHelper.increaseAllByAmount(builder, applicable.getAttributeModifiers(stack, slot));
         }
         return builder;
     }

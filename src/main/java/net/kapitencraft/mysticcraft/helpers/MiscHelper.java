@@ -7,6 +7,7 @@ import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.client.particle.DamageIndicatorParticleOptions;
 import net.kapitencraft.mysticcraft.gui.IGuiHelper;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneItem;
+import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.Provider;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementProgress;
@@ -64,6 +65,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -75,6 +77,21 @@ public class MiscHelper {
 
     public static EquipmentSlot getSlotForStack(ItemStack stack) {
         return stack.getItem() instanceof ArmorItem armorItem ? armorItem.getSlot() : EquipmentSlot.MAINHAND;
+    }
+
+    public static Rarity getFinalRarity(Function<ItemStack, Rarity> defaulted, ItemStack stack) {
+        if (!stack.isEnchanted()) {
+            return defaulted.apply(stack);
+        } else {
+            final Rarity rarity = getItemRarity(stack.getItem());
+            return switch (rarity) {
+                case COMMON -> Rarity.UNCOMMON;
+                case UNCOMMON -> Rarity.RARE;
+                case RARE -> Rarity.EPIC;
+                case EPIC -> FormattingCodes.LEGENDARY;
+                default -> rarity == FormattingCodes.LEGENDARY ? FormattingCodes.MYTHIC : rarity == FormattingCodes.MYTHIC ? FormattingCodes.DIVINE : Rarity.COMMON;
+            };
+        }
     }
 
     public static <T> T forDifficulty(Difficulty difficulty, T easy, T medium, T hard, T peaceful) {

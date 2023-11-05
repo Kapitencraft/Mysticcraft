@@ -13,7 +13,9 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
+import org.jetbrains.annotations.NotNull;
 
 public class BonkEnchantment extends ExtendedCalculationEnchantment implements IUltimateEnchantment, IArmorEnchantment {
     public static final String BONK_ID = "Bonk Enchantment";
@@ -37,6 +39,11 @@ public class BonkEnchantment extends ExtendedCalculationEnchantment implements I
             }
         }
         return damage;
+    }
+
+    @Override
+    protected boolean checkCompatibility(@NotNull Enchantment ench) {
+        return !(ench instanceof IUltimateEnchantment);
     }
 
     @Override

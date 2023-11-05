@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.kapitencraft.mysticcraft.helpers.LootTableHelper;
 import net.kapitencraft.mysticcraft.init.ModEnchantments;
+import net.kapitencraft.mysticcraft.item.storage.loot_table.IConditional;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -12,8 +13,8 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraftforge.common.loot.IGlobalLootModifier;
 import org.jetbrains.annotations.NotNull;
 
-public class TelekinesisModifier extends ModLootModifier {
-    public static final Codec<TelekinesisModifier> CODEC = simpleCodec(TelekinesisModifier::new);
+public class TelekinesisModifier extends ModLootModifier implements IConditional {
+    public static final Codec<TelekinesisModifier> CODEC = LootTableHelper.simpleCodec(TelekinesisModifier::new);
 
     protected TelekinesisModifier(LootItemCondition[] conditionsIn) {
         super(conditionsIn);
@@ -32,5 +33,10 @@ public class TelekinesisModifier extends ModLootModifier {
     @Override
     public Codec<? extends IGlobalLootModifier> codec() {
         return CODEC;
+    }
+
+    @Override
+    public LootItemCondition[] getConditions() {
+        return conditions;
     }
 }

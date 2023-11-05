@@ -6,6 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.kapitencraft.mysticcraft.helpers.LootTableHelper;
 import net.kapitencraft.mysticcraft.item.misc.RNGDropHelper;
+import net.kapitencraft.mysticcraft.item.storage.loot_table.IConditional;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
@@ -15,7 +16,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("ALL")
-public class AddItemModifier extends ModLootModifier {
+public class AddItemModifier extends ModLootModifier implements IConditional {
     protected static <T extends AddItemModifier> Products.P4<RecordCodecBuilder.Mu<T>, LootItemCondition[], Item, Float, Integer> addItemCodecStart(RecordCodecBuilder.Instance<T> instance) {
         return codecStart(instance)
                 .and(ForgeRegistries.ITEMS.getCodec()
@@ -50,5 +51,10 @@ public class AddItemModifier extends ModLootModifier {
     @Override
     public Codec<? extends IGlobalLootModifier> codec() {
         return CODEC;
+    }
+
+    @Override
+    public LootItemCondition[] getConditions() {
+        return conditions;
     }
 }

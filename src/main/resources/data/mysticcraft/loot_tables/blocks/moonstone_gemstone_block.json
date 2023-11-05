@@ -24,7 +24,7 @@
                   }
                 }
               ],
-              "name": "mysticcraft:moon_stone_gemstone_block"
+              "name": "mysticcraft:moonstone_gemstone_block"
             },
             {
               "type": "minecraft:item",
@@ -50,7 +50,7 @@
                   "function": "mysticcraft:pristine_modifier"
                 }
               ],
-              "name": "mysticcraft:rough_moon_stone_gemstone"
+              "name": "mysticcraft:rough_moonstone_gemstone"
             }
           ]
         }

@@ -13,30 +13,29 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.util.StringRepresentable;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 public class GemstoneSlot {
-    private static final String TYPE_ID = "type";
-    private static final String GEMSTONE_RARITY_ID = "gem_rarity";
-    private static final String GEMSTONE_TYPE_ID = "gem";
 
     public static final Codec<GemstoneSlot> CODEC = RecordCodecBuilder.create(gemstoneSlotInstance ->
             gemstoneSlotInstance.group(
-                    Type.CODEC.fieldOf(TYPE_ID).forGetter(GemstoneSlot::getType),
-                    GemstoneType.CODEC.fieldOf(GEMSTONE_TYPE_ID).forGetter(GemstoneSlot::getAppliedGemstone),
-                    GemstoneType.Rarity.CODEC.fieldOf(GEMSTONE_RARITY_ID).forGetter(GemstoneSlot::getGemRarity)
+                    Type.CODEC.fieldOf("type").forGetter(GemstoneSlot::getType),
+                    GemstoneType.CODEC.optionalFieldOf("gem", GemstoneType.EMPTY).forGetter(GemstoneSlot::getAppliedGemstone),
+                    GemstoneType.Rarity.CODEC.optionalFieldOf("gem_rarity", GemstoneType.Rarity.EMPTY).forGetter(GemstoneSlot::getGemRarity)
             ).apply(gemstoneSlotInstance, GemstoneSlot::new)
     );
-    public static final GemstoneSlot BLOCKED = new GemstoneSlot(Type.EMPTY, GemstoneType.ALMANDINE, GemstoneType.Rarity.EMPTY);
+    public static final GemstoneSlot BLOCKED = new GemstoneSlot(Type.EMPTY, GemstoneType.EMPTY, GemstoneType.Rarity.EMPTY);
 
 
     private GemstoneType.Rarity gemRarity;
     private final Type type;
-    @Nullable
+    @NotNull
     private GemstoneType appliedGemstoneType;
-    GemstoneSlot(Type gem_type, @Nullable GemstoneType appliedGemstoneType, GemstoneType.Rarity rarity) {
-        this.appliedGemstoneType = appliedGemstoneType;
+    GemstoneSlot(Type gem_type, GemstoneType appliedGemstoneType, GemstoneType.Rarity rarity) {
+        this.appliedGemstoneType = Objects.requireNonNull(appliedGemstoneType);
         this.type = gem_type;
         this.gemRarity = rarity;
     }
@@ -66,7 +65,7 @@ public class GemstoneSlot {
 
     private boolean isValidGemstone(GemstoneType gemstoneType) {
         for (GemstoneType gemstoneType1 : this.type.applicable) {
-            if (gemstoneType1 != null && gemstoneType1.equals(gemstoneType) || gemstoneType == null) {
+            if (gemstoneType1 != null && gemstoneType1.equals(gemstoneType) || gemstoneType == GemstoneType.EMPTY) {
                 return true;
             }
         }
@@ -74,7 +73,7 @@ public class GemstoneSlot {
     }
     public boolean putGemstone(GemstoneType gemstoneType, GemstoneType.Rarity rarity) {
         if (this.isValidGemstone(gemstoneType)) {
-            this.appliedGemstoneType = gemstoneType;
+            this.appliedGemstoneType = Objects.requireNonNull(gemstoneType);
             this.gemRarity = rarity;
             ModEventFactory.onGemstoneApplied(gemstoneType, this);
             return true;
@@ -83,27 +82,32 @@ public class GemstoneSlot {
     }
 
     public @Nullable GemstoneItem toItem() {
-        if (this.appliedGemstoneType == null || this.gemRarity == null) {
+        if (this.gemRarity == GemstoneType.Rarity.EMPTY || this.appliedGemstoneType == GemstoneType.EMPTY || this == BLOCKED) {
             return null;
         }
         return ModItems.GEMSTONES.get(this.appliedGemstoneType).get(this.gemRarity).get();
     }
 
-    public @Nullable GemstoneType getAppliedGemstone() {
+    public GemstoneType getAppliedGemstone() {
         return this.appliedGemstoneType;
     }
 
+    @SuppressWarnings("ALL")
     public MutableComponent getDisplay() {
-        boolean flag = this.appliedGemstoneType == null;
+        boolean flag = this.appliedGemstoneType == GemstoneType.EMPTY;
         Style rarityColorStyle = Style.EMPTY.withColor(getColorForRarity());
         Style gemstoneColorStyle = Style.EMPTY.withColor((flag ? ChatFormatting.GRAY.getColor() : appliedGemstoneType.getColour()));
         return Component.literal("[").withStyle(rarityColorStyle).append(Component.literal(this.type.getUNICODE()).withStyle(gemstoneColorStyle)).append(Component.literal("]").withStyle(rarityColorStyle));
     }
 
 
+    public static GemstoneSlot[] of(Type... types) {
+        return new Builder(types).build();
+    }
+
     @Override
     public String toString() {
-        return "GemstoneSlot{Rarity: " + this.getGemRarity().getId() + ", applied GemstoneType: " + (this.appliedGemstoneType == null ? "null" : this.appliedGemstoneType.getId()) + "}";
+        return "GemstoneSlot{Rarity: " + this.getGemRarity().getId() + ", applied GemstoneType: " + this.appliedGemstoneType.getId() + "}";
     }
 
     public enum Type implements StringRepresentable {
@@ -113,12 +117,13 @@ public class GemstoneSlot {
         ABILITY_DAMAGE("\uF001", "ability_damage", GemstoneType.ALMANDINE),
         EMPTY("", "empty", (GemstoneType) null),
         FISHING_SPEED("\uF006", "fishing_speed", GemstoneType.AQUAMARINE),
-        DRAW_SPEED("\uF004", "draw_speed", GemstoneType.MOON_STONE),
+        DRAW_SPEED("\uF004", "draw_speed", GemstoneType.MOONSTONE),
+        MOVE_SPEED("\uF000", "move_speed", GemstoneType.CELESTINE),
         ARMOR("\uF000", "armor", GemstoneType.AMETHYST),
-        OFFENCE("\uF005", "offence", GemstoneType.JASPER, GemstoneType.SAPPHIRE, GemstoneType.ALMANDINE, GemstoneType.MOON_STONE),
-        DEFENCE("\uF002", "defence", GemstoneType.RUBY, GemstoneType.AMETHYST),
+        OFFENCE("\uF005", "offence", GemstoneType.JASPER, GemstoneType.SAPPHIRE, GemstoneType.ALMANDINE, GemstoneType.MOONSTONE, GemstoneType.CELESTINE),
+        DEFENCE("\uF002", "defence", GemstoneType.RUBY, GemstoneType.AMETHYST, GemstoneType.CELESTINE),
         MAGIC("\uF003", "magic", GemstoneType.SAPPHIRE, GemstoneType.ALMANDINE),
-        COMBAT("\u2694", "combat", GemstoneType.JASPER, GemstoneType.SAPPHIRE, GemstoneType.ALMANDINE, GemstoneType.MOON_STONE, GemstoneType.RUBY, GemstoneType.AMETHYST);
+        COMBAT("\u2694", "combat", GemstoneType.JASPER, GemstoneType.SAPPHIRE, GemstoneType.ALMANDINE, GemstoneType.MOONSTONE, GemstoneType.RUBY, GemstoneType.AMETHYST, GemstoneType.CELESTINE);
 
         public static final Codec<Type> CODEC = StringRepresentable.fromEnum(Type::values);
 
@@ -138,7 +143,7 @@ public class GemstoneSlot {
         }
 
         @Override
-        public String getSerializedName() {
+        public @NotNull String getSerializedName() {
             return id;
         }
     }
@@ -153,7 +158,7 @@ public class GemstoneSlot {
         public GemstoneSlot[] build() {
             GemstoneSlot[] slots = new GemstoneSlot[types.length];
             for (int i = 0; i < slots.length; i++) {
-                slots[i] = new GemstoneSlot(types[i], null, GemstoneType.Rarity.EMPTY);
+                slots[i] = new GemstoneSlot(types[i], GemstoneType.EMPTY, GemstoneType.Rarity.EMPTY);
             }
             return slots;
         }

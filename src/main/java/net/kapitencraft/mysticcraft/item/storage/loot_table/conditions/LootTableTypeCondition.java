@@ -3,8 +3,10 @@ package net.kapitencraft.mysticcraft.item.storage.loot_table.conditions;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.kapitencraft.mysticcraft.helpers.TagHelper;
+import net.kapitencraft.mysticcraft.init.ModLootItemConditions;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
+import org.jetbrains.annotations.NotNull;
 
 public class LootTableTypeCondition extends BaseCondition {
     private static final LootTableTypeCondition EMPTY = new LootTableTypeCondition(null);
@@ -20,8 +22,8 @@ public class LootTableTypeCondition extends BaseCondition {
     }
 
     @Override
-    public LootItemConditionType getType() {
-        return null;
+    public @NotNull LootItemConditionType getType() {
+        return ModLootItemConditions.TYPE.get();
     }
 
     @Override

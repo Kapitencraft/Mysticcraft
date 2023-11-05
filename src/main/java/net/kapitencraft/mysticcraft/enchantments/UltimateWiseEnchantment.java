@@ -13,6 +13,8 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantment;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
@@ -34,6 +36,12 @@ public class UltimateWiseEnchantment extends StatBoostEnchantment implements IWe
     @Override
     public boolean hasModifiersForThatSlot(EquipmentSlot slot) {
         return CollectionHelper.arrayContains(MiscHelper.WEAPON_SLOT, slot);
+    }
+
+
+    @Override
+    protected boolean checkCompatibility(@NotNull Enchantment ench) {
+        return !(ench instanceof IUltimateEnchantment);
     }
 
     @Override

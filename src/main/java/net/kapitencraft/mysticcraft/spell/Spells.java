@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.spell;
 
 import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
+import net.kapitencraft.mysticcraft.helpers.CollectionHelper;
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.helpers.TextHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
@@ -46,7 +47,8 @@ public enum Spells implements Spell {
 
     private static final TabGroup SPELL_GROUP = new TabGroup(TabRegister.TabTypes.SPELL_AND_GEMSTONE);
     public static HashMap<Spells, RegistryObject<SpellScrollItem>> registerAll() {
-        return ModItems.createRegistry(SpellScrollItem::new, (spell) -> spell.REGISTRY_NAME + "_spell_scroll", List.of(values()), SPELL_GROUP);
+        List<Spells> spells = CollectionHelper.remove(values(), EMPTY_SPELL);
+        return ModItems.createRegistry(SpellScrollItem::new, (spell) -> spell.REGISTRY_NAME + "_spell_scroll", spells, SPELL_GROUP);
     }
 
 
@@ -194,6 +196,4 @@ public enum Spells implements Spell {
         String replace = pattern.replace(RED, "0");
         return replace.replace(BLUE, "1");
     }
-
-
 }

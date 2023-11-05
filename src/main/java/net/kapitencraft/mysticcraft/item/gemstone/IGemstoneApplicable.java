@@ -36,11 +36,4 @@ public interface IGemstoneApplicable {
     default boolean putGemstone(GemstoneType gemstoneType, GemstoneType.Rarity rarity, int slotIndex, ItemStack stack) {
         return this.getHelper(stack).putGemstone(gemstoneType, rarity, slotIndex, stack);
     }
-
-
-
-    default void addModInfo(ItemStack stack, List<Component> list) {
-        this.getHelper(stack).addModInfo(stack, list);
-    }
-
 }

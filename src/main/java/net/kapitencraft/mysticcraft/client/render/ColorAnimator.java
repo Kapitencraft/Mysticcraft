@@ -20,7 +20,13 @@ public class ColorAnimator {
     }
 
     public static ColorAnimator createRainbow(int cooldown) {
-        return create(cooldown).addFrame(new Vector3f(1, 0, 0)).addFrame(new Vector3f(0, 1, 0)).addFrame(new Vector3f(0, 0, 1));
+        return create(cooldown).addFrames(new float[][] {{1, 0, 0}, {0, 1, 0}, {0, 0, 1}});
+    }
+
+    public static ColorAnimator createLightRainbow(int cooldown) {
+        return create(cooldown).addFrames(new float[][] {
+                {1, 0, 0}, {1, 1, 0}, {0, 1, 0}, {0, 1, 1}, {0, 0, 1}, {1, 0, 1}
+        });
     }
 
 
@@ -35,6 +41,17 @@ public class ColorAnimator {
 
     public ColorAnimator addFrame(Vector3f color) {
         colors.add(color);
+        return this;
+    }
+
+    public ColorAnimator addFrame(float r, float g, float b) {
+        return addFrame(new Vector3f(r, g, b));
+    }
+
+    public ColorAnimator addFrames(float[][] matrix) {
+        for (float[] color : matrix) {
+            addFrame(color[0], color[1], color[2]);
+        }
         return this;
     }
 
@@ -64,11 +81,13 @@ public class ColorAnimator {
 
     private Vector3f getColor(int curTime, Vector3f first, Vector3f second) {
         float percentage = MathHelper.makePercentage(curTime, nextColorTime);
-        Vector3f a = new Vector3f(first);
-        Vector3f b = new Vector3f(second);
-        Vector3f change = new Vector3f(a.add(b.mul(-1)));
-        a.add(change.mul(-percentage));
-        return a;
+        float xOff = second.x - first.x;
+        float yOff = second.y - first.y;
+        float zOff = second.z - first.z;
+        xOff *= percentage;
+        yOff *= percentage;
+        zOff *= percentage;
+        return new Vector3f(first.x + xOff, first.y + yOff, first.z + zOff);
     }
 
     public int getLength() {

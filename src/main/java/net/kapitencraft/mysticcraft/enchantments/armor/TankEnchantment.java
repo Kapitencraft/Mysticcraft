@@ -11,7 +11,9 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
@@ -28,6 +30,12 @@ public class TankEnchantment extends StatBoostEnchantment implements IUltimateEn
     @Override
     public int getMaxLevel() {
         return 5;
+    }
+
+
+    @Override
+    protected boolean checkCompatibility(@NotNull Enchantment ench) {
+        return !(ench instanceof IUltimateEnchantment);
     }
 
     @Override

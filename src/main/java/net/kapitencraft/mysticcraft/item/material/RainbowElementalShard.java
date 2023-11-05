@@ -9,7 +9,7 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 public class RainbowElementalShard extends ElementalShard implements DyeableLeatherItem {
-    private static final ColorAnimator animator = ColorAnimator.createRainbow(100);
+    private static final ColorAnimator animator = ColorAnimator.createLightRainbow(100);
     private static final Element RAINBOW = () -> "rainbow";
     public RainbowElementalShard() {
         super(RAINBOW);

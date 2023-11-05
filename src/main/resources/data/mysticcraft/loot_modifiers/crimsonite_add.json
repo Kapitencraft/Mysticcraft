@@ -2,7 +2,7 @@
   "type": "mysticcraft:add_item",
   "conditions": [
     {
-      "condition": "block_state_properties",
+      "condition": "minecraft:block_state_property",
       "block": "minecraft:crimson_nylium"
     }
   ],

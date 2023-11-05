@@ -2,6 +2,8 @@ package net.kapitencraft.mysticcraft.item.storage.loot_table.modifiers;
 
 import com.mojang.serialization.Codec;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.kapitencraft.mysticcraft.helpers.LootTableHelper;
+import net.kapitencraft.mysticcraft.item.storage.loot_table.IConditional;
 import net.kapitencraft.mysticcraft.item.storage.loot_table.LootContextReader;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.Item;
@@ -13,8 +15,8 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraftforge.common.loot.IGlobalLootModifier;
 import org.jetbrains.annotations.NotNull;
 
-public class ReplenishModifier extends ModLootModifier {
-    public static final Codec<ReplenishModifier> CODEC = simpleCodec(ReplenishModifier::new);
+public class ReplenishModifier extends ModLootModifier implements IConditional {
+    public static final Codec<ReplenishModifier> CODEC = LootTableHelper.simpleCodec(ReplenishModifier::new);
     protected ReplenishModifier(LootItemCondition[] conditionsIn) {
         super(conditionsIn);
     }
@@ -38,5 +40,10 @@ public class ReplenishModifier extends ModLootModifier {
     @Override
     public Codec<? extends IGlobalLootModifier> codec() {
         return CODEC;
+    }
+
+    @Override
+    public LootItemCondition[] getConditions() {
+        return conditions;
     }
 }

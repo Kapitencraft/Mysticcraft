@@ -11,6 +11,7 @@ import net.kapitencraft.mysticcraft.gui.IGuiHelper;
 import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
+import net.kapitencraft.mysticcraft.helpers.TextHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.item.combat.spells.SpellItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword.LongSwordItem;
@@ -52,6 +53,7 @@ import java.util.*;
 import static net.minecraft.world.item.ItemStack.ATTRIBUTE_MODIFIER_FORMAT;
 
 @Mixin(ItemStack.class)
+@SuppressWarnings("ALL")
 public abstract class ItemStackMixin {
     private static final Style LORE_STYLE = Style.EMPTY.withColor(ChatFormatting.DARK_PURPLE).withItalic(true);
     private static final ColorAnimator RAINBOW_ANIMATOR = ColorAnimator.createRainbow(30 * (10 - ClientModConfig.rgbSpeed));
@@ -206,7 +208,7 @@ public abstract class ItemStackMixin {
                                 toAppend.append(Component.translatable("attribute.modifier.take." + modifier.getOperation().toValue(), ATTRIBUTE_MODIFIER_FORMAT.format(d1), Component.translatable(entry.getKey().getDescriptionId())).withStyle(ChatFormatting.RED));
                             }
                         }
-                        if (modifier.getOperation() == AttributeModifier.Operation.ADDITION) {
+                        if (modifier.getOperation() == AttributeModifier.Operation.ADDITION || (modifier.getOperation() == AttributeModifier.Operation.MULTIPLY_BASE && (entry.getKey() == Attributes.MOVEMENT_SPEED || entry.getKey() == ForgeMod.SWIM_SPEED.get()))) {
                             if (reforge != null && reforge.hasModifier(entry.getKey())) {
                                 Double reforgeValue = reforge.applyModifiers(self().getRarity()).get(entry.getKey());
                                 String reforgeStringValue = reforgeValue > 0 ? "+" + ATTRIBUTE_MODIFIER_FORMAT.format(reforgeValue) : ATTRIBUTE_MODIFIER_FORMAT.format(reforgeValue);
@@ -216,7 +218,8 @@ public abstract class ItemStackMixin {
                                 HashMap<Attribute, AttributeModifier> mods = applicable.getAttributeModifiers(self(), equipmentslot);
                                 if (mods.containsKey(entry.getKey())) {
                                     double value = mods.get(entry.getKey()).getAmount();
-                                    toAppend.append(Component.literal(" (+" + value + ")").withStyle(ChatFormatting.LIGHT_PURPLE));
+                                    double rounded = MathHelper.round(value, 2);
+                                    toAppend.append(Component.literal(" (+" + rounded + ")").withStyle(ChatFormatting.LIGHT_PURPLE));
                                 }
                             }
                         }
@@ -283,6 +286,7 @@ public abstract class ItemStackMixin {
             list.add(MiscHelper.buildComponent(Component.literal(flag ? RarityMod + " " : "") ,  createNameMod(self()), MiscHelper.SPLIT, obfuscated).withStyle(rarity.getStyleModifier()).withStyle(ChatFormatting.BOLD));
         }
 
+        TextHelper.removeUnnecessaryEmptyLines(list);
         return list;
     }
 

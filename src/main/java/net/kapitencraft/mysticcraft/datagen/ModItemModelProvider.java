@@ -2,7 +2,6 @@ package net.kapitencraft.mysticcraft.datagen;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.init.ModItems;
-import net.kapitencraft.mysticcraft.item.combat.spells.SpellScrollItem;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneItem;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneType;
 import net.minecraft.data.PackOutput;
@@ -56,12 +55,6 @@ public class ModItemModelProvider extends ItemModelProvider {
         return withExistingParent(item.getId().getPath(),
                 new ResourceLocation("item/handheld")).texture("layer0",
                 (texture == null ? MysticcraftMod.res("item/" + item.getId().getPath()) : texture));
-    }
-
-    private void registerScrolls() {
-        for (RegistryObject<SpellScrollItem> item : ModItems.SCROLLS.values()) {
-            simpleItem(item, MysticcraftMod.res("item/scroll"));
-        }
     }
 
     private void registerGemstones() {

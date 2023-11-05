@@ -10,11 +10,13 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraftforge.common.ForgeMod;
 
 import javax.annotation.Nullable;
 import java.util.*;
 
 public class AttributeHelper {
+
 
     public static Multimap<Attribute, AttributeModifier> increaseByPercent(Multimap<Attribute, AttributeModifier> multimap, double percent, AttributeModifier.Operation[] operations, @Nullable Attribute attributeReq) {
         HashMultimap<Attribute, AttributeModifier> toReturn = HashMultimap.create();
@@ -39,10 +41,23 @@ public class AttributeHelper {
         return toReturn;
     }
 
+
+    /**
+     * @param multimap the map to add to
+     * @param amount the amount of the addition
+     * @param operation the operation of the addition
+     * @param attributeReq if there's a requirement for the attribute
+     * @return the merged map
+     */
     public static Multimap<Attribute, AttributeModifier> increaseByAmount(Multimap<Attribute, AttributeModifier> multimap, double amount, AttributeModifier.Operation operation, @Nullable Attribute attributeReq) {
         HashMultimap<Attribute, AttributeModifier> toReturn = HashMultimap.create();
         boolean hasBeenAdded = attributeReq == null;
         Collection<AttributeModifier> attributeModifiers;
+        //switch operation of movement speed to multiply base since addition is to powerful
+        if ((attributeReq == Attributes.MOVEMENT_SPEED || attributeReq == ForgeMod.SWIM_SPEED.get()) && operation == AttributeModifier.Operation.ADDITION) {
+            operation = AttributeModifier.Operation.MULTIPLY_BASE;
+            amount *= 0.01;
+        }
         for (Attribute attribute : multimap.keys()) {
             attributeModifiers = multimap.get(attribute);
             for (AttributeModifier modifier : attributeModifiers) {
@@ -55,10 +70,6 @@ public class AttributeHelper {
             }
         }
         if (!hasBeenAdded) {
-            if (attributeReq == Attributes.MOVEMENT_SPEED && operation == AttributeModifier.Operation.ADDITION) {
-                operation = AttributeModifier.Operation.MULTIPLY_BASE;
-                amount *= 0.01;
-            }
             toReturn.put(attributeReq, new AttributeModifier(UUID.randomUUID(), "Custom Attribute", amount, operation));
         }
         multimap = toReturn;

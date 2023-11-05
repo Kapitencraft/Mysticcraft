@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.helpers;
 
 import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.Provider;
+import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.Reference;
 import net.kapitencraft.mysticcraft.misc.string_converter.MathArgument;
 import net.kapitencraft.mysticcraft.misc.string_converter.TransferArg;
 import net.minecraft.ChatFormatting;
@@ -22,6 +23,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Vector3f;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,12 +34,26 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class TextHelper {
+    public static final Component EMPTY = Component.literal("");
 
     public static void sendTitle(Player player, Component title) {
         if (player instanceof ServerPlayer serverPlayer) {
             Function<Component, Packet<?>> function = ClientboundSetTitleTextPacket::new;
             serverPlayer.connection.send(function.apply(title));
         }
+    }
+
+    public static void removeUnnecessaryEmptyLines(List<Component> components) {
+        Reference<Component> reference = Reference.of(null);
+        components.removeIf(component -> {
+            if (component.getString().equals("")) {
+                if (reference.getValue() != null && reference.getValue().getString().equals("")) {
+                    return true;
+                }
+            }
+            reference.setValue(component);
+            return false;
+        });
     }
 
     public static Component getStackNameWithoutBrackets(ItemStack stack) {
@@ -66,6 +82,10 @@ public class TextHelper {
 
     public static void setHotbarDisplay(Player player, Component display) {
         player.displayClientMessage(display, true);
+    }
+
+    public static String Vec3fToString(Vector3f vector3f) {
+        return "[" + vector3f.x + ", " + vector3f.y + ", " + vector3f.z + "]";
     }
 
     public static void sendSubTitle(Player player, Component subtitle) {

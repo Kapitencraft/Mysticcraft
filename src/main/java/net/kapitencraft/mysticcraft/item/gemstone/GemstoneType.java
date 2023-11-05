@@ -3,6 +3,7 @@ package net.kapitencraft.mysticcraft.item.gemstone;
 import com.mojang.serialization.Codec;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.block.GemstoneBlock;
+import net.kapitencraft.mysticcraft.helpers.CollectionHelper;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModItems;
@@ -13,21 +14,25 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.function.Supplier;
 
 public enum GemstoneType implements StringRepresentable {
+    EMPTY(0, ()-> null, 0, "empty", 0),
     ALMANDINE(getColorFromChatFormatting(ChatFormatting.LIGHT_PURPLE), ModAttributes.ABILITY_DAMAGE, 0.3, "almandine", GemstoneBlock.HIGH_MEDIUM_STRENGHT),
     JASPER(getColorFromChatFormatting(ChatFormatting.DARK_RED), ModAttributes.STRENGTH, 2, "jasper", GemstoneBlock.VERY_HIGH_STRENGHT),
-    RUBY(getColorFromChatFormatting(ChatFormatting.RED), () -> Attributes.MAX_HEALTH, 1.2, "ruby", GemstoneBlock.LOW_STRENGHT),
+    RUBY(getColorFromChatFormatting(ChatFormatting.RED), () -> Attributes.MAX_HEALTH, 0.5, "ruby", GemstoneBlock.LOW_STRENGHT),
     AMETHYST(getColorFromChatFormatting(ChatFormatting.DARK_PURPLE), () -> Attributes.ARMOR, 2.3, "amethyst", GemstoneBlock.LOW_MEDIUM_STRENGHT),
     SAPPHIRE(getColorFromChatFormatting(ChatFormatting.BLUE), ModAttributes.INTELLIGENCE, 2.7, "sapphire", GemstoneBlock.MEDIUM_STRENGHT),
-    AQUAMARINE(getColorFromChatFormatting(ChatFormatting.AQUA), ModAttributes.FISHING_SPEED, 2.9, "aquamarine", GemstoneBlock.VERY_LOW_STRENGHT),
-    MOON_STONE(getColorFromChatFormatting(ChatFormatting.WHITE), ModAttributes.DRAW_SPEED, 0.5, "moon_stone", GemstoneBlock.HIGH_STRENGHT);
-
+    AQUAMARINE(getColorFromChatFormatting(ChatFormatting.AQUA), ForgeMod.SWIM_SPEED, 0.1, "aquamarine", GemstoneBlock.VERY_LOW_STRENGHT),
+    TURQUOISE(getColorFromChatFormatting(ChatFormatting.DARK_AQUA), ModAttributes.FISHING_SPEED, 2.9, "turquoise", GemstoneBlock.LOW_MEDIUM_STRENGHT),
+    MOONSTONE(getColorFromChatFormatting(ChatFormatting.BLACK), ModAttributes.DRAW_SPEED, 0.5, "moonstone", GemstoneBlock.HIGH_STRENGHT),
+    CELESTINE(getColorFromChatFormatting(ChatFormatting.WHITE), ()-> Attributes.MOVEMENT_SPEED, 0.07, "celestine", GemstoneBlock.LOW_STRENGHT);
 
     public static Codec<GemstoneType> CODEC = StringRepresentable.fromEnum(GemstoneType::values);
     public static final TabGroup GEMSTONE_GROUP = new TabGroup(TabRegister.TabTypes.SPELL_AND_GEMSTONE);
@@ -56,7 +61,11 @@ public enum GemstoneType implements StringRepresentable {
                 return values()[i];
             }
         }
-        return null;
+        return EMPTY;
+    }
+
+    public Supplier<Attribute> getModifiedAttribute() {
+        return modifiedAttribute;
     }
 
     public double getBlockStrength() {
@@ -65,15 +74,18 @@ public enum GemstoneType implements StringRepresentable {
 
     public static HashMap<GemstoneType, HashMap<Rarity, RegistryObject<GemstoneItem>>> createRegistry() {
         HashMap<GemstoneType, HashMap<Rarity, RegistryObject<GemstoneItem>>> toReturn = new HashMap<>();
-        for (GemstoneType type : values()) {
+        for (GemstoneType type : TYPES_TO_USE) {
             toReturn.put(type, type.registerItems());
         }
         return toReturn;
     }
 
+    private static final List<GemstoneType> TYPES_TO_USE = CollectionHelper.remove(GemstoneType.values(), GemstoneType.EMPTY);
+    private static final List<Rarity> RARITIES_TO_USE = CollectionHelper.remove(Rarity.values(), Rarity.EMPTY);
+
     public HashMap<Rarity, RegistryObject<GemstoneItem>> registerItems() {
         HashMap<Rarity, RegistryObject<GemstoneItem>> toReturn = new HashMap<>();
-        for (Rarity rarity : Rarity.values()) {
+        for (Rarity rarity : RARITIES_TO_USE) {
             if (rarity != Rarity.EMPTY) {
                 toReturn.put(rarity, ModItems.register(rarity.id + "_" + this.getId() + "_gemstone", () -> new GemstoneItem(rarity, this.getId()), GEMSTONE_GROUP));
             }

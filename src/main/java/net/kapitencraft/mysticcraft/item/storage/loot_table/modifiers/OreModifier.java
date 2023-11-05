@@ -6,6 +6,7 @@ import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
 import net.kapitencraft.mysticcraft.helpers.LootTableHelper;
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
+import net.kapitencraft.mysticcraft.item.storage.loot_table.IConditional;
 import net.kapitencraft.mysticcraft.item.storage.loot_table.LootContextReader;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
@@ -15,8 +16,8 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraftforge.common.loot.IGlobalLootModifier;
 import org.jetbrains.annotations.NotNull;
 
-public class OreModifier extends ModLootModifier {
-    public static final Codec<OreModifier> CODEC = simpleCodec(OreModifier::new);
+public class OreModifier extends ModLootModifier implements IConditional {
+    public static final Codec<OreModifier> CODEC = LootTableHelper.simpleCodec(OreModifier::new);
 
     protected OreModifier(LootItemCondition[] conditionsIn) {
         super(conditionsIn);
@@ -36,5 +37,10 @@ public class OreModifier extends ModLootModifier {
     @Override
     public Codec<? extends IGlobalLootModifier> codec() {
         return CODEC;
+    }
+
+    @Override
+    public LootItemCondition[] getConditions() {
+        return conditions;
     }
 }

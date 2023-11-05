@@ -168,7 +168,7 @@ public class  GemstoneGrinderBlockEntity extends BlockEntity implements MenuProv
                     } else if (!slotWithGemstone) {
                         if (tag.getBoolean("hadGemstoneIn" + i)) {
                             MysticcraftMod.sendInfo("removing");
-                            applicable.putGemstone(null, GemstoneType.Rarity.EMPTY, blockEntity.getSlotForItem(i), gemstoneApplicable);
+                            applicable.putGemstone(GemstoneType.EMPTY, GemstoneType.Rarity.EMPTY, blockEntity.getSlotForItem(i), gemstoneApplicable);
                         }
                         tag.putBoolean("hadGemstoneIn" + i, false);
                     }
