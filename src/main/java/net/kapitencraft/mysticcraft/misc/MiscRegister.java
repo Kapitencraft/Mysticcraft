@@ -555,11 +555,10 @@ public class MiscRegister {
                 }
             }
             if (mainHandItem.getEnchantmentLevel(ModEnchantments.REPLENISH.get()) > 0) {
-                BlockState newState = block.defaultBlockState();
-                newState.setValue(ageProperty, 0);
                 event.setCanceled(true);
                 Block.dropResources(state, context);
-                level.setBlock(pos, newState, 3);
+                state.setValue(ageProperty, 0);
+                level.setBlockAndUpdate(pos, state);
             }
         }
         if (mainHandItem.getEnchantmentLevel(ModEnchantments.LUMBERJACK.get()) > 0 && state.is(BlockTags.LOGS)) {

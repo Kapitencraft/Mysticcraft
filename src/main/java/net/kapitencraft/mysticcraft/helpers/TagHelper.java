@@ -1,19 +1,19 @@
 package net.kapitencraft.mysticcraft.helpers;
 
 import com.google.common.collect.Multimap;
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
-import com.mojang.serialization.JsonOps;
 import net.kapitencraft.mysticcraft.ModMarker;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.misc.serialization.CodecSerializer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.StringTagVisitor;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.storage.loot.Serializer;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -34,19 +34,6 @@ public class TagHelper {
     public static <T> CodecSerializer<T> createNullDefaultedSerializer(Codec<T> codec) {
         return createSerializer(codec, null);
     }
-
-    public record CodecSerializer<T>(Codec<T> codec, T defaulted) implements Serializer<T> {
-        @Override
-            public void serialize(@NotNull JsonObject object, @NotNull T value, @NotNull JsonSerializationContext p_79327_) {
-                JsonObject element = (JsonObject) TagHelper.getOrLog(codec.encodeStart(JsonOps.INSTANCE, value), new JsonObject());
-                element.asMap().forEach(object::add);
-            }
-
-            @Override
-            public @NotNull T deserialize(@NotNull JsonObject object, @NotNull JsonDeserializationContext context) {
-                return TagHelper.getOrLog(codec.parse(JsonOps.INSTANCE, object), defaulted);
-            }
-        }
 
 
     public static boolean checkForIntAbove0(CompoundTag tag, String name) {

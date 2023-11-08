@@ -12,9 +12,9 @@ plugins {
 }
 apply plugin: 'org.spongepowered.mixin'
 
-version = 'v0.9.9f-mc1.19.3 [FML 44.1.0]'
-group = 'net.kapitencraft.mysticcraft' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = 'mysticcraft'
+version = mod_version
+group = mod_group_id // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = mod_id
 
 // Mojang ships Java 17 to end users in 1.18+, so your mod should target Java 17.
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
@@ -34,17 +34,17 @@ minecraft {
     //
     // Use non-default mappings at your own risk. They may not always work.
     // Simply re-run your setup task after changing the mappings to update your workspace.
-    mappings channel: 'official', version: '1.19.3'
+    mappings channel: 'official', version: mc_version
 
     // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg') // Currently, this location cannot be changed from the default.
 
     // Default run configurations.
     // These can be tweaked, removed, or duplicated as needed.
     runs {
-        client {
+        configureEach {
             workingDirectory project.file('run')
 
-            // Recommended logging data for a user dev environment
+            // Recommended logging data for a userdev environment
             // The markers can be added/remove as needed separated by commas.
             // "SCAN": For mods scan.
             // "REGISTRIES": For firing of registry events.
@@ -57,65 +57,30 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
-            property 'forge.enabledGameTestNamespaces', 'mysticcraft'
+            property 'forge.enabledGameTestNamespaces', mod_id
 
             mods {
-                mysticcraft {
+                "${mod_id}" {
                     source sourceSets.main
                 }
             }
         }
 
+        client {
+        }
+
         server {
-            workingDirectory project.file('run')
-
-            property 'forge.logging.markers', 'REGISTRIES'
-
-            property 'forge.logging.console.level', 'debug'
-
-            property 'forge.enabledGameTestNamespaces', 'mysticcraft'
-
-            mods {
-                mysticcraft {
-                    source sourceSets.main
-                }
-            }
         }
 
         // This run config launches GameTestServer and runs all registered gametests, then exits.
         // By default, the server will crash when no gametests are provided.
         // The gametest system is also enabled by default for other run configs under the /test command.
         gameTestServer {
-            workingDirectory project.file('run')
-
-            property 'forge.logging.markers', 'REGISTRIES'
-
-            property 'forge.logging.console.level', 'debug'
-
-            property 'forge.enabledGameTestNamespaces', 'mysticcraft'
-
-            mods {
-                mysticcraft {
-                    source sourceSets.main
-                }
-            }
         }
 
         data {
-            workingDirectory project.file('run')
-
-            property 'forge.logging.markers', 'REGISTRIES'
-
-            property 'forge.logging.console.level', 'debug'
-
             // Specify the mod id for data generation, where to output the resulting resource, and where to look for existing resources.
-            args '--mod', 'mysticcraft', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
-
-            mods {
-                mysticcraft {
-                    source sourceSets.main
-                }
-            }
+            args '--mod', mod_id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
         }
     }
 }
@@ -165,7 +130,7 @@ mixin {
 jar {
     manifest {
         attributes([
-                "Specification-Title"     : "mysticcraft",
+                "Specification-Title"     : mod_id,
                 "Specification-Vendor"    : "mysticcraftsareus",
                 "Specification-Version"   : "1", // We are version 1 of ourselves
                 "Implementation-Title"    : project.name,

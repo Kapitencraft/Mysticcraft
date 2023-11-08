@@ -2,12 +2,15 @@ package net.kapitencraft.mysticcraft.datagen;
 
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+
+import java.util.concurrent.CompletableFuture;
 
 @Mod.EventBusSubscriber(modid = MysticcraftMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class DataGenerators {
@@ -17,13 +20,15 @@ public class DataGenerators {
         DataGenerator generator = event.getGenerator();
         PackOutput output = generator.getPackOutput();
         ExistingFileHelper helper = event.getExistingFileHelper();
+        CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
         ModLanguageProvider provider = new ModLanguageProvider(output);
         generator.addProvider(false, new ModBlockStateProvider(output, helper));
         generator.addProvider(false, new ModRecipeProvider(output));
-        generator.addProvider(true, ModLootTableProvider.create(output));
+        generator.addProvider(false, ModLootTableProvider.create(output));
         generator.addProvider(false, new ModItemModelProvider(output, helper));
         generator.addProvider(false, new ModBestiaryProvider(output, provider));
         generator.addProvider(false, new ReforgeProvider(output));
         generator.addProvider(false, provider);
+        generator.addProvider(true, new ModWorldGenProvider(output, lookupProvider));
     }
 }

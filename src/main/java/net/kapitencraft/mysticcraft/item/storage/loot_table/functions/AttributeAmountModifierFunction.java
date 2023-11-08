@@ -2,12 +2,12 @@ package net.kapitencraft.mysticcraft.item.storage.loot_table.functions;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.kapitencraft.mysticcraft.helpers.TagHelper;
 import net.kapitencraft.mysticcraft.init.ModLootItemFunctions;
 import net.kapitencraft.mysticcraft.item.storage.loot_table.IConditional;
 import net.kapitencraft.mysticcraft.item.storage.loot_table.modifiers.ModLootModifier;
 import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.BinaryProvider;
 import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.SaveAbleEnum;
+import net.kapitencraft.mysticcraft.misc.serialization.JsonSerializer;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -100,5 +100,5 @@ public class AttributeAmountModifierFunction extends LootItemConditionalFunction
         return ModLootItemFunctions.ATTRIBUTE_MODIFIER.get();
     }
 
-    public static final TagHelper.CodecSerializer<AttributeAmountModifierFunction> SERIALIZER = TagHelper.createNullDefaultedSerializer(CODEC);
+    public static final JsonSerializer<AttributeAmountModifierFunction> SERIALIZER = new JsonSerializer<>(CODEC);
 }

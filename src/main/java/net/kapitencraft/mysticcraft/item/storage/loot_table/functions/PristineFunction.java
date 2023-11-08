@@ -1,13 +1,17 @@
 package net.kapitencraft.mysticcraft.item.storage.loot_table.functions;
 
 import com.mojang.serialization.Codec;
-import net.kapitencraft.mysticcraft.helpers.*;
+import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
+import net.kapitencraft.mysticcraft.helpers.LootTableHelper;
+import net.kapitencraft.mysticcraft.helpers.MathHelper;
+import net.kapitencraft.mysticcraft.helpers.TextHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModItems;
 import net.kapitencraft.mysticcraft.init.ModLootItemFunctions;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneItem;
 import net.kapitencraft.mysticcraft.item.gemstone.GemstoneType;
 import net.kapitencraft.mysticcraft.item.storage.loot_table.IConditional;
+import net.kapitencraft.mysticcraft.misc.serialization.JsonSerializer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -55,7 +59,7 @@ public class PristineFunction extends LootItemConditionalFunction implements ICo
         return stack;
     }
 
-    public static final TagHelper.CodecSerializer<PristineFunction> SERIALIZER = TagHelper.createNullDefaultedSerializer(CODEC);
+    public static final JsonSerializer<PristineFunction> SERIALIZER = new JsonSerializer<>(CODEC);
 
     @Override
     public @NotNull LootItemFunctionType getType() {

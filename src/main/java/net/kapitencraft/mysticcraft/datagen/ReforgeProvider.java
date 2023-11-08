@@ -24,7 +24,7 @@ public class ReforgeProvider implements DataProvider {
 
 
     @Override
-    public CompletableFuture<?> run(@NotNull CachedOutput cachedOutput) {
+    public @NotNull CompletableFuture<?> run(@NotNull CachedOutput cachedOutput) {
         addReforges();
         MysticcraftMod.sendWarn(String.valueOf(reforges.size()));
         CompletableFuture<?>[] futures = new CompletableFuture[reforges.size()];

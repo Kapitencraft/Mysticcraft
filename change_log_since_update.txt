@@ -1,13 +1,1 @@
-fixed fire lance spell hitting mobs multiple times per tick
-fixed magic find not working on vanilla rare drops
-fixed Shadow Assassin Armor not hiding on ability use
-fixed Pristine color display
-fixed gemstones not usable on multiple armor pieces at the same time
-fixed game crash when trying to apply an empty gemstone slot
-fixed rainbow animator doing sh**
-fixed showing empty spell
-fixed gemstones can not be removed from gemstone items
-
-added mining fortune attribute
-added celestine gemstone
-added update checker
+added Crimsonium ore world gen
