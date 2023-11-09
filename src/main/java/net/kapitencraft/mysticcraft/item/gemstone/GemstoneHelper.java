@@ -1,12 +1,16 @@
 package net.kapitencraft.mysticcraft.item.gemstone;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.init.ModEnchantments;
+import net.kapitencraft.mysticcraft.item.persistant.ItemStackSaveable;
+import net.kapitencraft.mysticcraft.item.persistant.SaveableVariant;
+import net.kapitencraft.mysticcraft.misc.serialization.NbtSerializer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -15,64 +19,43 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nullable;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-public class GemstoneHelper {
+public class GemstoneHelper extends ItemStackSaveable {
+    public static final Codec<GemstoneHelper> CODEC = RecordCodecBuilder.create(gemstoneHelperInstance ->
+            gemstoneHelperInstance.group(
+                    GemstoneSlot.CODEC.listOf().fieldOf("slots").forGetter(i -> Arrays.asList(i.curSlots))
+            ).apply(gemstoneHelperInstance, GemstoneHelper::new)
+    );
+    private static final SaveableVariant<GemstoneHelper> VARIANT = new SaveableVariant<>(new NbtSerializer<>(CODEC), "GemstoneData");
     private static final String DATA_ID = "GemstoneData";
+    private final GemstoneSlot[] curSlots;
 
-    private final GemstoneSlot[] defaultSlots;
-
-
-    public GemstoneHelper(GemstoneSlot[] defaultSlots) {
-        this.defaultSlots = defaultSlots;
+    GemstoneHelper(List<GemstoneSlot> currentSlots) {
+        this.curSlots = currentSlots.toArray(GemstoneSlot[]::new);
     }
 
-    public GemstoneSlot[] getGemstoneSlots(ItemStack stack) {
-        return this.loadData(stack);
+
+    GemstoneHelper(GemstoneSlot[] slots) {
+        this.curSlots = slots;
+    }
+
+    public GemstoneSlot[] getGemstoneSlots() {
+        return curSlots;
+    }
+
+    public static GemstoneHelper get(ItemStack stack) {
+        return ItemStackSaveable.get(stack, VARIANT);
     }
 
     public boolean putGemstone(GemstoneType gemstoneType, GemstoneType.Rarity rarity, int slotIndex, ItemStack stack) {
-        GemstoneSlot[] slots = this.getGemstoneSlots(stack);
+        GemstoneSlot[] slots = this.getGemstoneSlots();
         GemstoneSlot slot = slots[slotIndex];
         boolean flag = slot.putGemstone(gemstoneType, rarity);
         this.saveData(stack, slots);
         return flag;
-    }
-
-    private boolean hasData(ItemStack stack) {
-        return !(stack.getTag() == null || stack.getTagElement(DATA_ID) == null);
-    }
-
-    private void setSlots(GemstoneSlot[] slots, ItemStack stack) {
-        for (int i = 0; i < slots.length; i++) {
-            if (!(slots[i].getType() == this.defaultSlots[i].getType())) {
-                return;
-            }
-        }
-        this.saveData(stack, slots);
-    }
-    public GemstoneSlot[] loadData(ItemStack current) {
-        if (hasData(current)) {
-            CompoundTag tag = current.getTagElement(DATA_ID);
-            if (tag == null) {
-                throw new IllegalStateException("Existing Tag is not Existing :D");
-            }
-            if (!tag.contains("Size")) {
-                throw new IllegalStateException("Found Modification Data without Size");
-            }
-            GemstoneSlot[] slots = new GemstoneSlot[tag.getShort("Size")];
-            ListTag slotTag = tag.getList("slots", Tag.TAG_COMPOUND);
-            if (slotTag.size() < tag.getShort("Size")) {
-                MysticcraftMod.sendWarn("tried loading malformed gemstone helper");
-            } else for (int i = 0; i < tag.getShort("Size"); i++) {
-                slots[i] = GemstoneSlot.fromNBT(slotTag.getCompound(i));
-            }
-            this.putGemstones(slots, current);
-            return slots;
-        } else {
-            return this.defaultSlots;
-        }
     }
 
     private void saveData(ItemStack current, GemstoneSlot[] slots) {
@@ -88,10 +71,10 @@ public class GemstoneHelper {
     }
 
 
-    public void getDisplay(ItemStack itemStack, List<Component> list) {
+    public void getDisplay(List<Component> list) {
         MutableComponent component = null;
         try {
-            for (@Nullable GemstoneSlot slot : this.getGemstoneSlots(itemStack)) {
+            for (@Nullable GemstoneSlot slot : this.getGemstoneSlots()) {
                 if (slot != null && slot != GemstoneSlot.BLOCKED) {
                     if (component == null) {
                         component = slot.getDisplay();
@@ -108,14 +91,6 @@ public class GemstoneHelper {
         }
     }
 
-    private boolean putGemstones(GemstoneSlot[] slots, ItemStack stack) {
-        if (slots.length == this.defaultSlots.length) {
-            this.setSlots(slots, stack);
-            return true;
-        }
-        return false;
-    }
-
     public HashMap<Attribute, AttributeModifier> getAttributeModifiers(ItemStack stack, EquipmentSlot equipmentSlot) {
         HashMap<Attribute, Double> attributeModifier = new HashMap<>();
         HashMap<Attribute, AttributeModifier> modifierHashMap = new HashMap<>();
@@ -124,7 +99,7 @@ public class GemstoneHelper {
             @Nullable Attribute attribute;
             GemstoneType gemstoneType;
             try {
-                for (@Nullable GemstoneSlot slot : this.getGemstoneSlots(stack)) {
+                for (@Nullable GemstoneSlot slot : this.getGemstoneSlots()) {
                     if (slot != null) {
                         gemstoneType = slot.getAppliedGemstone();
                         if (gemstoneType != GemstoneType.EMPTY) {

@@ -1,18 +1,29 @@
 package net.kapitencraft.mysticcraft.item.persistant;
 
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.HashMap;
-
 public abstract class ItemStackSaveable {
-    private static final HashMap<ItemStack, HashMap<SaveableVariant<?>, ItemStackSaveable>> MAP = new HashMap<>();
-    public static <T extends ItemStackSaveable> T get(ItemStack stack, SaveableVariant<T> variant) {
-        if (MAP.containsKey(stack)) {
-            return MAP.get(stack);
-        } else {
-            MAP.put(stack, )
-        }
+
+    public static void save(ItemStack stack) {
+        CompoundTag tag = stack.getOrCreateTag();
+        SaveableVariant.SERIALIZERS.forEach(variant -> {
+            if (variant.getContainer().contains(stack)) {
+                tag.put(variant.getName(), variant.save(stack));
+            }
+        });
     }
 
+    public static <T extends ItemStackSaveable> T get(ItemStack stack, SaveableVariant<T> variant) {
+        return variant.getContainer().get(stack);
+    }
 
+    public static void load(ItemStack stack) {
+        SaveableVariant.SERIALIZERS.forEach(variant -> {
+            try {
+                variant.loadAndSave(stack);
+            } catch (Exception ignored) {
+            }
+        });
+    }
 }

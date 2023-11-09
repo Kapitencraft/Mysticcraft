@@ -63,6 +63,10 @@ public class GemstoneSlot {
     }
 
 
+    public GemstoneSlot empty() {
+        return new GemstoneSlot(this.type, GemstoneType.EMPTY, GemstoneType.Rarity.EMPTY);
+    }
+
     private boolean isValidGemstone(GemstoneType gemstoneType) {
         for (GemstoneType gemstoneType1 : this.type.applicable) {
             if (gemstoneType1 != null && gemstoneType1.equals(gemstoneType) || gemstoneType == GemstoneType.EMPTY) {
