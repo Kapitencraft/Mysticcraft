@@ -12,7 +12,7 @@ plugins {
 }
 apply plugin: 'org.spongepowered.mixin'
 
-version = mod_version
+version = 'v${mod_version}-mc1.19.3 [FML 44.1.0]'
 group = mod_group_id // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = mod_id
 

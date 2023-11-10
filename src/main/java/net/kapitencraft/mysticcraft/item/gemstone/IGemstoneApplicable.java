@@ -11,10 +11,16 @@ import java.util.List;
 
 public interface IGemstoneApplicable {
     default GemstoneHelper getHelper(ItemStack stack) {
-        return GemstoneHelper.get(stack);
+        GemstoneHelper helper = new GemstoneHelper(this.getDefaultSlots());
+        helper.loadData(stack);
+        return helper;
+    }
+
+    default int getGemstoneSlotAmount() {
+        return getDefaultSlots().length;
     }
     default GemstoneSlot[] getGemstoneSlots(ItemStack stack) {
-        return this.getHelper(stack).getGemstoneSlots();
+        return this.getHelper(stack).getGemstoneSlots(stack);
     }
 
     default HashMap<Attribute, AttributeModifier> getAttributeModifiers(ItemStack stack, EquipmentSlot slot) {
@@ -23,7 +29,7 @@ public interface IGemstoneApplicable {
 
     GemstoneSlot[] getDefaultSlots();
     default void appendDisplay(ItemStack itemStack, List<Component> list) {
-        this.getHelper(itemStack).getDisplay(list);
+        this.getHelper(itemStack).getDisplay(itemStack, list);
     }
 
 

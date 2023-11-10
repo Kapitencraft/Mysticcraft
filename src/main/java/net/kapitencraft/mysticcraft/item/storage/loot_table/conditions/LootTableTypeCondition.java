@@ -2,8 +2,8 @@ package net.kapitencraft.mysticcraft.item.storage.loot_table.conditions;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.kapitencraft.mysticcraft.helpers.TagHelper;
 import net.kapitencraft.mysticcraft.init.ModLootItemConditions;
+import net.kapitencraft.mysticcraft.misc.serialization.JsonSerializer;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import org.jetbrains.annotations.NotNull;
@@ -31,5 +31,5 @@ public class LootTableTypeCondition extends BaseCondition {
         return type.is(context);
     }
 
-    public static final TagHelper.CodecSerializer<LootTableTypeCondition> SERIALIZER = TagHelper.createSerializer(CODEC, EMPTY);
+    public static final JsonSerializer<LootTableTypeCondition> SERIALIZER = new JsonSerializer<>(CODEC, EMPTY);
 }

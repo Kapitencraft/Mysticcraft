@@ -3,6 +3,7 @@ package net.kapitencraft.mysticcraft.misc.serialization;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DynamicOps;
 import net.kapitencraft.mysticcraft.helpers.TagHelper;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class Serializer<T, K extends DynamicOps<T>, L> {
 
@@ -17,7 +18,7 @@ public abstract class Serializer<T, K extends DynamicOps<T>, L> {
 
     abstract T getSerializeDefault();
 
-    public T serialize(L value) {
+    public T serialize(@NotNull L value) {
         return TagHelper.getOrLog(codec.encodeStart(generator, value), getSerializeDefault());
     }
 

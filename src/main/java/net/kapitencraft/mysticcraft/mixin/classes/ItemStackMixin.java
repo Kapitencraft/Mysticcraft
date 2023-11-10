@@ -19,7 +19,6 @@ import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.QuiverItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.bow.ShortBowItem;
 import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.item.misc.IModItem;
-import net.kapitencraft.mysticcraft.item.persistant.ItemStackSaveable;
 import net.kapitencraft.mysticcraft.item.reforging.Reforge;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.minecraft.ChatFormatting;
@@ -66,13 +65,11 @@ public abstract class ItemStackMixin {
     @Inject(method = "<init>", at = @At("TAIL"))
     public void init(CallbackInfo info) {
         ModEventFactory.onLoadingItemStack(self());
-        ItemStackSaveable.load(self());
     }
 
     @Inject(method = "save", at = @At("HEAD"))
     private void save(CompoundTag tag, CallbackInfoReturnable<CompoundTag> callbackInfoReturnable) {
         ModEventFactory.onSavingItemStack(self(), tag);
-        ItemStackSaveable.save(self());
     }
 
     /**
