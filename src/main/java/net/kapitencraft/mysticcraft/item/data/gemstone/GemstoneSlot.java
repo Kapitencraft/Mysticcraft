@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.item.gemstone;
+package net.kapitencraft.mysticcraft.item.data.gemstone;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

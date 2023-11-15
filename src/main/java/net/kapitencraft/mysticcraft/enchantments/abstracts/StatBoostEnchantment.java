@@ -21,7 +21,7 @@ public abstract class StatBoostEnchantment extends Enchantment implements ModEnc
     }
 
     public abstract Consumer<Multimap<Attribute, AttributeModifier>> getModifiers(int level, ItemStack enchanted, EquipmentSlot slot);
-    public boolean hasModifiersForThatSlot(EquipmentSlot slot) {
+    public boolean hasModifiersForThatSlot(EquipmentSlot slot, ItemStack stack) {
         return this.slots.contains(slot);
     }
 
@@ -29,7 +29,7 @@ public abstract class StatBoostEnchantment extends Enchantment implements ModEnc
         Map<Enchantment, Integer> enchantments = stack.getAllEnchantments();
         Multimap<Attribute, AttributeModifier> multimap = HashMultimap.create();
         enchantments.forEach((enchantment, integer) -> {
-            if (enchantment instanceof StatBoostEnchantment boostEnchantment && boostEnchantment.hasModifiersForThatSlot(slot)) {
+            if (enchantment instanceof StatBoostEnchantment boostEnchantment && boostEnchantment.hasModifiersForThatSlot(slot, stack)) {
                 boostEnchantment.getModifiers(integer, stack, slot).accept(multimap);
             }
         });

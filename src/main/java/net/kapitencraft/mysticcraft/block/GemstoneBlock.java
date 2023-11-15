@@ -1,8 +1,8 @@
 package net.kapitencraft.mysticcraft.block;
 
 import net.kapitencraft.mysticcraft.init.ModItems;
-import net.kapitencraft.mysticcraft.item.gemstone.GemstoneItem;
-import net.kapitencraft.mysticcraft.item.gemstone.GemstoneType;
+import net.kapitencraft.mysticcraft.item.data.gemstone.GemstoneItem;
+import net.kapitencraft.mysticcraft.item.data.gemstone.GemstoneType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.material.Material;

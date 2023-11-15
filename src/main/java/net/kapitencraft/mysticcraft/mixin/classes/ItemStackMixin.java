@@ -13,13 +13,15 @@ import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.helpers.TextHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
+import net.kapitencraft.mysticcraft.item.ITieredItem;
 import net.kapitencraft.mysticcraft.item.combat.spells.SpellItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword.LongSwordItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.QuiverItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.bow.ShortBowItem;
-import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
+import net.kapitencraft.mysticcraft.item.data.dungeon.IStarAbleItem;
+import net.kapitencraft.mysticcraft.item.data.gemstone.IGemstoneApplicable;
+import net.kapitencraft.mysticcraft.item.data.reforging.Reforge;
 import net.kapitencraft.mysticcraft.item.misc.IModItem;
-import net.kapitencraft.mysticcraft.item.reforging.Reforge;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
@@ -114,12 +116,14 @@ public abstract class ItemStackMixin {
                         final MutableComponent[] components = new MutableComponent[1];
                         enchantmentOptional.ifPresent((p_41708_) -> components[0] = (MutableComponent) p_41708_.getFullname(EnchantmentHelper.getEnchantmentLevel(compoundtag)));
                         MutableComponent component = components[0];
-                        if (enchantment instanceof IUltimateEnchantment) {
-                            component.withStyle(ChatFormatting.LIGHT_PURPLE).withStyle(ChatFormatting.BOLD);
-                        } else if (level == enchantment.getMaxLevel()) {
-                            component.withStyle(ChatFormatting.GOLD);
-                        } else if (level > enchantment.getMaxLevel()) {
-                            component.withStyle(Style.EMPTY.withColor(RAINBOW_ANIMATOR.makeTextColor(ServerData.getTime())));
+                        if (!(enchantment.isCurse())) {
+                            if (enchantment instanceof IUltimateEnchantment) {
+                                component.withStyle(ChatFormatting.LIGHT_PURPLE).withStyle(ChatFormatting.BOLD);
+                            } else if (level == enchantment.getMaxLevel()) {
+                                component.withStyle(ChatFormatting.GOLD);
+                            } else if (level > enchantment.getMaxLevel()) {
+                                component.withStyle(Style.EMPTY.withColor(RAINBOW_ANIMATOR.makeTextColor(ServerData.getTime())));
+                            }
                         }
                         list.add(component);
                     }
@@ -192,20 +196,19 @@ public abstract class ItemStackMixin {
                         if (flag) {
                             //Base Values
                             toAppend.append(Component.literal(" ").append(Component.translatable("attribute.modifier.equals." + modifier.getOperation().toValue(), ATTRIBUTE_MODIFIER_FORMAT.format(d1), Component.translatable(entry.getKey().getDescriptionId()))).withStyle(ChatFormatting.DARK_GREEN));
-                        } else if (d0 > 0.0D) {
+                        } else if (d0 > 0.0D || d0 < 0.0D) {
                             if (modifier.getOperation() == AttributeModifier.Operation.MULTIPLY_TOTAL) {
                                 d1+=1;
-                                toAppend.append(MiscHelper.buildComponent(Component.literal(String.valueOf(MathHelper.round(d1, 2))), Component.literal("x "), Component.translatable(entry.getKey().getDescriptionId())).withStyle(ChatFormatting.BLUE));
+                                toAppend.append(MiscHelper.buildComponent(Component.literal(String.valueOf(MathHelper.defRound(d1))), Component.literal("x "), Component.translatable(entry.getKey().getDescriptionId())).withStyle(ChatFormatting.BLUE));
                             } else {
-                                toAppend.append(Component.translatable("attribute.modifier.plus." + modifier.getOperation().toValue(), ATTRIBUTE_MODIFIER_FORMAT.format(d1), Component.translatable(entry.getKey().getDescriptionId())).withStyle(ChatFormatting.BLUE));
-                            }
-                        } else if (d0 < 0.0D) {
-                            if (modifier.getOperation() == AttributeModifier.Operation.MULTIPLY_TOTAL) {
-                                d1+=1;
-                                toAppend.append(MiscHelper.buildComponent(Component.literal(String.valueOf(MathHelper.round(d1, 2))), Component.literal("x "), Component.translatable(entry.getKey().getDescriptionId())).withStyle(ChatFormatting.BLUE));
-                            } else {
-                                d1 *= -1.0D;
-                                toAppend.append(Component.translatable("attribute.modifier.take." + modifier.getOperation().toValue(), ATTRIBUTE_MODIFIER_FORMAT.format(d1), Component.translatable(entry.getKey().getDescriptionId())).withStyle(ChatFormatting.RED));
+                                String id = "plus";
+                                ChatFormatting formatting = ChatFormatting.BLUE;
+                                if (d0 < 0.0D) {
+                                    d1 *= -1;
+                                    id = "take";
+                                    formatting = ChatFormatting.RED;
+                                }
+                                toAppend.append(Component.translatable("attribute.modifier." + id + "." + modifier.getOperation().toValue(), ATTRIBUTE_MODIFIER_FORMAT.format(d1), Component.translatable(entry.getKey().getDescriptionId())).withStyle(formatting));
                             }
                         }
                         if (modifier.getOperation() == AttributeModifier.Operation.ADDITION || (modifier.getOperation() == AttributeModifier.Operation.MULTIPLY_BASE && (entry.getKey() == Attributes.MOVEMENT_SPEED || entry.getKey() == ForgeMod.SWIM_SPEED.get()))) {
@@ -364,11 +367,24 @@ public abstract class ItemStackMixin {
      */
     @Overwrite
     public Component getHoverName() {
-        Reforge reforge = Reforge.getFromStack(self());
         CompoundTag compoundtag = self().getTagElement("display");
         MutableComponent name = Component.empty();
-        MutableComponent reforgeName = reforge != null ? reforge.getName() : Component.empty();
         Component component = null;
+        Item item = self().getItem();
+        Reforge reforge = Reforge.getFromStack(self());
+        if (reforge != null) {
+            name.append(reforge.getName());
+            name.append(" ");
+        }
+
+        if (item instanceof ITieredItem) {
+            ITieredItem.ItemTier tier = ITieredItem.getTier(self());
+            if (tier != ITieredItem.ItemTier.DEFAULT) {
+                name.append(tier.getName());
+                name.append(" ");
+            }
+
+        }
         if (compoundtag != null && compoundtag.contains("Name", 8)) {
             try {
                 component = Component.Serializer.fromJson(compoundtag.getString("Name"));
@@ -377,16 +393,15 @@ public abstract class ItemStackMixin {
                 compoundtag.remove("Name");
             }
         }
-        if (reforge != null) {
-            name.append(reforgeName);
-            name.append(Component.literal(" "));
-        }
-
         if (component == null) {
             component = self().getItem().getName(self());
         }
-        return name.append(component);
-
+        name.append(component);
+        if (item instanceof IStarAbleItem && IStarAbleItem.hasStars(self())) {
+            name.append(" ");
+            name.append(IStarAbleItem.getStarDisplay(self()));
+        }
+        return name;
     }
 
     @Invoker

@@ -5,6 +5,7 @@ import net.kapitencraft.mysticcraft.client.particle.MagicCircleParticleType;
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.helpers.ParticleHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
+import net.kapitencraft.mysticcraft.item.combat.armor.client.NetherArmorItem;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.ArmorTabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
@@ -12,12 +13,14 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 import java.util.List;
+import java.util.Map;
 
-public class WarpedArmorItem extends TieredArmorItem {
+public class WarpedArmorItem extends NetherArmorItem {
     public static final ArmorTabGroup WARPED_GROUP = new ArmorTabGroup(TabRegister.TabTypes.WEAPONS_AND_TOOLS);
 
     @Override
@@ -35,16 +38,11 @@ public class WarpedArmorItem extends TieredArmorItem {
     }
 
     @Override
-    boolean withCustomModel() {
-        return false;
-    }
-
-    @Override
     protected void fullSetTick(ItemStack stack, Level level, LivingEntity living) {
         if (magicalShieldCooldown <= 0) {
             if (!hasSpawned) {
                 living.getPersistentData().putBoolean(SHIELD_ID, true);
-                ParticleHelper.sendParticles(level, new MagicCircleParticleType(living), true, MathHelper.getPosition(living), 1, 0, 0, 0, 0);
+                ParticleHelper.sendParticles(level, new MagicCircleParticleType(living.getId()), true, MathHelper.getPosition(living), 1, 0, 0, 0, 0);
                 hasSpawned = true;
             }
             if (living.getAttributeValue(ModAttributes.MANA.get()) == 0) {
@@ -63,7 +61,16 @@ public class WarpedArmorItem extends TieredArmorItem {
     }
 
     @Override
-    public List<ArmorTier> getAvailableTiers() {
-        return ArmorTier.NETHER_ARMOR_TIERS;
+    public boolean withCustomModel() {
+        return false;
+    }
+    @Override
+    public Map<Item, Integer> getMatCost(ItemStack stack) {
+        return null;
+    }
+
+    @Override
+    public List<ItemStack> getStarCost(ItemStack stack, int curStars) {
+        return null;
     }
 }

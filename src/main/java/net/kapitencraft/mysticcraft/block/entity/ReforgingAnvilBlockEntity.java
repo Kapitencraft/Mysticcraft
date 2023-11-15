@@ -2,8 +2,10 @@ package net.kapitencraft.mysticcraft.block.entity;
 
 import net.kapitencraft.mysticcraft.gui.reforging_anvil.ReforgingAnvilMenu;
 import net.kapitencraft.mysticcraft.init.ModBlockEntities;
-import net.kapitencraft.mysticcraft.item.reforging.Reforge;
-import net.kapitencraft.mysticcraft.item.reforging.Reforges;
+import net.kapitencraft.mysticcraft.item.data.dungeon.IPrestigeAbleItem;
+import net.kapitencraft.mysticcraft.item.data.dungeon.IStarAbleItem;
+import net.kapitencraft.mysticcraft.item.data.reforging.Reforge;
+import net.kapitencraft.mysticcraft.item.data.reforging.Reforges;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -26,7 +28,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class ReforgingAnvilBlockEntity extends BlockEntity implements MenuProvider {
-    public final ReforgeAnvilItemStackHandler handler = new ReforgeAnvilItemStackHandler(1);
+    public final ReforgeAnvilItemStackHandler handler = new ReforgeAnvilItemStackHandler();
     LazyOptional<ReforgeAnvilItemStackHandler> lazyItemHandler = LazyOptional.empty();
 
     public ReforgingAnvilBlockEntity(BlockPos pos, BlockState state) {
@@ -49,11 +51,15 @@ public class ReforgingAnvilBlockEntity extends BlockEntity implements MenuProvid
     }
 
     public String updateButtonPress() {
-        ItemStack stack = this.handler.getStackInSlot(0);
+        ItemStack stack = getStack(false);
         if (Reforge.reforgeAble(stack)) {
             return Reforges.applyRandom(false, stack).getRegistryName();
         }
         return null;
+    }
+
+    public ItemStack getStack(boolean upgrade) {
+        return this.handler.getStackInSlot(upgrade ? 1 : 0);
     }
 
     public void updateButtonPress(String s) {
@@ -77,16 +83,17 @@ public class ReforgingAnvilBlockEntity extends BlockEntity implements MenuProvid
 
     private static class ReforgeAnvilItemStackHandler extends ItemStackHandler {
 
-        public ReforgeAnvilItemStackHandler(int amount) {super(amount);}
+        public ReforgeAnvilItemStackHandler() {super(2);}
 
         @Override
         public boolean isItemValid(int slot, @NotNull ItemStack stack) {
-            return stack.getItem() instanceof TieredItem || stack.getItem() instanceof ArmorItem;
+            return slot == 1 ? stack.getItem() instanceof IPrestigeAbleItem || stack.getItem() instanceof IStarAbleItem :
+                    stack.getItem() instanceof TieredItem || stack.getItem() instanceof ArmorItem;
         }
 
         @Override
         public int getSlotLimit(int slot) {
-            return 1;
+            return 2;
         }
     }
 

@@ -1,10 +1,7 @@
 package net.kapitencraft.mysticcraft.init;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.enchantments.EfficientJewellingEnchantment;
-import net.kapitencraft.mysticcraft.enchantments.HealthMendingEnchantment;
-import net.kapitencraft.mysticcraft.enchantments.TelekinesisEnchantment;
-import net.kapitencraft.mysticcraft.enchantments.UltimateWiseEnchantment;
+import net.kapitencraft.mysticcraft.enchantments.*;
 import net.kapitencraft.mysticcraft.enchantments.armor.*;
 import net.kapitencraft.mysticcraft.enchantments.tools.*;
 import net.kapitencraft.mysticcraft.enchantments.weapon.*;
@@ -23,6 +20,8 @@ public interface ModEnchantments {
         return REGISTRY.register(name, supplier);
     }
 
+
+    RegistryObject<Enchantment> EXPERIENCED = register("experienced", ExperiencedEnchantment::new);
     RegistryObject<Enchantment> SMELTING_TOUCH = register("smelting_touch", SmeltingTouchEnchantment::new);
     RegistryObject<Enchantment> DELICATE = register("delicate", DelicateEnchantment::new);
     RegistryObject<Enchantment> TANK = register("tank", TankEnchantment::new);

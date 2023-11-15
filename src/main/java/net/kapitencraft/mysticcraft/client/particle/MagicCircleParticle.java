@@ -65,7 +65,7 @@ public class MagicCircleParticle extends TextureSheetParticle {
         @Nullable
         @Override
         public Particle createParticle(MagicCircleParticleType type, @NotNull ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
-            return new MagicCircleParticle(level, x, y, z, xSpeed, ySpeed, zSpeed, SPRITE_SET, type.getLiving());
+            return new MagicCircleParticle(level, x, y, z, xSpeed, ySpeed, zSpeed, SPRITE_SET, (LivingEntity) level.getEntity(type.getLiving()));
         }
     }
 }

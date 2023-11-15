@@ -24,7 +24,7 @@ public class ReforgingPacket {
     }
 
     public void toBytes(FriendlyByteBuf buf) {
-        buf.writeBlockPos(BEPos);
+        buf.writeBlockPos(this.BEPos);
         buf.writeUtf(this.reforgeName);
     }
 

@@ -6,18 +6,16 @@ import com.mojang.serialization.Codec;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class MagicCircleParticleType extends ParticleType<MagicCircleParticleType> implements ParticleOptions {
-    private final @Nullable LivingEntity living;
-    public MagicCircleParticleType(@Nullable LivingEntity living) {
+    private final int living;
+    public MagicCircleParticleType(int living) {
         super(false, DESERIALIZER);
         this.living = living;
     }
 
-    public @Nullable LivingEntity getLiving() {
+    public int getLiving() {
         return living;
     }
 
@@ -25,12 +23,12 @@ public class MagicCircleParticleType extends ParticleType<MagicCircleParticleTyp
 
         @Override
         public @NotNull MagicCircleParticleType fromCommand(@NotNull ParticleType<MagicCircleParticleType> type, @NotNull StringReader reader) throws CommandSyntaxException {
-            return new MagicCircleParticleType(null);
+            return new MagicCircleParticleType(0);
         }
 
         @Override
         public @NotNull MagicCircleParticleType fromNetwork(@NotNull ParticleType<MagicCircleParticleType> p_123735_, @NotNull FriendlyByteBuf byteBuf) {
-            return new MagicCircleParticleType(null);
+            return new MagicCircleParticleType(byteBuf.readInt());
         }
     };
 
@@ -41,7 +39,7 @@ public class MagicCircleParticleType extends ParticleType<MagicCircleParticleTyp
 
     @Override
     public void writeToNetwork(@NotNull FriendlyByteBuf byteBuf) {
-
+        byteBuf.writeInt(living);
     }
 
     @Override

@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword;
 
-import net.kapitencraft.mysticcraft.item.gemstone.GemstoneSlot;
-import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
+import net.kapitencraft.mysticcraft.item.data.gemstone.GemstoneSlot;
+import net.kapitencraft.mysticcraft.item.data.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.item.misc.ModTiers;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;

@@ -6,7 +6,6 @@ import net.kapitencraft.mysticcraft.enchantments.abstracts.IWeaponEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.ModEnchantmentCategories;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.StatBoostEnchantment;
 import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
-import net.kapitencraft.mysticcraft.helpers.CollectionHelper;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -34,8 +33,8 @@ public class UltimateWiseEnchantment extends StatBoostEnchantment implements IWe
     }
 
     @Override
-    public boolean hasModifiersForThatSlot(EquipmentSlot slot) {
-        return CollectionHelper.arrayContains(MiscHelper.WEAPON_SLOT, slot);
+    public boolean hasModifiersForThatSlot(EquipmentSlot slot, ItemStack stack) {
+        return MiscHelper.getSlotForStack(stack) == slot && slot == EquipmentSlot.MAINHAND;
     }
 
 

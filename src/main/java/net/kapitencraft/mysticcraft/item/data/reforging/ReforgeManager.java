@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.item.reforging;
+package net.kapitencraft.mysticcraft.item.data.reforging;
 
 import com.google.gson.*;
 import net.kapitencraft.mysticcraft.ModMarker;

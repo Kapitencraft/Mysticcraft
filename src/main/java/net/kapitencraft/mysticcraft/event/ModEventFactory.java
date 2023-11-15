@@ -1,8 +1,8 @@
 package net.kapitencraft.mysticcraft.event;
 
-import net.kapitencraft.mysticcraft.item.gemstone.GemstoneSlot;
-import net.kapitencraft.mysticcraft.item.gemstone.GemstoneType;
-import net.kapitencraft.mysticcraft.item.reforging.Reforge;
+import net.kapitencraft.mysticcraft.item.data.gemstone.GemstoneSlot;
+import net.kapitencraft.mysticcraft.item.data.gemstone.GemstoneType;
+import net.kapitencraft.mysticcraft.item.data.reforging.Reforge;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;

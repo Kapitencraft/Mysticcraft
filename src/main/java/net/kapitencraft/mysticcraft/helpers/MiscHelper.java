@@ -3,10 +3,9 @@ package net.kapitencraft.mysticcraft.helpers;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.client.particle.DamageIndicatorParticleOptions;
 import net.kapitencraft.mysticcraft.gui.IGuiHelper;
-import net.kapitencraft.mysticcraft.item.gemstone.GemstoneItem;
+import net.kapitencraft.mysticcraft.item.data.gemstone.GemstoneItem;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.Provider;
 import net.minecraft.advancements.Advancement;
@@ -41,10 +40,9 @@ import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -64,6 +62,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -76,7 +75,28 @@ public class MiscHelper {
     //NORTH = new Rotation("z-", 360, 4);
 
     public static EquipmentSlot getSlotForStack(ItemStack stack) {
-        return stack.getItem() instanceof ArmorItem armorItem ? armorItem.getSlot() : EquipmentSlot.MAINHAND;
+        return stack.getItem() instanceof ArmorItem armorItem ? armorItem.getSlot() : stack.getItem() instanceof ShieldItem ? EquipmentSlot.OFFHAND : EquipmentSlot.MAINHAND;
+    }
+
+    public static int repairPlayerItems(Player player, int value, Enchantment ench) {
+        Map.Entry<EquipmentSlot, ItemStack> entry = EnchantmentHelper.getRandomItemWith(ench, player, ItemStack::isDamaged);
+        if (entry != null) {
+            ItemStack itemstack = entry.getValue();
+            int i = Math.min((int) (value * itemstack.getXpRepairRatio()), itemstack.getDamageValue());
+            itemstack.setDamageValue(itemstack.getDamageValue() - i);
+            int j = value - i / 2;
+            return j > 0 ? repairPlayerItems(player, j, ench) : 0;
+        } else {
+            return value;
+        }
+
+    }
+
+
+    public static void getEnchantmentLevelAndDo(ItemStack stack, Enchantment enchantment, Consumer<Integer> enchConsumer) {
+        if (stack.getEnchantmentLevel(enchantment) > 0) {
+            enchConsumer.accept(stack.getEnchantmentLevel(enchantment));
+        }
     }
 
     public static Rarity getFinalRarity(Function<ItemStack, Rarity> defaulted, ItemStack stack) {
@@ -118,7 +138,9 @@ public class MiscHelper {
                     BlockPos pos1 = new BlockPos(blockPos.getX() + extraPos.getX(), blockPos.getY() + extraPos.getY(), blockPos.getZ() + extraPos.getZ());
                     BlockState state = level.getBlockState(pos1);
                     if (block == state.getBlock() && shouldMine.test(state)) {
-                        mainHandItem.hurt(1, MysticcraftMod.RANDOM_SOURCE, serverPlayer);
+                        mainHandItem.hurtAndBreak(1, serverPlayer, serverPlayer1 -> {
+                            serverPlayer1.broadcastBreakEvent(EquipmentSlot.MAINHAND);
+                        });
                         extra.accept(pos1);
                         breakBlock(pos1, level, context);
                         iterator.add(pos1);
@@ -126,6 +148,7 @@ public class MiscHelper {
                     }
                 }
             }
+            if (shouldBreak.test(extraPos)) break;
         }
     }
 

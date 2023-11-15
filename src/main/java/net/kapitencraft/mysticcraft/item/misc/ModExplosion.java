@@ -203,7 +203,7 @@ public abstract class ModExplosion {
         }
         if (shouldSendDamageValue() && this.source instanceof Player player) {
             DamageCounter.DamageHolder holder = DamageCounter.getDamage(true);
-            player.sendSystemMessage(Component.literal("Your " + name + " hit " + TextHelper.wrapInRed(holder.hit()) + " Enemies for §c" + MathHelper.round(holder.damage(), 2) + " Damage"));
+            player.sendSystemMessage(Component.literal("Your " + name + " hit " + TextHelper.wrapInRed(holder.hit()) + " Enemies for §c" + MathHelper.defRound(holder.damage()) + " Damage"));
         }
     }
 

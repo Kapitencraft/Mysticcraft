@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.gui.gemstone_grinder;
 
-import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
+import net.kapitencraft.mysticcraft.item.data.gemstone.IGemstoneApplicable;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;

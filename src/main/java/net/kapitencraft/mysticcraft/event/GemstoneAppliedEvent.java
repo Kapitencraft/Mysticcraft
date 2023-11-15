@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.event;
 
-import net.kapitencraft.mysticcraft.item.gemstone.GemstoneType;
-import net.kapitencraft.mysticcraft.item.gemstone.GemstoneSlot;
+import net.kapitencraft.mysticcraft.item.data.gemstone.GemstoneSlot;
+import net.kapitencraft.mysticcraft.item.data.gemstone.GemstoneType;
 import net.minecraftforge.eventbus.api.Event;
 
 public class GemstoneAppliedEvent extends Event {

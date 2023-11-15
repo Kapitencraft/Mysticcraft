@@ -17,4 +17,5 @@ public interface ModLootModifiers {
     RegistryObject<Codec<TelekinesisModifier>> TELEKINESIS = REGISTRY.register("telekinesis", ()-> TelekinesisModifier.CODEC);
     RegistryObject<Codec<ReplenishModifier>> REPLENISH = REGISTRY.register("replenish", ()-> ReplenishModifier.CODEC);
     RegistryObject<Codec<OreModifier>> ORE = REGISTRY.register("ore_mod", ()-> OreModifier.CODEC);
+    RegistryObject<Codec<SmeltModifier>> SMELT = REGISTRY.register("smelt", ()-> SmeltModifier.CODEC);
 }

@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.item.gemstone;
+package net.kapitencraft.mysticcraft.item.data.gemstone;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;

@@ -30,6 +30,7 @@ public class ModRegistryInit {
         register("Loot Modifiers", ModLootModifiers.REGISTRY);
         register("Loot Functions", ModLootItemFunctions.REGISTRY);
         register("Loot Conditions", ModLootItemConditions.REGISTRY);
+        register("Command Arguments", ModCommandArguments.REGISTRY);
     }
 
     private static void register(String registerName, DeferredRegister<?> register) {

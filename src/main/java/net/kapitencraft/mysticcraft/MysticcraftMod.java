@@ -4,13 +4,13 @@ import com.mojang.logging.LogUtils;
 import net.kapitencraft.mysticcraft.config.ClientModConfig;
 import net.kapitencraft.mysticcraft.config.CommonModConfig;
 import net.kapitencraft.mysticcraft.gui.gemstone_grinder.GemstoneGrinderScreen;
-import net.kapitencraft.mysticcraft.gui.reforging_anvil.ReforgingAnvilScreen;
+import net.kapitencraft.mysticcraft.gui.reforging_anvil.ReforgeAnvilScreen;
 import net.kapitencraft.mysticcraft.init.ModEntityTypes;
 import net.kapitencraft.mysticcraft.init.ModFluids;
 import net.kapitencraft.mysticcraft.init.ModMenuTypes;
 import net.kapitencraft.mysticcraft.init.ModRegistryInit;
 import net.kapitencraft.mysticcraft.item.AnvilUses;
-import net.kapitencraft.mysticcraft.item.reforging.Reforges;
+import net.kapitencraft.mysticcraft.item.data.reforging.Reforges;
 import net.kapitencraft.mysticcraft.misc.ModItemProperties;
 import net.kapitencraft.mysticcraft.networking.ModMessages;
 import net.kapitencraft.mysticcraft.potion.ModPotionRecipe;
@@ -97,7 +97,7 @@ public class MysticcraftMod {
 
         private static void registerMenuScreens() {
             MenuScreens.register(ModMenuTypes.GEM_GRINDER.get(), GemstoneGrinderScreen::new);
-            MenuScreens.register(ModMenuTypes.REFORGING_ANVIL.get(), ReforgingAnvilScreen::new);
+            MenuScreens.register(ModMenuTypes.REFORGING_ANVIL.get(), ReforgeAnvilScreen::new);
         }
 
         @SubscribeEvent

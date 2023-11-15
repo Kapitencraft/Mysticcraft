@@ -27,8 +27,8 @@ public class ScrollableTooltips {
         Vector2i toolTipSize = createToolTipBoxSize(event.getComponents(), event.getFont());
         Vector2i screenSize = new Vector2i(event.getScreenWidth(), event.getScreenHeight());
         Vector2i pos = new Vector2i(event.getX(), event.getY());
-        boolean isHigherThanScreen = toolTipSize.y > event.getScreenHeight();
         int height = event.getY();
+        boolean isHigherThanScreen = toolTipSize.y > screenSize.y || height + toolTipSize.y > screenSize.y;
         if (stack != event.getItemStack()) {
             scrollY = 0;
             stack = event.getItemStack();

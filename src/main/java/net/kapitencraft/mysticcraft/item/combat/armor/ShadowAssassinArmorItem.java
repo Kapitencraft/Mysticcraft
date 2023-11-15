@@ -48,7 +48,7 @@ public class ShadowAssassinArmorItem extends ModArmorItem implements IArmorBonus
     }
 
     @Override
-    boolean withCustomModel() {
+    public boolean withCustomModel() {
         return true;
     }
 

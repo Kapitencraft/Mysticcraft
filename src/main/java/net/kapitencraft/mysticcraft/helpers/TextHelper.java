@@ -56,6 +56,10 @@ public class TextHelper {
         });
     }
 
+    public static String createGiveFromStack(String name, ItemStack stack) {
+        return "/give " + name + " " + BuiltInRegistries.ITEM.getKey(stack.getItem()) + stack.getOrCreateTag();
+    }
+
     public static Component getStackNameWithoutBrackets(ItemStack stack) {
         MutableComponent mutablecomponent = Component.empty().append(stack.getHoverName());
         if (stack.hasCustomHoverName()) {

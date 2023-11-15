@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.item.reforging;
+package net.kapitencraft.mysticcraft.item.data.reforging;
 
 import net.kapitencraft.mysticcraft.event.ModEventFactory;
 import net.kapitencraft.mysticcraft.helpers.MathHelper;

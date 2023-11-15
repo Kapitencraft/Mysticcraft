@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.item.reforging;
+package net.kapitencraft.mysticcraft.item.data.reforging;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -40,6 +40,10 @@ public class Reforge {
         this.onlyFromStone = builder.onlyFromStone;
         this.type = builder.type;
         this.statList = builder.stats;
+    }
+
+    public static Reforge.Builder builder(String registryName) {
+        return new Builder(registryName);
     }
 
     public boolean isOnlyFromStone() {

@@ -6,6 +6,7 @@ import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModParticleTypes;
+import net.kapitencraft.mysticcraft.item.combat.armor.client.NetherArmorItem;
 import net.kapitencraft.mysticcraft.item.item_bonus.ExtraBonus;
 import net.kapitencraft.mysticcraft.item.item_bonus.FullSetBonus;
 import net.kapitencraft.mysticcraft.item.item_bonus.IArmorBonusItem;
@@ -23,11 +24,15 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
-public class SoulMageArmorItem extends ModArmorItem implements IArmorBonusItem {
+import java.util.List;
+import java.util.Map;
+
+public class SoulMageArmorItem extends NetherArmorItem implements IArmorBonusItem {
     public static final ArmorTabGroup SOUL_MAGE_ARMOR_GROUP = new ArmorTabGroup(TabRegister.TabTypes.WEAPONS_AND_TOOLS);
     public static final String helperString = "SoulMageFullSet";
     private static final PieceBonus HELMET_BONUS = new SoulMageHelmetBonus();
@@ -35,7 +40,7 @@ public class SoulMageArmorItem extends ModArmorItem implements IArmorBonusItem {
     private static final FullSetBonus SET_BONUS = new SoulMageArmorFullSetBonus();
 
     @Override
-    boolean withCustomModel() {
+    public boolean withCustomModel() {
         return false;
     }
 
@@ -86,5 +91,15 @@ public class SoulMageArmorItem extends ModArmorItem implements IArmorBonusItem {
     @Override
     public TabGroup getGroup() {
         return SOUL_MAGE_ARMOR_GROUP;
+    }
+
+    @Override
+    public Map<Item, Integer> getMatCost(ItemStack stack) {
+        return null;
+    }
+
+    @Override
+    public List<ItemStack> getStarCost(ItemStack stack, int curStars) {
+        return null;
     }
 }

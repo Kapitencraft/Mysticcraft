@@ -26,7 +26,7 @@ public class CombatKnowledgeEnchantment extends ExtendedCalculationEnchantment {
 
     @Override
     public String[] getDescriptionMods(int level) {
-        return new String[]{level * 0.1 + "%"};
+        return new String[]{MathHelper.defRound(level * 0.1) + "%"};
     }
 
     @Override

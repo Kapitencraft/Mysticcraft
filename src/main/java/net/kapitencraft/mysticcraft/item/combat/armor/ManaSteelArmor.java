@@ -17,7 +17,7 @@ public class ManaSteelArmor extends ModArmorItem {
     }
 
     @Override
-    boolean withCustomModel() {
+    public boolean withCustomModel() {
         return false;
     }
 

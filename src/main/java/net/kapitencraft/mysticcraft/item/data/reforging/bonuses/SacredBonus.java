@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.item.reforging.bonuses;
+package net.kapitencraft.mysticcraft.item.data.reforging.bonuses;
 
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.item.item_bonus.ReforgingBonus;

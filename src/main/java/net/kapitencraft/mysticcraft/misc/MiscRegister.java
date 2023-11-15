@@ -14,14 +14,18 @@ import net.kapitencraft.mysticcraft.guild.GuildUpgrade;
 import net.kapitencraft.mysticcraft.guild.GuildUpgrades;
 import net.kapitencraft.mysticcraft.helpers.*;
 import net.kapitencraft.mysticcraft.init.*;
-import net.kapitencraft.mysticcraft.item.combat.armor.*;
+import net.kapitencraft.mysticcraft.item.ITieredItem;
+import net.kapitencraft.mysticcraft.item.combat.armor.ModArmorItem;
+import net.kapitencraft.mysticcraft.item.combat.armor.ModArmorMaterials;
+import net.kapitencraft.mysticcraft.item.combat.armor.SoulMageArmorItem;
+import net.kapitencraft.mysticcraft.item.combat.armor.WarpedArmorItem;
 import net.kapitencraft.mysticcraft.item.combat.spells.SpellItem;
 import net.kapitencraft.mysticcraft.item.combat.totems.ModTotemItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword.ManaSteelSwordItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.bow.ModBowItem;
+import net.kapitencraft.mysticcraft.item.data.reforging.Reforge;
+import net.kapitencraft.mysticcraft.item.data.reforging.ReforgeManager;
 import net.kapitencraft.mysticcraft.item.item_bonus.IArmorBonusItem;
-import net.kapitencraft.mysticcraft.item.reforging.Reforge;
-import net.kapitencraft.mysticcraft.item.reforging.ReforgeManager;
 import net.kapitencraft.mysticcraft.misc.cooldown.Cooldowns;
 import net.kapitencraft.mysticcraft.misc.damage_source.FerociousDamageSource;
 import net.kapitencraft.mysticcraft.misc.damage_source.IAbilitySource;
@@ -50,15 +54,12 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.entity.projectile.SmallFireball;
-import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -89,7 +90,10 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
 
 @Mod.EventBusSubscriber
 public class MiscRegister {
@@ -157,35 +161,6 @@ public class MiscRegister {
     @SubscribeEvent
     public static void registerDrawSpeed(ArrowLooseEvent event) {
         event.setCharge((int) (event.getCharge() * event.getEntity().getAttributeValue(ModAttributes.DRAW_SPEED.get()) / 100));
-    }
-
-    private static void createArrow(ItemStack itemStack, Player player, float speed, float xChange, float yChange) {
-        ItemStack projectile = player.getProjectile(itemStack);
-        ArrowItem arrowitem = (ArrowItem)(projectile.getItem() instanceof ArrowItem ? projectile.getItem() : Items.ARROW);
-        AbstractArrow abstractarrow = arrowitem.createArrow(player.level, itemStack, player);
-        abstractarrow.shootFromRotation(player, player.getXRot() + xChange, player.getYRot() + yChange, 0.0F, speed * 3.0F, 1.0F);
-        if (speed == 1.0F) {
-            abstractarrow.setCritArrow(true);
-        }
-
-        int j = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.POWER_ARROWS, itemStack);
-        if (j > 0) {
-            abstractarrow.setBaseDamage(abstractarrow.getBaseDamage() + (double)j * 0.5D + 0.5D);
-        }
-
-        int k = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PUNCH_ARROWS, itemStack);
-        if (k > 0) {
-            abstractarrow.setKnockback(k);
-        }
-
-        if (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FLAMING_ARROWS, itemStack) > 0) {
-            abstractarrow.setSecondsOnFire(100);
-        }
-        itemStack.hurtAndBreak(1, player, (p_253596_) -> p_253596_.broadcastBreakEvent(player.getUsedItemHand()));
-        if ((player.getAbilities().instabuild || (projectile.getItem() instanceof ArrowItem && ((ArrowItem)projectile.getItem()).isInfinite(projectile, itemStack, player))) || player.getAbilities().instabuild && (itemStack.is(Items.SPECTRAL_ARROW) || itemStack.is(Items.TIPPED_ARROW))) {
-            abstractarrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
-        }
-        player.level.addFreshEntity(abstractarrow);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
@@ -266,14 +241,6 @@ public class MiscRegister {
                 reforge.getBonus().onEntityKilled(killed, attacker, type);
             }
         }
-    }
-
-    private static List<AttributeModifier.Operation> getOperations(Collection<AttributeModifier> attributeModifiers) {
-        ArrayList<AttributeModifier.Operation> operations = new ArrayList<>();
-        for (AttributeModifier modifier : attributeModifiers) {
-            operations.add(modifier.getOperation());
-        }
-        return operations;
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -411,7 +378,7 @@ public class MiscRegister {
                     tag.putByte(SpellItem.SPELL_EXECUTION_DUR, (byte) (tag.getByte(SpellItem.SPELL_EXECUTION_DUR) - 1));
                 }
             }
-            if (InventoryHelper.hasSetInInventory(player, TieredArmorItem.ArmorTier.INFERNAL)) {
+            if (InventoryHelper.hasSetInInventory(player, ITieredItem.ItemTier.INFERNAL)) {
                 MiscHelper.awardAchievement(player, "mysticcraft:infernal_armor");
             }
             if (!player.isOnGround()) {
@@ -509,32 +476,20 @@ public class MiscRegister {
         if (event.getAmount() > 0) MiscHelper.createDamageIndicator(living, event.getAmount(), "heal");
     }
 
-    //@SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void telekinesis2Register(LivingDropsEvent event) {
-        Collection<ItemEntity> entities = event.getDrops();
-        if (event.getSource().getEntity() instanceof Player attacker) {
-            for (ItemEntity entity : entities) {
-                ItemStack stack = entity.getItem();
-                //Telekinesis Register
-                if (attacker.getMainHandItem().getEnchantmentLevel(ModEnchantments.TELEKINESIS.get()) > 0) {
-                    attacker.getInventory().add(stack);
-                    entity.kill();
-                    event.setCanceled(true);
-                }
-            }
-        }
-    }
-
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void telekinesisXpRegister(LivingExperienceDropEvent event) {
         Player attacker = event.getAttackingPlayer();
         if (attacker != null) {
             ItemStack mainHand = attacker.getMainHandItem();
             if (mainHand.getEnchantmentLevel(ModEnchantments.TELEKINESIS.get()) > 0) {
-                attacker.giveExperiencePoints(event.getDroppedExperience());
+                addXp(attacker, event.getDroppedExperience());
                 event.setCanceled(true);
             }
         }
+    }
+
+    private static void addXp(Player player, int amount) {
+        player.giveExperiencePoints(MiscHelper.repairPlayerItems(player, amount, Enchantments.MENDING));
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -564,13 +519,19 @@ public class MiscRegister {
         if (mainHandItem.getEnchantmentLevel(ModEnchantments.LUMBERJACK.get()) > 0 && state.is(BlockTags.LOGS)) {
             MiscHelper.mineMultiple(pos, serverPlayer, block, pos1 -> {}, state1 -> true, pos1 -> false);
         }
-        if (mainHandItem.getEnchantmentLevel(ModEnchantments.VEIN_MINER.get()) > 0 && state.is(BlockTags.MINEABLE_WITH_PICKAXE)) {
-            Reference<Integer> brokenBlocks = Reference.of(-1);
-            final int maximalBrokenBlocks = mainHandItem.getEnchantmentLevel(ModEnchantments.VEIN_MINER.get());
-            MiscHelper.mineMultiple(pos, serverPlayer, block, pos1 -> MathHelper.add(brokenBlocks::getValue, brokenBlocks::setValue, 1), state1 -> true, pos1 -> brokenBlocks.getValue() > maximalBrokenBlocks);
+        if (state.is(BlockTags.MINEABLE_WITH_PICKAXE)) {
+            MiscHelper.getEnchantmentLevelAndDo(mainHandItem, ModEnchantments.VEIN_MINER.get(), integer -> {
+                Reference<Integer> brokenBlocks = Reference.of(-1);
+                MiscHelper.mineMultiple(pos, serverPlayer, block,
+                        pos1 -> MathHelper.add(brokenBlocks::getValue, brokenBlocks::setValue, 1),
+                        state1 -> true, pos1 -> brokenBlocks.getValue() > integer);
+            });
         }
+        MiscHelper.getEnchantmentLevelAndDo(mainHandItem, ModEnchantments.EXPERIENCED.get(), integer -> {
+            MathHelper.add(event::getExpToDrop, event::setExpToDrop, integer);
+        });
         if (mainHandItem.getEnchantmentLevel(ModEnchantments.TELEKINESIS.get()) > 0) {
-            player.giveExperiencePoints(event.getExpToDrop());
+            addXp(player, event.getExpToDrop());
             event.setExpToDrop(0);
         }
     }

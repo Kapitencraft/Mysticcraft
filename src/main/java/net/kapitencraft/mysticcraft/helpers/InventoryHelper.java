@@ -1,6 +1,8 @@
 package net.kapitencraft.mysticcraft.helpers;
 
+import net.kapitencraft.mysticcraft.item.ITieredItem;
 import net.kapitencraft.mysticcraft.item.combat.armor.TieredArmorItem;
+import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.Reference;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
@@ -10,6 +12,7 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 
 public class InventoryHelper {
@@ -54,6 +57,10 @@ public class InventoryHelper {
         return itemStacks;
     }
 
+    private static Predicate<ItemStack> byItem(Item item) {
+        return stack -> stack.getItem() == item;
+    }
+
     public static boolean hasSetInInventory(Player player,  ArmorMaterial material) {
         boolean helmetFound = false;
         boolean chestplateFound = false;
@@ -75,7 +82,7 @@ public class InventoryHelper {
         return leggingsFound && helmetFound && chestplateFound && bootsFound;
     }
 
-    public static boolean hasSetInInventory(Player player, TieredArmorItem.ArmorTier armorTier) {
+    public static boolean hasSetInInventory(Player player, ITieredItem.ItemTier armorTier) {
         boolean helmetFound = false;
         boolean chestplateFound = false;
         boolean leggingsFound = false;
@@ -83,7 +90,7 @@ public class InventoryHelper {
         for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
             ItemStack stack = player.getInventory().getItem(i);
             if (stack.getItem() instanceof TieredArmorItem armorItem) {
-                if (TieredArmorItem.getTier(stack) == armorTier) {
+                if (ITieredItem.getTier(stack) == armorTier) {
                     switch (armorItem.getSlot()) {
                         case LEGS -> leggingsFound = true;
                         case HEAD -> helmetFound = true;
@@ -94,5 +101,18 @@ public class InventoryHelper {
             }
         }
         return leggingsFound && helmetFound && chestplateFound && bootsFound;
+    }
+
+    @SuppressWarnings("ALL")
+    public static boolean hasInInventory(Map<Item, Integer> content, Player player) {
+        for (Map.Entry<Item, Integer> entry : content.entrySet()) {
+            Reference<Integer> reference = Reference.of(entry.getValue());
+            List<ItemStack> list = getByFilter(player, byItem(entry.getKey()));
+            list.forEach(stack -> MathHelper.add(reference::getValue, reference::setValue, -stack.getCount()));
+            if (reference.getValue() > 0) {
+                return false;
+            }
+        }
+        return true;
     }
 }

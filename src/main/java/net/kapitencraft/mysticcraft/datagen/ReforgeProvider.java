@@ -2,8 +2,8 @@ package net.kapitencraft.mysticcraft.datagen;
 
 import com.google.gson.JsonObject;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.item.reforging.Reforge;
-import net.kapitencraft.mysticcraft.item.reforging.Reforges;
+import net.kapitencraft.mysticcraft.item.data.reforging.Reforge;
+import net.kapitencraft.mysticcraft.item.data.reforging.Reforges;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
@@ -25,8 +25,8 @@ public class ReforgeProvider implements DataProvider {
 
     @Override
     public @NotNull CompletableFuture<?> run(@NotNull CachedOutput cachedOutput) {
+        Reforges.registerRarities();
         addReforges();
-        MysticcraftMod.sendWarn(String.valueOf(reforges.size()));
         CompletableFuture<?>[] futures = new CompletableFuture[reforges.size()];
         int i = 0;
         for (Reforge reforge : reforges) {
@@ -45,8 +45,5 @@ public class ReforgeProvider implements DataProvider {
     }
 
     public void addReforges() {
-        Reforges.registerRarities();
-        Reforges.register();
-        reforges.addAll(Reforges.all().values());
     }
 }

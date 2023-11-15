@@ -5,6 +5,7 @@ import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModParticleTypes;
+import net.kapitencraft.mysticcraft.item.combat.armor.client.NetherArmorItem;
 import net.kapitencraft.mysticcraft.item.combat.armor.client.model.CrimsonArmorModel;
 import net.kapitencraft.mysticcraft.item.combat.armor.client.renderer.ArmorRenderer;
 import net.kapitencraft.mysticcraft.item.item_bonus.ExtraBonus;
@@ -23,13 +24,15 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Map;
 
-public class CrimsonArmorItem extends TieredArmorItem implements IArmorBonusItem {
+public class CrimsonArmorItem extends NetherArmorItem implements IArmorBonusItem {
     public static final ArmorTabGroup CRIMSON_ARMOR_GROUP = new ArmorTabGroup(TabRegister.TabTypes.WEAPONS_AND_TOOLS);
     private static final String helperString = "crimsonParticles";
     private static final FullSetBonus FULL_SET_BONUS = new CrimsonArmorFullSetBonus();
@@ -77,7 +80,7 @@ public class CrimsonArmorItem extends TieredArmorItem implements IArmorBonusItem
     }
 
     @Override
-    boolean withCustomModel() {
+    public boolean withCustomModel() {
         return true;
     }
 
@@ -90,14 +93,18 @@ public class CrimsonArmorItem extends TieredArmorItem implements IArmorBonusItem
     public @Nullable String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
         return makeCustomTextureLocation("crimson_armor");
     }
-
-    @Override
-    public List<ArmorTier> getAvailableTiers() {
-        return ArmorTier.NETHER_ARMOR_TIERS;
-    }
-
     @Override
     public TabGroup getGroup() {
         return CRIMSON_ARMOR_GROUP;
+    }
+
+    @Override
+    public Map<Item, Integer> getMatCost(ItemStack stack) {
+        return null;
+    }
+
+    @Override
+    public List<ItemStack> getStarCost(ItemStack stack, int curStars) {
+        return null;
     }
 }

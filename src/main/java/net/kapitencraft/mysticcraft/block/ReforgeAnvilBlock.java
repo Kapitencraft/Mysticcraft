@@ -34,7 +34,7 @@ public class ReforgeAnvilBlock extends BaseEntityBlock {
             if(entity instanceof ReforgingAnvilBlockEntity blockEntity) {
                 NetworkHooks.openScreen(((ServerPlayer)pPlayer), blockEntity, pPos);
             } else {
-                throw new IllegalStateException("Our Container provider is missing!");
+                throw new IllegalStateException("The Container provider is missing!");
             }
         }
 

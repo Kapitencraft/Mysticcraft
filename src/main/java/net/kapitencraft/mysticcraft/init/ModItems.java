@@ -22,8 +22,8 @@ import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.bow.ModBowItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.bow.TallinBow;
 import net.kapitencraft.mysticcraft.item.creative.BuildersWand;
 import net.kapitencraft.mysticcraft.item.creative.ModDebugStickItem;
-import net.kapitencraft.mysticcraft.item.gemstone.GemstoneItem;
-import net.kapitencraft.mysticcraft.item.gemstone.GemstoneType;
+import net.kapitencraft.mysticcraft.item.data.gemstone.GemstoneItem;
+import net.kapitencraft.mysticcraft.item.data.gemstone.GemstoneType;
 import net.kapitencraft.mysticcraft.item.material.*;
 import net.kapitencraft.mysticcraft.item.misc.IModItem;
 import net.kapitencraft.mysticcraft.item.misc.MaterialModItem;
@@ -142,9 +142,9 @@ public interface ModItems {
     HashMap<EquipmentSlot, RegistryObject<ModArmorItem>> ENDER_KNIGHT_ARMOR = ModArmorItem.createRegistry("ender_knight", EnderKnightArmorItem::new, EnderKnightArmorItem.ENDER_KNIGHT_GROUP);
     HashMap<EquipmentSlot, RegistryObject<ModArmorItem>> FROZEN_BLAZE_ARMOR = ModArmorItem.createRegistry("frozen_blaze", FrozenBlazeArmorItem::new, FrozenBlazeArmorItem.FROZEN_BLAZE_ARMOR_GROUP);
     HashMap<EquipmentSlot, RegistryObject<ModArmorItem>> SHADOW_ASSASSIN_ARMOR = ModArmorItem.createRegistry("shadow_assassin", ShadowAssassinArmorItem::new, ShadowAssassinArmorItem.SA_ARMOR_GROUP);
-    HashMap<EquipmentSlot, RegistryObject<ModArmorItem>> CRIMSON_ARMOR = ModArmorItem.createRegistry("crimson", CrimsonArmorItem::new, CrimsonArmorItem.CRIMSON_ARMOR_GROUP);
-    HashMap<EquipmentSlot, RegistryObject<ModArmorItem>> SOUL_MAGE_ARMOR = ModArmorItem.createRegistry("soul_mage", SoulMageArmorItem::new, SoulMageArmorItem.SOUL_MAGE_ARMOR_GROUP);
-    HashMap<EquipmentSlot, RegistryObject<ModArmorItem>> WARPED_ARMOR = ModArmorItem.createRegistry("warped", WarpedArmorItem::new, WarpedArmorItem.WARPED_GROUP);
+    HashMap<EquipmentSlot, RegistryObject<CrimsonArmorItem>> CRIMSON_ARMOR = ModArmorItem.createRegistry("crimson", CrimsonArmorItem::new, CrimsonArmorItem.CRIMSON_ARMOR_GROUP);
+    HashMap<EquipmentSlot, RegistryObject<SoulMageArmorItem>> SOUL_MAGE_ARMOR = ModArmorItem.createRegistry("soul_mage", SoulMageArmorItem::new, SoulMageArmorItem.SOUL_MAGE_ARMOR_GROUP);
+    HashMap<EquipmentSlot, RegistryObject<WarpedArmorItem>> WARPED_ARMOR = ModArmorItem.createRegistry("warped", WarpedArmorItem::new, WarpedArmorItem.WARPED_GROUP);
 
     RegistryObject<Item> FROZEN_BLAZE_SPAWN_EGG = REGISTRY.register("frozen_blaze_spawn_egg", ()-> new ForgeSpawnEggItem(ModEntityTypes.FROZEN_BLAZE, -16711681, -16763956, new Item.Properties()));
 

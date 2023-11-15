@@ -38,7 +38,7 @@ public class WizardHatItem extends ModArmorItem implements IModItem {
     }
 
     @Override
-    boolean withCustomModel() {
+    public boolean withCustomModel() {
         return true;
     }
 

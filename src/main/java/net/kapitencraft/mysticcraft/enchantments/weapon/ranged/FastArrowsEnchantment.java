@@ -32,7 +32,7 @@ public class FastArrowsEnchantment extends StatBoostEnchantment implements IWeap
     }
 
     @Override
-    public boolean hasModifiersForThatSlot(EquipmentSlot slot) {
+    public boolean hasModifiersForThatSlot(EquipmentSlot slot, ItemStack stack) {
         return slot == EquipmentSlot.MAINHAND;
     }
 

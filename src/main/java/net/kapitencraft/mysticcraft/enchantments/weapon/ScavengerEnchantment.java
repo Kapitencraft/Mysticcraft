@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.enchantments.weapon;
+    package net.kapitencraft.mysticcraft.enchantments.weapon;
 
 import net.kapitencraft.mysticcraft.enchantments.abstracts.IWeaponEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.ModEnchantment;
@@ -12,7 +12,7 @@ public class ScavengerEnchantment extends Enchantment implements IWeaponEnchantm
 
     @Override
     public String[] getDescriptionMods(int level) {
-        return new String[] {"" + level * 20};
+        return new String[] {level * 20 + "%"};
     }
 
     @Override

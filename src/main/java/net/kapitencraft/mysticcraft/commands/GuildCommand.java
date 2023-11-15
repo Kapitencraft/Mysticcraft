@@ -6,6 +6,7 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.kapitencraft.mysticcraft.guild.Guild;
 import net.kapitencraft.mysticcraft.guild.GuildHandler;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.ClickEvent;
@@ -21,30 +22,30 @@ public class GuildCommand {
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         LiteralCommandNode<CommandSourceStack> main = dispatcher.register(net.minecraft.commands.Commands.literal("guild")
-                .then(net.minecraft.commands.Commands.literal("create")
-                        .then(net.minecraft.commands.Commands.argument("name", StringArgumentType.greedyString())
+                .then(Commands.literal("create")
+                        .then(Commands.argument("name", StringArgumentType.greedyString())
                                 .executes(context -> addGuild(StringArgumentType.getString(context, "name"), context.getSource()))
                         )
-                ).then(net.minecraft.commands.Commands.literal("join")
-                        .then(net.minecraft.commands.Commands.argument("name", StringArgumentType.word())
+                ).then(Commands.literal("join")
+                        .then(Commands.argument("name", StringArgumentType.word())
                             .executes(context -> joinGuild(StringArgumentType.getString(context, "name"), context.getSource(), null))
-                                .then(net.minecraft.commands.Commands.argument("inviteKey", StringArgumentType.word())
+                                .then(Commands.argument("inviteKey", StringArgumentType.word())
                                         .executes(context -> joinGuild(StringArgumentType.getString(context, "name"), context.getSource(), StringArgumentType.getString(context, "inviteKey")))
                                 )
                         )
-                ).then(net.minecraft.commands.Commands.literal("invite")
-                        .then(net.minecraft.commands.Commands.argument("toInvite", EntityArgument.player())
+                ).then(Commands.literal("invite")
+                        .then(Commands.argument("toInvite", EntityArgument.player())
                                 .executes(context -> inviteToGuild(EntityArgument.getPlayer(context, "toInvite"), context.getSource()))
                         )
-                ).then(net.minecraft.commands.Commands.literal("kick")
-                        .then(net.minecraft.commands.Commands.argument("name", EntityArgument.player())
+                ).then(Commands.literal("kick")
+                        .then(Commands.argument("name", EntityArgument.player())
                                 .executes(context -> kickPlayer(EntityArgument.getPlayer(context, "name"), context.getSource()))
                         )
-                ).then(net.minecraft.commands.Commands.literal("promote")
-                        .then(net.minecraft.commands.Commands.argument("name", EntityArgument.player())
+                ).then(Commands.literal("promote")
+                        .then(Commands.argument("name", EntityArgument.player())
                                 .executes(context -> promotePlayer(EntityArgument.getPlayer(context, "name"), context.getSource()))
                         )
-                ).then(net.minecraft.commands.Commands.literal("disband")
+                ).then(Commands.literal("disband")
                         .executes(context -> disbandGuild(context.getSource()))
                 )
         );

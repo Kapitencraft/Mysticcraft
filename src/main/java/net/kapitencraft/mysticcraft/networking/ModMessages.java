@@ -3,19 +3,14 @@ package net.kapitencraft.mysticcraft.networking;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.Provider;
 import net.kapitencraft.mysticcraft.networking.packets.C2S.ReforgingPacket;
+import net.kapitencraft.mysticcraft.networking.packets.C2S.UpgradeItemPacket;
 import net.kapitencraft.mysticcraft.networking.packets.SendCompoundTagPacket;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
-
-import java.util.function.BiConsumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 public class ModMessages {
     private static final String PROTOCOL_VERSION = "1";
@@ -25,11 +20,6 @@ public class ModMessages {
     private static int messageID = 0;
     private static int id() {
         return messageID++;
-    }
-
-    public static <MSG> void addNetworkMessage(Class<MSG> messageType, BiConsumer<MSG, FriendlyByteBuf> encoder, Function<FriendlyByteBuf, MSG> decoder, BiConsumer<MSG, Supplier<NetworkEvent.Context>> messageConsumer) {
-        PACKET_HANDLER.registerMessage(messageID, messageType, encoder, decoder, messageConsumer);
-        messageID++;
     }
 
     public static <MSG> void sendToServer(MSG message) {
@@ -62,6 +52,11 @@ public class ModMessages {
                 .decoder(ReforgingPacket::new)
                 .encoder(ReforgingPacket::toBytes)
                 .consumerMainThread(ReforgingPacket::handle)
+                .add();
+        net.messageBuilder(UpgradeItemPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(UpgradeItemPacket::new)
+                .encoder(UpgradeItemPacket::toBytes)
+                .consumerMainThread(UpgradeItemPacket::handle)
                 .add();
         net.messageBuilder(SendCompoundTagPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
                 .decoder(SendCompoundTagPacket::new)

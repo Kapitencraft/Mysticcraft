@@ -34,9 +34,4 @@ public class TelekinesisModifier extends ModLootModifier implements IConditional
     public Codec<? extends IGlobalLootModifier> codec() {
         return CODEC;
     }
-
-    @Override
-    public LootItemCondition[] getConditions() {
-        return conditions;
-    }
 }

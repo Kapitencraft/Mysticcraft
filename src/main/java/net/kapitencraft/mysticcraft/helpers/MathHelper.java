@@ -30,6 +30,10 @@ public class MathHelper {
         return  Math.floor(no * Math.pow(10, num)) / (Math.pow(10, num));
     }
 
+    public static double defRound(double no) {
+        return round(no, 2);
+    }
+
     public static <T extends Entity> List<T> getEntitiesAround(Class<T> tClass, Entity source, double range) {
         Level level = source.getLevel();
         return getEntitiesAround(tClass, level, source.getBoundingBox(), range);

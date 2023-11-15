@@ -44,13 +44,13 @@ public abstract class LivingEntityMixin extends Entity {
         ));
         Rendering.addRenderer(new Rendering.RenderHolder(
                 new Rendering.PositionHolder(-90, 350),
-                value -> FormattingCodes.DARK_AQUA + "Effective HP: " + MathHelper.round(value.getHealth() * 100 / (100 - getDamageProtection(value)), 2),
+                value -> FormattingCodes.DARK_AQUA + "Effective HP: " + MathHelper.defRound(value.getHealth() * 100 / (100 - getDamageProtection(value))),
                 Rendering.RenderType.SMALL
         ));
     }
 
     private static double getDamageProtection(LivingEntity living) {
-        return MathHelper.round(100 - calculateDamage(100, living.getAttributeValue(Attributes.ARMOR), living.getAttributeValue(Attributes.ARMOR_TOUGHNESS)), 2);
+        return MathHelper.defRound(100 - calculateDamage(100, living.getAttributeValue(Attributes.ARMOR), living.getAttributeValue(Attributes.ARMOR_TOUGHNESS)));
     }
 
     /**

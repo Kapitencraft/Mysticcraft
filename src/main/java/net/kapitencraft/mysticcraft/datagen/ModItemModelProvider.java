@@ -2,8 +2,8 @@ package net.kapitencraft.mysticcraft.datagen;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.init.ModItems;
-import net.kapitencraft.mysticcraft.item.gemstone.GemstoneItem;
-import net.kapitencraft.mysticcraft.item.gemstone.GemstoneType;
+import net.kapitencraft.mysticcraft.item.data.gemstone.GemstoneItem;
+import net.kapitencraft.mysticcraft.item.data.gemstone.GemstoneType;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;

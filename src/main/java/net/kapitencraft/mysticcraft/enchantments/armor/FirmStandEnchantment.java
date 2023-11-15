@@ -1,10 +1,8 @@
 package net.kapitencraft.mysticcraft.enchantments.armor;
 
 import com.google.common.collect.Multimap;
-import net.kapitencraft.mysticcraft.enchantments.abstracts.StatBoostEnchantment;
+import net.kapitencraft.mysticcraft.enchantments.abstracts.ArmorStatBoostEnchantment;
 import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
-import net.kapitencraft.mysticcraft.helpers.CollectionHelper;
-import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -14,7 +12,7 @@ import net.minecraft.world.item.enchantment.EnchantmentCategory;
 
 import java.util.function.Consumer;
 
-public class FirmStandEnchantment extends StatBoostEnchantment {
+public class FirmStandEnchantment extends ArmorStatBoostEnchantment {
     public FirmStandEnchantment() {
         super(Rarity.UNCOMMON, EnchantmentCategory.WEARABLE, EquipmentSlot.FEET, EquipmentSlot.LEGS);
     }
@@ -25,13 +23,8 @@ public class FirmStandEnchantment extends StatBoostEnchantment {
     }
 
     @Override
-    public Consumer<Multimap<Attribute, AttributeModifier>> getModifiers(int level, ItemStack enchanted, EquipmentSlot slot) {
-        return multimap -> multimap.put(Attributes.KNOCKBACK_RESISTANCE, AttributeHelper.createModifier("Firm Stand Enchantment", AttributeModifier.Operation.ADDITION, level));
-    }
-
-    @Override
-    public boolean hasModifiersForThatSlot(EquipmentSlot slot) {
-        return CollectionHelper.arrayContains(MiscHelper.ARMOR_EQUIPMENT, slot);
+    public Consumer<Multimap<Attribute, AttributeModifier>> getArmorModifiers(int level, ItemStack enchanted, EquipmentSlot slot) {
+        return multimap -> multimap.put(Attributes.KNOCKBACK_RESISTANCE, AttributeHelper.createModifierForSlot("Firm Stand Enchantment", AttributeModifier.Operation.ADDITION, level, slot));
     }
 
     @Override

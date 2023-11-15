@@ -8,13 +8,14 @@ import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.helpers.TextHelper;
 import net.kapitencraft.mysticcraft.init.ModItems;
 import net.kapitencraft.mysticcraft.item.combat.armor.client.renderer.ArmorRenderer;
-import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
+import net.kapitencraft.mysticcraft.item.data.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.item.item_bonus.ExtraBonus;
 import net.kapitencraft.mysticcraft.item.item_bonus.FullSetBonus;
 import net.kapitencraft.mysticcraft.item.item_bonus.IArmorBonusItem;
 import net.kapitencraft.mysticcraft.item.item_bonus.PieceBonus;
 import net.kapitencraft.mysticcraft.item.misc.IModItem;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
+import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.Provider;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -53,8 +54,8 @@ public abstract class ModArmorItem extends ArmorItem implements IModItem {
         ModArmorItem create(EquipmentSlot slot);
     }
 
-    public static HashMap<EquipmentSlot, RegistryObject<ModArmorItem>> createRegistry(String registryName, Creator creator, TabGroup group) {
-        return ModItems.createRegistry(creator::create, slot -> registryName + "_" + TextHelper.getRegistryNameForSlot(slot), List.of(MiscHelper.ARMOR_EQUIPMENT), group);
+    public static <T extends ModArmorItem> HashMap<EquipmentSlot, RegistryObject<T>> createRegistry(String registryName, Provider<T, EquipmentSlot> creator, TabGroup group) {
+        return ModItems.createRegistry(creator, slot -> registryName + "_" + TextHelper.getRegistryNameForSlot(slot), List.of(MiscHelper.ARMOR_EQUIPMENT), group);
     }
 
     public static boolean hadFullSet(ModArmorMaterials materials, LivingEntity living) {
@@ -144,7 +145,7 @@ public abstract class ModArmorItem extends ArmorItem implements IModItem {
 
     // display / model START
 
-    abstract boolean withCustomModel();
+    protected abstract boolean withCustomModel();
     protected ArmorRenderer<?> getRenderer(LivingEntity living, ItemStack stack, EquipmentSlot slot) { return null;}
 
     @Override
@@ -170,8 +171,7 @@ public abstract class ModArmorItem extends ArmorItem implements IModItem {
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
         HashMultimap<Attribute, AttributeModifier> builder = HashMultimap.create();
-        Multimap<Attribute, AttributeModifier> map = null;
-        builder.putAll(this.getDefaultAttributeModifiers(slot));
+        builder.putAll(super.getAttributeModifiers(slot, stack));
         if (slot == this.getSlot()) {
             if (this instanceof IArmorBonusItem bonusItem && this.user instanceof LivingEntity living) {
                 PieceBonus pieceBonus = bonusItem.getPieceBonusForSlot(this.getSlot());

@@ -29,7 +29,7 @@ public class OverloadEnchantment extends StatBoostEnchantment implements ModEnch
     }
 
     @Override
-    public boolean hasModifiersForThatSlot(EquipmentSlot slot) {
+    public boolean hasModifiersForThatSlot(EquipmentSlot slot, ItemStack stack) {
         return slot == EquipmentSlot.MAINHAND;
     }
 

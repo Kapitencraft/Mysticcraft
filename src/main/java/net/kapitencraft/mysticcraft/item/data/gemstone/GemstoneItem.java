@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.item.gemstone;
+package net.kapitencraft.mysticcraft.item.data.gemstone;
 
 import net.kapitencraft.mysticcraft.item.misc.IModItem;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;

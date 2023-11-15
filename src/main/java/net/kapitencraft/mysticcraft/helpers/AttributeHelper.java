@@ -183,6 +183,14 @@ public class AttributeHelper {
             this.modifiers = increaseAllByAmount(modifiers, toMerge);
         }
 
+        public void update(Provider<Multimap<Attribute, AttributeModifier>, Multimap<Attribute, AttributeModifier>> provider) {
+            this.modifiers = provider.provide(this.modifiers);
+        }
+
+        public void mulAll(double percent) {
+            this.modifiers = increaseByPercent(this.modifiers, percent, AttributeModifier.Operation.values(), null);
+        }
+
         public void merge(HashMap<Attribute, Double> toMerge, AttributeModifier.Operation operation) {
             for (Attribute attribute : toMerge.keySet()) {
                 this.modifiers = increaseByAmount(this.modifiers, toMerge.get(attribute), operation, attribute);

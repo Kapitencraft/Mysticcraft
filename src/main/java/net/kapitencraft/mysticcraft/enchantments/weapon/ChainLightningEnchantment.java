@@ -28,7 +28,7 @@ public class ChainLightningEnchantment extends ExtendedCalculationEnchantment im
 
     @Override
     public String[] getDescriptionMods(int level) {
-        return new String[] {level * 0.1 + "%", (int) (Math.sqrt(level)) + "", level / 2 + "", 1 + level * 0.05 + "%"};
+        return new String[] {(level * 0.1) + "%", (int) (Math.sqrt(level)) + "", level / 2 + "", 1 + level * 0.05 + "%"};
     }
 
 

@@ -1,1 +1,5 @@
 added Crimsonium ore world gen
+removed unnecessary asset files;
+added smelting touch enchantment;
+added /show command
+fixed Attribute mods also being applied to main hand item (armor)

@@ -1,5 +1,5 @@
 {
-  "type": "mysticcraft:ore_mods",
+  "type": "mysticcraft:ore_mod",
   "conditions": [
     {
       "condition": "mysticcraft:tag_key",

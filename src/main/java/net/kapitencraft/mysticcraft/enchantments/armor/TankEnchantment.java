@@ -1,8 +1,8 @@
 package net.kapitencraft.mysticcraft.enchantments.armor;
 
 import com.google.common.collect.Multimap;
+import net.kapitencraft.mysticcraft.enchantments.abstracts.ArmorStatBoostEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.IUltimateEnchantment;
-import net.kapitencraft.mysticcraft.enchantments.abstracts.StatBoostEnchantment;
 import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
-public class TankEnchantment extends StatBoostEnchantment implements IUltimateEnchantment {
+public class TankEnchantment extends ArmorStatBoostEnchantment implements IUltimateEnchantment {
     public TankEnchantment() {
         super(Rarity.VERY_RARE, EnchantmentCategory.ARMOR, MiscHelper.ARMOR_EQUIPMENT);
     }
@@ -39,7 +39,7 @@ public class TankEnchantment extends StatBoostEnchantment implements IUltimateEn
     }
 
     @Override
-    public Consumer<Multimap<Attribute, AttributeModifier>> getModifiers(int level, ItemStack enchanted, EquipmentSlot slot) {
+    public Consumer<Multimap<Attribute, AttributeModifier>> getArmorModifiers(int level, ItemStack enchanted, EquipmentSlot slot) {
         return multimap -> {
             ArmorItem armorItem = (ArmorItem) enchanted.getItem();
             multimap.put(Attributes.MOVEMENT_SPEED, AttributeHelper.createModifierForSlot("Tank Enchantment", AttributeModifier.Operation.MULTIPLY_BASE, -level, armorItem.getSlot()));

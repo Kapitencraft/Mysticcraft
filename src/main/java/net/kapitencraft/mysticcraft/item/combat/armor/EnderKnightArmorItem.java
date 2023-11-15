@@ -6,8 +6,8 @@ import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
-import net.kapitencraft.mysticcraft.item.gemstone.GemstoneSlot;
-import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
+import net.kapitencraft.mysticcraft.item.data.gemstone.GemstoneSlot;
+import net.kapitencraft.mysticcraft.item.data.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.ArmorTabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
@@ -40,7 +40,7 @@ public class EnderKnightArmorItem extends ModArmorItem implements IGemstoneAppli
     }
 
     @Override
-    boolean withCustomModel() {
+    public boolean withCustomModel() {
         return false;
     }
 

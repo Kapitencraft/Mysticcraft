@@ -2,7 +2,7 @@ package net.kapitencraft.mysticcraft.enchantments.extras;
 
 import net.kapitencraft.mysticcraft.enchantments.abstracts.ModEnchantment;
 import net.kapitencraft.mysticcraft.helpers.TextHelper;
-import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
+import net.kapitencraft.mysticcraft.item.data.gemstone.IGemstoneApplicable;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;

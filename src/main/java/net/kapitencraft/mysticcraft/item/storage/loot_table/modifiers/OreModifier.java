@@ -25,7 +25,7 @@ public class OreModifier extends ModLootModifier implements IConditional {
 
     @Override
     protected @NotNull ObjectArrayList<ItemStack> doApply(ObjectArrayList<ItemStack> generatedLoot, LootContext context) {
-            double attributeValue = AttributeHelper.getSaveAttributeValue(ModAttributes.MINING_SPEED.get(), LootTableHelper.getLivingSource(context));
+        double attributeValue = AttributeHelper.getSaveAttributeValue(ModAttributes.MINING_FORTUNE.get(), LootTableHelper.getLivingSource(context));
         LootContextReader.simple(context, BlockState.class, LootContextParams.BLOCK_STATE).ifPresent(state -> generatedLoot.forEach(stack -> {
             if (stack.getItem() != state.getBlock().asItem()) {
                 MathHelper.mul(stack::getCount, stack::setCount, (int) (1 + attributeValue / 100));
@@ -37,10 +37,5 @@ public class OreModifier extends ModLootModifier implements IConditional {
     @Override
     public Codec<? extends IGlobalLootModifier> codec() {
         return CODEC;
-    }
-
-    @Override
-    public LootItemCondition[] getConditions() {
-        return conditions;
     }
 }

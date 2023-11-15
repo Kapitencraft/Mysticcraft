@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.item.combat.weapon.ranged.bow;
 
-import net.kapitencraft.mysticcraft.item.gemstone.GemstoneSlot;
-import net.kapitencraft.mysticcraft.item.gemstone.IGemstoneApplicable;
+import net.kapitencraft.mysticcraft.item.data.gemstone.GemstoneSlot;
+import net.kapitencraft.mysticcraft.item.data.gemstone.IGemstoneApplicable;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 

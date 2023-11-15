@@ -70,7 +70,7 @@ public class FrozenBlazeArmorItem extends ModArmorItem implements IArmorBonusIte
     }
 
     @Override
-    boolean withCustomModel() {
+    public boolean withCustomModel() {
         return true;
     }
 

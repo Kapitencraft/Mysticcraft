@@ -1,7 +1,8 @@
-package net.kapitencraft.mysticcraft.item.gemstone;
+package net.kapitencraft.mysticcraft.item.data.gemstone;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
+import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.init.ModEnchantments;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
@@ -131,7 +132,7 @@ public class GemstoneHelper {
     public HashMap<Attribute, AttributeModifier> getAttributeModifiers(ItemStack stack, EquipmentSlot equipmentSlot) {
         HashMap<Attribute, Double> attributeModifier = new HashMap<>();
         HashMap<Attribute, AttributeModifier> modifierHashMap = new HashMap<>();
-        if ((stack.getItem() instanceof ArmorItem armorItem && armorItem.getSlot() == equipmentSlot) || equipmentSlot == EquipmentSlot.MAINHAND) {
+        if (MiscHelper.getSlotForStack(stack) == equipmentSlot) {
             double gemstoneModifier;
             @Nullable Attribute attribute;
             @Nullable GemstoneType gemstoneType;

@@ -1,11 +1,11 @@
 package net.kapitencraft.mysticcraft.helpers;
 
 import net.kapitencraft.mysticcraft.enchantments.abstracts.ExtendedAbilityEnchantment;
+import net.kapitencraft.mysticcraft.item.data.reforging.Reforge;
+import net.kapitencraft.mysticcraft.item.data.reforging.Reforges;
 import net.kapitencraft.mysticcraft.item.item_bonus.Bonus;
 import net.kapitencraft.mysticcraft.item.item_bonus.IArmorBonusItem;
 import net.kapitencraft.mysticcraft.item.item_bonus.IWeaponBonusItem;
-import net.kapitencraft.mysticcraft.item.reforging.Reforge;
-import net.kapitencraft.mysticcraft.item.reforging.Reforges;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ArmorItem;
