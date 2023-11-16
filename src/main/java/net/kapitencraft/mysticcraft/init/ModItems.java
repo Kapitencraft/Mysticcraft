@@ -145,6 +145,7 @@ public interface ModItems {
     HashMap<EquipmentSlot, RegistryObject<CrimsonArmorItem>> CRIMSON_ARMOR = ModArmorItem.createRegistry("crimson", CrimsonArmorItem::new, CrimsonArmorItem.CRIMSON_ARMOR_GROUP);
     HashMap<EquipmentSlot, RegistryObject<SoulMageArmorItem>> SOUL_MAGE_ARMOR = ModArmorItem.createRegistry("soul_mage", SoulMageArmorItem::new, SoulMageArmorItem.SOUL_MAGE_ARMOR_GROUP);
     HashMap<EquipmentSlot, RegistryObject<WarpedArmorItem>> WARPED_ARMOR = ModArmorItem.createRegistry("warped", WarpedArmorItem::new, WarpedArmorItem.WARPED_GROUP);
+    HashMap<EquipmentSlot, RegistryObject<WizardCloakArmorItem>> WIZARD_CLOAK_ARMOR = ModArmorItem.createRegistry("wizard_cloak", WizardCloakArmorItem::new, WizardCloakArmorItem.WIZARD_CLOAK_GROUP);
 
     RegistryObject<Item> FROZEN_BLAZE_SPAWN_EGG = REGISTRY.register("frozen_blaze_spawn_egg", ()-> new ForgeSpawnEggItem(ModEntityTypes.FROZEN_BLAZE, -16711681, -16763956, new Item.Properties()));
 

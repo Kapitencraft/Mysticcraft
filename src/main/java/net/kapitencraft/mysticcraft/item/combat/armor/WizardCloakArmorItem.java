@@ -1,5 +1,6 @@
 package net.kapitencraft.mysticcraft.item.combat.armor;
 
+import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.item.combat.armor.client.model.WizardCloakModel;
 import net.kapitencraft.mysticcraft.item.combat.armor.client.renderer.ArmorRenderer;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.ArmorTabGroup;
@@ -8,15 +9,15 @@ import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
 import org.jetbrains.annotations.Nullable;
 
-public class WizardCloakArmor extends ModArmorItem {
-    private static final ArmorTabGroup WIZARD_CLOAK_GROUP = new ArmorTabGroup(TabRegister.TabTypes.WEAPONS_AND_TOOLS);
+public class WizardCloakArmorItem extends ModArmorItem {
+    public static final ArmorTabGroup WIZARD_CLOAK_GROUP = new ArmorTabGroup(TabRegister.TabTypes.WEAPONS_AND_TOOLS);
 
-    public WizardCloakArmor(ArmorMaterial p_40386_, EquipmentSlot p_40387_, Properties p_40388_) {
-        super(p_40386_, p_40387_, p_40388_);
+    public WizardCloakArmorItem(EquipmentSlot p_40387_) {
+        super(ModArmorMaterials.WIZARD_CLOAK, p_40387_, MiscHelper.rarity(Rarity.RARE));
     }
 
     @Override
