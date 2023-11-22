@@ -15,12 +15,12 @@ public class FrozenBlazeRenderer extends MobRenderer<FrozenBlazeEntity, BlazeMod
     }
 
     @Override
-    public ResourceLocation getTextureLocation(@NotNull FrozenBlazeEntity p_114482_) {
+    public @NotNull ResourceLocation getTextureLocation(@NotNull FrozenBlazeEntity p_114482_) {
         return new ResourceLocation("mysticcraft:textures/entity/frozen_blaze.png");
     }
 
     @Override
-    protected int getBlockLightLevel(FrozenBlazeEntity p_114496_, BlockPos p_114497_) {
+    protected int getBlockLightLevel(@NotNull FrozenBlazeEntity p_114496_, @NotNull BlockPos p_114497_) {
         return 15;
     }
 }

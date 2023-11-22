@@ -21,6 +21,7 @@ import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.bow.ShortBowItem;
 import net.kapitencraft.mysticcraft.item.data.dungeon.IStarAbleItem;
 import net.kapitencraft.mysticcraft.item.data.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.item.data.reforging.Reforge;
+import net.kapitencraft.mysticcraft.item.data.spell.ISpellItem;
 import net.kapitencraft.mysticcraft.item.misc.IModItem;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.minecraft.ChatFormatting;
@@ -89,6 +90,9 @@ public abstract class ItemStackMixin {
         }
 
         list.add(name);
+        if (item instanceof IGemstoneApplicable applicable) {
+            applicable.appendDisplay(self(), list);
+        }
         if (!tooltipFlag.isAdvanced() && !self().hasCustomHoverName() && self().is(Items.FILLED_MAP)) {
             Integer integer = MapItem.getMapId(self());
             if (integer != null) {
@@ -104,7 +108,9 @@ public abstract class ItemStackMixin {
                 item.appendHoverText(self(), player == null ? null : player.level, list, tooltipFlag);
             }
         }
-
+        if (item instanceof ISpellItem spellItem) {
+            spellItem.appendDisplay(list, self(), player);
+        }
         if (shouldShowInTooltip(j, ItemStack.TooltipPart.ENCHANTMENTS)) {
                 ListTag enchantmentTags = self().getEnchantmentTags();
                 for(int i = 0; i < enchantmentTags.size(); ++i) {

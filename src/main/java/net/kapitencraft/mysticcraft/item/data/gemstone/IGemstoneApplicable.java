@@ -12,7 +12,7 @@ import java.util.List;
 public interface IGemstoneApplicable {
     default GemstoneHelper getHelper(ItemStack stack) {
         GemstoneHelper helper = new GemstoneHelper(this.getDefaultSlots());
-        helper.loadData(stack);
+        helper.loadData(stack, stack1 -> {});
         return helper;
     }
 

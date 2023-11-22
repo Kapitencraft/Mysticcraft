@@ -4,8 +4,7 @@ import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.init.ModEnchantments;
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.screens.Screen;
+import net.kapitencraft.mysticcraft.item.data.ItemData;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -18,11 +17,11 @@ import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Consumer;
 
-public class GemstoneHelper {
+public class GemstoneHelper implements ItemData<GemstoneSlot[], GemstoneHelper> {
     private static final String DATA_ID = "GemstoneData";
 
     private final GemstoneSlot[] defaultSlots;
@@ -33,7 +32,7 @@ public class GemstoneHelper {
     }
 
     public GemstoneSlot[] getGemstoneSlots(ItemStack stack) {
-        return this.loadData(stack);
+        return this.loadData(stack, stack1 -> {});
     }
 
     public boolean putGemstone(GemstoneType gemstoneType, GemstoneType.Rarity rarity, int slotIndex, ItemStack stack) {
@@ -44,16 +43,6 @@ public class GemstoneHelper {
         return flag;
     }
 
-    public void removeGemstone(int slotIndex, ItemStack stack) {
-        GemstoneSlot[] slots = this.getGemstoneSlots(stack);
-        slots[slotIndex] = this.defaultSlots[slotIndex];
-        this.saveData(stack, slots);
-    }
-
-    private boolean hasData(ItemStack stack) {
-        return !(stack.getTag() == null || stack.getTagElement(DATA_ID) == null);
-    }
-
     private void setSlots(GemstoneSlot[] slots, ItemStack stack) {
         for (int i = 0; i < slots.length; i++) {
             if (!(slots[i].getType() == this.defaultSlots[i].getType())) {
@@ -62,14 +51,11 @@ public class GemstoneHelper {
         }
         this.saveData(stack, slots);
     }
-    public GemstoneSlot[] loadData(ItemStack current) {
-        if (hasData(current)) {
+    public GemstoneSlot[] loadData(ItemStack current, Consumer<GemstoneHelper> ifNull) {
+        if (!(current.getTag() == null || current.getTagElement(DATA_ID) == null)) {
             CompoundTag tag = current.getTagElement(DATA_ID);
-            if (tag == null) {
-                throw new IllegalStateException("Existing Tag is not Existing :D");
-            }
             GemstoneSlot[] slots;
-            if (!tag.contains("Size")) {
+            if (tag == null || !tag.contains("Size")) {
                 MysticcraftMod.sendWarn("Found Modification Data without Size, using default");
                 slots = defaultSlots;
             } else {
@@ -84,11 +70,12 @@ public class GemstoneHelper {
             this.putGemstones(slots, current);
             return slots;
         } else {
+            ifNull.accept(this);
             return this.defaultSlots;
         }
     }
 
-    private void saveData(ItemStack current, GemstoneSlot[] slots) {
+    public void saveData(ItemStack current, GemstoneSlot[] slots) {
         CompoundTag tag = new CompoundTag();
         ListTag slotsTag = new ListTag();
         for (int i = 0; i < slots.length; i++) {
@@ -99,7 +86,6 @@ public class GemstoneHelper {
         tag.put("slots", slotsTag);
         current.addTagElement(DATA_ID, tag);
     }
-
 
     public void getDisplay(ItemStack itemStack, List<Component> list) {
         MutableComponent component = null;
@@ -119,6 +105,11 @@ public class GemstoneHelper {
         if (component != null) {
             list.add(component);
         }
+    }
+
+    @Override
+    public String getTagId() {
+        return DATA_ID;
     }
 
     private boolean putGemstones(GemstoneSlot[] slots, ItemStack stack) {
@@ -161,32 +152,6 @@ public class GemstoneHelper {
         return modifierHashMap;
     }
 
-    public void addModInfo(ItemStack stack, List<Component> list) {
-        GemstoneSlot[] slots = this.getGemstoneSlots(stack);
-        EquipmentSlot equipmentSlot = getSlotForStack(stack);
-        if (slots != null) {
-            boolean flag1 = false;
-            for (@Nullable GemstoneSlot slot : slots) {
-                flag1 = slot != null && slot.getAppliedGemstone() != null;
-                if (flag1) {
-                    break;
-                }
-            }
-            if (flag1) {
-                ArrayList<Attribute> modified = new ArrayList<>(this.getAttributeModifiers(stack, equipmentSlot).keySet());
-                if (Screen.hasShiftDown()) {
-                    list.add(Component.literal("Gemstone Modifications:").withStyle(ChatFormatting.GREEN));
-                    HashMap<Attribute, AttributeModifier> modifiers = this.getAttributeModifiers(stack, equipmentSlot);
-                    for (Attribute attribute : modified) {
-                        double amount = modifiers.get(attribute).getAmount();
-                        list.add(Component.translatable(attribute.getDescriptionId()).append(Component.literal(": " + (amount > 0 ? "+" : "") + amount)));
-                    }
-                } else {
-                    list.add(Component.literal("Press [SHIFT] for Gemstone Information").withStyle(ChatFormatting.GREEN));
-                }
-            }
-        }
-    }
 
     private EquipmentSlot getSlotForStack(ItemStack stack) {
         return stack.getItem() instanceof ArmorItem armorItem ? armorItem.getSlot() : EquipmentSlot.MAINHAND;

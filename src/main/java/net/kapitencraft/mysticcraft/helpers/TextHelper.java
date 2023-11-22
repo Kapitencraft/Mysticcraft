@@ -2,8 +2,8 @@ package net.kapitencraft.mysticcraft.helpers;
 
 import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.Provider;
 import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.Reference;
-import net.kapitencraft.mysticcraft.misc.string_converter.MathArgument;
-import net.kapitencraft.mysticcraft.misc.string_converter.TransferArg;
+import net.kapitencraft.mysticcraft.misc.string_converter.args.MathArgument;
+import net.kapitencraft.mysticcraft.misc.string_converter.args.TransferArg;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;

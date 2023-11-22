@@ -8,7 +8,6 @@ import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.helpers.TextHelper;
 import net.kapitencraft.mysticcraft.init.ModItems;
 import net.kapitencraft.mysticcraft.item.combat.armor.client.renderer.ArmorRenderer;
-import net.kapitencraft.mysticcraft.item.data.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.item.item_bonus.ExtraBonus;
 import net.kapitencraft.mysticcraft.item.item_bonus.FullSetBonus;
 import net.kapitencraft.mysticcraft.item.item_bonus.IArmorBonusItem;
@@ -64,10 +63,6 @@ public abstract class ModArmorItem extends ArmorItem implements IModItem {
 
     @Override
     public void appendHoverTextWithPlayer(@NotNull ItemStack stack, @Nullable Level level, @NotNull List<Component> toolTip, @NotNull TooltipFlag flag, Player player) {
-        if (stack.getItem() instanceof IGemstoneApplicable gemstoneApplicable) {
-            gemstoneApplicable.appendDisplay(stack, toolTip);
-            toolTip.add(Component.literal(""));
-        }
         if (stack.getItem() instanceof IArmorBonusItem bonusItem) {
             bonusItem.addDisplay(toolTip, this.getSlot());
             toolTip.add(Component.literal(""));

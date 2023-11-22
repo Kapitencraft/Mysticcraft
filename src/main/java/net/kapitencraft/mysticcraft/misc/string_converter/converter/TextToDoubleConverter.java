@@ -1,5 +1,8 @@
 package net.kapitencraft.mysticcraft.misc.string_converter.converter;
 
+import net.kapitencraft.mysticcraft.misc.string_converter.args.CalculationArgument;
+import net.kapitencraft.mysticcraft.misc.string_converter.args.MathArgument;
+
 import java.util.HashMap;
 import java.util.function.Supplier;
 
@@ -19,5 +22,10 @@ public class TextToDoubleConverter extends TextToNumConverter<Double> {
                 throw new IllegalArgumentException("Unable to find argument: '" + s + "'");
             }
         }
+    }
+
+    @Override
+    protected CalculationArgument<Double> getCalcArg(String value) {
+        return new MathArgument<>(value);
     }
 }

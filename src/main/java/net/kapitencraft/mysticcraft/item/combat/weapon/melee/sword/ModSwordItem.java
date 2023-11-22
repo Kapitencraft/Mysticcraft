@@ -3,26 +3,21 @@ package net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
-import net.kapitencraft.mysticcraft.item.data.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.item.misc.IModItem;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.*;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.SwordItem;
+import net.minecraft.world.item.Tier;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.ForgeMod;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 
 public abstract class ModSwordItem extends SwordItem implements IModItem {
     public static final float DEFAULT_ATTACK_SPEED = -2.4f;
@@ -37,20 +32,6 @@ public abstract class ModSwordItem extends SwordItem implements IModItem {
     @Override
     public TabGroup getGroup() {
         return SWORD_GROUP;
-    }
-
-    @Override
-    public @NotNull Rarity getRarity(@NotNull ItemStack stack) {
-        return MiscHelper.getFinalRarity(super::getRarity, stack);
-    }
-
-
-    @Override
-    public void appendHoverTextWithPlayer(@NotNull ItemStack itemStack, @Nullable Level level, @NotNull List<Component> list, @NotNull TooltipFlag flag, Player player) {
-        if (itemStack.getItem() instanceof IGemstoneApplicable applicable) {
-            applicable.appendDisplay(itemStack, list);
-            list.add(Component.literal(""));
-        }
     }
 
     @Override

@@ -7,6 +7,7 @@ import net.kapitencraft.mysticcraft.client.particle.DamageIndicatorParticleOptio
 import net.kapitencraft.mysticcraft.gui.IGuiHelper;
 import net.kapitencraft.mysticcraft.item.data.gemstone.GemstoneItem;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
+import net.kapitencraft.mysticcraft.misc.VeinMinerHolder;
 import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.Provider;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementProgress;
@@ -45,10 +46,7 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.loot.LootContext;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
@@ -64,7 +62,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -99,11 +96,11 @@ public class MiscHelper {
         }
     }
 
-    public static Rarity getFinalRarity(Function<ItemStack, Rarity> defaulted, ItemStack stack) {
+    @SuppressWarnings("ALL")
+    public static Rarity getFinalRarity(Rarity rarity, ItemStack stack) {
         if (!stack.isEnchanted()) {
-            return defaulted.apply(stack);
+            return rarity;
         } else {
-            final Rarity rarity = getItemRarity(stack.getItem());
             return switch (rarity) {
                 case COMMON -> Rarity.UNCOMMON;
                 case UNCOMMON -> Rarity.RARE;
@@ -124,53 +121,8 @@ public class MiscHelper {
     }
 
     public static void mineMultiple(BlockPos pos, ServerPlayer serverPlayer, Block block, Consumer<BlockPos> extra, Predicate<BlockState> shouldMine, Predicate<BlockPos> shouldBreak) {
-        ServerLevel level = serverPlayer.getLevel();
-        ItemStack mainHandItem = serverPlayer.getMainHandItem();
-        LootContext.Builder context = (new LootContext.Builder(level)).withRandom(level.random).withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(pos)).withParameter(LootContextParams.TOOL, mainHandItem).withOptionalParameter(LootContextParams.THIS_ENTITY, serverPlayer);
-        BlockPos extraPos = pos;
-        List<BlockPos> iterator = new ArrayList<>(1);
-        iterator.add(extraPos);
-        while (iterator.size() > 0 && iterator.get(0) != null) {
-            extraPos = iterator.get(0);
-            iterator.remove(0);
-            for (BlockPos blockPos : Values()) {
-                if (!(blockPos.getX() != 0 && blockPos.getY() != 0 && blockPos.getZ() != 0)) {
-                    BlockPos pos1 = new BlockPos(blockPos.getX() + extraPos.getX(), blockPos.getY() + extraPos.getY(), blockPos.getZ() + extraPos.getZ());
-                    BlockState state = level.getBlockState(pos1);
-                    if (block == state.getBlock() && shouldMine.test(state)) {
-                        mainHandItem.hurtAndBreak(1, serverPlayer, serverPlayer1 -> {
-                            serverPlayer1.broadcastBreakEvent(EquipmentSlot.MAINHAND);
-                        });
-                        extra.accept(pos1);
-                        breakBlock(pos1, level, context);
-                        iterator.add(pos1);
-                        if (shouldBreak.test(pos1)) break;
-                    }
-                }
-            }
-            if (shouldBreak.test(extraPos)) break;
-        }
-    }
-
-    private static void breakBlock(BlockPos pos, Level level, LootContext.Builder builder) {
-        BlockState state = level.getBlockState(pos);
-        Block.dropResources(state, builder);
-        level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
-    }
-
-
-    public static BlockPos[] Values() {
-        BlockPos[] returnValue = new BlockPos[27];
-        int x = 0;
-        for (int i = -1; i <= 1; i++) {
-            for (int j = -1; j <= 1; j++) {
-                for (int k = -1; k <= 1; k++) {
-                    returnValue[x] = new BlockPos(i, j, k);
-                    x++;
-                }
-            }
-        }
-        return returnValue;
+        VeinMinerHolder holder = new VeinMinerHolder(serverPlayer, block, extra, shouldMine, shouldBreak);
+        holder.start(pos);
     }
 
     public static <T> void giveNullOrElse(@Nullable T t, Consumer<T> toDo) {
@@ -364,7 +316,7 @@ public class MiscHelper {
     }
 
     public static DamageType getDamageType(DamageSource source) {
-        if (source.getMsgId().contains("ability")) {
+        if (source.getMsgId().contains("ability") || source.getMsgId().contains("magic")) {
             return DamageType.MAGIC;
         }
         if (source instanceof IndirectEntityDamageSource) {

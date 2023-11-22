@@ -181,8 +181,8 @@ public class BuildersWand extends Item implements IModItem {
             BlockPos pos1 = blockPos.get(0);
             BlockPos pos2 = blockPos.get(1);
             BlockPos diff = pos2.subtract(pos1);
-            MathHelper.forCube(diff, (integer, integer2, integer3) -> {
-                BlockPos pos3 = diff.offset(pos1.getX() + integer, pos1.getY() + integer2, pos1.getZ() + integer3);
+            MathHelper.forCube(diff, (pos) -> {
+                BlockPos pos3 = diff.offset(pos1.getX() + pos.getX(), pos1.getY() + pos.getY(), pos1.getZ() + pos.getZ());
                 level.setBlock(pos3, MathHelper.pickRandom(blocks).defaultBlockState(), 3);
             });
         }, "builders_wand.cuboid"),

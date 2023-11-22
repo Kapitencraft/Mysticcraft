@@ -6,8 +6,12 @@ import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.helpers.TextHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModItems;
-import net.kapitencraft.mysticcraft.item.combat.spells.*;
+import net.kapitencraft.mysticcraft.item.combat.spells.AspectOfTheVoidItem;
+import net.kapitencraft.mysticcraft.item.combat.spells.FireLance;
+import net.kapitencraft.mysticcraft.item.combat.spells.IFireScytheItem;
+import net.kapitencraft.mysticcraft.item.combat.spells.SpellScrollItem;
 import net.kapitencraft.mysticcraft.item.combat.spells.necron_sword.NecronSword;
+import net.kapitencraft.mysticcraft.item.data.spell.ISpellItem;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
@@ -46,9 +50,9 @@ public enum Spells implements Spell {
     FIRE_LANCE("Fire Lance", "1011100", Type.CYCLE, 5, FireLanceSpell::execute, item -> item instanceof FireLance, FireLanceSpell::getDescription, Rarity.UNCOMMON, true, 0,     Elements.FIRE, Elements.AIR);
 
     private static final TabGroup SPELL_GROUP = new TabGroup(TabRegister.TabTypes.SPELL_AND_GEMSTONE);
+    private static final List<Spells> WITHOUT_EMPTY = CollectionHelper.remove(values(), EMPTY_SPELL);
     public static HashMap<Spells, RegistryObject<SpellScrollItem>> registerAll() {
-        List<Spells> spells = CollectionHelper.remove(values(), EMPTY_SPELL);
-        return ModItems.createRegistry(SpellScrollItem::new, (spell) -> spell.REGISTRY_NAME + "_spell_scroll", spells, SPELL_GROUP);
+        return ModItems.createRegistry(SpellScrollItem::new, (spell) -> spell.REGISTRY_NAME + "_spell_scroll", WITHOUT_EMPTY, SPELL_GROUP);
     }
 
 
@@ -113,6 +117,11 @@ public enum Spells implements Spell {
     }
 
     @Override
+    public String getRegistryName() {
+        return REGISTRY_NAME;
+    }
+
+    @Override
     public double getDefaultManaCost() {
         return this.MANA_COST;
     }
@@ -144,14 +153,14 @@ public enum Spells implements Spell {
     }
 
     public boolean canApply(Item item) {return this.helper.test(item);}
-    public void addDescription(List<Component> list, SpellItem item, ItemStack ignoredStack, Player player) {
-        int spellSlotAmount = item.getSpellSlotAmount();
-        list.add(Component.literal("Ability: " + this.getName() + " " + (spellSlotAmount > 1 ? (item.getIndexForSlot(this) + 1) + " / " + item.getSpellSlotAmount() : "")).withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.GOLD));
+    public void addDescription(List<Component> list, ISpellItem item, ItemStack stack, Player player) {
+        int spellSlotAmount = item.getSlotAmount();
+        list.add(Component.literal("Ability: " + this.getName() + " " + (spellSlotAmount > 1 ? (item.getIndexForSlot(stack, this) + 1) + " / " + item.getSlotAmount() : "")).withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.GOLD));
         if (this.description.get() != null) list.addAll(this.description.get());
         if (this.MANA_COST > 0 && player != null) {
             list.add(Component.literal("Mana-Cost: " + FormattingCodes.DARK_RED + getManaCostForPlayer(player)).withStyle(ChatFormatting.DARK_GRAY));
         }
-        if (this.castingType != null && item.getSpellSlotAmount() > 1) list.add(Component.literal("Pattern: [" + this.getPattern() + FormattingCodes.RESET + "]"));
+        if (this.castingType != null && item.getSlotAmount() > 1) list.add(Component.literal("Pattern: [" + this.getPattern() + FormattingCodes.RESET + "]"));
         if (this.cooldown != 0 && player != null) {
             int cooldownTicks = getRemainingCooldownTicks(player);
             list.add(Component.literal("Cooldown: " + (cooldownTicks > 0 ? TextHelper.wrapInRed("ACTIVE") + "(" + MathHelper.round(cooldownTicks / 20., 1) + "s)" : "INACTIVE, " + MathHelper.round(MathHelper.cooldown(player, this.cooldown) / 20., 1) + "s")).withStyle(ChatFormatting.DARK_GRAY));
@@ -164,7 +173,7 @@ public enum Spells implements Spell {
     }
 
     public static Spells get(String pattern) {
-        for (Spells spell : values()) {
+        for (Spells spell : WITHOUT_EMPTY) {
             String castingType = spell.getCastingType();
             if (Objects.equals(castingType, pattern)) {
                 return spell;
@@ -195,5 +204,14 @@ public enum Spells implements Spell {
         }
         String replace = pattern.replace(RED, "0");
         return replace.replace(BLUE, "1");
+    }
+
+    public static Spells getByName(String name) {
+        for (Spells spells : WITHOUT_EMPTY) {
+            if (Objects.equals(spells.REGISTRY_NAME, name)) {
+                return spells;
+            }
+        }
+        return EMPTY_SPELL;
     }
 }

@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.spell.spells;
 
-import net.kapitencraft.mysticcraft.item.combat.spells.SpellItem;
+import net.kapitencraft.mysticcraft.item.data.spell.ISpellItem;
 import net.kapitencraft.mysticcraft.spell.Element;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
@@ -18,12 +18,14 @@ public interface Spell {
     void execute(LivingEntity living, ItemStack stack);
     List<Component> getDescription();
     boolean canApply(Item item);
-    void addDescription(List<Component> list, SpellItem item, ItemStack ignoredStack, Player player);
+    void addDescription(List<Component> list, ISpellItem item, ItemStack ignoredStack, Player player);
     String getPattern();
 
     List<Element> elements();
 
     Type getType();
+
+    String getRegistryName();
 
     double getDefaultManaCost();
     int getCooldown();

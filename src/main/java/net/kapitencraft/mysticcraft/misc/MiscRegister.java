@@ -286,7 +286,7 @@ public class MiscRegister {
         LivingEntity attacked = event.getEntity();
         DamageSource source = event.getSource();
         LivingEntity attacker = MiscHelper.getAttacker(source);
-        if (attacker == null) {
+        if (attacker == null || MiscHelper.getDamageType(source) != MiscHelper.DamageType.MELEE) {
             return;
         }
         if (attacker.getAttribute(ModAttributes.FEROCITY.get()) != null) {
@@ -315,6 +315,13 @@ public class MiscRegister {
                 HealingHelper.setEffectReason(attacker);
                 attacker.heal(2f);
             }
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public static void tickVeinMiner(TickEvent.ServerTickEvent event) {
+        if (event.phase == TickEvent.Phase.END) {
+            VeinMinerHolder.tickAll();
         }
     }
 

@@ -3,6 +3,7 @@ package net.kapitencraft.mysticcraft;
 import com.mojang.logging.LogUtils;
 import net.kapitencraft.mysticcraft.config.ClientModConfig;
 import net.kapitencraft.mysticcraft.config.CommonModConfig;
+import net.kapitencraft.mysticcraft.config.ServerModConfig;
 import net.kapitencraft.mysticcraft.gui.gemstone_grinder.GemstoneGrinderScreen;
 import net.kapitencraft.mysticcraft.gui.reforging_anvil.ReforgeAnvilScreen;
 import net.kapitencraft.mysticcraft.init.ModEntityTypes;
@@ -78,6 +79,7 @@ public class MysticcraftMod {
         ModRegistryInit.register(modEventBus);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientModConfig.SPEC);
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, CommonModConfig.SPEC);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ServerModConfig.SPEC);
 
         MinecraftForge.EVENT_BUS.register(this);
     }
@@ -137,11 +139,6 @@ public class MysticcraftMod {
         LOGGER.error(MYSTICCRAFT_MARKER, error);
     }
 
-    public static void sendFatal(String fatal, Throwable throwable) throws Throwable {
-        sendError(fatal);
-        throw throwable;
-    }
-
     public static void sendInfo(String info) {
         sendInfo(info, false, null);
     }
@@ -160,6 +157,6 @@ public class MysticcraftMod {
         lastMSG = info;
     }
 
-    public static final Marker MYSTICCRAFT_MARKER = new ModMarker("MYSTICCRAFT");
+    public static final Marker MYSTICCRAFT_MARKER = new ModMarker("Mysticcraft");
 
 }

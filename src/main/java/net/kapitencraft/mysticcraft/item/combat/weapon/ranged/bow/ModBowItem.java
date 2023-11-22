@@ -3,15 +3,11 @@ package net.kapitencraft.mysticcraft.item.combat.weapon.ranged.bow;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModEnchantments;
-import net.kapitencraft.mysticcraft.item.data.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.item.misc.IModItem;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
-import net.kapitencraft.mysticcraft.misc.FormattingCodes;
-import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
@@ -25,9 +21,6 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 
 public abstract class ModBowItem extends BowItem implements IModItem {
     public static final TabGroup BOW_GROUP = new TabGroup(TabRegister.TabTypes.WEAPONS_AND_TOOLS);
@@ -142,30 +135,6 @@ public abstract class ModBowItem extends BowItem implements IModItem {
         return arrow.getDeltaMovement().x * mul1 * (1 + mul2 * 0.1);
     }
 
-    @Override
-    public @NotNull Rarity getRarity(ItemStack p_41461_) {
-        if (!p_41461_.isEnchanted()) {
-            return super.getRarity(p_41461_);
-        } else {
-            final Rarity rarity = MiscHelper.getItemRarity(this);
-            if (rarity == Rarity.COMMON) {
-                return Rarity.UNCOMMON;
-            } else if (rarity == Rarity.UNCOMMON) {
-                return Rarity.RARE;
-            } else if (rarity == Rarity.RARE) {
-                return Rarity.EPIC;
-            } else if (rarity == Rarity.EPIC) {
-                return FormattingCodes.LEGENDARY;
-            } else if (rarity == FormattingCodes.LEGENDARY) {
-                return FormattingCodes.MYTHIC;
-            } else if (rarity == FormattingCodes.MYTHIC) {
-                return FormattingCodes.DIVINE;
-            } else {
-                return Rarity.COMMON;
-            }
-        }
-    }
-
     public abstract double getDamage();
 
     @Override
@@ -175,12 +144,5 @@ public abstract class ModBowItem extends BowItem implements IModItem {
             builder.put(ModAttributes.RANGED_DAMAGE.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[5], "Damage Modifier", this.getDamage(), AttributeModifier.Operation.ADDITION));
         }
         return builder;
-    }
-
-    @Override
-    public void appendHoverTextWithPlayer(@NotNull ItemStack stack, @Nullable Level level, @NotNull List<Component> list, @NotNull TooltipFlag flag, Player player) {
-        if (stack.getItem() instanceof IGemstoneApplicable gemstoneApplicable) {
-            gemstoneApplicable.appendDisplay(stack, list);
-        }
     }
 }

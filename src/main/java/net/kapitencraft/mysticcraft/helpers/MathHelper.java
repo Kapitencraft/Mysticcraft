@@ -2,7 +2,6 @@ package net.kapitencraft.mysticcraft.helpers;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
-import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.TriConsumer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -100,9 +99,9 @@ public class MathHelper {
         return value / maxValue;
     }
 
-    public static void forCube(BlockPos cube, TriConsumer<Integer, Integer, Integer> consumer) {
+    public static void forCube(BlockPos cube, Consumer<BlockPos> consumer) {
         MiscHelper.repeatXTimes(cube.getX(), integer -> MiscHelper.repeatXTimes(cube.getY(), integer1 -> MiscHelper.repeatXTimes(cube.getZ(), integer2 -> {
-            consumer.accept(integer, integer1, integer2);
+            consumer.accept(new BlockPos(integer, integer1, integer2));
         })));
     }
 

@@ -1,5 +1,8 @@
-added Crimsonium ore world gen
+added Crimsonium ore world gen;
+added Server Config;
+moved Vein-miner/Lumberjack enchantment to Tick based system to reduce lag;
 removed unnecessary asset files;
 added smelting touch enchantment;
-added /show command
-fixed Attribute mods also being applied to main hand item (armor)
+added /show command;
+fixed Attribute mods also being applied to main hand item (armor);
+nerved ferocity only to trigger on melee attacks;

@@ -22,8 +22,7 @@ public enum ModArmorMaterials implements ArmorMaterial {
     SOUL_MAGE("soul_mage", 24, new int[]{8,11, 18, 7}, 34, SoundEvents.ARMOR_EQUIP_DIAMOND, 0.8f, 0.2f, ()-> Ingredient.of(Items.SOUL_SOIL)),
     CRIMSON("crimson", 30, new int[]{9, 13, 16, 8}, 14, SoundEvents.ARMOR_EQUIP_NETHERITE, 2.3f, 1f, ()-> Ingredient.of(ModItems.CRIMSON_STEEL_INGOT.get())),
     WARPED("warped", 28, new int[]{8, 12, 16, 8}, 17, SoundEvents.ARMOR_EQUIP_NETHERITE, 1.8f, 1.4f, Ingredient::of),
-    WIZARD_CLOAK("wizard_cloak", 10, new int[]{5, 7, 9, 4}, 30, SoundEvents.ARMOR_EQUIP_LEATHER, 0.2f, 0.4f, Ingredient::of)
-    ;
+    WIZARD_CLOAK("wizard_cloak", 10, new int[]{5, 7, 9, 4}, 30, SoundEvents.ARMOR_EQUIP_LEATHER, 0.2f, 0.4f, Ingredient::of);
     private static final int[] HEALTH_PER_SLOT = new int[]{13, 15, 16, 11};
     private final String name;
     private final int durabilityMultiplier;

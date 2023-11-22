@@ -15,7 +15,7 @@ public class ClientModConfig {
                 .comment("the scale of how quick tooltips are scrolled with")
             .defineInRange("scroll_scale", 5, 1, 20);
     private static final ForgeConfigSpec.BooleanValue SHOW_EXTRA_DEBUG = BUILDER
-            .comment("determines if extra debug should be shown")
+            .comment("determines if extra debug log should be shown")
             .define("extra_debug", false);
     private static final ForgeConfigSpec.IntValue RGB_SPEED = BUILDER
             .comment("the speed of rgb text")

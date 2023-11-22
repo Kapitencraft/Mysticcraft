@@ -5,7 +5,6 @@ import net.kapitencraft.mysticcraft.item.combat.spells.SpellScrollItem;
 import net.kapitencraft.mysticcraft.item.combat.spells.necron_sword.NecronSword;
 import net.kapitencraft.mysticcraft.spell.SpellSlot;
 import net.kapitencraft.mysticcraft.spell.Spells;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -46,31 +45,12 @@ public class AnvilUses {
                 10
         );
         registerAnvilUse(
-                stack -> {
-                    CompoundTag tag = stack.getOrCreateTag();
-                    return stack.getItem() instanceof NecronSword && (tag.contains("NecronSpells") || !tag.getBoolean("SpellsMaxed"));
-                },
+                stack -> stack.getItem() instanceof NecronSword sword && !sword.hasSpell(stack, Spells.WITHER_IMPACT),
                 stack -> stack.getItem() instanceof SpellScrollItem scrollItem && scrollItem.getSpell().canApply(ModItems.NECRON_SWORD.get()),
                 (stack, stack1) -> {
-                    CompoundTag tag = stack.getOrCreateTag();
-                    if (tag.contains("NecronSpells", 10)) {
-                        NecronSword sword = (NecronSword) stack.getItem();
-                        CompoundTag spells = tag.getCompound("NecronSpells");
-                        if (spells.getAllKeys().size() == 2) {
-                            tag.putBoolean("SpellsMaxed", true);
-                        }
-                        sword.removeSlot(0);
-                        sword.addSlot(new SpellSlot(Spells.WITHER_IMPACT));
-                        tag.remove("NecronSpells");
-                    } else {
-                        CompoundTag tag1 = new CompoundTag();
-                        NecronSword sword = (NecronSword) stack.getItem();
-                        SpellScrollItem scrollItem = (SpellScrollItem) stack1.getItem();
-                        String name = scrollItem.getSpell().getName();
-                        tag1.put(name, new CompoundTag());
-                        tag.put("NecronSpells", tag1);
-                        sword.addSlot(new SpellSlot(scrollItem.getSpell()));
-                    }
+                    NecronSword sword = (NecronSword) stack.getItem();
+                    if (sword.hasAnySpell(stack)) sword.setSlot(0, new SpellSlot(Spells.WITHER_IMPACT), stack);
+                    else sword.setSlot(0, new SpellSlot(((SpellScrollItem) stack1.getItem()).getSpell()), stack);
                 },
                 20
         );
