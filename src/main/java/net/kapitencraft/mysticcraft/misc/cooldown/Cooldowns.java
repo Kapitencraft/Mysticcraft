@@ -1,7 +1,6 @@
 package net.kapitencraft.mysticcraft.misc.cooldown;
 
 import net.kapitencraft.mysticcraft.enchantments.armor.BonkEnchantment;
-import net.kapitencraft.mysticcraft.enchantments.weapon.melee.VenomousEnchantment;
 import net.kapitencraft.mysticcraft.helpers.TagHelper;
 import net.kapitencraft.mysticcraft.item.item_bonus.fullset.CrimsonArmorFullSetBonus;
 import net.kapitencraft.mysticcraft.misc.HealingHelper;
@@ -9,20 +8,12 @@ import net.kapitencraft.mysticcraft.spell.spells.WitherShieldSpell;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public interface Cooldowns {
     List<Cooldown> cooldowns = new ArrayList<>();
-    Cooldown VENOMOUS = new Cooldown(CompoundPath.builder("VenomousTimer").build(), 100, living ->  {
-        AttributeInstance speed = living.getAttribute(Attributes.MOVEMENT_SPEED);
-        if (speed != null) {
-            speed.removeModifier(VenomousEnchantment.ID);
-        }
-    });
     Cooldown WITHER_SHIELD = new Cooldown(CompoundPath.builder(WitherShieldSpell.DAMAGE_REDUCTION_TIME).build(), 100, living -> {
         CompoundTag tag = living.getPersistentData();
         float absorption = tag.getFloat(WitherShieldSpell.ABSORPTION_AMOUNT_ID);
@@ -30,9 +21,6 @@ public interface Cooldowns {
         living.heal(absorption / 2);
         living.setAbsorptionAmount(living.getAbsorptionAmount() - absorption);
         tag.putFloat(WitherShieldSpell.ABSORPTION_AMOUNT_ID, 0);
-    });
-    Cooldown EXPLOSIVE_SIGHT = new Cooldown(CompoundPath.builder("ExplosiveSight").build(), 600, living -> {
-
     });
     Cooldown DOMINUS = new Cooldown(CompoundPath.builder(CrimsonArmorFullSetBonus.COOLDOWN_ID).build(), 120, living -> {
         TagHelper.reduceBy1(living.getPersistentData(), CrimsonArmorFullSetBonus.DOMINUS_ID);

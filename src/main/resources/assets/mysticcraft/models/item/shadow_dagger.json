@@ -1,0 +1,6 @@
+{
+  "parent": "mysticcraft:item/dagger",
+  "textures": {
+    "layer0": "mysticcraft:item/shadow_dagger"
+  }
+}

@@ -102,4 +102,35 @@ public class ModTiers {
             return Ingredient.of(Items.GHAST_TEAR);
         }
     };
+    public static final Tier SHADOW_TIER = new Tier() {
+        @Override
+        public int getUses() {
+            return 520;
+        }
+
+        @Override
+        public float getSpeed() {
+            return 3.4f;
+        }
+
+        @Override
+        public float getAttackDamageBonus() {
+            return 2;
+        }
+
+        @Override
+        public int getLevel() {
+            return 2;
+        }
+
+        @Override
+        public int getEnchantmentValue() {
+            return 15;
+        }
+
+        @Override
+        public @NotNull Ingredient getRepairIngredient() {
+            return Ingredient.of();
+        }
+    };
 }

@@ -140,8 +140,10 @@ public class SpellHelper implements ItemData<SpellSlot[], SpellHelper> {
                     sendUseDisplay(user, spell);
                 }
                 List<Element> elements = spell.elements();
-                ItemStack spellShardRNG = new ItemStack(ModItems.ELEMENTAL_SHARDS.get(MathHelper.pickRandom(elements)).get());
-                RNGDropHelper.calculateAndDrop(spellShardRNG, 0.00002f, user, MathHelper.getPosition(user));
+                if (!elements.isEmpty()) {
+                    ItemStack spellShardRNG = new ItemStack(ModItems.ELEMENTAL_SHARDS.get(MathHelper.pickRandom(elements)).get());
+                    RNGDropHelper.calculateAndDrop(spellShardRNG, 0.00002f, user, MathHelper.getPosition(user));
+                }
                 return true;
             }
         }

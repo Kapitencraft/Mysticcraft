@@ -16,12 +16,11 @@
     "ProjectileMixin",
     "KeyMappingMixin",
     "WitherSkullMixin",
-    "ShapedRecipeSerializerMixin",
-    "ShapelessRecipeSerializerMixin",
     "RandomChanceModifierMixin",
-    "ResultSlotMixin",
     "DiggerItemMixin",
-    "InventoryMixin"
+    "InventoryMixin",
+    "AttributeMapMixin",
+    "OverworldBiomeBuilderMixin"
   ],
   "injectors": {
     "defaultRequire": 1

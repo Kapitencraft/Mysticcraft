@@ -2,6 +2,7 @@ package net.kapitencraft.mysticcraft.item.item_bonus;
 
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
+import net.kapitencraft.mysticcraft.spell.spells.Spell;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
@@ -17,31 +18,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public abstract class Bonus {
-    protected final String name;
-    protected final String superName;
+public interface Bonus {
 
-    protected Bonus(String name, String superName) {
-        this.name = name;
-        this.superName = superName;
-    }
+    default void onEntityKilled(LivingEntity killed, LivingEntity user, MiscHelper.DamageType type) {}
+    default @Nullable Multimap<Attribute, AttributeModifier> getModifiers(LivingEntity living) {return null;}
 
-    public void onEntityKilled(LivingEntity killed, LivingEntity user, MiscHelper.DamageType type) {}
-    public @Nullable Multimap<Attribute, AttributeModifier> getModifiers(LivingEntity living) {return null;}
-
-    public float onEntityHurt(LivingEntity hurt, LivingEntity user, MiscHelper.DamageType type, float damage) {
+    default float onEntityHurt(LivingEntity hurt, LivingEntity user, MiscHelper.DamageType type, float damage) {
         return damage;
     }
 
-    public float onTakeDamage(LivingEntity hurt, LivingEntity source, MiscHelper.DamageType type, float damage) {
+    default float onTakeDamage(LivingEntity hurt, LivingEntity source, MiscHelper.DamageType type, float damage) {
         return damage;
     }
-    public void onTick(@NotNull ItemStack stack, Level level, @NotNull Entity entity) {}
-    public abstract Consumer<List<Component>> getDisplay();
+    default void onTick(@NotNull ItemStack stack, Level level, @NotNull Entity entity) {}
+    Consumer<List<Component>> getDisplay();
 
-    public List<Component> makeDisplay() {
+    String getSuperName();
+    String getName();
+
+    default List<Component> makeDisplay() {
         List<Component> display = new ArrayList<>();
-        display.add(Component.literal(superName + " Bonus: " + name).withStyle(ChatFormatting.GOLD).withStyle(ChatFormatting.BOLD));
+        display.add(Component.literal((this instanceof Spell ? "Spell: " : getSuperName() + " Bonus: ") + getName()).withStyle(ChatFormatting.GOLD).withStyle(ChatFormatting.BOLD));
         getDisplay().accept(display);
         return display;
     }

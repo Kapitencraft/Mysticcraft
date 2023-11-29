@@ -10,7 +10,9 @@
       "item": "mysticcraft:mana_steel_ingot"
     },
     "+": {
-      "item": "mysticcraft:perfect_jasper_gemstone"
+      "type": "forge:nbt",
+      "item": "mysticcraft:gemstone",
+      "nbt": "{GemstoneData: {GemId: jasper, GemRarity: perfect}}"
     }
   },
   "result": {

@@ -26,48 +26,19 @@ public class ArmorRenderer<T extends ArmorModel> {
     private static final ModelPart EMPTY_PART = new ModelPart(Collections.emptyList(), Collections.emptyMap());
 
     public ModelPart makeArmorParts(EquipmentSlot slot) {
-        return switch (slot) {
-            case FEET -> new ModelPart(Collections.emptyList(),
-                    Map.of("head", EMPTY_PART,
-                            "hat", EMPTY_PART,
-                            "body", EMPTY_PART,
-                            "right_arm", EMPTY_PART,
-                            "left_arm", EMPTY_PART,
-                            "right_leg", checkNonNull(model.armorRightBoot),
-                            "left_leg", checkNonNull(model.armorLeftBoot)
-                    )
-            );
-            case LEGS -> new ModelPart(Collections.emptyList(),
-                    Map.of("head", EMPTY_PART,
-                            "hat", EMPTY_PART,
-                            "body", EMPTY_PART,
-                            "right_arm", EMPTY_PART,
-                            "left_arm", EMPTY_PART,
-                            "right_leg", checkNonNull(model.armorRightLeg),
-                            "left_leg", checkNonNull(model.armorLeftLeg)
-                    )
-            );
-            case CHEST -> new ModelPart(Collections.emptyList(),
-                    Map.of("head", EMPTY_PART,
-                            "hat", EMPTY_PART,
-                            "body", checkNonNull(model.armorChest),
-                            "right_arm", checkNonNull(model.armorRightArm),
-                            "left_arm", checkNonNull(model.armorLeftArm),
-                            "right_leg", EMPTY_PART,
-                            "left_leg", EMPTY_PART
-                    )
-            );
-            case HEAD -> new ModelPart(Collections.emptyList(),
-                    Map.of("head", checkNonNull(model.armorHead),
-                            "hat", EMPTY_PART,
-                            "body", EMPTY_PART,
-                            "right_arm", EMPTY_PART,
-                            "left_arm", EMPTY_PART,
-                            "right_leg", EMPTY_PART,
-                            "left_leg", EMPTY_PART)
-            );
-            default -> EMPTY_PART;
-        };
+        return new ModelPart(Collections.emptyList(),
+                Map.of(
+                        "head", slot == EquipmentSlot.HEAD ? checkNonNull(model.armorHead) : EMPTY_PART,
+                        "hat", EMPTY_PART,
+                        "body", slot == EquipmentSlot.CHEST ? checkNonNull(model.armorChest) : EMPTY_PART,
+                        "right_arm", slot == EquipmentSlot.CHEST ? checkNonNull(model.armorRightArm) : EMPTY_PART,
+                        "left_arm", slot == EquipmentSlot.CHEST ? checkNonNull(model.armorLeftArm) : EMPTY_PART,
+                        "right_leg", slot == EquipmentSlot.FEET ? checkNonNull(model.armorRightBoot) :
+                                slot == EquipmentSlot.LEGS ? checkNonNull(model.armorRightLeg) : EMPTY_PART,
+                        "left_leg", slot == EquipmentSlot.FEET ? checkNonNull(model.armorLeftBoot) :
+                                slot == EquipmentSlot.LEGS ? checkNonNull(model.armorLeftLeg) : EMPTY_PART
+                )
+        );
     }
     private static @NotNull ModelPart checkNonNull(@Nullable ModelPart part) {
         return part == null ? EMPTY_PART : part;

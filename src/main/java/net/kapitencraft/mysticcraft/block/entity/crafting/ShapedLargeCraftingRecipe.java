@@ -176,7 +176,7 @@ public class ShapedLargeCraftingRecipe extends LargeCraftingRecipe {
             }
             ResourceLocation resourcelocation = new ResourceLocation(GsonHelper.getAsString(element, "tag"));
             TagKey<Item> tagkey = TagKey.create(Registries.ITEM, resourcelocation);
-            return new CraftingUtils.TagAmountValue(tagkey, amount);
+            return new CraftingHelper.TagAmountValue(tagkey, amount);
         } else {
             throw new JsonParseException("An ingredient entry needs either a tag or an item");
         }

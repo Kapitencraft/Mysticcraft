@@ -43,7 +43,6 @@ public class Rendering {
         int guiScale = options.guiScale().get();
         int w = event.getWindow().getGuiScaledWidth();
         int h = event.getWindow().getGuiScaledHeight();
-        int scale = 2 - guiScale == 0 ? 1 : guiScale;
         int posX = w / 2;
         int posY = h / 2;
         Player entity = Minecraft.getInstance().player;

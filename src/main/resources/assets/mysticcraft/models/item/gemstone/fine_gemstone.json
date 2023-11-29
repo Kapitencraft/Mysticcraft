@@ -1,0 +1,7 @@
+{
+  "parent": "mysticcraft:item/gemstone",
+  "textures": {
+    "layer0": "mysticcraft:item/gemstone/fine_gemstone",
+    "layer1": "mysticcraft:item/empty_dyed_overlay"
+  }
+}

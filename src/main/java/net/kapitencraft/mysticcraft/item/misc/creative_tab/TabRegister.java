@@ -1,9 +1,11 @@
 package net.kapitencraft.mysticcraft.item.misc.creative_tab;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.helpers.CollectionHelper;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.init.ModBlocks;
 import net.kapitencraft.mysticcraft.init.ModItems;
+import net.kapitencraft.mysticcraft.item.data.gemstone.GemstoneType;
 import net.kapitencraft.mysticcraft.spell.Elements;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.ListTag;
@@ -26,9 +28,10 @@ public class TabRegister {
         event.registerCreativeModeTab(MysticcraftMod.res("spell_and_gemstone"), builder ->
                 builder.title(Component.translatable("itemGroup.mysticcraft.spell_and_gemstone"))
                         .icon(() -> new ItemStack(ModItems.SCYLLA.get()))
-                        .displayItems((featureFlagSet, output, flag) ->
-                                TabGroup.registerAll(TabTypes.SPELL_AND_GEMSTONE, output::acceptAll)
-                        )
+                        .displayItems((featureFlagSet, output, flag) -> {
+                                    output.acceptAll(CollectionHelper.values(GemstoneType.allItems()));
+                                    TabGroup.registerAll(TabTypes.SPELL_AND_GEMSTONE, output::acceptAll);
+                        })
         );
         event.registerCreativeModeTab(MysticcraftMod.res("materials"), builder ->
                 builder.title(Component.translatable("itemGroup.mysticcraft.materials"))
@@ -46,6 +49,7 @@ public class TabRegister {
                                 stack.addTagElement("Enchantments", tags);
                                 return stack;
                             }));
+                            output.acceptAll(GemstoneType.allBlocks().values());
                             TabGroup.registerAll(TabTypes.MOD_MATERIALS, output::acceptAll);
                         })
         );

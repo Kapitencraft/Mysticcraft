@@ -6,10 +6,21 @@ import net.minecraft.network.chat.Component;
 import java.util.List;
 import java.util.function.Consumer;
 
-public abstract class PieceBonus extends Bonus {
+public abstract class PieceBonus implements Bonus {
+    private final String name;
 
     public PieceBonus(String name) {
-        super(name, "Piece");
+        this.name = name;
+    }
+
+    @Override
+    public String getSuperName() {
+        return "Piece";
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 
     @Override

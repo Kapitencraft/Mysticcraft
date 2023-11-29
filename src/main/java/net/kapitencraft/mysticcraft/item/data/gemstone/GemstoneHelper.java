@@ -53,9 +53,9 @@ public class GemstoneHelper implements ItemData<GemstoneSlot[], GemstoneHelper> 
     }
     public GemstoneSlot[] loadData(ItemStack current, Consumer<GemstoneHelper> ifNull) {
         if (!(current.getTag() == null || current.getTagElement(DATA_ID) == null)) {
-            CompoundTag tag = current.getTagElement(DATA_ID);
+            CompoundTag tag = current.getOrCreateTagElement(DATA_ID);
             GemstoneSlot[] slots;
-            if (tag == null || !tag.contains("Size")) {
+            if (!tag.contains("Size")) {
                 MysticcraftMod.sendWarn("Found Modification Data without Size, using default");
                 slots = defaultSlots;
             } else {

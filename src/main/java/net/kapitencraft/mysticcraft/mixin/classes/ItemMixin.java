@@ -64,6 +64,10 @@ public abstract class ItemMixin implements IForgeItem {
         return builder.build();
     }
 
+    /**
+     * @author Kapitencraft
+     * @reason spell item
+     */
     @Overwrite
     public InteractionResultHolder<ItemStack> use(@NotNull Level level, Player player, @NotNull InteractionHand hand) {
         CompoundTag tag = player.getPersistentData();
@@ -102,6 +106,10 @@ public abstract class ItemMixin implements IForgeItem {
     }
 
 
+    /**
+     * @author Kapitencraft
+     * @reason spell items
+     */
     @Overwrite
     public int getUseDuration(ItemStack stack) {
         if (stack.getItem() instanceof ISpellItem spellItem) {

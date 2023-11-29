@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:item/generated",
+  "overrides": [
+    {
+      "predicate": {
+        "minecraft:rarity": 0.1
+      },
+      "model": "mysticcraft:item/gemstone/rough_gemstone"
+    },
+    {
+      "predicate": {
+        "minecraft:rarity": 0.2
+      },
+      "model": "mysticcraft:item/gemstone/flawed_gemstone"
+    },
+    {
+      "predicate": {
+        "minecraft:rarity": 0.3
+      },
+      "model": "mysticcraft:item/gemstone/fine_gemstone"
+    },
+    {
+      "predicate": {
+        "minecraft:rarity": 0.4
+      },
+      "model": "mysticcraft:item/gemstone/flawless_gemstone"
+    },
+    {
+      "predicate": {
+        "minecraft:rarity": 0.5
+      },
+      "model": "mysticcraft:item/gemstone/perfect_gemstone"
+    }
+  ]
+}

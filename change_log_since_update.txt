@@ -1,8 +1,13 @@
 added Crimsonium ore world gen;
 added Server Config;
-moved Vein-miner/Lumberjack enchantment to Tick based system to reduce lag;
-removed unnecessary asset files;
+added some textures;
+added crafting recipes for all shadow assassin armor pieces
 added smelting touch enchantment;
 added /show command;
+
+fixed shadow assassin armor craftable with all dyeable_leather
 fixed Attribute mods also being applied to main hand item (armor);
+
+moved Vein-miner/Lumberjack enchantment to Tick based system to reduce lag;
 nerved ferocity only to trigger on melee attacks;
+removed unnecessary asset files;

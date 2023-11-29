@@ -1,5 +1,6 @@
 package net.kapitencraft.mysticcraft.block.special;
 
+import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.block.GemstoneBlock;
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.init.ModBlocks;
@@ -30,13 +31,17 @@ public class GemstoneCreator extends Block implements GameMasterBlock {
     @Override
     public void onPlace(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState state1, boolean flag) {
         GemstoneType type = createType(level, pos);
-        GemstoneBlock block = ModBlocks.GEMSTONE_BLOCKS.get(type).getBlock();
+        GemstoneBlock block = ModBlocks.GEMSTONE_BLOCK.getBlock();
+        BlockState toPlace = block.defaultBlockState();
+        GemstoneBlock.setType(toPlace, type);
+        MysticcraftMod.sendInfo("loading creator!");
         MathHelper.forCube(new BlockPos(RANGE, RANGE, RANGE), (pos1) -> {
             if (level.getBlockState(pos1).getBlock() instanceof EmptyGemstoneBlock) {
-                level.setBlockAndUpdate(pos1.offset(pos), block.defaultBlockState());
+                level.setBlockAndUpdate(pos1.offset(pos), toPlace);
             }
         });
     }
+
 
     private static GemstoneType createType(Level level, BlockPos pos) {
         List<GemstoneType> types = new ArrayList<>();

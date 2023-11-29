@@ -373,7 +373,6 @@ public abstract class ItemStackMixin {
      */
     @Overwrite
     public Component getHoverName() {
-        CompoundTag compoundtag = self().getTagElement("display");
         MutableComponent name = Component.empty();
         Component component = null;
         Item item = self().getItem();
@@ -391,6 +390,7 @@ public abstract class ItemStackMixin {
             }
 
         }
+        CompoundTag compoundtag = self().getTagElement("display");
         if (compoundtag != null && compoundtag.contains("Name", 8)) {
             try {
                 component = Component.Serializer.fromJson(compoundtag.getString("Name"));

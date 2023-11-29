@@ -8,7 +8,6 @@ import net.kapitencraft.mysticcraft.block.special.GemstoneCreator;
 import net.kapitencraft.mysticcraft.dungeon.generation.GenerationBlock;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.item.data.gemstone.GemstoneItem;
-import net.kapitencraft.mysticcraft.item.data.gemstone.GemstoneType;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.Provider;
 import net.minecraft.world.item.BlockItem;
@@ -25,14 +24,19 @@ import net.minecraftforge.registries.RegistryObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public interface ModBlocks {
     DeferredRegister<Block> REGISTRY = MysticcraftMod.makeRegistry(ForgeRegistries.BLOCKS);
     List<RegistryObject<BlockItem>> ITEM_BLOCKS = new ArrayList<>();
     private static <T extends Block> BlockRegistryHolder<T> registerBlock(String name, Supplier<T> block, Item.Properties properties, TabGroup group) {
+        return registerBlock(name, block, object -> new BlockItem(object.get(), properties), group);
+    }
+
+    private static <T extends Block> BlockRegistryHolder<T> registerBlock(String name, Supplier<T> block, Function<RegistryObject<T>, BlockItem> func, TabGroup group) {
         RegistryObject<T> toReturn = REGISTRY.register(name, block);
-        return new BlockRegistryHolder<>(toReturn, registerItem(name, toReturn, properties, group));
+        return new BlockRegistryHolder<>(toReturn, registerItem(name, ()-> func.apply(toReturn), group));
     }
 
     private static <T, V extends Block> HashMap<T, BlockRegistryHolder<V>> createMappedRegistry(Provider<V, T> provider, Provider<String, T> nameProvider, Provider<Item.Properties, T> propertiesProvider, List<T> values, TabGroup group) {
@@ -43,8 +47,8 @@ public interface ModBlocks {
         return map;
     }
 
-    private static <T extends Block> RegistryObject<BlockItem> registerItem(String name, RegistryObject<T> block, Item.Properties properties, TabGroup tabGroup) {
-        RegistryObject<BlockItem> registryObject = ModItems.REGISTRY.register(name, () -> new BlockItem(block.get(), properties));
+    private static <T extends Block> RegistryObject<BlockItem> registerItem(String name, Supplier<BlockItem> sup, TabGroup tabGroup) {
+        RegistryObject<BlockItem> registryObject = ModItems.REGISTRY.register(name, sup);
         ITEM_BLOCKS.add(registryObject);
         if (tabGroup != null) {
             tabGroup.add(registryObject);
@@ -69,5 +73,5 @@ public interface ModBlocks {
     BlockRegistryHolder<GoldenStairs> GOLDEN_STAIRS = registerBlock("golden_stairs", GoldenStairs::new, MiscHelper.rarity(Rarity.COMMON), TabGroup.GOLDEN_DECO);
     BlockRegistryHolder<GoldenWall> GOLDEN_WALL = registerBlock("golden_wall", GoldenWall::new, MiscHelper.rarity(Rarity.COMMON), TabGroup.GOLDEN_DECO);
     BlockRegistryHolder<LapisButton> LAPIS_BUTTON = registerBlock("lapis_button", LapisButton::new, MiscHelper.rarity(Rarity.UNCOMMON), TabGroup.DECO);
-    HashMap<GemstoneType, BlockRegistryHolder<GemstoneBlock>> GEMSTONE_BLOCKS = createMappedRegistry(GemstoneBlock::new, value -> value.getId() + "_gemstone_block", value -> MiscHelper.rarity(Rarity.RARE), List.of(GemstoneType.values()), TabGroup.MATERIAL);
+    BlockRegistryHolder<GemstoneBlock> GEMSTONE_BLOCK = registerBlock("gemstone_block", GemstoneBlock::new, object -> new GemstoneBlock.Item(), null);
 }

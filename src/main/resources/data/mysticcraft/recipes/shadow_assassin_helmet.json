@@ -3,10 +3,10 @@
   "pattern": [
     "***",
     "* *"
-  ],
+    ],
   "key": {
     "*": {
-      "type": "forge:nbt",
+      "type": "forge:partial_nbt",
       "item": "mysticcraft:dyed_leather",
       "nbt": "{display: {color:3355189}}"
     }

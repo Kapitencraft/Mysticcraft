@@ -1,21 +1,17 @@
 package net.kapitencraft.mysticcraft.item.data.gemstone;
 
 import com.mojang.serialization.Codec;
-import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.block.GemstoneBlock;
 import net.kapitencraft.mysticcraft.helpers.CollectionHelper;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
-import net.kapitencraft.mysticcraft.init.ModItems;
-import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
-import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
 import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.SaveAbleEnum;
 import net.minecraft.ChatFormatting;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -24,27 +20,26 @@ import java.util.function.Supplier;
 
 public enum GemstoneType implements StringRepresentable {
     EMPTY(0, ()-> null, 0, "empty", 0),
-    ALMANDINE(getColorFromChatFormatting(ChatFormatting.LIGHT_PURPLE), ModAttributes.ABILITY_DAMAGE, 0.3, "almandine", GemstoneBlock.HIGH_MEDIUM_STRENGHT),
-    JASPER(getColorFromChatFormatting(ChatFormatting.DARK_RED), ModAttributes.STRENGTH, 2, "jasper", GemstoneBlock.VERY_HIGH_STRENGHT),
-    RUBY(getColorFromChatFormatting(ChatFormatting.RED), () -> Attributes.MAX_HEALTH, 0.5, "ruby", GemstoneBlock.LOW_STRENGHT),
-    AMETHYST(getColorFromChatFormatting(ChatFormatting.DARK_PURPLE), () -> Attributes.ARMOR, 2.3, "amethyst", GemstoneBlock.LOW_MEDIUM_STRENGHT),
-    SAPPHIRE(getColorFromChatFormatting(ChatFormatting.BLUE), ModAttributes.INTELLIGENCE, 2.7, "sapphire", GemstoneBlock.MEDIUM_STRENGHT),
-    AQUAMARINE(getColorFromChatFormatting(ChatFormatting.AQUA), ForgeMod.SWIM_SPEED, 0.1, "aquamarine", GemstoneBlock.VERY_LOW_STRENGHT),
-    TURQUOISE(getColorFromChatFormatting(ChatFormatting.DARK_AQUA), ModAttributes.FISHING_SPEED, 2.9, "turquoise", GemstoneBlock.LOW_MEDIUM_STRENGHT),
-    MOONSTONE(getColorFromChatFormatting(ChatFormatting.BLACK), ModAttributes.DRAW_SPEED, 0.5, "moonstone", GemstoneBlock.HIGH_STRENGHT),
-    CELESTINE(getColorFromChatFormatting(ChatFormatting.WHITE), ()-> Attributes.MOVEMENT_SPEED, 0.07, "celestine", GemstoneBlock.LOW_STRENGHT);
+    ALMANDINE(colorFromCFormatting(ChatFormatting.LIGHT_PURPLE), ModAttributes.ABILITY_DAMAGE, 0.3, "almandine", GemstoneBlock.HIGH_MEDIUM_STRENGHT),
+    JASPER(colorFromCFormatting(ChatFormatting.DARK_RED), ModAttributes.STRENGTH, 2, "jasper", GemstoneBlock.VERY_HIGH_STRENGHT),
+    RUBY(colorFromCFormatting(ChatFormatting.RED), () -> Attributes.MAX_HEALTH, 0.5, "ruby", GemstoneBlock.LOW_STRENGHT),
+    AMETHYST(colorFromCFormatting(ChatFormatting.DARK_PURPLE), () -> Attributes.ARMOR, 2.3, "amethyst", GemstoneBlock.LOW_MEDIUM_STRENGHT),
+    SAPPHIRE(colorFromCFormatting(ChatFormatting.BLUE), ModAttributes.INTELLIGENCE, 2.7, "sapphire", GemstoneBlock.MEDIUM_STRENGHT),
+    AQUAMARINE(colorFromCFormatting(ChatFormatting.AQUA), ForgeMod.SWIM_SPEED, 0.1, "aquamarine", GemstoneBlock.VERY_LOW_STRENGHT),
+    TURQUOISE(colorFromCFormatting(ChatFormatting.DARK_AQUA), ModAttributes.FISHING_SPEED, 2.9, "turquoise", GemstoneBlock.LOW_MEDIUM_STRENGHT),
+    MOONSTONE(colorFromCFormatting(ChatFormatting.BLACK), ModAttributes.DRAW_SPEED, 0.5, "moonstone", GemstoneBlock.HIGH_STRENGHT),
+    CELESTINE(colorFromCFormatting(ChatFormatting.WHITE), ()-> Attributes.MOVEMENT_SPEED, 0.07, "celestine", GemstoneBlock.LOW_STRENGHT);
 
     public static Codec<GemstoneType> CODEC = StringRepresentable.fromEnum(GemstoneType::values);
-    public static final TabGroup GEMSTONE_GROUP = new TabGroup(TabRegister.TabTypes.SPELL_AND_GEMSTONE);
     private final int COLOR;
     public final Supplier<Attribute>  modifiedAttribute;
     public final double BASE_VALUE;
     private final String id;
     private final double blockStrength;
 
-    public static int getColorFromChatFormatting(ChatFormatting formatting) {
-        MysticcraftMod.sendInfo(String.valueOf(formatting.getColor() == null));
-        return formatting.getColor() == null ? -1 : formatting.getColor();
+    public static int colorFromCFormatting(ChatFormatting formatting) {
+        if (formatting.getColor() == null) throw new IllegalStateException("formatting has no color");
+        return formatting.getColor();
     }
 
     GemstoneType(int color, Supplier<Attribute> modifiedAttribute, double baseValue, String id, double blockStrength) {
@@ -72,10 +67,18 @@ public enum GemstoneType implements StringRepresentable {
         return blockStrength * blockStrength * 2;
     }
 
-    public static HashMap<GemstoneType, HashMap<Rarity, RegistryObject<GemstoneItem>>> createRegistry() {
-        HashMap<GemstoneType, HashMap<Rarity, RegistryObject<GemstoneItem>>> toReturn = new HashMap<>();
+    public static HashMap<GemstoneType, HashMap<Rarity, ItemStack>> allItems() {
+        HashMap<GemstoneType, HashMap<Rarity, ItemStack>> toReturn = new HashMap<>();
         for (GemstoneType type : TYPES_TO_USE) {
             toReturn.put(type, type.registerItems());
+        }
+        return toReturn;
+    }
+
+    public static HashMap<GemstoneType, ItemStack> allBlocks() {
+        HashMap<GemstoneType, ItemStack> toReturn = new HashMap<>();
+        for (GemstoneType type : TYPES_TO_USE) {
+            toReturn.put(type, type.registerBlocks());
         }
         return toReturn;
     }
@@ -83,14 +86,18 @@ public enum GemstoneType implements StringRepresentable {
     private static final List<GemstoneType> TYPES_TO_USE = CollectionHelper.remove(GemstoneType.values(), GemstoneType.EMPTY);
     private static final List<Rarity> RARITIES_TO_USE = CollectionHelper.remove(Rarity.values(), Rarity.EMPTY);
 
-    public HashMap<Rarity, RegistryObject<GemstoneItem>> registerItems() {
-        HashMap<Rarity, RegistryObject<GemstoneItem>> toReturn = new HashMap<>();
+    public HashMap<Rarity, ItemStack> registerItems() {
+        HashMap<Rarity, ItemStack> toReturn = new HashMap<>();
         for (Rarity rarity : RARITIES_TO_USE) {
             if (rarity != Rarity.EMPTY) {
-                toReturn.put(rarity, ModItems.register(rarity.id + "_" + this.getId() + "_gemstone", () -> new GemstoneItem(rarity, this.getId()), GEMSTONE_GROUP));
+                toReturn.put(rarity, IGemstoneItem.createData(rarity, this, false));
             }
         }
         return toReturn;
+    }
+
+    public ItemStack registerBlocks() {
+        return IGemstoneItem.createData(Rarity.ROUGH, this, true);
     }
 
     public int getColour() {
@@ -107,12 +114,12 @@ public enum GemstoneType implements StringRepresentable {
     }
 
     public enum Rarity implements SaveAbleEnum, StringRepresentable {
-        ROUGH(1, getColorFromChatFormatting(ChatFormatting.WHITE), 1, "rough"),
-        FLAWED(2, getColorFromChatFormatting(ChatFormatting.GREEN), 1.75, "flawed"),
-        FINE(3, getColorFromChatFormatting(ChatFormatting.BLUE), 2.3, "fine"),
-        FLAWLESS(4, getColorFromChatFormatting(ChatFormatting.DARK_PURPLE), 3, "flawless"),
-        PERFECT(5, getColorFromChatFormatting(ChatFormatting.GOLD), 4.8, "perfect"),
-        EMPTY(0, getColorFromChatFormatting(ChatFormatting.DARK_GRAY), 0, "empty");
+        ROUGH(1, colorFromCFormatting(ChatFormatting.WHITE), 1, "rough"),
+        FLAWED(2, colorFromCFormatting(ChatFormatting.GREEN), 1.75, "flawed"),
+        FINE(3, colorFromCFormatting(ChatFormatting.BLUE), 2.3, "fine"),
+        FLAWLESS(4, colorFromCFormatting(ChatFormatting.DARK_PURPLE), 3, "flawless"),
+        PERFECT(5, colorFromCFormatting(ChatFormatting.GOLD), 4.8, "perfect"),
+        EMPTY(0, colorFromCFormatting(ChatFormatting.DARK_GRAY), 0, "empty");
         public static final Codec<Rarity> CODEC = StringRepresentable.fromEnum(Rarity::values);
         public final int colour, level;
         public final double modMul;

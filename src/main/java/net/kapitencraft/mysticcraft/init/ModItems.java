@@ -12,6 +12,7 @@ import net.kapitencraft.mysticcraft.item.combat.shield.ModShieldItem;
 import net.kapitencraft.mysticcraft.item.combat.spells.*;
 import net.kapitencraft.mysticcraft.item.combat.spells.necron_sword.*;
 import net.kapitencraft.mysticcraft.item.combat.totems.VoidTotemItem;
+import net.kapitencraft.mysticcraft.item.combat.weapon.melee.dagger.ShadowDagger;
 import net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword.DoubleSword;
 import net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword.GhostlySword;
 import net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword.ManaSteelSwordItem;
@@ -23,7 +24,6 @@ import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.bow.TallinBow;
 import net.kapitencraft.mysticcraft.item.creative.BuildersWand;
 import net.kapitencraft.mysticcraft.item.creative.ModDebugStickItem;
 import net.kapitencraft.mysticcraft.item.data.gemstone.GemstoneItem;
-import net.kapitencraft.mysticcraft.item.data.gemstone.GemstoneType;
 import net.kapitencraft.mysticcraft.item.material.*;
 import net.kapitencraft.mysticcraft.item.misc.IModItem;
 import net.kapitencraft.mysticcraft.item.misc.MaterialModItem;
@@ -96,6 +96,7 @@ public interface ModItems {
     RegistryObject<Scylla> SCYLLA = register("scylla", Scylla::new, NecronSword.NECRON_GROUP);
     RegistryObject<Astraea> ASTREA = register("astrea", Astraea::new, NecronSword.NECRON_GROUP);
     RegistryObject<Valkyrie> VALKYRIE = register("valkyrie", Valkyrie::new, NecronSword.NECRON_GROUP);
+    RegistryObject<ShadowDagger> SHADOW_DAGGER = register("shadow_dagger", () -> new ShadowDagger(), TabGroup.COMBAT);
     RegistryObject<AspectOfTheEndItem> AOTE = register("aspect_of_the_end", ()-> new AspectOfTheEndItem(50), SpellItem.SPELL_GROUP);
     RegistryObject<AspectOfTheVoidItem> AOTV = register("aspect_of_the_void", AspectOfTheVoidItem::new, SpellItem.SPELL_GROUP);
     RegistryObject<HeatedScythe> HEATED_SCYTHE = register("heated_scythe", HeatedScythe::new, IFireScytheItem.FIRE_SCYTHE_GROUP);
@@ -152,7 +153,7 @@ public interface ModItems {
     RegistryObject<GUISlotBlockItem> MISSING_GEMSTONE_SLOT = register("missing_slot", ()-> new GUISlotBlockItem().putTooltip(List.of(Component.literal("This Gemstone Applicable has no gemstone at that slot").withStyle(ChatFormatting.RED))), null);
     RegistryObject<GUISlotBlockItem> EMPTY_APPLICABLE_SLOT = register("empty_applicable", ()-> new GUISlotBlockItem().putTooltip(List.of(Component.literal("There is no Gemstone Applicable in it's slot").withStyle(ChatFormatting.RED))), null);
     RegistryObject<BucketItem> BUCKET_OF_MANA = REGISTRY.register("bucket_of_mana", ()-> new BucketItem(ModFluids.SOURCE_MANA_FLUID, MiscHelper.rarity(Rarity.EPIC).stacksTo(1)));
-    HashMap<GemstoneType, HashMap<GemstoneType.Rarity, RegistryObject<GemstoneItem>>> GEMSTONES = GemstoneType.createRegistry();
+    RegistryObject<GemstoneItem> GEMSTONE = REGISTRY.register("gemstone", GemstoneItem::new);
     HashMap<GuildUpgrade, RegistryObject<GuildUpgradeItem>> GUILD_UPGRADES = GuildUpgrades.createRegistry();
     HashMap<PrecursorRelicItem.BossType, RegistryObject<PrecursorRelicItem>> PRECURSOR_RELICTS = PrecursorRelicItem.makeRegistry();
 }

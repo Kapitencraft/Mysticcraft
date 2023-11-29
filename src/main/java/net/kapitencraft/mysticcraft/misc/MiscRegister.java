@@ -10,6 +10,7 @@ import net.kapitencraft.mysticcraft.enchantments.abstracts.ModBowEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.armor.BasaltWalkerEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.weapon.ranged.OverloadEnchantment;
 import net.kapitencraft.mysticcraft.entity.FrozenBlazeEntity;
+import net.kapitencraft.mysticcraft.guild.GuildHandler;
 import net.kapitencraft.mysticcraft.guild.GuildUpgrade;
 import net.kapitencraft.mysticcraft.guild.GuildUpgrades;
 import net.kapitencraft.mysticcraft.helpers.*;
@@ -19,6 +20,7 @@ import net.kapitencraft.mysticcraft.item.combat.armor.ModArmorItem;
 import net.kapitencraft.mysticcraft.item.combat.armor.ModArmorMaterials;
 import net.kapitencraft.mysticcraft.item.combat.armor.SoulMageArmorItem;
 import net.kapitencraft.mysticcraft.item.combat.armor.WarpedArmorItem;
+import net.kapitencraft.mysticcraft.item.combat.duel.DuelHandler;
 import net.kapitencraft.mysticcraft.item.combat.spells.SpellItem;
 import net.kapitencraft.mysticcraft.item.combat.totems.ModTotemItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword.ManaSteelSwordItem;
@@ -84,6 +86,7 @@ import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.ArrowLooseEvent;
 import net.minecraftforge.event.entity.player.CriticalHitEvent;
 import net.minecraftforge.event.level.BlockEvent;
+import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.event.village.VillagerTradesEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -99,6 +102,13 @@ import java.util.Objects;
 public class MiscRegister {
     static final String doubleJumpId = "currentDoubleJump";
 
+    @SubscribeEvent
+    public static void loadingLevel(LevelEvent.Load event) {
+        if (event.getLevel() instanceof ServerLevel serverLevel && serverLevel.dimension() == Level.OVERWORLD) {
+            GuildHandler.setInstance(serverLevel.getDataStorage().computeIfAbsent((tag -> GuildHandler.load(tag, serverLevel.getServer())), GuildHandler::createDefault, "guilds"));
+            DuelHandler.setInstance(serverLevel.getDataStorage().computeIfAbsent(tag -> DuelHandler.load(tag, serverLevel.getServer()), DuelHandler::new, "duels"));
+        }
+    }
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void damageAttributeRegister(LivingHurtEvent event) {
         @Nullable LivingEntity attacker = MiscHelper.getAttacker(event.getSource());
@@ -106,10 +116,10 @@ public class MiscRegister {
         if (event.getSource() instanceof IAbilitySource abilitySource) {
             double intel = attacker.getAttributeValue(ModAttributes.INTELLIGENCE.get());
             double ability_damage = attacker.getAttributeValue(ModAttributes.ABILITY_DAMAGE.get());
-            event.setAmount((float) (event.getAmount() * (1 + (intel / 100) * abilitySource.getScaling()) * (1 + (ability_damage / 100))));
+            MathHelper.mul(event::getAmount, event::setAmount, (float) ((1 + (intel / 100) * abilitySource.getScaling()) * (1 + (ability_damage / 100))));
         } else if (AttributeHelper.getSaveAttributeValue(ModAttributes.STRENGTH.get(), attacker) != -1) {
             double Strength = AttributeHelper.getSaveAttributeValue(ModAttributes.STRENGTH.get(), attacker);
-            event.setAmount((float) (event.getAmount() * (1 + Strength / 100)));
+            MathHelper.mul(event::getAmount, event::setAmount, (float) (1 + Strength / 100));
         }
         double double_jump = AttributeHelper.getSaveAttributeValue(ModAttributes.DOUBLE_JUMP.get(), attacker);
         if (double_jump > 0 && attacker.getPersistentData().getInt(doubleJumpId) > 0 && event.getSource().getMsgId().equals("fall")) {

@@ -9,6 +9,8 @@ import net.kapitencraft.mysticcraft.item.combat.armor.TieredArmorItem;
 import net.kapitencraft.mysticcraft.item.combat.shield.ModShieldItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.QuiverItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.bow.ModBowItem;
+import net.kapitencraft.mysticcraft.item.data.gemstone.GemstoneType;
+import net.kapitencraft.mysticcraft.item.data.gemstone.IGemstoneItem;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -33,12 +35,23 @@ public class ModItemProperties {
         makeTieredArmor(ModItems.CRIMSON_ARMOR);
         makeTieredArmor(ModItems.SOUL_MAGE_ARMOR);
         makeTieredArmor(ModItems.WARPED_ARMOR);
-        ItemProperties.register(Items.BOW, new ResourceLocation("pull"), (stack, p_174677_, living, p_174679_) -> {
+        ItemProperties.register(Items.BOW, new ResourceLocation("pull"), (stack, level, living, p_174679_) -> {
             if (living == null || living.getAttribute(ModAttributes.DRAW_SPEED.get()) == null) {
                 return 0.0F;
             } else {
                 return living.getUseItem() != stack ? 0.0F : (float)((stack.getUseDuration() * living.getAttributeValue(ModAttributes.DRAW_SPEED.get()) / 100) - living.getUseItemRemainingTicks()) / 20.0F;
             }
+        });
+        ItemProperties.register(ModItems.GEMSTONE.get(), new ResourceLocation("rarity"), (stack, level, living, timeLeft) -> {
+            GemstoneType.Rarity rarity = IGemstoneItem.getGemRarity(stack);
+            return switch (rarity) {
+                case ROUGH -> 0.1f;
+                case FLAWED -> 0.2f;
+                case FINE -> 0.3f;
+                case FLAWLESS -> 0.4f;
+                case PERFECT -> 0.5f;
+                default -> 0;
+            };
         });
     }
 
@@ -71,6 +84,7 @@ public class ModItemProperties {
         for (RegistryObject<ModArmorItem> registryObject : armorHashMap.values()) {
             Item armorItem = registryObject.get();
             ItemProperties.register(armorItem, new ResourceLocation("dimension"), ((stack, level, living, i) -> {
+                if (living == null) return 0;
                 ResourceKey<Level> dimension = living.level.dimension();
                 if (dimension == Level.END) {
                     return 2;

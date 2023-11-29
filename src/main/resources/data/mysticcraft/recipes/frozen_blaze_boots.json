@@ -6,6 +6,7 @@
   ],
   "key": {
     "*":{
+      "type": "mysticcraft:amount",
       "item": "mysticcraft:frozen_blaze_rod",
       "amount": 10
     }

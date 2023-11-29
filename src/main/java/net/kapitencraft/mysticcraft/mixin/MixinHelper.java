@@ -3,7 +3,7 @@ package net.kapitencraft.mysticcraft.mixin;
 import com.google.gson.*;
 import net.kapitencraft.mysticcraft.ModMarker;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.block.entity.crafting.CraftingUtils;
+import net.kapitencraft.mysticcraft.block.entity.crafting.CraftingHelper;
 import net.kapitencraft.mysticcraft.helpers.CollectionHelper;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
@@ -13,11 +13,11 @@ import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.ShapedRecipe;
-import net.minecraftforge.common.crafting.CraftingHelper;
 import org.slf4j.Marker;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -26,8 +26,8 @@ public class MixinHelper {
 
     public static Ingredient fromNetwork(FriendlyByteBuf buf) {
         int size = buf.readVarInt();
-        if (size == -1) return CraftingHelper.getIngredient(buf.readResourceLocation(), buf);
-        return MixinHelper.fromValues(Stream.generate(() -> new CraftingUtils.ItemAmountValue(buf.readItem())).limit(size));
+        if (size == -1) return net.minecraftforge.common.crafting.CraftingHelper.getIngredient(buf.readResourceLocation(), buf);
+        return MixinHelper.fromValues(Stream.generate(() -> new CraftingHelper.ItemAmountValue(buf.readItem())).limit(size));
     }
 
 
@@ -40,7 +40,7 @@ public class MixinHelper {
                 if (jsonarray.size() == 0) {
                     throw new JsonSyntaxException("Item array cannot be empty, at least one item must be defined");
                 } else {
-                    return CollectionHelper.merge(StreamSupport.stream(jsonarray.spliterator(), false).map((p_151264_) -> load(GsonHelper.convertToJsonObject(p_151264_, "item"), shapeless)).toList());
+                    return CollectionHelper.merge(StreamSupport.stream(jsonarray.spliterator(), false).map((p_151264_) -> load(GsonHelper.convertToJsonObject(p_151264_, "item"), shapeless)).collect(Collectors.toList()));
                 }
             } else {
                 throw new JsonSyntaxException("Expected item to be object or array of objects");
@@ -51,7 +51,7 @@ public class MixinHelper {
     }
 
     public static Ingredient fromValues(Stream<? extends Ingredient.Value> p_43939_) {
-        Ingredient ingredient = new CraftingUtils.AmountIngredient(p_43939_);
+        Ingredient ingredient = new CraftingHelper.AmountIngredient(p_43939_);
         return ingredient.isEmpty() ? Ingredient.EMPTY : ingredient;
     }
 
@@ -92,11 +92,11 @@ public class MixinHelper {
     }
 
     private static Ingredient makeAmountIngredient(Item item, int amount) {
-        return fromValues(Stream.of(new CraftingUtils.ItemAmountValue(item, amount)));
+        return fromValues(Stream.of(new CraftingHelper.ItemAmountValue(item, amount)));
     }
 
     private static Ingredient makeTagIngredient(TagKey<Item> tagKey, int amount) {
-        return fromValues(Stream.of(new CraftingUtils.TagAmountValue(tagKey, amount)));
+        return fromValues(Stream.of(new CraftingHelper.TagAmountValue(tagKey, amount)));
     }
 
     private static int getAmount(JsonObject object) {

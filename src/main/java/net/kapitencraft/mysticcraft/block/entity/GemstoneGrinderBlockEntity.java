@@ -6,10 +6,7 @@ import net.kapitencraft.mysticcraft.gui.gemstone_grinder.GemstoneGrinderMenu;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.init.ModBlockEntities;
 import net.kapitencraft.mysticcraft.init.ModItems;
-import net.kapitencraft.mysticcraft.item.data.gemstone.GemstoneItem;
-import net.kapitencraft.mysticcraft.item.data.gemstone.GemstoneSlot;
-import net.kapitencraft.mysticcraft.item.data.gemstone.GemstoneType;
-import net.kapitencraft.mysticcraft.item.data.gemstone.IGemstoneApplicable;
+import net.kapitencraft.mysticcraft.item.data.gemstone.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -161,7 +158,7 @@ public class  GemstoneGrinderBlockEntity extends BlockEntity implements MenuProv
                     if (slotWithGemstone && !tag.getBoolean("hadGemstoneIn" + i)) {
                         tag.putBoolean("hadGemstoneIn" + i, true);
                         GemstoneItem gemstoneItem = (GemstoneItem) stack.getItem();
-                        if (!applicable.putGemstone(gemstoneItem.getGemstone(), gemstoneItem.getRarity(), blockEntity.getSlotForItem(i), gemstoneApplicable)) {
+                        if (!applicable.putGemstone(IGemstoneItem.getGemstone(stack), IGemstoneItem.getGemRarity(stack), blockEntity.getSlotForItem(i), gemstoneApplicable)) {
                             blockEntity.queue.add(stack);
                             handler.setStackInSlot(i, ItemStack.EMPTY);
                         }
@@ -202,7 +199,7 @@ public class  GemstoneGrinderBlockEntity extends BlockEntity implements MenuProv
         int j = 0;
         for (int i = 0; i < 5; i++) {
             if (slotsUnlocked[i]) {
-                stacks[i] = new ItemStack(GemstoneItem.of(slots[j]));
+                stacks[i] = GemstoneItem.of(slots[j]);
                 j++;
             } else {
                 stacks[i] = new ItemStack(ModItems.MISSING_GEMSTONE_SLOT.get());

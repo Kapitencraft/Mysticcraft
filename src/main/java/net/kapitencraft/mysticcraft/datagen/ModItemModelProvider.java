@@ -1,9 +1,6 @@
 package net.kapitencraft.mysticcraft.datagen;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.init.ModItems;
-import net.kapitencraft.mysticcraft.item.data.gemstone.GemstoneItem;
-import net.kapitencraft.mysticcraft.item.data.gemstone.GemstoneType;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -14,9 +11,6 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.RegistryObject;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 
 public class ModItemModelProvider extends ItemModelProvider {
@@ -31,7 +25,9 @@ public class ModItemModelProvider extends ItemModelProvider {
         //registerGemstones();
 
 
-        List<RegistryObject<Item>> items = List.of();
+        List<RegistryObject<Item>> items = List.of(
+
+        );
         for (RegistryObject<Item> item : items) {
             try {
                 if (item.get() instanceof TieredItem) {
@@ -55,26 +51,5 @@ public class ModItemModelProvider extends ItemModelProvider {
         return withExistingParent(item.getId().getPath(),
                 new ResourceLocation("item/handheld")).texture("layer0",
                 (texture == null ? MysticcraftMod.res("item/" + item.getId().getPath()) : texture));
-    }
-
-    private void registerGemstones() {
-        List<Collection<RegistryObject<GemstoneItem>>> gemstoneList = ModItems.GEMSTONES.values().stream().map(HashMap::values).toList();
-        List<RegistryObject<GemstoneItem>> gemstones = new ArrayList<>();
-        for (Collection<RegistryObject<GemstoneItem>> list : gemstoneList) {
-            gemstones.addAll(list);
-        }
-        gemstones = gemstones.stream().filter(registryObject -> registryObject.get().getRarity() != GemstoneType.Rarity.EMPTY).toList();
-        for (RegistryObject<GemstoneItem> registryObject : gemstones) {
-            GemstoneItem item = registryObject.get();
-            registerWithColor(registryObject, getGemstoneTextureForRarity(item.getRarity()));
-        }
-    }
-
-    private ResourceLocation getGemstoneTextureForRarity(GemstoneType.Rarity rarity) {
-        return MysticcraftMod.res("item/" + rarity.getId() + "_gemstone");
-    }
-
-    private ItemModelBuilder registerWithColor(RegistryObject<? extends Item> item, ResourceLocation texture) {
-        return simpleItem(item, texture).texture("layer1", MysticcraftMod.res("item/empty_dyed_overlay"));
     }
 }

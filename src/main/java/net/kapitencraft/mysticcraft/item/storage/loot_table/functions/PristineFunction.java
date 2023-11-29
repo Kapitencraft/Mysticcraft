@@ -6,10 +6,10 @@ import net.kapitencraft.mysticcraft.helpers.LootTableHelper;
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.helpers.TextHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
-import net.kapitencraft.mysticcraft.init.ModItems;
 import net.kapitencraft.mysticcraft.init.ModLootItemFunctions;
 import net.kapitencraft.mysticcraft.item.data.gemstone.GemstoneItem;
 import net.kapitencraft.mysticcraft.item.data.gemstone.GemstoneType;
+import net.kapitencraft.mysticcraft.item.data.gemstone.IGemstoneItem;
 import net.kapitencraft.mysticcraft.item.storage.loot_table.IConditional;
 import net.kapitencraft.mysticcraft.misc.serialization.JsonSerializer;
 import net.minecraft.network.chat.Component;
@@ -32,8 +32,8 @@ public class PristineFunction extends LootItemConditionalFunction implements ICo
 
     @Override
     protected @NotNull ItemStack run(@NotNull ItemStack stack, @NotNull LootContext context) {
-        if (stack.getItem() instanceof GemstoneItem gemstoneItem) {
-            int gemstoneLevel, oldGemstoneLevel = gemstoneLevel = gemstoneItem.getRarity().level;
+        if (stack.getItem() instanceof GemstoneItem) {
+            int gemstoneLevel, oldGemstoneLevel = gemstoneLevel = IGemstoneItem.getGemRarity(stack).level;
             if (gemstoneLevel == 0) {
                 return stack;
             } else {
@@ -49,10 +49,9 @@ public class PristineFunction extends LootItemConditionalFunction implements ICo
                 }
                 if (gemstoneLevel != oldGemstoneLevel && entity instanceof Player player) {
                     GemstoneType.Rarity rarity = GemstoneType.Rarity.byLevel(gemstoneLevel);
-                    GemstoneItem item = ModItems.GEMSTONES.get(gemstoneItem.getGemstone()).get(rarity).get();
-                    ItemStack pristinedStack = new ItemStack(item).copyWithCount(stack.getCount());
-                    player.sendSystemMessage(Component.literal("§5PRISTINE§a you found " + stack.getCount() + " ").append(TextHelper.getStackNameWithoutBrackets(pristinedStack)));
-                    return pristinedStack;
+                    ItemStack item = IGemstoneItem.createData(rarity, IGemstoneItem.getGemstone(stack), false).copyWithCount(stack.getCount());
+                    player.sendSystemMessage(Component.literal("§5PRISTINE§a you found " + stack.getCount() + " ").append(TextHelper.getStackNameWithoutBrackets(item)));
+                    return item;
                 }
             }
         }

@@ -21,6 +21,7 @@ public class GuildHandler extends SavedData {
     }
 
     public static GuildHandler createDefault() {
+        MysticcraftMod.sendInfo("Unable to load Guilds; using default");
         return new GuildHandler();
     }
 

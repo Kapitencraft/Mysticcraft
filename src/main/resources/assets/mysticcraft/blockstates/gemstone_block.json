@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "mysticcraft:block/gemstone_block"
+    }
+  }
+}

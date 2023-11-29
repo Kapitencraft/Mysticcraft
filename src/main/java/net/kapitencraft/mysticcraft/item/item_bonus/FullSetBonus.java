@@ -1,9 +1,18 @@
 package net.kapitencraft.mysticcraft.item.item_bonus;
 
-public abstract class FullSetBonus extends Bonus{
+public abstract class FullSetBonus implements Bonus{
+    private final String name;
     protected FullSetBonus(String name) {
-        super(name, "Full Set");
+        this.name = name;
     }
 
+    @Override
+    public String getName() {
+        return name;
+    }
 
+    @Override
+    public String getSuperName() {
+        return "Full Set";
+    }
 }

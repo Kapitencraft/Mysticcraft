@@ -28,10 +28,14 @@ public class CollectionHelper {
         return target;
     }
 
-    public static <T> List<T> merge(List<List<T>> toMerge) {
+    public static <T> List<T> merge(Collection<Collection<T>> toMerge) {
         List<T> list = new ArrayList<>();
         toMerge.forEach(list::addAll);
         return list;
+    }
+
+    public static <T, K, L, J extends Map<K, L>> List<L> values(Map<T, J> map) {
+        return merge(map.values().stream().map(Map::values).toList());
     }
 
     public static <T, K> K getFirstValue(Map<T, K> map) {

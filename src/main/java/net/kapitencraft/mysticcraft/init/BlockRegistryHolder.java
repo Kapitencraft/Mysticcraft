@@ -26,4 +26,8 @@ public class BlockRegistryHolder<T extends Block> {
     public Supplier<Block> block() {
         return (Supplier<Block>) block;
     }
+
+    public RegistryObject<BlockItem> item() {
+        return item;
+    }
 }

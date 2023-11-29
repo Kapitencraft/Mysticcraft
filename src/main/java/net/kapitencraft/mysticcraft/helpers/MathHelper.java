@@ -52,10 +52,14 @@ public class MathHelper {
 
 
     public static ArrayList<Vec3> lineOfSight(Entity entity, double range, double scaling) {
+        return lineOfSight(entity.getRotationVector(), entity.getEyePosition(), range, scaling);
+    }
+
+    public static ArrayList<Vec3> lineOfSight(Vec2 vec, Vec3 pos, double range, double scaling) {
         ArrayList<Vec3> line = new ArrayList<>();
         Vec3 vec3;
         for (double i = 0; i <= range; i+=scaling) {
-            vec3 = entity.getLookAngle().scale(i).add(entity.getX(), entity.getY(), entity.getZ()).add(0, entity.getEyeHeight(), 0);
+            vec3 = calculateViewVector(vec.x, vec.y).scale(i).add(pos.x, pos.y, pos.z);
             line.add(vec3);
         }
         return line;
@@ -184,9 +188,19 @@ public class MathHelper {
             }
             return list;
         }
-        throw new IllegalArgumentException("range should be higher thant 0");
+        throw new IllegalArgumentException("range should be greater than 0");
     }
 
+    public static List<Entity> getAllEntitiesInsideCylinder(float radius, Vec3 sourcePos, Vec2 rot, double range, Level level) {
+        List<Entity> toReturn = new ArrayList<>();
+        ArrayList<Vec3> lineOfSight = lineOfSight(rot, sourcePos, range, 0.1);
+        lineOfSight.forEach(vec3 -> {
+            AABB aabb = new AABB(vec3.add(radius, radius, radius), vec3.subtract(radius, radius, radius));
+            List<Entity> entities = level.getEntitiesOfClass(Entity.class, aabb, entity -> vec3.distanceTo(MathHelper.getPosition(entity)) < radius);
+            toReturn.addAll(entities.stream().filter(entity -> !toReturn.contains(entity)).toList());
+        });
+        return toReturn;
+    }
     public static Vec3 getPosition(Entity entity) {
         return new Vec3(entity.getX(), entity.getY(), entity.getZ());
     }

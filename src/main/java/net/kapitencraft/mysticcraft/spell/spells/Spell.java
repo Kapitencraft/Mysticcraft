@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.spell.spells;
 
 import net.kapitencraft.mysticcraft.item.data.spell.ISpellItem;
+import net.kapitencraft.mysticcraft.item.item_bonus.Bonus;
 import net.kapitencraft.mysticcraft.spell.Element;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
@@ -11,7 +12,7 @@ import net.minecraft.world.item.Rarity;
 
 import java.util.List;
 
-public interface Spell {
+public interface Spell extends Bonus {
     Rarity getRarity();
     String getCastingType();
     String getName();
@@ -43,5 +44,4 @@ public interface Spell {
             return string;
         }
     }
-
 }
