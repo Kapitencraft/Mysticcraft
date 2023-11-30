@@ -90,8 +90,7 @@ public class GemstoneBlock extends Block {
             Player player = context.getPlayer();
             if (player == null) return state;
             ItemStack place = player.getItemInHand(context.getHand());
-            state.setValue(TYPE, IGemstoneItem.getGemstone(place));
-            return state;
+            return state.setValue(TYPE, IGemstoneItem.getGemstone(place));
         }
     }
 }

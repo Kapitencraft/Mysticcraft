@@ -43,8 +43,6 @@ public class ItemAmountIngredient extends AbstractIngredient {
     public boolean test(@Nullable ItemStack itemStack) {
         if (itemStack == null) {
             return false;
-        } else if (this.isEmpty()) {
-            return itemStack.isEmpty();
         } else {
             return itemStack.getItem() == item && itemStack.getCount() >= amount;
         }

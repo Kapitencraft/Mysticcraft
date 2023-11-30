@@ -29,7 +29,7 @@ public abstract class BlockStateMixin extends BlockBehaviour.BlockStateBase {
     @Inject(method = "getDestroySpeed", at = @At("HEAD"))
     public void getDestroySpeed(@NotNull BlockGetter getter, @NotNull BlockPos pos, CallbackInfoReturnable<Float> returnable) {
         if (getBlock() instanceof GemstoneBlock) {
-
+            returnable.setReturnValue(GemstoneBlock.getType(self()).getBlockStrength());
         }
     }
 }

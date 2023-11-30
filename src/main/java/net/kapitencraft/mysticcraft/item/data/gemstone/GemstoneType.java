@@ -63,8 +63,8 @@ public enum GemstoneType implements StringRepresentable {
         return modifiedAttribute;
     }
 
-    public double getBlockStrength() {
-        return blockStrength * blockStrength * 2;
+    public float getBlockStrength() {
+        return (float) (blockStrength * blockStrength * 2);
     }
 
     public static HashMap<GemstoneType, HashMap<Rarity, ItemStack>> allItems() {
