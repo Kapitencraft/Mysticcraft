@@ -12,7 +12,7 @@ plugins {
 }
 apply plugin: 'org.spongepowered.mixin'
 
-version = 'v${mod_version}-mc1.19.3 [FML 44.1.0]'
+version = "v${mod_version}-mc${mc_version} [FML ${forge_version}]"
 group = mod_group_id // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = mod_id
 
@@ -54,7 +54,7 @@ minecraft {
             // Recommended logging level for the console
             // You can set various levels here.
             // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
-            property 'forge.logging.console.level', 'debug'
+            property 'forge.logging.console.level', 'info'
 
             // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
             property 'forge.enabledGameTestNamespaces', mod_id
@@ -66,17 +66,8 @@ minecraft {
             }
         }
 
-        client {
-        }
-
-        server {
-        }
-
-        // This run config launches GameTestServer and runs all registered gametests, then exits.
-        // By default, the server will crash when no gametests are provided.
-        // The gametest system is also enabled by default for other run configs under the /test command.
-        gameTestServer {
-        }
+        client {}
+        server {}
 
         data {
             // Specify the mod id for data generation, where to output the resulting resource, and where to look for existing resources.
@@ -104,7 +95,7 @@ dependencies {
     // Specify the version of Minecraft to use. If this is any group other than 'net.minecraft', it is assumed
     // that the dep is a ForgeGradle 'patcher' dependency, and its patches will be applied.
     // The user dev artifact is a special name and will get all sorts of transformations applied to it.
-    minecraft 'net.minecraftforge:forge:1.19.3-44.1.0'
+    minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 
     // Real mod deobf dependency examples - these get remapped to your current mappings
     // compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}:api") // Adds JEI API as a compile dependency

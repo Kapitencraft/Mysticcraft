@@ -6,7 +6,6 @@ import net.kapitencraft.mysticcraft.ServerData;
 import net.kapitencraft.mysticcraft.client.render.ColorAnimator;
 import net.kapitencraft.mysticcraft.config.ClientModConfig;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.IUltimateEnchantment;
-import net.kapitencraft.mysticcraft.event.ModEventFactory;
 import net.kapitencraft.mysticcraft.gui.IGuiHelper;
 import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
@@ -45,10 +44,6 @@ import net.minecraftforge.event.ForgeEventFactory;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.gen.Invoker;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -56,23 +51,13 @@ import java.util.*;
 import static net.minecraft.world.item.ItemStack.ATTRIBUTE_MODIFIER_FORMAT;
 
 @Mixin(ItemStack.class)
-@SuppressWarnings("ALL")
-public abstract class ItemStackMixin {
+public abstract class ItemStackClientMixin {
     private static final Style LORE_STYLE = Style.EMPTY.withColor(ChatFormatting.DARK_PURPLE).withItalic(true);
     private static final ColorAnimator RAINBOW_ANIMATOR = ColorAnimator.createRainbow(30 * (10 - ClientModConfig.rgbSpeed));
 
+    @SuppressWarnings("ALL")
     private ItemStack self() {
         return (ItemStack) (Object) this;
-    }
-
-    @Inject(method = "<init>", at = @At("TAIL"))
-    public void init(CallbackInfo info) {
-        ModEventFactory.onLoadingItemStack(self());
-    }
-
-    @Inject(method = "save", at = @At("HEAD"))
-    private void save(CompoundTag tag, CallbackInfoReturnable<CompoundTag> callbackInfoReturnable) {
-        ModEventFactory.onSavingItemStack(self(), tag);
     }
 
     /**
@@ -112,29 +97,29 @@ public abstract class ItemStackMixin {
             spellItem.appendDisplay(list, self(), player);
         }
         if (shouldShowInTooltip(j, ItemStack.TooltipPart.ENCHANTMENTS)) {
-                ListTag enchantmentTags = self().getEnchantmentTags();
-                for(int i = 0; i < enchantmentTags.size(); ++i) {
-                    CompoundTag compoundtag = enchantmentTags.getCompound(i);
-                    Optional<Enchantment> enchantmentOptional = BuiltInRegistries.ENCHANTMENT.getOptional(EnchantmentHelper.getEnchantmentId(compoundtag));
-                    if (enchantmentOptional.isPresent()) {
-                        Enchantment enchantment = enchantmentOptional.get();
-                        int level = self().getEnchantmentLevel(enchantment);
-                        final MutableComponent[] components = new MutableComponent[1];
-                        enchantmentOptional.ifPresent((p_41708_) -> components[0] = (MutableComponent) p_41708_.getFullname(EnchantmentHelper.getEnchantmentLevel(compoundtag)));
-                        MutableComponent component = components[0];
-                        if (!(enchantment.isCurse())) {
-                            if (enchantment instanceof IUltimateEnchantment) {
-                                component.withStyle(ChatFormatting.LIGHT_PURPLE).withStyle(ChatFormatting.BOLD);
-                            } else if (level == enchantment.getMaxLevel()) {
-                                component.withStyle(ChatFormatting.GOLD);
-                            } else if (level > enchantment.getMaxLevel()) {
-                                component.withStyle(Style.EMPTY.withColor(RAINBOW_ANIMATOR.makeTextColor(ServerData.getTime())));
-                            }
+            ListTag enchantmentTags = self().getEnchantmentTags();
+            for(int i = 0; i < enchantmentTags.size(); ++i) {
+                CompoundTag compoundtag = enchantmentTags.getCompound(i);
+                Optional<Enchantment> enchantmentOptional = BuiltInRegistries.ENCHANTMENT.getOptional(EnchantmentHelper.getEnchantmentId(compoundtag));
+                if (enchantmentOptional.isPresent()) {
+                    Enchantment enchantment = enchantmentOptional.get();
+                    int level = self().getEnchantmentLevel(enchantment);
+                    final MutableComponent[] components = new MutableComponent[1];
+                    enchantmentOptional.ifPresent((p_41708_) -> components[0] = (MutableComponent) p_41708_.getFullname(EnchantmentHelper.getEnchantmentLevel(compoundtag)));
+                    MutableComponent component = components[0];
+                    if (!(enchantment.isCurse())) {
+                        if (enchantment instanceof IUltimateEnchantment) {
+                            component.withStyle(ChatFormatting.LIGHT_PURPLE).withStyle(ChatFormatting.BOLD);
+                        } else if (level == enchantment.getMaxLevel()) {
+                            component.withStyle(ChatFormatting.GOLD);
+                        } else if (level > enchantment.getMaxLevel()) {
+                            component.withStyle(Style.EMPTY.withColor(RAINBOW_ANIMATOR.makeTextColor(ServerData.getTime())));
                         }
-                        list.add(component);
                     }
+                    list.add(component);
                 }
             }
+        }
         if (tag.contains("display", 10)) {
             CompoundTag compoundtag = tag.getCompound("display");
             if (shouldShowInTooltip(j, ItemStack.TooltipPart.DYE) && compoundtag.contains("color", 99)) {
@@ -156,7 +141,7 @@ public abstract class ItemStackMixin {
                     } catch (Exception exception) {
                         compoundtag.remove("Lore");
                     }
-                 }
+                }
             }
         }
         if (shouldShowInTooltip(j, ItemStack.TooltipPart.MODIFIERS)) {
@@ -353,7 +338,7 @@ public abstract class ItemStackMixin {
         MutableComponent component = Component.empty();
         Rarity rarity = stack.getItem().getRarity(stack);
         component.append(Component.literal(rarity + " "));
-        if (stack.getItem() instanceof SpellItem) {
+        if (stack.getItem() instanceof ISpellItem) {
             component.append(Component.translatable("item.indicator.spell_catalyst"));
             component.append(" ");
         }
@@ -365,7 +350,6 @@ public abstract class ItemStackMixin {
     private static boolean shouldShowInTooltip(int p_41627_, ItemStack.TooltipPart p_41628_) {
         return (p_41627_ & p_41628_.getMask()) == 0;
     }
-
 
     /**
      * @reason reforge name
@@ -418,4 +402,5 @@ public abstract class ItemStackMixin {
 
     @Invoker
     abstract Collection<Component> callExpandBlockState(String s);
+
 }

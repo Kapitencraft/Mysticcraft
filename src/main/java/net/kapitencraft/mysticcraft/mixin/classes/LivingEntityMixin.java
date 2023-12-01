@@ -1,12 +1,9 @@
 package net.kapitencraft.mysticcraft.mixin.classes;
 
 
-import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.client.render.Rendering;
 import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
-import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.kapitencraft.mysticcraft.misc.damage_source.IAbilitySource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -36,23 +33,6 @@ public abstract class LivingEntityMixin extends Entity {
         return (LivingEntity) (Object) this;
     }
 
-    static {
-        Rendering.addRenderer(new Rendering.RenderHolder(
-                new Rendering.PositionHolder(-90, 340),
-                value -> FormattingCodes.DARK_BLUE + "Protection: " + getDamageProtection(value) + "%",
-                Rendering.RenderType.SMALL
-        ));
-        Rendering.addRenderer(new Rendering.RenderHolder(
-                new Rendering.PositionHolder(-90, 350),
-                value -> FormattingCodes.DARK_AQUA + "Effective HP: " + MathHelper.defRound(value.getHealth() * 100 / (100 - getDamageProtection(value))),
-                Rendering.RenderType.SMALL
-        ));
-    }
-
-    private static double getDamageProtection(LivingEntity living) {
-        return MathHelper.defRound(100 - calculateDamage(100, living.getAttributeValue(Attributes.ARMOR), living.getAttributeValue(Attributes.ARMOR_TOUGHNESS)));
-    }
-
     /**
      * @reason armor-shredder attribute
      * @author Kapitencraft
@@ -63,7 +43,7 @@ public abstract class LivingEntityMixin extends Entity {
             double armorShredValue = source.getEntity() instanceof LivingEntity living ? AttributeHelper.getSaveAttributeValue(ModAttributes.ARMOR_SHREDDER.get(), living) : 0;
             this.callHurtArmor(source, damage);
             double armorValue = Math.max(0, getArmorValue(source) - armorShredValue);
-            return calculateDamage(damage, (float) armorValue, (float) own().getAttributeValue(Attributes.ARMOR_TOUGHNESS));
+            return MathHelper.calculateDamage(damage, (float) armorValue, (float) own().getAttributeValue(Attributes.ARMOR_TOUGHNESS));
         }
 
         return damage;
@@ -99,11 +79,6 @@ public abstract class LivingEntityMixin extends Entity {
         }
     }
 
-    private static float calculateDamage(float damage, double armorValue, double armorToughnessValue) {
-        double f = MysticcraftMod.DAMAGE_CALCULATION_VALUE - armorToughnessValue / 4.0F;
-        double defencePercentage = armorValue / (armorValue + f);
-        return (float) (damage * (1f - defencePercentage));
-    }
 
     @Invoker
     abstract void callHurtArmor(DamageSource source, float damage);

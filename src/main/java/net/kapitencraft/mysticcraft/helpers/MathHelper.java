@@ -33,6 +33,13 @@ public class MathHelper {
         return round(no, 2);
     }
 
+    public static float calculateDamage(float damage, double armorValue, double armorToughnessValue) {
+        double f = MysticcraftMod.DAMAGE_CALCULATION_VALUE - armorToughnessValue / 4.0F;
+        double defencePercentage = armorValue / (armorValue + f);
+        return (float) (damage * (1f - defencePercentage));
+    }
+
+
     public static <T extends Entity> List<T> getEntitiesAround(Class<T> tClass, Entity source, double range) {
         Level level = source.getLevel();
         return getEntitiesAround(tClass, level, source.getBoundingBox(), range);

@@ -12,6 +12,7 @@ import net.kapitencraft.mysticcraft.item.data.reforging.Reforge;
 import net.kapitencraft.mysticcraft.item.data.spell.ISpellItem;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.kapitencraft.mysticcraft.spell.Spells;
+import net.kapitencraft.mysticcraft.spell.spells.Spell;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -119,6 +120,20 @@ public abstract class ItemMixin implements IForgeItem {
             return stack.getFoodProperties(null).isFastFood() ? 16 : 32;
         } else {
             return 0;
+        }
+    }
+
+    /**
+     * @author Kapitencraft
+     * @reason spell usage
+     */
+    @Overwrite
+    public void onUseTick(@NotNull Level level, @NotNull LivingEntity user, @NotNull ItemStack stack, int count) {
+        if (self() instanceof ISpellItem spellItem) {
+            Spell spell = spellItem.getActiveSpell(stack);
+            if (spell.getType() == Spells.Type.CYCLE && spellItem.handleMana(user, spell, stack) && (Integer.MAX_VALUE - count & 2) == 0) {
+                spell.execute(user, stack);
+            }
         }
     }
 

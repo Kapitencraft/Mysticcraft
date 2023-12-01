@@ -26,6 +26,7 @@ public abstract class BlockStateMixin extends BlockBehaviour.BlockStateBase {
         return (BlockState) (Object) this;
     }
 
+
     @Inject(method = "getDestroySpeed", at = @At("HEAD"))
     public void getDestroySpeed(@NotNull BlockGetter getter, @NotNull BlockPos pos, CallbackInfoReturnable<Float> returnable) {
         if (getBlock() instanceof GemstoneBlock) {

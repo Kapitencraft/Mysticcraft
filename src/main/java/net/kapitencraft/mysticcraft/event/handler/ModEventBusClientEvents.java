@@ -8,13 +8,16 @@ import net.kapitencraft.mysticcraft.client.particle.FireNormalParticle;
 import net.kapitencraft.mysticcraft.client.particle.MagicCircleParticle;
 import net.kapitencraft.mysticcraft.client.particle.flame.*;
 import net.kapitencraft.mysticcraft.entity.client.renderer.*;
-import net.kapitencraft.mysticcraft.init.ModBlocks;
-import net.kapitencraft.mysticcraft.init.ModEntityTypes;
-import net.kapitencraft.mysticcraft.init.ModItems;
-import net.kapitencraft.mysticcraft.init.ModParticleTypes;
+import net.kapitencraft.mysticcraft.gui.gemstone_grinder.GemstoneGrinderScreen;
+import net.kapitencraft.mysticcraft.gui.reforging_anvil.ReforgeAnvilScreen;
+import net.kapitencraft.mysticcraft.init.*;
 import net.kapitencraft.mysticcraft.item.ColoredItem;
 import net.kapitencraft.mysticcraft.item.data.gemstone.IGemstoneItem;
 import net.kapitencraft.mysticcraft.item.material.RainbowElementalShard;
+import net.kapitencraft.mysticcraft.misc.ModItemProperties;
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -24,6 +27,7 @@ import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 import java.util.function.Function;
 
@@ -33,6 +37,23 @@ public class ModEventBusClientEvents {
     @SubscribeEvent
     public static void registerLayer(EntityRenderersEvent.RegisterLayerDefinitions event) {
     }
+
+    @SubscribeEvent
+    public static void onClientSetup(FMLClientSetupEvent event) {
+        MysticcraftMod.sendRegisterDisplay("Item Properties");
+        ModItemProperties.addCustomItemProperties();
+        MysticcraftMod.sendRegisterDisplay("Menu Screens");
+        registerMenuScreens();
+        MysticcraftMod.sendInfo("rendering Mana Fluid");
+        ItemBlockRenderTypes.setRenderLayer(ModFluids.SOURCE_MANA_FLUID.get(), RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(ModFluids.FLOWING_MANA_FLUID.get(), RenderType.translucent());
+    }
+
+    private static void registerMenuScreens() {
+        MenuScreens.register(ModMenuTypes.GEM_GRINDER.get(), GemstoneGrinderScreen::new);
+        MenuScreens.register(ModMenuTypes.REFORGING_ANVIL.get(), ReforgeAnvilScreen::new);
+    }
+
 
     @SubscribeEvent
     public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {

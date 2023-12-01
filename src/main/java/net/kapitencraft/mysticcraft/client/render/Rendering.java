@@ -7,8 +7,11 @@ import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.kapitencraft.mysticcraft.misc.MiscRegister;
 import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.Provider;
 import net.minecraft.client.Minecraft;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec2;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -18,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
+@Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class Rendering {
     private static final PoseStack BIG_SYMBOLS = new PoseStack();
     private static final PoseStack MEDIUM_SYMBOLS = new PoseStack();
@@ -34,7 +37,22 @@ public class Rendering {
                 value -> FormattingCodes.BLUE + MathHelper.round(value.getAttributeValue(ModAttributes.MANA.get()), 1) + " [+" + MathHelper.round(value.getPersistentData().getDouble(MiscRegister.OVERFLOW_MANA_ID), 1) + " Overflow] " + FormattingCodes.RESET + " / " + FormattingCodes.DARK_BLUE + value.getAttributeValue(ModAttributes.MAX_MANA.get()) + " (+" + MathHelper.round(value.getPersistentData().getDouble("manaRegen") * 20, 2) + "/s)",
                 RenderType.BIG
         ));
+        addRenderer(new Rendering.RenderHolder(
+                new Rendering.PositionHolder(-90, 340),
+                value -> FormattingCodes.DARK_BLUE + "Protection: " + getDamageProtection(value) + "%",
+                Rendering.RenderType.SMALL
+        ));
+        addRenderer(new Rendering.RenderHolder(
+                new Rendering.PositionHolder(-90, 350),
+                value -> FormattingCodes.DARK_AQUA + "Effective HP: " + MathHelper.defRound(value.getHealth() * 100 / (100 - getDamageProtection(value))),
+                Rendering.RenderType.SMALL
+        ));
+
     }
+    private static double getDamageProtection(LivingEntity living) {
+        return MathHelper.defRound(100 - MathHelper.calculateDamage(100, living.getAttributeValue(Attributes.ARMOR), living.getAttributeValue(Attributes.ARMOR_TOUGHNESS)));
+    }
+
 
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

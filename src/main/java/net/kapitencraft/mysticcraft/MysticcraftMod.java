@@ -1,46 +1,22 @@
 package net.kapitencraft.mysticcraft;
 
 import com.mojang.logging.LogUtils;
-import net.kapitencraft.mysticcraft.block.entity.crafting.ItemAmountIngredient;
 import net.kapitencraft.mysticcraft.config.ClientModConfig;
 import net.kapitencraft.mysticcraft.config.CommonModConfig;
 import net.kapitencraft.mysticcraft.config.ServerModConfig;
-import net.kapitencraft.mysticcraft.gui.gemstone_grinder.GemstoneGrinderScreen;
-import net.kapitencraft.mysticcraft.gui.reforging_anvil.ReforgeAnvilScreen;
-import net.kapitencraft.mysticcraft.init.ModEntityTypes;
-import net.kapitencraft.mysticcraft.init.ModFluids;
-import net.kapitencraft.mysticcraft.init.ModMenuTypes;
 import net.kapitencraft.mysticcraft.init.ModRegistryInit;
-import net.kapitencraft.mysticcraft.item.AnvilUses;
-import net.kapitencraft.mysticcraft.item.data.reforging.Reforges;
-import net.kapitencraft.mysticcraft.misc.ModItemProperties;
-import net.kapitencraft.mysticcraft.networking.ModMessages;
-import net.kapitencraft.mysticcraft.potion.ModPotionRecipe;
-import net.minecraft.client.gui.screens.MenuScreens;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.SpawnPlacements;
-import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
-import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.RegisterEvent;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.Marker;
@@ -88,56 +64,6 @@ public class MysticcraftMod {
         MinecraftForge.EVENT_BUS.register(this);
     }
 
-    @Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
-    public static class ClientModEvents {
-        @SubscribeEvent
-        public static void onClientSetup(FMLClientSetupEvent event) {
-            sendRegisterDisplay("Item Properties");
-            ModItemProperties.addCustomItemProperties();
-            sendRegisterDisplay("Menu Screens");
-            registerMenuScreens();
-            sendInfo("rendering Mana Fluid");
-            ItemBlockRenderTypes.setRenderLayer(ModFluids.SOURCE_MANA_FLUID.get(), RenderType.translucent());
-            ItemBlockRenderTypes.setRenderLayer(ModFluids.FLOWING_MANA_FLUID.get(), RenderType.translucent());
-        }
-
-        private static void registerMenuScreens() {
-            MenuScreens.register(ModMenuTypes.GEM_GRINDER.get(), GemstoneGrinderScreen::new);
-            MenuScreens.register(ModMenuTypes.REFORGING_ANVIL.get(), ReforgeAnvilScreen::new);
-        }
-
-        @SubscribeEvent
-        public static void onCommonSetup(FMLCommonSetupEvent event) {
-            sendRegisterDisplay("custom Potion Recipes");
-            BrewingRecipeRegistry.addRecipe(new ModPotionRecipe());
-            sendRegisterDisplay("Entity World Generation");
-            registerSpawnPlacements();
-            sendRegisterDisplay("Rarities");
-            Reforges.registerRarities();
-            sendRegisterDisplay("Reforges");
-            Reforges.register();
-            sendRegisterDisplay("Anvil Uses");
-            AnvilUses.registerUses();
-            sendRegisterDisplay("Packet Handling");
-            ModMessages.register();
-        }
-
-        @SubscribeEvent
-        public static void registerRecipeAdditions(RegisterEvent event) {
-            if (event.getRegistryKey().equals(ForgeRegistries.Keys.RECIPE_SERIALIZERS)) {
-                MysticcraftMod.sendRegisterDisplay("Recipe Serializers");
-                CraftingHelper.register(MysticcraftMod.res("amount"), ItemAmountIngredient.Serializer.INSTANCE);
-            }
-        }
-
-
-        private static void registerSpawnPlacements() {
-            SpawnPlacements.register(ModEntityTypes.FROZEN_BLAZE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                    Monster::checkAnyLightMonsterSpawnRules);
-        }
-    }
-
-
     public static String doubleFormat(double d) {
         return new DecimalFormat("#.##").format(d);
     }
@@ -171,5 +97,4 @@ public class MysticcraftMod {
     }
 
     public static final Marker MYSTICCRAFT_MARKER = new ModMarker("Mysticcraft");
-
 }
