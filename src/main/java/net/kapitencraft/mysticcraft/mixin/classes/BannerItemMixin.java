@@ -1,5 +1,6 @@
 package net.kapitencraft.mysticcraft.mixin.classes;
 
+import net.kapitencraft.mysticcraft.guild.Guild;
 import net.kapitencraft.mysticcraft.guild.GuildHandler;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Direction;
@@ -27,8 +28,9 @@ public abstract class BannerItemMixin extends StandingAndWallBlockItem {
 
     @Override
     public @NotNull Component getName(@NotNull ItemStack stack) {
-        if (GuildHandler.getInstance().isStackFromGuildBanner(stack)) {
-            return Component.translatable("guild.banner.name", GuildHandler.getInstance().getGuildForBanner(stack)).withStyle(ChatFormatting.GREEN);
+        Guild guild = GuildHandler.getInstance().getGuildForBanner(stack);
+        if (guild != null) {
+            return Component.translatable("guild.banner.name", guild.getName()).withStyle(ChatFormatting.GREEN);
         }
         return super.getName(stack);
     }

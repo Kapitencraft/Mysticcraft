@@ -28,9 +28,9 @@ public class ReforgeAnvilScreen extends ModScreen<ReforgingAnvilBlockEntity, Ref
     @Override
     protected void init() {
         super.init();
-        ImageButton reforge = new ImageButton(this.leftPos + 43, this.topPos + 62, 16, 16, 0, 0, 16, BUTTON_LOCATION, 16, 16, this::reforgeUse);
+        ImageButton reforge = new ImageButton(this.leftPos + 43, this.topPos + 55, 16, 16, 0, 0, 16, BUTTON_LOCATION, 16, 16, this::reforgeUse);
         reforge.setTooltip(Tooltip.create(Component.translatable("reforge.button")));
-        ImageButton upgrade = new ImageButton(this.leftPos + 115, this.topPos + 62, 16, 16, 0, 0, 16, BUTTON_LOCATION, 16, 16, this::upgradeUse);
+        ImageButton upgrade = new ImageButton(this.leftPos + 115, this.topPos + 55, 16, 16, 0, 0, 16, BUTTON_LOCATION, 16, 16, this::upgradeUse);
         upgrade.setTooltip(Tooltip.create(Component.translatable("upgrade.button")));
         this.addRenderableWidget(reforge);
         this.addRenderableWidget(upgrade);

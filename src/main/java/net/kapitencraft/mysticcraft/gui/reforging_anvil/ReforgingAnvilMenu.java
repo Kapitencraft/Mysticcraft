@@ -13,6 +13,8 @@ import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,9 +23,12 @@ public class ReforgingAnvilMenu extends ModMenu<ReforgingAnvilBlockEntity> {
     public ReforgingAnvilMenu(int containerId, Inventory inventory, ReforgingAnvilBlockEntity re) {
         super(ModMenuTypes.REFORGING_ANVIL.get(), containerId, 1, inventory, re);
         this.addPlayerInventories(inventory, 0, 0);
-        this.blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(handler ->
-                this.addSlot(new SlotItemHandler(handler, 0, 78, 35))
-        );
+        LazyOptional<IItemHandler> itemHandler =
+        this.blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER);
+        itemHandler.ifPresent(handler -> {
+            this.addSlot(new SlotItemHandler(handler, 0, 43, 35));
+            this.addSlot(new SlotItemHandler(handler, 1, 115, 35));
+        });
     }
 
     public ReforgingAnvilMenu(int id, Inventory inv, FriendlyByteBuf extraData) {

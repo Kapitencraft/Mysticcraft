@@ -5,6 +5,8 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.kapitencraft.mysticcraft.guild.Guild;
 import net.kapitencraft.mysticcraft.guild.GuildHandler;
+import net.kapitencraft.mysticcraft.networking.ModMessages;
+import net.kapitencraft.mysticcraft.networking.packets.S2C.SyncGuildsPacket;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
@@ -13,6 +15,7 @@ import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
 import javax.annotation.Nullable;
@@ -72,12 +75,13 @@ public class GuildCommand {
     }
 
     private static int disbandGuild(CommandSourceStack stack) {
-        Player player = stack.getPlayer();
+        ServerPlayer player = stack.getPlayer();
         if (player != null) {
             Guild guild = GuildHandler.getInstance().getGuildForPlayer(player);
-            if (guild.getOwner() == player) {
+            if (guild.getOwner() == player.getUUID()) {
                 String msg = GuildHandler.getInstance().removeGuild(guild.getName());
                 if (Objects.equals(msg, "success")) {
+                    ModMessages.sendToAllConnectedPlayers(value -> SyncGuildsPacket.removeGuild(guild), player.getLevel());
                     ModCommands.sendSuccess(stack, "guild.disband.success");
                     return guild.getMemberAmount();
                 } else if (Objects.equals(msg, "noSuchGuild")) {
@@ -91,7 +95,7 @@ public class GuildCommand {
 
     private static int joinGuild(String name, CommandSourceStack stack, @Nullable String inviteKey) {
         Guild guild = GuildHandler.getInstance().getGuild(name);
-        Player player = stack.getPlayer();
+        ServerPlayer player = stack.getPlayer();
         if (player == null) {
             stack.sendFailure(Component.translatable("command.failed.console"));
             return 0;
@@ -99,6 +103,7 @@ public class GuildCommand {
         String guildName = guild.getName();
         if (inviteKey != null) {
             if (guild.acceptInvitation(player, inviteKey)) {
+                ModMessages.sendToAllConnectedPlayers(value -> SyncGuildsPacket.addPlayer(player, guild), player.getLevel());
                 ModCommands.sendSuccess(stack, "command.guild.join.invite.accept", guildName);
                 return 1;
             }
@@ -107,6 +112,7 @@ public class GuildCommand {
         }
         if (guild.isPublic()) {
             guild.addMember(player);
+            ModMessages.sendToAllConnectedPlayers(value -> SyncGuildsPacket.addPlayer(player, guild), player.getLevel());
             ModCommands.sendSuccess(stack, "command.guild.join.success", guildName);
             return 1;
         }
@@ -119,7 +125,7 @@ public class GuildCommand {
         Guild guild = getGuild(source);
         if (guild != null) {
             MutableComponent component = (MutableComponent) source.getDisplayName();
-            String inviteKey = guild.addInvitation(target);
+            String inviteKey = guild.addInvitation(target.getUUID());
             if (Objects.equals(inviteKey, "isMember")) {
                 stack.sendFailure(Component.translatable("command.guild.invite.isMember", target.getName()));
                 return 0;
@@ -136,13 +142,14 @@ public class GuildCommand {
     }
 
     private static int kickPlayer(Player target, CommandSourceStack stack) {
-        Player source = stack.getPlayer();
+        ServerPlayer source = stack.getPlayer();
         Guild guild = getGuild(source);
         if (guild != null) {
-            if (guild.getOwner() == target) {
+            if (guild.getOwner() == target.getUUID()) {
                 stack.sendFailure(Component.translatable("command.guild.kick.isOwner"));
             }
             if (guild.kickMember(target)) {
+                ModMessages.sendToAllConnectedPlayers(value -> SyncGuildsPacket.leaveGuild(target), source.getLevel());
                 ModCommands.sendSuccess(stack, "command.guild.kick.success", target.getName());
                 return 1;
             }
@@ -154,12 +161,13 @@ public class GuildCommand {
     private static int promotePlayer(Player target, CommandSourceStack stack) {
         Guild guild = getGuild(target);
         if (guild != null) {
-            if (guild.getOwner() == target) {
+            if (guild.getOwner() == target.getUUID()) {
                 stack.sendFailure(Component.translatable("command.guild.promote.isOwner", target.getName()));
             }
-            String promoteString = guild.promotePlayer(target);
+            String promoteString = guild.promotePlayer(target.getUUID());
             if (Objects.equals(promoteString, "success")) {
-                ModCommands.sendSuccess(stack, "command.guild.promote.success", target.getName(), guild.getRank(target).getIGName());
+                ModMessages.sendToAllConnectedPlayers(value -> SyncGuildsPacket.changeRank(target, guild.getRank(target.getUUID())), stack.getLevel());
+                ModCommands.sendSuccess(stack, "command.guild.promote.success", target.getName(), guild.getRank(target.getUUID()).getIGName());
                 return 1;
             } else if (Objects.equals(promoteString, "owner")) {
                 stack.sendFailure(Component.translatable("command.guild.promote.failed.admin"));

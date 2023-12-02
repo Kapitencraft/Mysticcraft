@@ -71,11 +71,11 @@ public abstract class LivingEntityMixin extends Entity {
 
     private double getArmorValue(DamageSource source) {
         if (source.getMsgId().equals("true_damage")) {
-            return own().getAttributeValue(ModAttributes.TRUE_DEFENCE.get());
+            return AttributeHelper.getSaveAttributeValue(ModAttributes.TRUE_DEFENCE.get(), own());
         } else if (source instanceof IAbilitySource) {
-            return own().getAttributeValue(ModAttributes.MAGIC_DEFENCE.get());
+            return AttributeHelper.getSaveAttributeValue(ModAttributes.MAGIC_DEFENCE.get(), own());
         } else {
-            return own().getAttributeValue(Attributes.ARMOR);
+            return AttributeHelper.getSaveAttributeValue(Attributes.ARMOR, own());
         }
     }
 

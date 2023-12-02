@@ -10,6 +10,4 @@ public interface ModPacket {
     void toBytes(FriendlyByteBuf buf);
 
     boolean handle(Supplier<NetworkEvent.Context> sup);
-
-
 }

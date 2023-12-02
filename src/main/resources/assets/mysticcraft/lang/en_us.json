@@ -447,7 +447,8 @@
   "mysticcraft.ench_desc.shift": "press [Shift] for enchantment descriptions",
   "mysticcraft.ench_desc.treasure": "Treasure Enchantment; may not be obtained from Enchantment Table",
 
-  "reforging.button": "§2Click here to apply a custom reforge to your Item",
+  "reforge.button": "§2Click here to apply a custom reforge to your Item",
+  "upgrade.button": "§1Click here to prestige/star your item",
 
   "reforge.epic": "Epic",
   "reforge.fair": "Fair",

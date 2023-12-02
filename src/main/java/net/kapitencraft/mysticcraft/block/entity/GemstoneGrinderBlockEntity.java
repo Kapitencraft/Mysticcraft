@@ -1,7 +1,6 @@
 package net.kapitencraft.mysticcraft.block.entity;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.block.entity.render.ItemStackQueue;
 import net.kapitencraft.mysticcraft.gui.gemstone_grinder.GemstoneGrinderMenu;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.init.ModBlockEntities;
@@ -30,7 +29,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class  GemstoneGrinderBlockEntity extends BlockEntity implements MenuProvider {
+public class GemstoneGrinderBlockEntity extends BlockEntity implements MenuProvider {
     public final GemstoneGrinderItemStackHandler itemHandler = new GemstoneGrinderItemStackHandler(6);
     public ItemStackQueue queue = new ItemStackQueue();
 

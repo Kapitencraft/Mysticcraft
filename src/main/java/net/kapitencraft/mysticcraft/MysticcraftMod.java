@@ -78,13 +78,16 @@ public class MysticcraftMod {
         LOGGER.error(MYSTICCRAFT_MARKER, error);
     }
 
-    public static void sendInfo(String info) {
-        sendInfo(info, false, null);
+    public static void sendInfo(String info, Marker marker) {
+        sendInfo(info, marker);
     }
 
-    public static void sendInfo(String info, boolean shouldRepeat, @Nullable Marker marker, Object... toAdd) {
-        if (lastMSG == null || !lastMSG.equals(info) || shouldRepeat) LOGGER.info(marker == null ? MYSTICCRAFT_MARKER : marker, info, toAdd);
-        lastMSG = info;
+    public static void sendInfo(String info, Object... toAdd) {
+        sendInfo(info, null, toAdd);
+    }
+
+    public static void sendInfo(String info, @Nullable Marker marker, Object... toAdd) {
+        LOGGER.info(marker == null ? MYSTICCRAFT_MARKER : marker, info, toAdd);
     }
 
     public static void sendWarn(String warn) {

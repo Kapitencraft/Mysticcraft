@@ -2,7 +2,7 @@ package net.kapitencraft.mysticcraft.item.material;
 
 import net.kapitencraft.mysticcraft.guild.Guild;
 import net.kapitencraft.mysticcraft.guild.GuildHandler;
-import net.kapitencraft.mysticcraft.guild.GuildUpgrade;
+import net.kapitencraft.mysticcraft.guild.GuildUpgrades;
 import net.kapitencraft.mysticcraft.item.misc.IModItem;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
@@ -19,9 +19,9 @@ import org.jetbrains.annotations.NotNull;
 
 public class GuildUpgradeItem extends Item implements IModItem {
     public static final TabGroup group = new TabGroup(TabRegister.TabTypes.TOOLS_AND_UTILITIES);
-    private final GuildUpgrade upgrade;
+    private final GuildUpgrades upgrade;
 
-    public GuildUpgradeItem(GuildUpgrade upgrade) {
+    public GuildUpgradeItem(GuildUpgrades upgrade) {
         super(new Properties().rarity(Rarity.RARE));
         this.upgrade = upgrade;
     }

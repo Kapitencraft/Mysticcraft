@@ -1,14 +1,16 @@
 package net.kapitencraft.mysticcraft.helpers;
 
-import com.google.common.collect.Multimap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
+import com.mojang.serialization.DynamicOps;
+import com.mojang.serialization.codecs.PrimitiveCodec;
 import net.kapitencraft.mysticcraft.ModMarker;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.TriConsumer;
 import net.kapitencraft.mysticcraft.misc.serialization.CodecSerializer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.StringTagVisitor;
@@ -118,21 +120,6 @@ public class TagHelper {
         return hashMap;
     }
 
-
-    public static int @NotNull [] getIntArray(CompoundTag tag) {
-        if (!tag.contains(LENGTH_ID)) {
-            MysticcraftMod.sendWarn("tried to load UUID Array from Tag but Tag isn`t Array Tag");
-        } else {
-            int length = tag.getInt(LENGTH_ID);
-            int[] array = new int[length];
-            for (int i = 0; i < length; i++) {
-                array[i] = tag.getInt(String.valueOf(i));
-            }
-            return array;
-        }
-        return new int[0];
-    }
-
     public static UUID[] getUuidArray(CompoundTag arrayTag) {
         if (!arrayTag.contains(LENGTH_ID)) {
             MysticcraftMod.sendWarn("tried to load UUID Array from Tag but Tag isn`t Array Tag");
@@ -147,32 +134,17 @@ public class TagHelper {
         return null;
     }
 
-    public static CompoundTag putIntList(List<Integer> list) {
-        CompoundTag arrayTag = new CompoundTag();
-        for (int i = 0; i < list.size(); i++) {
-            arrayTag.putInt(String.valueOf(i), list.get(i));
+    public static final PrimitiveCodec<UUID> UUID_CODEC = new PrimitiveCodec<>() {
+        @Override
+        public <T> DataResult<UUID> read(DynamicOps<T> ops, T input) {
+            return ops.getStringValue(input).map(UUID::fromString);
         }
-        arrayTag.putInt(LENGTH_ID, list.size());
-        return arrayTag;
-    }
 
-    public static CompoundTag putUUIDIntMultiMap(Multimap<UUID, Integer> multimap) {
-        CompoundTag tag = new CompoundTag();
-        for (UUID uuid : multimap.keySet()) {
-            CompoundTag uuidTag = new CompoundTag();
-            Iterator<Integer> iterator = multimap.get(uuid).iterator();
-            for (int i = 0; i < multimap.get(uuid).size(); i++) {
-                if (iterator.hasNext()) {
-                    uuidTag.putInt("Value " + i, iterator.next());
-                } else {
-                    throw new IllegalStateException("that shouldn't happen...");
-                }
-            }
-            tag.put(uuid.toString(), uuidTag);
+        @Override
+        public <T> T write(DynamicOps<T> ops, UUID value) {
+            return ops.createString(value.toString());
         }
-        return tag;
-    }
-
+    };
 
     public static CompoundTag putUuidList(List<UUID> list) {
         CompoundTag arrayTag = new CompoundTag();
@@ -181,5 +153,22 @@ public class TagHelper {
         }
         arrayTag.putInt(LENGTH_ID, list.size());
         return arrayTag;
+    }
+
+    public static class TagBuilder {
+        private final CompoundTag tag = new CompoundTag();
+
+        public static TagBuilder create() {
+            return new TagBuilder();
+        }
+
+        public <T> TagBuilder withArg(String name, T value, TriConsumer<CompoundTag, String, T> consumer) {
+            consumer.accept(tag, name, value);
+            return this;
+        }
+
+        public CompoundTag build() {
+            return tag;
+        }
     }
 }

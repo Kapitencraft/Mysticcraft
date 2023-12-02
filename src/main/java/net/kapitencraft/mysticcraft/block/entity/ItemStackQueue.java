@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.block.entity.render;
+package net.kapitencraft.mysticcraft.block.entity;
 
 import net.minecraft.world.item.ItemStack;
 

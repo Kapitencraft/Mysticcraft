@@ -11,7 +11,6 @@ import net.kapitencraft.mysticcraft.enchantments.armor.BasaltWalkerEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.weapon.ranged.OverloadEnchantment;
 import net.kapitencraft.mysticcraft.entity.FrozenBlazeEntity;
 import net.kapitencraft.mysticcraft.guild.GuildHandler;
-import net.kapitencraft.mysticcraft.guild.GuildUpgrade;
 import net.kapitencraft.mysticcraft.guild.GuildUpgrades;
 import net.kapitencraft.mysticcraft.helpers.*;
 import net.kapitencraft.mysticcraft.init.*;
@@ -34,6 +33,8 @@ import net.kapitencraft.mysticcraft.misc.damage_source.IAbilitySource;
 import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.Reference;
 import net.kapitencraft.mysticcraft.mixin.classes.LivingEntityAccessor;
 import net.kapitencraft.mysticcraft.mob_effects.NumbnessMobEffect;
+import net.kapitencraft.mysticcraft.networking.ModMessages;
+import net.kapitencraft.mysticcraft.networking.packets.S2C.SyncGuildsPacket;
 import net.kapitencraft.mysticcraft.spell.spells.WitherShieldSpell;
 import net.kapitencraft.mysticcraft.villagers.ModVillagers;
 import net.minecraft.ChatFormatting;
@@ -460,7 +461,7 @@ public class MiscRegister {
     }
 
     @SubscribeEvent
-    public static void arrowRegisterEvent(EntityJoinLevelEvent event) {
+    public static void joinLevelEvent(EntityJoinLevelEvent event) {
         if (event.getEntity() instanceof Arrow arrow) {
             if (arrow.getOwner() instanceof LivingEntity living) {
                 ItemStack bow = living.getMainHandItem();
@@ -475,6 +476,9 @@ public class MiscRegister {
                     }
                 }
             }
+        }
+        else if (event.getEntity() instanceof ServerPlayer serverPlayer) {
+            ModMessages.sendToClientPlayer(SyncGuildsPacket.loadAll(GuildHandler.all()), serverPlayer);
         }
     }
     @SubscribeEvent
@@ -559,7 +563,7 @@ public class MiscRegister {
     public static void registerVillagerProfession(VillagerTradesEvent event) {
         Int2ObjectMap<List<VillagerTrades.ItemListing>> trades = event.getTrades();
         if (event.getType() == ModVillagers.GUILD_MASTER.getProfession().get()) {
-            for (GuildUpgrade upgrade : GuildUpgrades.values()) {
+            for (GuildUpgrades upgrade : GuildUpgrades.values()) {
                 trades.put(upgrade.getRarity().getProfessionLevel(),
                         List.of(new BasicItemListing(getEmeraldCost(upgrade.defaultCost()),
                                 upgrade.mainCostItem(),

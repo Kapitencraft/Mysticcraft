@@ -4,6 +4,7 @@ import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.Provider;
 import net.kapitencraft.mysticcraft.networking.packets.C2S.ReforgingPacket;
 import net.kapitencraft.mysticcraft.networking.packets.C2S.UpgradeItemPacket;
+import net.kapitencraft.mysticcraft.networking.packets.S2C.SyncGuildsPacket;
 import net.kapitencraft.mysticcraft.networking.packets.SendCompoundTagPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -67,6 +68,11 @@ public class ModMessages {
                 .decoder(SendCompoundTagPacket::new)
                 .encoder(SendCompoundTagPacket::toBytes)
                 .consumerMainThread(SendCompoundTagPacket::handle)
+                .add();
+        net.messageBuilder(SyncGuildsPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(SyncGuildsPacket::new)
+                .encoder(SyncGuildsPacket::toBytes)
+                .consumerMainThread(SyncGuildsPacket::handle)
                 .add();
     }
 }

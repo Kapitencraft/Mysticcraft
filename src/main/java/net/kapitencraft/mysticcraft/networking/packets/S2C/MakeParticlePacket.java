@@ -18,7 +18,6 @@ public abstract class MakeParticlePacket implements ModPacket {
     protected Vec3 pos;
     protected Vec3 delta;
     private final ParticleOptions options;
-    protected boolean cancelled = false;
     public MakeParticlePacket(ParticleOptions options, double x, double y, double z, double dx, double dy, double dz) {
         this.pos = new Vec3(x, y, z);
         this.delta = new Vec3(dx, dy, dz);
@@ -49,12 +48,13 @@ public abstract class MakeParticlePacket implements ModPacket {
 
     @Override
     public boolean handle(Supplier<NetworkEvent.Context> sup) {
-        ClientLevel level = Minecraft.getInstance().level;
-        if (level != null && Minecraft.getInstance().getCameraEntity() != null) {
-            changeValues(level);
-            level.addParticle(options,  pos.x, pos.y, pos.z, delta.x, delta.y, delta.z);
-            return true;
-        }
-        return false;
+        sup.get().enqueueWork(()-> {
+            ClientLevel level = Minecraft.getInstance().level;
+            if (level != null && Minecraft.getInstance().getCameraEntity() != null) {
+                changeValues(level);
+                level.addParticle(options,  pos.x, pos.y, pos.z, delta.x, delta.y, delta.z);
+            }
+        });
+        return true;
     }
 }

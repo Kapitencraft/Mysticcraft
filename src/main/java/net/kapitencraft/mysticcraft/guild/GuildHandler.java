@@ -2,8 +2,11 @@ package net.kapitencraft.mysticcraft.guild;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.helpers.TextHelper;
+import net.kapitencraft.mysticcraft.networking.ModMessages;
+import net.kapitencraft.mysticcraft.networking.packets.S2C.SyncGuildsPacket;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BannerItem;
 import net.minecraft.world.item.ItemStack;
@@ -11,18 +14,24 @@ import net.minecraft.world.level.saveddata.SavedData;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
+import java.util.Collection;
 import java.util.HashMap;
 
 public class GuildHandler extends SavedData {
     private static GuildHandler instance;
     private final HashMap<String, Guild> guilds = new HashMap<>();
 
-    public GuildHandler() {
-    }
-
     public static GuildHandler createDefault() {
         MysticcraftMod.sendInfo("Unable to load Guilds; using default");
         return new GuildHandler();
+    }
+
+    public static Collection<Guild> all() {
+        return instance.guilds.values();
+    }
+
+    public static void ensureInstanceNotNull() {
+        if (instance == null) instance = new GuildHandler();
     }
 
     public static void setInstance(GuildHandler newInstance) {
@@ -44,7 +53,10 @@ public class GuildHandler extends SavedData {
             ItemStack stack = owner.getMainHandItem();
             if (stack.getItem() instanceof BannerItem) {
                 this.setDirty();
-                guilds.put(newGuildName, new Guild(newGuildName, owner, stack, new GuildUpgradeInstance()));
+                guilds.put(newGuildName, new Guild(newGuildName, owner.getUUID(), stack, new GuildUpgradeInstance()));
+                if (owner instanceof ServerPlayer player) {
+                    ModMessages.sendToAllConnectedPlayers(value -> SyncGuildsPacket.addGuild(owner, guilds.get(newGuildName)), player.getLevel());
+                }
                 return "success";
             }
             return "noBanner";
@@ -81,6 +93,11 @@ public class GuildHandler extends SavedData {
         return getGuild(player.getPersistentData().getString("GuildName"));
     }
 
+    public static void addNewGuild(Guild guild) {
+        ensureInstanceNotNull();
+        instance.addGuild(guild);
+    }
+
     private void addGuild(Guild guild) {
         this.guilds.put(guild.getName(), guild);
     }
@@ -111,15 +128,13 @@ public class GuildHandler extends SavedData {
         int i = 0;
         for (Guild guild : guilds.values()) {
             save.put("Guild" + i, guild.saveToTag());
-            for (Player player : guild.getAllMembers()) {
-                player.getPersistentData().putString("GuildName", guild.getName());
-            }
             i++;
         }
         return save;
     }
 
     public static GuildHandler getInstance() {
+        ensureInstanceNotNull();
         return instance;
     }
 }

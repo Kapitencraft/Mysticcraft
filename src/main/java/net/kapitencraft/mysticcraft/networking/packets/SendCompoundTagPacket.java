@@ -36,20 +36,24 @@ public class SendCompoundTagPacket implements ModPacket {
 
     @Override
     public boolean handle(Supplier<NetworkEvent.Context> sup) {
+        NetworkEvent.Context context = sup.get();
         if (toServer) {
-            NetworkEvent.Context context = sup.get();
-            ServerPlayer serverPlayer = context.getSender();
-            if (serverPlayer != null) {
-                ServerLevel level = serverPlayer.getLevel();
-                Entity entity = level.getEntity(entityIdToReceive);
-                if (entity != null) TagHelper.injectCompoundTag(entity, toSend);
-            }
+            context.enqueueWork(()-> {
+                ServerPlayer serverPlayer = context.getSender();
+                if (serverPlayer != null) {
+                    ServerLevel level = serverPlayer.getLevel();
+                    Entity entity = level.getEntity(entityIdToReceive);
+                    if (entity != null) TagHelper.injectCompoundTag(entity, toSend);
+                }
+            });
         } else {
-            ClientLevel level = Minecraft.getInstance().level;
-            if (level != null) {
-                Entity entity = level.getEntity(entityIdToReceive);
-                if (entity != null) TagHelper.injectCompoundTag(entity, toSend);
-            }
+            context.enqueueWork(()-> {
+                ClientLevel level = Minecraft.getInstance().level;
+                if (level != null) {
+                    Entity entity = level.getEntity(entityIdToReceive);
+                    if (entity != null) TagHelper.injectCompoundTag(entity, toSend);
+                }
+            });
         }
         return false;
     }
