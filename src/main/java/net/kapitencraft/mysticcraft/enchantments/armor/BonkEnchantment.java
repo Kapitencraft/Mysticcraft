@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 public class BonkEnchantment extends ExtendedCalculationEnchantment implements IUltimateEnchantment, IArmorEnchantment {
     public static final String BONK_ID = "Bonk Enchantment";
 
-    protected BonkEnchantment() {
+    public BonkEnchantment() {
         super(DEFAULT_RARITY, EnchantmentCategory.ARMOR, DEFAULT_SLOTS, CalculationType.ALL, ProcessPriority.LOWEST);
     }
 

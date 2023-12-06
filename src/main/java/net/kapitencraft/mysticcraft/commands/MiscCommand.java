@@ -3,6 +3,7 @@ package net.kapitencraft.mysticcraft.commands;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.LiteralCommandNode;
+import net.kapitencraft.mysticcraft.init.ModEnchantments;
 import net.kapitencraft.mysticcraft.item.data.dungeon.IPrestigeAbleItem;
 import net.kapitencraft.mysticcraft.item.data.dungeon.IStarAbleItem;
 import net.minecraft.commands.CommandSourceStack;
@@ -39,8 +40,10 @@ public class MiscCommand {
                 Map<Enchantment, Integer> enchantments = new HashMap<>();
                 if (Enchantments.SHARPNESS.canEnchant(stack1)) enchantments.put(Enchantments.SHARPNESS, 5);
                 if (Enchantments.BLOCK_FORTUNE.canEnchant(stack1)) enchantments.put(Enchantments.BLOCK_FORTUNE, 3);
-                if (Enchantments.ALL_DAMAGE_PROTECTION.canEnchant(stack1))
+                if (Enchantments.ALL_DAMAGE_PROTECTION.canEnchant(stack1)) {
                     enchantments.put(Enchantments.ALL_DAMAGE_PROTECTION, 4);
+                    enchantments.put(ModEnchantments.BONK.get(), 1);
+                }
                 for (Enchantment enchantment : BuiltInRegistries.ENCHANTMENT) {
                     if (enchantment.canEnchant(stack1) && isCompatible(enchantments, enchantment) && !enchantment.isCurse()) {
                         enchantments.put(enchantment, enchantment.getMaxLevel());

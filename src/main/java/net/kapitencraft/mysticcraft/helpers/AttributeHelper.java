@@ -2,8 +2,8 @@ package net.kapitencraft.mysticcraft.helpers;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import net.kapitencraft.mysticcraft.api.Provider;
 import net.kapitencraft.mysticcraft.misc.attribute.ChangingAttributeModifier;
-import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.Provider;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;

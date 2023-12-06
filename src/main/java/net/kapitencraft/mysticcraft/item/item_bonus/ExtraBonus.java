@@ -1,18 +1,27 @@
 package net.kapitencraft.mysticcraft.item.item_bonus;
 
+import net.minecraft.network.chat.Component;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class ExtraBonus implements Bonus {
-    private final String name;
-    protected ExtraBonus(String name) {
-        this.name = name;
-    }
 
     @Override
     public String getSuperName() {
-        return "Extra";
+        return "";
+    }
+
+
+    @Override
+    public List<Component> makeDisplay() {
+        List<Component> list = new ArrayList<>();
+        getDisplay().accept(list);
+        return list;
     }
 
     @Override
     public String getName() {
-        return name;
+        return "";
     }
 }

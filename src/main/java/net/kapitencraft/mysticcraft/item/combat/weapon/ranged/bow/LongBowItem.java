@@ -32,6 +32,6 @@ public class LongBowItem extends ModBowItem implements IGemstoneApplicable {
 
     @Override
     public double getDamage() {
-        return 9;
+        return 5;
     }
 }

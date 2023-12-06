@@ -91,12 +91,11 @@ public class MysticcraftMod {
     }
 
     public static void sendWarn(String warn) {
-        sendWarn(warn, false, null);
+        sendWarn(warn, null);
     }
 
-    public static void sendWarn(String info, boolean shouldRepeat, Marker marker, Object... toAdd) {
-        if (lastMSG == null || !lastMSG.equals(info) || shouldRepeat) LOGGER.info(marker == null ? MYSTICCRAFT_MARKER : marker, info, toAdd);
-        lastMSG = info;
+    public static void sendWarn(String info, Marker marker, Object... toAdd) {
+        LOGGER.warn(marker == null ? MYSTICCRAFT_MARKER : marker, info, toAdd);
     }
 
     public static final Marker MYSTICCRAFT_MARKER = new ModMarker("Mysticcraft");

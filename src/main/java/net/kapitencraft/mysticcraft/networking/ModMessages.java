@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.networking;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.Provider;
+import net.kapitencraft.mysticcraft.api.Provider;
 import net.kapitencraft.mysticcraft.networking.packets.C2S.ReforgingPacket;
 import net.kapitencraft.mysticcraft.networking.packets.C2S.UpgradeItemPacket;
 import net.kapitencraft.mysticcraft.networking.packets.S2C.SyncGuildsPacket;

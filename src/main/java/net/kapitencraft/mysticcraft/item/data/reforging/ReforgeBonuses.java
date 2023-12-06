@@ -1,9 +1,9 @@
 package net.kapitencraft.mysticcraft.item.data.reforging;
 
+import net.kapitencraft.mysticcraft.api.SaveAbleEnum;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.item.data.reforging.bonuses.SacredBonus;
 import net.kapitencraft.mysticcraft.item.item_bonus.ReforgingBonus;
-import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.SaveAbleEnum;
 import net.minecraft.network.chat.Component;
 
 import java.util.List;

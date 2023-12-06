@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.init;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.api.Provider;
 import net.kapitencraft.mysticcraft.block.*;
 import net.kapitencraft.mysticcraft.block.deco.*;
 import net.kapitencraft.mysticcraft.block.special.EmptyGemstoneBlock;
@@ -9,7 +10,6 @@ import net.kapitencraft.mysticcraft.dungeon.generation.GenerationBlock;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.item.data.gemstone.GemstoneItem;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
-import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.Provider;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;

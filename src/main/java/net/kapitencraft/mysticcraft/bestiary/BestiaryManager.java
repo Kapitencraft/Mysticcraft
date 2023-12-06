@@ -41,7 +41,7 @@ public class BestiaryManager extends SimpleJsonResourceReloadListener {
                 String s = object.getAsJsonPrimitive("type").getAsString();
                 bestiariesForType.put(type, new Bestiary(description, combatXp, Bestiary.Type.getByName(s)));
             } catch (Exception e) {
-                MysticcraftMod.sendWarn("Unable to load bestiary for '{}': {}", false, MARKER, entry.getKey().toString(), e.getMessage());
+                MysticcraftMod.sendWarn("Unable to load bestiary for '{}': {}", MARKER, entry.getKey().toString(), e.getMessage());
             }
         }
         MysticcraftMod.sendInfo("Loaded {} bestiaries", MARKER, bestiariesForType.size());

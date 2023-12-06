@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.misc.functions_and_interfaces;
+package net.kapitencraft.mysticcraft.api;
 
 public interface SingleBinaryProvider<T, K> extends BinaryProvider<T, K, K> {
 }

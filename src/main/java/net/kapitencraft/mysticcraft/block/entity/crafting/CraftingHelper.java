@@ -2,6 +2,7 @@ package net.kapitencraft.mysticcraft.block.entity.crafting;
 
 import com.google.common.collect.Lists;
 import com.google.gson.JsonObject;
+import net.kapitencraft.mysticcraft.ModMarker;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
@@ -116,4 +117,6 @@ public class CraftingHelper {
             super(p_43907_);
         }
     }
+
+    public static final ModMarker RECIPE_MARKER = new ModMarker("Recipes");
 }

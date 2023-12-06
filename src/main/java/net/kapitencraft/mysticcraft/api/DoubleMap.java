@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.misc.functions_and_interfaces;
+package net.kapitencraft.mysticcraft.api;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -25,7 +25,7 @@ public class TallinBow extends ShortBowItem {
 
     @Override
     public double getDamage() {
-        return 7;
+        return 3;
     }
 
     @Override

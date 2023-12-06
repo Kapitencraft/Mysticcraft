@@ -2,6 +2,7 @@ package net.kapitencraft.mysticcraft.item.creative;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import net.kapitencraft.mysticcraft.api.QuadConsumer;
 import net.kapitencraft.mysticcraft.config.CommonModConfig;
 import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
@@ -10,7 +11,6 @@ import net.kapitencraft.mysticcraft.helpers.TextHelper;
 import net.kapitencraft.mysticcraft.item.misc.IModItem;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
-import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.QuadConsumer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;

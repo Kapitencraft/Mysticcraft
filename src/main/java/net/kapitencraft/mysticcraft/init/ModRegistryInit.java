@@ -31,6 +31,7 @@ public class ModRegistryInit {
         register("Loot Functions", ModLootItemFunctions.REGISTRY);
         register("Loot Conditions", ModLootItemConditions.REGISTRY);
         register("Command Arguments", ModCommandArguments.REGISTRY);
+        register("Recipe Types", ModRecipeSerializers.REGISTRY);
     }
 
     private static void register(String registerName, DeferredRegister<?> register) {

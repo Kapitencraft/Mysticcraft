@@ -18,7 +18,7 @@ public final class ModMarker implements Marker {
 
     @Override
     public void add(Marker reference) {
-        MysticcraftMod.sendWarn("tried adding Marker: sike!", false, null);
+        MysticcraftMod.sendWarn("tried adding Marker: sike!", null);
     }
 
     @Override

@@ -5,23 +5,24 @@
   "refmap": "mysticcraft.mixin-refmap.json",
   "client": [
     "BannerItemMixin",
-    "KeyMappingMixin",
     "HandItemLayerRendererMixin",
-    "ItemStackClientMixin"
+    "ItemStackClientMixin",
+    "KeyMappingMixin"
   ],
   "mixins": [
-    "LivingEntityAccessor",
-    "LivingEntityMixin",
-    "PlayerMixin",
+    "AttributeMapMixin",
     "AttributesMixin",
-    "ItemMixin",
-    "ProjectileMixin",
-    "WitherSkullMixin",
-    "RandomChanceModifierMixin",
+    "BlockStateMixin",
     "DiggerItemMixin",
     "InventoryMixin",
-    "AttributeMapMixin",
-    "OverworldBiomeBuilderMixin"
+    "ItemMixin",
+    "LivingEntityAccessor",
+    "LivingEntityMixin",
+    "OverworldBiomeBuilderMixin",
+    "PlayerMixin",
+    "ProjectileMixin",
+    "RandomChanceModifierMixin",
+    "WitherSkullMixin"
   ],
   "injectors": {
     "defaultRequire": 1

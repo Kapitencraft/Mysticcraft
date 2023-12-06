@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.item.combat.armor.client.renderer;
 
+import net.kapitencraft.mysticcraft.api.Provider;
 import net.kapitencraft.mysticcraft.item.combat.armor.client.model.ArmorModel;
-import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.Provider;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.world.entity.EquipmentSlot;

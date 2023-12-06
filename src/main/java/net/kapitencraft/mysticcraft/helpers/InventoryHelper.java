@@ -1,8 +1,8 @@
 package net.kapitencraft.mysticcraft.helpers;
 
+import net.kapitencraft.mysticcraft.api.Reference;
 import net.kapitencraft.mysticcraft.item.ITieredItem;
 import net.kapitencraft.mysticcraft.item.combat.armor.TieredArmorItem;
-import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.Reference;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;

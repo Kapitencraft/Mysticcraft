@@ -44,12 +44,6 @@ public abstract class ShortBowItem extends ModBowItem {
         return base_cooldown;
     }
 
-    @Override
-    public boolean onEntitySwing(ItemStack stack, LivingEntity entity) {
-        this.releaseUsing(stack, entity.level, entity, 0);
-        return true;
-    }
-
     public abstract float getShotCooldown();
 
     public boolean canShoot(CompoundTag tag, Level world) {

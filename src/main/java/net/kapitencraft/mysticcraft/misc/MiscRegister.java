@@ -2,6 +2,7 @@ package net.kapitencraft.mysticcraft.misc;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.api.Reference;
 import net.kapitencraft.mysticcraft.bestiary.BestiaryManager;
 import net.kapitencraft.mysticcraft.enchantments.HealthMendingEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.ExtendedCalculationEnchantment;
@@ -30,7 +31,6 @@ import net.kapitencraft.mysticcraft.item.item_bonus.IArmorBonusItem;
 import net.kapitencraft.mysticcraft.misc.cooldown.Cooldowns;
 import net.kapitencraft.mysticcraft.misc.damage_source.FerociousDamageSource;
 import net.kapitencraft.mysticcraft.misc.damage_source.IAbilitySource;
-import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.Reference;
 import net.kapitencraft.mysticcraft.mixin.classes.LivingEntityAccessor;
 import net.kapitencraft.mysticcraft.mob_effects.NumbnessMobEffect;
 import net.kapitencraft.mysticcraft.networking.ModMessages;

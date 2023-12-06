@@ -1,19 +1,13 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "mysticcraft:upgrade_item",
+  "craft_type": "eight",
   "category": "equipment",
-  "key": {
-    "*": {
-      "item": "mysticcraft:lasrs_eye"
-    },
-    ".": {
-      "item": "mysticcraft:necron_sword"
-    }
+  "material": {
+    "item": "mysticcraft:lasrs_eye"
   },
-  "pattern": [
-    "***",
-    "*.*",
-    "***"
-  ],
+  "source": {
+    "item": "mysticcraft:necron_sword"
+  },
   "result": {
     "item": "mysticcraft:hyperion"
   }

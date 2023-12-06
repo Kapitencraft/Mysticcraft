@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.helpers;
 
-import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.Provider;
-import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.Reference;
+import net.kapitencraft.mysticcraft.api.Provider;
+import net.kapitencraft.mysticcraft.api.Reference;
 import net.kapitencraft.mysticcraft.misc.string_converter.args.MathArgument;
 import net.kapitencraft.mysticcraft.misc.string_converter.args.TransferArg;
 import net.minecraft.ChatFormatting;
@@ -41,6 +41,10 @@ public class TextHelper {
             Function<Component, Packet<?>> function = ClientboundSetTitleTextPacket::new;
             serverPlayer.connection.send(function.apply(title));
         }
+    }
+
+    public static String mergeRegister(String a, String b) {
+        return a + "_" + b;
     }
 
     public static void removeUnnecessaryEmptyLines(List<Component> components) {

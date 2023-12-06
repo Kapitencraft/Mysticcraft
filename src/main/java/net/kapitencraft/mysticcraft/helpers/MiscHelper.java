@@ -1,11 +1,11 @@
 package net.kapitencraft.mysticcraft.helpers;
 
+import net.kapitencraft.mysticcraft.api.Provider;
 import net.kapitencraft.mysticcraft.client.particle.DamageIndicatorParticleOptions;
 import net.kapitencraft.mysticcraft.gui.IGuiHelper;
 import net.kapitencraft.mysticcraft.item.data.gemstone.GemstoneItem;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.kapitencraft.mysticcraft.misc.VeinMinerHolder;
-import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.Provider;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.core.BlockPos;
@@ -46,6 +46,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.items.ItemStackHandler;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -53,6 +54,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -116,10 +118,17 @@ public class MiscHelper {
         holder.start(pos);
     }
 
-    public static <T> void giveNullOrElse(@Nullable T t, Consumer<T> toDo) {
+    public static <T> void ifNonNull(@Nullable T t, Consumer<T> toDo) {
         if (t != null) {
             toDo.accept(t);
         }
+    }
+
+    public static <T, K> @NotNull K ifNonNullOrDefault(@Nullable T t, Function<T, K> function, Supplier<K> defaulted) {
+        if (t != null) {
+            return function.apply(t);
+        }
+        return defaulted.get();
     }
 
     public static Item.Properties rarity(Rarity rarity) {

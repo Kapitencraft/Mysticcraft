@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.init;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.api.Provider;
 import net.kapitencraft.mysticcraft.gui.GUISlotBlockItem;
 import net.kapitencraft.mysticcraft.guild.GuildUpgrades;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
@@ -30,7 +31,6 @@ import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.tools.HammerItem;
 import net.kapitencraft.mysticcraft.item.tools.fishing_rods.LavaFishingRod;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
-import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.Provider;
 import net.kapitencraft.mysticcraft.spell.Element;
 import net.kapitencraft.mysticcraft.spell.Spells;
 import net.minecraft.ChatFormatting;
@@ -95,14 +95,14 @@ public interface ModItems {
     RegistryObject<Scylla> SCYLLA = register("scylla", Scylla::new, NecronSword.NECRON_GROUP);
     RegistryObject<Astraea> ASTREA = register("astrea", Astraea::new, NecronSword.NECRON_GROUP);
     RegistryObject<Valkyrie> VALKYRIE = register("valkyrie", Valkyrie::new, NecronSword.NECRON_GROUP);
-    RegistryObject<ShadowDagger> SHADOW_DAGGER = register("shadow_dagger", () -> new ShadowDagger(), TabGroup.COMBAT);
+    RegistryObject<ShadowDagger> SHADOW_DAGGER = register("shadow_dagger", ShadowDagger::new, TabGroup.COMBAT);
     RegistryObject<AspectOfTheEndItem> AOTE = register("aspect_of_the_end", ()-> new AspectOfTheEndItem(50), SpellItem.SPELL_GROUP);
     RegistryObject<AspectOfTheVoidItem> AOTV = register("aspect_of_the_void", AspectOfTheVoidItem::new, SpellItem.SPELL_GROUP);
     RegistryObject<HeatedScythe> HEATED_SCYTHE = register("heated_scythe", HeatedScythe::new, IFireScytheItem.FIRE_SCYTHE_GROUP);
     RegistryObject<FieryScythe> FIERY_SCYTHE = register("fiery_scythe", FieryScythe::new, IFireScytheItem.FIRE_SCYTHE_GROUP);
     RegistryObject<BurningScythe> BURNING_SCYTHE = register("burning_scythe", BurningScythe::new, IFireScytheItem.FIRE_SCYTHE_GROUP);
     RegistryObject<InfernalScythe> INFERNAL_SCYTHE = register("infernal_scythe", InfernalScythe::new, IFireScytheItem.FIRE_SCYTHE_GROUP);
-    RegistryObject<FireLance> FIRE_LANCE = register("fire_lance", () -> new FireLance(), SpellItem.SPELL_GROUP);
+    RegistryObject<FireLance> FIRE_LANCE = register("fire_lance", FireLance::new, SpellItem.SPELL_GROUP);
     RegistryObject<LavaFishingRod> LAVA_FISHING_ROD_TEST = register("lava_fishing_rod", () -> new LavaFishingRod(Rarity.RARE), TabGroup.MATERIAL);
     HashMap<Spells, RegistryObject<SpellScrollItem>> SCROLLS = Spells.registerAll();
     RegistryObject<MaterialModItem> ORB_OF_CONSUMPTION = registerNonStackableMaterial("orb_of_consumption", Rarity.EPIC, TabGroup.MATERIAL);

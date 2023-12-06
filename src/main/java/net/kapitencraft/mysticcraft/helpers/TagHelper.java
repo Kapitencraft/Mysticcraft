@@ -10,7 +10,7 @@ import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.codecs.PrimitiveCodec;
 import net.kapitencraft.mysticcraft.ModMarker;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.TriConsumer;
+import net.kapitencraft.mysticcraft.api.TriConsumer;
 import net.kapitencraft.mysticcraft.misc.serialization.CodecSerializer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.StringTagVisitor;

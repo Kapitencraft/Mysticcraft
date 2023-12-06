@@ -4,7 +4,7 @@ import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.item.data.spell.ISpellItem;
 import net.kapitencraft.mysticcraft.item.data.spell.SpellHelper;
 import net.kapitencraft.mysticcraft.item.item_bonus.ExtraBonus;
-import net.kapitencraft.mysticcraft.item.item_bonus.IWeaponBonusItem;
+import net.kapitencraft.mysticcraft.item.item_bonus.IItemBonusItem;
 import net.kapitencraft.mysticcraft.item.item_bonus.PieceBonus;
 import net.kapitencraft.mysticcraft.item.item_bonus.piece.ShadowDaggerBonus;
 import net.kapitencraft.mysticcraft.item.misc.ModTiers;
@@ -13,7 +13,7 @@ import net.kapitencraft.mysticcraft.spell.SpellSlot;
 import net.kapitencraft.mysticcraft.spell.Spells;
 import org.jetbrains.annotations.Nullable;
 
-public class ShadowDagger extends ModDaggerItem implements IWeaponBonusItem, ISpellItem {
+public class ShadowDagger extends ModDaggerItem implements IItemBonusItem, ISpellItem {
     private static final ShadowDaggerBonus BONUS = new ShadowDaggerBonus();
 
     public ShadowDagger() {
@@ -32,12 +32,12 @@ public class ShadowDagger extends ModDaggerItem implements IWeaponBonusItem, ISp
 
     @Override
     public @Nullable PieceBonus getBonus() {
-        return BONUS;
+        return null;
     }
 
     @Override
     public @Nullable ExtraBonus getExtraBonus() {
-        return null;
+        return BONUS;
     }
 
     @Override

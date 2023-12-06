@@ -3,6 +3,7 @@ package net.kapitencraft.mysticcraft.item.combat.armor;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.api.Provider;
 import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.helpers.TextHelper;
@@ -14,7 +15,6 @@ import net.kapitencraft.mysticcraft.item.item_bonus.IArmorBonusItem;
 import net.kapitencraft.mysticcraft.item.item_bonus.PieceBonus;
 import net.kapitencraft.mysticcraft.item.misc.IModItem;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
-import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.Provider;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -63,10 +63,7 @@ public abstract class ModArmorItem extends ArmorItem implements IModItem {
 
     @Override
     public void appendHoverTextWithPlayer(@NotNull ItemStack stack, @Nullable Level level, @NotNull List<Component> toolTip, @NotNull TooltipFlag flag, Player player) {
-        if (stack.getItem() instanceof IArmorBonusItem bonusItem) {
-            bonusItem.addDisplay(toolTip, this.getSlot());
-            toolTip.add(Component.literal(""));
-        }
+
     }
 
     @Override

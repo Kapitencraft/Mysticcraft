@@ -2,21 +2,21 @@ package net.kapitencraft.mysticcraft.item.item_bonus.piece;
 
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
-import net.kapitencraft.mysticcraft.item.item_bonus.PieceBonus;
+import net.kapitencraft.mysticcraft.item.item_bonus.ExtraBonus;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 
 import java.util.List;
 import java.util.function.Consumer;
 
-public class ShadowDaggerBonus extends PieceBonus {
+public class ShadowDaggerBonus extends ExtraBonus {
     public ShadowDaggerBonus() {
-        super("?");
+
     }
 
     @Override
     public Consumer<List<Component>> getDisplay() {
-        return list -> list.add(Component.literal("deals 100% more damage from behind the enemy"));
+        return list -> list.add(Component.literal("deals 2x damage from behind the enemy"));
     }
 
     @Override

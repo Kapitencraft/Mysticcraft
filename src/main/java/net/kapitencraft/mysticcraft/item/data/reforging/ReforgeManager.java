@@ -46,7 +46,7 @@ public class ReforgeManager extends SimpleJsonResourceReloadListener {
                 }
                 Reforges.registerReforge(reforge.build());
             } catch (Exception e) {
-                MysticcraftMod.sendWarn("Unable to load reforge '{}': {}", false, MARKER, name, e.getMessage());
+                MysticcraftMod.sendWarn("Unable to load reforge '{}': {}", MARKER, name, e.getMessage());
             }
         }
     }

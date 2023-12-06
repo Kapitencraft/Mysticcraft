@@ -4,6 +4,7 @@ import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.spell.spells.Spell;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -40,6 +41,7 @@ public interface Bonus {
         List<Component> display = new ArrayList<>();
         display.add(Component.literal((this instanceof Spell ? "Spell: " : getSuperName() + " Bonus: ") + getName()).withStyle(ChatFormatting.GOLD).withStyle(ChatFormatting.BOLD));
         getDisplay().accept(display);
+        display.add(CommonComponents.EMPTY);
         return display;
     }
 }

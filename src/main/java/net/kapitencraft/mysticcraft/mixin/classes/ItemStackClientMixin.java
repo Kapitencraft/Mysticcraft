@@ -21,6 +21,7 @@ import net.kapitencraft.mysticcraft.item.data.dungeon.IStarAbleItem;
 import net.kapitencraft.mysticcraft.item.data.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.item.data.reforging.Reforge;
 import net.kapitencraft.mysticcraft.item.data.spell.ISpellItem;
+import net.kapitencraft.mysticcraft.item.item_bonus.IItemBonusItem;
 import net.kapitencraft.mysticcraft.item.misc.IModItem;
 import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.minecraft.ChatFormatting;
@@ -43,6 +44,7 @@ import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.event.ForgeEventFactory;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
 import javax.annotation.Nullable;
@@ -52,6 +54,8 @@ import static net.minecraft.world.item.ItemStack.ATTRIBUTE_MODIFIER_FORMAT;
 
 @Mixin(ItemStack.class)
 public abstract class ItemStackClientMixin {
+    @Shadow public abstract ItemStack setHoverName(@org.jetbrains.annotations.Nullable Component p_41715_);
+
     private static final Style LORE_STYLE = Style.EMPTY.withColor(ChatFormatting.DARK_PURPLE).withItalic(true);
     private static final ColorAnimator RAINBOW_ANIMATOR = ColorAnimator.createRainbow(30 * (10 - ClientModConfig.rgbSpeed));
 
@@ -95,6 +99,10 @@ public abstract class ItemStackClientMixin {
         }
         if (item instanceof ISpellItem spellItem) {
             spellItem.appendDisplay(list, self(), player);
+        }
+        if (item instanceof IItemBonusItem bonusItem) {
+            bonusItem.addDisplay(list, MiscHelper.getSlotForStack(self()));
+            list.add(Component.literal(""));
         }
         if (shouldShowInTooltip(j, ItemStack.TooltipPart.ENCHANTMENTS)) {
             ListTag enchantmentTags = self().getEnchantmentTags();

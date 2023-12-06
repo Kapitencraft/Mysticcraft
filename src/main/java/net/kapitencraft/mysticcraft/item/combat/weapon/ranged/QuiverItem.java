@@ -12,11 +12,13 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -40,10 +42,10 @@ public class QuiverItem extends ContainableItem<ArrowItem> {
 
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @org.jetbrains.annotations.Nullable Level level, @NotNull List<Component> tooltip, @NotNull TooltipFlag tooltipFlag) {
-        List<ContainableHolder<ArrowItem>> contents = getContents(stack);
-        contents.forEach((holder) -> tooltip.add(((MutableComponent) holder.getDefaultStack().getHoverName()).withStyle(MiscHelper.getItemRarity(holder.getItem()).getStyleModifier()).append(": " + holder.getAmount())));
-        double percentage = getUsedCapacity(stack)  * 1. / getCapacity(stack);
+    public void appendHoverTextWithPlayer(@NotNull ItemStack itemStack, @Nullable Level level, @NotNull List<Component> list, @NotNull TooltipFlag flag, Player player) {
+        List<ContainableHolder<ArrowItem>> contents = getContents(itemStack);
+        contents.forEach((holder) -> list.add(((MutableComponent) holder.getDefaultStack().getHoverName()).withStyle(MiscHelper.getItemRarity(holder.getItem()).getStyleModifier()).append(": " + holder.getAmount())));
+        double percentage = getUsedCapacity(itemStack)  * 1. / getCapacity(itemStack);
         TextColor color = TextColor.fromLegacyFormat(ChatFormatting.GREEN);
         if (percentage > 0.9) {
             color = TextColor.fromLegacyFormat(ChatFormatting.RED);
@@ -52,7 +54,7 @@ public class QuiverItem extends ContainableItem<ArrowItem> {
         } else if (percentage > 0.5) {
             color = TextColor.fromLegacyFormat(ChatFormatting.YELLOW);
         }
-        tooltip.add(Component.literal(getUsedCapacity(stack) + " / " + getCapacity(stack)).withStyle(Style.EMPTY.withColor(color)));
+        list.add(Component.literal(getUsedCapacity(itemStack) + " / " + getCapacity(itemStack)).withStyle(Style.EMPTY.withColor(color)));
     }
 
     @Override

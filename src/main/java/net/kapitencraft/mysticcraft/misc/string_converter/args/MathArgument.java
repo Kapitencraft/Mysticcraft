@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.misc.string_converter.args;
 
-import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.SingleBinaryProvider;
+import net.kapitencraft.mysticcraft.api.SingleBinaryProvider;
 import net.kapitencraft.mysticcraft.misc.string_converter.converter.TextToNumConverter;
 
 public class MathArgument<T extends Number> implements CalculationArgument<T> {

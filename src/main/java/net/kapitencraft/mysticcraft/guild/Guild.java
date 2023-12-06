@@ -3,6 +3,7 @@ package net.kapitencraft.mysticcraft.guild;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.kapitencraft.mysticcraft.ModMarker;
+import net.kapitencraft.mysticcraft.api.MapStream;
 import net.kapitencraft.mysticcraft.helpers.TagHelper;
 import net.kapitencraft.mysticcraft.helpers.TextHelper;
 import net.minecraft.nbt.CompoundTag;
@@ -25,13 +26,14 @@ public class Guild {
             Codec.STRING.fieldOf("name").forGetter(Guild::getName),
             TagHelper.UUID_CODEC.fieldOf("owner").forGetter(Guild::getOwner),
             ItemStack.CODEC.fieldOf("banner").forGetter(Guild::getBanner),
-            GuildUpgradeInstance.CODEC.fieldOf("upgrades").forGetter(Guild::getUpgrades)
-
+            GuildUpgradeInstance.CODEC.fieldOf("upgrades").forGetter(Guild::getUpgrades),
+            GuildPlayerHolder.CODEC.listOf().fieldOf("players").forGetter(Guild::save)
         ).apply(guildInstance, Guild::createFromData)
     );
 
-    private static Guild createFromData(String name, UUID owner, ItemStack banner, GuildUpgradeInstance instance) {
+    private static Guild createFromData(String name, UUID owner, ItemStack banner, GuildUpgradeInstance instance, List<GuildPlayerHolder> holders) {
         Guild guild = new Guild(name, owner, banner, instance);
+        guild.recreate(holders);
         return guild;
     }
 
@@ -58,6 +60,19 @@ public class Guild {
         if (!ranks.containsKey(player) && !removed) {
             ranks.put(player, rank);
         }
+    }
+
+    private void recreate(List<GuildPlayerHolder> list) {
+        list.forEach(this::add);
+    }
+
+    private List<GuildPlayerHolder> save() {
+        return MapStream.of(this.ranks).map(GuildPlayerHolder::new).toList();
+    }
+
+    private void add(GuildPlayerHolder holder) {
+        this.setMember(holder.getPlayerId());
+        this.setRank(holder.getPlayerId(), holder.getRank());
     }
 
 
@@ -169,7 +184,7 @@ public class Guild {
             UUID playerId = player.getUUID();
             members.remove(playerId);
             ranks.remove(playerId);
-            player.getPersistentData().putString("GuildName", "");
+            player.getPersistentData().remove("GuildName");
         }
     }
 
@@ -252,7 +267,7 @@ public class Guild {
         OWNER("owner", "Owner");
 
 
-        private static final Codec<GuildRank> CODEC = StringRepresentable.fromEnum(GuildRank::values);
+        static final Codec<GuildRank> CODEC = StringRepresentable.fromEnum(GuildRank::values);
         private final String registryName;
         private final String name;
 

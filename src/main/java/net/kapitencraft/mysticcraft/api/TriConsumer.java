@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.misc.functions_and_interfaces;
+package net.kapitencraft.mysticcraft.api;
 
 public interface TriConsumer<A, B, C> {
 

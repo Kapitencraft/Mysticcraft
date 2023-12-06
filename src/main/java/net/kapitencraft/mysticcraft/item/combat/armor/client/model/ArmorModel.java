@@ -8,6 +8,8 @@ import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.NoSuchElementException;
+
 public class ArmorModel extends EntityModel<LivingEntity> {
     protected static final CubeDeformation NULL_DEFORM = new CubeDeformation(0);
     public final ModelPart armorHead;
@@ -22,14 +24,22 @@ public class ArmorModel extends EntityModel<LivingEntity> {
 
 
     public ArmorModel(ModelPart root) {
-        armorHead = root.getChild("armorHead");
-        armorChest = root.getChild("armorBody");
-        armorRightArm = root.getChild("armorRightArm");
-        armorLeftArm = root.getChild("armorLeftArm");
-        armorRightLeg = root.getChild("armorRightLeg");
-        armorLeftLeg = root.getChild("armorLeftLeg");
-        armorRightBoot = root.getChild("armorRightBoot");
-        armorLeftBoot = root.getChild("armorLeftBoot");
+        armorHead = getSave("armorHead", root);
+        armorChest = getSave("armorBody", root);
+        armorRightArm = getSave("armorRightArm", root);
+        armorLeftArm = getSave("armorLeftArm", root);
+        armorRightLeg = getSave("armorRightLeg", root);
+        armorLeftLeg = getSave("armorLeftLeg", root);
+        armorRightBoot = getSave("armorRightBoot", root);
+        armorLeftBoot = getSave("armorLeftBoot", root);
+    }
+
+    private static ModelPart getSave(String name, ModelPart part) {
+        try {
+            return part.getChild(name);
+        } catch (NoSuchElementException e) {
+            return null;
+        }
     }
 
     @Override

@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.bestiary;
 
-import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.SaveAbleEnum;
+import net.kapitencraft.mysticcraft.api.SaveAbleEnum;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 

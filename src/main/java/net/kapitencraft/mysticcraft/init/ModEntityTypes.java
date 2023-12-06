@@ -1,10 +1,10 @@
 package net.kapitencraft.mysticcraft.init;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.api.Provider;
 import net.kapitencraft.mysticcraft.entity.*;
 import net.kapitencraft.mysticcraft.entity.skeleton_master.SkeletonMaster;
 import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.firework.NapalmRocketEntity;
-import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.Provider;
 import net.kapitencraft.mysticcraft.spell.spells.FireBoltProjectile;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;

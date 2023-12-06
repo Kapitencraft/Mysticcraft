@@ -5,8 +5,10 @@ import net.minecraft.world.entity.LivingEntity;
 
 import java.util.*;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @SuppressWarnings("ALL")
 public class CollectionHelper {
@@ -20,6 +22,10 @@ public class CollectionHelper {
 
     public static <T> ArrayList<T> colToList(Collection<T> collection) {
         return new ArrayList<>(collection);
+    }
+
+    public static <T, K> Stream<T> sync(Stream<K> in, BiFunction<K, T, T> func, T always) {
+        return in.map(k -> func.apply(k, always));
     }
 
     public static <T> ArrayList<T> toList(T ts) {

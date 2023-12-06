@@ -1,16 +1,8 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "mysticcraft:armor",
   "category": "equipment",
-  "key": {
-    "*": {
-      "item": "mysticcraft:crimson_steel_ingot"
-    }
+  "material": {
+    "item": "mysticcraft:crimson_steel_ingot"
   },
-  "pattern": [
-    "* *",
-    "* *"
-  ],
-  "result": {
-    "item": "mysticcraft:crimson_boots"
-  }
+  "results": "mysticcraft:crimson"
 }

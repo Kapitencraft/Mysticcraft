@@ -134,7 +134,7 @@ public class GuildCommand {
                 return 0;
             }
             target.sendSystemMessage(Component.translatable("guild.invite", component, guild.getName()));
-            target.sendSystemMessage(Component.translatable("guild.invite.accept").withStyle(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/guild join " + guild.getName() + " " + inviteKey))).append("guild.invite.accept.append"));
+            target.sendSystemMessage(Component.translatable("guild.invite.accept").withStyle(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/guild join " + guild.getName() + " " + inviteKey))).append(Component.translatable("guild.invite.accept.append")));
             ModCommands.sendSuccess(stack, "guild.invite.success");
             return 1;
         }
@@ -170,7 +170,7 @@ public class GuildCommand {
                 ModCommands.sendSuccess(stack, "command.guild.promote.success", target.getName(), guild.getRank(target.getUUID()).getIGName());
                 return 1;
             } else if (Objects.equals(promoteString, "owner")) {
-                stack.sendFailure(Component.translatable("command.guild.promote.failed.admin"));
+                stack.sendFailure(Component.translatable("command.guild.promote.isOwner"));
                 return 0;
             }
         }

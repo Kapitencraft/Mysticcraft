@@ -53,6 +53,10 @@ public class MathHelper {
         setter.accept(getter.get() * mul);
     }
 
+    public static void mul(Supplier<Double> getter, Consumer<Double> setter, double mul) {
+        setter.accept(getter.get() * mul);
+    }
+
     public static void mul(Supplier<Float> getter, Consumer<Float> setter, float mul) {
         setter.accept(getter.get() * mul);
     }

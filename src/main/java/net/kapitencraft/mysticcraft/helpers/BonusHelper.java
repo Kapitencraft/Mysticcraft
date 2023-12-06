@@ -5,7 +5,7 @@ import net.kapitencraft.mysticcraft.item.data.reforging.Reforge;
 import net.kapitencraft.mysticcraft.item.data.reforging.Reforges;
 import net.kapitencraft.mysticcraft.item.item_bonus.Bonus;
 import net.kapitencraft.mysticcraft.item.item_bonus.IArmorBonusItem;
-import net.kapitencraft.mysticcraft.item.item_bonus.IWeaponBonusItem;
+import net.kapitencraft.mysticcraft.item.item_bonus.IItemBonusItem;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ArmorItem;
@@ -30,17 +30,17 @@ public class BonusHelper {
     public static void useBonuses(LivingEntity living, BiConsumer<Bonus, ItemStack> user) {
         doForSlot((stack, slot) -> {
             if (stack.getItem() instanceof IArmorBonusItem bonusItem) {
-                if (stack.getItem() instanceof ArmorItem armorItem && armorItem.getSlot() == EquipmentSlot.CHEST) MiscHelper.giveNullOrElse(bonusItem.getFullSetBonus(), fullSetBonus -> user.accept(fullSetBonus, stack));
-                MiscHelper.giveNullOrElse(bonusItem.getPieceBonusForSlot(slot), pieceBonus -> user.accept(pieceBonus, stack));
-                MiscHelper.giveNullOrElse(bonusItem.getExtraBonus(slot), extraBonus -> user.accept(extraBonus, stack));
+                if (stack.getItem() instanceof ArmorItem armorItem && armorItem.getSlot() == EquipmentSlot.CHEST) MiscHelper.ifNonNull(bonusItem.getFullSetBonus(), fullSetBonus -> user.accept(fullSetBonus, stack));
+                MiscHelper.ifNonNull(bonusItem.getPieceBonusForSlot(slot), pieceBonus -> user.accept(pieceBonus, stack));
+                MiscHelper.ifNonNull(bonusItem.getExtraBonus(slot), extraBonus -> user.accept(extraBonus, stack));
             }
             Reforge reforge = Reforges.getReforge(stack);
             if (reforge != null && reforge.getBonus() != null) {
                 user.accept(reforge.getBonus(), stack);
             }
-            if (stack.getItem() instanceof IWeaponBonusItem weaponBonusItem) {
-                MiscHelper.giveNullOrElse(weaponBonusItem.getBonus(), pieceBonus -> user.accept(pieceBonus, stack));
-                MiscHelper.giveNullOrElse(weaponBonusItem.getExtraBonus(), extraBonus -> user.accept(extraBonus, stack));
+            if (stack.getItem() instanceof IItemBonusItem bonusItem) {
+                MiscHelper.ifNonNull(bonusItem.getBonus(), pieceBonus -> user.accept(pieceBonus, stack));
+                MiscHelper.ifNonNull(bonusItem.getExtraBonus(), extraBonus -> user.accept(extraBonus, stack));
             }
         }, living);
     }

@@ -53,7 +53,7 @@ public class SmeltModifier extends ModLootModifier implements IConditional {
                 }
             }
         }
-        MysticcraftMod.sendWarn("Couldn't smelt {} because there is no smelting recipe", true, MysticcraftMod.MYSTICCRAFT_MARKER, p_81268_);
+        MysticcraftMod.sendWarn("Couldn't smelt {} because there is no smelting recipe", MysticcraftMod.MYSTICCRAFT_MARKER, p_81268_);
         return p_81268_;
     }
 

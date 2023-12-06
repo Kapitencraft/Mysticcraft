@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.misc.attribute;
 
-import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.Provider;
+import net.kapitencraft.mysticcraft.api.Provider;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;

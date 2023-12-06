@@ -1,11 +1,11 @@
 package net.kapitencraft.mysticcraft.item.data.gemstone;
 
 import com.mojang.serialization.Codec;
+import net.kapitencraft.mysticcraft.api.SaveAbleEnum;
 import net.kapitencraft.mysticcraft.block.GemstoneBlock;
 import net.kapitencraft.mysticcraft.helpers.CollectionHelper;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
-import net.kapitencraft.mysticcraft.misc.functions_and_interfaces.SaveAbleEnum;
 import net.minecraft.ChatFormatting;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.ai.attributes.Attribute;
