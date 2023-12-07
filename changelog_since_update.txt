@@ -2,6 +2,7 @@ fixed being unable to log into modded servers;
 fixed game crashing when trying to equip wizard hat item;
 fixed quivers not showing contents;
 fixed shortbows being able to be used by droping item out of inventory;
+fixed itemstacks being added to new slots each time :hype:;
 
 added ability to shadow dagger;
 added Mana Syphon Enchantment;

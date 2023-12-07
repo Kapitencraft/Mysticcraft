@@ -1,15 +1,19 @@
 package net.kapitencraft.mysticcraft.item;
 
+import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.item.data.dungeon.IPrestigeAbleItem;
 import net.kapitencraft.mysticcraft.item.data.dungeon.IStarAbleItem;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 public interface ITieredItem extends IStarAbleItem, IPrestigeAbleItem {
 
@@ -43,6 +47,7 @@ public interface ITieredItem extends IStarAbleItem, IPrestigeAbleItem {
 
 
     ItemTier fromDefault();
+    Consumer<Multimap<Attribute, AttributeModifier>> getModifiersForSlot(ItemStack stack, ItemTier tier);
 
     enum ItemTier {
         INFERNAL("infernal", 1.521379, 4, null, 25),

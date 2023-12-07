@@ -42,15 +42,9 @@ public class ArmorRecipe extends CustomRecipe {
         return new ShapedRecipe(getId(), getGroup(), category(), 3, cost.size() / 3, cost, stack);
     }
 
-    //TODO fix crafting recipes not working
     @Override
     public boolean matches(@NotNull CraftingContainer container, @NotNull Level level) {
-        for (ShapedRecipe recipe : this.all) {
-            if (recipe.matches(container, level)) {
-                return true;
-            }
-        }
-        return false;
+        return this.all.stream().anyMatch(recipe -> recipe.matches(container, level));
     }
 
     @Override
@@ -143,10 +137,10 @@ public class ArmorRecipe extends CustomRecipe {
             HashMap<ArmorType, ItemStack> map = new HashMap<>();
             List<ArmorType> toUse = Arrays.stream(ArmorType.values()).filter(armorType -> !unusedSlots.contains(armorType)).toList();
             if (results != null) {
-                Stream<String> stream = CollectionHelper.sync(toUse.stream().map(ArmorType::getSerializedName), TextHelper::mergeRegister, results);
-                MapStream<ArmorType, String> mapStream = MapStream.create(toUse, stream.toList());
+                Stream<String> stream = CollectionHelper.sync(toUse.stream().map(ArmorType::getSerializedName), TextHelper::swappedMergeRegister, results);
                 try {
-                    mapStream.mapValues(ResourceLocation::new)
+                    MapStream.create(toUse, stream.toList())
+                            .mapValues(ResourceLocation::new)
                             .mapValues(BuiltInRegistries.ITEM::get)
                             .mapValues(ItemStack::new)
                             .forEach(map::put);

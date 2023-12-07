@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Objects;
 
 public class FireLanceSpell {
-    //TODO fix cycle spells not being executed
     public static void execute(LivingEntity user, ItemStack stack) {
         ArrayList<Vec3> lineOfSight = MathHelper.lineOfSight(user, 10, 0.05);
         List<LivingEntity> hit = new ArrayList<>();

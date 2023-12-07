@@ -47,6 +47,10 @@ public class TextHelper {
         return a + "_" + b;
     }
 
+    public static String swappedMergeRegister(String a, String b) {
+        return mergeRegister(b, a);
+    }
+
     public static void removeUnnecessaryEmptyLines(List<Component> components) {
         Reference<Component> reference = Reference.of(null);
         components.removeIf(component -> {

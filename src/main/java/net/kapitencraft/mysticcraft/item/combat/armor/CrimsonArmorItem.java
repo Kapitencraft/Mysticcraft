@@ -31,6 +31,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class CrimsonArmorItem extends NetherArmorItem implements IArmorBonusItem {
     public static final ArmorTabGroup CRIMSON_ARMOR_GROUP = new ArmorTabGroup(TabRegister.TabTypes.WEAPONS_AND_TOOLS);
@@ -50,17 +51,6 @@ public class CrimsonArmorItem extends NetherArmorItem implements IArmorBonusItem
     @Override
     protected void postFullSetTick(ItemStack stack, Level level, LivingEntity living) {
         ParticleHelper.clearAllHelpers(helperString, living);
-    }
-
-    @Override
-    public Multimap<Attribute, AttributeModifier> getAttributeMods(EquipmentSlot slot) {
-                HashMultimap<Attribute, AttributeModifier> builder = HashMultimap.create();
-                if (slot == this.slot) {
-                    builder.put(ModAttributes.STRENGTH.get(), AttributeHelper.createModifierForSlot("Crimson Armor", AttributeModifier.Operation.ADDITION, 3 * this.getMaterial().getDefenseForSlot(this.getSlot()), slot));
-                    builder.put(ModAttributes.CRIT_DAMAGE.get(), AttributeHelper.createModifierForSlot("Crimson Armor", AttributeModifier.Operation.ADDITION, this.getMaterial().getDefenseForSlot(this.getSlot()), slot));
-                    builder.put(Attributes.MAX_HEALTH, AttributeHelper.createModifierForSlot("Crimson Armor", AttributeModifier.Operation.ADDITION, this.getMaterial().getDefenseForSlot(this.getSlot()) / 2.5, slot));
-                }
-                return builder;
     }
 
     @Override
@@ -107,4 +97,25 @@ public class CrimsonArmorItem extends NetherArmorItem implements IArmorBonusItem
     public List<ItemStack> getStarCost(ItemStack stack, int curStars) {
         return null;
     }
+
+    @Override
+    public Consumer<Multimap<Attribute, AttributeModifier>> getModifiersForSlot(ItemStack stack, ItemTier tier) {
+        return multimap -> {
+            multimap.put(ModAttributes.STRENGTH.get(), AttributeHelper.createModifierForSlot("Crimson Armor", AttributeModifier.Operation.ADDITION,
+                    3 * this.getMaterial().getDefenseForSlot(this.getSlot()) * tier.getValueMul() , slot));
+            multimap.put(ModAttributes.CRIT_DAMAGE.get(), AttributeHelper.createModifierForSlot("Crimson Armor", AttributeModifier.Operation.ADDITION,
+                    this.getMaterial().getDefenseForSlot(this.getSlot()) * tier.getValueMul(), slot));
+            multimap.put(Attributes.MAX_HEALTH, AttributeHelper.createModifierForSlot("Crimson Armor", AttributeModifier.Operation.ADDITION,
+                    this.getMaterial().getDefenseForSlot(this.getSlot()) * 0.4 * tier.getValueMul(), slot));
+        };
+    }
+
+    @Override
+    public Multimap<Attribute, AttributeModifier> getAttributeMods(EquipmentSlot slot) {
+        HashMultimap<Attribute, AttributeModifier> builder = HashMultimap.create();
+        if (slot == this.slot) {
+        }
+        return builder;
+    }
+
 }
