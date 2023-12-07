@@ -31,6 +31,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class SoulMageArmorItem extends NetherArmorItem implements IArmorBonusItem {
     public static final ArmorTabGroup SOUL_MAGE_ARMOR_GROUP = new ArmorTabGroup(TabRegister.TabTypes.WEAPONS_AND_TOOLS);
@@ -100,6 +101,11 @@ public class SoulMageArmorItem extends NetherArmorItem implements IArmorBonusIte
 
     @Override
     public List<ItemStack> getStarCost(ItemStack stack, int curStars) {
+        return null;
+    }
+
+    @Override
+    public Consumer<Multimap<Attribute, AttributeModifier>> getModifiersForSlot(ItemStack stack, ItemTier tier) {
         return null;
     }
 }

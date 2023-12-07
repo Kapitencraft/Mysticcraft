@@ -19,6 +19,7 @@ import net.minecraft.world.level.Level;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class WarpedArmorItem extends NetherArmorItem {
     public static final ArmorTabGroup WARPED_GROUP = new ArmorTabGroup(TabRegister.TabTypes.WEAPONS_AND_TOOLS);
@@ -71,6 +72,11 @@ public class WarpedArmorItem extends NetherArmorItem {
 
     @Override
     public List<ItemStack> getStarCost(ItemStack stack, int curStars) {
+        return null;
+    }
+
+    @Override
+    public Consumer<Multimap<Attribute, AttributeModifier>> getModifiersForSlot(ItemStack stack, ItemTier tier) {
         return null;
     }
 }
