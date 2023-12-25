@@ -16,7 +16,7 @@ public interface Spell extends Bonus {
     Rarity getRarity();
     String getCastingType();
     String getName();
-    void execute(LivingEntity living, ItemStack stack);
+    boolean execute(LivingEntity living, ItemStack stack);
     List<Component> getDescription();
     boolean canApply(Item item);
     void addDescription(List<Component> list, ISpellItem item, ItemStack ignoredStack, Player player);

@@ -1,8 +1,8 @@
 package net.kapitencraft.mysticcraft.init;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.item.storage.loot_table.conditions.LootTableTypeCondition;
-import net.kapitencraft.mysticcraft.item.storage.loot_table.conditions.TagKeyCondition;
+import net.kapitencraft.mysticcraft.item.loot_table.conditions.LootTableTypeCondition;
+import net.kapitencraft.mysticcraft.item.loot_table.conditions.TagKeyCondition;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import net.minecraftforge.registries.DeferredRegister;

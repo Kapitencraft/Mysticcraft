@@ -18,7 +18,7 @@ public final class ModMarker implements Marker {
 
     @Override
     public void add(Marker reference) {
-        MysticcraftMod.sendWarn("tried adding Marker: sike!", null);
+        MysticcraftMod.sendWarn("tried adding Marker: sike!", this);
     }
 
     @Override
@@ -48,6 +48,6 @@ public final class ModMarker implements Marker {
 
     @Override
     public boolean contains(String name) {
-        return false;
+        return this.name.contains(name);
     }
 }

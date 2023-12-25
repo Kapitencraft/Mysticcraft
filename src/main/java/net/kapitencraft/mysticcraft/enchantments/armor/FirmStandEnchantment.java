@@ -3,6 +3,7 @@ package net.kapitencraft.mysticcraft.enchantments.armor;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.ArmorStatBoostEnchantment;
 import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
+import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -29,6 +30,6 @@ public class FirmStandEnchantment extends ArmorStatBoostEnchantment {
 
     @Override
     public String[] getDescriptionMods(int level) {
-        return new String[]{"+" + level*0.1};
+        return new String[]{"+" + MathHelper.defRound(level*0.1)};
     }
 }

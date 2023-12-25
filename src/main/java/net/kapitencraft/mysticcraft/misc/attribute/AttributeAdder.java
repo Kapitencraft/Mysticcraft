@@ -8,7 +8,6 @@ import net.kapitencraft.mysticcraft.entity.WithermancerLordEntity;
 import net.kapitencraft.mysticcraft.entity.skeleton_master.SkeletonMaster;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModEntityTypes;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobCategory;
@@ -20,7 +19,9 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 @EventBusSubscriber(modid = MysticcraftMod.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
@@ -68,27 +69,26 @@ public class AttributeAdder {
 
     @SafeVarargs
     private static void addToPlayer(EntityAttributeModificationEvent event, Supplier<Attribute>... attributes) {
-        for (Supplier<Attribute> attribute : attributes) {
-            event.add(EntityType.PLAYER, attribute.get());
-        }
+        Arrays.stream(attributes).map(Supplier::get).forEach(attribute -> event.add(EntityType.PLAYER, attribute));
     }
 
 
     private static void addAll(EntityAttributeModificationEvent event, Attribute attribute, isAInstance generator) {
         List<String> addedList = new ArrayList<>();
-        for (EntityType<? extends Entity> entityType : ForgeRegistries.ENTITY_TYPES.getValues()) {
-            EntityType<? extends LivingEntity> livingType;
-            try {
-                livingType = (EntityType<? extends LivingEntity>) entityType;
-                if (generator.is(livingType)) {
-                    event.add(livingType, attribute);
-                    addedList.add(livingType.getDescriptionId());
-                }
-            } catch (Exception ignored) {
-
-            }
-        }
+        ForgeRegistries.ENTITY_TYPES.getValues().stream().map(AttributeAdder::toLiving).filter(Objects::nonNull).filter(generator::is)
+                .forEach(entityType -> {
+                    event.add(entityType, attribute);
+                    addedList.add(entityType.getDescriptionId());
+                });
         if (ClientModConfig.extraDebug) MysticcraftMod.sendRegisterDisplay("Attribute: [" + attribute.getDescriptionId() + "] to: " + addedList);
+    }
+
+    private static EntityType<? extends LivingEntity> toLiving(EntityType<?> in) {
+        try {
+            return (EntityType<? extends LivingEntity>) in;
+        } catch (ClassCastException e) {
+            return null;
+        }
     }
     @SubscribeEvent
     public static void createAttributes(EntityAttributeCreationEvent event) {

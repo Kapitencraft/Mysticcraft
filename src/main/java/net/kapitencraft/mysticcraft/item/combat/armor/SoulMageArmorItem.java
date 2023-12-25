@@ -17,7 +17,7 @@ import net.kapitencraft.mysticcraft.item.item_bonus.piece.SoulMageHelmetBonus;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.ArmorTabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
-import net.kapitencraft.mysticcraft.misc.FormattingCodes;
+import net.kapitencraft.mysticcraft.misc.ModRarities;
 import net.kapitencraft.mysticcraft.misc.particle_help.ParticleHelper;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -40,13 +40,15 @@ public class SoulMageArmorItem extends NetherArmorItem implements IArmorBonusIte
     private static final PieceBonus CHEST_BONUS = new SoulMageChestplateBonus();
     private static final FullSetBonus SET_BONUS = new SoulMageArmorFullSetBonus();
 
+
+    //TODO add crafting recipe
     @Override
     public boolean withCustomModel() {
         return false;
     }
 
     public SoulMageArmorItem(EquipmentSlot p_40387_) {
-        super(ModArmorMaterials.SOUL_MAGE, p_40387_, new Properties().rarity(FormattingCodes.LEGENDARY));
+        super(ModArmorMaterials.SOUL_MAGE, p_40387_, new Properties().rarity(ModRarities.LEGENDARY));
     }
 
     @Override

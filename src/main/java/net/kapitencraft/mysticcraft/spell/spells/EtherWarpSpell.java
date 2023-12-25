@@ -8,8 +8,9 @@ import net.minecraft.world.item.ItemStack;
 import java.util.List;
 
 public class EtherWarpSpell {
-    public static void execute(LivingEntity living, ItemStack ignoredStack) {
+    public static boolean execute(LivingEntity living, ItemStack ignoredStack) {
         MiscHelper.saveTeleport(living, 57);
+        return true;
     }
 
     public static List<Component> getDescription() {

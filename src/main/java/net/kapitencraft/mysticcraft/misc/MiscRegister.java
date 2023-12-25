@@ -1,5 +1,7 @@
 package net.kapitencraft.mysticcraft.misc;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.api.Reference;
@@ -11,6 +13,7 @@ import net.kapitencraft.mysticcraft.enchantments.abstracts.ModBowEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.armor.BasaltWalkerEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.weapon.ranged.OverloadEnchantment;
 import net.kapitencraft.mysticcraft.entity.FrozenBlazeEntity;
+import net.kapitencraft.mysticcraft.entity.item.UnCollectableItemEntity;
 import net.kapitencraft.mysticcraft.guild.GuildHandler;
 import net.kapitencraft.mysticcraft.guild.GuildUpgrades;
 import net.kapitencraft.mysticcraft.helpers.*;
@@ -25,9 +28,13 @@ import net.kapitencraft.mysticcraft.item.combat.spells.SpellItem;
 import net.kapitencraft.mysticcraft.item.combat.totems.ModTotemItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword.ManaSteelSwordItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.bow.ModBowItem;
-import net.kapitencraft.mysticcraft.item.data.reforging.Reforge;
+import net.kapitencraft.mysticcraft.item.data.gemstone.GemstoneType;
 import net.kapitencraft.mysticcraft.item.data.reforging.ReforgeManager;
-import net.kapitencraft.mysticcraft.item.item_bonus.IArmorBonusItem;
+import net.kapitencraft.mysticcraft.item.item_bonus.Bonus;
+import net.kapitencraft.mysticcraft.item.material.EssenceItem;
+import net.kapitencraft.mysticcraft.item.misc.SoulbindHelper;
+import net.kapitencraft.mysticcraft.misc.content.EssenceHolder;
+import net.kapitencraft.mysticcraft.misc.content.EssenceType;
 import net.kapitencraft.mysticcraft.misc.cooldown.Cooldowns;
 import net.kapitencraft.mysticcraft.misc.damage_source.FerociousDamageSource;
 import net.kapitencraft.mysticcraft.misc.damage_source.IAbilitySource;
@@ -48,6 +55,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -81,11 +90,14 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.BasicItemListing;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.event.AddReloadListenerEvent;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
+import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.ArrowLooseEvent;
 import net.minecraftforge.event.entity.player.CriticalHitEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.event.village.VillagerTradesEvent;
@@ -94,6 +106,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import javax.annotation.Nullable;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -110,6 +123,38 @@ public class MiscRegister {
             DuelHandler.setInstance(serverLevel.getDataStorage().computeIfAbsent(tag -> DuelHandler.load(tag, serverLevel.getServer()), DuelHandler::new, "duels"));
         }
     }
+
+    @SubscribeEvent
+    public static void pickUpEssence(PlayerEvent.ItemPickupEvent event) {
+        ItemStack stack = event.getStack();
+        if (stack.getItem() instanceof EssenceItem item) {
+            event.getEntity().getCapability(EssenceHolder.ESSENCE).ifPresent(essenceHolder -> {
+                EssenceType type = item.loadData(stack, i -> {});
+                essenceHolder.add(type, stack.getCount());
+                event.getEntity().displayClientMessage(Component.translatable("essence.pickup", type.getName(), stack.getCount()).withStyle(ChatFormatting.LIGHT_PURPLE), true);
+                event.getOriginalEntity().kill();
+            });
+        }
+    }
+
+    @SubscribeEvent
+    public static void onPlayerCloned(PlayerEvent.Clone event) {
+        if(event.isWasDeath()) {
+            event.getOriginal().getCapability(EssenceHolder.ESSENCE).ifPresent(oldStore ->
+                    event.getOriginal().getCapability(EssenceHolder.ESSENCE).ifPresent(newStore ->
+                            newStore.copyFrom(oldStore)));
+        }
+    }
+
+    @SubscribeEvent
+    public static void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
+        if (event.getObject() instanceof Player) {
+            if (!event.getObject().getCapability(EssenceHolder.ESSENCE).isPresent()) {
+                event.addCapability(MysticcraftMod.res("essence"), new EssenceHolder());
+            }
+        }
+    }
+
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void damageAttributeRegister(LivingHurtEvent event) {
         @Nullable LivingEntity attacker = MiscHelper.getAttacker(event.getSource());
@@ -228,28 +273,15 @@ public class MiscRegister {
     }
 
     @SubscribeEvent
-    public static void ItemBonusRegister(LivingDeathEvent event) {
+    public static void itemBonusRegister(LivingDeathEvent event) {
         DamageSource source = event.getSource();
         LivingEntity attacker = MiscHelper.getAttacker(source);
         MiscHelper.DamageType type = MiscHelper.getDamageType(source);
         LivingEntity killed = event.getEntity();
         if (attacker != null) {
             for (EquipmentSlot slot : MiscHelper.ARMOR_EQUIPMENT) {
-                if (attacker.getItemBySlot(slot).getItem() instanceof IArmorBonusItem bonusItem) {
-                    if (bonusItem.getPieceBonusForSlot(slot) != null) {
-                        bonusItem.getPieceBonusForSlot(slot).onEntityKilled(killed, attacker, type);
-                    }
-                    if (bonusItem.getFullSetBonus() != null) {
-                        bonusItem.getFullSetBonus().onEntityKilled(killed, attacker, type);
-                    }
-                    if (bonusItem.getExtraBonus(slot) != null) {
-                        bonusItem.getExtraBonus(slot).onEntityKilled(killed, attacker, type);
-                    }
-                }
-            }
-            Reforge reforge = Reforge.getFromStack(attacker.getMainHandItem());
-            if (reforge != null && reforge.getBonus() != null) {
-                reforge.getBonus().onEntityKilled(killed, attacker, type);
+                List<Bonus> bonuses = BonusHelper.getBonusesFromStack(attacker.getItemBySlot(slot));
+                bonuses.forEach(bonus -> bonus.onEntityKilled(killed, attacker, type));
             }
         }
     }
@@ -513,6 +545,7 @@ public class MiscRegister {
         player.giveExperiencePoints(MiscHelper.repairPlayerItems(player, amount, Enchantments.MENDING));
     }
 
+    @SuppressWarnings("all")
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void telekinesisRegister(BlockEvent.BreakEvent event) {
         Player player = event.getPlayer(); ItemStack mainHandItem = player.getMainHandItem(); BlockState state = event.getState();
@@ -561,6 +594,7 @@ public class MiscRegister {
 
     @SubscribeEvent
     public static void registerVillagerProfession(VillagerTradesEvent event) {
+        //TODO fix gemstone makers only having one trade
         Int2ObjectMap<List<VillagerTrades.ItemListing>> trades = event.getTrades();
         if (event.getType() == ModVillagers.GUILD_MASTER.getProfession().get()) {
             for (GuildUpgrades upgrade : GuildUpgrades.values()) {
@@ -570,6 +604,39 @@ public class MiscRegister {
                                 new ItemStack(ModItems.GUILD_UPGRADES.get(upgrade).get()),
                                 10, 2, 1.6f)));
             }
+        } else if (event.getType() == ModVillagers.GEMSTONE_MAKER.getProfession().get()) {
+            trades.put(1, List.of(
+                    new BasicItemListing(getEmeraldCost(4), MathHelper.pickRandom(GemstoneType.allForRarity(GemstoneType.Rarity.ROUGH)), 8, 5, 1.3f)
+            ));
+            int i = 2;
+            Multimap<Integer, VillagerTrades.ItemListing> multimap = HashMultimap.create();
+            for (int j = 0; j < 2; j++) {
+                for (GemstoneType.Rarity rarity : GemstoneType.RARITIES_TO_USE) {
+                    if (rarity != GemstoneType.Rarity.PERFECT) {
+                        GemstoneType type = MathHelper.pickRandom(GemstoneType.TYPES_TO_USE);
+                        ItemStack defRarity = GemstoneType.allItems().get(type).get(rarity);
+                        ItemStack newRarity = GemstoneType.allItems().get(type).get(rarity.next());
+                        int c = Mth.nextInt(RandomSource.create(), 1, 5);
+                        multimap.put(i,
+                                new BasicItemListing(getEmeraldCost((int) Math.pow(i, 2)), defRarity.copyWithCount(c), newRarity.copyWithCount(c), 8 - i, i + 6, (float) Math.pow(i, 1.5))
+                        );
+                        i++;
+                    }
+                }
+            }
+            multimap.keySet().forEach(integer -> {
+                Collection<VillagerTrades.ItemListing> values = multimap.get(integer);
+                trades.put(integer, values.stream().toList());
+            });
+        }
+    }
+
+    @SubscribeEvent
+    public static void disableToss(ItemTossEvent event) {
+        Player player = event.getPlayer();
+        if (SoulbindHelper.isSoulbound(event.getEntity().getItem())) {
+            event.setCanceled(true);
+            player.displayClientMessage(Component.translatable("soulbound.toss"), false);
         }
     }
 
@@ -589,13 +656,21 @@ public class MiscRegister {
         LivingEntity toDie = event.getEntity();
         if (toDie instanceof Player player) {
             List<ItemStack> totems = InventoryHelper.getByFilter(player, stack -> stack.getItem() instanceof ModTotemItem);
-            for (ItemStack stack : totems) {
+            if (!event.isCanceled()) for (ItemStack stack : totems) {
                 ModTotemItem totemItem = (ModTotemItem) stack.getItem();
                 if (totemItem.onUse(player, event.getSource())) {
                     event.setCanceled(true);
                     Minecraft.getInstance().gameRenderer.displayItemActivation(stack);
                     stack.shrink(1);
                     break;
+                }
+            }
+            if (!event.isCanceled()) {
+                List<ItemStack> soulbound = InventoryHelper.getByFilter(player, SoulbindHelper::isSoulbound);
+                for (ItemStack stack : soulbound) {
+                    UnCollectableItemEntity itemEntity = new UnCollectableItemEntity(toDie.level, toDie.getX(), toDie.getY(), toDie.getZ(), stack);
+                    itemEntity.addPlayer(player);
+                    itemEntity.move();
                 }
             }
         }

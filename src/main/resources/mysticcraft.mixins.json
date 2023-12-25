@@ -7,7 +7,8 @@
     "BannerItemMixin",
     "HandItemLayerRendererMixin",
     "ItemStackClientMixin",
-    "KeyMappingMixin"
+    "KeyMappingMixin",
+    "StringRenderOutputMixin"
   ],
   "mixins": [
     "AttributeMapMixin",
@@ -18,10 +19,13 @@
     "ItemMixin",
     "LivingEntityAccessor",
     "LivingEntityMixin",
+    "MerchantMenuMixin",
     "OverworldBiomeBuilderMixin",
     "PlayerMixin",
     "ProjectileMixin",
     "RandomChanceModifierMixin",
+    "StringDecomposerMixin",
+    "StyleMixin",
     "WitherSkullMixin"
   ],
   "injectors": {

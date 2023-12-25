@@ -12,7 +12,10 @@ import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.BiConsumer;
 
 public class BonusHelper {
@@ -43,6 +46,23 @@ public class BonusHelper {
                 MiscHelper.ifNonNull(bonusItem.getExtraBonus(), extraBonus -> user.accept(extraBonus, stack));
             }
         }, living);
+    }
+
+    public static List<Bonus> getBonusesFromStack(ItemStack stack) {
+        List<Bonus> bonuses = new ArrayList<>();
+        if (stack.getItem() instanceof IItemBonusItem bonusItem) {
+            bonuses.add(bonusItem.getBonus());
+            bonuses.add(bonusItem.getExtraBonus());
+            if (bonusItem instanceof IArmorBonusItem armorBonusItem) {
+                EquipmentSlot slot = MiscHelper.getSlotForStack(stack);
+                bonuses.add(armorBonusItem.getFullSetBonus());
+                bonuses.add(armorBonusItem.getExtraBonus(slot));
+                bonuses.add(armorBonusItem.getPieceBonusForSlot(slot));
+            }
+        }
+        Reforge reforge = Reforge.getFromStack(stack);
+        if (reforge != null) bonuses.add(reforge.getBonus());
+        return bonuses.stream().filter(Objects::nonNull).toList();
     }
 
 

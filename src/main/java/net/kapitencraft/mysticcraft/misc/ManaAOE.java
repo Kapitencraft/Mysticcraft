@@ -25,8 +25,7 @@ public class ManaAOE {
         }
         DamageCounter.DamageHolder holder = DamageCounter.getDamage(true);
         if (!user.level.isClientSide() && user instanceof Player player && holder.hasDamage()) {
-            String red = FormattingCodes.RED;
-            player.sendSystemMessage(Component.literal("Your " + TextHelper.makeGrammar(name) + " hit " + TextHelper.wrapInRed(holder.hit()) + " Enemies for " + red + MathHelper.defRound(holder.damage()) + " Damage"));
+            player.sendSystemMessage(Component.literal("Your " + TextHelper.makeGrammar(name) + " hit " + TextHelper.wrapInRed(holder.hit()) + " Enemies for " + TextHelper.wrapInRed(MathHelper.defRound(holder.damage())) + " Damage"));
         }
     }
 }

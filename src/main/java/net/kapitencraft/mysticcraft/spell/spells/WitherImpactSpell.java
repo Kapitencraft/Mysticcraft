@@ -13,11 +13,12 @@ import java.util.List;
 
 public class WitherImpactSpell {
     private static final Component[] description = {Component.literal("Teleports you 10 blocks ahead"), Component.literal("and deals damage to all entities around")};
-    public static void execute(LivingEntity user, ItemStack stack) {
+    public static boolean execute(LivingEntity user, ItemStack stack) {
         WitherShieldSpell.execute(user, stack);
         MiscHelper.saveTeleport(user, 10);
         ManaAOE.execute(user, "wither_impact", 0.4f, 5, 5);
         ParticleHelper.sendParticles(user.level, new CircleParticleOptions(new Vector3f(143f / 255, 0, 1), 5, 0.6), false, user.getX(), user.getY(), user.getZ(), 1, 0, 0, 0, 0);
+        return true;
     }
 
     public static List<Component> getDescription() {

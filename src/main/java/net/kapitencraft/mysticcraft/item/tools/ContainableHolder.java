@@ -11,8 +11,6 @@ public class ContainableHolder<T extends Item> {
     final T item;
     CompoundTag tag;
 
-    boolean dontAsk = false;
-
     public ContainableHolder(T item) {
         this.item = item;
     }
@@ -41,15 +39,6 @@ public class ContainableHolder<T extends Item> {
         this.amount += amount;
     }
 
-    public void reduce() {
-        if (dontAsk) {
-            grow(-1);
-            dontAsk = false;
-        } else {
-            dontAsk = true;
-        }
-    }
-
     public static <T extends Item> ContainableHolder<T> fromTag(CompoundTag tag) {
         int amount = tag.getInt("Amount");
         T item = (T) TextHelper.getFromId(tag.getString("Item"));
@@ -58,7 +47,6 @@ public class ContainableHolder<T extends Item> {
             ContainableHolder<T> holder = new ContainableHolder<>(item);
             holder.setTag(compoundTag);
             holder.setAmount(amount);
-            holder.dontAsk = tag.getBoolean("don't Ask");
             return holder;
         }
         return null;
@@ -69,7 +57,6 @@ public class ContainableHolder<T extends Item> {
         tag1.putInt("Amount", this.amount);
         tag1.putString("Item", TextHelper.getTextId(this.item));
         tag1.put("Info", this.getTag());
-        tag1.putBoolean("don't Ask", this.dontAsk);
         return tag1;
     }
 

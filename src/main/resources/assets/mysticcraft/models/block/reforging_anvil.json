@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/template_anvil",
   "textures": {
-    "top": "reforging_anvil_top"
+    "top": "mysticcraft:block/reforging_anvil_top"
   }
 }

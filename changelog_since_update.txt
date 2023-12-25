@@ -1,11 +1,5 @@
-fixed being unable to log into modded servers;
-fixed game crashing when trying to equip wizard hat item;
-fixed quivers not showing contents;
-fixed shortbows being able to be used by droping item out of inventory;
-fixed itemstacks being added to new slots each time :hype:;
-
-added ability to shadow dagger;
-added Mana Syphon Enchantment;
-
-nerved mod bows due to too-high damage values;
-simplified armor crafting code;
+fixed firm stand enchantment showing multiple past-dot digits although no req;
+fixed dagger model not looking write;
+fixed gemstone blocks not having particle texture;
+fixed gemstone grinder villager profession not working;
+[IN-DEV] removed Provider interfaces due to replacement with Functions

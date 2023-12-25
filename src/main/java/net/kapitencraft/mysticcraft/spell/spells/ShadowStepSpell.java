@@ -12,15 +12,14 @@ import java.util.List;
 
 public class ShadowStepSpell {
 
-    public static void execute(LivingEntity user, ItemStack ignored) {
+    public static boolean execute(LivingEntity user, ItemStack ignored) {
         Level level = user.level;
-        if (!level.isClientSide()) {
-            List<LivingEntity> list = MathHelper.getAllEntitiesInsideCylinder(0.2f, user.getEyePosition(), user.getRotationVector(), 20, level).stream().filter(entity -> entity instanceof LivingEntity && entity != user).map(entity -> (LivingEntity) entity).toList();
-            if (list.isEmpty()) return;
-            LivingEntity living = list.get(0);
-            Vec3 behind = living.getLookAngle().scale(-2);
-            MiscHelper.teleport(user, behind.add(MathHelper.getPosition(user)));
-        }
+        List<LivingEntity> list = MathHelper.getAllEntitiesInsideCylinder(0.2f, user.getEyePosition(), user.getRotationVector(), 20, level).stream().filter(entity -> entity instanceof LivingEntity && entity != user).map(entity -> (LivingEntity) entity).toList();
+        if (list.isEmpty()) return false;
+        LivingEntity living = list.get(0);
+        Vec3 behind = living.getLookAngle().scale(-2);
+        MiscHelper.teleport(user, behind.add(MathHelper.getPosition(user)));
+        return true;
     }
 
     public static List<Component> getDescription() {

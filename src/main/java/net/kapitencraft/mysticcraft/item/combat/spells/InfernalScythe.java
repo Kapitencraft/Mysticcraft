@@ -2,7 +2,7 @@ package net.kapitencraft.mysticcraft.item.combat.spells;
 
 import net.kapitencraft.mysticcraft.item.data.spell.SpellHelper;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
-import net.kapitencraft.mysticcraft.misc.FormattingCodes;
+import net.kapitencraft.mysticcraft.misc.ModRarities;
 import net.kapitencraft.mysticcraft.spell.SpellSlot;
 import net.kapitencraft.mysticcraft.spell.Spells;
 import net.minecraft.network.chat.Component;
@@ -11,7 +11,7 @@ import java.util.List;
 
 public class InfernalScythe extends NormalSpellItem implements IDamageSpellItem, IFireScytheItem {
     public InfernalScythe() {
-        super(new Properties().rarity(FormattingCodes.LEGENDARY), 350, 69);
+        super(new Properties().rarity(ModRarities.LEGENDARY), 350, 69);
     }
 
     @Override

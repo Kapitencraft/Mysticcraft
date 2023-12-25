@@ -9,7 +9,7 @@ public class KeeperHolder {
 
     public KeeperHolder(SkeletonMaster master) {
         this.master = master;
-        MiscHelper.repeatXTimes(4, integer -> arrowKeepers[integer] = new ArrowKeeper(integer * 90));
+        MiscHelper.repeat(4, integer -> arrowKeepers[integer] = new ArrowKeeper(integer * 90));
         chargeAll();
     }
 

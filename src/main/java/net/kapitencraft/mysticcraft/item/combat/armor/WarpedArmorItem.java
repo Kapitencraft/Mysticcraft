@@ -24,6 +24,8 @@ import java.util.function.Consumer;
 public class WarpedArmorItem extends NetherArmorItem {
     public static final ArmorTabGroup WARPED_GROUP = new ArmorTabGroup(TabRegister.TabTypes.WEAPONS_AND_TOOLS);
 
+
+    //TODO add crafting recipe
     @Override
     public TabGroup getGroup() {
         return WARPED_GROUP;

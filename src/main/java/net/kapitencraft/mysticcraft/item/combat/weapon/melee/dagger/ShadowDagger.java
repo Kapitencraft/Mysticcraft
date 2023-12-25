@@ -8,7 +8,7 @@ import net.kapitencraft.mysticcraft.item.item_bonus.IItemBonusItem;
 import net.kapitencraft.mysticcraft.item.item_bonus.PieceBonus;
 import net.kapitencraft.mysticcraft.item.item_bonus.piece.ShadowDaggerBonus;
 import net.kapitencraft.mysticcraft.item.misc.ModTiers;
-import net.kapitencraft.mysticcraft.misc.FormattingCodes;
+import net.kapitencraft.mysticcraft.misc.ModRarities;
 import net.kapitencraft.mysticcraft.spell.SpellSlot;
 import net.kapitencraft.mysticcraft.spell.Spells;
 import org.jetbrains.annotations.Nullable;
@@ -17,7 +17,7 @@ public class ShadowDagger extends ModDaggerItem implements IItemBonusItem, ISpel
     private static final ShadowDaggerBonus BONUS = new ShadowDaggerBonus();
 
     public ShadowDagger() {
-        super(ModTiers.SHADOW_TIER, 3, MiscHelper.rarity(FormattingCodes.LEGENDARY));
+        super(ModTiers.SHADOW_TIER, 3, MiscHelper.rarity(ModRarities.LEGENDARY));
     }
 
     @Override

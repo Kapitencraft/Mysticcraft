@@ -62,7 +62,7 @@ public interface ISpellItem {
     }
 
     default boolean handleMana(LivingEntity user, Spell spell, ItemStack stack) {
-        return getSpells(stack).handleMana(user, spell);
+        return getSpells(stack).handleManaAndExecute(user, spell, stack);
     }
 
     default boolean handleActiveMana(LivingEntity user, ItemStack stack) {

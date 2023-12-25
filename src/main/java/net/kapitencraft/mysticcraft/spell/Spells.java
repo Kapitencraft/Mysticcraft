@@ -14,7 +14,7 @@ import net.kapitencraft.mysticcraft.item.combat.spells.necron_sword.NecronSword;
 import net.kapitencraft.mysticcraft.item.data.spell.ISpellItem;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
-import net.kapitencraft.mysticcraft.misc.FormattingCodes;
+import net.kapitencraft.mysticcraft.misc.ModRarities;
 import net.kapitencraft.mysticcraft.spell.spells.*;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
@@ -30,19 +30,20 @@ import net.minecraftforge.registries.RegistryObject;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.BiConsumer;
+import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+@Deprecated //change to new System after 1.0
 public enum Spells implements Spell {
     WITHER_IMPACT("Wither Impact", "1101110", Type.RELEASE, 300, WitherImpactSpell::execute, item -> item instanceof NecronSword, WitherImpactSpell::getDescription, Rarity.RARE, true, 0, Elements.SHADOW),
     WITHER_SHIELD("Wither Shield", "1101111", Type.RELEASE, 150, WitherShieldSpell::execute, item -> item instanceof NecronSword, WitherShieldSpell::getDescription, Rarity.RARE, true, 0, Elements.EARTH, Elements.SHADOW),
-    IMPLOSION("Implosion", "0000000", Type.RELEASE, 300, ImplosionSpell::execute, item -> item instanceof NecronSword, ImplosionSpell::getDescription, FormattingCodes.LEGENDARY, true, 0, Elements.FIRE, Elements.SHADOW),
+    IMPLOSION("Implosion", "0000000", Type.RELEASE, 300, ImplosionSpell::execute, item -> item instanceof NecronSword, ImplosionSpell::getDescription, ModRarities.LEGENDARY, true, 0, Elements.FIRE, Elements.SHADOW),
     INSTANT_TRANSMISSION("Instant Transmission", "1110111", Type.RELEASE, 50, InstantTransmissionSpell::execute, item -> true, InstantTransmissionSpell::getDescription, Rarity.COMMON, true, 0, Elements.VOID),
     ETHER_WARP("Ether Transmission", "1000111", Type.RELEASE, 50, EtherWarpSpell::execute, item -> item instanceof AspectOfTheVoidItem, EtherWarpSpell::getDescription, Rarity.EPIC, true, 20, Elements.VOID, Elements.AIR),
     EXPLOSIVE_SIGHT("Explosive Sight", "1010110", Type.RELEASE, 150, ExplosiveSightSpell::execute, item -> true, ExplosiveSightSpell::getDescription, Rarity.UNCOMMON, true, 600, Elements.FIRE),
-    EMPTY_SPELL("Empty Spell", null, Type.RELEASE, 0, (living, itemStack)-> {}, item -> false, EmptySpell::getDescription, Rarity.UNCOMMON, false, 0),
+    EMPTY_SPELL("Empty Spell", null, Type.RELEASE, 0, (living, itemStack)-> true, item -> false, EmptySpell::getDescription, Rarity.UNCOMMON, false, 0),
     SHADOW_STEP("Shadow Step", "1110011", Type.RELEASE, 80, ShadowStepSpell::execute, item -> true, ShadowStepSpell::getDescription, Rarity.EPIC, true, 1200, Elements.SHADOW),
     HUGE_HEAL("Huge Heal", "0011011", Type.RELEASE, 70, HugeHealSpell::execute, item -> true, HugeHealSpell::getDescription, Rarity.UNCOMMON, true, 40, Elements.WATER),
     FIRE_BOLT_1("Fire Bolt 1", "0110011", Type.RELEASE, 50, createFireBold(1, false), item -> item instanceof IFireScytheItem, createFireBoldDesc(1f), Rarity.UNCOMMON, true, 0, Elements.FIRE),
@@ -58,31 +59,30 @@ public enum Spells implements Spell {
     }
 
 
-    private static BiConsumer<LivingEntity, ItemStack> createFireBold(double baseDamage, boolean explosive) {
+    private static BiPredicate<LivingEntity, ItemStack> createFireBold(double baseDamage, boolean explosive) {
         return (user, stack) -> {
             FireBoltProjectile projectile = FireBoltProjectile.createProjectile(user.level, user, explosive, baseDamage, "Fire Bolt");
             projectile.shootFromRotation(user, user.getXRot(), user.getYRot(), 0, 2, 1);
             projectile.setBaseDamage(baseDamage);
             user.level.addFreshEntity(projectile);
+            return true;
         };
     }
     private static Supplier<List<Component>> createFireBoldDesc(float damage) {
-        return ()-> List.of(Component.literal("Fires a Fire Bolt dealing"), Component.literal(FormattingCodes.RED + damage + FormattingCodes.RESET + " Base Ability Damage"));
+        return ()-> List.of(Component.literal("Fires a Fire Bolt dealing"), Component.literal(TextHelper.wrapInRed(damage) + " Base Ability Damage"));
     }
     private final String castingType, name;
     public final Type TYPE;
     public final double MANA_COST;
-    private final BiConsumer<LivingEntity, ItemStack> run;
+    private final BiPredicate<LivingEntity, ItemStack> run;
     private final Predicate<Item> helper;
     private final Supplier<List<Component>> description;
     public final String REGISTRY_NAME;
-    private final boolean shouldBeItem;
     public final Rarity RARITY;
     private final List<Element> elements;
     private final int cooldown;
 
-    Spells(String name, String castingType, Type type, double manaCost, BiConsumer<LivingEntity, ItemStack> toRun, Predicate<Item> helper, Supplier<List<Component>> description, Rarity rarity, boolean shouldBeItem, int cooldown, Element... elements) {
-        this.shouldBeItem = shouldBeItem;
+    Spells(String name, String castingType, Type type, double manaCost, BiPredicate<LivingEntity, ItemStack> toRun, Predicate<Item> helper, Supplier<List<Component>> description, Rarity rarity, boolean shouldBeItem, int cooldown, Element... elements) {
         this.name = TextHelper.removeNumbers(name);
         this.TYPE = type;
         this.MANA_COST = manaCost;
@@ -148,16 +148,18 @@ public enum Spells implements Spell {
         return this.RARITY;
     }
 
-    public void execute(LivingEntity living, ItemStack stack) {
+    public boolean execute(LivingEntity living, ItemStack stack) {
+        boolean success = false;
         CompoundTag SpellCooldowns = living.getPersistentData().getCompound("SpellCooldowns");
         int cooldown = SpellCooldowns.getInt(this.name);
         if (cooldown < 1) {
-            this.run.accept(living, stack);
+            success = this.run.test(living, stack);
             cooldown =MathHelper.cooldown(living, this.cooldown);
         } else {
             cooldown--;
         }
         SpellCooldowns.putInt(this.name, cooldown);
+        return success;
     }
 
     public List<Component> getDescription() {
@@ -170,9 +172,9 @@ public enum Spells implements Spell {
         list.add(Component.literal("Ability: " + this.getName() + " " + (spellSlotAmount > 1 ? (item.getIndexForSlot(stack, this) + 1) + " / " + item.getSlotAmount() : "")).withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.GOLD));
         if (this.description.get() != null) list.addAll(this.description.get());
         if (this.MANA_COST > 0 && player != null) {
-            list.add(Component.literal("Mana-Cost: " + FormattingCodes.DARK_RED + getManaCostForPlayer(player)).withStyle(ChatFormatting.DARK_GRAY));
+            list.add(Component.literal("Mana-Cost: §4" + getManaCostForPlayer(player)).withStyle(ChatFormatting.DARK_GRAY));
         }
-        if (this.castingType != null && item.getSlotAmount() > 1) list.add(Component.literal("Pattern: [" + this.getPattern() + FormattingCodes.RESET + "]"));
+        if (this.castingType != null && item.getSlotAmount() > 1) list.add(Component.literal("Pattern: [" + this.getPattern() + "§r]"));
         if (this.cooldown != 0 && player != null) {
             int cooldownTicks = getRemainingCooldownTicks(player);
             list.add(Component.literal("Cooldown: " + (cooldownTicks > 0 ? TextHelper.wrapInRed("ACTIVE") + "(" + MathHelper.round(cooldownTicks / 20., 1) + "s)" : "INACTIVE, " + MathHelper.round(MathHelper.cooldown(player, this.cooldown) / 20., 1) + "s")).withStyle(ChatFormatting.DARK_GRAY));
@@ -207,8 +209,8 @@ public enum Spells implements Spell {
         return replace.replace("1", BLUE);
     }
 
-    private static final String BLUE = FormattingCodes.BLUE + "\u2726";
-    private static final String RED = FormattingCodes.RED + "\u2724";
+    private static final String BLUE = "§9\u2726";
+    private static final String RED = "§6\u2724";
     public static String getStringForPattern(String pattern, boolean fromTooltip) {
         if (fromTooltip) {
             String replace1 = pattern.replace("Pattern: [", "");

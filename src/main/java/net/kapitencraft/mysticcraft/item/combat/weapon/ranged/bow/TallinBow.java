@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.item.combat.weapon.ranged.bow;
 
-import net.kapitencraft.mysticcraft.misc.FormattingCodes;
+import net.kapitencraft.mysticcraft.misc.ModRarities;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class TallinBow extends ShortBowItem {
     public TallinBow() {
-        super(new Properties().rarity(FormattingCodes.LEGENDARY).durability(1500));
+        super(new Properties().rarity(ModRarities.LEGENDARY).durability(1500));
     }
 
     @Override

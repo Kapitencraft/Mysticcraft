@@ -14,17 +14,19 @@ import java.util.List;
 
 public interface Cooldowns {
     List<Cooldown> cooldowns = new ArrayList<>();
-    Cooldown WITHER_SHIELD = new Cooldown(CompoundPath.builder(WitherShieldSpell.DAMAGE_REDUCTION_TIME).build(), 100, living -> {
-        CompoundTag tag = living.getPersistentData();
-        float absorption = tag.getFloat(WitherShieldSpell.ABSORPTION_AMOUNT_ID);
-        HealingHelper.setEffectReason(living);
-        living.heal(absorption / 2);
-        living.setAbsorptionAmount(living.getAbsorptionAmount() - absorption);
-        tag.putFloat(WitherShieldSpell.ABSORPTION_AMOUNT_ID, 0);
+    Cooldown WITHER_SHIELD = new Cooldown(CompoundPath.builder(WitherShieldSpell.DAMAGE_REDUCTION_TIME).build(), 100, entity -> {
+        if (entity instanceof LivingEntity living) {
+            CompoundTag tag = living.getPersistentData();
+            float absorption = tag.getFloat(WitherShieldSpell.ABSORPTION_AMOUNT_ID);
+            HealingHelper.setEffectReason(living);
+            living.heal(absorption / 2);
+            living.setAbsorptionAmount(living.getAbsorptionAmount() - absorption);
+            tag.putFloat(WitherShieldSpell.ABSORPTION_AMOUNT_ID, 0);
+        }
     });
     Cooldown DOMINUS = new Cooldown(CompoundPath.builder(CrimsonArmorFullSetBonus.COOLDOWN_ID).build(), 120, living -> {
-        TagHelper.reduceBy1(living.getPersistentData(), CrimsonArmorFullSetBonus.DOMINUS_ID);
-        //Cooldowns.DOMINUS.applyCooldown(living, false);
+        if (TagHelper.reduceBy1(living.getPersistentData(), CrimsonArmorFullSetBonus.DOMINUS_ID) > 0)
+            Cooldowns.DOMINUS.applyCooldown(living, false);
     });
     static Cooldown BONK_ENCHANTMENT(EquipmentSlot slot) {
         CompoundPath path = CompoundPath.builder(slot.getName() + ".cooldown").withParent(BonkEnchantment.BONK_ID, builder -> {}).build();

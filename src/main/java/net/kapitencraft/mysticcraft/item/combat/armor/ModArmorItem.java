@@ -3,7 +3,6 @@ package net.kapitencraft.mysticcraft.item.combat.armor;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.api.Provider;
 import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.helpers.TextHelper;
@@ -34,6 +33,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public abstract class ModArmorItem extends ArmorItem implements IModItem {
     private static final String FULL_SET_ID = "hadFullSet";
@@ -53,7 +53,7 @@ public abstract class ModArmorItem extends ArmorItem implements IModItem {
         ModArmorItem create(EquipmentSlot slot);
     }
 
-    public static <T extends ModArmorItem> HashMap<EquipmentSlot, RegistryObject<T>> createRegistry(String registryName, Provider<T, EquipmentSlot> creator, TabGroup group) {
+    public static <T extends ModArmorItem> HashMap<EquipmentSlot, RegistryObject<T>> createRegistry(String registryName, Function<EquipmentSlot, T> creator, TabGroup group) {
         return ModItems.createRegistry(creator, slot -> registryName + "_" + TextHelper.getRegistryNameForSlot(slot), List.of(MiscHelper.ARMOR_EQUIPMENT), group);
     }
 

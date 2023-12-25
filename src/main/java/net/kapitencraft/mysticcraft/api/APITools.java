@@ -1,40 +1,25 @@
 package net.kapitencraft.mysticcraft.api;
 
-import net.kapitencraft.mysticcraft.helpers.MiscHelper;
-import net.minecraft.world.entity.LivingEntity;
-import org.jetbrains.annotations.NotNull;
-
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 public class APITools {
-    public static @NotNull LivingEntity[] entityListToArray(@NotNull List<LivingEntity> list) {
-        LivingEntity[] ret = new LivingEntity[list.size()];
-        MiscHelper.repeatXTimes(list.size(), integer -> ret[integer] = list.get(integer));
-        return ret;
+    private static List<Character> convertList(int value) {
+        int d = value == 27 ? 10 : 0;
+        List<Character> list = new ArrayList<>();
+        for (int i = d; i < (value + d); i++) {
+            list.add(CONVERT.get(i));
+        }
+        return list;
     }
 
-    private static HashMap<Character, Integer> getConversationMap() {
-        HashMap<Character, Integer> conversationMap = new HashMap<Character, Integer>(16);
-        conversationMap.put('0', 0);
-        conversationMap.put('1', 1);
-        conversationMap.put('2', 2);
-        conversationMap.put('3', 3);
-        conversationMap.put('4', 4);
-        conversationMap.put('5', 5);
-        conversationMap.put('6', 6);
-        conversationMap.put('7', 7);
-        conversationMap.put('8', 8);
-        conversationMap.put('9', 9);
-        conversationMap.put('A', 10);
-        conversationMap.put('B', 11);
-        conversationMap.put('C', 12);
-        conversationMap.put('D', 13);
-        conversationMap.put('E', 14);
-        conversationMap.put('F', 15);
-        return conversationMap;
-    }
+    private static final List<Character> CONVERT = List.of(
+            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+                    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
+                    'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
+                    'U', 'V', 'W', 'X', 'Y', 'Z', ' ', '-', '+', '*', '/',
+                    '!', '?', '.', ',', '\'', '\"', '<', '>', '(', ')', '§', '$', '%', '&', '\\', '=', '`', '´');
 
     private static char[] invertCharArray(char[] ts) {
         char[] temp = Arrays.copyOf(ts, ts.length);
@@ -44,20 +29,65 @@ public class APITools {
         return temp;
     }
 
-    public static int hexadecimalDecompiler(String input) {
-        input = input.toUpperCase();
-        char[] chars = invertCharArray(input.toCharArray());
-        System.out.println(Arrays.toString(chars));
-        int ret = 0;
+    public static long compiler(int convert, String in) {
+        List<Character> convertList = convertList(convert);
+        in = in.toUpperCase();
+        char[] chars = invertCharArray(in.toCharArray());
+        long ret = 0;
         char ch;
         for (int i = 0; i < chars.length; i++) {
             ch = chars[i];
-            if (getConversationMap().containsKey(ch)) {
-                int buffer = (int) Math.pow(16, i) * getConversationMap().get(ch);
-                System.out.println("Converting " + ch + ": " + buffer);
-                ret += buffer;
+            if (convertList.contains(ch)) {
+                int buffer = convertList.indexOf(ch);
+                ret += buffer * Math.pow(convert, i);
+            } else {
+                System.out.print("Found unknown char '");
+                System.out.print(ch);
+                System.out.println("', skipping");
             }
         }
         return ret;
+    }
+
+    @SuppressWarnings("all")
+    public static String decompile(int convert, long in) {
+        List<Character> convertList = convertList(convert);
+        StringBuilder builder = new StringBuilder();
+        int j = 0;
+        while (in >= Math.pow(convert, j) * 15) {
+            j++;
+        }
+        while (in > 0) {
+            for (int i = 1; i < convert; i++) {
+                long pow = (long) Math.pow(convert, j);
+                if (pow * i > in) {
+                    i--;
+                    if (!(builder.isEmpty() && convertList.get(i) == '0')) {
+                        builder.append(convertList.get(i));
+                    }
+                    in -= pow * i;
+                    j--;
+                    break;
+                }
+            }
+        }
+        return builder.toString();
+    }
+
+    public static String transfer(int inConvert, int outConvert, String toTransfer) {
+        long value = compiler(inConvert, toTransfer);
+        return decompile(outConvert, value);
+    }
+
+    public static String transfer(String in) {
+        String inConvert = in.substring(0, 2);
+        String outConvert = in.substring(2, 4);
+        try {
+            String transfer = transfer(Integer.parseInt(inConvert), Integer.parseInt(outConvert), in.substring(4));
+            return outConvert + inConvert + transfer;
+        } catch (NumberFormatException e) {
+            System.out.println("unable to ");
+        }
+        return "";
     }
 }

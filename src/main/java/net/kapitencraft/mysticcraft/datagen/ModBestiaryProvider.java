@@ -57,7 +57,7 @@ public class ModBestiaryProvider implements DataProvider {
         JsonArray array = new JsonArray();
         List<String> translation = bestiaryStore.translations;
         int descLength = translation.size();
-        MiscHelper.repeatXTimes(descLength, integer -> {
+        MiscHelper.repeat(descLength, integer -> {
             String translationId = "best." + entityName + "." + (integer + 1);
             array.add(translationId);
             if (provider != null) provider.add(translationId, translation.get(integer));

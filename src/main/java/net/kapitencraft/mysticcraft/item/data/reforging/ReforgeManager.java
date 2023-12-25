@@ -25,6 +25,8 @@ public class ReforgeManager extends SimpleJsonResourceReloadListener {
     protected void apply(@NotNull Map<ResourceLocation, JsonElement> map, @NotNull ResourceManager manager, @NotNull ProfilerFiller filler) {
         for (Map.Entry<ResourceLocation, JsonElement> entry: map.entrySet()) {
             String[] data = entry.getKey().getPath().split("/");
+            if (data.length < 1) throw new IllegalStateException("found reforge without name; expected corrupted mod file! please re-download");
+            if (data.length < 2) throw new IllegalStateException("found reforge without type identification");
             String name = data[1];
             String type = data[0];
             try {

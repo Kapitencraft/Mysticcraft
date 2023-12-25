@@ -1,10 +1,8 @@
 package net.kapitencraft.mysticcraft.client.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.kapitencraft.mysticcraft.api.Provider;
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
-import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.kapitencraft.mysticcraft.misc.MiscRegister;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.LivingEntity;
@@ -19,6 +17,7 @@ import net.minecraftforge.fml.common.Mod;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
@@ -34,17 +33,17 @@ public class Rendering {
         SMALL_SYMBOLS.scale(0.5f, 0.5f, 0.5f);
         addRenderer(new RenderHolder(
                 new PositionHolder(-203, -116),
-                value -> FormattingCodes.BLUE + MathHelper.round(value.getAttributeValue(ModAttributes.MANA.get()), 1) + " [+" + MathHelper.round(value.getPersistentData().getDouble(MiscRegister.OVERFLOW_MANA_ID), 1) + " Overflow] " + FormattingCodes.RESET + " / " + FormattingCodes.DARK_BLUE + value.getAttributeValue(ModAttributes.MAX_MANA.get()) + " (+" + MathHelper.round(value.getPersistentData().getDouble("manaRegen") * 20, 2) + "/s)",
+                value -> "§9" + MathHelper.round(value.getAttributeValue(ModAttributes.MANA.get()), 1) + " [+" + MathHelper.round(value.getPersistentData().getDouble(MiscRegister.OVERFLOW_MANA_ID), 1) + " Overflow] §r / §1" + value.getAttributeValue(ModAttributes.MAX_MANA.get()) + " (+" + MathHelper.round(value.getPersistentData().getDouble("manaRegen") * 20, 2) + "/s)",
                 RenderType.BIG
         ));
         addRenderer(new Rendering.RenderHolder(
                 new Rendering.PositionHolder(-90, 340),
-                value -> FormattingCodes.DARK_BLUE + "Protection: " + getDamageProtection(value) + "%",
+                value -> "§1Protection: " + getDamageProtection(value) + "%",
                 Rendering.RenderType.SMALL
         ));
         addRenderer(new Rendering.RenderHolder(
                 new Rendering.PositionHolder(-90, 350),
-                value -> FormattingCodes.DARK_AQUA + "Effective HP: " + MathHelper.defRound(value.getHealth() * 100 / (100 - getDamageProtection(value))),
+                value -> "§3Effective HP: " + MathHelper.defRound(value.getHealth() * 100 / (100 - getDamageProtection(value))),
                 Rendering.RenderType.SMALL
         ));
 
@@ -67,7 +66,7 @@ public class Rendering {
         if (entity != null) {
             list.forEach(renderHolder -> {
                 Vec2 pos = renderHolder.pos.makePos();
-                render(getStack(renderHolder.type), renderHolder.provider.provide(entity), posX - options.guiScale().get() + pos.x, posY - options.guiScale().get() + pos.y, -1);
+                render(getStack(renderHolder.type), renderHolder.provider.apply(entity), posX - options.guiScale().get() + pos.x, posY - options.guiScale().get() + pos.y, -1);
             });
         }
     }
@@ -91,10 +90,10 @@ public class Rendering {
 
     public static class RenderHolder {
         private final PositionHolder pos;
-        private final Provider<String, Player> provider;
+        private final Function<Player, String> provider;
         private final RenderType type;
 
-        public RenderHolder(PositionHolder pos, Provider<String, Player> provider, RenderType type) {
+        public RenderHolder(PositionHolder pos, Function<Player, String> provider, RenderType type) {
             this.pos = pos;
             this.provider = provider;
             this.type = type;

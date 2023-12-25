@@ -104,7 +104,7 @@ public class ColorAnimator {
         int length = buf.readInt();
         int nextColorTime = buf.readInt();
         ColorAnimator animator = create(nextColorTime);
-        MiscHelper.repeatXTimes(length, integer -> {
+        MiscHelper.repeat(length, integer -> {
             Vector3f color = DustParticleOptionsBase.readVector3f(buf);
             animator.addFrame(color);
         });

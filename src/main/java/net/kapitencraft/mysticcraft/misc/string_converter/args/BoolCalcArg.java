@@ -10,7 +10,7 @@ public class BoolCalcArg implements CalculationArgument<Boolean> {
     }
 
     @Override
-    public Boolean provide(Boolean value1, Boolean value2) {
+    public Boolean apply(Boolean value1, Boolean value2) {
         return null;
     }
 

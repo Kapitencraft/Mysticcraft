@@ -1,8 +1,8 @@
 package net.kapitencraft.mysticcraft.init;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.item.storage.loot_table.functions.AttributeAmountModifierFunction;
-import net.kapitencraft.mysticcraft.item.storage.loot_table.functions.PristineFunction;
+import net.kapitencraft.mysticcraft.item.loot_table.functions.AttributeAmountModifierFunction;
+import net.kapitencraft.mysticcraft.item.loot_table.functions.PristineFunction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.storage.loot.Serializer;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunction;

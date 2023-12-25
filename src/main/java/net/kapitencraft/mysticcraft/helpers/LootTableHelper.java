@@ -2,9 +2,9 @@ package net.kapitencraft.mysticcraft.helpers;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.kapitencraft.mysticcraft.item.storage.loot_table.IConditional;
-import net.kapitencraft.mysticcraft.item.storage.loot_table.LootContextReader;
-import net.kapitencraft.mysticcraft.item.storage.loot_table.modifiers.ModLootModifier;
+import net.kapitencraft.mysticcraft.item.loot_table.IConditional;
+import net.kapitencraft.mysticcraft.item.loot_table.LootContextReader;
+import net.kapitencraft.mysticcraft.item.loot_table.modifiers.ModLootModifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;

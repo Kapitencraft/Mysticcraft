@@ -10,7 +10,6 @@ import net.kapitencraft.mysticcraft.item.data.dungeon.IStarAbleItem;
 import net.kapitencraft.mysticcraft.item.data.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.item.data.reforging.Reforge;
 import net.kapitencraft.mysticcraft.item.data.spell.ISpellItem;
-import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.kapitencraft.mysticcraft.spell.Spells;
 import net.kapitencraft.mysticcraft.spell.spells.Spell;
 import net.minecraft.nbt.CompoundTag;
@@ -78,14 +77,13 @@ public abstract class ItemMixin implements IForgeItem {
                 tag.putString(SPELL_EXE, tag.getString(SPELL_EXE) + "1");
                 TextHelper.sendTitle(player, Component.literal(Spells.getPattern(tag.getString(SPELL_EXE))));
                 if (item.getClosestSpell(tag.getString(SPELL_EXE)) != null) {
-                    TextHelper.sendSubTitle(player, Component.literal(FormattingCodes.ORANGE + "\u27A4 " + item.getClosestSpell(tag.getString(SPELL_EXE)).getName()));
+                    TextHelper.sendSubTitle(player, Component.literal( "§6\u27A4 " + item.getClosestSpell(tag.getString(SPELL_EXE)).getName()));
                 }
                 tag.putByte(SPELL_EXECUTION_DUR, (byte) 20);
                 return InteractionResultHolder.consume(itemstack);
             } else {
                 if (item.getActiveSpell(itemstack).getType() == Spells.Type.RELEASE) {
                     if (item.handleActiveMana(player, itemstack)) {
-                        item.executeSpell(itemstack, player);
                         return InteractionResultHolder.consume(itemstack);
                     }
                 } else {
@@ -131,8 +129,8 @@ public abstract class ItemMixin implements IForgeItem {
     public void onUseTick(@NotNull Level level, @NotNull LivingEntity user, @NotNull ItemStack stack, int count) {
         if (self() instanceof ISpellItem spellItem) {
             Spell spell = spellItem.getActiveSpell(stack);
-            if (spell.getType() == Spells.Type.CYCLE && spellItem.handleMana(user, spell, stack) && (Integer.MAX_VALUE - count & 2) == 0) {
-                spell.execute(user, stack);
+            if (spell.getType() == Spells.Type.CYCLE && (Integer.MAX_VALUE - count & 2) == 0) {
+                spellItem.handleMana(user, spell, stack);
             }
         }
     }
@@ -144,7 +142,7 @@ public abstract class ItemMixin implements IForgeItem {
             tag.putString(SPELL_EXE, tag.getString(SPELL_EXE) + "0");
             TextHelper.sendTitle(player, Component.literal(Spells.getPattern(tag.getString(SPELL_EXE))));
             if (spellItem.getClosestSpell(tag.getString(SPELL_EXE)) != null) {
-                TextHelper.sendSubTitle(player, Component.literal(FormattingCodes.ORANGE + "\u27A4 " + spellItem.getClosestSpell(tag.getString(SPELL_EXE)).getName()));
+                TextHelper.sendSubTitle(player, Component.literal("§6\u27A4 " + spellItem.getClosestSpell(tag.getString(SPELL_EXE)).getName()));
             }
             tag.putByte(SPELL_EXECUTION_DUR, (byte) 20);
             return true;

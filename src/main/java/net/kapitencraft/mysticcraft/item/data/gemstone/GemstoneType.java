@@ -1,12 +1,13 @@
 package net.kapitencraft.mysticcraft.item.data.gemstone;
 
 import com.mojang.serialization.Codec;
-import net.kapitencraft.mysticcraft.api.SaveAbleEnum;
 import net.kapitencraft.mysticcraft.block.GemstoneBlock;
 import net.kapitencraft.mysticcraft.helpers.CollectionHelper;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -20,15 +21,15 @@ import java.util.function.Supplier;
 
 public enum GemstoneType implements StringRepresentable {
     EMPTY(0, ()-> null, 0, "empty", 0),
-    ALMANDINE(colorFromCFormatting(ChatFormatting.LIGHT_PURPLE), ModAttributes.ABILITY_DAMAGE, 0.3, "almandine", GemstoneBlock.HIGH_MEDIUM_STRENGHT),
-    JASPER(colorFromCFormatting(ChatFormatting.DARK_RED), ModAttributes.STRENGTH, 2, "jasper", GemstoneBlock.VERY_HIGH_STRENGHT),
-    RUBY(colorFromCFormatting(ChatFormatting.RED), () -> Attributes.MAX_HEALTH, 0.5, "ruby", GemstoneBlock.LOW_STRENGHT),
-    AMETHYST(colorFromCFormatting(ChatFormatting.DARK_PURPLE), () -> Attributes.ARMOR, 2.3, "amethyst", GemstoneBlock.LOW_MEDIUM_STRENGHT),
-    SAPPHIRE(colorFromCFormatting(ChatFormatting.BLUE), ModAttributes.INTELLIGENCE, 2.7, "sapphire", GemstoneBlock.MEDIUM_STRENGHT),
-    AQUAMARINE(colorFromCFormatting(ChatFormatting.AQUA), ForgeMod.SWIM_SPEED, 0.1, "aquamarine", GemstoneBlock.VERY_LOW_STRENGHT),
-    TURQUOISE(colorFromCFormatting(ChatFormatting.DARK_AQUA), ModAttributes.FISHING_SPEED, 2.9, "turquoise", GemstoneBlock.LOW_MEDIUM_STRENGHT),
-    MOONSTONE(colorFromCFormatting(ChatFormatting.BLACK), ModAttributes.DRAW_SPEED, 0.5, "moonstone", GemstoneBlock.HIGH_STRENGHT),
-    CELESTINE(colorFromCFormatting(ChatFormatting.WHITE), ()-> Attributes.MOVEMENT_SPEED, 0.07, "celestine", GemstoneBlock.LOW_STRENGHT);
+    ALMANDINE(colorFromCFormat(ChatFormatting.LIGHT_PURPLE), ModAttributes.ABILITY_DAMAGE, 0.3, "almandine", GemstoneBlock.HIGH_MEDIUM_STRENGHT),
+    JASPER(colorFromCFormat(ChatFormatting.DARK_RED), ModAttributes.STRENGTH, 2, "jasper", GemstoneBlock.VERY_HIGH_STRENGHT),
+    RUBY(colorFromCFormat(ChatFormatting.RED), () -> Attributes.MAX_HEALTH, 0.5, "ruby", GemstoneBlock.LOW_STRENGHT),
+    AMETHYST(colorFromCFormat(ChatFormatting.DARK_PURPLE), () -> Attributes.ARMOR, 2.3, "amethyst", GemstoneBlock.LOW_MEDIUM_STRENGHT),
+    SAPPHIRE(colorFromCFormat(ChatFormatting.BLUE), ModAttributes.INTELLIGENCE, 2.7, "sapphire", GemstoneBlock.MEDIUM_STRENGHT),
+    AQUAMARINE(colorFromCFormat(ChatFormatting.AQUA), ForgeMod.SWIM_SPEED, 0.1, "aquamarine", GemstoneBlock.VERY_LOW_STRENGHT),
+    TURQUOISE(colorFromCFormat(ChatFormatting.DARK_AQUA), ModAttributes.FISHING_SPEED, 2.9, "turquoise", GemstoneBlock.LOW_MEDIUM_STRENGHT),
+    MOONSTONE(colorFromCFormat(ChatFormatting.BLACK), ModAttributes.DRAW_SPEED, 0.5, "moonstone", GemstoneBlock.HIGH_STRENGHT),
+    CELESTINE(colorFromCFormat(ChatFormatting.WHITE), ()-> Attributes.MOVEMENT_SPEED, 0.07, "celestine", GemstoneBlock.LOW_STRENGHT);
 
     public static Codec<GemstoneType> CODEC = StringRepresentable.fromEnum(GemstoneType::values);
     private final int COLOR;
@@ -37,7 +38,7 @@ public enum GemstoneType implements StringRepresentable {
     private final String id;
     private final double blockStrength;
 
-    public static int colorFromCFormatting(ChatFormatting formatting) {
+    public static int colorFromCFormat(ChatFormatting formatting) {
         if (formatting.getColor() == null) throw new IllegalStateException("formatting has no color");
         return formatting.getColor();
     }
@@ -83,8 +84,12 @@ public enum GemstoneType implements StringRepresentable {
         return toReturn;
     }
 
-    private static final List<GemstoneType> TYPES_TO_USE = CollectionHelper.remove(GemstoneType.values(), GemstoneType.EMPTY);
-    private static final List<Rarity> RARITIES_TO_USE = CollectionHelper.remove(Rarity.values(), Rarity.EMPTY);
+    public static final List<GemstoneType> TYPES_TO_USE = CollectionHelper.remove(GemstoneType.values(), GemstoneType.EMPTY);
+    public static final List<Rarity> RARITIES_TO_USE = CollectionHelper.remove(Rarity.values(), Rarity.EMPTY);
+
+    public static List<ItemStack> allForRarity(Rarity rarity) {
+        return allItems().values().stream().map(map -> map.get(rarity)).toList();
+    }
 
     public HashMap<Rarity, ItemStack> registerItems() {
         HashMap<Rarity, ItemStack> toReturn = new HashMap<>();
@@ -94,6 +99,10 @@ public enum GemstoneType implements StringRepresentable {
             }
         }
         return toReturn;
+    }
+
+    public MutableComponent getDispName() {
+        return Component.translatable("gem_type." + this.getSerializedName());
     }
 
     public ItemStack registerBlocks() {
@@ -113,14 +122,14 @@ public enum GemstoneType implements StringRepresentable {
         return id;
     }
 
-    public enum Rarity implements SaveAbleEnum, StringRepresentable {
-        ROUGH(1, colorFromCFormatting(ChatFormatting.WHITE), 1, "rough"),
-        FLAWED(2, colorFromCFormatting(ChatFormatting.GREEN), 1.75, "flawed"),
-        FINE(3, colorFromCFormatting(ChatFormatting.BLUE), 2.3, "fine"),
-        FLAWLESS(4, colorFromCFormatting(ChatFormatting.DARK_PURPLE), 3, "flawless"),
-        PERFECT(5, colorFromCFormatting(ChatFormatting.GOLD), 4.8, "perfect"),
-        EMPTY(0, colorFromCFormatting(ChatFormatting.DARK_GRAY), 0, "empty");
-        public static final Codec<Rarity> CODEC = StringRepresentable.fromEnum(Rarity::values);
+    public enum Rarity implements StringRepresentable {
+        ROUGH(1, colorFromCFormat(ChatFormatting.WHITE), 1, "rough"),
+        FLAWED(2, colorFromCFormat(ChatFormatting.GREEN), 1.75, "flawed"),
+        FINE(3, colorFromCFormat(ChatFormatting.BLUE), 2.3, "fine"),
+        FLAWLESS(4, colorFromCFormat(ChatFormatting.DARK_PURPLE), 3, "flawless"),
+        PERFECT(5, colorFromCFormat(ChatFormatting.GOLD), 4.8, "perfect"),
+        EMPTY(0, colorFromCFormat(ChatFormatting.DARK_GRAY), 0, "empty");
+        public static final EnumCodec<Rarity> CODEC = StringRepresentable.fromEnum(Rarity::values);
         public final int colour, level;
         public final double modMul;
         private final String id;
@@ -132,6 +141,19 @@ public enum GemstoneType implements StringRepresentable {
             this.id = id;
         }
 
+        public Rarity next() {
+            if (this == PERFECT) {
+                throw new IllegalArgumentException("perfect is perfect!");
+            }
+            return switch (this) {
+                case ROUGH -> FLAWED;
+                case FLAWED -> FINE;
+                case FINE -> FLAWLESS;
+                case FLAWLESS -> PERFECT;
+                default -> ROUGH;
+            };
+        }
+
         public String getId() {
             return id;
         }
@@ -141,12 +163,7 @@ public enum GemstoneType implements StringRepresentable {
         }
 
         public static Rarity getById(String id) {
-            return SaveAbleEnum.getValue(EMPTY, id, values());
-        }
-
-        @Override
-        public String getName() {
-            return id;
+            return CODEC.byName(id, EMPTY);
         }
 
         public static Rarity byLevel(int level) {

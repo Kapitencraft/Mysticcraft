@@ -4,7 +4,6 @@ import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
 import net.kapitencraft.mysticcraft.helpers.TextHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModEnchantments;
-import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -64,7 +63,7 @@ public class RNGDropHelper {
 
 
     private static Component createRareDropMessage(ItemStack drop, double magic_find, float chance) {
-        return DropRarities.getRarity(chance).makeDisplay().append(FormattingCodes.BOLD + ": " + FormattingCodes.RESET).append(TextHelper.getStackNameWithoutBrackets(drop)).append(FormattingCodes.AQUA + " (+" + magic_find + ")");
+        return DropRarities.getRarity(chance).makeDisplay().append("§l: §r").append(TextHelper.getStackNameWithoutBrackets(drop)).append("§b (+" + magic_find + ")");
     }
 
     public static void trySendDropMessage(ItemStack drop, double magicFind, LivingEntity toSend, float chance) {

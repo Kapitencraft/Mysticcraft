@@ -1,9 +1,9 @@
 package net.kapitencraft.mysticcraft.enchantments.weapon;
 
+import net.kapitencraft.mysticcraft.content.ChainLightningHelper;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.ExtendedCalculationEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.IUltimateEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.IWeaponEnchantment;
-import net.kapitencraft.mysticcraft.enchantments.extras.ChainLightningHelper;
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.minecraft.world.damagesource.DamageSource;

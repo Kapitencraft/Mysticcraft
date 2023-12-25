@@ -42,16 +42,9 @@ public class ParticleHelper {
 
     public static void clearAllHelpers(@Nullable String helperReason, LivingEntity target) {
         worker.remove(target.getUUID(), helperReason);
-        CompoundTag tag = target.getPersistentData();
-        ListTag helpers = tag.getList("ParticleHelpers", Tag.TAG_COMPOUND);
-        helpers.removeIf(tag1 -> {
-            if (tag1 instanceof CompoundTag helperTag) {
-                if (helperReason == null || helperTag.getString("helperReason").equals(helperReason)) {
-                    return true;
-                }
-            }
-            return false;
-        });
+        target.getPersistentData()
+                .getList("ParticleHelpers", Tag.TAG_COMPOUND)
+                .removeIf(tag1 -> tag1 instanceof CompoundTag helperTag && (helperReason == null || helperTag.getString("helperReason").equals(helperReason)));
     }
 
     public static CompoundTag createArrowHeadProperties(int maxSteps, int maxParticle, SimpleParticleType particleType, SimpleParticleType particleType1) {
@@ -79,7 +72,8 @@ public class ParticleHelper {
 
     public static String toTag(SimpleParticleType type) {
         ResourceLocation location = BuiltInRegistries.PARTICLE_TYPE.getKey(type);
-        return (location == null ? BuiltInRegistries.PARTICLE_TYPE.getKey(ParticleTypes.ANGRY_VILLAGER) : location).toString();
+        if (location == null) location = BuiltInRegistries.PARTICLE_TYPE.getKey(ParticleTypes.ANGRY_VILLAGER);
+        return location == null ? "null" : location.toString();
     }
 
     private static void loadAllHelpers(Entity target) {

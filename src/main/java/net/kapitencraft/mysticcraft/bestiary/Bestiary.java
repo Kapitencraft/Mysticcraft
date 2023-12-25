@@ -1,8 +1,9 @@
 package net.kapitencraft.mysticcraft.bestiary;
 
-import net.kapitencraft.mysticcraft.api.SaveAbleEnum;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.util.StringRepresentable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -31,11 +32,12 @@ public class Bestiary {
         return description;
     }
 
-    public enum Type implements SaveAbleEnum {
+    public enum Type implements StringRepresentable {
         NORMAL("normal"),
         MINI_BOSS("mini_boss"),
         BOSS("boss");
 
+        private static final EnumCodec<Type> CODEC = StringRepresentable.fromEnum(Type::values);
 
         private final String name;
 
@@ -43,13 +45,14 @@ public class Bestiary {
             this.name = name;
         }
 
-        @Override
-        public String getName() {
-            return name;
-        }
 
         public static Type getByName(String name) {
-            return SaveAbleEnum.getValue(NORMAL, name, values());
+            return CODEC.byName(name, NORMAL);
+        }
+
+        @Override
+        public @NotNull String getSerializedName() {
+            return name;
         }
     }
 }

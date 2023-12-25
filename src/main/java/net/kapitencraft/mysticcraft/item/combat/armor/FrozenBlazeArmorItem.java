@@ -11,7 +11,7 @@ import net.kapitencraft.mysticcraft.item.item_bonus.fullset.FrozenBlazeFullSetBo
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.ArmorTabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
-import net.kapitencraft.mysticcraft.misc.FormattingCodes;
+import net.kapitencraft.mysticcraft.misc.ModRarities;
 import net.kapitencraft.mysticcraft.misc.damage_source.FrozenDamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -36,7 +36,7 @@ public class FrozenBlazeArmorItem extends ModArmorItem implements IArmorBonusIte
 
     private static final FrozenBlazeFullSetBonus FULL_SET_BONUS = new FrozenBlazeFullSetBonus();
     public FrozenBlazeArmorItem(EquipmentSlot p_40387_) {
-        super(ModArmorMaterials.FROZEN_BLAZE, p_40387_, new Item.Properties().rarity(FormattingCodes.LEGENDARY).fireResistant());
+        super(ModArmorMaterials.FROZEN_BLAZE, p_40387_, new Item.Properties().rarity(ModRarities.LEGENDARY).fireResistant());
     }
 
     @Override

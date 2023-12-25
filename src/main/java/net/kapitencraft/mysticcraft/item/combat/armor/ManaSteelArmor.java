@@ -6,14 +6,14 @@ import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
-import net.kapitencraft.mysticcraft.misc.FormattingCodes;
+import net.kapitencraft.mysticcraft.misc.ModRarities;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 
 public class ManaSteelArmor extends ModArmorItem {
     public ManaSteelArmor(EquipmentSlot p_40387_) {
-        super(ModArmorMaterials.MANA_STEEL, p_40387_, new Properties().rarity(FormattingCodes.MYTHIC));
+        super(ModArmorMaterials.MANA_STEEL, p_40387_, new Properties().rarity(ModRarities.MYTHIC));
     }
 
     @Override

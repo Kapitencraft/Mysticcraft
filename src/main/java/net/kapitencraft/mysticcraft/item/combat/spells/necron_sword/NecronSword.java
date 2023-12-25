@@ -10,7 +10,7 @@ import net.kapitencraft.mysticcraft.item.data.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.item.data.spell.SpellHelper;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
-import net.kapitencraft.mysticcraft.misc.FormattingCodes;
+import net.kapitencraft.mysticcraft.misc.ModRarities;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -37,7 +37,7 @@ public abstract class NecronSword extends SpellItem implements IGemstoneApplicab
     }
 
     public NecronSword(int damage, int intelligence, double ferocity, double strenght) {
-        super(new Properties().rarity(FormattingCodes.LEGENDARY), damage, -2.4f, intelligence, 0);
+        super(new Properties().rarity(ModRarities.LEGENDARY), damage, -2.4f, intelligence, 0);
         this.FEROCITY = ferocity;
         this.STRENGHT = strenght;
     }

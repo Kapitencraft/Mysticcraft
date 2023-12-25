@@ -99,7 +99,7 @@ public class MathHelper {
         BlockPos diff = b.subtract(a);
         double horizontal = Mth.sqrt((diff.getX() * diff.getX()) + (diff.getZ() * diff.getZ()) + (diff.getY() * diff.getY()));
         int numPoints = (int) (size == LineSize.THIN ? horizontal * 20 : horizontal * 50);
-        MiscHelper.repeatXTimes(numPoints, integer -> {
+        MiscHelper.repeat(numPoints, integer -> {
             double t = integer / (numPoints - 1.);
             list.add(makeLinePos(t, a, diff));
         });
@@ -115,7 +115,7 @@ public class MathHelper {
     }
 
     public static void forCube(BlockPos cube, Consumer<BlockPos> consumer) {
-        MiscHelper.repeatXTimes(cube.getX(), integer -> MiscHelper.repeatXTimes(cube.getY(), integer1 -> MiscHelper.repeatXTimes(cube.getZ(), integer2 -> {
+        MiscHelper.repeat(cube.getX(), integer -> MiscHelper.repeat(cube.getY(), integer1 -> MiscHelper.repeat(cube.getZ(), integer2 -> {
             consumer.accept(new BlockPos(integer, integer1, integer2));
         })));
     }
@@ -172,8 +172,8 @@ public class MathHelper {
         return getEntitiesAround(LivingEntity.class, source, range);
     }
 
-    public static Vec3 calculateViewVector(float horizontalXAxis, float verticalYAxis) {
-        float f = horizontalXAxis * ((float)Math.PI / 180F);
+    public static Vec3 calculateViewVector(float horizontalHeightXAxis, float verticalYAxis) {
+        float f = horizontalHeightXAxis * ((float)Math.PI / 180F);
         float f1 = -verticalYAxis * ((float)Math.PI / 180F);
         float f2 = Mth.cos(f1);
         float f3 = Mth.sin(f1);
@@ -308,6 +308,9 @@ public class MathHelper {
         return (returnable << 8) + b;
     }
 
+    public static int RGBtoInt(float r, float g, float b) {
+        return RGBtoInt(new Vector3f(r, g, b));
+    }
     public static Vector3i fromFloat(Vector3f floatValue, int mul) {
         return new Vector3i((int) (floatValue.x * mul), (int) (floatValue.y * mul), (int) (floatValue.z * mul));
     }

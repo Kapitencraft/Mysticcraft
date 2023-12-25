@@ -115,7 +115,7 @@ public class SpellHelper implements ItemData<SpellSlot[], SpellHelper> {
         return false;
     }
 
-    public boolean handleMana(LivingEntity user, Spell spell) {
+    public boolean handleManaAndExecute(LivingEntity user, Spell spell, ItemStack stack) {
         if (user.getAttribute(ModAttributes.INTELLIGENCE.get()) == null) {
             return false;
         }
@@ -131,6 +131,9 @@ public class SpellHelper implements ItemData<SpellSlot[], SpellHelper> {
                 return false;
             }
             if (currentMana >= manaToUse) {
+                if (!spell.execute(user, stack)) {
+                    return false;
+                }
                 if (overflowMana > 0) {
                     user.getPersistentData().putDouble(MiscRegister.OVERFLOW_MANA_ID, overflowMana > manaToUse ? overflowMana - manaToUse : 0);
                     manaToUse -= overflowMana;
@@ -153,10 +156,7 @@ public class SpellHelper implements ItemData<SpellSlot[], SpellHelper> {
     public boolean executeSpell(String executionId, ItemStack stack, LivingEntity user) {
         if (Spells.contains(executionId) && executionId.length() == 7) {
             Spell spell = Spells.get(executionId);
-            if (this.containsSpell(spell) && handleMana(user, spell)) {
-                spell.execute(user, stack);
-                return true;
-            }
+            return this.containsSpell(spell) && handleManaAndExecute(user, spell, stack);
         }
         return false;
     }

@@ -1,10 +1,13 @@
 package net.kapitencraft.mysticcraft.item.tools;
 
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
+import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.init.ModEnchantments;
 import net.kapitencraft.mysticcraft.item.misc.IModItem;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.SlotAccess;
@@ -13,6 +16,8 @@ import net.minecraft.world.inventory.ClickAction;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,8 +32,19 @@ public abstract class ContainableItem<T extends Item> extends Item implements IM
         this.stackSize = stackSize;
     }
 
+
+    @Override
+    public void appendHoverTextWithPlayer(@NotNull ItemStack itemStack, @Nullable Level level, @NotNull List<Component> list, @NotNull TooltipFlag flag, Player player) {
+        List<ContainableHolder<T>> contents = getContents(itemStack);
+        contents.forEach((holder) -> list.add(((MutableComponent) holder.getDefaultStack().getHoverName()).withStyle(MiscHelper.getItemRarity(holder.getItem()).getStyleModifier()).append(": " + holder.getAmount())));
+    }
+
     public int getUsedCapacity(ItemStack stack) {
         return MathHelper.count(getContents(stack).stream().map(ContainableHolder::getAmount).toList());
+    }
+
+    public int getRemainingCapacity(ItemStack stack) {
+        return getCapacity(stack) - getUsedCapacity(stack);
     }
 
 
@@ -57,6 +73,14 @@ public abstract class ContainableItem<T extends Item> extends Item implements IM
         return list;
     }
 
+    public ContainableHolder<T> getItem(@NotNull ItemStack stack, Item item) {
+        if (canApply(item)) {
+            List<ContainableHolder<T>> content = getContents(stack);
+
+        }
+        return new ContainableHolder<>(null);
+    }
+
     public CompoundTag saveContents(ItemStack stack, List<ContainableHolder<T>> toSave) {
         CompoundTag tag = new CompoundTag();
         int i = 0;
@@ -77,11 +101,11 @@ public abstract class ContainableItem<T extends Item> extends Item implements IM
             List<ContainableHolder<T>> contents = getContents(stack);
             ItemStack itemstack = slot.getItem();
             if (itemstack.isEmpty() && !contents.isEmpty()) {
-                ItemStack returned = remove(contents.get(0).getDefaultStack(), Screen.hasControlDown() ? 64 : 1, contents);
+                ItemStack returned = remove(contents.get(0).getDefaultStack(), Screen.hasControlDown() ? 64 : 1, stack);
                 slot.safeInsert(returned);
                 this.playDropContentsSound(player);
             } else if (canApply(itemstack.getItem())) {
-                int freeSpace = getCapacity(stack) - getUsedCapacity(stack);
+                int freeSpace = getRemainingCapacity(stack);
                 ItemStack toPut = slot.safeTake(itemstack.getCount(), freeSpace, player);
                 ContainableHolder<T> holder = getHolder(toPut, contents);
                 holder.grow(toPut.getCount());
@@ -100,9 +124,9 @@ public abstract class ContainableItem<T extends Item> extends Item implements IM
             List<ContainableHolder<T>> list = getContents(stack);
             if (stack1.isEmpty()) {
                 ItemStack first = list.get(0).getDefaultStack();
-                remove(first, 1, list);
+                remove(first, 1, stack);
             } else if (canApply(stack1.getItem())) {
-                int freeValue = getCapacity(stack) - getUsedCapacity(stack);
+                int freeValue = getRemainingCapacity(stack);
                 ContainableHolder<T> holder = getHolder(stack1, list);
                 int toGrow = Math.min(freeValue, stack1.getCount());
                 holder.grow(toGrow);
@@ -118,7 +142,7 @@ public abstract class ContainableItem<T extends Item> extends Item implements IM
         }
     }
 
-    public boolean canApply(Item item) {
+    protected boolean canApply(Item item) {
         try {
             T t = (T) item;
             return true;
@@ -128,8 +152,9 @@ public abstract class ContainableItem<T extends Item> extends Item implements IM
     }
 
     public ContainableHolder<T> getHolder(ItemStack value, List<ContainableHolder<T>> contents) {
+        value.getOrCreateTag();
         for (ContainableHolder<T> holder : contents)  {
-            if (holder.item == value.getItem() && holder.tag.equals(value.getTag())) {
+            if (ItemStack.isSameItemSameTags(holder.getDefaultStack(), value)) {
                 return holder;
             }
         }
@@ -139,8 +164,27 @@ public abstract class ContainableItem<T extends Item> extends Item implements IM
         return holder;
     }
 
-    private ItemStack remove(@Nullable ItemStack item, int maxAmount, List<ContainableHolder<T>> contents) {
-        return item == null ? ItemStack.EMPTY : getHolder(item, contents).makeStack(maxAmount);
+    public ItemStack remove(@Nullable ItemStack item, int maxAmount, ItemStack source) {
+        if (item == null) return ItemStack.EMPTY;
+        List<ContainableHolder<T>> contents = getContents(source);
+        ContainableHolder<T> holder = getHolder(item, contents);
+        ItemStack stack = holder.makeStack(maxAmount);
+        saveContents(source, contents);
+        return stack;
+    }
+
+    public ItemStack put(ItemStack stack, ItemStack source) {
+        List<ContainableHolder<T>> content = getContents(source);
+        ContainableHolder<T> holder = getHolder(stack, content);
+        int free = getRemainingCapacity(source);
+        if (free < stack.getCount()) {
+            holder.grow(free);
+            stack.shrink(free);
+            return stack;
+        } else {
+            holder.grow(stack.getCount());
+            return ItemStack.EMPTY;
+        }
     }
 
 

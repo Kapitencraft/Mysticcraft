@@ -3,9 +3,9 @@ package net.kapitencraft.mysticcraft.item.item_bonus.piece;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
+import net.kapitencraft.mysticcraft.helpers.TextHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.item.item_bonus.PieceBonus;
-import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -24,7 +24,7 @@ public class SoulMageHelmetBonus extends PieceBonus {
 
     @Override
     public Consumer<List<Component>> getDisplay() {
-        return list -> list.addAll(List.of(Component.literal("Grants " + FormattingCodes.RED + "+1 Ability Damage" + FormattingCodes.RESET + " per " + FormattingCodes.AQUA + "25 Intelligence"), Component.literal("you have")));
+        return list -> list.addAll(List.of(Component.literal("Grants " + TextHelper.wrapInRed("+1 Ability Damage") + " per §b25 Intelligence§r"), Component.literal("you have")));
     }
 
     @Nullable

@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class FireLanceSpell {
-    public static void execute(LivingEntity user, ItemStack stack) {
+    public static boolean execute(LivingEntity user, ItemStack ignored) {
         ArrayList<Vec3> lineOfSight = MathHelper.lineOfSight(user, 10, 0.05);
         List<LivingEntity> hit = new ArrayList<>();
         for (Vec3 vec3 : lineOfSight) {
@@ -38,6 +38,7 @@ public class FireLanceSpell {
                 }
             }
         }
+        return true;
     }
 
     public static List<Component> getDescription() {

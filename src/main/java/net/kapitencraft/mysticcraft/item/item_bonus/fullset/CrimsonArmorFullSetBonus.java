@@ -2,11 +2,12 @@ package net.kapitencraft.mysticcraft.item.item_bonus.fullset;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import net.kapitencraft.mysticcraft.entity.CrimsonDeathRayProjectile;
+import net.kapitencraft.mysticcraft.content.CrimsonDeathRayHelper;
 import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.helpers.TagHelper;
 import net.kapitencraft.mysticcraft.item.item_bonus.FullSetBonus;
+import net.kapitencraft.mysticcraft.misc.cooldown.Cooldowns;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
@@ -37,20 +38,15 @@ public class CrimsonArmorFullSetBonus extends FullSetBonus {
         if (data.getInt(DOMINUS_ID) < 10) {
             TagHelper.increaseIntegerTagValue(user.getPersistentData(), DOMINUS_ID, 1);
         } else {
-            float YRot = user.getYRot();
-            for (int i = 0; i < 3; i++) {
-                float curRor = YRot + (120 * i);
-                CrimsonDeathRayProjectile projectile = CrimsonDeathRayProjectile.createProjectile(user.level, user, curRor);
-                user.level.addFreshEntity(projectile);
-            }
+            CrimsonDeathRayHelper.add(user);
         }
-        data.putInt(COOLDOWN_ID, 120);
+        Cooldowns.DOMINUS.applyCooldown(user, true);
     }
 
     @Override
     public void onTick(@NotNull ItemStack stack, Level level, @NotNull Entity entity) {
         CompoundTag data = entity.getPersistentData();
-        int dominusCooldown = data.getInt(COOLDOWN_ID);
+        int dominusCooldown = Cooldowns.DOMINUS.getCooldownTime(entity);
         int dominus = data.getInt(DOMINUS_ID);
         if (dominusCooldown-- <= 0 && dominus > 0) {
             dominus--;

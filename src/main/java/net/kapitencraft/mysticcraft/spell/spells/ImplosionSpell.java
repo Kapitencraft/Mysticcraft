@@ -9,8 +9,9 @@ import java.util.List;
 
 public class ImplosionSpell {
 
-    public static void execute(LivingEntity user, ItemStack stack) {
+    public static boolean execute(LivingEntity user, ItemStack ignored) {
         ManaAOE.execute(user, "implosion", 0.1f, 5, 5);
+        return true;
     }
     public static List<Component> getDescription() {
         return List.of(Component.literal("Deals 5 Damage to Enemies 5 Blocks Around you"));

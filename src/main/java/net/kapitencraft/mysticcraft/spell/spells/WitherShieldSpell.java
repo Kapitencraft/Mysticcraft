@@ -6,6 +6,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ public class WitherShieldSpell {
     public static final String DAMAGE_REDUCTION_TIME = "WS-DamageReductionTime";
     public static final String ABSORPTION_AMOUNT_ID = "WS-AbsorptionAmount";
 
-    public static void execute(LivingEntity user, ItemStack stack) {
+    public static boolean execute(@NotNull LivingEntity user, ItemStack ignored) {
         CompoundTag tag = user.getPersistentData();
         Cooldowns.WITHER_SHIELD.applyCooldown(user, true);
         float absorption = (float) (user.getAttributeValue(ModAttributes.CRIT_DAMAGE.get()) * 0.3);
@@ -23,6 +24,7 @@ public class WitherShieldSpell {
             user.setAbsorptionAmount(user.getAbsorptionAmount() + absorption);
         }
         tag.putFloat(ABSORPTION_AMOUNT_ID, absorption);
+        return true;
     }
 
     public static List<Component> getDescription() {

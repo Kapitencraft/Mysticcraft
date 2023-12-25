@@ -1,7 +1,6 @@
 package net.kapitencraft.mysticcraft.init;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.api.Provider;
 import net.kapitencraft.mysticcraft.gui.GUISlotBlockItem;
 import net.kapitencraft.mysticcraft.guild.GuildUpgrades;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
@@ -30,7 +29,7 @@ import net.kapitencraft.mysticcraft.item.misc.MaterialModItem;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.tools.HammerItem;
 import net.kapitencraft.mysticcraft.item.tools.fishing_rods.LavaFishingRod;
-import net.kapitencraft.mysticcraft.misc.FormattingCodes;
+import net.kapitencraft.mysticcraft.misc.ModRarities;
 import net.kapitencraft.mysticcraft.spell.Element;
 import net.kapitencraft.mysticcraft.spell.Spells;
 import net.minecraft.ChatFormatting;
@@ -50,6 +49,7 @@ import net.minecraftforge.registries.RegistryObject;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Supplier;
 @SuppressWarnings("unused")
 public interface ModItems {
@@ -68,10 +68,10 @@ public interface ModItems {
         return register(name, ()-> new MaterialModItem(rarity, false, group), group);
     }
 
-    static <T, V extends Item & IModItem> HashMap<T, RegistryObject<V>> createRegistry(Provider<V, T> provider, Provider<String, T> nameProvider, List<T> values, TabGroup group) {
+    static <T, V extends Item & IModItem> HashMap<T, RegistryObject<V>> createRegistry(Function<T, V> provider, Function<T, String> nameProvider, List<T> values, TabGroup group) {
         HashMap<T, RegistryObject<V>> map = new HashMap<>();
         for (T t : values) {
-            map.put(t, register(nameProvider.provide(t), ()-> provider.provide(t), group));
+            map.put(t, register(nameProvider.apply(t), ()-> provider.apply(t), group));
         }
         return map;
     }
@@ -83,6 +83,10 @@ public interface ModItems {
 
     DeferredRegister<Item> REGISTRY = MysticcraftMod.makeRegistry(ForgeRegistries.ITEMS);
 
+
+    RegistryObject<BackpackItem> BACKPACK = register("backpack", BackpackItem::new, TabGroup.MATERIAL);
+    RegistryObject<WalletItem> WALLET = register("wallet", WalletItem::new, TabGroup.MATERIAL);
+    RegistryObject<EssenceItem> ESSENCE = register("essence", EssenceItem::new, null);
     RegistryObject<VoidTotemItem> VOID_TOTEM_ITEM = register("void_totem", VoidTotemItem::new, TabGroup.COMBAT);
     RegistryObject<ModDebugStickItem> MOD_DEBUG_STICK = register("mod_debug_stick", ModDebugStickItem::new, TabGroup.UTILITIES);
     RegistryObject<BuildersWand> BUILDERS_WAND = register("builders_wand", BuildersWand::new, TabGroup.UTILITIES);
@@ -106,13 +110,14 @@ public interface ModItems {
     RegistryObject<LavaFishingRod> LAVA_FISHING_ROD_TEST = register("lava_fishing_rod", () -> new LavaFishingRod(Rarity.RARE), TabGroup.MATERIAL);
     HashMap<Spells, RegistryObject<SpellScrollItem>> SCROLLS = Spells.registerAll();
     RegistryObject<MaterialModItem> ORB_OF_CONSUMPTION = registerNonStackableMaterial("orb_of_consumption", Rarity.EPIC, TabGroup.MATERIAL);
-    RegistryObject<MaterialModItem> NECRONS_HANDLE = registerNonStackableMaterial("necrons_handle", FormattingCodes.LEGENDARY, TabGroup.MATERIAL);
+    RegistryObject<MaterialModItem> NECRONS_HANDLE = registerNonStackableMaterial("necrons_handle", ModRarities.LEGENDARY, TabGroup.MATERIAL);
+    RegistryObject<SoulboundCore> SOULBOUND_CORE = register("soulbound_core", SoulboundCore::new, TabGroup.MATERIAL);
     RegistryObject<UnbreakingCore> UNBREAKING_CORE = register("unbreaking_core", UnbreakingCore::new, TabGroup.MATERIAL);
     RegistryObject<MaterialModItem> MANA_STEEL_INGOT = registerMaterial("mana_steel_ingot", Rarity.RARE, TabGroup.MATERIAL);
     RegistryObject<MaterialModItem> UPPER_BlADE_MS = registerNonStackableMaterial("upper_mana_steel_sword_part", Rarity.RARE, TabGroup.MATERIAL);
     RegistryObject<MaterialModItem> DOWN_BlADE_MS = registerNonStackableMaterial("lower_mana_steel_sword_part", Rarity.RARE, TabGroup.MATERIAL);
     RegistryObject<MaterialModItem> MS_HANDLE = registerNonStackableMaterial("mana_steel_sword_handle", Rarity.RARE, TabGroup.MATERIAL);
-    RegistryObject<MaterialModItem> HEART_OF_THE_NETHER = registerNonStackableMaterial("heart_of_the_nether", FormattingCodes.MYTHIC, TabGroup.MATERIAL);
+    RegistryObject<MaterialModItem> HEART_OF_THE_NETHER = registerNonStackableMaterial("heart_of_the_nether", ModRarities.MYTHIC, TabGroup.MATERIAL);
     RegistryObject<MaterialModItem> CRIMSON_STEEL_INGOT = registerMaterial("crimson_steel_ingot", Rarity.EPIC, TabGroup.CRIMSON_MATERIAL);
     RegistryObject<MaterialModItem> CRIMSON_STEEL_DUST = registerMaterial("crimson_steel_dust", Rarity.EPIC, TabGroup.CRIMSON_MATERIAL);
     RegistryObject<MaterialModItem> CRIMSONITE_CLUSTER = registerMaterial("crimsonite_cluster", Rarity.UNCOMMON, TabGroup.CRIMSON_MATERIAL);

@@ -2,7 +2,6 @@ package net.kapitencraft.mysticcraft.helpers;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import net.kapitencraft.mysticcraft.api.Provider;
 import net.kapitencraft.mysticcraft.misc.attribute.ChangingAttributeModifier;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -14,6 +13,8 @@ import net.minecraftforge.common.ForgeMod;
 
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 public class AttributeHelper {
 
@@ -126,7 +127,7 @@ public class AttributeHelper {
         return new AttributeModifier(modifier.getId(), modifier.getName(), value, modifier.getOperation());
     }
 
-    public static AttributeModifier addLiquidModifier(@Nullable UUID uuid, String name, AttributeModifier.Operation operation, Provider<Double, LivingEntity> transfer, LivingEntity living) {
+    public static AttributeModifier addLiquidModifier(@Nullable UUID uuid, String name, AttributeModifier.Operation operation, Function<LivingEntity, Double> transfer, LivingEntity living) {
         if (modUUIDs.containsKey(name) && modUUIDs.get(name) == uuid) return new ChangingAttributeModifier(uuid, name, operation, living, transfer);
         else {
             modUUIDs.put(name, Objects.requireNonNullElseGet(uuid, UUID::randomUUID));
@@ -183,8 +184,8 @@ public class AttributeHelper {
             this.modifiers = increaseAllByAmount(modifiers, toMerge);
         }
 
-        public void update(Provider<Multimap<Attribute, AttributeModifier>, Multimap<Attribute, AttributeModifier>> provider) {
-            this.modifiers = provider.provide(this.modifiers);
+        public void update(UnaryOperator<Multimap<Attribute, AttributeModifier>> provider) {
+            this.modifiers = provider.apply(this.modifiers);
         }
 
         public void mulAll(double percent) {

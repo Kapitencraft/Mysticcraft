@@ -21,13 +21,9 @@ public class ModRenderTypes extends RenderType {
             false,
             false,
             RenderType.CompositeState.builder()
-                    .setLineState(new LineStateShard(OptionalDouble.of(3)))
-                    .setLayeringState(RenderStateShard.VIEW_OFFSET_Z_LAYERING)
-                    .setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY)
-                    .setTextureState(NO_TEXTURE)
-                    .setCullState(RenderStateShard.NO_CULL)
+                    .setLineState(new LineStateShard(OptionalDouble.of(2)))
+                    .setShaderState(ShaderStateShard.RENDERTYPE_LINES_SHADER)
                     .setDepthTestState(RenderStateShard.EQUAL_DEPTH_TEST)
-                    .setLightmapState(RenderStateShard.NO_LIGHTMAP)
                     .setWriteMaskState(RenderStateShard.COLOR_WRITE)
                     .createCompositeState(false)
      );

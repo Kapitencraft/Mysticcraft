@@ -4,7 +4,7 @@ import net.kapitencraft.mysticcraft.item.data.gemstone.GemstoneSlot;
 import net.kapitencraft.mysticcraft.item.data.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.item.misc.ModTiers;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
-import net.kapitencraft.mysticcraft.misc.FormattingCodes;
+import net.kapitencraft.mysticcraft.misc.ModRarities;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
@@ -18,7 +18,7 @@ import java.util.List;
 
 public class ManaSteelSwordItem extends LongSwordItem implements IGemstoneApplicable {
     public ManaSteelSwordItem() {
-        super(ModTiers.MANA_STEEL, 3, new Properties().durability(1800).rarity(FormattingCodes.MYTHIC));
+        super(ModTiers.MANA_STEEL, 3, new Properties().durability(1800).rarity(ModRarities.MYTHIC));
     }
 
     @Override

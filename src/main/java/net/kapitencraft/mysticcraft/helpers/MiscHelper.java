@@ -1,10 +1,9 @@
 package net.kapitencraft.mysticcraft.helpers;
 
-import net.kapitencraft.mysticcraft.api.Provider;
 import net.kapitencraft.mysticcraft.client.particle.DamageIndicatorParticleOptions;
 import net.kapitencraft.mysticcraft.gui.IGuiHelper;
 import net.kapitencraft.mysticcraft.item.data.gemstone.GemstoneItem;
-import net.kapitencraft.mysticcraft.misc.FormattingCodes;
+import net.kapitencraft.mysticcraft.misc.ModRarities;
 import net.kapitencraft.mysticcraft.misc.VeinMinerHolder;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementProgress;
@@ -57,6 +56,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 public class MiscHelper {
     //EAST = new Rotation("x+", 90, 1);
@@ -66,6 +66,22 @@ public class MiscHelper {
 
     public static EquipmentSlot getSlotForStack(ItemStack stack) {
         return stack.getItem() instanceof ArmorItem armorItem ? armorItem.getSlot() : stack.getItem() instanceof ShieldItem ? EquipmentSlot.OFFHAND : EquipmentSlot.MAINHAND;
+    }
+
+    private static void test() {
+        List<Entity> list = new ArrayList<>();
+    }
+
+    public static <T, K extends T> K instance(T value, Class<K> target) {
+        try {
+            return (K) value;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static <T, K extends T> Stream<K> instanceStream(Stream<T> in, Class<K> kClass) {
+        return CollectionHelper.mapSync(in, kClass, MiscHelper::instance);
     }
 
     public static int repairPlayerItems(Player player, int value, Enchantment ench) {
@@ -98,8 +114,8 @@ public class MiscHelper {
                 case COMMON -> Rarity.UNCOMMON;
                 case UNCOMMON -> Rarity.RARE;
                 case RARE -> Rarity.EPIC;
-                case EPIC -> FormattingCodes.LEGENDARY;
-                default -> rarity == FormattingCodes.LEGENDARY ? FormattingCodes.MYTHIC : rarity == FormattingCodes.MYTHIC ? FormattingCodes.DIVINE : Rarity.COMMON;
+                case EPIC -> ModRarities.LEGENDARY;
+                default -> rarity == ModRarities.LEGENDARY ? ModRarities.MYTHIC : rarity == ModRarities.MYTHIC ? ModRarities.DIVINE : Rarity.COMMON;
             };
         }
     }
@@ -152,9 +168,9 @@ public class MiscHelper {
         return false;
     }
 
-    public static <T, K> T getValue(Provider<K, T> provider, T defaultValue, K key, T... values) {
+    public static <T, K> T getValue(Function<T, K> provider, T defaultValue, K key, T... values) {
         for (T t : values) {
-            if (provider.provide(t).equals(key)) {
+            if (provider.apply(t).equals(key)) {
                 return t;
             }
         }
@@ -224,7 +240,7 @@ public class MiscHelper {
         entity.level.playSound(entity, new BlockPos(MathHelper.getPosition(entity)), SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1f, 1f);
     }
 
-    public static void repeatXTimes(int times, Consumer<Integer> consumer) {
+    public static void repeat(int times, Consumer<Integer> consumer) {
         for (int i = 0; i < times; i++) {
             consumer.accept(i);
         }
@@ -357,7 +373,7 @@ public class MiscHelper {
 
     public static char[] append(char[] in, char toAppend) {
         char[] copy = new char[in.length + 1];
-        repeatXTimes(in.length, integer -> copy[integer] = in[integer]);
+        repeat(in.length, integer -> copy[integer] = in[integer]);
         copy[in.length] = toAppend;
         return copy;
     }
@@ -405,7 +421,7 @@ public class MiscHelper {
 
     public static SimpleContainer containerOf(ItemStackHandler handler) {
         SimpleContainer inventory = new SimpleContainer(handler.getSlots());
-        repeatXTimes(handler.getSlots(), integer -> {
+        repeat(handler.getSlots(), integer -> {
             if (!(handler.getStackInSlot(integer).getItem() instanceof IGuiHelper || handler.getStackInSlot(integer).getItem() instanceof GemstoneItem)) {
                 inventory.setItem(integer, handler.getStackInSlot(integer));
             }
@@ -414,7 +430,7 @@ public class MiscHelper {
     }
 
     public static List<ItemStack> shrinkDrops(List<ItemStack> drops, Item item, final int amount) {
-        repeatXTimes(drops.size(), i -> {
+        repeat(drops.size(), i -> {
             int varAmount = amount;
             ItemStack stack = drops.get(i);
             if (stack.getItem() == item) {

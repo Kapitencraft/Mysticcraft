@@ -17,9 +17,8 @@ import java.util.List;
 public class ExplosiveSightSpell {
 
     private static final Component[] description = new Component[] {Component.literal("Explodes in a range of 150")};
-    public static void execute(LivingEntity user, ItemStack ignoredStack) {
+    public static boolean execute(LivingEntity user, ItemStack ignoredStack) {
         ArrayList<Vec3> sight = MathHelper.lineOfSight(user, 150, 0.5);
-        if (user.level.isClientSide()) return;
         for (Vec3 vec3 : sight) {
             BlockPos pos = new BlockPos(vec3);
             if (user.level.getBlockState(pos).canOcclude()) {
@@ -29,6 +28,7 @@ public class ExplosiveSightSpell {
                 break;
             }
         }
+        return true;
     }
 
     public static List<Component> getDescription() {

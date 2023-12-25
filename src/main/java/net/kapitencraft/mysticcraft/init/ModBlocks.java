@@ -1,7 +1,6 @@
 package net.kapitencraft.mysticcraft.init;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.api.Provider;
 import net.kapitencraft.mysticcraft.block.*;
 import net.kapitencraft.mysticcraft.block.deco.*;
 import net.kapitencraft.mysticcraft.block.special.EmptyGemstoneBlock;
@@ -39,10 +38,10 @@ public interface ModBlocks {
         return new BlockRegistryHolder<>(toReturn, registerItem(name, ()-> func.apply(toReturn), group));
     }
 
-    private static <T, V extends Block> HashMap<T, BlockRegistryHolder<V>> createMappedRegistry(Provider<V, T> provider, Provider<String, T> nameProvider, Provider<Item.Properties, T> propertiesProvider, List<T> values, TabGroup group) {
+    private static <T, V extends Block> HashMap<T, BlockRegistryHolder<V>> createMappedRegistry(Function<T, V> provider, Function<T, String> nameProvider, Function<T, Item.Properties> propertiesProvider, List<T> values, TabGroup group) {
         HashMap<T, BlockRegistryHolder<V>> map = new HashMap<>();
         for (T t : values) {
-            map.put(t, registerBlock(nameProvider.provide(t), ()-> provider.provide(t), propertiesProvider.provide(t), group));
+            map.put(t, registerBlock(nameProvider.apply(t), ()-> provider.apply(t), propertiesProvider.apply(t), group));
         }
         return map;
     }

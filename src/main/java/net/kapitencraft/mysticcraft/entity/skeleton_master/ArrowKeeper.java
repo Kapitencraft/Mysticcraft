@@ -58,7 +58,7 @@ public class ArrowKeeper {
     }
 
     private void updatePosition(SkeletonMaster master) {
-        MiscHelper.repeatXTimes(arrowMatrix.length, integer -> MiscHelper.repeatXTimes(arrowMatrix[integer].length, integer1 -> {
+        MiscHelper.repeat(arrowMatrix.length, integer -> MiscHelper.repeat(arrowMatrix[integer].length, integer1 -> {
                     double offset1 = integer1 * 0.25;
                     double offset2 = integer * 0.25;
                     Vec3 pos = MathHelper.calculateViewVector(master.getXRot(), master.getYRot() + rotation);

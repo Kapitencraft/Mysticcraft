@@ -1,20 +1,20 @@
 package net.kapitencraft.mysticcraft.item.misc;
 
-import net.kapitencraft.mysticcraft.misc.FormattingCodes;
+import net.minecraft.ChatFormatting;
 
 public enum DropRarity {
-    COMMON(0, "common", FormattingCodes.WHITE, "COMMON"),
-    UNCOMMON(1, "uncommon", FormattingCodes.GREEN, "UNCOMMON"),
-    RARE(2, "rare", FormattingCodes.BLUE, "RARE"),
-    LEGENDARY(3, "legendary", FormattingCodes.LIGHT_PURPLE, "CRAZY RARE"),
-    PRAY_RNG(4, "pray_rng", FormattingCodes.RED, "PRAY TO RNGESUS"),
-    RNG_INCARNATE(5, "rng_incarnate", FormattingCodes.DARK_RED, "RNGESUS INCARNATE");
+    COMMON(0, "common", ChatFormatting.WHITE, "COMMON"),
+    UNCOMMON(1, "uncommon", ChatFormatting.GREEN, "UNCOMMON"),
+    RARE(2, "rare", ChatFormatting.BLUE, "RARE"),
+    LEGENDARY(3, "legendary", ChatFormatting.LIGHT_PURPLE, "CRAZY RARE"),
+    PRAY_RNG(4, "pray_rng", ChatFormatting.RED, "PRAY TO RNGESUS"),
+    RNG_INCARNATE(5, "rng_incarnate", ChatFormatting.DARK_RED, "RNGESUS INCARNATE");
     private final int Id;
     private final String name;
-    private final String color;
+    private final ChatFormatting color;
     private final String displayName;
 
-    DropRarity(int id, String name, String color, String displayName) {
+    DropRarity(int id, String name, ChatFormatting color, String displayName) {
         this.Id = id;
         this.name = name;
         this.color = color;
@@ -26,7 +26,7 @@ public enum DropRarity {
         return this.Id;
     }
 
-    public String getColor() {
+    public ChatFormatting getColor() {
         return color;
     }
 

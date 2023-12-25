@@ -5,12 +5,14 @@ import net.kapitencraft.mysticcraft.block.entity.crafting.ItemAmountIngredient;
 import net.kapitencraft.mysticcraft.init.ModEntityTypes;
 import net.kapitencraft.mysticcraft.item.AnvilUses;
 import net.kapitencraft.mysticcraft.item.data.reforging.Reforges;
+import net.kapitencraft.mysticcraft.misc.content.EssenceHolder;
 import net.kapitencraft.mysticcraft.networking.ModMessages;
 import net.kapitencraft.mysticcraft.potion.ModPotionRecipe;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
+import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -52,5 +54,8 @@ public class ModEventBusEvents {
         SpawnPlacements.register(ModEntityTypes.FROZEN_BLAZE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 Monster::checkAnyLightMonsterSpawnRules);
     }
-
+    @SubscribeEvent
+    public static void onRegisterCapabilities(RegisterCapabilitiesEvent event) {
+        event.register(EssenceHolder.class);
+    }
 }

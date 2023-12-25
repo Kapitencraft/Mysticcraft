@@ -11,7 +11,7 @@ import net.kapitencraft.mysticcraft.item.data.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.ArmorTabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
-import net.kapitencraft.mysticcraft.misc.FormattingCodes;
+import net.kapitencraft.mysticcraft.misc.ModRarities;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -36,7 +36,7 @@ public class EnderKnightArmorItem extends ModArmorItem implements IGemstoneAppli
     }
 
     public EnderKnightArmorItem(EquipmentSlot p_40387_) {
-        super(ModArmorMaterials.ENDER_KNIGHT, p_40387_, new Properties().rarity(FormattingCodes.LEGENDARY).fireResistant());
+        super(ModArmorMaterials.ENDER_KNIGHT, p_40387_, new Properties().rarity(ModRarities.LEGENDARY).fireResistant());
     }
 
     @Override

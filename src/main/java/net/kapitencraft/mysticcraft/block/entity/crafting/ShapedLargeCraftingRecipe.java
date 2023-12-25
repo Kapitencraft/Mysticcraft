@@ -3,6 +3,7 @@ package net.kapitencraft.mysticcraft.block.entity.crafting;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.gson.*;
+import net.kapitencraft.mysticcraft.helpers.CollectionHelper;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -145,7 +146,7 @@ public class ShapedLargeCraftingRecipe extends LargeCraftingRecipe {
                 if (jsonarray.size() == 0) {
                     throw new JsonSyntaxException("Item array cannot be empty, at least one item must be defined");
                 } else {
-                    return Ingredient.fromValues(StreamSupport.stream(jsonarray.spliterator(), false).map((jsonElement) -> valueFromJson(GsonHelper.convertToJsonObject(jsonElement, "item"))));
+                    return Ingredient.fromValues(CollectionHelper.mapSync(StreamSupport.stream(jsonarray.spliterator(), false), "item", GsonHelper::convertToJsonObject).map(ShapedLargeCraftingRecipe::valueFromJson));
                 }
             } else {
                 throw new JsonSyntaxException("Expected item to be object or array of objects");

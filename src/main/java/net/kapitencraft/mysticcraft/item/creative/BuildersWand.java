@@ -10,7 +10,7 @@ import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.helpers.TextHelper;
 import net.kapitencraft.mysticcraft.item.misc.IModItem;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
-import net.kapitencraft.mysticcraft.misc.FormattingCodes;
+import net.kapitencraft.mysticcraft.misc.ModRarities;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
@@ -51,7 +51,7 @@ public class BuildersWand extends Item implements IModItem {
     int test = 0;
 
     public BuildersWand() {
-        super(MiscHelper.rarity(FormattingCodes.LEGENDARY).stacksTo(1));
+        super(MiscHelper.rarity(ModRarities.LEGENDARY).stacksTo(1));
     }
 
     @Override

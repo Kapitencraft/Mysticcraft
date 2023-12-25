@@ -1,14 +1,11 @@
 package net.kapitencraft.mysticcraft.item.combat.weapon.ranged;
 
-import net.kapitencraft.mysticcraft.helpers.MiscHelper;
+import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
-import net.kapitencraft.mysticcraft.item.tools.ContainableHolder;
 import net.kapitencraft.mysticcraft.item.tools.ContainableItem;
-import net.kapitencraft.mysticcraft.misc.FormattingCodes;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.util.Mth;
@@ -43,14 +40,13 @@ public class QuiverItem extends ContainableItem<ArrowItem> {
 
     @Override
     public void appendHoverTextWithPlayer(@NotNull ItemStack itemStack, @Nullable Level level, @NotNull List<Component> list, @NotNull TooltipFlag flag, Player player) {
-        List<ContainableHolder<ArrowItem>> contents = getContents(itemStack);
-        contents.forEach((holder) -> list.add(((MutableComponent) holder.getDefaultStack().getHoverName()).withStyle(MiscHelper.getItemRarity(holder.getItem()).getStyleModifier()).append(": " + holder.getAmount())));
+        super.appendHoverTextWithPlayer(itemStack, level, list, flag, player);
         double percentage = getUsedCapacity(itemStack)  * 1. / getCapacity(itemStack);
         TextColor color = TextColor.fromLegacyFormat(ChatFormatting.GREEN);
         if (percentage > 0.9) {
             color = TextColor.fromLegacyFormat(ChatFormatting.RED);
         } else if (percentage > 0.75) {
-            color = FormattingCodes.ORANGE_COLOR;
+            color = TextColor.fromRgb(MathHelper.RGBtoInt(255, 127, 0));
         } else if (percentage > 0.5) {
             color = TextColor.fromLegacyFormat(ChatFormatting.YELLOW);
         }

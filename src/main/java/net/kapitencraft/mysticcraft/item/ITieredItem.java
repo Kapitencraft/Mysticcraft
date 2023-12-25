@@ -16,6 +16,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 public interface ITieredItem extends IStarAbleItem, IPrestigeAbleItem {
+    String ID = "Tier";
 
     List<ItemTier> getAvailableTiers();
 
@@ -37,7 +38,7 @@ public interface ITieredItem extends IStarAbleItem, IPrestigeAbleItem {
     }
 
     static @NotNull ItemTier getTier(ItemStack stack) {
-        return ItemTier.getByName(stack.getOrCreateTag().getString("tier"));
+        return ItemTier.getByName(stack.getOrCreateTag().getString(ID));
     }
 
     @Override
@@ -95,7 +96,7 @@ public interface ITieredItem extends IStarAbleItem, IPrestigeAbleItem {
         }
 
         public void saveToStack(ItemStack stack) {
-            stack.getOrCreateTag().putString("tier", this.getRegName());
+            stack.getOrCreateTag().putString(ID, this.getRegName());
         }
 
         public String getRegName() {

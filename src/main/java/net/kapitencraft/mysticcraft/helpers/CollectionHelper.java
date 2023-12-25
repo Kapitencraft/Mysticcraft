@@ -7,6 +7,7 @@ import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -20,12 +21,22 @@ public class CollectionHelper {
         return null;
     }
 
+    public static <T> List<T> create(int size, Supplier<T> sup) {
+        List<T> list = new ArrayList<>();
+        MiscHelper.repeat(size, integer -> list.add(sup.get()));
+        return list;
+    }
+
     public static <T> ArrayList<T> colToList(Collection<T> collection) {
         return new ArrayList<>(collection);
     }
 
-    public static <T, K> Stream<T> sync(Stream<K> in, BiFunction<K, T, T> func, T always) {
+    public static <J, T, K> Stream<J> mapSync(Stream<K> in, T always, BiFunction<K, T, J> func) {
         return in.map(k -> func.apply(k, always));
+    }
+
+    public static <T, K> void sync(Stream<T> in, K always, BiConsumer<T, K> consumer) {
+        in.forEach(t -> consumer.accept(t, always));
     }
 
     public static <T> ArrayList<T> toList(T ts) {

@@ -1,7 +1,6 @@
 package net.kapitencraft.mysticcraft.networking;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.api.Provider;
 import net.kapitencraft.mysticcraft.networking.packets.C2S.ReforgingPacket;
 import net.kapitencraft.mysticcraft.networking.packets.C2S.UpgradeItemPacket;
 import net.kapitencraft.mysticcraft.networking.packets.S2C.SyncGuildsPacket;
@@ -12,6 +11,8 @@ import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
+
+import java.util.function.Function;
 
 public class ModMessages {
     private static final String PROTOCOL_VERSION = "1";
@@ -36,8 +37,8 @@ public class ModMessages {
         PACKET_HANDLER.sendTo(message, player.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
     }
 
-    public static <MSG> void sendToAllConnectedPlayers(Provider<MSG, ServerPlayer> provider, ServerLevel serverLevel) {
-        serverLevel.getPlayers(serverPlayer -> true).forEach(serverPlayer -> ModMessages.sendToClientPlayer(provider.provide(serverPlayer), serverPlayer));
+    public static <MSG> void sendToAllConnectedPlayers(Function<ServerPlayer, MSG> provider, ServerLevel serverLevel) {
+        serverLevel.getPlayers(serverPlayer -> true).forEach(serverPlayer -> ModMessages.sendToClientPlayer(provider.apply(serverPlayer), serverPlayer));
     }
 
 

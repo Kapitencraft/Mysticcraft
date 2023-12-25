@@ -1,6 +1,5 @@
 package net.kapitencraft.mysticcraft.item.combat.armor.client.renderer;
 
-import net.kapitencraft.mysticcraft.api.Provider;
 import net.kapitencraft.mysticcraft.item.combat.armor.client.model.ArmorModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
@@ -10,12 +9,13 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class ArmorRenderer<T extends ArmorModel> {
     private final T model;
-    public ArmorRenderer(Supplier<LayerDefinition> supplier, Provider<T, ModelPart> modelConstructor) {
-        this.model = modelConstructor.provide(supplier.get().bakeRoot());
+    public ArmorRenderer(Supplier<LayerDefinition> supplier, Function<ModelPart, T> modelConstructor) {
+        this.model = modelConstructor.apply(supplier.get().bakeRoot());
     }
 
     public ArmorRenderer<T> makeInvisible(boolean invisible) {

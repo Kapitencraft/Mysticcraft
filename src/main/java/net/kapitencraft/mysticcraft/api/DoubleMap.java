@@ -1,5 +1,7 @@
 package net.kapitencraft.mysticcraft.api;
 
+import net.kapitencraft.mysticcraft.helpers.CollectionHelper;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
@@ -8,7 +10,7 @@ import java.util.function.Consumer;
 public class DoubleMap<T, K, L> extends HashMap<T, HashMap<K, L>> {
 
     public void forValues(Consumer<L> consumer) {
-        this.values().stream().map(Map::values).forEach(col -> col.forEach(consumer));
+        CollectionHelper.merge(this.values().stream().map(Map::values).toList()).forEach(consumer);
     }
     public void forMap(BiConsumer<K, L> biConsumer) {
         this.values().forEach(map -> map.forEach(biConsumer));

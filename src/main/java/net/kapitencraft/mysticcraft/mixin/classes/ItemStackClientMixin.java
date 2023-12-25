@@ -22,8 +22,9 @@ import net.kapitencraft.mysticcraft.item.data.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.item.data.reforging.Reforge;
 import net.kapitencraft.mysticcraft.item.data.spell.ISpellItem;
 import net.kapitencraft.mysticcraft.item.item_bonus.IItemBonusItem;
+import net.kapitencraft.mysticcraft.item.misc.CreativeItems;
 import net.kapitencraft.mysticcraft.item.misc.IModItem;
-import net.kapitencraft.mysticcraft.misc.FormattingCodes;
+import net.kapitencraft.mysticcraft.item.misc.SoulbindHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -45,7 +46,7 @@ import net.minecraftforge.event.ForgeEventFactory;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.gen.Invoker;
+import org.spongepowered.asm.mixin.Unique;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -54,9 +55,23 @@ import static net.minecraft.world.item.ItemStack.ATTRIBUTE_MODIFIER_FORMAT;
 
 @Mixin(ItemStack.class)
 public abstract class ItemStackClientMixin {
-    @Shadow public abstract ItemStack setHoverName(@org.jetbrains.annotations.Nullable Component p_41715_);
 
+    @Shadow public abstract String toString();
+
+    @Shadow
+    private static Collection<Component> expandBlockState(String p_41762_) {
+        return null;
+    }
+
+    @Shadow public abstract boolean hasCustomHoverName();
+
+    @Shadow protected abstract int getHideFlags();
+
+    @Shadow public abstract boolean isDamageableItem();
+
+    @Unique
     private static final Style LORE_STYLE = Style.EMPTY.withColor(ChatFormatting.DARK_PURPLE).withItalic(true);
+    @Unique
     private static final ColorAnimator RAINBOW_ANIMATOR = ColorAnimator.createRainbow(30 * (10 - ClientModConfig.rgbSpeed));
 
     @SuppressWarnings("ALL")
@@ -74,7 +89,7 @@ public abstract class ItemStackClientMixin {
         Item item = self().getItem();
         CompoundTag tag = self().getOrCreateTag();
         MutableComponent name = Component.empty().append(self().getHoverName()).withStyle(self().getRarity().getStyleModifier());
-        if (this.callHasCustomHoverName()) {
+        if (hasCustomHoverName()) {
             name.withStyle(ChatFormatting.ITALIC);
         }
 
@@ -89,7 +104,7 @@ public abstract class ItemStackClientMixin {
             }
         }
 
-        int j = callGetHideFlags();
+        int j = getHideFlags();
         if (shouldShowInTooltip(j, ItemStack.TooltipPart.ADDITIONAL)) {
             if (item instanceof IModItem modItem) {
                 modItem.appendHoverTextWithPlayer(self(), player == null ? null : player.level, list, tooltipFlag, player);
@@ -232,8 +247,11 @@ public abstract class ItemStackClientMixin {
         }
 
         if (self().hasTag()) {
-            if (shouldShowInTooltip(j, ItemStack.TooltipPart.UNBREAKABLE) && tag.getBoolean("Unbreakable")) {
-                list.add(Component.translatable("item.unbreakable").withStyle(ChatFormatting.BLUE));
+            if (shouldShowInTooltip(j, ItemStack.TooltipPart.UNBREAKABLE)) {
+                if (tag.getBoolean("Unbreakable")) list.add(TextHelper.wrapInObfuscation(Component.translatable("item.unbreakable"), true).withStyle(ChatFormatting.BLUE));
+                if (tag.getBoolean(SoulbindHelper.SOULBOUND_TAG_ID)) {
+                    list.add(TextHelper.wrapInObfuscation(Component.translatable("item.soulbound"), true).withStyle(ChatFormatting.BLUE));
+                }
             }
 
             if (shouldShowInTooltip(j, ItemStack.TooltipPart.CAN_DESTROY) && tag.contains("CanDestroy", 9)) {
@@ -243,7 +261,7 @@ public abstract class ItemStackClientMixin {
                     list.add(Component.translatable("item.canBreak").withStyle(ChatFormatting.GRAY));
 
                     for(int k = 0; k < listtag1.size(); ++k) {
-                        list.addAll(callExpandBlockState(listtag1.getString(k)));
+                        list.addAll(expandBlockState(listtag1.getString(k)));
                     }
                 }
             }
@@ -255,7 +273,7 @@ public abstract class ItemStackClientMixin {
                     list.add(Component.translatable("item.canPlace").withStyle(ChatFormatting.GRAY));
 
                     for(int l = 0; l < listtag2.size(); ++l) {
-                        list.addAll(callExpandBlockState(listtag2.getString(l)));
+                        list.addAll(expandBlockState(listtag2.getString(l)));
                     }
                 }
             }
@@ -278,20 +296,23 @@ public abstract class ItemStackClientMixin {
         if (player != null && !item.isEnabled(player.getLevel().enabledFeatures())) {
             list.add(Component.translatable("item.disabled").withStyle(ChatFormatting.RED));
         }
+        if (CreativeItems.contains(item)) {
+            list.add(Component.translatable("item.creative_only").withStyle(ChatFormatting.RED));
+        }
+
         ForgeEventFactory.onItemTooltip(self(), player, list, tooltipFlag);
         if (!(item instanceof IGuiHelper)) {
             Rarity rarity = item.getRarity(self());
             boolean flag = rarity != MiscHelper.getItemRarity(item);
-            String RarityMod = FormattingCodes.OBFUSCATED + "A" + FormattingCodes.RESET;
-            MutableComponent obfuscated = Component.literal(flag ? RarityMod : "");
             list.add(Component.literal(""));
-            list.add(MiscHelper.buildComponent(Component.literal(flag ? RarityMod + " " : "") ,  createNameMod(self()), MiscHelper.SPLIT, obfuscated).withStyle(rarity.getStyleModifier()).withStyle(ChatFormatting.BOLD));
+            list.add(TextHelper.wrapInObfuscation(createNameMod(self()), flag).withStyle(rarity.getStyleModifier()).withStyle(ChatFormatting.BOLD));
         }
 
         TextHelper.removeUnnecessaryEmptyLines(list);
         return list;
     }
 
+    @SuppressWarnings("all")
     private static Component getNameModifier(ItemStack stack) {
         Item item = stack.getItem();
         if (item instanceof LongSwordItem) {
@@ -338,10 +359,12 @@ public abstract class ItemStackClientMixin {
         return indicator("item");
     }
 
+    @SuppressWarnings("all")
     private static MutableComponent indicator(String id) {
         return Component.translatable("item.indicator." + id);
     }
 
+    @SuppressWarnings("all")
     private static MutableComponent createNameMod(ItemStack stack) {
         MutableComponent component = Component.empty();
         Rarity rarity = stack.getItem().getRarity(stack);
@@ -355,6 +378,7 @@ public abstract class ItemStackClientMixin {
     }
 
 
+    @SuppressWarnings("all")
     private static boolean shouldShowInTooltip(int p_41627_, ItemStack.TooltipPart p_41628_) {
         return (p_41627_ & p_41628_.getMask()) == 0;
     }
@@ -401,14 +425,5 @@ public abstract class ItemStackClientMixin {
         }
         return name;
     }
-
-    @Invoker
-    abstract boolean callHasCustomHoverName();
-
-    @Invoker
-    abstract int callGetHideFlags();
-
-    @Invoker
-    abstract Collection<Component> callExpandBlockState(String s);
 
 }

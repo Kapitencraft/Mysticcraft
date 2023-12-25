@@ -3,6 +3,7 @@ package net.kapitencraft.mysticcraft.item;
 import net.kapitencraft.mysticcraft.init.ModItems;
 import net.kapitencraft.mysticcraft.item.combat.spells.SpellScrollItem;
 import net.kapitencraft.mysticcraft.item.combat.spells.necron_sword.NecronSword;
+import net.kapitencraft.mysticcraft.item.misc.SoulbindHelper;
 import net.kapitencraft.mysticcraft.spell.SpellSlot;
 import net.kapitencraft.mysticcraft.spell.Spells;
 import net.minecraft.world.item.ItemStack;
@@ -53,6 +54,12 @@ public class AnvilUses {
                     else sword.setSlot(0, new SpellSlot(((SpellScrollItem) stack1.getItem()).getSpell()), stack);
                 },
                 20
+        );
+        registerAnvilUse(
+                SoulbindHelper::isNotSoulbound,
+                stack -> stack.getItem() == ModItems.SOULBOUND_CORE.get(),
+                (stack, stack1) -> SoulbindHelper.setSoulbound(stack),
+                15
         );
     }
 

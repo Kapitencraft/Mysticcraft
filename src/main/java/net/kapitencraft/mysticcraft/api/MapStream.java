@@ -19,6 +19,10 @@ public class MapStream<T, K> {
         return stream;
     }
 
+
+    public static <T, K> MapStream<T, K> create() {
+        return new MapStream<>();
+    }
     public static <T, K> MapStream<T, K> create(List<T> keys, List<K> values) {
         if (keys.size() != values.size()) {
             throw new IllegalStateException("tried creating map from different length collections");

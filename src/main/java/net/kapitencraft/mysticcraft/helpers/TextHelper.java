@@ -1,6 +1,5 @@
 package net.kapitencraft.mysticcraft.helpers;
 
-import net.kapitencraft.mysticcraft.api.Provider;
 import net.kapitencraft.mysticcraft.api.Reference;
 import net.kapitencraft.mysticcraft.misc.string_converter.args.MathArgument;
 import net.kapitencraft.mysticcraft.misc.string_converter.args.TransferArg;
@@ -43,6 +42,23 @@ public class TextHelper {
         }
     }
 
+    public static String wrapInObfuscation(String source) {
+        return wrapInFormatting(source, ChatFormatting.OBFUSCATED);
+    }
+
+    public static String wrapInFormatting(Object source, ChatFormatting formatting) {
+        char id = formatting.getChar();
+        boolean obfuscate = id == 'k';
+        StringBuilder builder = new StringBuilder();
+        String format = "§" + id;
+        builder.append(format);
+        if (obfuscate) builder.append("k§r ");
+        builder.append(source);
+        if (obfuscate) builder.append(" §kk");
+        builder.append("§r");
+        return builder.toString();
+    }
+
     public static String mergeRegister(String a, String b) {
         return a + "_" + b;
     }
@@ -79,6 +95,9 @@ public class TextHelper {
         return mutablecomponent;
     }
 
+    public static MutableComponent wrapInObfuscation(MutableComponent source, boolean really) {
+        return really ? Component.literal("§kA§r ").append(source).append(" §kA§r") : source;
+    }
 
     public static String makeDescriptionId(Item item) {
         return Util.makeDescriptionId("item", BuiltInRegistries.ITEM.getKey(item));
@@ -89,7 +108,7 @@ public class TextHelper {
     }
 
     public static String wrapInRed(Object toWrap) {
-        return "§c" + toWrap + "§r";
+        return wrapInFormatting(toWrap, ChatFormatting.RED);
     }
 
     public static void setHotbarDisplay(Player player, Component display) {
@@ -207,19 +226,19 @@ public class TextHelper {
         return fromVec3(new Vec3(pos.getX(), pos.getY(), pos.getZ()));
     }
 
-    public static <T, K> T makeList(List<K> toMerge, Supplier<T> generator, Provider<T, K> transfer, BiConsumer<T, T> useConsumer) {
+    public static <T, K> T makeList(List<K> toMerge, Supplier<T> generator, Function<K, T> transfer, BiConsumer<T, T> useConsumer) {
         T t = generator.get();
         for (K k : toMerge) {
-            T transferred = transfer.provide(k);
+            T transferred = transfer.apply(k);
             useConsumer.accept(t, transferred);
         }
         return t;
     }
 
-    public static <T> String makeList(List<T> toMerge, Provider<String, T> provider) {
+    public static <T> String makeList(List<T> toMerge, Function<T, String> provider) {
         StringBuilder builder = new StringBuilder();
         for (T t : toMerge) {
-            String s = provider.provide(t);
+            String s = provider.apply(t);
             builder.append(s);
             if (t != toMerge.get(toMerge.size() - 1)) {
                 builder.append(", ");

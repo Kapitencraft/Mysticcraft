@@ -10,8 +10,9 @@ import java.util.List;
 public class InstantTransmissionSpell {
     private static final Component[] description = new Component[]{Component.literal("teleports you 8 blocks ahead")};
 
-    public static void execute(LivingEntity user, ItemStack ignoredStack) {
+    public static boolean execute(LivingEntity user, ItemStack ignored) {
         MiscHelper.saveTeleport(user, 8);
+        return true;
     }
 
     public static List<Component> getDescription() {

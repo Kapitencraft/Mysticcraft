@@ -1,7 +1,6 @@
 package net.kapitencraft.mysticcraft.item.material;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.api.SaveAbleEnum;
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.init.ModItems;
@@ -9,6 +8,7 @@ import net.kapitencraft.mysticcraft.item.misc.IModItem;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -70,7 +70,7 @@ public class PrecursorRelicItem extends Item implements IModItem {
         return PRECURSOR_GROUP;
     }
 
-    public enum BossType implements SaveAbleEnum {
+    public enum BossType implements StringRepresentable {
         NECRON("diamantes_handle", "Necron", boss -> {
             AttributeInstance attackDamage = boss.getAttribute(Attributes.ATTACK_DAMAGE);
             AttributeInstance hp = boss.getAttribute(Attributes.MAX_HEALTH);
@@ -93,6 +93,8 @@ public class PrecursorRelicItem extends Item implements IModItem {
         }),
         MAXOR("bigfoots_lasso", "Maxor", boss -> {}),
         STORM("lasrs_eye", "Storm", boss -> {});
+
+        private static final EnumCodec<BossType> CODEC = StringRepresentable.fromEnum(BossType::values);
 
         private final String name;
         private final Consumer<WitherBoss> toDo;
@@ -122,17 +124,17 @@ public class PrecursorRelicItem extends Item implements IModItem {
             return boss.getPersistentData().contains("WitherType", 8);
         }
 
-        @Override
-        public String getName() {
-            return name;
-        }
-
         public static BossType fromBoss(WitherBoss boss) {
             return byName(boss.getPersistentData().getString("WitherType"));
         }
 
         public static BossType byName(String name) {
-            return SaveAbleEnum.getValue(MAXOR, name, values());
+            return CODEC.byName(name, MAXOR);
+        }
+
+        @Override
+        public @NotNull String getSerializedName() {
+            return name;
         }
     }
 }

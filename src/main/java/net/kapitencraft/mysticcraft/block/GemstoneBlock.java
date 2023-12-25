@@ -6,12 +6,14 @@ import net.kapitencraft.mysticcraft.init.ModBlocks;
 import net.kapitencraft.mysticcraft.item.data.gemstone.GemstoneType;
 import net.kapitencraft.mysticcraft.item.data.gemstone.IGemstoneItem;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -20,6 +22,7 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,11 +39,14 @@ public class GemstoneBlock extends Block {
     public static final double HIGH_STRENGHT = 9;
     public static final double VERY_HIGH_STRENGHT = 10;
 
+    //TODO fix gemstone block not being translucent
+
+    //TODO fix being able to place gemstone blocks inside players
+
     public GemstoneBlock() {
         super(Properties.of(Material.HEAVY_METAL).sound(SoundType.AMETHYST_CLUSTER).requiresCorrectToolForDrops());
         this.registerDefaultState(this.getStateDefinition().any().setValue(TYPE, GemstoneType.ALMANDINE));
     }
-
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
@@ -64,6 +70,11 @@ public class GemstoneBlock extends Block {
 
     public ItemStack getItem(BlockState state, boolean block) {
         return IGemstoneItem.createData(GemstoneType.Rarity.ROUGH, getType(state), block);
+    }
+
+    @Override
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter level, BlockPos pos, Player player) {
+        return getItem(state, true);
     }
 
 
@@ -91,6 +102,11 @@ public class GemstoneBlock extends Block {
             if (player == null) return state;
             ItemStack place = player.getItemInHand(context.getHand());
             return state.setValue(TYPE, IGemstoneItem.getGemstone(place));
+        }
+
+        @Override
+        public @NotNull Component getName(@NotNull ItemStack stack) {
+            return Component.translatable("gemstone_block.name", IGemstoneItem.getGemstone(stack).getDispName());
         }
     }
 }

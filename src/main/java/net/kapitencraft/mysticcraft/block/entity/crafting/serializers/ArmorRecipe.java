@@ -17,13 +17,17 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 public class ArmorRecipe extends CustomRecipe {
@@ -134,16 +138,14 @@ public class ArmorRecipe extends CustomRecipe {
             String results = GsonHelper.getAsString(object, "results", null);
             JsonArray unused = GsonHelper.getAsJsonArray(object, "unused", new JsonArray());
             List<ArmorType> unusedSlots = unused.asList().stream().map(JsonElement::getAsString).map(ArmorType::get).toList();
-            HashMap<ArmorType, ItemStack> map = new HashMap<>();
+            MapStream<ArmorType, Item> map = MapStream.create();
             List<ArmorType> toUse = Arrays.stream(ArmorType.values()).filter(armorType -> !unusedSlots.contains(armorType)).toList();
             if (results != null) {
-                Stream<String> stream = CollectionHelper.sync(toUse.stream().map(ArmorType::getSerializedName), TextHelper::swappedMergeRegister, results);
+                Stream<String> stream = CollectionHelper.mapSync(toUse.stream().map(ArmorType::getSerializedName), results, TextHelper::swappedMergeRegister);
                 try {
-                    MapStream.create(toUse, stream.toList())
+                    map = MapStream.create(toUse, stream.toList())
                             .mapValues(ResourceLocation::new)
-                            .mapValues(BuiltInRegistries.ITEM::get)
-                            .mapValues(ItemStack::new)
-                            .forEach(map::put);
+                            .mapValues(BuiltInRegistries.ITEM::get);
                 } catch (Exception e) {
                     MysticcraftMod.sendWarn("unable to load recipe {}: {}", CraftingHelper.RECIPE_MARKER, location, e.getMessage());
                 }
@@ -152,21 +154,20 @@ public class ArmorRecipe extends CustomRecipe {
                 List<ResourceLocation> locations = array.asList().stream().map(JsonElement::getAsString).map(ResourceLocation::new).toList();
                 try {
                     MapStream.create(toUse, locations)
-                            .mapValues(BuiltInRegistries.ITEM::get)
-                            .mapValues(ItemStack::new).forEach(map::put);
+                            .mapValues(BuiltInRegistries.ITEM::get);
                 } catch (Exception e) {
                     MysticcraftMod.sendWarn("unable to load recipe {}: {}", CraftingHelper.RECIPE_MARKER, location, e.getMessage());
                 }
             }
             CraftingBookCategory category = CraftingBookCategory.CODEC.byName(GsonHelper.getAsString(object, "category", null));
-            return new ArmorRecipe(location, category, material, map, group);
+            return new ArmorRecipe(location, category, material, map.mapValues(ItemStack::new).toMap(), group);
         }
 
         @Override
         public @Nullable ArmorRecipe fromNetwork(@NotNull ResourceLocation resourceLocation, FriendlyByteBuf buf) {
             String group = buf.readUtf();
             Ingredient material = Ingredient.fromNetwork(buf);
-            List<String> items = List.of(buf.readUtf(), buf.readUtf(), buf.readUtf(), buf.readUtf());
+            List<String> items = CollectionHelper.create(4, buf::readUtf);
             List<ItemStack> results = items.stream().filter(s -> !Objects.equals(s, ""))
                     .map(ResourceLocation::new)
                     .map(BuiltInRegistries.ITEM::get)
@@ -187,7 +188,7 @@ public class ArmorRecipe extends CustomRecipe {
                     .map(BuiltInRegistries.ITEM::getKey)
                     .map(ResourceLocation::toString)
                     .forEach(buf::writeUtf);
-            MiscHelper.repeatXTimes(4 - recipe.all.size(), integer -> buf.writeUtf(""));
+            MiscHelper.repeat(4 - recipe.all.size(), integer -> buf.writeUtf(""));
             buf.writeEnum(recipe.category());
         }
     }

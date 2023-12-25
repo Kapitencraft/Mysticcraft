@@ -3,14 +3,15 @@ package net.kapitencraft.mysticcraft.item.data.reforging;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.api.SaveAbleEnum;
 import net.kapitencraft.mysticcraft.item.item_bonus.ReforgingBonus;
-import net.kapitencraft.mysticcraft.misc.FormattingCodes;
+import net.kapitencraft.mysticcraft.misc.ModRarities;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.item.*;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -53,14 +54,14 @@ public class Reforge {
     public JsonObject serialize() {
         JsonObject object = new JsonObject();
         JsonObject mods = new JsonObject();
-        final List<Rarity> rarities = List.of(Rarity.COMMON, Rarity.UNCOMMON, Rarity.RARE, Rarity.EPIC, FormattingCodes.LEGENDARY, FormattingCodes.MYTHIC, FormattingCodes.DIVINE);
+        final List<Rarity> rarities = List.of(Rarity.COMMON, Rarity.UNCOMMON, Rarity.RARE, Rarity.EPIC, ModRarities.LEGENDARY, ModRarities.MYTHIC, ModRarities.DIVINE);
         for (Map.Entry<Attribute, ReforgeStat> entry : statList.entrySet()) {
             JsonArray array = new JsonArray();
             rarities.forEach(rarity -> array.add(entry.getValue().apply(rarity)));
             mods.add(String.valueOf(BuiltInRegistries.ATTRIBUTE.getKey(entry.getKey())), array);
         }
         if (this.bonus != null) {
-            object.addProperty("bonus", ReforgeBonuses.byBonus(this.bonus).getName());
+            object.addProperty("bonus", ReforgeBonuses.byBonus(this.bonus).getSerializedName());
         }
         object.add("mods", mods);
         return object;
@@ -115,7 +116,6 @@ public class Reforge {
         private boolean onlyFromStone = false;
         private Type type;
 
-
         public Builder(String registryName) {
             this.registryName = registryName;
         }
@@ -163,12 +163,14 @@ public class Reforge {
         return false;
     }
 
-    public enum Type implements SaveAbleEnum {
+    public enum Type implements StringRepresentable {
         MELEE_WEAPON("melee", stack -> stack.getItem() instanceof SwordItem),
         RANGED_WEAPON("ranged", stack -> stack.getItem() instanceof BowItem),
         ARMOR("armor", stack -> stack.getItem() instanceof ArmorItem),
         FISHING_ROD("fishing", stack -> stack.getItem() instanceof FishingRodItem),
         EQUIPMENT("equipment", stack -> !(MELEE_WEAPON.mayApply(stack) || RANGED_WEAPON.mayApply(stack) || ARMOR.mayApply(stack) || FISHING_ROD.mayApply(stack)));
+
+        private static final EnumCodec<Type> CODEC = StringRepresentable.fromEnum(Type::values);
 
         private final Predicate<ItemStack> applicably;
         private final String name;
@@ -179,7 +181,7 @@ public class Reforge {
         }
 
         public static Type byName(String in) {
-            return SaveAbleEnum.getValue(ARMOR, in, values());
+            return CODEC.byName(in, ARMOR);
         }
 
         boolean mayApply(ItemStack stack) {
@@ -187,19 +189,20 @@ public class Reforge {
         }
 
         @Override
-        public String getName() {
+        public @NotNull String getSerializedName() {
             return name;
         }
     }
 
-    public enum Functions implements SaveAbleEnum {
+    public enum Functions implements StringRepresentable {
         EMPTY("empty", new ReforgingBonus("Empty") {
             @Override
             public Consumer<List<Component>> getDisplay() {
                 return list -> list.add(Component.literal("this bonus is empty"));
             }
-        })
-        ;
+        });
+
+        private static final EnumCodec<Functions> CODEC = StringRepresentable.fromEnum(Functions::values);
 
 
         private final String name;
@@ -215,10 +218,11 @@ public class Reforge {
         }
 
         public Functions byName(String name) {
-            return SaveAbleEnum.getValue(EMPTY, name, values());
+            return CODEC.byName(name, EMPTY);
         }
 
-        public String getName() {
+        @Override
+        public @NotNull String getSerializedName() {
             return name;
         }
     }

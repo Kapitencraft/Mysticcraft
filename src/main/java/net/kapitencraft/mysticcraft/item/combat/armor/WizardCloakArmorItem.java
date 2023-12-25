@@ -14,6 +14,8 @@ import net.minecraft.world.item.Rarity;
 import org.jetbrains.annotations.Nullable;
 
 public class WizardCloakArmorItem extends ModArmorItem {
+
+    //TODO add crafting recipe
     public static final ArmorTabGroup WIZARD_CLOAK_GROUP = new ArmorTabGroup(TabRegister.TabTypes.WEAPONS_AND_TOOLS);
 
     public WizardCloakArmorItem(EquipmentSlot p_40387_) {

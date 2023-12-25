@@ -72,14 +72,8 @@ public class MysticcraftMod {
         sendInfo("Registering " + nameOfRegistered + "...");
     }
 
-    private static String lastMSG = "";
-
     public static void sendError(String error) {
         LOGGER.error(MYSTICCRAFT_MARKER, error);
-    }
-
-    public static void sendInfo(String info, Marker marker) {
-        sendInfo(info, marker);
     }
 
     public static void sendInfo(String info, Object... toAdd) {

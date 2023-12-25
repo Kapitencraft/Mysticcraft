@@ -25,14 +25,14 @@ public abstract class ProjectileMixin extends Entity {
      * @author Kapitencraft
      */
     @Overwrite
-    public void shootFromRotation(Entity entity, float p_37253_, float p_37254_, float p_37255_, float speed, float p_37257_) {
+    public void shootFromRotation(Entity entity, float p_37253_, float p_37254_, float p_37255_, float speed, float inaccuracy) {
         if (entity instanceof LivingEntity living) {
             speed *= 1 + AttributeHelper.getSaveAttributeValue(ModAttributes.ARROW_SPEED.get(), living) / 100;
         }
         float f = -Mth.sin(p_37254_ * ((float)Math.PI / 180F)) * Mth.cos(p_37253_ * ((float)Math.PI / 180F));
         float f1 = -Mth.sin((p_37253_ + p_37255_) * ((float)Math.PI / 180F));
         float f2 = Mth.cos(p_37254_ * ((float)Math.PI / 180F)) * Mth.cos(p_37253_ * ((float)Math.PI / 180F));
-        this.callShoot(f, f1, f2, speed, p_37257_);
+        this.callShoot(f, f1, f2, speed, inaccuracy);
         Vec3 vec3 = entity.getDeltaMovement();
         this.setDeltaMovement(this.getDeltaMovement().add(vec3.x, entity.isOnGround() ? 0.0D : vec3.y, vec3.z));
     }

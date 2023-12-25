@@ -2,7 +2,7 @@ package net.kapitencraft.mysticcraft.init;
 
 import com.mojang.serialization.Codec;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.item.storage.loot_table.modifiers.*;
+import net.kapitencraft.mysticcraft.item.loot_table.modifiers.*;
 import net.minecraftforge.common.loot.IGlobalLootModifier;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -18,4 +18,5 @@ public interface ModLootModifiers {
     RegistryObject<Codec<ReplenishModifier>> REPLENISH = REGISTRY.register("replenish", ()-> ReplenishModifier.CODEC);
     RegistryObject<Codec<OreModifier>> ORE = REGISTRY.register("ore_mod", ()-> OreModifier.CODEC);
     RegistryObject<Codec<SmeltModifier>> SMELT = REGISTRY.register("smelt", ()-> SmeltModifier.CODEC);
+    RegistryObject<Codec<AddEssenceModifier>> ADD_ESSENCE = REGISTRY.register("add_essence", ()-> AddEssenceModifier.CODEC);
 }
