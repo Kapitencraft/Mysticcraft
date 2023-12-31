@@ -2,8 +2,8 @@ package net.kapitencraft.mysticcraft.entity.client.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.entity.VampireBat;
 import net.kapitencraft.mysticcraft.entity.client.model.VampireBatModel;
+import net.kapitencraft.mysticcraft.entity.vampire.VampireBat;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;

@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.Objects;
 
-public class ParticleHelper {
+public class ParticleAnimator {
     private static final String COOLDOWN_ID = "cooldown";
     private static final String TICKS_ALIVE_ID = "ticksAlive";
     private static final String MAX_TICKS_ALIVE_ID = "maxTicksAlive";
@@ -98,12 +98,12 @@ public class ParticleHelper {
         this.isRemoved = flag;
     }
 
-    public static ParticleHelper createWithTargetHeight(String helperReason, Entity target, Type type, CompoundTag properties) {
+    public static ParticleAnimator createWithTargetHeight(String helperReason, Entity target, Type type, CompoundTag properties) {
         properties.putFloat(MAX_HEIGHT_ID, target.getBbHeight());
-        return new ParticleHelper(helperReason, target, type, properties);
+        return new ParticleAnimator(helperReason, target, type, properties);
     }
 
-    public ParticleHelper(String helperReason, Entity target, Type type, CompoundTag properties) {
+    public ParticleAnimator(String helperReason, Entity target, Type type, CompoundTag properties) {
         this.liveUntilTargetDeath = type == Type.ARROW_HEAD;
         this.properties = properties;
         this.target = target;
@@ -124,7 +124,7 @@ public class ParticleHelper {
         return this.properties.getFloat(MAX_HEIGHT_ID) / (this.properties.getFloat(ROTATION_PER_TICK_ID) / 2f);
     }
 
-    private ParticleHelper(@NotNull CompoundTag tag, Entity target, int curTagID) {
+    private ParticleAnimator(@NotNull CompoundTag tag, Entity target, int curTagID) {
         this.curTagID = curTagID;
         this.properties = (CompoundTag) tag.get("properties");
         this.helperReason = tag.getString("helperReason");
@@ -182,8 +182,8 @@ public class ParticleHelper {
         initSave();
     }
 
-    public static ParticleHelper of(@NotNull CompoundTag tag, Entity living, int tagID) {
-        return new ParticleHelper(tag, living, tagID);
+    public static ParticleAnimator of(@NotNull CompoundTag tag, Entity living, int tagID) {
+        return new ParticleAnimator(tag, living, tagID);
     }
 
     public void tick(int ticks) {

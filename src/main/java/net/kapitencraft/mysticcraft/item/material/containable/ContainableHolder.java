@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.item.tools;
+package net.kapitencraft.mysticcraft.item.material.containable;
 
 import net.kapitencraft.mysticcraft.helpers.TextHelper;
 import net.minecraft.nbt.CompoundTag;

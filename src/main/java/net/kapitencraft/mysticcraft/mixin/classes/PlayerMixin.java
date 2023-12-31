@@ -4,7 +4,7 @@ package net.kapitencraft.mysticcraft.mixin.classes;
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.init.ModEnchantments;
 import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.QuiverItem;
-import net.kapitencraft.mysticcraft.item.tools.ContainableHolder;
+import net.kapitencraft.mysticcraft.item.material.containable.ContainableHolder;
 import net.kapitencraft.mysticcraft.misc.HealingHelper;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;

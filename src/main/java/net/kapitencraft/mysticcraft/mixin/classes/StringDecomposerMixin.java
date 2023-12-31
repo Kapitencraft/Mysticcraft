@@ -1,8 +1,8 @@
 package net.kapitencraft.mysticcraft.mixin.classes;
 
 import net.kapitencraft.mysticcraft.client.font.effect.BaseGlyphEffect;
-import net.kapitencraft.mysticcraft.client.font.effect.Effects;
 import net.kapitencraft.mysticcraft.client.font.effect.EffectsStyle;
+import net.kapitencraft.mysticcraft.client.font.effect.GlyphEffects;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Style;
 import net.minecraft.util.FormattedCharSink;
@@ -37,8 +37,8 @@ public class StringDecomposerMixin {
                 if (chatformatting != null) {
                     formattedStyle = chatformatting == ChatFormatting.RESET ? style2 : formattedStyle.applyLegacyFormat(chatformatting);
                 } else {
-                    if (Effects.EFFECTS_FOR_KEY.containsKey(c1)) {
-                        BaseGlyphEffect effect = Effects.EFFECTS_FOR_KEY.get(c1);
+                    if (GlyphEffects.EFFECTS_FOR_KEY.containsKey(c1)) {
+                        BaseGlyphEffect effect = GlyphEffects.EFFECTS_FOR_KEY.get(c1);
                         effects.addEffect(effect);
                     }
                 }

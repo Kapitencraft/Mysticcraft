@@ -13,7 +13,7 @@ public interface IGemstoneItem {
         ItemStack stack = new ItemStack(block ? ModBlocks.GEMSTONE_BLOCK.getItem() : ModItems.GEMSTONE.get());
         CompoundTag tag = stack.getOrCreateTagElement(id);
         tag.putString("GemId", type.getId());
-        tag.putString("GemRarity", rarity.getName());
+        tag.putString("GemRarity", rarity.getSerializedName());
         return stack;
     }
 

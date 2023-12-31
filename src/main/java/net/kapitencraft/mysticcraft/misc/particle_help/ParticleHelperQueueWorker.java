@@ -10,8 +10,8 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class ParticleHelperQueueWorker {
-    private final Multimap<UUID, ParticleHelper> multimap = HashMultimap.create();
-    private final Multimap<UUID, ParticleHelper> queue = HashMultimap.create();
+    private final Multimap<UUID, ParticleAnimator> multimap = HashMultimap.create();
+    private final Multimap<UUID, ParticleAnimator> queue = HashMultimap.create();
     private boolean joinQueue = false;
 
 
@@ -22,7 +22,7 @@ public class ParticleHelperQueueWorker {
 
     public void tick(int ticks, UUID toTick) {
         joinQueue = true;
-        for (ParticleHelper helper : multimap.get(toTick)) {
+        for (ParticleAnimator helper : multimap.get(toTick)) {
             helper.tick(ticks);
         }
         joinQueue = false;
@@ -30,7 +30,7 @@ public class ParticleHelperQueueWorker {
         queue.clear();
     }
 
-    public void add(UUID uuid, ParticleHelper helper) {
+    public void add(UUID uuid, ParticleAnimator helper) {
         if (joinQueue) {
             queue.put(uuid, helper);
         } else {
@@ -38,9 +38,9 @@ public class ParticleHelperQueueWorker {
         }
     }
 
-    private Collection<ParticleHelper> getHelper(String type, Collection<ParticleHelper> source) {
-        Collection<ParticleHelper> helpers = new ArrayList<>();
-        for (ParticleHelper helper : source) {
+    private Collection<ParticleAnimator> getHelper(String type, Collection<ParticleAnimator> source) {
+        Collection<ParticleAnimator> helpers = new ArrayList<>();
+        for (ParticleAnimator helper : source) {
             if (Objects.equals(helper.getHelperReason(), type)) {
                 helpers.add(helper);
             }
@@ -50,7 +50,7 @@ public class ParticleHelperQueueWorker {
 
     public boolean remove(UUID target, @Nullable String type) {
         if (!joinQueue) {
-            for (ParticleHelper helper : getHelper(type, multimap.get(target))) {
+            for (ParticleAnimator helper : getHelper(type, multimap.get(target))) {
                 helper.remove(true);
                 multimap.remove(target, helper);
             }

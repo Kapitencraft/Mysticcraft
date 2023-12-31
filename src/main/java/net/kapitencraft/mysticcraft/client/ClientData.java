@@ -14,6 +14,7 @@ public class ClientData {
     public static void tickEvent(TickEvent.PlayerTickEvent event) {
         if (event.phase == TickEvent.Phase.END && event.player == Minecraft.getInstance().player) {
             time++;
+            MysticcraftClientInstance.getInstance().acceptor.animateAll();
         }
     }
 

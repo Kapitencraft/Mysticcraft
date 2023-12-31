@@ -33,10 +33,20 @@ public class MathHelper {
         return round(no, 2);
     }
 
+    public static Vector3f color(int r, int g, int b) {
+        return new Vector3f(r / 255f, g / 255f, b / 255f);
+    }
+
     public static float calculateDamage(float damage, double armorValue, double armorToughnessValue) {
         double f = MysticcraftMod.DAMAGE_CALCULATION_VALUE - armorToughnessValue / 4.0F;
         double defencePercentage = armorValue / (armorValue + f);
         return (float) (damage * (1f - defencePercentage));
+    }
+
+    public static Vec3 rotateHorizontalVec(Vec3 source, Vec3 target, int angle) {
+        double x = (target.x - source.x) * Math.cos(angle) - (target.y - source.y) * Math.sin(angle) + source.x;
+        double z = (target.x - source.x) * Math.sin(angle) + (target.y - source.y) * Math.cos(angle) + source.y;
+        return new Vec3(x, 0, z);
     }
 
 

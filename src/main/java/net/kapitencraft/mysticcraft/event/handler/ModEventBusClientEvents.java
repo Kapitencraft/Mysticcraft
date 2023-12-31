@@ -6,8 +6,10 @@ import net.kapitencraft.mysticcraft.client.particle.CircleParticle;
 import net.kapitencraft.mysticcraft.client.particle.DamageIndicatorParticle;
 import net.kapitencraft.mysticcraft.client.particle.FireNormalParticle;
 import net.kapitencraft.mysticcraft.client.particle.MagicCircleParticle;
+import net.kapitencraft.mysticcraft.client.particle.animation.ParticleAnimationProvider;
 import net.kapitencraft.mysticcraft.client.particle.flame.*;
 import net.kapitencraft.mysticcraft.entity.client.renderer.*;
+import net.kapitencraft.mysticcraft.gui.containable.ContainableScreen;
 import net.kapitencraft.mysticcraft.gui.gemstone_grinder.GemstoneGrinderScreen;
 import net.kapitencraft.mysticcraft.gui.reforging_anvil.ReforgeAnvilScreen;
 import net.kapitencraft.mysticcraft.init.*;
@@ -52,6 +54,7 @@ public class ModEventBusClientEvents {
     private static void registerMenuScreens() {
         MenuScreens.register(ModMenuTypes.GEM_GRINDER.get(), GemstoneGrinderScreen::new);
         MenuScreens.register(ModMenuTypes.REFORGING_ANVIL.get(), ReforgeAnvilScreen::new);
+        MenuScreens.register(ModMenuTypes.CONTAINABLE.get(), ContainableScreen::new);
     }
 
 
@@ -78,6 +81,7 @@ public class ModEventBusClientEvents {
         event.register(ModParticleTypes.MAGIC_CIRCLE.get(), MagicCircleParticle.MagicCircleParticleProvider::new);
         event.register(ModParticleTypes.DAMAGE_INDICATOR.get(), DamageIndicatorParticle.Provider::new);
         event.register(ModParticleTypes.CIRCLE.get(), CircleParticle.Provider::new);
+        event.register(ModParticleTypes.ANIMATION.get(), ParticleAnimationProvider::new);
     }
 
     @SubscribeEvent

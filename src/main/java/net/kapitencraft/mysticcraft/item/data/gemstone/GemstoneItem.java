@@ -26,7 +26,7 @@ public class GemstoneItem extends Item implements IModItem, IGemstoneItem {
     @Override
     public @NotNull Component getName(@NotNull ItemStack stack) {
         return MiscHelper.buildComponent(
-                Component.translatable("gem_rarity." + IGemstoneItem.getGemRarity(stack).getName()),
+                Component.translatable("gem_rarity." + IGemstoneItem.getGemRarity(stack).getSerializedName()),
                 Component.literal(" "),
                 Component.translatable("gem_type." + IGemstoneItem.getGemId(stack)),
                 Component.literal(" "),

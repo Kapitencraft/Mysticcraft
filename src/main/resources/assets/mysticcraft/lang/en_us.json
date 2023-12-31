@@ -64,6 +64,7 @@
   "block.mysticcraft.reforging_table": "Reforging Table",
   "block.mysticcraft.ruby_gemstone_block": "Ruby Crystal",
   "block.mysticcraft.sapphire_gemstone_block": "Sapphire Crystal",
+  "block.mysticcraft.soul_chain": "Soul Chain",
 
   "builders_wand.cone": "Cone",
   "builders_wand.cuboid": "Cube",
@@ -383,10 +384,13 @@
   "item.mysticcraft.shadow_assassin_leggings": "Shadow Assassin Leggings",
   "item.mysticcraft.shadow_dagger": "Shadow Dagger",
   "item.mysticcraft.shadow_leather": "Shadow Leather",
+  "item.mysticcraft.soulbound_core": "Soulbound Core",
   "item.mysticcraft.soul_mage_boots": "Soul Mage Boots",
   "item.mysticcraft.soul_mage_chestplate": "Soul Mage Chestplate",
   "item.mysticcraft.soul_mage_helmet": "Soul Mage Helmet",
   "item.mysticcraft.soul_mage_leggings": "Soul Mage Leggings",
+  "item.mysticcraft.soul_steel_alloy": "Soul Steel Alloy",
+  "item.mysticcraft.soul_steel_nugget": "Soul Steel Nugget",
   "item.mysticcraft.spell_shard": "Spell Shard",
   "item.mysticcraft.staff_of_destruction": "Staff of Destruction",
   "item.mysticcraft.staff_of_the_wild": "Staff of the Wild",
@@ -446,5 +450,6 @@
   "soulbound.toss": "You may not drop Soulbound items",
 
   "upgrade.button": "§1Click here to prestige/star your item",
-  "item.creative_only": "Only obtainable in creative mode"
+  "item.creative_only": "Only obtainable in creative mode",
+  "block.mysticcraft.reforge_anvil": "Reforge Anvil"
 }

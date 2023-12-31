@@ -6,6 +6,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.api.Reference;
 import net.kapitencraft.mysticcraft.bestiary.BestiaryManager;
+import net.kapitencraft.mysticcraft.client.particle.animation.*;
 import net.kapitencraft.mysticcraft.enchantments.HealthMendingEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.ExtendedCalculationEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.IToolEnchantment;
@@ -15,9 +16,11 @@ import net.kapitencraft.mysticcraft.enchantments.weapon.ranged.OverloadEnchantme
 import net.kapitencraft.mysticcraft.entity.FrozenBlazeEntity;
 import net.kapitencraft.mysticcraft.entity.item.UnCollectableItemEntity;
 import net.kapitencraft.mysticcraft.guild.GuildHandler;
-import net.kapitencraft.mysticcraft.guild.GuildUpgrades;
 import net.kapitencraft.mysticcraft.helpers.*;
-import net.kapitencraft.mysticcraft.init.*;
+import net.kapitencraft.mysticcraft.init.ModAttributes;
+import net.kapitencraft.mysticcraft.init.ModBlocks;
+import net.kapitencraft.mysticcraft.init.ModEnchantments;
+import net.kapitencraft.mysticcraft.init.ModMobEffects;
 import net.kapitencraft.mysticcraft.item.ITieredItem;
 import net.kapitencraft.mysticcraft.item.combat.armor.ModArmorItem;
 import net.kapitencraft.mysticcraft.item.combat.armor.ModArmorMaterials;
@@ -38,6 +41,7 @@ import net.kapitencraft.mysticcraft.misc.content.EssenceType;
 import net.kapitencraft.mysticcraft.misc.cooldown.Cooldowns;
 import net.kapitencraft.mysticcraft.misc.damage_source.FerociousDamageSource;
 import net.kapitencraft.mysticcraft.misc.damage_source.IAbilitySource;
+import net.kapitencraft.mysticcraft.misc.particle_help.ParticleAnimator;
 import net.kapitencraft.mysticcraft.mixin.classes.LivingEntityAccessor;
 import net.kapitencraft.mysticcraft.mob_effects.NumbnessMobEffect;
 import net.kapitencraft.mysticcraft.networking.ModMessages;
@@ -47,6 +51,7 @@ import net.kapitencraft.mysticcraft.villagers.ModVillagers;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -109,7 +114,6 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 
 @Mod.EventBusSubscriber
@@ -173,16 +177,22 @@ public class MiscRegister {
         }
         LivingEntity attacked = event.getEntity();
         if (AttributeHelper.getSaveAttributeValue(ModAttributes.ARMOR_SHREDDER.get(), attacker) != -1) {
-            double armorShredder = (int) AttributeHelper.getSaveAttributeValue(ModAttributes.ARMOR_SHREDDER.get(), attacker);
+            double armorShredder = AttributeHelper.getSaveAttributeValue(ModAttributes.ARMOR_SHREDDER.get(), attacker);
             for (int i = 0; i < 4; i++) {
                 ItemStack stack = attacked.getItemBySlot(MiscHelper.ARMOR_EQUIPMENT[i]);
-                stack.hurt((int) armorShredder / 3, attacked.level.getRandom(), attacker instanceof ServerPlayer serverPlayer ? serverPlayer : null);
+                stack.hurt((int) (armorShredder / 3), attacked.level.getRandom(), attacker instanceof ServerPlayer serverPlayer ? serverPlayer : null);
             }
         }
-        if (AttributeHelper.getSaveAttributeValue(ModAttributes.LIVE_STEAL.get(), attacker) != -1) {
-            double live_steel = (int) AttributeHelper.getSaveAttributeValue(ModAttributes.LIVE_STEAL.get(), attacker);
-            HealingHelper.setEffectReason(attacked);
-            attacker.heal(Math.min((float) live_steel, event.getAmount()));
+        double liveSteal = AttributeHelper.getSaveAttributeValue(ModAttributes.LIVE_STEAL.get(), attacker);
+        if (liveSteal != -1) {
+            HealingHelper.setEffectReason(attacker);
+            ParticleHelper.sendParticles(new ParticleAnimationOptions(
+                    new DustParticleOptions(MathHelper.color(130, 0, 0), 1.9f),
+                    ParticleAnimationParameters.create().withParam(ParticleAnimParams.TARGET, attacker),
+                    ParticleAnimationInfo.create(Map.of(10, ParticleAnimations.MOVE_TO))
+            ), false, attacked, 5, attacked.getBbWidth(), attacked.getBbHeight(), attacked.getBbWidth(), 0.2);
+
+            attacker.heal(Math.min((float) liveSteal, event.getAmount()));
         }
         if (AttributeHelper.getSaveAttributeValue(ModAttributes.CRIT_CHANCE.get(), attacker) / 100 > Math.random() && attacker instanceof Player player) {
             CriticalHitEvent event1 = ForgeHooks.getCriticalHit(player, attacked, false, 1.5f);
@@ -286,16 +296,20 @@ public class MiscRegister {
         }
     }
 
+    @SuppressWarnings("all")
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void HitEffectRegister(LivingHurtEvent event) {
         LivingEntity living = event.getEntity();
         CompoundTag tag = living.getPersistentData();
+        if (event.getSource().isFire() && living.hasEffect(ModMobEffects.BLAZING.get())) {
+            MathHelper.mul(event::getAmount, event::setAmount, 1 + 0.2f * living.getEffect(ModMobEffects.BLAZING.get()).getAmplifier());
+        }
         if (living.hasEffect(ModMobEffects.VULNERABILITY.get())) {
-            event.setAmount((float) (event.getAmount() * (1 + Objects.requireNonNull(living.getEffect(ModMobEffects.VULNERABILITY.get())).getAmplifier() * 0.05)));
+            MathHelper.mul(event::getAmount, event::setAmount, 1 + living.getEffect(ModMobEffects.VULNERABILITY.get()).getAmplifier() * 0.05f);
         }
         if (living.hasEffect(ModMobEffects.NUMBNESS.get())) {
             event.setCanceled(true);
-            tag.putFloat(NumbnessMobEffect.NUMBNESS_ID, tag.getFloat(NumbnessMobEffect.NUMBNESS_ID) + event.getAmount());
+            TagHelper.increaseFloatTagValue(tag, NumbnessMobEffect.NUMBNESS_ID, event.getAmount());
         }
         if (event.getSource().getDirectEntity() instanceof SmallFireball smallFireball) {
             if (smallFireball.getOwner() instanceof FrozenBlazeEntity) {
@@ -336,9 +350,9 @@ public class MiscRegister {
             final double ferocity = source instanceof FerociousDamageSource damageSource ? damageSource.ferocity : attacker.getAttributeValue(ModAttributes.FEROCITY.get());
             if (MathHelper.chance(ferocity / 100, attacker)) {
                 MiscHelper.delayed(40, () -> {
-                    float ferocity_damage = (float) (source instanceof FerociousDamageSource ferociousDamageSource ? ferociousDamageSource.damage : source.getEntity() instanceof AbstractArrow arrow ?                             arrow.getBaseDamage() : attacker.getAttributeValue(Attributes.ATTACK_DAMAGE));
-                    attacked.level.playSound(attacked, new BlockPos(MathHelper.getPosition(attacked)), SoundEvents.IRON_GOLEM_ATTACK, SoundSource.HOSTILE, 1f, 0f);
-                    attacked.hurt(new FerociousDamageSource(attacker, (ferocity - 100), ferocity_damage), ferocity_damage);
+                    float ferocityDamage = (float) (source instanceof FerociousDamageSource ferociousDamageSource ? ferociousDamageSource.damage : source.getEntity() instanceof AbstractArrow arrow ?                             arrow.getBaseDamage() : attacker.getAttributeValue(Attributes.ATTACK_DAMAGE));
+                    attacked.level.playSound(attacked, new BlockPos(MathHelper.getPosition(attacked)), SoundEvents.IRON_GOLEM_ATTACK, SoundSource.HOSTILE, 1f, 0.5f);
+                    attacked.hurt(new FerociousDamageSource(attacker, (ferocity - 100), ferocityDamage), ferocityDamage);
                 });
             }
         }
@@ -447,7 +461,7 @@ public class MiscRegister {
         }
         if (tag.contains("lastFullSet", 8)) {
             if (ModArmorItem.hadFullSet(ModArmorMaterials.SOUL_MAGE, living)) {
-                net.kapitencraft.mysticcraft.misc.particle_help.ParticleHelper.clearAllHelpers(SoulMageArmorItem.helperString, living);
+                ParticleAnimator.clearAllHelpers(SoulMageArmorItem.helperString, living);
                 tag.putString("lastFullSet", "");
             } else if (ModArmorItem.hadFullSet(ModArmorMaterials.SHADOW_ASSASSIN, living)) {
                 living.setInvisible(false);
@@ -478,7 +492,7 @@ public class MiscRegister {
     public static void serverTick(TickEvent.LevelTickEvent event) {
         if (event.level instanceof ServerLevel serverLevel) {
             for (Entity entity : serverLevel.getEntities().getAll()) {
-                net.kapitencraft.mysticcraft.misc.particle_help.ParticleHelper.tickHelper(entity);
+                ParticleAnimator.tickHelper(entity);
             }
             helper.update((uuid)-> {
                 Arrow arrow = (Arrow) serverLevel.getEntity(uuid);
@@ -594,34 +608,26 @@ public class MiscRegister {
 
     @SubscribeEvent
     public static void registerVillagerProfession(VillagerTradesEvent event) {
-        //TODO fix gemstone makers only having one trade
         Int2ObjectMap<List<VillagerTrades.ItemListing>> trades = event.getTrades();
-        if (event.getType() == ModVillagers.GUILD_MASTER.getProfession().get()) {
-            for (GuildUpgrades upgrade : GuildUpgrades.values()) {
-                trades.put(upgrade.getRarity().getProfessionLevel(),
-                        List.of(new BasicItemListing(getEmeraldCost(upgrade.defaultCost()),
-                                upgrade.mainCostItem(),
-                                new ItemStack(ModItems.GUILD_UPGRADES.get(upgrade).get()),
-                                10, 2, 1.6f)));
-            }
-        } else if (event.getType() == ModVillagers.GEMSTONE_MAKER.getProfession().get()) {
-            trades.put(1, List.of(
-                    new BasicItemListing(getEmeraldCost(4), MathHelper.pickRandom(GemstoneType.allForRarity(GemstoneType.Rarity.ROUGH)), 8, 5, 1.3f)
-            ));
-            int i = 2;
+        if (event.getType() == ModVillagers.GEMSTONE_MAKER.getProfession().get()) {
             Multimap<Integer, VillagerTrades.ItemListing> multimap = HashMultimap.create();
-            for (int j = 0; j < 2; j++) {
-                for (GemstoneType.Rarity rarity : GemstoneType.RARITIES_TO_USE) {
-                    if (rarity != GemstoneType.Rarity.PERFECT) {
-                        GemstoneType type = MathHelper.pickRandom(GemstoneType.TYPES_TO_USE);
+            for (GemstoneType type : GemstoneType.TYPES_TO_USE) {
+                ItemStack sell = GemstoneType.allItems().get(type, GemstoneType.Rarity.ROUGH);
+                multimap.put(1,
+                        new BasicItemListing(getEmeraldCost(4), sell, 8, 5, 1.2f));
+            }
+            int i = 2;
+            for (GemstoneType.Rarity rarity : GemstoneType.RARITIES_TO_USE) {
+                if (rarity != GemstoneType.Rarity.PERFECT) {
+                    for (GemstoneType type : GemstoneType.TYPES_TO_USE) {
                         ItemStack defRarity = GemstoneType.allItems().get(type).get(rarity);
                         ItemStack newRarity = GemstoneType.allItems().get(type).get(rarity.next());
                         int c = Mth.nextInt(RandomSource.create(), 1, 5);
                         multimap.put(i,
-                                new BasicItemListing(getEmeraldCost((int) Math.pow(i, 2)), defRarity.copyWithCount(c), newRarity.copyWithCount(c), 8 - i, i + 6, (float) Math.pow(i, 1.5))
+                                new BasicItemListing(getEmeraldCost((int) Math.pow(i, 2)), defRarity.copyWithCount(c), newRarity.copyWithCount(c), 8 - i, i + 6, (float) Math.pow(i, -1.5))
                         );
-                        i++;
                     }
+                    i++;
                 }
             }
             multimap.keySet().forEach(integer -> {

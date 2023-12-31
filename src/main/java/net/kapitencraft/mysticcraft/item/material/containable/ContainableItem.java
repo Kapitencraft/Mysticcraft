@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.item.tools;
+package net.kapitencraft.mysticcraft.item.material.containable;
 
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
@@ -32,6 +32,10 @@ public abstract class ContainableItem<T extends Item> extends Item implements IM
         this.stackSize = stackSize;
     }
 
+
+    public int getDefaultStackSize() {
+        return stackSize;
+    }
 
     @Override
     public void appendHoverTextWithPlayer(@NotNull ItemStack itemStack, @Nullable Level level, @NotNull List<Component> list, @NotNull TooltipFlag flag, Player player) {

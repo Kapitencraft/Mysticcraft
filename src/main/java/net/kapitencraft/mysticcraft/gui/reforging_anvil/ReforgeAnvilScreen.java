@@ -37,7 +37,7 @@ public class ReforgeAnvilScreen extends ModScreen<ReforgingAnvilBlockEntity, Ref
     }
 
     private void reforgeUse(Button ignored) {
-        ModMessages.sendToServer(new ReforgingPacket(this.menu.getBlockEntity().getBlockPos(), this.menu.handleButtonPress()));
+        ModMessages.sendToServer(new ReforgingPacket(this.menu.getCapabilityProvider().getBlockPos(), this.menu.handleButtonPress()));
     }
     private void upgradeUse(Button ignored) {
         this.menu.upgrade();

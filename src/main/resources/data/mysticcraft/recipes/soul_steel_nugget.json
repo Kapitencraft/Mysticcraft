@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "mysticcraft:soul_steel_alloy"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "item": "mysticcraft:soul_steel_nugget"
+  }
+}

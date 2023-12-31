@@ -17,6 +17,11 @@ public class StunningEnchantment extends EffectApplicationEnchantment {
     }
 
     @Override
+    public int getMaxLevel() {
+        return 3;
+    }
+
+    @Override
     protected int getChance(int level) {
         return level;
     }

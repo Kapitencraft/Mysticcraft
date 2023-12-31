@@ -5,8 +5,8 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 
-public class IgnitionEffect extends MobEffect {
-    public IgnitionEffect() {
+public class BlazingEffect extends MobEffect {
+    public BlazingEffect() {
         super(MobEffectCategory.HARMFUL, -52480);
     }
 

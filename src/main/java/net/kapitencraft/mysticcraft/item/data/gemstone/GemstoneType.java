@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.item.data.gemstone;
 
 import com.mojang.serialization.Codec;
+import net.kapitencraft.mysticcraft.api.DoubleMap;
 import net.kapitencraft.mysticcraft.block.GemstoneBlock;
 import net.kapitencraft.mysticcraft.helpers.CollectionHelper;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
@@ -67,13 +68,16 @@ public enum GemstoneType implements StringRepresentable {
     public float getBlockStrength() {
         return (float) (blockStrength * blockStrength * 2);
     }
+    private static final DoubleMap<GemstoneType, Rarity, ItemStack> ALL_ITEMS = new DoubleMap<>();
 
-    public static HashMap<GemstoneType, HashMap<Rarity, ItemStack>> allItems() {
-        HashMap<GemstoneType, HashMap<Rarity, ItemStack>> toReturn = new HashMap<>();
-        for (GemstoneType type : TYPES_TO_USE) {
-            toReturn.put(type, type.registerItems());
+    public static DoubleMap<GemstoneType, Rarity, ItemStack> allItems() {
+        if (ALL_ITEMS.isEmpty()) {
+            for (GemstoneType type : TYPES_TO_USE) {
+                ALL_ITEMS.put(type, type.registerItems());
+            }
+            ALL_ITEMS.immutable();
         }
-        return toReturn;
+        return ALL_ITEMS;
     }
 
     public static HashMap<GemstoneType, ItemStack> allBlocks() {

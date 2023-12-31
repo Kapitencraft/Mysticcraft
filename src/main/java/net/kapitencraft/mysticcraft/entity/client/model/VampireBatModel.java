@@ -3,7 +3,7 @@ package net.kapitencraft.mysticcraft.entity.client.model;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.kapitencraft.mysticcraft.entity.VampireBat;
+import net.kapitencraft.mysticcraft.entity.vampire.VampireBat;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;

@@ -3,7 +3,7 @@ package net.kapitencraft.mysticcraft.entity;
 import net.kapitencraft.mysticcraft.helpers.CollectionHelper;
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.init.ModEntityTypes;
-import net.kapitencraft.mysticcraft.misc.particle_help.ParticleHelper;
+import net.kapitencraft.mysticcraft.misc.particle_help.ParticleAnimator;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EntityType;
@@ -28,7 +28,7 @@ public class CrimsonDeathRayProjectile extends AbstractArrow {
         super(ModEntityTypes.CRIMSON_DEATH_RAY.get(), level);
         this.setOwner(owner);
         this.setYRot(yRot);
-        new ParticleHelper("crimsonProjectile", this, ParticleHelper.Type.ARROW_HEAD, ParticleHelper.createArrowHeadProperties(10, 20, ParticleTypes.FLAME, ParticleTypes.ASH));
+        new ParticleAnimator("crimsonProjectile", this, ParticleAnimator.Type.ARROW_HEAD, ParticleAnimator.createArrowHeadProperties(10, 20, ParticleTypes.FLAME, ParticleTypes.ASH));
         this.setPos(MathHelper.getPosition(owner).add(0, 0.1, 0));
         this.setNoGravity(true);
         this.setNoPhysics(true);

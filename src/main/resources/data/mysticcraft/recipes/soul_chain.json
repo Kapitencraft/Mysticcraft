@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "*",
+    "+",
+    "*"
+  ],
+  "key": {
+    "*": {
+      "item": "mysticcraft:soul_steel_nugget"
+    },
+    "+": {
+      "item": "mysticcraft:soul_steel_alloy"
+    }
+  },
+  "result": {
+    "item": "mysticcraft:soul_chain"
+  }
+}

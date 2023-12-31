@@ -30,7 +30,7 @@ public class ReforgeProvider implements DataProvider {
         CompletableFuture<?>[] futures = new CompletableFuture[reforges.size()];
         int i = 0;
         for (Reforge reforge : reforges) {
-            Path path = output.getOutputFolder(PackOutput.Target.DATA_PACK).resolve(MysticcraftMod.MOD_ID).resolve("reforges").resolve(reforge.getType().getName()).resolve(reforge.getRegistryName() + ".json");
+            Path path = output.getOutputFolder(PackOutput.Target.DATA_PACK).resolve(MysticcraftMod.MOD_ID).resolve("reforges").resolve(reforge.getType().getSerializedName()).resolve(reforge.getRegistryName() + ".json");
             JsonObject object = reforge.serialize();
             futures[i++] = DataProvider.saveStable(cachedOutput, object, path);
         }

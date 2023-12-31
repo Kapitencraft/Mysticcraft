@@ -2,7 +2,6 @@ package net.kapitencraft.mysticcraft.init;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.gui.GUISlotBlockItem;
-import net.kapitencraft.mysticcraft.guild.GuildUpgrades;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.item.combat.armor.*;
 import net.kapitencraft.mysticcraft.item.combat.shield.GoldenShield;
@@ -24,6 +23,7 @@ import net.kapitencraft.mysticcraft.item.creative.BuildersWand;
 import net.kapitencraft.mysticcraft.item.creative.ModDebugStickItem;
 import net.kapitencraft.mysticcraft.item.data.gemstone.GemstoneItem;
 import net.kapitencraft.mysticcraft.item.material.*;
+import net.kapitencraft.mysticcraft.item.material.containable.WalletItem;
 import net.kapitencraft.mysticcraft.item.misc.IModItem;
 import net.kapitencraft.mysticcraft.item.misc.MaterialModItem;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
@@ -84,7 +84,7 @@ public interface ModItems {
     DeferredRegister<Item> REGISTRY = MysticcraftMod.makeRegistry(ForgeRegistries.ITEMS);
 
 
-    RegistryObject<BackpackItem> BACKPACK = register("backpack", BackpackItem::new, TabGroup.MATERIAL);
+    //RegistryObject<BackpackItem> BACKPACK = register("backpack", BackpackItem::new, TabGroup.MATERIAL);
     RegistryObject<WalletItem> WALLET = register("wallet", WalletItem::new, TabGroup.MATERIAL);
     RegistryObject<EssenceItem> ESSENCE = register("essence", EssenceItem::new, null);
     RegistryObject<VoidTotemItem> VOID_TOTEM_ITEM = register("void_totem", VoidTotemItem::new, TabGroup.COMBAT);
@@ -141,9 +141,11 @@ public interface ModItems {
     RegistryObject<DyedLeatherItem> DYED_LEATHER = register("dyed_leather",  DyedLeatherItem::new, TabGroup.MATERIAL);
 
     RegistryObject<QuiverItem> AMETHYST_QUIVER = register("amethyst_quiver", ()-> new QuiverItem(MiscHelper.rarity(Rarity.RARE), 16), QuiverItem.QUIVER_GROUP);
-    RegistryObject<LavaFishItem> BLAZING_SALMON = register("blazing_salmon", ()-> new LavaFishItem(1, 1.2f, new MobEffectInstance(ModMobEffects.IGNITION.get(), 100, 1)), LavaFishItem.LAVA_FISH_GROUP);
+    RegistryObject<LavaFishItem> BLAZING_SALMON = register("blazing_salmon", ()-> new LavaFishItem(1, 1.2f, new MobEffectInstance(ModMobEffects.BLAZING.get(), 100, 1)), LavaFishItem.LAVA_FISH_GROUP);
     RegistryObject<LavaFishItem> MAGMA_COD = register("magma_cod", ()-> new LavaFishItem(2, 1.1f, new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 150, 1)), LavaFishItem.LAVA_FISH_GROUP);
 
+    RegistryObject<MaterialModItem> SOUL_STEEL_ALLOY = registerMaterial("soul_steel_alloy", Rarity.RARE, TabGroup.MATERIAL);
+    RegistryObject<MaterialModItem> SOUL_STEEL_NUGGET = registerMaterial("soul_steel_nugget", Rarity.UNCOMMON, TabGroup.MATERIAL);
     HashMap<EquipmentSlot, RegistryObject<ModArmorItem>> ENDER_KNIGHT_ARMOR = ModArmorItem.createRegistry("ender_knight", EnderKnightArmorItem::new, EnderKnightArmorItem.ENDER_KNIGHT_GROUP);
     HashMap<EquipmentSlot, RegistryObject<ModArmorItem>> FROZEN_BLAZE_ARMOR = ModArmorItem.createRegistry("frozen_blaze", FrozenBlazeArmorItem::new, FrozenBlazeArmorItem.FROZEN_BLAZE_ARMOR_GROUP);
     HashMap<EquipmentSlot, RegistryObject<ModArmorItem>> SHADOW_ASSASSIN_ARMOR = ModArmorItem.createRegistry("shadow_assassin", ShadowAssassinArmorItem::new, ShadowAssassinArmorItem.SA_ARMOR_GROUP);
@@ -158,6 +160,6 @@ public interface ModItems {
     RegistryObject<GUISlotBlockItem> EMPTY_APPLICABLE_SLOT = register("empty_applicable", ()-> new GUISlotBlockItem().putTooltip(List.of(Component.literal("There is no Gemstone Applicable in it's slot").withStyle(ChatFormatting.RED))), null);
     RegistryObject<BucketItem> BUCKET_OF_MANA = REGISTRY.register("bucket_of_mana", ()-> new BucketItem(ModFluids.SOURCE_MANA_FLUID, MiscHelper.rarity(Rarity.EPIC).stacksTo(1)));
     RegistryObject<GemstoneItem> GEMSTONE = REGISTRY.register("gemstone", GemstoneItem::new);
-    HashMap<GuildUpgrades, RegistryObject<GuildUpgradeItem>> GUILD_UPGRADES = GuildUpgrades.createRegistry();
+    //HashMap<GuildUpgrades, RegistryObject<GuildUpgradeItem>> GUILD_UPGRADES = GuildUpgrades.createRegistry();
     HashMap<PrecursorRelicItem.BossType, RegistryObject<PrecursorRelicItem>> PRECURSOR_RELICTS = PrecursorRelicItem.makeRegistry();
 }

@@ -15,6 +15,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.HalfTransparentBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -29,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class GemstoneBlock extends Block {
+public class GemstoneBlock extends HalfTransparentBlock {
     private static final EnumProperty<GemstoneType> TYPE = EnumProperty.create("gemstone", GemstoneType.class);
     public static final double VERY_LOW_STRENGHT = 4;
     public static final double LOW_STRENGHT = 5;
@@ -39,13 +40,14 @@ public class GemstoneBlock extends Block {
     public static final double HIGH_STRENGHT = 9;
     public static final double VERY_HIGH_STRENGHT = 10;
 
-    //TODO fix gemstone block not being translucent
-
-    //TODO fix being able to place gemstone blocks inside players
-
     public GemstoneBlock() {
-        super(Properties.of(Material.HEAVY_METAL).sound(SoundType.AMETHYST_CLUSTER).requiresCorrectToolForDrops());
+        super(Properties.of(Material.HEAVY_METAL).sound(SoundType.AMETHYST_CLUSTER).requiresCorrectToolForDrops().noOcclusion());
         this.registerDefaultState(this.getStateDefinition().any().setValue(TYPE, GemstoneType.ALMANDINE));
+    }
+
+    @Override
+    public int getLightBlock(BlockState p_60585_, BlockGetter p_60586_, BlockPos p_60587_) {
+        return 1;
     }
 
     @Override
@@ -72,6 +74,16 @@ public class GemstoneBlock extends Block {
         return IGemstoneItem.createData(GemstoneType.Rarity.ROUGH, getType(state), block);
     }
 
+    @Nullable
+    @Override
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        BlockState state = this.defaultBlockState();
+        Player player = context.getPlayer();
+        if (player == null) return state;
+        ItemStack place = player.getItemInHand(context.getHand());
+        return state.setValue(TYPE, IGemstoneItem.getGemstone(place));
+    }
+
     @Override
     public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter level, BlockPos pos, Player player) {
         return getItem(state, true);
@@ -92,16 +104,6 @@ public class GemstoneBlock extends Block {
     public static class Item extends BlockItem implements IGemstoneItem {
         public Item() {
             super(ModBlocks.GEMSTONE_BLOCK.getBlock(), MiscHelper.rarity(Rarity.RARE));
-        }
-
-        @Nullable
-        @Override
-        protected BlockState getPlacementState(BlockPlaceContext context) {
-            BlockState state = getBlock().defaultBlockState();
-            Player player = context.getPlayer();
-            if (player == null) return state;
-            ItemStack place = player.getItemInHand(context.getHand());
-            return state.setValue(TYPE, IGemstoneItem.getGemstone(place));
         }
 
         @Override

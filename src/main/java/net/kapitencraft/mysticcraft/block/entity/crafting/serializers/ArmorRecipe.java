@@ -3,9 +3,7 @@ package net.kapitencraft.mysticcraft.block.entity.crafting.serializers;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.api.MapStream;
-import net.kapitencraft.mysticcraft.block.entity.crafting.CraftingHelper;
 import net.kapitencraft.mysticcraft.helpers.CollectionHelper;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.helpers.TextHelper;
@@ -142,22 +140,14 @@ public class ArmorRecipe extends CustomRecipe {
             List<ArmorType> toUse = Arrays.stream(ArmorType.values()).filter(armorType -> !unusedSlots.contains(armorType)).toList();
             if (results != null) {
                 Stream<String> stream = CollectionHelper.mapSync(toUse.stream().map(ArmorType::getSerializedName), results, TextHelper::swappedMergeRegister);
-                try {
-                    map = MapStream.create(toUse, stream.toList())
-                            .mapValues(ResourceLocation::new)
-                            .mapValues(BuiltInRegistries.ITEM::get);
-                } catch (Exception e) {
-                    MysticcraftMod.sendWarn("unable to load recipe {}: {}", CraftingHelper.RECIPE_MARKER, location, e.getMessage());
-                }
+                map = MapStream.create(toUse, stream.toList())
+                        .mapValues(ResourceLocation::new)
+                        .mapValues(BuiltInRegistries.ITEM::get);
             } else {
                 JsonArray array = GsonHelper.getAsJsonArray(object, "results", new JsonArray());
                 List<ResourceLocation> locations = array.asList().stream().map(JsonElement::getAsString).map(ResourceLocation::new).toList();
-                try {
-                    MapStream.create(toUse, locations)
-                            .mapValues(BuiltInRegistries.ITEM::get);
-                } catch (Exception e) {
-                    MysticcraftMod.sendWarn("unable to load recipe {}: {}", CraftingHelper.RECIPE_MARKER, location, e.getMessage());
-                }
+                MapStream.create(toUse, locations)
+                        .mapValues(BuiltInRegistries.ITEM::get);
             }
             CraftingBookCategory category = CraftingBookCategory.CODEC.byName(GsonHelper.getAsString(object, "category", null));
             return new ArmorRecipe(location, category, material, map.mapValues(ItemStack::new).toMap(), group);

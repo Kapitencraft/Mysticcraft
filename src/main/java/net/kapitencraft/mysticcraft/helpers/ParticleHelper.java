@@ -1,5 +1,6 @@
 package net.kapitencraft.mysticcraft.helpers;
 
+import net.kapitencraft.mysticcraft.ModMarker;
 import net.kapitencraft.mysticcraft.misc.particle_help.ParticleAmountHolder;
 import net.kapitencraft.mysticcraft.misc.particle_help.ParticleGradientHolder;
 import net.minecraft.core.particles.ParticleOptions;
@@ -12,6 +13,7 @@ import net.minecraft.world.phys.Vec3;
 import java.util.List;
 
 public class ParticleHelper {
+    public static final ModMarker PARTICLE_ENGINE = new ModMarker("ParticleEngine");
 
     public static <T extends ParticleOptions> int sendParticles(Level level, T type, boolean force, double x, double y, double z, int amount, double deltaX, double deltaY, double deltaZ, double speed) {
         if (level instanceof ServerLevel serverLevel) {

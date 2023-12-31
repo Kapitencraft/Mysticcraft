@@ -68,8 +68,11 @@ public class MysticcraftMod {
         return new DecimalFormat("#.##").format(d);
     }
 
+    public static void sendRegisterDisplay(String nameOfRegistered, ModMarker marker) {
+        sendInfo("Registering " + nameOfRegistered + "...", marker);
+    }
     public static void sendRegisterDisplay(String nameOfRegistered) {
-        sendInfo("Registering " + nameOfRegistered + "...");
+        sendRegisterDisplay(nameOfRegistered, ModRegistryInit.REGISTRY_MARKER);
     }
 
     public static void sendError(String error) {

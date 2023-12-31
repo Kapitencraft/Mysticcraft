@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.gui;
+
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -9,29 +9,25 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class ModMenu<T extends BlockEntity> extends AbstractContainerMenu {
+public abstract class ModMenu<T extends ICapabilityProvider> extends AbstractContainerMenu {
     private final int slotAmount;
     protected final Level level;
     protected final Player player;
     protected final T blockEntity;
 
-    protected ModMenu(@Nullable MenuType<?> menuType, int containerId, int slotAMount, Inventory inventory, T block) {
+    protected ModMenu(@Nullable MenuType<?> menuType, int containerId, int slotAMount, Inventory inventory, T provider) {
         super(menuType, containerId);
         this.slotAmount = slotAMount;
         this.player = inventory.player;
         this.level = player.level;
-        this.blockEntity = block;
+        this.blockEntity = provider;
     }
 
-    protected T fromBlockEntityLoader(Inventory inventory, FriendlyByteBuf byteBuf) {
-        return (T) inventory.player.level.getBlockEntity(byteBuf.readBlockPos());
-    }
-
-    protected void addPlayerInventories(Inventory inventory, int xOffset, int yOffset) {
+    public void addPlayerInventories(Inventory inventory, int xOffset, int yOffset) {
         addPlayerInventory(inventory, xOffset, yOffset);
         addPlayerHotbar(inventory, xOffset, yOffset);
     }
@@ -48,8 +44,8 @@ public abstract class ModMenu<T extends BlockEntity> extends AbstractContainerMe
     private static final int PLAYER_INVENTORY_ROW_COUNT = 3;
     private static final int PLAYER_INVENTORY_COLUMN_COUNT = 9;
     private static final int PLAYER_INVENTORY_SLOT_COUNT = PLAYER_INVENTORY_COLUMN_COUNT * PLAYER_INVENTORY_ROW_COUNT;
-    private static final int VANILLA_SLOT_COUNT = HOTBAR_SLOT_COUNT + PLAYER_INVENTORY_SLOT_COUNT;
-    private static final int VANILLA_FIRST_SLOT_INDEX = 0;
+    public static final int VANILLA_SLOT_COUNT = HOTBAR_SLOT_COUNT + PLAYER_INVENTORY_SLOT_COUNT;
+    public static final int VANILLA_FIRST_SLOT_INDEX = 0;
     public static final int TE_INVENTORY_FIRST_SLOT_INDEX = VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT;
 
     // THIS YOU HAVE TO DEFINE!
@@ -86,7 +82,7 @@ public abstract class ModMenu<T extends BlockEntity> extends AbstractContainerMe
         return copyOfSourceStack;
     }
 
-    public T getBlockEntity() {
+    public T getCapabilityProvider() {
         return blockEntity;
     }
 }

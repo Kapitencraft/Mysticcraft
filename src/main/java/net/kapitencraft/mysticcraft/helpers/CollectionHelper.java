@@ -4,10 +4,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 
 import java.util.*;
-import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
+import java.util.function.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -19,6 +16,32 @@ public class CollectionHelper {
             return entry.getKey();
         }
         return null;
+    }
+
+    public static <T> void removeMapping2(List<T> ts, BiPredicate<T, T> predicate) {
+        ts.removeIf(t -> {
+            int id = ts.indexOf(t);
+            T second;
+            if (id < ts.size() - 1) {
+                second = ts.get(id + 1);
+            } else {
+                second = ts.get(0);
+            }
+            return predicate.test(t, second);
+        });
+    }
+
+    public static <T> void forEachMapping2(List<T> ts, BiConsumer<T, T> consumer) {
+        ts.forEach(t -> {
+            int id = ts.indexOf(t);
+            T second;
+            if (id < ts.size() - 1) {
+                second = ts.get(id + 1);
+            } else {
+                second = ts.get(0);
+            }
+            consumer.accept(t, second);
+        });
     }
 
     public static <T> List<T> create(int size, Supplier<T> sup) {

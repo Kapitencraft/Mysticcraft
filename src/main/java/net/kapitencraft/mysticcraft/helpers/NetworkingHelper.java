@@ -12,6 +12,10 @@ public class NetworkingHelper {
         buf.writeDouble(vec3.z);
     }
 
+    public static Vec3 readVec3(FriendlyByteBuf buf) {
+        return new Vec3(buf.readDouble(), buf.readDouble(), buf.readDouble());
+    }
+
     public static void writeVector3f(FriendlyByteBuf buf, Vector3f vec) {
         buf.writeFloat(vec.x);
         buf.writeFloat(vec.y);

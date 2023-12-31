@@ -30,3 +30,5 @@ Ritual Magic?
 
     Vampire Hunter: An NPC mob that assists players during the night, offering powerful weapons and supplies to help them combat other vampire-like mobs.
 }
+
+"m"

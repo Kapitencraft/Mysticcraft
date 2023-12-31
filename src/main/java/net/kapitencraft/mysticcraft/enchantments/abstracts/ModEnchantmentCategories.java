@@ -3,7 +3,7 @@ package net.kapitencraft.mysticcraft.enchantments.abstracts;
 import net.kapitencraft.mysticcraft.item.combat.spells.SpellItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.QuiverItem;
 import net.kapitencraft.mysticcraft.item.data.gemstone.IGemstoneApplicable;
-import net.kapitencraft.mysticcraft.item.tools.ContainableItem;
+import net.kapitencraft.mysticcraft.item.material.containable.ContainableItem;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.DiggerItem;
 import net.minecraft.world.item.HoeItem;

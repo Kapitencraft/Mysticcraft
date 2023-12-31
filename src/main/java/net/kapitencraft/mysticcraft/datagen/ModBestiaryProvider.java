@@ -53,7 +53,7 @@ public class ModBestiaryProvider implements DataProvider {
         Bestiary bestiary = bestiaryStore.bestiary();
         JsonObject object = new JsonObject();
         object.addProperty("combat_xp", bestiary.getCombatXp());
-        object.addProperty("type", bestiary.getType().getName());
+        object.addProperty("type", bestiary.getType().getSerializedName());
         JsonArray array = new JsonArray();
         List<String> translation = bestiaryStore.translations;
         int descLength = translation.size();

@@ -1,5 +1,7 @@
 package net.kapitencraft.mysticcraft.helpers;
 
+import net.kapitencraft.mysticcraft.client.font.effect.BaseGlyphEffect;
+import net.kapitencraft.mysticcraft.client.font.effect.EffectsStyle;
 import net.kapitencraft.mysticcraft.client.particle.DamageIndicatorParticleOptions;
 import net.kapitencraft.mysticcraft.gui.IGuiHelper;
 import net.kapitencraft.mysticcraft.item.data.gemstone.GemstoneItem;
@@ -11,6 +13,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.PlayerAdvancements;
@@ -48,10 +51,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -66,6 +66,11 @@ public class MiscHelper {
 
     public static EquipmentSlot getSlotForStack(ItemStack stack) {
         return stack.getItem() instanceof ArmorItem armorItem ? armorItem.getSlot() : stack.getItem() instanceof ShieldItem ? EquipmentSlot.OFFHAND : EquipmentSlot.MAINHAND;
+    }
+
+    public static void withSpecial(Style style, BaseGlyphEffect effect) {
+        EffectsStyle effectsStyle = (EffectsStyle) style;
+        effectsStyle.addEffect(effect);
     }
 
     private static void test() {
@@ -206,6 +211,10 @@ public class MiscHelper {
                 run.run();
             }
         }.start(delayTicks);
+    }
+
+    public static void ensureTags(ItemStack... stacks) {
+        Arrays.stream(stacks).filter(stack -> stack != ItemStack.EMPTY).forEach(ItemStack::getOrCreateTag);
     }
 
     public static boolean saveTeleportTest(Entity entity, double maxRange) {

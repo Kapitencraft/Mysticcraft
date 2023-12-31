@@ -33,7 +33,7 @@ public class FireLanceSpell {
                         living.invulnerableTime = 0;
                     }
                     living.hurt(new AbilityDamageSource(user, 0.2f, "fire_lance"), 4);
-                    living.addEffect(new MobEffectInstance(ModMobEffects.IGNITION.get(), 40, 2));
+                    living.addEffect(new MobEffectInstance(ModMobEffects.BLAZING.get(), 40, 2));
                     hit.add(living);
                 }
             }

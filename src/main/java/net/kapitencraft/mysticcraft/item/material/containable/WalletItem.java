@@ -1,8 +1,7 @@
-package net.kapitencraft.mysticcraft.item.material;
+package net.kapitencraft.mysticcraft.item.material.containable;
 
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
-import net.kapitencraft.mysticcraft.item.tools.ContainableItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Rarity;

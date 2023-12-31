@@ -1,5 +1,6 @@
 package net.kapitencraft.mysticcraft.init;
 
+import net.kapitencraft.mysticcraft.ModMarker;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.potion.ModPotions;
 import net.kapitencraft.mysticcraft.villagers.ModVillagers;
@@ -39,4 +40,6 @@ public class ModRegistryInit {
         MysticcraftMod.sendRegisterDisplay(registerName);
         register.register(eventBus);
     }
+
+    public static final ModMarker REGISTRY_MARKER = new ModMarker("Registry");
 }

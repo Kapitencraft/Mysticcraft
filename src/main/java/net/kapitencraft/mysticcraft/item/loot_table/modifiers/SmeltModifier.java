@@ -41,20 +41,20 @@ public class SmeltModifier extends ModLootModifier implements IConditional {
         return CODEC;
     }
 
-    private ItemStack run(ItemStack p_81268_) {
-        if (!p_81268_.isEmpty()) {
-            Optional<SmeltingRecipe> optional = context.getLevel().getRecipeManager().getRecipeFor(RecipeType.SMELTING, new SimpleContainer(p_81268_), context.getLevel());
+    private ItemStack run(ItemStack unSmelt) {
+        if (!unSmelt.isEmpty()) {
+            Optional<SmeltingRecipe> optional = context.getLevel().getRecipeManager().getRecipeFor(RecipeType.SMELTING, new SimpleContainer(unSmelt), context.getLevel());
             if (optional.isPresent()) {
                 ItemStack itemstack = optional.get().getResultItem();
                 if (!itemstack.isEmpty()) {
                     ItemStack itemstack1 = itemstack.copy();
-                    itemstack1.setCount(p_81268_.getCount() * itemstack.getCount()); //Forge: Support smelting returning multiple
+                    itemstack1.setCount(unSmelt.getCount() * itemstack.getCount()); //Forge: Support smelting returning multiple
                     return itemstack1;
                 }
             }
         }
-        MysticcraftMod.sendWarn("Couldn't smelt {} because there is no smelting recipe", MysticcraftMod.MYSTICCRAFT_MARKER, p_81268_);
-        return p_81268_;
+        MysticcraftMod.sendWarn("Couldn't smelt {} because there is no smelting recipe", MysticcraftMod.MYSTICCRAFT_MARKER, unSmelt);
+        return unSmelt;
     }
 
 }

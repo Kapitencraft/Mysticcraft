@@ -2,4 +2,14 @@ fixed firm stand enchantment showing multiple past-dot digits although no req;
 fixed dagger model not looking write;
 fixed gemstone blocks not having particle texture;
 fixed gemstone grinder villager profession not working;
-[IN-DEV] removed Provider interfaces due to replacement with Functions
+fixed reforge anvil neither having item nor block model;
+fixed being able to place gemstone - blocks inside entities;
+fixed gemstone maker villagers not having multiple trades per lvl;
+fixed rainbow animation being boring :poggers:
+
+[IN-DEV] removed Provider interfaces due to replacement with Functions;
+
+disabled Guild Upgrades due to missing implementation;
+
+added wallet and backpack item;
+added wallet and backpack being able to take items from their Inventory for trading;

@@ -16,7 +16,7 @@ import net.kapitencraft.mysticcraft.item.item_bonus.fullset.CrimsonArmorFullSetB
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.ArmorTabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
-import net.kapitencraft.mysticcraft.misc.particle_help.ParticleHelper;
+import net.kapitencraft.mysticcraft.misc.particle_help.ParticleAnimator;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -43,14 +43,14 @@ public class CrimsonArmorItem extends NetherArmorItem implements IArmorBonusItem
 
     @Override
     protected void initFullSetTick(ItemStack stack, Level level, LivingEntity living) {
-        new ParticleHelper(helperString, living, ParticleHelper.Type.ORBIT, ParticleHelper.createOrbitProperties(0, 1000, 0, 0, 3, (SimpleParticleType) ModParticleTypes.RED_FLAME.get(), 0.75f));
-        new ParticleHelper(helperString, living, ParticleHelper.Type.ORBIT, ParticleHelper.createOrbitProperties(0, 1000, 180, 0, 3, (SimpleParticleType) ModParticleTypes.RED_FLAME.get(), 0.75f));
+        new ParticleAnimator(helperString, living, ParticleAnimator.Type.ORBIT, ParticleAnimator.createOrbitProperties(0, 1000, 0, 0, 3, (SimpleParticleType) ModParticleTypes.RED_FLAME.get(), 0.75f));
+        new ParticleAnimator(helperString, living, ParticleAnimator.Type.ORBIT, ParticleAnimator.createOrbitProperties(0, 1000, 180, 0, 3, (SimpleParticleType) ModParticleTypes.RED_FLAME.get(), 0.75f));
 
     }
 
     @Override
     protected void postFullSetTick(ItemStack stack, Level level, LivingEntity living) {
-        ParticleHelper.clearAllHelpers(helperString, living);
+        ParticleAnimator.clearAllHelpers(helperString, living);
     }
 
     @Override

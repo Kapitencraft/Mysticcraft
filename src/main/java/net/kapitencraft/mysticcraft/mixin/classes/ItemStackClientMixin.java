@@ -2,7 +2,7 @@ package net.kapitencraft.mysticcraft.mixin.classes;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
-import net.kapitencraft.mysticcraft.ServerData;
+import net.kapitencraft.mysticcraft.client.font.effect.GlyphEffects;
 import net.kapitencraft.mysticcraft.client.render.ColorAnimator;
 import net.kapitencraft.mysticcraft.config.ClientModConfig;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.IUltimateEnchantment;
@@ -68,6 +68,8 @@ public abstract class ItemStackClientMixin {
     @Shadow protected abstract int getHideFlags();
 
     @Shadow public abstract boolean isDamageableItem();
+
+    @Shadow public abstract ItemStack copy();
 
     @Unique
     private static final Style LORE_STYLE = Style.EMPTY.withColor(ChatFormatting.DARK_PURPLE).withItalic(true);
@@ -136,7 +138,7 @@ public abstract class ItemStackClientMixin {
                         } else if (level == enchantment.getMaxLevel()) {
                             component.withStyle(ChatFormatting.GOLD);
                         } else if (level > enchantment.getMaxLevel()) {
-                            component.withStyle(Style.EMPTY.withColor(RAINBOW_ANIMATOR.makeTextColor(ServerData.getTime())));
+                            MiscHelper.withSpecial(component.getStyle(), GlyphEffects.RAINBOW);
                         }
                     }
                     list.add(component);
