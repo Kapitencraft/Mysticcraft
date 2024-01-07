@@ -5,22 +5,20 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.AnvilBlock;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class ReforgeAnvilBlock extends BaseEntityBlock {
+public class ReforgeAnvilBlock extends AnvilBlock implements EntityBlock {
     public ReforgeAnvilBlock() {
         super(Properties.copy(Blocks.ANVIL));
     }
@@ -31,23 +29,11 @@ public class ReforgeAnvilBlock extends BaseEntityBlock {
         return new ReforgingAnvilBlockEntity(pos, state);
     }
 
-    public BlockState getStateForPlacement(BlockPlaceContext p_48781_) {
-        return this.defaultBlockState().setValue(HorizontalDirectionalBlock.FACING, p_48781_.getHorizontalDirection().getClockWise());
-    }
-
     @Override
-    public @NotNull RenderShape getRenderShape(@NotNull BlockState p_49232_) {
-        return RenderShape.MODEL;
+    public void onLand(Level p_48793_, BlockPos p_48794_, BlockState p_48795_, BlockState p_48796_, FallingBlockEntity p_48797_) {
     }
-
     @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(HorizontalDirectionalBlock.FACING);
-    }
-
-    @Override
-    public @NotNull VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter getter, @NotNull BlockPos pos, @NotNull CollisionContext context) {
-        return Blocks.ANVIL.getShape(state, getter, pos, context);
+    public void onBrokenAfterFall(Level p_152053_, BlockPos p_152054_, FallingBlockEntity p_152055_) {
     }
 
     @Override

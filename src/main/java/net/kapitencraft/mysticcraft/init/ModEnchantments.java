@@ -21,6 +21,7 @@ public interface ModEnchantments {
     }
 
 
+    RegistryObject<Enchantment> FLASH = register("flash", FlashEnchantment::new);
     RegistryObject<Enchantment> MANA_SYPHON = register("mana_syphon", ManaSyphonEnchantment::new);
     RegistryObject<Enchantment> BONK = register("bonk", BonkEnchantment::new);
     RegistryObject<Enchantment> EXPERIENCED = register("experienced", ExperiencedEnchantment::new);

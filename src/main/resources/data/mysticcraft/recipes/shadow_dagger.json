@@ -1,0 +1,13 @@
+{
+  "type": "mysticcraft:upgrade",
+  "craft_type": "eight",
+  "source": {
+    "item": "mysticcraft:dark_dagger"
+  },
+  "material": {
+    "item": "mysticcraft:shadow_crystal"
+  },
+  "result": {
+    "item": "mysticcraft:shadow_dagger"
+  }
+}

@@ -10,6 +10,7 @@ import net.kapitencraft.mysticcraft.item.combat.shield.ModShieldItem;
 import net.kapitencraft.mysticcraft.item.combat.spells.*;
 import net.kapitencraft.mysticcraft.item.combat.spells.necron_sword.*;
 import net.kapitencraft.mysticcraft.item.combat.totems.VoidTotemItem;
+import net.kapitencraft.mysticcraft.item.combat.weapon.melee.dagger.DarkDagger;
 import net.kapitencraft.mysticcraft.item.combat.weapon.melee.dagger.ShadowDagger;
 import net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword.DoubleSword;
 import net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword.GhostlySword;
@@ -146,6 +147,8 @@ public interface ModItems {
 
     RegistryObject<MaterialModItem> SOUL_STEEL_ALLOY = registerMaterial("soul_steel_alloy", Rarity.RARE, TabGroup.MATERIAL);
     RegistryObject<MaterialModItem> SOUL_STEEL_NUGGET = registerMaterial("soul_steel_nugget", Rarity.UNCOMMON, TabGroup.MATERIAL);
+    RegistryObject<MaterialModItem> SHADOW_CRYSTAL = registerMaterial("shadow_crystal", Rarity.UNCOMMON, TabGroup.MATERIAL);
+    RegistryObject<DarkDagger> DARK_DAGGER = register("dark_dagger", DarkDagger::new, TabGroup.COMBAT);
     HashMap<EquipmentSlot, RegistryObject<ModArmorItem>> ENDER_KNIGHT_ARMOR = ModArmorItem.createRegistry("ender_knight", EnderKnightArmorItem::new, EnderKnightArmorItem.ENDER_KNIGHT_GROUP);
     HashMap<EquipmentSlot, RegistryObject<ModArmorItem>> FROZEN_BLAZE_ARMOR = ModArmorItem.createRegistry("frozen_blaze", FrozenBlazeArmorItem::new, FrozenBlazeArmorItem.FROZEN_BLAZE_ARMOR_GROUP);
     HashMap<EquipmentSlot, RegistryObject<ModArmorItem>> SHADOW_ASSASSIN_ARMOR = ModArmorItem.createRegistry("shadow_assassin", ShadowAssassinArmorItem::new, ShadowAssassinArmorItem.SA_ARMOR_GROUP);

@@ -1,6 +1,7 @@
-package net.kapitencraft.mysticcraft.block;
+package net.kapitencraft.mysticcraft.block.gemstone;
 
 import net.kapitencraft.mysticcraft.block.entity.GemstoneGrinderBlockEntity;
+import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.init.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
@@ -24,7 +25,7 @@ import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class GemstoneGrinderBlock extends BaseEntityBlock {
+public class GemstoneGrinderBlock extends Block implements EntityBlock {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
     public GemstoneGrinderBlock() {
@@ -92,6 +93,6 @@ public class GemstoneGrinderBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level level, @NotNull BlockState state, @NotNull BlockEntityType<T> type) {
-        return createTickerHelper(type, ModBlockEntities.GEMSTONE_GRINDER.get(), GemstoneGrinderBlockEntity::tick);
+        return MiscHelper.createTickerHelper(type, ModBlockEntities.GEMSTONE_GRINDER.get(), GemstoneGrinderBlockEntity::tick);
     }
 }

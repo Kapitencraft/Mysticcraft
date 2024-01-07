@@ -12,7 +12,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
     }
 
 
-    private void blockWithItem(BlockRegistryHolder<?> holder) {
+    private void blockWithItem(BlockRegistryHolder<?, ?> holder) {
         simpleBlockWithItem(holder.getBlock(), cubeAll(holder.getBlock()));
     }
 

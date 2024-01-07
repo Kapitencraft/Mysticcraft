@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.event.handler;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.block.GemstoneBlock;
+import net.kapitencraft.mysticcraft.block.gemstone.GemstoneBlock;
 import net.kapitencraft.mysticcraft.client.particle.CircleParticle;
 import net.kapitencraft.mysticcraft.client.particle.DamageIndicatorParticle;
 import net.kapitencraft.mysticcraft.client.particle.FireNormalParticle;
@@ -89,7 +89,7 @@ public class ModEventBusClientEvents {
         MysticcraftMod.sendRegisterDisplay("Custom Item Colors");
         registerColor(event, ColoredItem::getColor, ModItems.DYED_LEATHER.get());
         registerColor(event, RainbowElementalShard::getColor, ModItems.RAINBOW_ELEMENTAL_SHARD.get());
-        registerColor(event, IGemstoneItem::getColor, ModItems.GEMSTONE.get(), ModBlocks.GEMSTONE_BLOCK.getItem());
+        registerColor(event, IGemstoneItem::getColor, ModItems.GEMSTONE.get(), ModBlocks.GEMSTONE_BLOCK.getItem(), ModBlocks.GEMSTONE_CRYSTAL.getItem());
     }
 
     private static void registerColor(RegisterColorHandlersEvent.Item event, Function<ItemStack, Integer> func, Item... object) {
@@ -100,5 +100,6 @@ public class ModEventBusClientEvents {
     public static void registerBlockColors(RegisterColorHandlersEvent.Block event) {
         MysticcraftMod.sendRegisterDisplay("Custom Block Colors");
         event.register(GemstoneBlock::getColor, ModBlocks.GEMSTONE_BLOCK.getBlock());
+        event.register(GemstoneBlock::getColor, ModBlocks.GEMSTONE_CRYSTAL.getBlock());
     }
 }

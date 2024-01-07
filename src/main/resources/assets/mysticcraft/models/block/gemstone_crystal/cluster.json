@@ -1,0 +1,7 @@
+{
+  "parent": "mysticcraft:block/tinted_cross",
+  "textures": {
+    "cross": "mysticcraft:block/gemstone/cluster"
+  },
+  "render_type": "translucent"
+}

@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class ElementalShard extends Item implements IModItem {
-    public static final TabGroup ELEMENTS_GROUP = new TabGroup(TabRegister.TabTypes.SPELL_AND_GEMSTONE, TabRegister.TabTypes.MOD_MATERIALS);
+    public static final TabGroup ELEMENTS_GROUP = new TabGroup(TabRegister.TabTypes.SPELL, TabRegister.TabTypes.MOD_MATERIALS);
     private final Element element;
 
     public ElementalShard(Element element) {

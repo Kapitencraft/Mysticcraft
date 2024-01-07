@@ -6,8 +6,12 @@ import net.kapitencraft.mysticcraft.init.ModEnchantments;
 import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.QuiverItem;
 import net.kapitencraft.mysticcraft.item.material.containable.ContainableHolder;
 import net.kapitencraft.mysticcraft.misc.HealingHelper;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.item.ItemStack;
@@ -16,8 +20,10 @@ import net.minecraft.world.item.ProjectileWeaponItem;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ForgeHooks;
 import org.jetbrains.annotations.NotNull;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -27,6 +33,12 @@ import java.util.function.Predicate;
 
 @Mixin(Player.class)
 public abstract class PlayerMixin extends LivingEntity {
+
+    @Shadow @Final private Inventory inventory;
+
+    @Shadow public abstract InteractionResult interactOn(Entity p_36158_, InteractionHand p_36159_);
+
+    @Shadow public abstract void remove(RemovalReason p_150097_);
 
     protected PlayerMixin(EntityType<? extends LivingEntity> p_20966_, Level p_20967_) {
         super(p_20966_, p_20967_);
@@ -61,8 +73,8 @@ public abstract class PlayerMixin extends LivingEntity {
                 return ForgeHooks.getProjectile(this, stack, itemstack);
             } else {
                 predicate = ((ProjectileWeaponItem)stack.getItem()).getAllSupportedProjectiles();
-                for(int i = 0; i < own().getInventory().getContainerSize(); ++i) {
-                    ItemStack stack1 = own().getInventory().getItem(i);
+                for(int i = 0; i < inventory.getContainerSize(); ++i) {
+                    ItemStack stack1 = inventory.getItem(i);
                     if (stack1.getItem() instanceof QuiverItem quiverItem) {
                         List<ContainableHolder<ArrowItem>> quiverContents = quiverItem.getContents(stack1);
                         for (ContainableHolder<ArrowItem> holder : quiverContents) {
@@ -86,5 +98,4 @@ public abstract class PlayerMixin extends LivingEntity {
             }
         }
     }
-
 }

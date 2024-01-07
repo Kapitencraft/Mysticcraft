@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.block.entity;
 
-import net.kapitencraft.mysticcraft.gui.reforging_anvil.ReforgingAnvilMenu;
+import net.kapitencraft.mysticcraft.gui.reforging_anvil.ReforgeAnvilMenu;
+import net.kapitencraft.mysticcraft.helpers.InventoryHelper;
 import net.kapitencraft.mysticcraft.init.ModBlockEntities;
 import net.kapitencraft.mysticcraft.item.data.dungeon.IPrestigeAbleItem;
 import net.kapitencraft.mysticcraft.item.data.dungeon.IStarAbleItem;
@@ -16,6 +17,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TieredItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -26,6 +28,8 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class ReforgingAnvilBlockEntity extends BlockEntity implements MenuProvider {
     public final ReforgeAnvilItemStackHandler handler = new ReforgeAnvilItemStackHandler();
@@ -50,9 +54,10 @@ public class ReforgingAnvilBlockEntity extends BlockEntity implements MenuProvid
         super.load(nbt);
     }
 
-    public String updateButtonPress() {
+    public String updateButtonPress(Player player) {
         ItemStack stack = getStack(false);
-        if (Reforge.reforgeAble(stack)) {
+        if (InventoryHelper.hasInInventory(List.of(new ItemStack(Items.EMERALD, 5)), player) && Reforge.reforgeAble(stack)) {
+            InventoryHelper.removeFromInventory(new ItemStack(Items.EMERALD, 5), player);
             return Reforges.applyRandom(false, stack).getRegistryName();
         }
         return null;
@@ -71,14 +76,14 @@ public class ReforgingAnvilBlockEntity extends BlockEntity implements MenuProvid
     }
 
     @Override
-    public Component getDisplayName() {
+    public @NotNull Component getDisplayName() {
         return Component.translatable("block.mysticcraft.reforge_anvil");
     }
 
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int id, @NotNull Inventory inventory, @NotNull Player p_39956_) {
-        return new ReforgingAnvilMenu(id, inventory, this);
+        return new ReforgeAnvilMenu(id, inventory, this);
     }
 
     private static class ReforgeAnvilItemStackHandler extends ItemStackHandler {

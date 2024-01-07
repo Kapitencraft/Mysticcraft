@@ -184,7 +184,7 @@ public class TextHelper {
             case "wither" -> ChatFormatting.BLACK;
             case "ferocity" -> ChatFormatting.GOLD;
             case "drown" -> ChatFormatting.AQUA;
-            case "ability" -> ChatFormatting.DARK_RED;
+            case "ability", "fire" -> ChatFormatting.DARK_RED;
             case "dodge" -> ChatFormatting.DARK_GRAY;
             default -> ChatFormatting.RED;
         };
@@ -202,6 +202,7 @@ public class TextHelper {
             case 4 -> "drown";
             case 5 -> "ability";
             case 6 -> "dodge";
+            case 7 -> "fire";
             default -> "normal";
         };
     }
@@ -214,6 +215,7 @@ public class TextHelper {
             case "drown" -> 4;
             case "ability" -> 5;
             case "dodge" -> 6;
+            case "fire" -> 7;
             default -> 0;
         };
     }

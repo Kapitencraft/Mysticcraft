@@ -32,3 +32,6 @@ Ritual Magic?
 }
 
 "m"
+
+generic.shield_size (attribute)
+https://www.youtube.com/shorts/LDJCMHqISfw

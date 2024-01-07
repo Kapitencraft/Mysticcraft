@@ -1,12 +1,13 @@
 package net.kapitencraft.mysticcraft.helpers;
 
-import net.kapitencraft.mysticcraft.client.font.effect.BaseGlyphEffect;
 import net.kapitencraft.mysticcraft.client.font.effect.EffectsStyle;
+import net.kapitencraft.mysticcraft.client.font.effect.GlyphEffect;
 import net.kapitencraft.mysticcraft.client.particle.DamageIndicatorParticleOptions;
 import net.kapitencraft.mysticcraft.gui.IGuiHelper;
 import net.kapitencraft.mysticcraft.item.data.gemstone.GemstoneItem;
 import net.kapitencraft.mysticcraft.misc.ModRarities;
 import net.kapitencraft.mysticcraft.misc.VeinMinerHolder;
+import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.core.BlockPos;
@@ -41,6 +42,9 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -68,13 +72,11 @@ public class MiscHelper {
         return stack.getItem() instanceof ArmorItem armorItem ? armorItem.getSlot() : stack.getItem() instanceof ShieldItem ? EquipmentSlot.OFFHAND : EquipmentSlot.MAINHAND;
     }
 
-    public static void withSpecial(Style style, BaseGlyphEffect effect) {
-        EffectsStyle effectsStyle = (EffectsStyle) style;
+    public static Style withSpecial(Style style, GlyphEffect effect) {
+        Style newStyle = style.withColor((ChatFormatting) null);
+        EffectsStyle effectsStyle = (EffectsStyle) newStyle;
         effectsStyle.addEffect(effect);
-    }
-
-    private static void test() {
-        List<Entity> list = new ArrayList<>();
+        return newStyle;
     }
 
     public static <T, K extends T> K instance(T value, Class<K> target) {
@@ -316,6 +318,11 @@ public class MiscHelper {
             float rangeOffset = entity.getBbHeight() / 2;
             ParticleHelper.sendParticles(serverLevel, new DamageIndicatorParticleOptions(TextHelper.damageIndicatorCoder(type), amount, rangeOffset), false, entity.getX(), entity.getY(), entity.getZ(), 1, 0, 0, 0, 0);
         }
+    }
+
+    @Nullable
+    public static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(BlockEntityType<A> p_152133_, BlockEntityType<E> p_152134_, BlockEntityTicker<? super E> p_152135_) {
+        return p_152134_ == p_152133_ ? (BlockEntityTicker<A>)p_152135_ : null;
     }
 
     private static Vec3 getUpdateForPos(Vec3 cam, LivingEntity living) {

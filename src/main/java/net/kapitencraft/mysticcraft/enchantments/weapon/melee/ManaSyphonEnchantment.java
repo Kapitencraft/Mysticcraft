@@ -28,6 +28,6 @@ public class ManaSyphonEnchantment extends ExtendedCalculationEnchantment {
 
     @Override
     public String[] getDescriptionMods(int level) {
-        return new String[0];
+        return new String[]{level * 0.0025 + "%"};
     }
 }

@@ -52,7 +52,7 @@ public enum Spells implements Spell {
     FIRE_BOLT_4("Fire Bolt 4", "0110011", Type.RELEASE, 50, createFireBold(5.2, true), item -> item instanceof IFireScytheItem, createFireBoldDesc(5.2f), Rarity.UNCOMMON, true, 0, Elements.FIRE),
     FIRE_LANCE("Fire Lance", "1011100", Type.CYCLE, 5, FireLanceSpell::execute, item -> item instanceof FireLance, FireLanceSpell::getDescription, Rarity.UNCOMMON, true, 0,     Elements.FIRE, Elements.AIR);
 
-    private static final TabGroup SPELL_GROUP = new TabGroup(TabRegister.TabTypes.SPELL_AND_GEMSTONE);
+    private static final TabGroup SPELL_GROUP = new TabGroup(TabRegister.TabTypes.SPELL);
     private static final List<Spells> WITHOUT_EMPTY = CollectionHelper.remove(values(), EMPTY_SPELL);
     public static HashMap<Spells, RegistryObject<SpellScrollItem>> registerAll() {
         return ModItems.createRegistry(SpellScrollItem::new, (spell) -> spell.REGISTRY_NAME + "_spell_scroll", WITHOUT_EMPTY, SPELL_GROUP);

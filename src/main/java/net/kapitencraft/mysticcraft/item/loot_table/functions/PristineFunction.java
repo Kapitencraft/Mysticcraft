@@ -5,6 +5,7 @@ import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
 import net.kapitencraft.mysticcraft.helpers.LootTableHelper;
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
+import net.kapitencraft.mysticcraft.init.ModItems;
 import net.kapitencraft.mysticcraft.init.ModLootItemFunctions;
 import net.kapitencraft.mysticcraft.item.data.gemstone.GemstoneItem;
 import net.kapitencraft.mysticcraft.item.data.gemstone.GemstoneType;
@@ -48,7 +49,7 @@ public class PristineFunction extends LootItemConditionalFunction implements ICo
                 }
                 if (gemstoneLevel != oldGemstoneLevel && entity instanceof Player player) {
                     GemstoneType.Rarity rarity = GemstoneType.Rarity.byLevel(gemstoneLevel);
-                    ItemStack item = IGemstoneItem.createData(rarity, IGemstoneItem.getGemstone(stack), false).copyWithCount(stack.getCount());
+                    ItemStack item = IGemstoneItem.createData(rarity, IGemstoneItem.getGemstone(stack), ModItems.GEMSTONE).copyWithCount(stack.getCount());
                     player.sendSystemMessage(Component.literal("§5PRISTINE§a you found " + stack.getCount() + " ").append(item.getHoverName()));
                     return item;
                 }

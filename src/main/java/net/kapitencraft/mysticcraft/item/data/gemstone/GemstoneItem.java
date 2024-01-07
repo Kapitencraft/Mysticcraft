@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class GemstoneItem extends Item implements IModItem, IGemstoneItem {
-    public static final TabGroup GROUP = new TabGroup(TabRegister.TabTypes.SPELL_AND_GEMSTONE);
+    public static final TabGroup GROUP = new TabGroup(TabRegister.TabTypes.SPELL);
     public GemstoneItem() {
         super(MiscHelper.rarity(Rarity.RARE));
     }

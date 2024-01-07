@@ -10,21 +10,22 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.DiggerItem;
 import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.NotNull;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(DiggerItem.class)
 public abstract class DiggerItemMixin extends Item {
+    @Shadow @Final private Multimap<Attribute, AttributeModifier> defaultModifiers;
+
     public DiggerItemMixin(Properties p_41383_) {
         super(p_41383_);
     }
 
     @Accessor
     abstract float getSpeed();
-
-    @Accessor
-    abstract Multimap<Attribute, AttributeModifier> getDefaultModifiers();
 
 
     /**
@@ -35,7 +36,7 @@ public abstract class DiggerItemMixin extends Item {
     public @NotNull Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(@NotNull EquipmentSlot slot) {
         if (slot == EquipmentSlot.MAINHAND) {
             HashMultimap<Attribute, AttributeModifier> multimap = HashMultimap.create();
-            multimap.putAll(getDefaultModifiers());
+            multimap.putAll(this.defaultModifiers);
             multimap.put(ModAttributes.MINING_SPEED.get(), AttributeHelper.createModifier("Digger Item Speed Modifier", AttributeModifier.Operation.ADDITION, getSpeed()));
             return multimap;
         }

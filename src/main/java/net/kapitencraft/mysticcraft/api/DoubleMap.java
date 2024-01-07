@@ -7,15 +7,21 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-public class DoubleMap<T, K, L> extends HashMap<T, HashMap<K, L>> {
+public class DoubleMap<T, K, L> extends HashMap<T, Map<K, L>> {
     private boolean immutable = false;
 
     public void forValues(Consumer<L> consumer) {
         CollectionHelper.merge(this.values().stream().map(Map::values).toList()).forEach(consumer);
     }
 
+    public static <T, K, L> DoubleMap<T, K, L> of(Map<T, Map<K, L>> map) {
+        DoubleMap<T, K, L> map1 = DoubleMap.create();
+        map1.putAll(map);
+        return map1;
+    }
+
     @Override
-    public HashMap<K, L> put(T key, HashMap<K, L> value) {
+    public Map<K, L> put(T key, Map<K, L> value) {
         if (this.immutable) throw new UnsupportedOperationException("tried modifying immutable double map");
         return super.put(key, value);
     }

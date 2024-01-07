@@ -6,41 +6,21 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
-import org.spongepowered.asm.mixin.gen.Accessor;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
 @Mixin(ServerPlaceRecipe.class)
 public abstract class ServerPlaceRecipeMixin implements PlaceRecipe<Integer> {
+
+    @Shadow protected Inventory inventory;
 
     /**
      * @reason higher stack size crafting
      * @author Kapitencraft
      */
-    @Overwrite
-    public void moveItemToGrid(Slot slot, ItemStack stack) {
-        Inventory inventory = getInventory();
-        int s = stack.getCount();
-        int i = inventory.findSlotMatchingUnusedItem(stack);
-        if (i != -1) {
-            ItemStack itemstack = inventory.getItem(i).copy();
-            if (!itemstack.isEmpty()) {
-                if (itemstack.getCount() > s) {
-                    inventory.removeItem(i, s);
-                } else {
-                    inventory.removeItemNoUpdate(i);
-                }
 
-                itemstack.setCount(s);
-                if (slot.getItem().isEmpty()) {
-                    slot.set(itemstack);
-                } else {
-                    slot.getItem().grow(s);
-                }
-
-            }
-        }
+    @ModifyConstant(method = "moveItemToGrid")
+    public int moveItemToGrid(int i, Slot slot, ItemStack stack) {
+        return i == 1 ? stack.getCount() : i;
     }
-
-    @Accessor
-    abstract Inventory getInventory();
 }

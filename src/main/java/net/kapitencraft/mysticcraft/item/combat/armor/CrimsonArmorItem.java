@@ -5,9 +5,12 @@ import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModParticleTypes;
+import net.kapitencraft.mysticcraft.item.ITieredItem;
 import net.kapitencraft.mysticcraft.item.combat.armor.client.NetherArmorItem;
 import net.kapitencraft.mysticcraft.item.combat.armor.client.model.CrimsonArmorModel;
 import net.kapitencraft.mysticcraft.item.combat.armor.client.renderer.ArmorRenderer;
+import net.kapitencraft.mysticcraft.item.data.dungeon.IPrestigeAbleItem;
+import net.kapitencraft.mysticcraft.item.data.dungeon.IStarAbleItem;
 import net.kapitencraft.mysticcraft.item.item_bonus.ExtraBonus;
 import net.kapitencraft.mysticcraft.item.item_bonus.FullSetBonus;
 import net.kapitencraft.mysticcraft.item.item_bonus.IArmorBonusItem;
@@ -16,6 +19,7 @@ import net.kapitencraft.mysticcraft.item.item_bonus.fullset.CrimsonArmorFullSetB
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.ArmorTabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
+import net.kapitencraft.mysticcraft.misc.content.EssenceType;
 import net.kapitencraft.mysticcraft.misc.particle_help.ParticleAnimator;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.world.entity.Entity;
@@ -24,13 +28,11 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
 
 public class CrimsonArmorItem extends NetherArmorItem implements IArmorBonusItem {
@@ -89,8 +91,12 @@ public class CrimsonArmorItem extends NetherArmorItem implements IArmorBonusItem
     }
 
     @Override
-    public Map<Item, Integer> getMatCost(ItemStack stack) {
-        return null;
+    public List<ItemStack> getMatCost(ItemStack stack) {
+        int stars = IStarAbleItem.getStars(stack) + 5;
+        int prestige = ITieredItem.getTier(stack).getNumber();
+        return List.of(
+                IPrestigeAbleItem.essence(EssenceType.CRIMSON, (int) Math.pow(stars, prestige))
+        );
     }
 
     @Override

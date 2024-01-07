@@ -1,11 +1,11 @@
 package net.kapitencraft.mysticcraft.client.font.effect;
 
-public abstract class BaseGlyphEffect {
+public abstract class GlyphEffect {
 
-    public BaseGlyphEffect() {
+    public GlyphEffect() {
     }
 
     public abstract void apply(EffectSettings settings);
 
-    abstract char getKey();
+    public abstract char getKey();
 }

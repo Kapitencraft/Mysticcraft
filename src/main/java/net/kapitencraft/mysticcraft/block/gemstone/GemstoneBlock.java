@@ -1,8 +1,9 @@
-package net.kapitencraft.mysticcraft.block;
+package net.kapitencraft.mysticcraft.block.gemstone;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.init.ModBlocks;
+import net.kapitencraft.mysticcraft.init.ModItems;
 import net.kapitencraft.mysticcraft.item.data.gemstone.GemstoneType;
 import net.kapitencraft.mysticcraft.item.data.gemstone.IGemstoneItem;
 import net.minecraft.core.BlockPos;
@@ -29,6 +30,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class GemstoneBlock extends HalfTransparentBlock {
     private static final EnumProperty<GemstoneType> TYPE = EnumProperty.create("gemstone", GemstoneType.class);
@@ -70,8 +72,8 @@ public class GemstoneBlock extends HalfTransparentBlock {
         return getType(state).getColour();
     }
 
-    public ItemStack getItem(BlockState state, boolean block) {
-        return IGemstoneItem.createData(GemstoneType.Rarity.ROUGH, getType(state), block);
+    public <T extends net.minecraft.world.item.Item & IGemstoneItem> ItemStack getItem(BlockState state, Supplier<T> supplier) {
+        return IGemstoneItem.createData(GemstoneType.Rarity.ROUGH, getType(state), supplier);
     }
 
     @Nullable
@@ -86,24 +88,27 @@ public class GemstoneBlock extends HalfTransparentBlock {
 
     @Override
     public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter level, BlockPos pos, Player player) {
-        return getItem(state, true);
+        return getItem(state, ModBlocks.GEMSTONE_BLOCK::getItem);
     }
 
 
-    public static void setType(BlockState state, GemstoneType type) {
-        state.setValue(TYPE, type);
+    public static BlockState setType(BlockState state, GemstoneType type) {
+        return state.setValue(TYPE, type);
     }
 
     public void addItem(LootContext context, Consumer<ItemStack> consumer) {
-        consumer.accept(getItem(context.getParam(LootContextParams.BLOCK_STATE), false));
+        consumer.accept(getItem(context.getParam(LootContextParams.BLOCK_STATE), ModItems.GEMSTONE));
     }
     public void addBlock(LootContext context, Consumer<ItemStack> consumer) {
-        consumer.accept(getItem(context.getParam(LootContextParams.BLOCK_STATE), true));
+        consumer.accept(getItem(context.getParam(LootContextParams.BLOCK_STATE), ModBlocks.GEMSTONE_BLOCK::getItem));
     }
 
     public static class Item extends BlockItem implements IGemstoneItem {
         public Item() {
-            super(ModBlocks.GEMSTONE_BLOCK.getBlock(), MiscHelper.rarity(Rarity.RARE));
+            this(ModBlocks.GEMSTONE_BLOCK.getBlock());
+        }
+        protected Item(Block block) {
+            super(block, MiscHelper.rarity(Rarity.RARE));
         }
 
         @Override

@@ -1,7 +1,6 @@
 package net.kapitencraft.mysticcraft.item.misc;
 
 import net.kapitencraft.mysticcraft.misc.damage_source.AbilityDamageSource;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
@@ -19,16 +18,7 @@ public class ManaExplosion extends ModExplosion {
         super(level, source, x, y, z, radius);
         this.intScaling = intScaling;
         this.spellName = spellName;
-    }
-
-    @Override
-    boolean hasFire() {
-        return false;
-    }
-
-    @Override
-    DamageSource getDamageSource() {
-        return new AbilityDamageSource(source, intScaling, spellName);
+        this.setDamageSource(new AbilityDamageSource(source, intScaling, spellName));
     }
 
     @Override

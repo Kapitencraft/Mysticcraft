@@ -5,6 +5,7 @@ import net.minecraft.world.entity.LivingEntity;
 
 import java.util.*;
 import java.util.function.*;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -76,6 +77,10 @@ public class CollectionHelper {
 
     public static <T, K, L, J extends Map<K, L>> List<L> values(Map<T, J> map) {
         return merge(map.values().stream().map(Map::values).toList());
+    }
+
+    public static <T, L> Collector<T, ?, Map<T, L>> createMap(Function<T, L> valueMapper) {
+        return Collectors.toMap(t -> t, valueMapper);
     }
 
     public static <T, K> K getFirstValue(Map<T, K> map) {

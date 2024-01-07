@@ -1,0 +1,6 @@
+{
+  "parent": "mysticcraft:item/gemstone_crystal",
+  "textures": {
+    "layer0": "mysticcraft:block/gemstone/large_crystal"
+  }
+}

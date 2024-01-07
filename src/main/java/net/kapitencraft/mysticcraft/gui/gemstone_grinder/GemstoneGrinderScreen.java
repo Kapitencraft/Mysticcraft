@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.gui.gemstone_grinder;
 
 import net.kapitencraft.mysticcraft.block.entity.GemstoneGrinderBlockEntity;
-import net.kapitencraft.mysticcraft.gui.ModScreen;
+import net.kapitencraft.mysticcraft.gui.screen.ModScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 

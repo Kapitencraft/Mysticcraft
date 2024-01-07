@@ -2,7 +2,6 @@ package net.kapitencraft.mysticcraft.mixin.classes;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
-import net.kapitencraft.mysticcraft.client.font.effect.GlyphEffects;
 import net.kapitencraft.mysticcraft.client.render.ColorAnimator;
 import net.kapitencraft.mysticcraft.config.ClientModConfig;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.IUltimateEnchantment;
@@ -12,6 +11,7 @@ import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.helpers.TextHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
+import net.kapitencraft.mysticcraft.init.ModGlyphEffects;
 import net.kapitencraft.mysticcraft.item.ITieredItem;
 import net.kapitencraft.mysticcraft.item.combat.spells.SpellItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword.LongSwordItem;
@@ -138,7 +138,7 @@ public abstract class ItemStackClientMixin {
                         } else if (level == enchantment.getMaxLevel()) {
                             component.withStyle(ChatFormatting.GOLD);
                         } else if (level > enchantment.getMaxLevel()) {
-                            MiscHelper.withSpecial(component.getStyle(), GlyphEffects.RAINBOW);
+                            component.setStyle(MiscHelper.withSpecial(component.getStyle(), ModGlyphEffects.RAINBOW.get()));
                         }
                     }
                     list.add(component);

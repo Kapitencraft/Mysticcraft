@@ -5,9 +5,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class Collector<T> implements Supplier<List<T>> {
+public class Counter<T> implements Supplier<List<T>> {
 
-    boolean collecting = false;
+    boolean counting = false;
     List<T> list = new ArrayList<>();
 
     @Override
@@ -18,11 +18,11 @@ public class Collector<T> implements Supplier<List<T>> {
     }
 
     public void start() {
-        collecting = true;
+        counting = true;
     }
 
     public void reset() {
-        collecting = false;
+        counting = false;
         list.clear();
     }
 }

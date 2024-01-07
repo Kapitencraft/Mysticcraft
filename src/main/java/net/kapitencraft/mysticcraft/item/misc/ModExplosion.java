@@ -14,11 +14,9 @@ import net.minecraft.network.protocol.game.ClientboundExplodePacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.item.PrimedTnt;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -32,6 +30,7 @@ import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
@@ -41,12 +40,18 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public abstract class ModExplosion {
+public class ModExplosion {
     private static final ExplosionDamageCalculator EXPLOSION_DAMAGE_CALCULATOR = new ExplosionDamageCalculator();
     protected final Level level;
     protected final @Nullable Entity source;
     protected final Vec3 pos;
     protected final float radius;
+    private Explosion self;
+    private boolean destroyBlocks = false;
+    private boolean hitEntities = false;
+    private boolean hasFire = false;
+    private Explosion.BlockInteraction interaction;
+    @Nullable DamageSource damage = null;
     protected final List<BlockPos> toBlow = new ArrayList<>();
     protected final Map<Player, Vec3> hitPlayers = new HashMap<>();
     protected final ExplosionDamageCalculator calculator;
@@ -56,10 +61,26 @@ public abstract class ModExplosion {
     }
 
     private boolean interactsWithBlocks() {
-        return (blockInteraction() == Explosion.BlockInteraction.DESTROY_WITH_DECAY) || blockInteraction() == Explosion.BlockInteraction.DESTROY;
+        return destroyBlocks || (blockInteraction() == Explosion.BlockInteraction.DESTROY_WITH_DECAY) || blockInteraction() == Explosion.BlockInteraction.DESTROY;
     }
-    abstract Explosion.BlockInteraction blockInteraction();
+    Explosion.BlockInteraction blockInteraction() {
+        return interaction;
+    }
 
+
+    public void setInteraction(Explosion.BlockInteraction interaction) {
+        this.interaction = interaction;
+    }
+
+    public ModExplosion destroyBlocks() {
+        this.destroyBlocks = true;
+        return this;
+    }
+
+    public ModExplosion hitEntities() {
+        this.hitEntities = true;
+        return this;
+    }
 
     public ModExplosion(Level level, @Nullable Entity source, double x, double y, double z, float radius) {
         this.level = level;
@@ -69,48 +90,35 @@ public abstract class ModExplosion {
         this.calculator = makeDamageCalculator(source);
     }
 
-    abstract boolean hasFire();
-    abstract DamageSource getDamageSource();
+    public boolean hasFire() {
+        return hasFire;
+    }
+
+    public void setDamageSource(DamageSource damage) {
+        this.damage = damage;
+    }
 
     public void explode() {
+        if (!destroyBlocks) return;//make sure it actually destroyes blocks
+        this.level.gameEvent(this.source, GameEvent.EXPLODE, new Vec3(this.pos.x, this.pos.y, this.pos.z));
         Set<BlockPos> set = Sets.newHashSet();
 
-        for(int j = 0; j < 16; ++j) {
-            for(int k = 0; k < 16; ++k) {
-                for(int l = 0; l < 16; ++l) {
-                    if (j == 0 || j == 15 || k == 0 || k == 15 || l == 0 || l == 15) {
-                        double d0 = (float)j / 15.0F * 2.0F - 1.0F;
-                        double d1 = (float)k / 15.0F * 2.0F - 1.0F;
-                        double d2 = (float)l / 15.0F * 2.0F - 1.0F;
-                        double d3 = Math.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
-                        d0 /= d3;
-                        d1 /= d3;
-                        d2 /= d3;
+        for(float j = -radius; j < radius; ++j) {
+            for(float k = -radius; k < radius; ++k) {
+                for(float l = -radius; l < radius; ++l) {
+                    Vec3 target = new Vec3(j, k, l).add(pos);
+                    if (target.distanceTo(pos) <= radius) {//making explosion only take target's within sphere
+                        BlockPos targetPos = new BlockPos(target);
+                        BlockState state = this.level.getBlockState(targetPos);
+                        FluidState fluidState = this.level.getFluidState(targetPos);
                         float f = this.radius * (0.7F + this.level.random.nextFloat() * 0.6F);
-                        double d4 = this.pos.x;
-                        double d6 = this.pos.y;
-                        double d8 = this.pos.z;
+                        Optional<Float> optional = this.calculator.getBlockExplosionResistance(toExplosion(), this.level, targetPos, state, fluidState);
+                        if (optional.isPresent()) {
+                            f -= (optional.get() + 0.3F) * 0.3F;
+                        }
 
-                        for(float f1 = 0.3F; f > 0.0F; f -= 0.22500001F) {
-                            BlockPos blockpos = new BlockPos(d4, d6, d8);
-                            BlockState blockstate = this.level.getBlockState(blockpos);
-                            FluidState fluidstate = this.level.getFluidState(blockpos);
-                            if (!this.level.isInWorldBounds(blockpos)) {
-                                break;
-                            }
-
-                            Optional<Float> optional = this.calculator.getBlockExplosionResistance(toExplosion(), this.level, blockpos, blockstate, fluidstate);
-                            if (optional.isPresent()) {
-                                f -= (optional.get() + 0.3F) * 0.3F;
-                            }
-
-                            if (f > 0.0F && this.calculator.shouldBlockExplode(toExplosion(), this.level, blockpos, blockstate, f)) {
-                                set.add(blockpos);
-                            }
-
-                            d4 += d0 * (double)0.3F;
-                            d6 += d1 * (double)0.3F;
-                            d8 += d2 * (double)0.3F;
+                        if (f > 0.0F && this.calculator.shouldBlockExplode(toExplosion(), this.level, targetPos, state, f)) {
+                            set.add(targetPos);
                         }
                     }
                 }
@@ -120,21 +128,22 @@ public abstract class ModExplosion {
     }
 
     public void dealDamage() {
+        if (!hitEntities) return; //make sure the explosion actually hurts entities
         float f2 = this.radius * 2.0F;
-        int k1 = Mth.floor(pos.x - (double)f2 - 1.0D);
-        int l1 = Mth.floor(pos.x + (double)f2 + 1.0D);
-        int i2 = Mth.floor(pos.y - (double)f2 - 1.0D);
-        int i1 = Mth.floor(pos.y + (double)f2 + 1.0D);
-        int j2 = Mth.floor(pos.z - (double)f2 - 1.0D);
-        int j1 = Mth.floor(pos.z + (double)f2 + 1.0D);
+        int k1 = (int) (pos.x - (double)f2 - 1.0D);
+        int l1 = (int) (pos.x + (double)f2 + 1.0D);
+        int i2 = (int) (pos.y - (double)f2 - 1.0D);
+        int i1 = (int) (pos.y + (double)f2 + 1.0D);
+        int j2 = (int) (pos.z - (double)f2 - 1.0D);
+        int j1 = (int) (pos.z + (double)f2 + 1.0D);
         List<Entity> list = this.level.getEntities(this.source, new AABB(k1, i2, j2, l1, i1, j1));
+        DamageCounter.activate();
         net.minecraftforge.event.ForgeEventFactory.onExplosionDetonate(this.level, toExplosion(), list, f2);
         Vec3 vec3 = new Vec3(pos.x, pos.y, pos.z);
 
-        for(int k2 = 0; k2 < list.size(); ++k2) {
-            Entity entity = list.get(k2);
+        for (Entity entity : list) {
             if (!entity.ignoreExplosion()) {
-                double d12 = Math.sqrt(entity.distanceToSqr(vec3)) / (double)f2;
+                double d12 = Math.sqrt(entity.distanceToSqr(vec3)) / (double) f2;
                 if (d12 <= 1.0D) {
                     double d5 = entity.getX() - pos.x;
                     double d7 = (entity instanceof PrimedTnt ? entity.getY() : entity.getEyeY()) - pos.y;
@@ -146,10 +155,11 @@ public abstract class ModExplosion {
                         d9 /= d13;
                         double d14 = Explosion.getSeenPercent(vec3, entity);
                         double d10 = (1.0D - d12) * d14;
-                        entity.hurt(this.getDamageSource(), (float)((int)((d10 * d10 + d10) / 2.0D * 7.0D * (double)f2 + 1.0D)));
+
+                        entity.hurt(this.damage != null ? this.damage : DamageSource.explosion(toExplosion()), (float) ((int) ((d10 * d10 + d10) / 2.0D * 7.0D * (double) f2 + 1.0D)));
                         double d11 = d10;
                         if (entity instanceof LivingEntity) {
-                            d11 = ProtectionEnchantment.getExplosionKnockbackAfterDampener((LivingEntity)entity, d10);
+                            d11 = ProtectionEnchantment.getExplosionKnockbackAfterDampener((LivingEntity) entity, d10);
                         }
 
                         entity.setDeltaMovement(entity.getDeltaMovement().add(d5 * d11, d7 * d11, d9 * d11));
@@ -189,13 +199,17 @@ public abstract class ModExplosion {
         }
     }
 
-    public void completeExplode(String name) {
+    public void completeExplode(String name, boolean withParticle) {
+        if (this.level.isClientSide()) return;
         explode();
-        finalizeExplosion(false);
+        finalizeExplosion(withParticle);
+        dealDamage();
         sendToClient(name);
     }
 
-    protected abstract boolean shouldSendDamageValue();
+    protected boolean shouldSendDamageValue() {
+        return false;
+    }
 
     private void sendToClient(String name) {
         if (this.level instanceof ServerLevel serverLevel) {
@@ -222,28 +236,24 @@ public abstract class ModExplosion {
         }
 
         if (flag) {
-            ObjectArrayList<Pair<ItemStack, BlockPos>> objectarraylist = new ObjectArrayList<>();
             boolean flag1 = this.getIndirectSourceEntity() instanceof Player;
-
-            for(BlockPos blockpos : this.toBlow) {
+            ObjectArrayList<Pair<ItemStack, BlockPos>> dropsForPos = new ObjectArrayList<>();
+            for (BlockPos blockpos : this.toBlow) {
                 BlockState blockstate = this.level.getBlockState(blockpos);
                 if (!blockstate.isAir()) {
-                    BlockPos blockpos1 = blockpos.immutable();
                     this.level.getProfiler().push("explosion_blocks");
                     if (blockstate.canDropFromExplosion(this.level, blockpos, toExplosion())) {
-                        Level $$9 = this.level;
-                        if ($$9 instanceof ServerLevel) {
-                            ServerLevel serverlevel = (ServerLevel)$$9;
+                        if (this.level instanceof ServerLevel serverlevel) {
                             BlockEntity blockentity = blockstate.hasBlockEntity() ? this.level.getBlockEntity(blockpos) : null;
-                            LootContext.Builder lootcontext$builder = (new LootContext.Builder(serverlevel)).withRandom(this.level.random).withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(blockpos)).withParameter(LootContextParams.TOOL, ItemStack.EMPTY).withOptionalParameter(LootContextParams.BLOCK_ENTITY, blockentity).withOptionalParameter(LootContextParams.THIS_ENTITY, this.source);
+                            LootContext.Builder builder = (new LootContext.Builder(serverlevel)).withRandom(this.level.random).withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(blockpos)).withParameter(LootContextParams.TOOL, ItemStack.EMPTY).withOptionalParameter(LootContextParams.BLOCK_ENTITY, blockentity).withOptionalParameter(LootContextParams.THIS_ENTITY, this.source);
                             if (blockInteraction() == Explosion.BlockInteraction.DESTROY_WITH_DECAY) {
-                                lootcontext$builder.withParameter(LootContextParams.EXPLOSION_RADIUS, this.radius);
+                                builder.withParameter(LootContextParams.EXPLOSION_RADIUS, this.radius);
                             }
 
                             blockstate.spawnAfterBreak(serverlevel, blockpos, ItemStack.EMPTY, flag1);
-                            blockstate.getDrops(lootcontext$builder).forEach((p_46074_) -> {
-                                addBlockDrops(objectarraylist, p_46074_, blockpos1);
-                            });
+                            blockstate.getDrops(builder).forEach(stack ->
+                                    Explosion.addBlockDrops(dropsForPos, stack, blockpos)
+                            );
                         }
                     }
 
@@ -251,41 +261,23 @@ public abstract class ModExplosion {
                     this.level.getProfiler().pop();
                 }
             }
-
-            for(Pair<ItemStack, BlockPos> pair : objectarraylist) {
+            for(Pair<ItemStack, BlockPos> pair : dropsForPos) {
                 Block.popResource(this.level, pair.getSecond(), pair.getFirst());
             }
+
         }
 
         if (this.hasFire()) {
-            for(BlockPos blockpos2 : this.toBlow) {
-                if (this.level.random.nextInt(3) == 0 && this.level.getBlockState(blockpos2).isAir() && this.level.getBlockState(blockpos2.below()).isSolidRender(this.level, blockpos2.below())) {
-                    this.level.setBlockAndUpdate(blockpos2, BaseFireBlock.getState(this.level, blockpos2));
+            for (BlockPos blockPos : this.toBlow) {
+                if (this.level.random.nextInt(3) == 0 && this.level.getBlockState(blockPos).isAir() && this.level.getBlockState(blockPos.below()).isSolidRender(this.level, blockPos.below())) {
+                    this.level.setBlockAndUpdate(blockPos, BaseFireBlock.getState(this.level, blockPos));
                 }
             }
         }
     }
-
-    private static void addBlockDrops(ObjectArrayList<Pair<ItemStack, BlockPos>> p_46068_, ItemStack p_46069_, BlockPos p_46070_) {
-        int i = p_46068_.size();
-
-        for(int j = 0; j < i; ++j) {
-            Pair<ItemStack, BlockPos> pair = p_46068_.get(j);
-            ItemStack itemstack = pair.getFirst();
-            if (ItemEntity.areMergable(itemstack, p_46069_)) {
-                ItemStack stack = ItemEntity.merge(itemstack, p_46069_, 16);
-                p_46068_.set(j, Pair.of(stack, pair.getSecond()));
-                if (p_46069_.isEmpty()) {
-                    return;
-                }
-            }
-        }
-
-        p_46068_.add(Pair.of(p_46069_, p_46070_));
-    }
-
 
     private Explosion toExplosion() {
-        return new Explosion(level, this.source, this.pos.x, this.pos.y, this.pos.z, this.radius, this.hasFire(), this.blockInteraction());
+        if (self == null) self = new Explosion(level, this.source, this.pos.x, this.pos.y, this.pos.z, this.radius, this.hasFire(), this.blockInteraction());
+        return self;
     }
 }

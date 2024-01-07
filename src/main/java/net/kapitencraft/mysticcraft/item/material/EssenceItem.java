@@ -23,6 +23,8 @@ public class EssenceItem extends Item implements IEssenceData, IModItem {
         return id.getName().append(super.getName(stack));
     }
 
+
+
     @Override
     public TabGroup getGroup() {
         return null;

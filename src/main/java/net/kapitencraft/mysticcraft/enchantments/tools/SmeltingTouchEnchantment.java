@@ -6,7 +6,7 @@ import net.minecraft.world.item.enchantment.EnchantmentCategory;
 
 public class SmeltingTouchEnchantment extends Enchantment {
     public SmeltingTouchEnchantment() {
-        super(Rarity.RARE, EnchantmentCategory.DIGGER, MiscHelper.WEAPON_SLOT);
+        super(Rarity.RARE, EnchantmentCategory.BREAKABLE, MiscHelper.WEAPON_SLOT);
     }
 
     @Override

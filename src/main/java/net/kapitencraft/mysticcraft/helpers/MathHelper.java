@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.helpers;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.api.Reference;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
@@ -22,6 +23,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 public class MathHelper {
 
@@ -57,6 +59,10 @@ public class MathHelper {
 
     public static void add(Supplier<Integer> getter, Consumer<Integer> setter, int change) {
         setter.accept(getter.get() + change);
+    }
+
+    public static void up1(Reference<Integer> reference) {
+        add(reference::getValue, reference::setValue, 1);
     }
 
     public static void mul(Supplier<Integer> getter, Consumer<Integer> setter, int mul) {
@@ -128,6 +134,18 @@ public class MathHelper {
         MiscHelper.repeat(cube.getX(), integer -> MiscHelper.repeat(cube.getY(), integer1 -> MiscHelper.repeat(cube.getZ(), integer2 -> {
             consumer.accept(new BlockPos(integer, integer1, integer2));
         })));
+    }
+
+    public static Stream<BlockPos> between(BlockPos start, BlockPos end) {
+        List<BlockPos> pos = new ArrayList<>();
+        for (int x = Math.min(start.getX(), end.getX()); x < Math.max(start.getX(), end.getX()); x++) {
+            for (int y = Math.min(start.getY(), end.getY()); y < Math.max(start.getY(), end.getY()); y++) {
+                for (int z = Math.min(start.getZ(), end.getZ()); z < Math.max(start.getZ(), end.getZ()); z++) {
+                    pos.add(new BlockPos(x, y, z));
+                }
+            }
+        }
+        return pos.stream();
     }
 
     private static BlockPos makeLinePos(double t, BlockPos a, BlockPos diff) {

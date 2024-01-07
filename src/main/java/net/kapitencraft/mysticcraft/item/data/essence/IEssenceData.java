@@ -14,6 +14,19 @@ public interface IEssenceData extends ItemData<EssenceType, IEssenceData> {
         return EssenceType.CODEC.byName(stack.getOrCreateTag().getString(getTagId()), EssenceType.UNDEAD);
     }
 
+    static void apply(ItemStack stack, EssenceType type) {
+        if (stack.getItem() instanceof IEssenceData data) {
+            data.saveData(stack, type);
+        }
+    }
+
+    static EssenceType read(ItemStack stack) {
+        if (stack.getItem() instanceof IEssenceData data) {
+            return data.loadData(stack, data1 -> {});
+        }
+        return EssenceType.UNDEAD;
+    }
+
     @Override
     default void getDisplay(ItemStack stack, List<Component> list) {
     }

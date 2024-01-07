@@ -6,16 +6,16 @@ import net.minecraftforge.registries.RegistryObject;
 
 import java.util.function.Supplier;
 
-public class BlockRegistryHolder<T extends Block> {
+public class BlockRegistryHolder<T extends Block, K extends BlockItem> {
     private final RegistryObject<T> block;
-    private final RegistryObject<BlockItem> item;
+    private final RegistryObject<K> item;
 
-    public BlockRegistryHolder(RegistryObject<T> block, RegistryObject<BlockItem> item) {
+    public BlockRegistryHolder(RegistryObject<T> block, RegistryObject<K> item) {
         this.block = block;
         this.item = item;
     }
 
-    public BlockItem getItem() {
+    public K getItem() {
         return item.get();
     }
 
@@ -27,7 +27,7 @@ public class BlockRegistryHolder<T extends Block> {
         return (Supplier<Block>) block;
     }
 
-    public RegistryObject<BlockItem> item() {
+    public RegistryObject<K> item() {
         return item;
     }
 }

@@ -39,7 +39,7 @@ public class ReforgingPacket {
                     if (this.reforgeName != null) {
                         rAEntity.updateButtonPress(this.reforgeName);
                     } else {
-                        rAEntity.updateButtonPress();
+                        rAEntity.updateButtonPress(player);
                     }
                 }
             }

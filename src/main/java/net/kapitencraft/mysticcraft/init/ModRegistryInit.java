@@ -33,6 +33,7 @@ public class ModRegistryInit {
         register("Loot Conditions", ModLootItemConditions.REGISTRY);
         register("Command Arguments", ModCommandArguments.REGISTRY);
         register("Recipe Types", ModRecipeSerializers.REGISTRY);
+        register("Glyph Effects", ModGlyphEffects.REGISTRY);
     }
 
     private static void register(String registerName, DeferredRegister<?> register) {

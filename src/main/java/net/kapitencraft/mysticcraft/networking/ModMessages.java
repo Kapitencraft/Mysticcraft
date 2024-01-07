@@ -3,16 +3,22 @@ package net.kapitencraft.mysticcraft.networking;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.networking.packets.C2S.ReforgingPacket;
 import net.kapitencraft.mysticcraft.networking.packets.C2S.UpgradeItemPacket;
+import net.kapitencraft.mysticcraft.networking.packets.S2C.DisplayTotemActivationPacket;
 import net.kapitencraft.mysticcraft.networking.packets.S2C.SyncGuildsPacket;
 import net.kapitencraft.mysticcraft.networking.packets.SendCompoundTagPacket;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundExplodePacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkDirection;
+import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
 
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class ModMessages {
     private static final String PROTOCOL_VERSION = "1";
@@ -75,5 +81,23 @@ public class ModMessages {
                 .encoder(SyncGuildsPacket::toBytes)
                 .consumerMainThread(SyncGuildsPacket::handle)
                 .add();
+        net.messageBuilder(DisplayTotemActivationPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(DisplayTotemActivationPacket::new)
+                .encoder(DisplayTotemActivationPacket::toBytes)
+                .consumerMainThread(DisplayTotemActivationPacket::handle)
+                .add();
+        net.messageBuilder(ClientboundExplodePacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(ClientboundExplodePacket::new)
+                .encoder(ClientboundExplodePacket::write)
+                .consumerMainThread(ModMessages::handleExplosionPacket)
+                .add();
+    }
+
+    private static boolean handleExplosionPacket(ClientboundExplodePacket packet, Supplier<NetworkEvent.Context> supplier) {
+        supplier.get().enqueueWork(()->{
+            ClientGamePacketListener listener = Minecraft.getInstance().getConnection();
+            if (listener != null) listener.handleExplosion(packet);
+        });
+        return true;
     }
 }

@@ -1,7 +1,9 @@
 package net.kapitencraft.mysticcraft.misc;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.block.gemstone.GemstoneCrystal;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
+import net.kapitencraft.mysticcraft.init.ModBlocks;
 import net.kapitencraft.mysticcraft.init.ModItems;
 import net.kapitencraft.mysticcraft.item.ITieredItem;
 import net.kapitencraft.mysticcraft.item.combat.armor.ModArmorItem;
@@ -42,7 +44,7 @@ public class ModItemProperties {
                 return living.getUseItem() != stack ? 0.0F : (float)((stack.getUseDuration() * living.getAttributeValue(ModAttributes.DRAW_SPEED.get()) / 100) - living.getUseItemRemainingTicks()) / 20.0F;
             }
         });
-        ItemProperties.register(ModItems.GEMSTONE.get(), new ResourceLocation("rarity"), (stack, level, living, timeLeft) -> {
+        ItemProperties.register(ModItems.GEMSTONE.get(), MysticcraftMod.res("rarity"), (stack, level, living, timeLeft) -> {
             GemstoneType.Rarity rarity = IGemstoneItem.getGemRarity(stack);
             return switch (rarity) {
                 case ROUGH -> 0.1f;
@@ -51,6 +53,15 @@ public class ModItemProperties {
                 case FLAWLESS -> 0.4f;
                 case PERFECT -> 0.5f;
                 default -> 0;
+            };
+        });
+        ItemProperties.register(ModBlocks.GEMSTONE_CRYSTAL.getItem(), MysticcraftMod.res("size"), (stack, level, living, timeLeft) -> {
+            GemstoneCrystal.Size size = GemstoneCrystal.Size.CODEC.byName(stack.getOrCreateTag().getString("Size"), GemstoneCrystal.Size.SMALL);
+            return switch (size) {
+                case SMALL -> 0.1f;
+                case MEDIUM -> 0.2f;
+                case LARGE -> 0.3f;
+                case CLUSTER -> 0.4f;
             };
         });
     }

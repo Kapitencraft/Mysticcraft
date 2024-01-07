@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.kapitencraft.mysticcraft.event.ModEventFactory;
 import net.kapitencraft.mysticcraft.helpers.TagHelper;
+import net.kapitencraft.mysticcraft.init.ModItems;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
@@ -88,7 +89,7 @@ public class GemstoneSlot {
         if (this.gemRarity == GemstoneType.Rarity.EMPTY || this.appliedGemstoneType == GemstoneType.EMPTY || this == BLOCKED) {
             return ItemStack.EMPTY;
         }
-        return IGemstoneItem.createData(this.gemRarity, this.appliedGemstoneType, false);
+        return IGemstoneItem.createData(this.gemRarity, this.appliedGemstoneType, ModItems.GEMSTONE);
     }
 
     public GemstoneType getAppliedGemstone() {

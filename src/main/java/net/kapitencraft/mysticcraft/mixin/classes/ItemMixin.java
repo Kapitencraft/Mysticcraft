@@ -27,9 +27,14 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.extensions.IForgeItem;
 import org.jetbrains.annotations.NotNull;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
-import org.spongepowered.asm.mixin.gen.Accessor;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import static net.kapitencraft.mysticcraft.item.combat.spells.SpellItem.SPELL_EXE;
 import static net.kapitencraft.mysticcraft.item.combat.spells.SpellItem.SPELL_EXECUTION_DUR;
@@ -37,6 +42,8 @@ import static net.kapitencraft.mysticcraft.item.combat.spells.SpellItem.SPELL_EX
 @Mixin(Item.class)
 @SuppressWarnings("ALL")
 public abstract class ItemMixin implements IForgeItem {
+
+    @Shadow @Final private Rarity rarity;
 
     private Item self() {return (Item) (Object) this;}
 
@@ -68,8 +75,8 @@ public abstract class ItemMixin implements IForgeItem {
      * @author Kapitencraft
      * @reason spell item
      */
-    @Overwrite
-    public InteractionResultHolder<ItemStack> use(@NotNull Level level, Player player, @NotNull InteractionHand hand) {
+    @Inject(method = "use", at = @At("HEAD"), cancellable = true)
+    public void use(@NotNull Level level, Player player, @NotNull InteractionHand hand, CallbackInfoReturnable<InteractionResultHolder<ItemStack>> cir) {
         CompoundTag tag = player.getPersistentData();
         ItemStack itemstack = player.getItemInHand(hand);
         if (itemstack.getItem() instanceof ISpellItem item) {
@@ -80,44 +87,28 @@ public abstract class ItemMixin implements IForgeItem {
                     TextHelper.sendSubTitle(player, Component.literal( "§6\u27A4 " + item.getClosestSpell(tag.getString(SPELL_EXE)).getName()));
                 }
                 tag.putByte(SPELL_EXECUTION_DUR, (byte) 20);
-                return InteractionResultHolder.consume(itemstack);
+                cir.setReturnValue(InteractionResultHolder.consume(itemstack));
             } else {
                 if (item.getActiveSpell(itemstack).getType() == Spells.Type.RELEASE) {
                     if (item.handleActiveMana(player, itemstack)) {
-                        return InteractionResultHolder.consume(itemstack);
+                        cir.setReturnValue(InteractionResultHolder.consume(itemstack));
                     }
                 } else {
                     player.startUsingItem(hand);
-                    return InteractionResultHolder.consume(itemstack);
+                    cir.setReturnValue(InteractionResultHolder.consume(itemstack));
                 }
             }
         }
-        if (itemstack.isEdible()) {
-            if (player.canEat(itemstack.getFoodProperties(player).canAlwaysEat())) {
-                player.startUsingItem(hand);
-                return InteractionResultHolder.consume(itemstack);
-            } else {
-                return InteractionResultHolder.fail(itemstack);
-            }
-        } else {
-            return InteractionResultHolder.pass(player.getItemInHand(hand));
-        }
     }
-
 
     /**
      * @author Kapitencraft
      * @reason spell items
      */
-    @Overwrite
-    public int getUseDuration(ItemStack stack) {
+    @Inject(method = "getUseDuration", at = @At("HEAD"))
+    public void getUseDuration(ItemStack stack, CallbackInfoReturnable<Integer> cir) {
         if (stack.getItem() instanceof ISpellItem spellItem) {
-            return spellItem.getItemUseDuration(stack);
-        }
-        if (stack.getItem().isEdible()) {
-            return stack.getFoodProperties(null).isFastFood() ? 16 : 32;
-        } else {
-            return 0;
+            cir.setReturnValue(spellItem.getItemUseDuration(stack));
         }
     }
 
@@ -125,8 +116,8 @@ public abstract class ItemMixin implements IForgeItem {
      * @author Kapitencraft
      * @reason spell usage
      */
-    @Overwrite
-    public void onUseTick(@NotNull Level level, @NotNull LivingEntity user, @NotNull ItemStack stack, int count) {
+    @Inject(method = "onUseTick", at = @At("HEAD"))
+    public void onUseTick(@NotNull Level level, @NotNull LivingEntity user, @NotNull ItemStack stack, int count, CallbackInfo info) {
         if (self() instanceof ISpellItem spellItem) {
             Spell spell = spellItem.getActiveSpell(stack);
             if (spell.getType() == Spells.Type.CYCLE && (Integer.MAX_VALUE - count & 2) == 0) {
@@ -156,9 +147,6 @@ public abstract class ItemMixin implements IForgeItem {
      */
     @Overwrite
     public @NotNull Rarity getRarity(@NotNull ItemStack stack) {
-        return MiscHelper.getFinalRarity(getRarity(), stack);
+        return MiscHelper.getFinalRarity(rarity, stack);
     }
-
-    @Accessor
-    abstract Rarity getRarity();
 }

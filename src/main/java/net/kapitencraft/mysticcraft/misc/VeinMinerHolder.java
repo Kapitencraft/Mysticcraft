@@ -50,6 +50,9 @@ public class VeinMinerHolder {
                 if (block == state.getBlock() && shouldMine.test(state)) {
                     mainHandItem.hurtAndBreak(1, serverPlayer,
                             serverPlayer1 -> serverPlayer1.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+                    if (mainHandItem.isEmpty()) {
+                        return true;
+                    }
                     extra.accept(pos1);
                     breakBlock(pos1, serverPlayer);
                     iterator.add(pos1);

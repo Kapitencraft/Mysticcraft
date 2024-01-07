@@ -34,6 +34,7 @@ public abstract class InventoryMixin {
         return this.getItems().get(this.getSelected()).getDestroySpeed(state) == 1 ? 1f : (float) this.getPlayer().getAttributeValue(ModAttributes.MINING_SPEED.get());
     }
 
+
     @Inject(method = "findSlotMatchingItem", at = @At("HEAD"))
     public void find(ItemStack stack, CallbackInfoReturnable<Integer> returnable) {
         stack.getOrCreateTag();

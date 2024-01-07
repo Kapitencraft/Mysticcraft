@@ -1,16 +1,17 @@
 package net.kapitencraft.mysticcraft.item.data.gemstone;
 
-import net.kapitencraft.mysticcraft.init.ModBlocks;
-import net.kapitencraft.mysticcraft.init.ModItems;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.function.Supplier;
 
 public interface IGemstoneItem {
     String id = "GemstoneData";
 
-    static ItemStack createData(GemstoneType.Rarity rarity, GemstoneType type, boolean block) {
-        ItemStack stack = new ItemStack(block ? ModBlocks.GEMSTONE_BLOCK.getItem() : ModItems.GEMSTONE.get());
+    static <T extends Item & IGemstoneItem> ItemStack createData(GemstoneType.Rarity rarity, GemstoneType type, Supplier<T> supplier) {
+        ItemStack stack = new ItemStack(supplier.get());
         CompoundTag tag = stack.getOrCreateTagElement(id);
         tag.putString("GemId", type.getId());
         tag.putString("GemRarity", rarity.getSerializedName());

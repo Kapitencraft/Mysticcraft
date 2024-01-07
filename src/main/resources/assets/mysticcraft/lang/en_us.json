@@ -159,6 +159,8 @@
   "enchantment.mysticcraft.fast_arrows.desc": "grants %1$s Arrow Speed",
   "enchantment.mysticcraft.firm_stand": "Firm Stand",
   "enchantment.mysticcraft.firm_stand.desc": "grants %1$s Knockback Resistance",
+  "enchantment.mysticcraft.flash": "Flash",
+  "enchantment.mysticcraft.flash.desc": "decreases lure time of fishing by at least %1$s and maximal %2$s ticks",
   "enchantment.mysticcraft.frozen_arrows": "Frozen Arrows",
   "enchantment.mysticcraft.frozen_arrows.desc": "freezes hit enemies by %1$s ticks",
   "enchantment.mysticcraft.giant_killer": "Giant Killer",
@@ -183,6 +185,8 @@
   "enchantment.mysticcraft.lumberjack.desc": "breaks trees (and other wood) in 1 cut",
   "enchantment.mysticcraft.magic_protection": "Magic Protection",
   "enchantment.mysticcraft.magic_protection.desc": "decreases damage taken from magic",
+  "enchantment.mysticcraft.mana_syphon": "Mana Syphon",
+  "enchantment.mysticcraft.mana_syphon.desc": "increases your mana by %1$s of your max mana when hitting an enemy",
   "enchantment.mysticcraft.necrotic_touch": "Necrotic Touch",
   "enchantment.mysticcraft.necrotic_touch.desc": "grants %1$s Live Steal",
   "enchantment.mysticcraft.overload": "Overload",
@@ -241,6 +245,7 @@
   "gem_rarity.perfect": "Perfect",
   "gem_rarity.rough": "Rough",
 
+  "gem_type.empty": "Empty",
   "gem_type.almandine": "Almandine",
   "gem_type.amethyst": "Amethyst",
   "gem_type.aquamarine": "Aquamarine",
@@ -252,12 +257,18 @@
   "gem_type.turquoise": "Turquoise",
 
   "gemstone_block.name": "%1$s Gemstone Block",
+  "gemstone_crystal.name": "%1$s Gemstone Crystal",
+  "gemstone_crystal.small.name": "Small %1$s Crystal",
+  "gemstone_crystal.medium.name": "Medium %1$s Crystal",
+  "gemstone_crystal.large.name": "Large %1$s Crystal",
+  "gemstone_crystal.cluster.name": "%1$s Cluster",
   "gemstone_item.translation": "Some say when harnessed properly, it can give it's owner extra %1$s",
 
   "generic.ability_damage": "§cAbility Damage",
   "generic.armor_shredder": "Armor Shredding",
   "generic.arrow_speed": "Arrow Speed",
   "generic.bonus_attack_speed": "Bonus Attack Speed",
+  "generic.crit_chance": "Crit Chance",
   "generic.crit_damage": "§1Crit Damage",
   "generic.dodge": "§0Dodge",
   "generic.draw_speed": "§6Draw Speed",
@@ -332,6 +343,7 @@
   "item.mysticcraft.crimsonite_dust": "Crimsonite Dust",
   "item.mysticcraft.crimsonium_dust": "Crimsonium Dust",
   "item.mysticcraft.crimsonium_ingot": "Crimsonium Ingot",
+  "item.mysticcraft.dark_dagger": "Dark Dagger",
   "item.mysticcraft.diamantes_handle": "Diamante's Handle",
   "item.mysticcraft.diamond_cleaver": "Diamond Cleaver",
   "item.mysticcraft.diamond_double_sword": "Diamond Double Sword",
@@ -343,6 +355,7 @@
   "item.mysticcraft.ender_knight_chestplate": "Ender Knight Chestplate",
   "item.mysticcraft.ender_knight_helmet": "Ender Knight Helmet",
   "item.mysticcraft.ender_knight_leggings": "Ender Knight Leggings",
+  "item.mysticcraft.essence": " Essence",
   "item.mysticcraft.fiery_scythe": "Fiery Scythe",
   "item.mysticcraft.fire_lance": "Fire Lance",
   "item.mysticcraft.frozen_blaze_boots": "Frozen Blaze Boots",
@@ -382,6 +395,7 @@
   "item.mysticcraft.shadow_assassin_chestplate": "Shadow Assassin Chestplate",
   "item.mysticcraft.shadow_assassin_helmet": "Shadow Assassin Helmet",
   "item.mysticcraft.shadow_assassin_leggings": "Shadow Assassin Leggings",
+  "item.mysticcraft.shadow_crystal": "Shadow Crystal",
   "item.mysticcraft.shadow_dagger": "Shadow Dagger",
   "item.mysticcraft.shadow_leather": "Shadow Leather",
   "item.mysticcraft.soulbound_core": "Soulbound Core",
@@ -411,7 +425,8 @@
 
   "itemGroup.mysticcraft.deco": "Mysticcraft's Decoration",
   "itemGroup.mysticcraft.materials": "Mysticcraft Materials",
-  "itemGroup.mysticcraft.spell_and_gemstone": "Spell- & Gemstone-Stuff",
+  "itemGroup.mysticcraft.spell": "Spell Items",
+  "itemGroup.mysticcraft.gemstone": "Gemstone Items",
   "itemGroup.mysticcraft.weapons_and_tools": "Weapons and Tools from Mysticcraft",
 
   "item_tier.burning": "Burning",
@@ -429,13 +444,18 @@
   "mysticcraft.ench_desc.treasure": "Treasure Enchantment; may not be obtained from Enchantment Table",
 
   "reforge.button": "§2Click here to apply a custom reforge to your Item",
+  "reforge.cost": "Requires 5 Emeralds to be used",
 
+  "reforge.clean": "Clean",
   "reforge.epic": "Epic",
   "reforge.fair": "Fair",
   "reforge.fast": "Fast",
+  "reforge.fierce": "Fierce",
   "reforge.gentle": "Gentle",
+  "reforge.heavy": "Heavy",
   "reforge.heroic": "Heroic",
   "reforge.legendary": "Legendary",
+  "reforge.light": "Light",
   "reforge.odd": "Odd",
   "reforge.sacred": "Sacred",
   "reforge.sharp": "Sharp",
@@ -451,5 +471,6 @@
 
   "upgrade.button": "§1Click here to prestige/star your item",
   "item.creative_only": "Only obtainable in creative mode",
-  "block.mysticcraft.reforge_anvil": "Reforge Anvil"
+  "block.mysticcraft.reforge_anvil": "Reforge Anvil",
+  "upgrade.cost": "Upgrade Requires: "
 }

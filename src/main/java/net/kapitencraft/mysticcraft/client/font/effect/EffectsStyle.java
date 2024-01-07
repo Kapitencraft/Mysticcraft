@@ -4,6 +4,6 @@ import java.util.List;
 
 public interface EffectsStyle {
 
-    void addEffect(BaseGlyphEffect effect);
-    List<BaseGlyphEffect> getEffects();
+    void addEffect(GlyphEffect effect);
+    List<GlyphEffect> getEffects();
 }

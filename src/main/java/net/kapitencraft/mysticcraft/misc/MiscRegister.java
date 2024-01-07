@@ -42,14 +42,13 @@ import net.kapitencraft.mysticcraft.misc.cooldown.Cooldowns;
 import net.kapitencraft.mysticcraft.misc.damage_source.FerociousDamageSource;
 import net.kapitencraft.mysticcraft.misc.damage_source.IAbilitySource;
 import net.kapitencraft.mysticcraft.misc.particle_help.ParticleAnimator;
-import net.kapitencraft.mysticcraft.mixin.classes.LivingEntityAccessor;
 import net.kapitencraft.mysticcraft.mob_effects.NumbnessMobEffect;
 import net.kapitencraft.mysticcraft.networking.ModMessages;
+import net.kapitencraft.mysticcraft.networking.packets.S2C.DisplayTotemActivationPacket;
 import net.kapitencraft.mysticcraft.networking.packets.S2C.SyncGuildsPacket;
 import net.kapitencraft.mysticcraft.spell.spells.WitherShieldSpell;
 import net.kapitencraft.mysticcraft.villagers.ModVillagers;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -130,13 +129,14 @@ public class MiscRegister {
 
     @SubscribeEvent
     public static void pickUpEssence(PlayerEvent.ItemPickupEvent event) {
-        ItemStack stack = event.getStack();
+        ItemStack stack = event.getOriginalEntity().getItem();
+        Player source = event.getEntity();
         if (stack.getItem() instanceof EssenceItem item) {
-            event.getEntity().getCapability(EssenceHolder.ESSENCE).ifPresent(essenceHolder -> {
+            source.getCapability(EssenceHolder.ESSENCE).ifPresent(essenceHolder -> {
                 EssenceType type = item.loadData(stack, i -> {});
                 essenceHolder.add(type, stack.getCount());
-                event.getEntity().displayClientMessage(Component.translatable("essence.pickup", type.getName(), stack.getCount()).withStyle(ChatFormatting.LIGHT_PURPLE), true);
-                event.getOriginalEntity().kill();
+                source.displayClientMessage(Component.translatable("essence.pickup", type.getName(), stack.getCount()).withStyle(ChatFormatting.LIGHT_PURPLE), true);
+                InventoryHelper.removeFromInventory(stack, source);
             });
         }
     }
@@ -447,9 +447,9 @@ public class MiscRegister {
             }
             if (!player.isOnGround()) {
                 if (canJump(player) && tag.getInt(doubleJumpId) < player.getAttributeValue(ModAttributes.DOUBLE_JUMP.get())) {
-                    if (((LivingEntityAccessor) player).getJumping() && ((LivingEntityAccessor) player).getNoJumpDelay() <= 0) {
+                    if (player.jumping && player.noJumpDelay <= 0) {
                         ParticleHelper.sendAlwaysVisibleParticles(ParticleTypes.CLOUD, player.level, player.getX(), player.getY(), player.getZ(), 0.25, 0.0, 0.25, 0,0,0, 15);
-                        ((LivingEntityAccessor) player).setNoJumpDelay(10); player.fallDistance = 0;
+                        player.noJumpDelay = 10; player.fallDistance = 0;
                         Vec3 targetLoc = MathHelper.setLength(player.getLookAngle().multiply(1, 0, 1), 0.75).add(0, 1, 0);
                         player.setDeltaMovement(targetLoc.x, targetLoc.y > 0 ? targetLoc.y : -targetLoc.y, targetLoc.z);
                         TagHelper.increaseIntegerTagValue(player.getPersistentData(), doubleJumpId, 1);
@@ -587,11 +587,11 @@ public class MiscRegister {
         if (mainHandItem.getEnchantmentLevel(ModEnchantments.LUMBERJACK.get()) > 0 && state.is(BlockTags.LOGS)) {
             MiscHelper.mineMultiple(pos, serverPlayer, block, pos1 -> {}, state1 -> true, pos1 -> false);
         }
-        if (state.is(BlockTags.MINEABLE_WITH_PICKAXE)) {
+        if (state.is(BlockTags.MINEABLE_WITH_PICKAXE) || state.is(BlockTags.MINEABLE_WITH_SHOVEL)) {
             MiscHelper.getEnchantmentLevelAndDo(mainHandItem, ModEnchantments.VEIN_MINER.get(), integer -> {
                 Reference<Integer> brokenBlocks = Reference.of(-1);
                 MiscHelper.mineMultiple(pos, serverPlayer, block,
-                        pos1 -> MathHelper.add(brokenBlocks::getValue, brokenBlocks::setValue, 1),
+                        pos1 -> MathHelper.up1(brokenBlocks),
                         state1 -> true, pos1 -> brokenBlocks.getValue() > integer);
             });
         }
@@ -660,13 +660,14 @@ public class MiscRegister {
     @SubscribeEvent
     public static void entityDeathEvents(LivingDeathEvent event) {
         LivingEntity toDie = event.getEntity();
-        if (toDie instanceof Player player) {
+        if (toDie instanceof ServerPlayer player) {
             List<ItemStack> totems = InventoryHelper.getByFilter(player, stack -> stack.getItem() instanceof ModTotemItem);
             if (!event.isCanceled()) for (ItemStack stack : totems) {
                 ModTotemItem totemItem = (ModTotemItem) stack.getItem();
                 if (totemItem.onUse(player, event.getSource())) {
                     event.setCanceled(true);
-                    Minecraft.getInstance().gameRenderer.displayItemActivation(stack);
+                    if (player.getHealth() <= 0) throw new IllegalStateException("Player wasn't revived!"); //ensure player being revived by the totem (e.g. health boost)
+                    ModMessages.sendToAllConnectedPlayers(serverPlayer -> new DisplayTotemActivationPacket(stack.copy(), player.getId()), player.getLevel());
                     stack.shrink(1);
                     break;
                 }

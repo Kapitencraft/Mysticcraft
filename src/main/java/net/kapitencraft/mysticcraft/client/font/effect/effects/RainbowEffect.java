@@ -1,9 +1,11 @@
-package net.kapitencraft.mysticcraft.client.font.effect;
+package net.kapitencraft.mysticcraft.client.font.effect.effects;
 
+import net.kapitencraft.mysticcraft.client.font.effect.EffectSettings;
+import net.kapitencraft.mysticcraft.client.font.effect.GlyphEffect;
 import net.minecraft.Util;
 import net.minecraft.util.Mth;
 
-public class RainbowEffect extends BaseGlyphEffect {
+public class RainbowEffect extends GlyphEffect {
     @Override
     public void apply(EffectSettings settings) {
         if (settings.isShadow) {
@@ -16,7 +18,7 @@ public class RainbowEffect extends BaseGlyphEffect {
     }
 
     @Override
-    char getKey() {
-        return 'o';
+    public char getKey() {
+        return 'z';
     }
 }

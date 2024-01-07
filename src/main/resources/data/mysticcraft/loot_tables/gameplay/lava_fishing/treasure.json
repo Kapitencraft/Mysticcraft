@@ -81,6 +81,18 @@
           "type": "minecraft:item",
           "weight": 50,
           "name": "minecraft:glowstone"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "mysticcraft:essence",
+          "weight": 2,
+          "functions": [
+            {
+              "function": "mysticcraft:apply_essence",
+              "type": "crimson",
+              "conditions": []
+            }
+          ]
         }
       ]
     }

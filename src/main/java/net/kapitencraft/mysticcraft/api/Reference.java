@@ -4,7 +4,6 @@ import org.jetbrains.annotations.Nullable;
 
 public class Reference<T> {
 
-    @Nullable
     private T value;
 
     private Reference(@Nullable T defaultValue) {
@@ -20,7 +19,7 @@ public class Reference<T> {
         return this;
     }
 
-    public @Nullable T getValue() {
+    public T getValue() {
         return value;
     }
 }

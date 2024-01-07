@@ -6,6 +6,7 @@ import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.init.ModBlocks;
 import net.kapitencraft.mysticcraft.init.ModItems;
 import net.kapitencraft.mysticcraft.item.data.gemstone.GemstoneType;
+import net.kapitencraft.mysticcraft.item.data.gemstone.IGemstoneItem;
 import net.kapitencraft.mysticcraft.spell.Elements;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.ListTag;
@@ -25,12 +26,21 @@ import net.minecraftforge.fml.common.Mod;
 public class TabRegister {
     @SubscribeEvent
     public static void registerTabs(CreativeModeTabEvent.Register event) {
-        event.registerCreativeModeTab(MysticcraftMod.res("spell_and_gemstone"), builder ->
-                builder.title(Component.translatable("itemGroup.mysticcraft.spell_and_gemstone"))
+        event.registerCreativeModeTab(MysticcraftMod.res("spell"), builder ->
+                builder.title(Component.translatable("itemGroup.mysticcraft.spell"))
                         .icon(() -> new ItemStack(ModItems.SCYLLA.get()))
                         .displayItems((featureFlagSet, output, flag) -> {
-                                    output.acceptAll(CollectionHelper.values(GemstoneType.allItems()));
-                                    TabGroup.registerAll(TabTypes.SPELL_AND_GEMSTONE, output::acceptAll);
+                                    TabGroup.registerAll(TabTypes.SPELL, output::acceptAll);
+                        })
+        );
+        event.registerCreativeModeTab(MysticcraftMod.res("gemstone"), builder ->
+                builder.title(Component.translatable("itemGroup.mysticcraft.gemstone"))
+                        .icon(() -> IGemstoneItem.createData(GemstoneType.Rarity.PERFECT, GemstoneType.JASPER, ModItems.GEMSTONE))
+                        .displayItems((featureFlagSet, output, flag) -> {
+                            output.acceptAll(CollectionHelper.values(GemstoneType.allItems()));
+                            output.acceptAll(GemstoneType.allBlocks().values());
+                            output.acceptAll(CollectionHelper.values(GemstoneType.allCrystals()));
+                            TabGroup.registerAll(TabTypes.GEMSTONE, output::acceptAll);
                         })
         );
         event.registerCreativeModeTab(MysticcraftMod.res("materials"), builder ->
@@ -74,15 +84,19 @@ public class TabRegister {
             TabGroup.registerAll(TabTypes.FOOD_AND_DRINK, event::acceptAll);
         } else if (event.getTab() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
             TabGroup.registerAll(TabTypes.TOOLS_AND_UTILITIES, event::acceptAll);
+        } else if (event.getTab() == CreativeModeTabs.OP_BLOCKS) {
+            TabGroup.registerAll(TabTypes.OPERATOR, event::acceptAll);
         }
     }
     public enum TabTypes {
-        SPELL_AND_GEMSTONE,
+        SPELL,
+        GEMSTONE,
         MOD_MATERIALS,
         WEAPONS_AND_TOOLS,
         SPAWN_EGGS,
         FOOD_AND_DRINK,
         TOOLS_AND_UTILITIES,
-        DECO
+        DECO,
+        OPERATOR
     }
 }

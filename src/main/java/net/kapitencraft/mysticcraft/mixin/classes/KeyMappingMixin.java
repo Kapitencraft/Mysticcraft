@@ -1,18 +1,21 @@
 package net.kapitencraft.mysticcraft.mixin.classes;
 
 
-import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.init.ModMobEffects;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraftforge.client.extensions.IForgeKeyMapping;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
-import org.spongepowered.asm.mixin.gen.Accessor;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(KeyMapping.class)
 public abstract class KeyMappingMixin implements IForgeKeyMapping {
+
+    @Shadow private int clickCount;
 
     private static boolean isStunned() {
         LocalPlayer local = Minecraft.getInstance().player;
@@ -23,19 +26,12 @@ public abstract class KeyMappingMixin implements IForgeKeyMapping {
      * @reason stun effect
      * @author Kapitencraft
      */
-    @Overwrite
-    public boolean consumeClick() {
+    @Inject(method = "consumeClick", at = @At("HEAD"), cancellable = true)
+    public void consumeClick(CallbackInfoReturnable<Boolean> cir) {
         if (isStunned()) {
-            this.setClickCount(0);
-            return false;
+            this.clickCount = 0;
+            cir.setReturnValue(false);
         }
-        if (this.getClickCount() == 0) {
-            return false;
-        } else {
-            MathHelper.add(this::getClickCount, this::setClickCount, -1);
-            return true;
-        }
-
     }
 
 
@@ -43,17 +39,8 @@ public abstract class KeyMappingMixin implements IForgeKeyMapping {
      * @reason stun effect
      * @author Kapitencraft
      */
-    @Overwrite
-    public boolean isDown() {
-        return !isStunned() && this.getIsDown() && isConflictContextAndModifierActive();
+    @Inject(method = "isDown", at = @At("HEAD"), cancellable = true)
+    public void isDown(CallbackInfoReturnable<Boolean> cir) {
+        if (isStunned()) cir.setReturnValue(false);
     }
-
-    @Accessor
-    abstract public boolean getIsDown();
-
-    @Accessor
-    abstract public int getClickCount();
-
-    @Accessor
-    abstract public void setClickCount(int clickCount);
 }

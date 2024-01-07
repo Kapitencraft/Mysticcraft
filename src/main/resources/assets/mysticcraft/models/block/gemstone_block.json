@@ -1,7 +1,7 @@
 {
   "parent": "mysticcraft:block/colored_block",
   "textures": {
-    "all": "mysticcraft:block/gemstone_crystal"
+    "all": "mysticcraft:block/gemstone/block"
   },
   "render_type": "translucent"
 }

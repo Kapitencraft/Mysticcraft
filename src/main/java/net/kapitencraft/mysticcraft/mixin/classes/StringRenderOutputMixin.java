@@ -1,8 +1,8 @@
 package net.kapitencraft.mysticcraft.mixin.classes;
 
-import net.kapitencraft.mysticcraft.client.font.effect.BaseGlyphEffect;
 import net.kapitencraft.mysticcraft.client.font.effect.EffectSettings;
 import net.kapitencraft.mysticcraft.client.font.effect.EffectsStyle;
+import net.kapitencraft.mysticcraft.client.font.effect.GlyphEffect;
 import net.kapitencraft.mysticcraft.helpers.CollectionHelper;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Style;
@@ -17,15 +17,9 @@ import java.util.stream.Stream;
 
 @Mixin(Font.StringRenderOutput.class)
 public abstract class StringRenderOutputMixin {
-
-    @Shadow
-    public float r;
-
-    @Shadow
-    public float g;
-
-    @Shadow
-    public float b;
+    private Font.StringRenderOutput self() {
+        return (Font.StringRenderOutput) (Object) this;
+    }
 
     @Shadow
     public
@@ -44,25 +38,25 @@ public abstract class StringRenderOutputMixin {
         if (effects.getEffects() != null && !effects.getEffects().isEmpty()) {
             EffectSettings settings = new EffectSettings();
             float r,g,b;
-            r = this.r;
-            g = this.g;
-            b = this.b;
-            settings.r = this.r;
-            settings.g = this.g;
-            settings.b = this.b;
+            r = self().r;
+            g = self().g;
+            b = self().b;
+            settings.r = self().r;
+            settings.g = self().g;
+            settings.b = self().b;
             settings.x = this.x;
             settings.y = this.y;
             settings.isShadow = isDropShadow();
             settings.index = index;
 
-            Stream<BaseGlyphEffect> effectStream = effects.getEffects().stream();
-            CollectionHelper.sync(effectStream, settings, BaseGlyphEffect::apply);
+            Stream<GlyphEffect> effectStream = effects.getEffects().stream();
+            CollectionHelper.sync(effectStream, settings, GlyphEffect::apply);
             this.x = settings.x;
             this.y = settings.y;
             if (r != settings.r || g != settings.g || b != settings.b) {
-                this.r = settings.r;
-                this.g = settings.g;
-                this.b = settings.b;
+                self().r = settings.r;
+                self().g = settings.g;
+                self().b = settings.b;
                 style.color = null;
             }
         }

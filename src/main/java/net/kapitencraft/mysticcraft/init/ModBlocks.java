@@ -3,6 +3,9 @@ package net.kapitencraft.mysticcraft.init;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.block.*;
 import net.kapitencraft.mysticcraft.block.deco.*;
+import net.kapitencraft.mysticcraft.block.gemstone.GemstoneBlock;
+import net.kapitencraft.mysticcraft.block.gemstone.GemstoneCrystal;
+import net.kapitencraft.mysticcraft.block.gemstone.GemstoneGrinderBlock;
 import net.kapitencraft.mysticcraft.block.special.EmptyGemstoneBlock;
 import net.kapitencraft.mysticcraft.block.special.GemstoneCreator;
 import net.kapitencraft.mysticcraft.dungeon.generation.GenerationBlock;
@@ -28,50 +31,51 @@ import java.util.function.Supplier;
 
 public interface ModBlocks {
     DeferredRegister<Block> REGISTRY = MysticcraftMod.makeRegistry(ForgeRegistries.BLOCKS);
-    List<RegistryObject<BlockItem>> ITEM_BLOCKS = new ArrayList<>();
-    private static <T extends Block> BlockRegistryHolder<T> registerBlock(String name, Supplier<T> block, Item.Properties properties, TabGroup group) {
+    List<RegistryObject<? extends BlockItem>> ITEM_BLOCKS = new ArrayList<>();
+    private static <T extends Block> BlockRegistryHolder<T, BlockItem> registerBlock(String name, Supplier<T> block, Item.Properties properties, TabGroup group) {
         return registerBlock(name, block, object -> new BlockItem(object.get(), properties), group);
     }
 
-    private static <T extends Block> BlockRegistryHolder<T> registerBlock(String name, Supplier<T> block, Function<RegistryObject<T>, BlockItem> func, TabGroup group) {
+    private static <T extends Block, K extends BlockItem> BlockRegistryHolder<T, K> registerBlock(String name, Supplier<T> block, Function<RegistryObject<T>, K> func, TabGroup group) {
         RegistryObject<T> toReturn = REGISTRY.register(name, block);
         return new BlockRegistryHolder<>(toReturn, registerItem(name, ()-> func.apply(toReturn), group));
     }
 
-    private static <T, V extends Block> HashMap<T, BlockRegistryHolder<V>> createMappedRegistry(Function<T, V> provider, Function<T, String> nameProvider, Function<T, Item.Properties> propertiesProvider, List<T> values, TabGroup group) {
-        HashMap<T, BlockRegistryHolder<V>> map = new HashMap<>();
+    private static <T, V extends Block> HashMap<T, BlockRegistryHolder<V, BlockItem>> createMappedRegistry(Function<T, V> provider, Function<T, String> nameProvider, Function<T, Item.Properties> propertiesProvider, List<T> values, TabGroup group) {
+        HashMap<T, BlockRegistryHolder<V, BlockItem>> map = new HashMap<>();
         for (T t : values) {
             map.put(t, registerBlock(nameProvider.apply(t), ()-> provider.apply(t), propertiesProvider.apply(t), group));
         }
         return map;
     }
 
-    private static <T extends Block> RegistryObject<BlockItem> registerItem(String name, Supplier<BlockItem> sup, TabGroup tabGroup) {
-        RegistryObject<BlockItem> registryObject = ModItems.REGISTRY.register(name, sup);
+    private static <T extends Block, K extends BlockItem> RegistryObject<K> registerItem(String name, Supplier<K> sup, TabGroup tabGroup) {
+        RegistryObject<K> registryObject = ModItems.REGISTRY.register(name, sup);
         ITEM_BLOCKS.add(registryObject);
         if (tabGroup != null) {
             tabGroup.add(registryObject);
         }
         return registryObject;
     }
-    BlockRegistryHolder<GemstoneGrinderBlock> GEMSTONE_GRINDER = registerBlock("gemstone_grinder", GemstoneGrinderBlock::new, MiscHelper.rarity(Rarity.RARE), GemstoneItem.GROUP);
+    BlockRegistryHolder<GemstoneGrinderBlock, BlockItem> GEMSTONE_GRINDER = registerBlock("gemstone_grinder", GemstoneGrinderBlock::new, MiscHelper.rarity(Rarity.RARE), GemstoneItem.GROUP);
 
-    BlockRegistryHolder<ReforgeAnvilBlock> REFORGING_ANVIL = registerBlock("reforging_anvil", ReforgeAnvilBlock::new, MiscHelper.rarity(Rarity.UNCOMMON), TabGroup.MATERIAL);
+    BlockRegistryHolder<ReforgeAnvilBlock, BlockItem> REFORGING_ANVIL = registerBlock("reforging_anvil", ReforgeAnvilBlock::new, MiscHelper.rarity(Rarity.UNCOMMON), TabGroup.MATERIAL);
     RegistryObject<LiquidBlock> MANA_FLUID_BLOCK = REGISTRY.register("mana_fluid_block", ManaLiquidBlock::new);
-    RegistryObject<GemstoneCreator> GEMSTONE_CREATOR = REGISTRY.register("gemstone_creator", GemstoneCreator::new);
+    BlockRegistryHolder<GemstoneCreator, BlockItem> GEMSTONE_CREATOR = registerBlock("gemstone_creator", GemstoneCreator::new, MiscHelper.rarity(Rarity.RARE), TabGroup.OPERATOR);
     RegistryObject<EmptyGemstoneBlock> EMPTY_GEMSTONE_BLOCK = REGISTRY.register("empty_gemstone", EmptyGemstoneBlock::new);
-    BlockRegistryHolder<Block> MANGATIC_STONE = registerBlock("mangatic_stone", ()-> new Block(BlockBehaviour.Properties.copy(Blocks.END_STONE)), MiscHelper.rarity(Rarity.RARE), TabGroup.MATERIAL);
-    BlockRegistryHolder<MangaticSlimeBlock> MANGATIC_SLIME = registerBlock("mangatic_slime", MangaticSlimeBlock::new, new Item.Properties().rarity(Rarity.EPIC), TabGroup.MATERIAL);
-    BlockRegistryHolder<ObsidianPressurePlate> OBSIDIAN_PRESSURE_PLATE = registerBlock("obsidian_pressure_plate", ObsidianPressurePlate::new, new Item.Properties().rarity(Rarity.UNCOMMON), TabGroup.DECO);
-    BlockRegistryHolder<Block> CRIMSONIUM_ORE = registerBlock("crimsonium_ore", ()-> new Block(BlockBehaviour.Properties.copy(Blocks.STONE)), new Item.Properties().rarity(Rarity.UNCOMMON), TabGroup.MATERIAL);
-    BlockRegistryHolder<ManaSAMLauncherBlock> MANA_SAM_LAUNCHER = registerBlock("mana_sam_launcher", ManaSAMLauncherBlock::new, new Item.Properties().rarity(Rarity.EPIC), null);
+    BlockRegistryHolder<Block, BlockItem> MANGATIC_STONE = registerBlock("mangatic_stone", ()-> new Block(BlockBehaviour.Properties.copy(Blocks.END_STONE)), MiscHelper.rarity(Rarity.RARE), TabGroup.MATERIAL);
+    BlockRegistryHolder<MangaticSlimeBlock, BlockItem> MANGATIC_SLIME = registerBlock("mangatic_slime", MangaticSlimeBlock::new, new Item.Properties().rarity(Rarity.EPIC), TabGroup.MATERIAL);
+    BlockRegistryHolder<ObsidianPressurePlate, BlockItem> OBSIDIAN_PRESSURE_PLATE = registerBlock("obsidian_pressure_plate", ObsidianPressurePlate::new, new Item.Properties().rarity(Rarity.UNCOMMON), TabGroup.DECO);
+    BlockRegistryHolder<Block, BlockItem> CRIMSONIUM_ORE = registerBlock("crimsonium_ore", ()-> new Block(BlockBehaviour.Properties.copy(Blocks.STONE)), new Item.Properties().rarity(Rarity.UNCOMMON), TabGroup.MATERIAL);
+    BlockRegistryHolder<ManaSAMLauncherBlock, BlockItem> MANA_SAM_LAUNCHER = registerBlock("mana_sam_launcher", ManaSAMLauncherBlock::new, new Item.Properties().rarity(Rarity.EPIC), null);
     RegistryObject<Block> FRAGILE_BASALT = REGISTRY.register("fragile_basalt", FragileBasaltBlock::new);
     RegistryObject<Block> GENERATION_BLOCK = REGISTRY.register("generation_block", GenerationBlock::new);
-    BlockRegistryHolder<GuildBoardBlock> GUILD_BOARD = registerBlock("guild_board", GuildBoardBlock::new, new Item.Properties().rarity(Rarity.EPIC), TabGroup.MATERIAL);
-    BlockRegistryHolder<GoldenSlab> GOLDEN_SLAB = registerBlock("golden_slab", GoldenSlab::new, MiscHelper.rarity(Rarity.COMMON), TabGroup.GOLDEN_DECO);
-    BlockRegistryHolder<GoldenStairs> GOLDEN_STAIRS = registerBlock("golden_stairs", GoldenStairs::new, MiscHelper.rarity(Rarity.COMMON), TabGroup.GOLDEN_DECO);
-    BlockRegistryHolder<GoldenWall> GOLDEN_WALL = registerBlock("golden_wall", GoldenWall::new, MiscHelper.rarity(Rarity.COMMON), TabGroup.GOLDEN_DECO);
-    BlockRegistryHolder<LapisButton> LAPIS_BUTTON = registerBlock("lapis_button", LapisButton::new, MiscHelper.rarity(Rarity.UNCOMMON), TabGroup.DECO);
-    BlockRegistryHolder<SoulChain> SOUL_CHAIN = registerBlock("soul_chain", SoulChain::new, MiscHelper.rarity(Rarity.RARE), TabGroup.DECO);
-    BlockRegistryHolder<GemstoneBlock> GEMSTONE_BLOCK = registerBlock("gemstone_block", GemstoneBlock::new, object -> new GemstoneBlock.Item(), null);
+    BlockRegistryHolder<GuildBoardBlock, BlockItem> GUILD_BOARD = registerBlock("guild_board", GuildBoardBlock::new, new Item.Properties().rarity(Rarity.EPIC), TabGroup.MATERIAL);
+    BlockRegistryHolder<GoldenSlab, BlockItem> GOLDEN_SLAB = registerBlock("golden_slab", GoldenSlab::new, MiscHelper.rarity(Rarity.COMMON), TabGroup.GOLDEN_DECO);
+    BlockRegistryHolder<GoldenStairs, BlockItem> GOLDEN_STAIRS = registerBlock("golden_stairs", GoldenStairs::new, MiscHelper.rarity(Rarity.COMMON), TabGroup.GOLDEN_DECO);
+    BlockRegistryHolder<GoldenWall, BlockItem> GOLDEN_WALL = registerBlock("golden_wall", GoldenWall::new, MiscHelper.rarity(Rarity.COMMON), TabGroup.GOLDEN_DECO);
+    BlockRegistryHolder<LapisButton, BlockItem> LAPIS_BUTTON = registerBlock("lapis_button", LapisButton::new, MiscHelper.rarity(Rarity.UNCOMMON), TabGroup.DECO);
+    BlockRegistryHolder<SoulChain, BlockItem> SOUL_CHAIN = registerBlock("soul_chain", SoulChain::new, MiscHelper.rarity(Rarity.RARE), TabGroup.DECO);
+    BlockRegistryHolder<GemstoneBlock, GemstoneBlock.Item> GEMSTONE_BLOCK = registerBlock("gemstone_block", GemstoneBlock::new, object -> new GemstoneBlock.Item(), null);
+    BlockRegistryHolder<GemstoneCrystal, GemstoneBlock.Item> GEMSTONE_CRYSTAL = registerBlock("gemstone_crystal", GemstoneCrystal::new, object -> new GemstoneCrystal.Item(), null);
 }

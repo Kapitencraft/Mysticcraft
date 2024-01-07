@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.gui.containable;
 
-import net.kapitencraft.mysticcraft.gui.ModScreen;
+import net.kapitencraft.mysticcraft.gui.screen.ModScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;

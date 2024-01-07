@@ -74,6 +74,10 @@ public interface ITieredItem extends IStarAbleItem, IPrestigeAbleItem {
             this.starAmount = starAmount;
         }
 
+        public int getNumber() {
+            return number;
+        }
+
         public MutableComponent getName() {
             return Component.translatable("item_tier." + this.name);
         }

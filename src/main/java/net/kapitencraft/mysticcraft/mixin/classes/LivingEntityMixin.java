@@ -16,7 +16,6 @@ import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
-import org.spongepowered.asm.mixin.gen.Invoker;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -37,16 +36,11 @@ public abstract class LivingEntityMixin extends Entity {
      * @reason armor-shredder attribute
      * @author Kapitencraft
      */
-    @Overwrite
-    public float getDamageAfterArmorAbsorb(DamageSource source, float damage) {
-        if (!source.isBypassArmor()) {
-            double armorShredValue = source.getEntity() instanceof LivingEntity living ? AttributeHelper.getSaveAttributeValue(ModAttributes.ARMOR_SHREDDER.get(), living) : 0;
-            this.callHurtArmor(source, damage);
-            double armorValue = Math.max(0, getArmorValue(source) - armorShredValue);
-            return MathHelper.calculateDamage(damage, (float) armorValue, (float) own().getAttributeValue(Attributes.ARMOR_TOUGHNESS));
-        }
-
-        return damage;
+    @Inject(method = "getDamageAfterArmorAbsorb", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hurtArmor(Lnet/minecraft/world/damagesource/DamageSource;F)V", shift = At.Shift.AFTER), cancellable = true)
+    public void getDamageAfterArmorAbsorb(DamageSource source, float damage, CallbackInfoReturnable<Float> cir) {
+        double armorShredValue = source.getEntity() instanceof LivingEntity living ? AttributeHelper.getSaveAttributeValue(ModAttributes.ARMOR_SHREDDER.get(), living) : 0;
+        double armorValue = Math.max(0, getArmorValue(source) - armorShredValue);
+        cir.setReturnValue(MathHelper.calculateDamage(damage, (float) armorValue, (float) own().getAttributeValue(Attributes.ARMOR_TOUGHNESS)));
     }
 
     /**
@@ -78,10 +72,6 @@ public abstract class LivingEntityMixin extends Entity {
             return AttributeHelper.getSaveAttributeValue(Attributes.ARMOR, own());
         }
     }
-
-
-    @Invoker
-    abstract void callHurtArmor(DamageSource source, float damage);
 
     @Inject(method = "hurt", at = @At(value = "RETURN", ordinal = 6))
     public void hurt(DamageSource source, float amount, CallbackInfoReturnable<Boolean> info) {

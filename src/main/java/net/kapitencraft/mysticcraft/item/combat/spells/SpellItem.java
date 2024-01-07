@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.UUID;
 
 public abstract class SpellItem extends SwordItem implements IModItem, ISpellItem {
-    public static final TabGroup SPELL_GROUP = new TabGroup(TabRegister.TabTypes.SPELL_AND_GEMSTONE, TabRegister.TabTypes.WEAPONS_AND_TOOLS);
+    public static final TabGroup SPELL_GROUP = new TabGroup(TabRegister.TabTypes.SPELL, TabRegister.TabTypes.WEAPONS_AND_TOOLS);
     public static final UUID ATTACK_SPEED_UUID = BASE_ATTACK_SPEED_UUID;
     public static final UUID ATTACK_DAMAGE_UUID = BASE_ATTACK_DAMAGE_UUID;
 

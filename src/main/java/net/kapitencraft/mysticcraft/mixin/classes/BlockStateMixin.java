@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.mixin.classes;
 
-import net.kapitencraft.mysticcraft.block.GemstoneBlock;
+import net.kapitencraft.mysticcraft.block.gemstone.GemstoneBlock;
+import net.kapitencraft.mysticcraft.block.gemstone.GemstoneCrystal;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -24,7 +25,8 @@ public abstract class BlockStateMixin {
     @Inject(method = "getDestroySpeed", at = @At("HEAD"), cancellable = true)
     public void getDestroySpeed(@NotNull BlockGetter getter, @NotNull BlockPos pos, CallbackInfoReturnable<Float> returnable) {
         if (self().getBlock() instanceof GemstoneBlock) {
-            returnable.setReturnValue(GemstoneBlock.getType(asState()).getBlockStrength());
+            float mul = self().getBlock() instanceof GemstoneCrystal ? 1.5f : 1;
+            returnable.setReturnValue(GemstoneBlock.getType(asState()).getBlockStrength() / mul);
         }
     }
 

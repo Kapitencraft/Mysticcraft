@@ -18,6 +18,7 @@ public class TabGroup {
     public static final TabGroup UTILITIES = new TabGroup(TabRegister.TabTypes.TOOLS_AND_UTILITIES);
     public static final TabGroup DECO = new TabGroup(TabRegister.TabTypes.DECO);
     public static final TabGroup GOLDEN_DECO = new TabGroup(TabRegister.TabTypes.DECO);
+    public static final TabGroup OPERATOR = new TabGroup(TabRegister.TabTypes.OPERATOR);
     protected final List<TabRegister.TabTypes> types;
     protected final List<RegistryObject<? extends Item>> items = new ArrayList<>();
 

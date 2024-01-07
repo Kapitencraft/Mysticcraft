@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.networking.packets.C2S;
 
-import net.kapitencraft.mysticcraft.gui.reforging_anvil.ReforgingAnvilMenu;
+import net.kapitencraft.mysticcraft.gui.reforging_anvil.ReforgeAnvilMenu;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
@@ -22,7 +22,7 @@ public class UpgradeItemPacket {
         NetworkEvent.Context context = supplier.get();
         context.enqueueWork(() -> {
             ServerPlayer player = context.getSender();
-            if (player != null && player.containerMenu instanceof ReforgingAnvilMenu menu) {
+            if (player != null && player.containerMenu instanceof ReforgeAnvilMenu menu) {
                 menu.upgrade();
             }
         });
