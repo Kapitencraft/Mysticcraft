@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.item.data.gemstone;
+package net.kapitencraft.mysticcraft.item.capability.gemstone;
 
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.item.misc.IModItem;

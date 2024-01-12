@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.item.data.reforging;
+package net.kapitencraft.mysticcraft.item.capability.reforging;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;

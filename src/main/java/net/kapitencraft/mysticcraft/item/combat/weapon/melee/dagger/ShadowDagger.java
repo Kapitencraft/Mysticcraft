@@ -1,8 +1,8 @@
 package net.kapitencraft.mysticcraft.item.combat.weapon.melee.dagger;
 
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
-import net.kapitencraft.mysticcraft.item.data.spell.ISpellItem;
-import net.kapitencraft.mysticcraft.item.data.spell.SpellHelper;
+import net.kapitencraft.mysticcraft.item.capability.spell.ISpellItem;
+import net.kapitencraft.mysticcraft.item.capability.spell.SpellHelper;
 import net.kapitencraft.mysticcraft.item.item_bonus.ExtraBonus;
 import net.kapitencraft.mysticcraft.item.item_bonus.IItemBonusItem;
 import net.kapitencraft.mysticcraft.item.item_bonus.PieceBonus;

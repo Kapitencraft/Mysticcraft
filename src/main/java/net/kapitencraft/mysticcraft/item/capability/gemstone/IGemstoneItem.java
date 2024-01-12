@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.item.data.gemstone;
+package net.kapitencraft.mysticcraft.item.capability.gemstone;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;

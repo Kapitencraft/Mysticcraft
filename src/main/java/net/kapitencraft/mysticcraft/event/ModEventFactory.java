@@ -1,12 +1,14 @@
 package net.kapitencraft.mysticcraft.event;
 
-import net.kapitencraft.mysticcraft.event.custom.GemstoneAppliedEvent;
+import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.event.custom.AddGemstonesToItemEvent;
 import net.kapitencraft.mysticcraft.event.custom.ItemStackEvent;
 import net.kapitencraft.mysticcraft.event.custom.RegisterRarityEvent;
 import net.kapitencraft.mysticcraft.event.custom.RegisterReforgesEvent;
-import net.kapitencraft.mysticcraft.item.data.gemstone.GemstoneSlot;
-import net.kapitencraft.mysticcraft.item.data.gemstone.GemstoneType;
-import net.kapitencraft.mysticcraft.item.data.reforging.Reforge;
+import net.kapitencraft.mysticcraft.init.ModRegistryInit;
+import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneData;
+import net.kapitencraft.mysticcraft.item.capability.reforging.Reforge;
+import net.kapitencraft.mysticcraft.misc.MiscRegister;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
@@ -17,9 +19,12 @@ import java.util.List;
 
 public class ModEventFactory {
 
-    public static void onGemstoneApplied(GemstoneType gemstoneType, GemstoneSlot gemstoneSlot) {
-        GemstoneAppliedEvent event = new GemstoneAppliedEvent(gemstoneType, gemstoneSlot);
+    public static void onGemstoneDataCreated(GemstoneData helper) {
+        MysticcraftMod.sendRegisterDisplay("Gemstone Slots");
+        AddGemstonesToItemEvent event = new AddGemstonesToItemEvent(helper);
+        MiscRegister.registerGemstones(event);
         MinecraftForge.EVENT_BUS.post(event);
+        MysticcraftMod.LOGGER.info(ModRegistryInit.REGISTRY_MARKER, "Registered {} Gemstone Slots", helper.getAmount());
     }
 
     public static void onLoadingItemStack(ItemStack stack) {

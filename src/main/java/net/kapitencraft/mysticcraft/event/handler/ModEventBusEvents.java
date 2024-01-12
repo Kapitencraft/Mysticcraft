@@ -4,7 +4,7 @@ import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.block.entity.crafting.ItemAmountIngredient;
 import net.kapitencraft.mysticcraft.init.ModEntityTypes;
 import net.kapitencraft.mysticcraft.item.AnvilUses;
-import net.kapitencraft.mysticcraft.item.data.reforging.Reforges;
+import net.kapitencraft.mysticcraft.item.capability.reforging.Reforges;
 import net.kapitencraft.mysticcraft.misc.content.EssenceHolder;
 import net.kapitencraft.mysticcraft.networking.ModMessages;
 import net.kapitencraft.mysticcraft.potion.ModPotionRecipe;

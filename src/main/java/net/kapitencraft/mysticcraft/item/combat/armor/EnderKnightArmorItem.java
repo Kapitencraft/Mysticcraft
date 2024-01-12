@@ -6,8 +6,6 @@ import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
-import net.kapitencraft.mysticcraft.item.data.gemstone.GemstoneSlot;
-import net.kapitencraft.mysticcraft.item.data.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.ArmorTabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
@@ -27,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Objects;
 
-public class EnderKnightArmorItem extends ModArmorItem implements IGemstoneApplicable {
+public class EnderKnightArmorItem extends ModArmorItem {
     public static final ArmorTabGroup ENDER_KNIGHT_GROUP = new ArmorTabGroup(TabRegister.TabTypes.WEAPONS_AND_TOOLS);
 
     @Override
@@ -74,10 +72,5 @@ public class EnderKnightArmorItem extends ModArmorItem implements IGemstoneAppli
         list.add(Component.literal(""));
         list.add(Component.literal("This Armor get`s double stats in the End"));
         list.add(Component.literal(""));
-    }
-
-    @Override
-    public GemstoneSlot[] getDefaultSlots() {
-        return new GemstoneSlot.Builder(GemstoneSlot.Type.DEFENCE, GemstoneSlot.Type.OFFENCE, GemstoneSlot.Type.COMBAT, GemstoneSlot.Type.COMBAT, GemstoneSlot.Type.STRENGTH).build();
     }
 }

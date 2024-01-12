@@ -13,14 +13,14 @@ import net.kapitencraft.mysticcraft.helpers.TextHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModGlyphEffects;
 import net.kapitencraft.mysticcraft.item.ITieredItem;
+import net.kapitencraft.mysticcraft.item.capability.dungeon.IStarAbleItem;
+import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneHelper;
+import net.kapitencraft.mysticcraft.item.capability.reforging.Reforge;
+import net.kapitencraft.mysticcraft.item.capability.spell.ISpellItem;
 import net.kapitencraft.mysticcraft.item.combat.spells.SpellItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword.LongSwordItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.QuiverItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.bow.ShortBowItem;
-import net.kapitencraft.mysticcraft.item.data.dungeon.IStarAbleItem;
-import net.kapitencraft.mysticcraft.item.data.gemstone.IGemstoneApplicable;
-import net.kapitencraft.mysticcraft.item.data.reforging.Reforge;
-import net.kapitencraft.mysticcraft.item.data.spell.ISpellItem;
 import net.kapitencraft.mysticcraft.item.item_bonus.IItemBonusItem;
 import net.kapitencraft.mysticcraft.item.misc.CreativeItems;
 import net.kapitencraft.mysticcraft.item.misc.IModItem;
@@ -67,8 +67,6 @@ public abstract class ItemStackClientMixin {
 
     @Shadow protected abstract int getHideFlags();
 
-    @Shadow public abstract boolean isDamageableItem();
-
     @Shadow public abstract ItemStack copy();
 
     @Unique
@@ -96,9 +94,7 @@ public abstract class ItemStackClientMixin {
         }
 
         list.add(name);
-        if (item instanceof IGemstoneApplicable applicable) {
-            applicable.appendDisplay(self(), list);
-        }
+        GemstoneHelper.getCapability(self(), iGemstoneHandler -> iGemstoneHandler.getDisplay(list));
         if (!tooltipFlag.isAdvanced() && !self().hasCustomHoverName() && self().is(Items.FILLED_MAP)) {
             Integer integer = MapItem.getMapId(self());
             if (integer != null) {
@@ -233,14 +229,14 @@ public abstract class ItemStackClientMixin {
                                 String reforgeStringValue = reforgeValue > 0 ? "+" + ATTRIBUTE_MODIFIER_FORMAT.format(reforgeValue) : ATTRIBUTE_MODIFIER_FORMAT.format(reforgeValue);
                                 toAppend.append(Component.literal(" (" + reforgeStringValue + ")").withStyle(ChatFormatting.GREEN));
                             }
-                            if (self().getItem() instanceof IGemstoneApplicable applicable) {
-                                HashMap<Attribute, AttributeModifier> mods = applicable.getAttributeModifiers(self(), equipmentslot);
+                            GemstoneHelper.getCapability(self(), iGemstoneHandler -> {
+                                HashMap<Attribute, AttributeModifier> mods = iGemstoneHandler.getAttributeModifiers(equipmentslot, self());
                                 if (mods.containsKey(entry.getKey())) {
                                     double value = mods.get(entry.getKey()).getAmount();
                                     double rounded = MathHelper.round(value, 2);
                                     toAppend.append(Component.literal(" (+" + rounded + ")").withStyle(ChatFormatting.LIGHT_PURPLE));
                                 }
-                            }
+                            });
                         }
                         list.add(toAppend);
                     }
@@ -379,7 +375,6 @@ public abstract class ItemStackClientMixin {
         return component;
     }
 
-
     @SuppressWarnings("all")
     private static boolean shouldShowInTooltip(int p_41627_, ItemStack.TooltipPart p_41628_) {
         return (p_41627_ & p_41628_.getMask()) == 0;
@@ -427,5 +422,4 @@ public abstract class ItemStackClientMixin {
         }
         return name;
     }
-
 }

@@ -21,6 +21,7 @@
     "FishingRodMixin",
     "InventoryMixin",
     "ItemMixin",
+    "ItemStackMixin",
     "LivingEntityMixin",
     "MerchantMenuMixin",
     "OverworldBiomeBuilderMixin",

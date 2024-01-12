@@ -69,6 +69,8 @@ public class MysticcraftMod {
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, CommonModConfig.SPEC);
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ServerModConfig.SPEC);
 
+        MinecraftForge.EVENT_BUS.register(MysticcraftServer.getInstance());
+
         MinecraftForge.EVENT_BUS.register(this);
     }
 
@@ -84,7 +86,7 @@ public class MysticcraftMod {
     }
 
     public static void sendError(String error) {
-        LOGGER.error(MYSTICCRAFT_MARKER, error);
+        LOGGER.error(MYSTICCRAFT_ERROR, error);
     }
 
     public static void sendInfo(String info, Object... toAdd) {
@@ -104,4 +106,5 @@ public class MysticcraftMod {
     }
 
     public static final Marker MYSTICCRAFT_MARKER = new ModMarker("Mysticcraft");
+    public static final Marker MYSTICCRAFT_ERROR = new ModMarker("Error");
 }

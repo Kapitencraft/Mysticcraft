@@ -5,7 +5,7 @@ import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
-import net.kapitencraft.mysticcraft.item.data.spell.ISpellItem;
+import net.kapitencraft.mysticcraft.item.capability.spell.ISpellItem;
 import net.kapitencraft.mysticcraft.item.misc.IModItem;
 import net.kapitencraft.mysticcraft.item.misc.ModTiers;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;

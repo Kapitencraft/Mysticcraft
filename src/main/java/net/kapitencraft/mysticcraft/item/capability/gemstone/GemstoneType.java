@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.item.data.gemstone;
+package net.kapitencraft.mysticcraft.item.capability.gemstone;
 
 import com.mojang.serialization.Codec;
 import net.kapitencraft.mysticcraft.api.DoubleMap;

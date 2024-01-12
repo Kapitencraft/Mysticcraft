@@ -2,7 +2,7 @@ package net.kapitencraft.mysticcraft.enchantments.extras;
 
 import net.kapitencraft.mysticcraft.enchantments.abstracts.ModEnchantment;
 import net.kapitencraft.mysticcraft.helpers.TextHelper;
-import net.kapitencraft.mysticcraft.item.data.gemstone.IGemstoneApplicable;
+import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
@@ -38,7 +38,7 @@ public class EnchantmentDescriptionManager {
         boolean fromBook = stack.getItem() instanceof EnchantedBookItem;
         if (!enchantments.isEmpty()) {
             if (!Screen.hasShiftDown() && !fromBook) {
-                tooltip.add(stack.getItem() instanceof IGemstoneApplicable ? 2:1, Component.translatable("mysticcraft.ench_desc.shift").withStyle(ChatFormatting.DARK_GRAY));
+                tooltip.add(GemstoneHelper.hasCapability(stack) ? 2:1, Component.translatable("mysticcraft.ench_desc.shift").withStyle(ChatFormatting.DARK_GRAY));
             } else {
                 for (Enchantment enchantment : enchantments) {
                     for (Component line : tooltip) {

@@ -4,7 +4,7 @@ import net.kapitencraft.mysticcraft.client.font.effect.EffectsStyle;
 import net.kapitencraft.mysticcraft.client.font.effect.GlyphEffect;
 import net.kapitencraft.mysticcraft.client.particle.DamageIndicatorParticleOptions;
 import net.kapitencraft.mysticcraft.gui.IGuiHelper;
-import net.kapitencraft.mysticcraft.item.data.gemstone.GemstoneItem;
+import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneItem;
 import net.kapitencraft.mysticcraft.misc.ModRarities;
 import net.kapitencraft.mysticcraft.misc.VeinMinerHolder;
 import net.minecraft.ChatFormatting;
@@ -37,7 +37,9 @@ import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
@@ -69,7 +71,7 @@ public class MiscHelper {
     //NORTH = new Rotation("z-", 360, 4);
 
     public static EquipmentSlot getSlotForStack(ItemStack stack) {
-        return stack.getItem() instanceof ArmorItem armorItem ? armorItem.getSlot() : stack.getItem() instanceof ShieldItem ? EquipmentSlot.OFFHAND : EquipmentSlot.MAINHAND;
+        return LivingEntity.getEquipmentSlotForItem(stack);
     }
 
     public static Style withSpecial(Style style, GlyphEffect effect) {

@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.item.data.spell;
+package net.kapitencraft.mysticcraft.item.capability.spell;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
@@ -7,7 +7,7 @@ import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.helpers.TextHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModItems;
-import net.kapitencraft.mysticcraft.item.data.ItemData;
+import net.kapitencraft.mysticcraft.item.capability.ItemData;
 import net.kapitencraft.mysticcraft.item.misc.RNGDropHelper;
 import net.kapitencraft.mysticcraft.misc.MiscRegister;
 import net.kapitencraft.mysticcraft.spell.Element;

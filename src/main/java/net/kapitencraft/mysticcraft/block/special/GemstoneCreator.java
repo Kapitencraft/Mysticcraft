@@ -4,7 +4,7 @@ import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.api.Reference;
 import net.kapitencraft.mysticcraft.block.gemstone.GemstoneBlock;
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
-import net.kapitencraft.mysticcraft.item.data.gemstone.GemstoneType;
+import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;

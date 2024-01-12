@@ -6,12 +6,12 @@ import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.helpers.TextHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModItems;
+import net.kapitencraft.mysticcraft.item.capability.spell.ISpellItem;
 import net.kapitencraft.mysticcraft.item.combat.spells.AspectOfTheVoidItem;
 import net.kapitencraft.mysticcraft.item.combat.spells.FireLance;
 import net.kapitencraft.mysticcraft.item.combat.spells.IFireScytheItem;
 import net.kapitencraft.mysticcraft.item.combat.spells.SpellScrollItem;
 import net.kapitencraft.mysticcraft.item.combat.spells.necron_sword.NecronSword;
-import net.kapitencraft.mysticcraft.item.data.spell.ISpellItem;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
 import net.kapitencraft.mysticcraft.misc.ModRarities;
@@ -58,6 +58,7 @@ public enum Spells implements Spell {
         return ModItems.createRegistry(SpellScrollItem::new, (spell) -> spell.REGISTRY_NAME + "_spell_scroll", WITHOUT_EMPTY, SPELL_GROUP);
     }
 
+    //TODO add scroll loot table
 
     private static BiPredicate<LivingEntity, ItemStack> createFireBold(double baseDamage, boolean explosive) {
         return (user, stack) -> {

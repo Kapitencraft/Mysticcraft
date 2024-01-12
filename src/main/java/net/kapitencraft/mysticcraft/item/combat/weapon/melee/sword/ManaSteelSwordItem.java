@@ -1,7 +1,5 @@
 package net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword;
 
-import net.kapitencraft.mysticcraft.item.data.gemstone.GemstoneSlot;
-import net.kapitencraft.mysticcraft.item.data.gemstone.IGemstoneApplicable;
 import net.kapitencraft.mysticcraft.item.misc.ModTiers;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.misc.ModRarities;
@@ -16,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class ManaSteelSwordItem extends LongSwordItem implements IGemstoneApplicable {
+public class ManaSteelSwordItem extends LongSwordItem {
     public ManaSteelSwordItem() {
         super(ModTiers.MANA_STEEL, 3, new Properties().durability(1800).rarity(ModRarities.MYTHIC));
     }
@@ -46,10 +44,5 @@ public class ManaSteelSwordItem extends LongSwordItem implements IGemstoneApplic
     @Override
     public TabGroup getGroup() {
         return null;
-    }
-
-    @Override
-    public GemstoneSlot[] getDefaultSlots() {
-        return GemstoneSlot.of(GemstoneSlot.Type.COMBAT, GemstoneSlot.Type.COMBAT);
     }
 }

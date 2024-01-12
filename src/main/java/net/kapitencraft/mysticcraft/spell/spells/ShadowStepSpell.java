@@ -11,6 +11,7 @@ import net.minecraft.world.phys.Vec3;
 import java.util.List;
 
 public class ShadowStepSpell {
+    //TODO fix not working
 
     public static boolean execute(LivingEntity user, ItemStack ignored) {
         Level level = user.level;

@@ -6,10 +6,10 @@ import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.helpers.TextHelper;
 import net.kapitencraft.mysticcraft.item.ITieredItem;
-import net.kapitencraft.mysticcraft.item.data.dungeon.IStarAbleItem;
-import net.kapitencraft.mysticcraft.item.data.gemstone.IGemstoneApplicable;
-import net.kapitencraft.mysticcraft.item.data.reforging.Reforge;
-import net.kapitencraft.mysticcraft.item.data.spell.ISpellItem;
+import net.kapitencraft.mysticcraft.item.capability.dungeon.IStarAbleItem;
+import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneHelper;
+import net.kapitencraft.mysticcraft.item.capability.reforging.Reforge;
+import net.kapitencraft.mysticcraft.item.capability.spell.ISpellItem;
 import net.kapitencraft.mysticcraft.spell.Spells;
 import net.kapitencraft.mysticcraft.spell.spells.Spell;
 import net.minecraft.nbt.CompoundTag;
@@ -58,9 +58,9 @@ public abstract class ItemMixin implements IForgeItem {
         if (slot == MiscHelper.getSlotForStack(stack) && reforge != null) {
             builder.merge(reforge.applyModifiers(self().getRarity(stack)), AttributeModifier.Operation.ADDITION);
         }
-        if (self() instanceof IGemstoneApplicable applicable) {
-            builder.merge(AttributeHelper.fromMap(applicable.getAttributeModifiers(stack, slot)));
-        }
+        GemstoneHelper.getCapability(stack, iGemstoneHandler -> {
+            builder.merge(AttributeHelper.fromMap(iGemstoneHandler.getAttributeModifiers(slot, stack)));
+        });
         if (self() instanceof IStarAbleItem) {
             builder.update(value -> IStarAbleItem.modifyData(stack, value));
         }

@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.item.data.spell;
+package net.kapitencraft.mysticcraft.item.capability.spell;
 
 import net.kapitencraft.mysticcraft.spell.SpellSlot;
 import net.kapitencraft.mysticcraft.spell.Spells;

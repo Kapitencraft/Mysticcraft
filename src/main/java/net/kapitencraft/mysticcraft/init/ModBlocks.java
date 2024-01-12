@@ -10,7 +10,7 @@ import net.kapitencraft.mysticcraft.block.special.EmptyGemstoneBlock;
 import net.kapitencraft.mysticcraft.block.special.GemstoneCreator;
 import net.kapitencraft.mysticcraft.dungeon.generation.GenerationBlock;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
-import net.kapitencraft.mysticcraft.item.data.gemstone.GemstoneItem;
+import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneItem;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;

@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.item.combat.spells;
 
-import net.kapitencraft.mysticcraft.item.data.spell.SpellHelper;
+import net.kapitencraft.mysticcraft.item.capability.spell.SpellHelper;
 import net.kapitencraft.mysticcraft.spell.SpellSlot;
 import net.kapitencraft.mysticcraft.spell.Spells;
 import net.minecraft.network.chat.Component;

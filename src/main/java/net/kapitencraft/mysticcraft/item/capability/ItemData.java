@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.item.data;
+package net.kapitencraft.mysticcraft.item.capability;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;

@@ -1,7 +1,7 @@
-package net.kapitencraft.mysticcraft.item.data.dungeon;
+package net.kapitencraft.mysticcraft.item.capability.dungeon;
 
 import net.kapitencraft.mysticcraft.init.ModItems;
-import net.kapitencraft.mysticcraft.item.data.essence.IEssenceData;
+import net.kapitencraft.mysticcraft.item.capability.essence.IEssenceData;
 import net.kapitencraft.mysticcraft.misc.content.EssenceType;
 import net.minecraft.world.item.ItemStack;
 

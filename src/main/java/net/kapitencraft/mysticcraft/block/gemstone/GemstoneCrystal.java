@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.block.gemstone;
 
 import net.kapitencraft.mysticcraft.init.ModBlocks;
-import net.kapitencraft.mysticcraft.item.data.gemstone.IGemstoneItem;
+import net.kapitencraft.mysticcraft.item.capability.gemstone.IGemstoneItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;

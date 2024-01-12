@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.item.data.dungeon;
+package net.kapitencraft.mysticcraft.item.capability.dungeon;
 
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.helpers.AttributeHelper;

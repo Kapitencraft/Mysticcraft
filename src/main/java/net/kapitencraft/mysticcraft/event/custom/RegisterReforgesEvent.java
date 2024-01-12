@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.event.custom;
 
-import net.kapitencraft.mysticcraft.item.data.reforging.Reforge;
+import net.kapitencraft.mysticcraft.item.capability.reforging.Reforge;
 import net.minecraftforge.eventbus.api.Event;
 
 import java.util.HashMap;

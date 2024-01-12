@@ -1,9 +1,9 @@
 package net.kapitencraft.mysticcraft.item.combat.spells;
 
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
+import net.kapitencraft.mysticcraft.item.capability.spell.ISpellItem;
+import net.kapitencraft.mysticcraft.item.capability.spell.SpellHelper;
 import net.kapitencraft.mysticcraft.item.combat.weapon.melee.lance.LanceItem;
-import net.kapitencraft.mysticcraft.item.data.spell.ISpellItem;
-import net.kapitencraft.mysticcraft.item.data.spell.SpellHelper;
 import net.kapitencraft.mysticcraft.item.misc.ModTiers;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.spell.SpellSlot;

@@ -1,6 +1,6 @@
-package net.kapitencraft.mysticcraft.item.data.essence;
+package net.kapitencraft.mysticcraft.item.capability.essence;
 
-import net.kapitencraft.mysticcraft.item.data.ItemData;
+import net.kapitencraft.mysticcraft.item.capability.ItemData;
 import net.kapitencraft.mysticcraft.misc.content.EssenceType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;

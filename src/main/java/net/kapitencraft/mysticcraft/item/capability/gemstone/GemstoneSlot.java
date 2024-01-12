@@ -1,8 +1,7 @@
-package net.kapitencraft.mysticcraft.item.data.gemstone;
+package net.kapitencraft.mysticcraft.item.capability.gemstone;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.kapitencraft.mysticcraft.event.ModEventFactory;
 import net.kapitencraft.mysticcraft.helpers.TagHelper;
 import net.kapitencraft.mysticcraft.init.ModItems;
 import net.minecraft.ChatFormatting;
@@ -22,9 +21,9 @@ public class GemstoneSlot {
 
     public static final Codec<GemstoneSlot> CODEC = RecordCodecBuilder.create(gemstoneSlotInstance ->
             gemstoneSlotInstance.group(
-                    Type.CODEC.fieldOf("type").forGetter(GemstoneSlot::getType),
-                    GemstoneType.CODEC.optionalFieldOf("gem", GemstoneType.EMPTY).forGetter(GemstoneSlot::getAppliedGemstone),
-                    GemstoneType.Rarity.CODEC.optionalFieldOf("gem_rarity", GemstoneType.Rarity.EMPTY).forGetter(GemstoneSlot::getGemRarity)
+                    Type.CODEC.fieldOf("Type").forGetter(GemstoneSlot::getType),
+                    GemstoneType.CODEC.optionalFieldOf("Gem", GemstoneType.EMPTY).forGetter(GemstoneSlot::getAppliedGemstone),
+                    GemstoneType.Rarity.CODEC.optionalFieldOf("GemRarity", GemstoneType.Rarity.EMPTY).forGetter(GemstoneSlot::getGemRarity)
             ).apply(gemstoneSlotInstance, GemstoneSlot::new)
     );
     public static final GemstoneSlot BLOCKED = new GemstoneSlot(Type.EMPTY, GemstoneType.EMPTY, GemstoneType.Rarity.EMPTY);
@@ -79,7 +78,6 @@ public class GemstoneSlot {
         if (this.isValidGemstone(gemstoneType)) {
             this.appliedGemstoneType = Objects.requireNonNull(gemstoneType);
             this.gemRarity = rarity;
-            ModEventFactory.onGemstoneApplied(gemstoneType, this);
             return true;
         }
         return false;
@@ -153,6 +151,7 @@ public class GemstoneSlot {
     }
 
     public static class Builder {
+        public static final int MAX_LENGTH = 5;
         private final Type[] types;
 
         public Builder(Type... types) {
@@ -160,6 +159,7 @@ public class GemstoneSlot {
         }
 
         public GemstoneSlot[] build() {
+            if (types.length > MAX_LENGTH) throw new IllegalStateException("attempting to build gemstone builder larger than 5");
             GemstoneSlot[] slots = new GemstoneSlot[types.length];
             for (int i = 0; i < slots.length; i++) {
                 slots[i] = new GemstoneSlot(types[i], GemstoneType.EMPTY, GemstoneType.Rarity.EMPTY);

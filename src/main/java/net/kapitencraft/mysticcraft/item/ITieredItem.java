@@ -1,8 +1,8 @@
 package net.kapitencraft.mysticcraft.item;
 
 import com.google.common.collect.Multimap;
-import net.kapitencraft.mysticcraft.item.data.dungeon.IPrestigeAbleItem;
-import net.kapitencraft.mysticcraft.item.data.dungeon.IStarAbleItem;
+import net.kapitencraft.mysticcraft.item.capability.dungeon.IPrestigeAbleItem;
+import net.kapitencraft.mysticcraft.item.capability.dungeon.IStarAbleItem;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.ai.attributes.Attribute;

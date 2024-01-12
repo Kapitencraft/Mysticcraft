@@ -14,7 +14,7 @@ import net.kapitencraft.mysticcraft.gui.gemstone_grinder.GemstoneGrinderScreen;
 import net.kapitencraft.mysticcraft.gui.reforging_anvil.ReforgeAnvilScreen;
 import net.kapitencraft.mysticcraft.init.*;
 import net.kapitencraft.mysticcraft.item.ColoredItem;
-import net.kapitencraft.mysticcraft.item.data.gemstone.IGemstoneItem;
+import net.kapitencraft.mysticcraft.item.capability.gemstone.IGemstoneItem;
 import net.kapitencraft.mysticcraft.item.material.RainbowElementalShard;
 import net.kapitencraft.mysticcraft.misc.ModItemProperties;
 import net.minecraft.client.gui.screens.MenuScreens;

@@ -1,7 +1,7 @@
-package net.kapitencraft.mysticcraft.item.data.reforging;
+package net.kapitencraft.mysticcraft.item.capability.reforging;
 
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
-import net.kapitencraft.mysticcraft.item.data.reforging.bonuses.SacredBonus;
+import net.kapitencraft.mysticcraft.item.capability.reforging.bonuses.SacredBonus;
 import net.kapitencraft.mysticcraft.item.item_bonus.ReforgingBonus;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.StringRepresentable;
