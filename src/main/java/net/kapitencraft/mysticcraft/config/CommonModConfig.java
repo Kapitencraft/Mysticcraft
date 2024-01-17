@@ -27,7 +27,7 @@ public class CommonModConfig {
     @SubscribeEvent
     public static void registerConfig(final ModConfigEvent event) {
         if (SPEC.isLoaded()) {
-            MysticcraftMod.sendInfo("loading common config...");
+            MysticcraftMod.LOGGER.info("loading common config...");
             resetBuildersWand = RESET_BUILDERS_WAND_POS.get();
             useOnComplete = USE_ON_POS_COMPLETE.get();
         }

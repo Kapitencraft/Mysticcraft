@@ -5,6 +5,7 @@ import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.init.ModEnchantments;
 import net.kapitencraft.mysticcraft.init.ModItems;
+import net.kapitencraft.mysticcraft.logging.Markers;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -42,7 +43,7 @@ public interface IGemstoneHandler {
                 }
             }
         } catch (NullPointerException e) {
-            MysticcraftMod.sendWarn("unable to read Gemstone slots: " + e.getMessage());
+            MysticcraftMod.LOGGER.warn(Markers.GEMSTONE, "unable to read Gemstone slots: {}", e.getMessage());
             e.printStackTrace();
         }
         if (component != null) {
@@ -82,7 +83,7 @@ public interface IGemstoneHandler {
                     }
                 }
             } catch (NullPointerException e) {
-                MysticcraftMod.sendWarn("unable to read Gemstone slots: " + e.getMessage());
+                MysticcraftMod.LOGGER.warn(Markers.GEMSTONE, "unable to read Gemstone slots: {}", e.getMessage());
             }
             for (Attribute attribute1 : attributeModifier.keySet()) {
                 modifierHashMap.put(attribute1, AttributeHelper.createModifier("Gemstone Modifications", AttributeModifier.Operation.ADDITION, attributeModifier.get(attribute1)));

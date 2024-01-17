@@ -125,12 +125,12 @@ public class GemstoneGrinderMenu extends ModMenu<GemstoneGrinderBlockEntity> {
         }
 
         private GemstoneGrinderBlockEntity.GemstoneGrinderItemStackHandler getHandler() {
-            return (GemstoneGrinderBlockEntity.GemstoneGrinderItemStackHandler) this.itemHandler;
+            return (GemstoneGrinderBlockEntity.GemstoneGrinderItemStackHandler) this.getItemHandler();
         }
 
 
         private ItemStack getApplicable() {
-            return this.itemHandler.getStackInSlot(0);
+            return this.getHandler().getStackInSlot(0);
         }
     }
 

@@ -1,17 +1,12 @@
 package net.kapitencraft.mysticcraft.helpers;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.codecs.PrimitiveCodec;
-import net.kapitencraft.mysticcraft.ModMarker;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.api.TriConsumer;
-import net.kapitencraft.mysticcraft.misc.serialization.CodecSerializer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.StringTagVisitor;
 import net.minecraft.nbt.TagParser;
@@ -19,23 +14,13 @@ import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 public class TagHelper {
-    private static final ModMarker TRANSFER_MARKER = new ModMarker("DataFormattingHelper");
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final String LENGTH_ID = "Length";
-    public static <T, K> Codec<Map<T, K>> makeMapCodec(Codec<T> tCodec, Codec<K> kCodec) {
-        return Codec.unboundedMap(tCodec, kCodec);
-    }
-
-    public static <T> CodecSerializer<T> createSerializer(Codec<T> codec, T defaulted) {
-        return new CodecSerializer<>(codec, defaulted);
-    }
-
-    public static <T> CodecSerializer<T> createNullDefaultedSerializer(Codec<T> codec) {
-        return createSerializer(codec, null);
-    }
 
 
     public static boolean checkForIntAbove0(CompoundTag tag, String name) {
@@ -99,7 +84,7 @@ public class TagHelper {
         try {
             return new TagParser(new StringReader(s)).readStruct();
         } catch (CommandSyntaxException e) {
-            MysticcraftMod.sendWarn("unable to read Tag '" + s + "': " + e.getMessage());
+            MysticcraftMod.LOGGER.warn("unable to read Tag '{}': {}", s, e.getMessage());
             return new CompoundTag();
         }
     }
@@ -122,7 +107,7 @@ public class TagHelper {
 
     public static UUID[] getUuidArray(CompoundTag arrayTag) {
         if (!arrayTag.contains(LENGTH_ID)) {
-            MysticcraftMod.sendWarn("tried to load UUID Array from Tag but Tag isn`t Array Tag");
+            MysticcraftMod.LOGGER.warn("tried to load UUID Array from Tag but Tag isn`t Array Tag");
         } else {
             int length = arrayTag.getInt(LENGTH_ID);
             UUID[] array = new UUID[length];

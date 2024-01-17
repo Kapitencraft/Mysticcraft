@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.client.particle.animation;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.helpers.ParticleHelper;
+import net.kapitencraft.mysticcraft.logging.Markers;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.network.FriendlyByteBuf;
 
@@ -39,7 +39,7 @@ public class ParticleAnimationParameters {
                 T t = (T) params.get(param);
                 return Optional.of(t);
             } catch (ClassCastException e) {
-                MysticcraftMod.sendWarn("error getting interactive particle param: {}", ParticleHelper.PARTICLE_ENGINE, e.getMessage());
+                MysticcraftMod.LOGGER.warn(Markers.PARTICLE_ENGINE, "error getting interactive particle param: {}", e.getMessage());
             }
         }
         return Optional.empty();

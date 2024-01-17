@@ -6,7 +6,9 @@ import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.helpers.TextHelper;
 import net.kapitencraft.mysticcraft.item.ITieredItem;
+import net.kapitencraft.mysticcraft.item.capability.CapabilityHelper;
 import net.kapitencraft.mysticcraft.item.capability.dungeon.IStarAbleItem;
+import net.kapitencraft.mysticcraft.item.capability.elytra.ElytraData;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneHelper;
 import net.kapitencraft.mysticcraft.item.capability.reforging.Reforge;
 import net.kapitencraft.mysticcraft.item.capability.spell.ISpellItem;
@@ -25,6 +27,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.extensions.IForgeItem;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Final;
@@ -45,6 +48,10 @@ public abstract class ItemMixin implements IForgeItem {
 
     @Shadow @Final private Rarity rarity;
 
+    @Shadow public abstract boolean isBarVisible(ItemStack p_150899_);
+
+    @Shadow @Final private int maxDamage;
+
     private Item self() {return (Item) (Object) this;}
 
     /**
@@ -58,8 +65,13 @@ public abstract class ItemMixin implements IForgeItem {
         if (slot == MiscHelper.getSlotForStack(stack) && reforge != null) {
             builder.merge(reforge.applyModifiers(self().getRarity(stack)), AttributeModifier.Operation.ADDITION);
         }
-        GemstoneHelper.getCapability(stack, iGemstoneHandler -> {
-            builder.merge(AttributeHelper.fromMap(iGemstoneHandler.getAttributeModifiers(slot, stack)));
+        GemstoneHelper.getCapability(stack, iGemstoneHandler ->
+                builder.merge(AttributeHelper.fromMap(iGemstoneHandler.getAttributeModifiers(slot, stack)))
+        );
+        CapabilityHelper.exeCapability(stack, CapabilityHelper.ELYTRA, data1 -> {
+            ElytraData data = data1.getData();
+            if (data == ElytraData.GRAVITY_BOOST && slot == EquipmentSlot.CHEST)
+                builder.add(ForgeMod.ENTITY_GRAVITY.get(), AttributeHelper.createModifier("ElytraGravityBoost", AttributeModifier.Operation.MULTIPLY_TOTAL, data1.getLevel() * -0.2));
         });
         if (self() instanceof IStarAbleItem) {
             builder.update(value -> IStarAbleItem.modifyData(stack, value));
@@ -105,7 +117,7 @@ public abstract class ItemMixin implements IForgeItem {
      * @author Kapitencraft
      * @reason spell items
      */
-    @Inject(method = "getUseDuration", at = @At("HEAD"))
+    @Inject(method = "getUseDuration", at = @At("HEAD"), cancellable = true)
     public void getUseDuration(ItemStack stack, CallbackInfoReturnable<Integer> cir) {
         if (stack.getItem() instanceof ISpellItem spellItem) {
             cir.setReturnValue(spellItem.getItemUseDuration(stack));

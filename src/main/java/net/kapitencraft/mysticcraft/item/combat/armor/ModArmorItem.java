@@ -45,12 +45,7 @@ public abstract class ModArmorItem extends ArmorItem implements IModItem {
         super(p_40386_, p_40387_, p_40388_);
     }
     public boolean equals(ArmorItem item) {
-        MysticcraftMod.sendInfo(item.getMaterial().getName());
         return this == item || item.getMaterial() == this.getMaterial();
-    }
-
-    public interface Creator {
-        ModArmorItem create(EquipmentSlot slot);
     }
 
     public static <T extends ModArmorItem> HashMap<EquipmentSlot, RegistryObject<T>> createRegistry(String registryName, Function<EquipmentSlot, T> creator, TabGroup group) {

@@ -4,6 +4,10 @@ import net.kapitencraft.mysticcraft.client.font.effect.EffectsStyle;
 import net.kapitencraft.mysticcraft.client.font.effect.GlyphEffect;
 import net.kapitencraft.mysticcraft.client.particle.DamageIndicatorParticleOptions;
 import net.kapitencraft.mysticcraft.gui.IGuiHelper;
+import net.kapitencraft.mysticcraft.item.capability.CapabilityHelper;
+import net.kapitencraft.mysticcraft.item.capability.elytra.ElytraCapability;
+import net.kapitencraft.mysticcraft.item.capability.elytra.ElytraData;
+import net.kapitencraft.mysticcraft.item.capability.elytra.IElytraData;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneItem;
 import net.kapitencraft.mysticcraft.misc.ModRarities;
 import net.kapitencraft.mysticcraft.misc.VeinMinerHolder;
@@ -51,6 +55,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.items.ItemStackHandler;
@@ -72,6 +77,25 @@ public class MiscHelper {
 
     public static EquipmentSlot getSlotForStack(ItemStack stack) {
         return LivingEntity.getEquipmentSlotForItem(stack);
+    }
+
+    public static Vec3 getFireWorkSpeedBoost(LivingEntity living) {
+        Vec3 sourceLookAngle = living.getLookAngle();
+        Vec3 sourceSpeed = living.getDeltaMovement();
+        double d1 = 0.1;
+        double d2 = 1.5;
+        double d3 = 0.5;
+        ItemStack chest = living.getItemBySlot(EquipmentSlot.CHEST);
+        LazyOptional<IElytraData> dataOptional = chest.getCapability(CapabilityHelper.ELYTRA);
+        if (dataOptional.isPresent()) {
+            IElytraData data = dataOptional.orElse(new ElytraCapability());
+            int i = data.getLevelForData(ElytraData.SPEED_BOOST);
+            if (i > 0) {
+                d1 *= i;
+                d3 *= i / 5.;
+            }
+        }
+        return sourceSpeed.add(sourceLookAngle.x * d1 + (sourceLookAngle.x * d2 - sourceSpeed.x) * d3, sourceLookAngle.y * d1 + (sourceLookAngle.y * d2 - sourceSpeed.y) * d3, sourceLookAngle.z * d1 + (sourceLookAngle.z * d2 - sourceSpeed.z) * d3);
     }
 
     public static Style withSpecial(Style style, GlyphEffect effect) {

@@ -1,6 +1,5 @@
 package net.kapitencraft.mysticcraft.entity.skeleton_master;
 
-import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.helpers.ParticleHelper;
 import net.minecraft.core.particles.ParticleTypes;
@@ -34,7 +33,6 @@ public class ControlledArrow extends Arrow {
     protected void onHitEntity(@NotNull EntityHitResult result) {
         if (result.getEntity() != this.getOwner()) {
             super.onHitEntity(result);
-            MysticcraftMod.sendInfo("discarded due to Entity Hit");
             this.discard();
         }
     }
@@ -49,7 +47,6 @@ public class ControlledArrow extends Arrow {
         ParticleHelper.sendParticles(ParticleTypes.FLAME, true, this, 1, 0, 0, 0, 0);
         super.tick();
         if (((this.getDeltaMovement() == Vec3.ZERO || this.isInFluidType()) && this.hasBeenFired) || this.getOwner() == null || !this.getOwner().isAlive()) {
-            MysticcraftMod.sendInfo("discarded due to tick");
             this.discard();
         } else {
             updatePos();
@@ -77,7 +74,6 @@ public class ControlledArrow extends Arrow {
     @Override
     protected void onHitBlock(@NotNull BlockHitResult p_36755_) {
         super.onHitBlock(p_36755_);
-        MysticcraftMod.sendInfo("discarded due to Block Hit");
         this.discard();
     }
 

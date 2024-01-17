@@ -22,6 +22,8 @@ import java.util.function.Supplier;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class Rendering {
+    private static final int baseWidth = 427;
+    private static final int baseHeight = 240;
     private static final PoseStack BIG_SYMBOLS = new PoseStack();
     private static final PoseStack MEDIUM_SYMBOLS = new PoseStack();
     private static final PoseStack SMALL_SYMBOLS = new PoseStack();
@@ -33,18 +35,23 @@ public class Rendering {
         SMALL_SYMBOLS.scale(0.5f, 0.5f, 0.5f);
         addRenderer(new RenderHolder(
                 new PositionHolder(-203, -116),
-                value -> "§9" + MathHelper.round(value.getAttributeValue(ModAttributes.MANA.get()), 1) + " [+" + MathHelper.round(value.getPersistentData().getDouble(MiscRegister.OVERFLOW_MANA_ID), 1) + " Overflow] §r / §1" + value.getAttributeValue(ModAttributes.MAX_MANA.get()) + " (+" + MathHelper.round(value.getPersistentData().getDouble("manaRegen") * 20, 2) + "/s)",
+                player -> "§9" + MathHelper.round(player.getAttributeValue(ModAttributes.MANA.get()), 1) + " [+" + MathHelper.round(player.getPersistentData().getDouble(MiscRegister.OVERFLOW_MANA_ID), 1) + " Overflow] §r / §1" + player.getAttributeValue(ModAttributes.MAX_MANA.get()) + " (+" + MathHelper.round(player.getPersistentData().getDouble("manaRegen") * 20, 2) + "/s)",
                 RenderType.BIG
         ));
-        addRenderer(new Rendering.RenderHolder(
-                new Rendering.PositionHolder(-90, 340),
-                value -> "§1Protection: " + getDamageProtection(value) + "%",
-                Rendering.RenderType.SMALL
+        addRenderer(new RenderHolder(
+                new PositionHolder(-90, 330),
+                player -> "§1Protection: " + getDamageProtection(player) + "%",
+                RenderType.SMALL
         ));
-        addRenderer(new Rendering.RenderHolder(
-                new Rendering.PositionHolder(-90, 350),
-                value -> "§3Effective HP: " + MathHelper.defRound(value.getHealth() * 100 / (100 - getDamageProtection(value))),
-                Rendering.RenderType.SMALL
+        addRenderer(new RenderHolder(
+                new Rendering.PositionHolder(-90, 340),
+                player -> "§3Effective HP: " + MathHelper.defRound(player.getHealth() * 100 / (100 - getDamageProtection(player))),
+                RenderType.SMALL
+        ));
+        addRenderer(new RenderHolder(
+                new PositionHolder(-90, 350),
+                player -> "Current Speed: " + MathHelper.defRound(player.getDeltaMovement().length()) + " b/s",
+                RenderType.SMALL
         ));
 
     }
@@ -52,21 +59,17 @@ public class Rendering {
         return MathHelper.defRound(100 - MathHelper.calculateDamage(100, living.getAttributeValue(Attributes.ARMOR), living.getAttributeValue(Attributes.ARMOR_TOUGHNESS)));
     }
 
-
-
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void overlays(RenderGuiOverlayEvent.Pre event) {
-        net.minecraft.client.Options options = Minecraft.getInstance().options;
-        int guiScale = options.guiScale().get();
         int w = event.getWindow().getGuiScaledWidth();
         int h = event.getWindow().getGuiScaledHeight();
-        int posX = w / 2;
-        int posY = h / 2;
+        int posX = w * (w / baseWidth) / 2;
+        int posY = h * (h / baseHeight) / 2;
         Player entity = Minecraft.getInstance().player;
         if (entity != null) {
             list.forEach(renderHolder -> {
                 Vec2 pos = renderHolder.pos.makePos();
-                render(getStack(renderHolder.type), renderHolder.provider.apply(entity), posX - options.guiScale().get() + pos.x, posY - options.guiScale().get() + pos.y, -1);
+                render(getStack(renderHolder.type), renderHolder.provider.apply(entity), posX + pos.x, posY + pos.y);
             });
         }
     }
@@ -75,8 +78,8 @@ public class Rendering {
         list.add(holder);
     }
 
-    private static void render(PoseStack stack, String toWrite, float x, float y, int idk) {
-        Minecraft.getInstance().font.draw(stack, toWrite, x, y, idk);
+    private static void render(PoseStack stack, String toWrite, float x, float y) {
+        Minecraft.getInstance().font.draw(stack, toWrite, x, y, -1);
     }
 
     private static PoseStack getStack(RenderType type) {
@@ -86,7 +89,6 @@ public class Rendering {
             case MEDIUM -> MEDIUM_SYMBOLS;
         };
     }
-
 
     public static class RenderHolder {
         private final PositionHolder pos;

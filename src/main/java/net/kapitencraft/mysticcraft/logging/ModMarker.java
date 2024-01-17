@@ -1,5 +1,6 @@
-package net.kapitencraft.mysticcraft;
+package net.kapitencraft.mysticcraft.logging;
 
+import net.kapitencraft.mysticcraft.MysticcraftMod;
 import org.slf4j.Marker;
 
 import java.util.Iterator;
@@ -18,7 +19,7 @@ public final class ModMarker implements Marker {
 
     @Override
     public void add(Marker reference) {
-        MysticcraftMod.sendWarn("tried adding Marker: sike!", this);
+        MysticcraftMod.LOGGER.warn(this, "tried adding Marker: sike!");
     }
 
     @Override

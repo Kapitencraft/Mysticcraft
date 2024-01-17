@@ -1,17 +1,76 @@
 package net.kapitencraft.mysticcraft.item.capability.elytra;
 
-import net.minecraft.core.Direction;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.kapitencraft.mysticcraft.helpers.MathHelper;
+import net.kapitencraft.mysticcraft.item.capability.CapabilityHelper;
+import net.kapitencraft.mysticcraft.item.capability.ModCapability;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import java.util.Arrays;
 
 
-public class ElytraCapability implements ICapabilityProvider {
+public class ElytraCapability extends ModCapability<ElytraCapability, IElytraData> implements IElytraData {
+    private ElytraData data;
+    private int level;
+
+    private final LazyOptional<ElytraCapability> self = LazyOptional.of(()-> this);
+    private static final Codec<ElytraCapability> CODEC = RecordCodecBuilder.create(elytraCapabilityInstance ->
+            elytraCapabilityInstance.group(
+                    ElytraData.CODEC.fieldOf("data").forGetter(i -> i.data),
+                    Codec.INT.fieldOf("level").forGetter(i -> i.level)
+            ).apply(elytraCapabilityInstance, ElytraCapability::new)
+    );
+
+    public ElytraCapability() {
+        super(CODEC);
+    }
+
+    public ElytraCapability(ElytraData data, int i) {
+        this();
+        this.data = data;
+        this.level = i;
+    }
+
+    public static void merge(ItemStack stack, ItemStack stack1) {
+        CapabilityHelper.exeCapability(stack, CapabilityHelper.ELYTRA, iElytraData ->
+                CapabilityHelper.exeCapability(stack1, CapabilityHelper.ELYTRA, iElytraData1 -> {
+                })
+        );
+    }
+
+    public static ElytraCapability create() {
+        ElytraCapability capability = new ElytraCapability();
+        capability.data = MathHelper.pickRandom(Arrays.stream(ElytraData.values()).toList());
+        capability.level = 1;
+        return capability;
+    }
 
     @Override
-    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        return cap;
+    public void copy(ElytraCapability capability) {
+        this.data = capability.data;
+        this.level = capability.level;
+    }
+
+    @Override
+    public Capability<IElytraData> getCapability() {
+        return CapabilityHelper.ELYTRA;
+    }
+
+    @Override
+    public LazyOptional<ElytraCapability> get() {
+        return self;
+    }
+
+    @Override
+    public ElytraData getData() {
+        return data;
+    }
+
+    @Override
+    public int getLevel() {
+        return level;
     }
 }

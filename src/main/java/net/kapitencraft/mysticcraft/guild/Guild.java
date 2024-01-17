@@ -2,7 +2,6 @@ package net.kapitencraft.mysticcraft.guild;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.kapitencraft.mysticcraft.ModMarker;
 import net.kapitencraft.mysticcraft.api.MapStream;
 import net.kapitencraft.mysticcraft.helpers.TagHelper;
 import net.kapitencraft.mysticcraft.helpers.TextHelper;
@@ -14,14 +13,12 @@ import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Marker;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.*;
 
 @ParametersAreNonnullByDefault
 public class Guild {
-    public static final Marker GUILD_MARKER = new ModMarker("GuildHandler");
     private static final Codec<Guild> CODEC = RecordCodecBuilder.create(guildInstance -> guildInstance.group(
             Codec.STRING.fieldOf("name").forGetter(Guild::getName),
             TagHelper.UUID_CODEC.fieldOf("owner").forGetter(Guild::getOwner),

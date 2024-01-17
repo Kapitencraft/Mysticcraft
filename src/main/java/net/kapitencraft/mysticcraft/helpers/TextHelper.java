@@ -5,6 +5,7 @@ import net.kapitencraft.mysticcraft.misc.string_converter.args.MathArgument;
 import net.kapitencraft.mysticcraft.misc.string_converter.args.TransferArg;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -22,6 +23,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
@@ -31,6 +33,7 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 
 public class TextHelper {
     public static final Component EMPTY = Component.literal("");
@@ -40,6 +43,18 @@ public class TextHelper {
             Function<Component, Packet<?>> function = ClientboundSetTitleTextPacket::new;
             serverPlayer.connection.send(function.apply(title));
         }
+    }
+
+    public static List<Component> getAllMatchingFilter(Function<Integer, String> keyMapper, @Nullable UnaryOperator<MutableComponent> styleMods, Object... args) {
+        List<Component> list = new ArrayList<>();
+        int i = 0;
+        while (I18n.exists(keyMapper.apply(i))) {
+            MutableComponent component = Component.translatable(keyMapper.apply(i), args);
+            if (styleMods != null) list.add(styleMods.apply(component));
+            else list.add(component);
+            i++;
+        }
+        return list;
     }
 
     public static String wrapInObfuscation(String source) {

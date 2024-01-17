@@ -8,7 +8,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentContents;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;
@@ -49,8 +48,7 @@ public class EnchantmentDescriptionManager {
                                     if (!enchantment.isTradeable()) tooltip.add(tooltip.indexOf(line) + 1, Component.translatable("mysticcraft.ench_desc.not_tradeable").withStyle(ChatFormatting.YELLOW));
                                     if (enchantment.isTreasureOnly()) tooltip.add(tooltip.indexOf(line) + 1, Component.translatable("mysticcraft.ench_desc.treasure").withStyle(ChatFormatting.YELLOW));
                                 }
-                                Component descriptionText = getDescription(stack, enchantment);
-                                tooltip.add(tooltip.indexOf(line) + 1, descriptionText);
+                                tooltip.addAll(tooltip.indexOf(line) + 1, getDescription(stack, enchantment));
                                 break;
                             }
                         }
@@ -60,14 +58,17 @@ public class EnchantmentDescriptionManager {
         }
     }
 
-    public static MutableComponent getDescription(ItemStack stack, Enchantment ench) {
-        String descriptionKey = ench.getDescriptionId() + ".desc";
-        if (!I18n.exists(descriptionKey) && I18n.exists(ench.getDescriptionId() + ".description")) {
-            descriptionKey = ench.getDescriptionId() + ".description";
-        }
+    public static List<Component> getDescription(ItemStack stack, Enchantment ench) {
         int level = stack.getItem() instanceof EnchantedBookItem ? (EnchantmentHelper.deserializeEnchantments(EnchantedBookItem.getEnchantments(stack)).get(ench)) : EnchantmentHelper.getTagEnchantmentLevel(ench, stack);
         String[] objects = ench instanceof ModEnchantment modEnchantment ? modEnchantment.getDescriptionMods(level) : new String[]{String.valueOf(level)};
         Stream<String> stream = Arrays.stream(objects);
-        return Component.translatable(descriptionKey, stream.map(TextHelper::wrapInRed).toArray()).withStyle(ChatFormatting.DARK_GRAY);
+        return TextHelper.getAllMatchingFilter(integer -> {
+            String descId = ench.getDescriptionId() + ".desc";
+            if (!I18n.exists(descId)) descId += "ription";
+            if (integer != 0) {
+                descId += integer;
+            }
+            return descId;
+        }, component -> component.withStyle(ChatFormatting.DARK_GRAY), stream.map(TextHelper::wrapInRed).toArray());
     }
 }

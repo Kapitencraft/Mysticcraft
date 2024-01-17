@@ -49,7 +49,7 @@ public abstract class TextConverter<T> {
             }
             cycle++;
         }
-        if (cycle == 1000) MysticcraftMod.sendWarn("the converter failed to convert value from args: " + s);
+        if (cycle == 1000) MysticcraftMod.LOGGER.warn("the converter failed to convert value from args: {}; out of time", s);
         return currentArgs.get(0).value();
     }
 

@@ -5,6 +5,7 @@ import net.kapitencraft.mysticcraft.guild.Guild;
 import net.kapitencraft.mysticcraft.guild.GuildHandler;
 import net.kapitencraft.mysticcraft.guild.GuildUpgradeInstance;
 import net.kapitencraft.mysticcraft.helpers.TagHelper;
+import net.kapitencraft.mysticcraft.logging.Markers;
 import net.kapitencraft.mysticcraft.networking.packets.ModPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -93,37 +94,37 @@ public class SyncGuildsPacket implements ModPacket {
                 switch (type) {
                     case LOAD_ALL -> {
                         List<Guild> list = getAll(tag);
-                        MysticcraftMod.sendInfo("received data for {} guilds", Guild.GUILD_MARKER, list.size());
+                        MysticcraftMod.LOGGER.info(Markers.GUILD, "received data for {} guilds", list.size());
                         GuildHandler.ensureInstanceNotNull();
                         list.forEach(GuildHandler::addNewGuild);
                     }
                     case ADD_GUILD -> {
                         Player player = getPlayer(tag.getUUID("owner"));
                         String name = tag.getString("name");
-                        MysticcraftMod.sendInfo("received data for adding new guild '{}' from {}", Guild.GUILD_MARKER, name, player.getName());
+                        MysticcraftMod.LOGGER.info(Markers.GUILD, "received data for adding new guild '{}' from {}", name, player.getName());
                         GuildHandler.getInstance().addNewGuild(name, player);
                     }
                     case ADD_PLAYER -> {
                         Player player = getPlayer(tag.getUUID("player"));
                         String guildName = tag.getString("name");
-                        MysticcraftMod.sendInfo("received data for adding {} to '{}'", Guild.GUILD_MARKER, player.getName(), guildName);
+                        MysticcraftMod.LOGGER.info(Markers.GUILD, "received data for adding {} to '{}'", player.getName(), guildName);
                         GuildHandler.getInstance().getGuild(guildName).addMember(player);
                     }
                     case REMOVE_GUILD -> {
                         String guildName = tag.getString("name");
-                        MysticcraftMod.sendInfo("received data to remove '{}'", Guild.GUILD_MARKER, guildName);
+                        MysticcraftMod.LOGGER.info(Markers.GUILD, "received data to remove '{}'", guildName);
                         GuildHandler.getInstance().removeGuild(guildName);
                     }
                     case CHANGE_RANK -> {
                         Player player = getPlayer(tag.getUUID("player"));
                         Guild.GuildRank rank = Guild.GuildRank.getByName(tag.getString("rank"));
-                        MysticcraftMod.sendInfo("received data to change rank of {} to {}", Guild.GUILD_MARKER, player.getName(), rank);
+                        MysticcraftMod.LOGGER.info(Markers.GUILD, "received data to change rank of {} to {}", player.getName(), rank);
                         GuildHandler handler = GuildHandler.getInstance();
                         handler.getGuildForPlayer(player).setRank(player.getUUID(), rank);
                     }
                     case LEAVE_GUILD -> {
                         Player player = getPlayer(tag.getUUID("player"));
-                        MysticcraftMod.sendInfo("received data to remove {} from their guild", Guild.GUILD_MARKER, player);
+                        MysticcraftMod.LOGGER.info("received data to remove {} from their guild", player);
                         GuildHandler.getInstance().getGuildForPlayer(player).kickMember(player);
                     }
                 }

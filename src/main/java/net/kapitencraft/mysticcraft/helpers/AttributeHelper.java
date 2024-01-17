@@ -176,12 +176,12 @@ public class AttributeHelper {
             this.modifiers = multimap;
         }
 
-        public AttributeBuilder() {
-            this.modifiers = HashMultimap.create();
-        }
-
         public void merge(Multimap<Attribute, AttributeModifier> toMerge) {
             this.modifiers = increaseAllByAmount(modifiers, toMerge);
+        }
+
+        public void add(Attribute attribute, AttributeModifier modifier) {
+            this.modifiers = increaseAllByAmount(modifiers, Map.of(attribute, modifier));
         }
 
         public void update(UnaryOperator<Multimap<Attribute, AttributeModifier>> provider) {

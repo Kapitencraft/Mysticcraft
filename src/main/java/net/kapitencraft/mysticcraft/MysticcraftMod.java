@@ -5,6 +5,7 @@ import net.kapitencraft.mysticcraft.config.ClientModConfig;
 import net.kapitencraft.mysticcraft.config.CommonModConfig;
 import net.kapitencraft.mysticcraft.config.ServerModConfig;
 import net.kapitencraft.mysticcraft.init.ModRegistryInit;
+import net.kapitencraft.mysticcraft.logging.Markers;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -18,7 +19,6 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryBuilder;
-import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.Marker;
 
@@ -78,33 +78,14 @@ public class MysticcraftMod {
         return new DecimalFormat("#.##").format(d);
     }
 
-    public static void sendRegisterDisplay(String nameOfRegistered, ModMarker marker) {
-        sendInfo("Registering " + nameOfRegistered + "...", marker);
+    public static void sendRegisterDisplay(String nameOfRegistered, Marker marker) {
+        LOGGER.info(marker, "Registering {}...", nameOfRegistered);
     }
     public static void sendRegisterDisplay(String nameOfRegistered) {
-        sendRegisterDisplay(nameOfRegistered, ModRegistryInit.REGISTRY_MARKER);
+        sendRegisterDisplay(nameOfRegistered, Markers.REGISTRY);
     }
 
     public static void sendError(String error) {
-        LOGGER.error(MYSTICCRAFT_ERROR, error);
+        LOGGER.error(Markers.ERROR, error);
     }
-
-    public static void sendInfo(String info, Object... toAdd) {
-        sendInfo(info, null, toAdd);
-    }
-
-    public static void sendInfo(String info, @Nullable Marker marker, Object... toAdd) {
-        LOGGER.info(marker == null ? MYSTICCRAFT_MARKER : marker, info, toAdd);
-    }
-
-    public static void sendWarn(String warn) {
-        sendWarn(warn, null);
-    }
-
-    public static void sendWarn(String info, Marker marker, Object... toAdd) {
-        LOGGER.warn(marker == null ? MYSTICCRAFT_MARKER : marker, info, toAdd);
-    }
-
-    public static final Marker MYSTICCRAFT_MARKER = new ModMarker("Mysticcraft");
-    public static final Marker MYSTICCRAFT_ERROR = new ModMarker("Error");
 }

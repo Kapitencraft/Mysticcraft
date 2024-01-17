@@ -19,6 +19,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         super(output, MysticcraftMod.MOD_ID, existingFileHelper);
     }
 
+    @SuppressWarnings("all")
     @Override
     protected void registerModels() {
         //registerScrolls();
@@ -36,7 +37,7 @@ public class ModItemModelProvider extends ItemModelProvider {
                     simpleItem(item, null);
                 }
             } catch (IllegalArgumentException e) {
-                MysticcraftMod.sendInfo("Unable to find texture '" + item.getId() + "'");
+                MysticcraftMod.LOGGER.info("Unable to find texture '{}'", item.getId());
             }
         }
     }

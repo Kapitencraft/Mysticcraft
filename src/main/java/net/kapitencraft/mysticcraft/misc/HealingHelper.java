@@ -22,7 +22,7 @@ public class HealingHelper {
             reason = healReasons.get(living);
             healReasons.remove(living);
         } else {
-            MysticcraftMod.sendWarn("unable to find Healing Reason for " + living.getName().getString() + ", using default");
+            MysticcraftMod.LOGGER.warn("unable to find Healing Reason for {}, using default", living.getName().getString());
         }
         return reason;
     }

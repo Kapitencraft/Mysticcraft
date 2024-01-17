@@ -1,8 +1,9 @@
 package net.kapitencraft.mysticcraft.item.capability.reforging;
 
 import com.google.gson.*;
-import net.kapitencraft.mysticcraft.ModMarker;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.logging.Markers;
+import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -10,7 +11,6 @@ import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Marker;
 
 import java.util.Map;
 
@@ -23,6 +23,7 @@ public class ReforgeManager extends SimpleJsonResourceReloadListener {
 
     @Override
     protected void apply(@NotNull Map<ResourceLocation, JsonElement> map, @NotNull ResourceManager manager, @NotNull ProfilerFiller filler) {
+        long l = Util.getMillis();
         for (Map.Entry<ResourceLocation, JsonElement> entry: map.entrySet()) {
             String[] data = entry.getKey().getPath().split("/");
             if (data.length < 1) throw new IllegalStateException("found reforge without name; expected corrupted mod file! please re-download");
@@ -48,10 +49,10 @@ public class ReforgeManager extends SimpleJsonResourceReloadListener {
                 }
                 Reforges.registerReforge(reforge.build());
             } catch (Exception e) {
-                MysticcraftMod.sendWarn("Unable to load reforge '{}': {}", MARKER, name, e.getMessage());
+                MysticcraftMod.LOGGER.warn(Markers.REFORGE_MANAGER, "Unable to load reforge '{}': {}", name, e.getMessage());
             }
         }
+        MysticcraftMod.LOGGER.info(Markers.REFORGE_MANAGER, "loading {} reforges took {} ms", Reforges.getReforgesSize(), Util.getMillis() - l);
     }
 
-    public static final Marker MARKER = new ModMarker("ReforgeManager");
 }

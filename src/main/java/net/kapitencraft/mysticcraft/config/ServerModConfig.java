@@ -26,7 +26,7 @@ public class ServerModConfig {
     @SubscribeEvent
     public static void registerConfig(final ModConfigEvent event) {
         if (SPEC.isLoaded()) {
-            MysticcraftMod.sendInfo("loading server config...");
+            MysticcraftMod.LOGGER.info("loading server config...");
             enableSocial = ENABLE_SOCIAL_COMMANDS.get();
             iterationMaxBroken = MAX_ITERATION_BROKEN_BLOCKS.get();
         }

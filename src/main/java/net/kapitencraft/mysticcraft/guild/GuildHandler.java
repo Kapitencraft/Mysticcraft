@@ -2,8 +2,10 @@ package net.kapitencraft.mysticcraft.guild;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.helpers.TextHelper;
+import net.kapitencraft.mysticcraft.logging.Markers;
 import net.kapitencraft.mysticcraft.networking.ModMessages;
 import net.kapitencraft.mysticcraft.networking.packets.S2C.SyncGuildsPacket;
+import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -22,7 +24,7 @@ public class GuildHandler extends SavedData {
     private final HashMap<String, Guild> guilds = new HashMap<>();
 
     public static GuildHandler createDefault() {
-        MysticcraftMod.sendInfo("Unable to load Guilds; using default");
+        MysticcraftMod.LOGGER.info(Markers.GUILD, "no Guilds found; using default");
         return new GuildHandler();
     }
 
@@ -44,7 +46,7 @@ public class GuildHandler extends SavedData {
     }
 
     public static GuildHandler load(CompoundTag tag, MinecraftServer server) {
-        MysticcraftMod.sendInfo("loadingData");
+        MysticcraftMod.LOGGER.info(Markers.GUILD, "loading Guilds...");
         return loadAllGuilds(server, tag);
     }
 
@@ -105,12 +107,14 @@ public class GuildHandler extends SavedData {
     public static GuildHandler loadAllGuilds(MinecraftServer server, CompoundTag tag) {
         int i = 0;
         GuildHandler guildHandler = new GuildHandler();
+        long j = Util.getMillis();
         while (tag.contains("Guild" + i, 10)) {
             Guild guild = Guild.loadFromTag(tag.getCompound("Guild" + i), server);
-            MysticcraftMod.sendInfo("Loaded Guild called " + TextHelper.wrapInNameMarkers(guild.getName()));
+            MysticcraftMod.LOGGER.info(Markers.GUILD, "Loaded Guild called " + TextHelper.wrapInNameMarkers(guild.getName()));
             guildHandler.addGuild(guild);
             i++;
         }
+        MysticcraftMod.LOGGER.info(Markers.GUILD, "loading {} Guilds took {} ms", i, Util.getMillis() - j);
         return guildHandler;
     }
 

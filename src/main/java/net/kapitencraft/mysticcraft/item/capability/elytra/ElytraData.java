@@ -6,7 +6,8 @@ import org.jetbrains.annotations.NotNull;
 public enum ElytraData implements StringRepresentable {
     SPEED_BOOST(5, "speed_boost"),
     UNBREAKING(1, "unbreaking"),
-    TIME(3, "time");
+    MANA_BOOST(5, "mana_boost"),
+    GRAVITY_BOOST(3, "gravity");
 
     public static final EnumCodec<ElytraData> CODEC = StringRepresentable.fromEnum(ElytraData::values);
 
@@ -21,5 +22,9 @@ public enum ElytraData implements StringRepresentable {
     @Override
     public @NotNull String getSerializedName() {
         return name;
+    }
+
+    public int getMaxLevel() {
+        return maxLevel;
     }
 }

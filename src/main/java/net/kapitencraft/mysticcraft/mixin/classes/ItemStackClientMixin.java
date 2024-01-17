@@ -2,8 +2,6 @@ package net.kapitencraft.mysticcraft.mixin.classes;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
-import net.kapitencraft.mysticcraft.client.render.ColorAnimator;
-import net.kapitencraft.mysticcraft.config.ClientModConfig;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.IUltimateEnchantment;
 import net.kapitencraft.mysticcraft.gui.IGuiHelper;
 import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
@@ -13,7 +11,9 @@ import net.kapitencraft.mysticcraft.helpers.TextHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModGlyphEffects;
 import net.kapitencraft.mysticcraft.item.ITieredItem;
+import net.kapitencraft.mysticcraft.item.capability.CapabilityHelper;
 import net.kapitencraft.mysticcraft.item.capability.dungeon.IStarAbleItem;
+import net.kapitencraft.mysticcraft.item.capability.elytra.ElytraData;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneHelper;
 import net.kapitencraft.mysticcraft.item.capability.reforging.Reforge;
 import net.kapitencraft.mysticcraft.item.capability.spell.ISpellItem;
@@ -32,6 +32,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.*;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -43,6 +44,7 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.event.ForgeEventFactory;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -58,8 +60,9 @@ public abstract class ItemStackClientMixin {
 
     @Shadow public abstract String toString();
 
+    @SuppressWarnings("all")
     @Shadow
-    private static Collection<Component> expandBlockState(String p_41762_) {
+    private static @NotNull Collection<Component> expandBlockState(String p_41762_) {
         return null;
     }
 
@@ -69,10 +72,9 @@ public abstract class ItemStackClientMixin {
 
     @Shadow public abstract ItemStack copy();
 
+    @Shadow public abstract boolean is(TagKey<Item> p_204118_);
     @Unique
     private static final Style LORE_STYLE = Style.EMPTY.withColor(ChatFormatting.DARK_PURPLE).withItalic(true);
-    @Unique
-    private static final ColorAnimator RAINBOW_ANIMATOR = ColorAnimator.createRainbow(30 * (10 - ClientModConfig.rgbSpeed));
 
     @SuppressWarnings("ALL")
     private ItemStack self() {
@@ -92,7 +94,6 @@ public abstract class ItemStackClientMixin {
         if (hasCustomHoverName()) {
             name.withStyle(ChatFormatting.ITALIC);
         }
-
         list.add(name);
         GemstoneHelper.getCapability(self(), iGemstoneHandler -> iGemstoneHandler.getDisplay(list));
         if (!tooltipFlag.isAdvanced() && !self().hasCustomHoverName() && self().is(Items.FILLED_MAP)) {
@@ -125,9 +126,7 @@ public abstract class ItemStackClientMixin {
                 if (enchantmentOptional.isPresent()) {
                     Enchantment enchantment = enchantmentOptional.get();
                     int level = self().getEnchantmentLevel(enchantment);
-                    final MutableComponent[] components = new MutableComponent[1];
-                    enchantmentOptional.ifPresent((p_41708_) -> components[0] = (MutableComponent) p_41708_.getFullname(EnchantmentHelper.getEnchantmentLevel(compoundtag)));
-                    MutableComponent component = components[0];
+                    MutableComponent component = (MutableComponent) enchantment.getFullname(EnchantmentHelper.getEnchantmentLevel(compoundtag));
                     if (!(enchantment.isCurse())) {
                         if (enchantment instanceof IUltimateEnchantment) {
                             component.withStyle(ChatFormatting.LIGHT_PURPLE).withStyle(ChatFormatting.BOLD);
@@ -243,7 +242,18 @@ public abstract class ItemStackClientMixin {
                 }
             }
         }
-
+        addEmpty(list);
+        CapabilityHelper.exeCapability(self(), CapabilityHelper.ELYTRA, data1 -> {
+                if (Screen.hasShiftDown()) {
+                    ElytraData data = data1.getData();
+                    String id = "elytra_data." + data.getSerializedName();
+                    list.add(Component.translatable(id).withStyle(ChatFormatting.GREEN).append(" ").append(Component.translatable("enchantment.level." + data1.getLevel())));
+                    list.addAll(TextHelper.getAllMatchingFilter(i -> i == 0 ? id + ".desc" : id + ".desc" + i, component -> component.withStyle(ChatFormatting.YELLOW)));
+                } else {
+                    list.add(Component.translatable("elytra_data.tooltip").withStyle(ChatFormatting.YELLOW));
+                }
+        });
+        addEmpty(list);
         if (self().hasTag()) {
             if (shouldShowInTooltip(j, ItemStack.TooltipPart.UNBREAKABLE)) {
                 if (tag.getBoolean("Unbreakable")) list.add(TextHelper.wrapInObfuscation(Component.translatable("item.unbreakable"), true).withStyle(ChatFormatting.BLUE));
@@ -276,7 +286,6 @@ public abstract class ItemStackClientMixin {
                 }
             }
         }
-
         if (tooltipFlag.isAdvanced()) {
             if (self().isDamaged()) {
                 list.add(Component.translatable("item.durability", self().getMaxDamage() - self().getDamageValue(), self().getMaxDamage()));
@@ -290,14 +299,12 @@ public abstract class ItemStackClientMixin {
                 }
             }
         }
-
         if (player != null && !item.isEnabled(player.getLevel().enabledFeatures())) {
             list.add(Component.translatable("item.disabled").withStyle(ChatFormatting.RED));
         }
         if (CreativeItems.contains(item)) {
             list.add(Component.translatable("item.creative_only").withStyle(ChatFormatting.RED));
         }
-
         ForgeEventFactory.onItemTooltip(self(), player, list, tooltipFlag);
         if (!(item instanceof IGuiHelper)) {
             Rarity rarity = item.getRarity(self());
@@ -305,9 +312,13 @@ public abstract class ItemStackClientMixin {
             list.add(Component.literal(""));
             list.add(TextHelper.wrapInObfuscation(createNameMod(self()), flag).withStyle(rarity.getStyleModifier()).withStyle(ChatFormatting.BOLD));
         }
-
         TextHelper.removeUnnecessaryEmptyLines(list);
         return list;
+    }
+
+    @SuppressWarnings("all")
+    private static void addEmpty(List<Component> components) {
+        components.add(CommonComponents.EMPTY);
     }
 
     @SuppressWarnings("all")

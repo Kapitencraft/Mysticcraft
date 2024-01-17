@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.item.item_bonus.ReforgingBonus;
+import net.kapitencraft.mysticcraft.logging.Markers;
 import net.kapitencraft.mysticcraft.misc.ModRarities;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -76,7 +77,7 @@ public class Reforge {
     }
 
     public void saveToStack(ItemStack stack) {
-        MysticcraftMod.sendInfo("putting Reforge '" + this.registryName + "' to the Stack");
+        MysticcraftMod.LOGGER.info(Markers.REFORGE_MANAGER, "putting Reforge '{}' to the Stack", this.registryName);
         stack.getOrCreateTag().putString(Reforges.REFORGE_NAME_ID, this.registryName);
     }
 

@@ -1,6 +1,5 @@
 package net.kapitencraft.mysticcraft.item.material;
 
-import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.init.ModItems;
@@ -78,7 +77,6 @@ public class PrecursorRelicItem extends Item implements IModItem {
                 attackDamage.addPermanentModifier(new AttributeModifier(DAMAGE_BOOST, "Necron's Damage Boost", 1.8, AttributeModifier.Operation.MULTIPLY_TOTAL));
             }
             if (hp != null) {
-                MysticcraftMod.sendInfo("adding Modifier");
                 hp.addPermanentModifier(new AttributeModifier(HP_BOOST, "Necron's HP Boost", 0.5, AttributeModifier.Operation.MULTIPLY_TOTAL));
             }
             boss.setHealth(boss.getMaxHealth());
@@ -86,7 +84,6 @@ public class PrecursorRelicItem extends Item implements IModItem {
         GOLDOR("jolly_pink_rock", "Goldor", boss -> {
             AttributeInstance hp = boss.getAttribute(Attributes.MAX_HEALTH);
             if (hp != null) {
-                MysticcraftMod.sendInfo("adding Modifier");
                 hp.addPermanentModifier(new AttributeModifier(HP_BOOST, "Goldor's HP Boost", 2, AttributeModifier.Operation.MULTIPLY_TOTAL));
             }
             boss.setHealth(boss.getMaxHealth());

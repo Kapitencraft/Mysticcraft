@@ -73,10 +73,7 @@ public interface ISpellItem {
         return getSpells(stack).getActiveSpell();
     }
 
-    default void executeSpell(ItemStack stack, Player player) {
-        getSpells(stack).getActiveSpell().execute(player, stack);
-    }
-
+    @Deprecated
     default Spell getClosestSpell(String spell_exe) {
         return Spells.EMPTY_SPELL;
     }

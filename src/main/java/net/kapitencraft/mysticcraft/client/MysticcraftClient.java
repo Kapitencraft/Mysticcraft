@@ -2,10 +2,10 @@ package net.kapitencraft.mysticcraft.client;
 
 import net.kapitencraft.mysticcraft.client.particle.animation.ParticleAnimationAcceptor;
 
-public class MysticcraftClientInstance {
-    private static final MysticcraftClientInstance instance = new MysticcraftClientInstance();
+public class MysticcraftClient {
+    private static final MysticcraftClient instance = new MysticcraftClient();
 
-    public static MysticcraftClientInstance getInstance() {
+    public static MysticcraftClient getInstance() {
         return instance;
     }
 

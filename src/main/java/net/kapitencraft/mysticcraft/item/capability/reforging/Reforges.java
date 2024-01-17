@@ -37,6 +37,10 @@ public class Reforges {
         return null;
     }
 
+    public static int getReforgesSize() {
+        return reforges.size();
+    }
+
 
     public static HashMap<String, Reforge> all() {
         return reforges;

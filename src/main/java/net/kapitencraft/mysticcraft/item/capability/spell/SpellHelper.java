@@ -9,7 +9,7 @@ import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModItems;
 import net.kapitencraft.mysticcraft.item.capability.ItemData;
 import net.kapitencraft.mysticcraft.item.misc.RNGDropHelper;
-import net.kapitencraft.mysticcraft.misc.MiscRegister;
+import net.kapitencraft.mysticcraft.misc.ManaMain;
 import net.kapitencraft.mysticcraft.spell.Element;
 import net.kapitencraft.mysticcraft.spell.SpellSlot;
 import net.kapitencraft.mysticcraft.spell.Spells;
@@ -109,7 +109,7 @@ public class SpellHelper implements ItemData<SpellSlot[], SpellHelper> {
             this.spellSlots[slotIndex] = null;
             return true;
         } catch (ArrayIndexOutOfBoundsException e) {
-            MysticcraftMod.sendWarn("unable to change slot: " + e.getMessage());
+            MysticcraftMod.LOGGER.warn("unable to change slot: {}", e.getMessage());
         }
 
         return false;
@@ -123,25 +123,11 @@ public class SpellHelper implements ItemData<SpellSlot[], SpellHelper> {
         if (manaToUse >= 10000 && user instanceof Player player) {
             MiscHelper.awardAchievement(player, "mysticcraft:archmage");
         }
-        double overflowMana = user.getPersistentData().getDouble(MiscRegister.OVERFLOW_MANA_ID);
         AttributeInstance manaInstance = user.getAttribute(ModAttributes.MANA.get());
         if (manaInstance != null) {
-            double currentMana = manaInstance.getBaseValue() + overflowMana;
-            if (currentMana == 0 || manaToUse == 0) {
-                return false;
-            }
-            if (currentMana >= manaToUse) {
-                if (!spell.execute(user, stack)) {
-                    return false;
-                }
-                if (overflowMana > 0) {
-                    user.getPersistentData().putDouble(MiscRegister.OVERFLOW_MANA_ID, overflowMana > manaToUse ? overflowMana - manaToUse : 0);
-                    manaToUse -= overflowMana;
-                }
-                if (manaToUse > 0) {
-                    manaInstance.setBaseValue(manaInstance.getBaseValue() - manaToUse);
-                    sendUseDisplay(user, spell);
-                }
+            if (ManaMain.consumeMana(user, manaToUse)) {
+                sendUseDisplay(user, spell);
+                spell.execute(user, stack);
                 List<Element> elements = spell.elements();
                 if (!elements.isEmpty()) {
                     ItemStack spellShardRNG = new ItemStack(ModItems.ELEMENTAL_SHARDS.get(MathHelper.pickRandom(elements)).get());

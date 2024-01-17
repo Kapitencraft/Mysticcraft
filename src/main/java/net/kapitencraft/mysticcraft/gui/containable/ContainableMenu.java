@@ -56,7 +56,7 @@ public class ContainableMenu<T extends Item> extends ModMenu<ItemStack> {
                 return ItemStack.EMPTY;
             }
         } else {
-            MysticcraftMod.sendWarn("Invalid slotIndex:" + index);
+            MysticcraftMod.LOGGER.warn("Invalid slotIndex: {}", index);
             return ItemStack.EMPTY;
         }
         // If stack size == 0 (the entire stack was moved) set slot contents to null

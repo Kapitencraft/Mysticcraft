@@ -39,7 +39,7 @@ public class CompoundPath {
                 return null;
             }
         } else {
-            MysticcraftMod.sendWarn("unable to read compound '" + path + "': wrong entity");
+            MysticcraftMod.LOGGER.warn("unable to read compound '{}': wrong entity", path);
         }
         return null;
     }

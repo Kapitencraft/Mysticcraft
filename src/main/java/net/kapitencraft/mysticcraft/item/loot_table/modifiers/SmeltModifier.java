@@ -6,6 +6,7 @@ import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.helpers.LootTableHelper;
 import net.kapitencraft.mysticcraft.init.ModEnchantments;
 import net.kapitencraft.mysticcraft.item.loot_table.IConditional;
+import net.kapitencraft.mysticcraft.logging.Markers;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -53,7 +54,7 @@ public class SmeltModifier extends ModLootModifier implements IConditional {
                 }
             }
         }
-        MysticcraftMod.sendWarn("Couldn't smelt {} because there is no smelting recipe", MysticcraftMod.MYSTICCRAFT_MARKER, unSmelt);
+        MysticcraftMod.LOGGER.warn(Markers.MOD_MARKER, "Couldn't smelt {} because there is no smelting recipe", unSmelt);
         return unSmelt;
     }
 

@@ -1,9 +1,10 @@
 package net.kapitencraft.mysticcraft.init;
 
-import net.kapitencraft.mysticcraft.ModMarker;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.logging.Markers;
 import net.kapitencraft.mysticcraft.potion.ModPotions;
 import net.kapitencraft.mysticcraft.villagers.ModVillagers;
+import net.minecraft.Util;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
@@ -11,9 +12,12 @@ import net.minecraftforge.registries.DeferredRegister;
 @Mod.EventBusSubscriber
 public class ModRegistryInit {
     private static IEventBus eventBus;
+    private static int registered = 0;
 
     public static void register(IEventBus bus) {
         eventBus = bus;
+        MysticcraftMod.LOGGER.info(Markers.REGISTRY, "starting registration");
+        long l = Util.getMillis();
         register("Attributes", ModAttributes.REGISTRY);
         register("Enchantments", ModEnchantments.REGISTRY);
         register("Items", ModItems.REGISTRY);
@@ -34,13 +38,14 @@ public class ModRegistryInit {
         register("Command Arguments", ModCommandArguments.REGISTRY);
         register("Recipe Types", ModRecipeSerializers.REGISTRY);
         register("Glyph Effects", ModGlyphEffects.REGISTRY);
+        MysticcraftMod.LOGGER.info(Markers.REGISTRY, "loading {} registries took {} ms", registered, Util.getMillis() - l);
     }
 
     private static void register(String registerName, DeferredRegister<?> register) {
         if (eventBus == null) throw new IllegalStateException("Register while event is used");
         MysticcraftMod.sendRegisterDisplay(registerName);
+        registered++;
         register.register(eventBus);
     }
 
-    public static final ModMarker REGISTRY_MARKER = new ModMarker("Registry");
 }

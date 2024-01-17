@@ -30,7 +30,7 @@ public class ClientModConfig {
     @SubscribeEvent
     public static void registerConfig(final ModConfigEvent event) {
         if (SPEC.isLoaded()) {
-            MysticcraftMod.sendInfo("loading client config...");
+            MysticcraftMod.LOGGER.info("loading client config...");
             scrollScale = SCROLL_SCALE.get();
             rgbSpeed = RGB_SPEED.get();
             extraDebug = SHOW_EXTRA_DEBUG.get();

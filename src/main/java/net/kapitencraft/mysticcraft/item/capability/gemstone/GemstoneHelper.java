@@ -3,16 +3,13 @@ package net.kapitencraft.mysticcraft.item.capability.gemstone;
 import net.kapitencraft.mysticcraft.api.Reference;
 import net.kapitencraft.mysticcraft.item.capability.CapabilityHelper;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.NonNullConsumer;
 import net.minecraftforge.common.util.NonNullPredicate;
 
 public class GemstoneHelper {
 
     public static boolean getCapability(ItemStack stack, NonNullConsumer<IGemstoneHandler> handlerConsumer) {
-        LazyOptional<IGemstoneHandler> optional = stack.getCapability(CapabilityHelper.GEMSTONE);
-        optional.ifPresent(handlerConsumer);
-        return optional.isPresent();
+        return CapabilityHelper.exeCapability(stack, CapabilityHelper.GEMSTONE, handlerConsumer);
     }
 
     public static boolean exCapability(ItemStack stack, NonNullPredicate<IGemstoneHandler> handlerConsumer) {
@@ -22,6 +19,6 @@ public class GemstoneHelper {
     }
 
     public static boolean hasCapability(ItemStack stack) {
-        return stack.getCapability(CapabilityHelper.GEMSTONE).isPresent();
+        return CapabilityHelper.hasCapability(stack, CapabilityHelper.GEMSTONE);
     }
 }

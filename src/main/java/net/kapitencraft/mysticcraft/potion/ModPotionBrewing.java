@@ -24,8 +24,7 @@ public class ModPotionBrewing {
             addMix(Potions.AWKWARD, ModItems.HARDENED_TEAR.get(), ModPotions.STUN.get());
             addMix(ModPotions.STUN.get(), DURATION, ModPotions.LONG_STUN.get());
         } catch (Throwable throwable) {
-            MysticcraftMod.sendWarn("failed to load Potions: ");
-            MysticcraftMod.sendWarn(throwable.getMessage());
+            MysticcraftMod.LOGGER.warn("failed to load Potions: {}", throwable.getMessage());
         }
     }
 

@@ -3,6 +3,7 @@ package net.kapitencraft.mysticcraft.api;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 
 public class APITools {
     private static List<Character> convertList(int value) {
@@ -29,6 +30,13 @@ public class APITools {
         return temp;
     }
 
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("input: ");
+        String in = scanner.nextLine();
+        System.out.println("output: " + transfer(in));
+    }
+
     public static long compiler(int convert, String in) {
         List<Character> convertList = convertList(convert);
         in = in.toUpperCase();
@@ -49,27 +57,14 @@ public class APITools {
         return ret;
     }
 
-    @SuppressWarnings("all")
     public static String decompile(int convert, long in) {
         List<Character> convertList = convertList(convert);
         StringBuilder builder = new StringBuilder();
-        int j = 0;
-        while (in >= Math.pow(convert, j) * 15) {
-            j++;
-        }
         while (in > 0) {
-            for (int i = 1; i < convert; i++) {
-                long pow = (long) Math.pow(convert, j);
-                if (pow * i > in) {
-                    i--;
-                    if (!(builder.isEmpty() && convertList.get(i) == '0')) {
-                        builder.append(convertList.get(i));
-                    }
-                    in -= pow * i;
-                    j--;
-                    break;
-                }
-            }
+            int i = (int) (in % convert);
+            in /= convert;
+            if (builder.isEmpty() && i == 0) continue;
+            builder.append(convertList.get(i));
         }
         return builder.toString();
     }
@@ -86,7 +81,7 @@ public class APITools {
             String transfer = transfer(Integer.parseInt(inConvert), Integer.parseInt(outConvert), in.substring(4));
             return outConvert + inConvert + transfer;
         } catch (NumberFormatException e) {
-            System.out.println("unable to ");
+            System.out.println("unable to read data, skipping");
         }
         return "";
     }

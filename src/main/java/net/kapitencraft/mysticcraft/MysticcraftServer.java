@@ -1,7 +1,9 @@
 package net.kapitencraft.mysticcraft;
 
+import net.kapitencraft.mysticcraft.item.capability.elytra.ElytraCapability;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneCapability;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneData;
+import net.minecraft.world.item.ElytraItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -22,6 +24,9 @@ public class MysticcraftServer {
             GemstoneCapability capability = new GemstoneCapability();
             capability.setDefault(data.get(obj.getItem()));
             event.addCapability(MysticcraftMod.res("gemstone"), capability);
+        }
+        if (obj.getItem() instanceof ElytraItem) {
+            event.addCapability(MysticcraftMod.res("elytra"), ElytraCapability.create());
         }
     }
 }

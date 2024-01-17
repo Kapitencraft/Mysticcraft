@@ -4,8 +4,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.kapitencraft.mysticcraft.ModMarker;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.logging.Markers;
+import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -13,7 +14,6 @@ import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.EntityType;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Marker;
 
 import java.util.HashMap;
 import java.util.List;
@@ -27,10 +27,9 @@ public class BestiaryManager extends SimpleJsonResourceReloadListener {
         super(GSON, "bestiary");
     }
 
-    private static final Marker MARKER = new ModMarker("BestiaryManager");
-
     @Override
     protected void apply(@NotNull Map<ResourceLocation, JsonElement> map, @NotNull ResourceManager manager, @NotNull ProfilerFiller filler) {
+        long l = Util.getMillis();
         for (Map.Entry<ResourceLocation, JsonElement> entry : map.entrySet()) {
             EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(entry.getKey());
             JsonElement element = entry.getValue();
@@ -41,9 +40,10 @@ public class BestiaryManager extends SimpleJsonResourceReloadListener {
                 String s = object.getAsJsonPrimitive("type").getAsString();
                 bestiariesForType.put(type, new Bestiary(description, combatXp, Bestiary.Type.getByName(s)));
             } catch (Exception e) {
-                MysticcraftMod.sendWarn("Unable to load bestiary for '{}': {}", MARKER, entry.getKey().toString(), e.getMessage());
+                MysticcraftMod.LOGGER.warn(Markers.BESTIARY_MANAGER, "Unable to load bestiary for '{}': {}", entry.getKey().toString(), e.getMessage());
             }
         }
-        MysticcraftMod.sendInfo("Loaded {} bestiaries", MARKER, bestiariesForType.size());
+        MysticcraftMod.LOGGER.info(Markers.BESTIARY_MANAGER, "Loading {} bestiaries took {} ms", bestiariesForType.size(), Util.getMillis() - l);
     }
+
 }

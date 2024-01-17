@@ -3,6 +3,7 @@ package net.kapitencraft.mysticcraft.misc.particle_help;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.helpers.TagHelper;
+import net.kapitencraft.mysticcraft.logging.Markers;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
@@ -172,7 +173,7 @@ public class ParticleAnimator {
 
     private void initSave() {
         CompoundTag tag = updateSaveData(false);
-        MysticcraftMod.sendInfo("Saving ParticleHelper to slot: " + this.curTagID + "(" + "ParticleHelper" + getNextFreeHelperSlot() + ")");
+        MysticcraftMod.LOGGER.info(Markers.PARTICLE_ENGINE, "Saving ParticleHelper to slot: {} (ParticleHelper {})", getNextFreeHelperSlot(), this.curTagID);
         this.target.getPersistentData().put("ParticleHelper" + this.curTagID, tag);
     }
 

@@ -18,7 +18,10 @@ import net.kapitencraft.mysticcraft.entity.item.UnCollectableItemEntity;
 import net.kapitencraft.mysticcraft.event.custom.AddGemstonesToItemEvent;
 import net.kapitencraft.mysticcraft.guild.GuildHandler;
 import net.kapitencraft.mysticcraft.helpers.*;
-import net.kapitencraft.mysticcraft.init.*;
+import net.kapitencraft.mysticcraft.init.ModAttributes;
+import net.kapitencraft.mysticcraft.init.ModEnchantments;
+import net.kapitencraft.mysticcraft.init.ModItems;
+import net.kapitencraft.mysticcraft.init.ModMobEffects;
 import net.kapitencraft.mysticcraft.item.ITieredItem;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneSlot;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneType;
@@ -61,7 +64,6 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -425,17 +427,6 @@ public class MiscRegister {
             BasaltWalkerEnchantment.onEntityMoved(living, living.blockPosition(), i);
         }
         BonusHelper.useBonuses(living, (bonus, stack) -> bonus.onTick(stack, living.getLevel(), living));
-        if (AttributeHelper.getSaveAttributeValue(ModAttributes.MANA.get(), living) != -1 && living.level.getBlockState(new BlockPos(living.getX(), living.getY(), living.getZ())).getBlock() == ModBlocks.MANA_FLUID_BLOCK.get()) {
-            double overflowMana = tag.getDouble(OVERFLOW_MANA_ID) + tag.getDouble("manaRegen");
-            tag.putDouble(OVERFLOW_MANA_ID, overflowMana);
-            if (overflowMana >= AttributeHelper.getSaveAttributeValue(ModAttributes.MAX_MANA.get(), living)) {
-                living.hurt(new DamageSource(OVERFLOW_MANA_ID).bypassInvul().bypassMagic().bypassEnchantments().bypassArmor(), Float.MAX_VALUE);
-                List<LivingEntity> livings = MathHelper.getLivingAround(living, 5);
-                for (LivingEntity living1 : livings) {
-                    living1.hurt(new EntityDamageSource(OVERFLOW_MANA_ID, living).bypassArmor().bypassMagic().bypassEnchantments().bypassInvul(), (float) (Float.MAX_VALUE * (0.01 * Math.max(5 - living1.distanceTo(living), 0))));
-                }
-            }
-        }
         if (living instanceof Player player) {
             MobEffectInstance stunInstance = player.getEffect(ModMobEffects.STUN.get());
             if (stunInstance != null && player.level.isClientSide) {

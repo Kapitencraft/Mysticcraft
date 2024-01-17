@@ -61,7 +61,7 @@
   "block.mysticcraft.mangatic_stone": "Mangatic Stone",
   "block.mysticcraft.moon_stone_gemstone_block": "Moon Stone Crystal",
   "block.mysticcraft.obsidian_pressure_plate": "Obsidian Pressure Plate",
-  "block.mysticcraft.reforging_table": "Reforging Table",
+  "block.mysticcraft.reforging_anvil": "Reforging Anvil",
   "block.mysticcraft.ruby_gemstone_block": "Ruby Crystal",
   "block.mysticcraft.sapphire_gemstone_block": "Sapphire Crystal",
   "block.mysticcraft.soul_chain": "Soul Chain",
@@ -120,6 +120,15 @@
   "element.shadow": "Shadow",
   "element.void": "Void",
   "element.water": "Water",
+
+  "elytra_data.speed_boost": "Speed Boost",
+  "elytra_data.speed_boost.desc": "increases speed from boosting your elytra",
+  "elytra_data.unbreaking": "Unbreaking",
+  "elytra_data.unbreaking.desc": "Elytras don't take durability damage from flying",
+  "elytra_data.gravity": "Gravity Boost",
+  "elytra_data.gravity.desc": "reduces your gravity while wearing your elytra",
+  "elytra_data.mana_boost": "Mana Boost",
+  "elytra_data.mana_boost.desc": "passively drains mana to boost the elytra",
 
   "enchantment.mysticcraft.aim": "Aim",
   "enchantment.mysticcraft.aim.desc": "arrows home towards enemies up to %1$s blocks away",
@@ -472,5 +481,6 @@
   "upgrade.button": "§1Click here to prestige/star your item",
   "item.creative_only": "Only obtainable in creative mode",
   "block.mysticcraft.reforge_anvil": "Reforge Anvil",
-  "upgrade.cost": "Upgrade Requires: "
+  "upgrade.cost": "Upgrade Requires: ",
+  "elytra_data.tooltip": "Press Shift to view Elytra Attachments"
 }

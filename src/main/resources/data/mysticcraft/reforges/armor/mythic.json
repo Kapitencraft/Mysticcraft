@@ -1,0 +1,58 @@
+{
+  "mods": {
+    "minecraft:generic.armor": [
+      2.0,
+      3.0,
+      6.0,
+      8.0,
+      10.0,
+      12.0,
+      16.0
+    ],
+    "minecraft:generic.max_health": [
+      0.2,
+      0.4,
+      0.6,
+      0.8,
+      1.0,
+      1.2,
+      1.4
+    ],
+    "minecraft:generic.movement_speed": [
+      2.0,
+      2.0,
+      2.0,
+      2.0,
+      2.0,
+      2.0,
+      2.0
+    ],
+    "mysticcraft:generic.crit_chance": [
+      0.5,
+      0.8,
+      1.1,
+      1.5,
+      1.9,
+      2.4,
+      3.0
+    ],
+    "mysticcraft:generic.intel": [
+      15.0,
+      22.0,
+      30.0,
+      40.0,
+      52.0,
+      67.0,
+      90.0
+    ],
+    "mysticcraft:generic.strenght": [
+      2.0,
+      4.0,
+      6.0,
+      8.0,
+      10.0,
+      12.0,
+      15.0
+    ]
+  }
+}

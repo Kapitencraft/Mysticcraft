@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.client.particle.animation;
 
-import net.kapitencraft.mysticcraft.client.MysticcraftClientInstance;
+import net.kapitencraft.mysticcraft.client.MysticcraftClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
@@ -26,7 +26,7 @@ public class ParticleAnimationProvider implements ParticleProvider<ParticleAnima
         ParticleOptions options1 = options.options;
         Particle particle = Minecraft.getInstance().particleEngine.createParticle(options1, x, y, z, dx, dy, dz);
         ParticleAnimationController controller = new ParticleAnimationController(new ArrayList<>(Stream.of(particle).filter(Objects::nonNull).toList()), info, options.params);
-        MysticcraftClientInstance.getInstance().acceptor.addAnimation(controller);
+        MysticcraftClient.getInstance().acceptor.addAnimation(controller);
         return particle;
     }
 }

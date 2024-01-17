@@ -16,6 +16,7 @@ import net.kapitencraft.mysticcraft.init.*;
 import net.kapitencraft.mysticcraft.item.ColoredItem;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.IGemstoneItem;
 import net.kapitencraft.mysticcraft.item.material.RainbowElementalShard;
+import net.kapitencraft.mysticcraft.logging.Markers;
 import net.kapitencraft.mysticcraft.misc.ModItemProperties;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
@@ -46,7 +47,7 @@ public class ModEventBusClientEvents {
         ModItemProperties.addCustomItemProperties();
         MysticcraftMod.sendRegisterDisplay("Menu Screens");
         registerMenuScreens();
-        MysticcraftMod.sendInfo("rendering Mana Fluid");
+        MysticcraftMod.LOGGER.info(Markers.REGISTRY, "adding Fluid Renderers...");
         ItemBlockRenderTypes.setRenderLayer(ModFluids.SOURCE_MANA_FLUID.get(), RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(ModFluids.FLOWING_MANA_FLUID.get(), RenderType.translucent());
     }
