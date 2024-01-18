@@ -43,14 +43,14 @@ public class MysticcraftMod {
         return DeferredRegister.create(res(location), MOD_ID);
     }
 
-    public static <T> DeferredRegister<T> makeRegistry(String location, final Supplier<RegistryBuilder<T>> sup) {
-        DeferredRegister<T> register = makeRegistry(location);
-        register.makeRegistry(sup);
-        return register;
-    }
-
     public static <T> DeferredRegister<T> makeRegistry(ResourceKey<Registry<T>> key) {
         return DeferredRegister.create(key, MOD_ID);
+    }
+
+    public static <T> DeferredRegister<T> makeCustomRegistry(ResourceKey<Registry<T>> key, final Supplier<RegistryBuilder<T>> sup) {
+        DeferredRegister<T> register = makeRegistry(key);
+        register.makeRegistry(sup);
+        return register;
     }
     public static final double DAMAGE_CALCULATION_VALUE = 50;
 
