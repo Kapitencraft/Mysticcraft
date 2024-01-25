@@ -1,0 +1,21 @@
+{
+  "1.0": [
+    "bug-fixes (!)"
+  ],
+  "2.0": [
+    "skills",
+    "perks",
+    "self-made-skills"
+  ],
+  "3.0": [
+    "material-plates",
+    "schematics",
+    "schematic-builder",
+    "combat-towers",
+    "units",
+    "mana-item-storage",
+    "auto-crafting",
+    "mana-generation",
+    "mana-furnace and similar machines"
+  ]
+}

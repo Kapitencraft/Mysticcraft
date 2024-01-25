@@ -1,5 +1,4 @@
 Skills;
-Soul-Binding;
 Elemental Magic;
 Alchemy and Potions;
 Injection Magic;
@@ -34,6 +33,7 @@ Ritual Magic?
 
 Tutorial ideen:
 Codecs
+Custom-Model-Armor
 Debugger
 Json-Daten
 

@@ -22,6 +22,7 @@ import net.kapitencraft.mysticcraft.misc.damage_source.IAbilitySource;
 import net.kapitencraft.mysticcraft.mob_effects.NumbnessMobEffect;
 import net.kapitencraft.mysticcraft.networking.ModMessages;
 import net.kapitencraft.mysticcraft.networking.packets.S2C.DisplayTotemActivationPacket;
+import net.kapitencraft.mysticcraft.requirements.Requirement;
 import net.kapitencraft.mysticcraft.spell.spells.WitherShieldSpell;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
@@ -47,6 +48,7 @@ import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.ShieldBlockEvent;
+import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.CriticalHitEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -58,6 +60,7 @@ import java.util.Map;
 
 @Mod.EventBusSubscriber
 public class DamageEvents {
+    private DamageEvents() {}
 //TODO merge
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void miscDamageEvents(LivingHurtEvent event) {
@@ -108,7 +111,7 @@ public class DamageEvents {
 
     @SuppressWarnings("all")
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void HitEffectRegister(LivingHurtEvent event) {
+    public static void hitEffectRegister(LivingHurtEvent event) {
         LivingEntity living = event.getEntity();
         CompoundTag tag = living.getPersistentData();
         if (event.getSource().isFire() && living.hasEffect(ModMobEffects.BLAZING.get())) {
@@ -241,6 +244,10 @@ public class DamageEvents {
         }
     }
 
+    @SubscribeEvent
+    public static void onAttackEntity(AttackEntityEvent event) {
+        event.setCanceled(Requirement.doesntMeetReqsFromEvent(event));
+    }
 
     @SubscribeEvent
     public static void shieldBlockEnchantments(ShieldBlockEvent event) {

@@ -126,7 +126,7 @@ public abstract class ContainableItem<T extends Item> extends Item implements IM
     public boolean overrideOtherStackedOnMe(@NotNull ItemStack stack, @NotNull ItemStack stack1, @NotNull Slot slot, @NotNull ClickAction action, @NotNull Player player, @NotNull SlotAccess access) {
         if (action == ClickAction.SECONDARY && slot.allowModification(player)) {
             List<ContainableHolder<T>> list = getContents(stack);
-            if (stack1.isEmpty()) {
+            if (stack1.isEmpty() && !list.isEmpty()) {
                 ItemStack first = list.get(0).getDefaultStack();
                 remove(first, 1, stack);
             } else if (canApply(stack1.getItem())) {

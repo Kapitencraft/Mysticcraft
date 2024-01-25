@@ -22,6 +22,7 @@ public class TankEnchantment extends ArmorStatBoostEnchantment implements IUltim
         super(Rarity.VERY_RARE, EnchantmentCategory.ARMOR, MiscHelper.ARMOR_EQUIPMENT);
     }
 
+    //TODO fix scale being extremly high
     @Override
     public String[] getDescriptionMods(int level) {
         return new String[] {-level + "%", "+" + level * 2};

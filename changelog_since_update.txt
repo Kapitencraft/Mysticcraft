@@ -1,1 +1,7 @@
 added some new reforges;
+added Requirements:
+Elytras now require 5 killed Enderdragons to be used;
+implemented requirements disabling damaging, mining or using items;
+moved Registry display to debug;
+
+found and fixed error with quivers;

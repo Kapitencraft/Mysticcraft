@@ -13,7 +13,7 @@ public class ModRegistryKeys {
 
     public static final ResourceKey<Registry<GlyphEffect>> GLYPH_EFFECTS = createRegistry("glyph_effects");
     public static final ResourceKey<Registry<RequirementType>> REQ_TYPES = createRegistry("requirement_types");
-    public static final ResourceKey<Registry<Requirement>> REQUIREMENTS = createRegistry("requirements");
+    public static final ResourceKey<Registry<Requirement<?>>> REQUIREMENTS = createRegistry("requirements");
 
     private static <T> ResourceKey<Registry<T>> createRegistry(String id) {
         return ResourceKey.createRegistryKey(MysticcraftMod.res(id));

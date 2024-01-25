@@ -4,10 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.IUltimateEnchantment;
 import net.kapitencraft.mysticcraft.gui.IGuiHelper;
-import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
-import net.kapitencraft.mysticcraft.helpers.MathHelper;
-import net.kapitencraft.mysticcraft.helpers.MiscHelper;
-import net.kapitencraft.mysticcraft.helpers.TextHelper;
+import net.kapitencraft.mysticcraft.helpers.*;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModGlyphEffects;
 import net.kapitencraft.mysticcraft.item.ITieredItem;
@@ -164,6 +161,18 @@ public abstract class ItemStackClientMixin {
                 }
             }
         }
+        CapabilityHelper.exeCapability(self(), CapabilityHelper.ELYTRA, data1 -> {
+            if (Screen.hasShiftDown()) {
+                ElytraData data = data1.getData();
+                String id = "elytra_data." + data.getSerializedName();
+                list.add(Component.translatable(id).withStyle(ChatFormatting.GREEN).append(" ").append(Component.translatable("enchantment.level." + data1.getLevel())));
+                list.addAll(TextHelper.getAllMatchingFilter(i -> i == 0 ? id + ".desc" : id + ".desc" + i, component -> component.withStyle(ChatFormatting.YELLOW)));
+            } else {
+                list.add(Component.translatable("elytra_data.tooltip").withStyle(ChatFormatting.YELLOW));
+            }
+            addEmpty(list);
+        });
+        ClientHelper.addReqContent(list::add, self().getItem(), player);
         if (shouldShowInTooltip(j, ItemStack.TooltipPart.MODIFIERS)) {
             Reforge reforge = Reforge.getFromStack(self());
             for(EquipmentSlot equipmentslot : EquipmentSlot.values()) {
@@ -243,16 +252,6 @@ public abstract class ItemStackClientMixin {
             }
         }
         addEmpty(list);
-        CapabilityHelper.exeCapability(self(), CapabilityHelper.ELYTRA, data1 -> {
-                if (Screen.hasShiftDown()) {
-                    ElytraData data = data1.getData();
-                    String id = "elytra_data." + data.getSerializedName();
-                    list.add(Component.translatable(id).withStyle(ChatFormatting.GREEN).append(" ").append(Component.translatable("enchantment.level." + data1.getLevel())));
-                    list.addAll(TextHelper.getAllMatchingFilter(i -> i == 0 ? id + ".desc" : id + ".desc" + i, component -> component.withStyle(ChatFormatting.YELLOW)));
-                } else {
-                    list.add(Component.translatable("elytra_data.tooltip").withStyle(ChatFormatting.YELLOW));
-                }
-        });
         addEmpty(list);
         if (self().hasTag()) {
             if (shouldShowInTooltip(j, ItemStack.TooltipPart.UNBREAKABLE)) {

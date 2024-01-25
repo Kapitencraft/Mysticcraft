@@ -75,11 +75,22 @@ public class MiscHelper {
     //SOUTH = new Rotation("z+", 180, 2);
     //NORTH = new Rotation("z-", 360, 4);
 
+
+    /**
+     * @param stack the {@link ItemStack} to get the slot from
+     * @return the {@link EquipmentSlot} dedicated to this stack
+     */
     public static EquipmentSlot getSlotForStack(ItemStack stack) {
         return LivingEntity.getEquipmentSlotForItem(stack);
     }
 
-    public static Vec3 getFireWorkSpeedBoost(LivingEntity living) {
+
+    /**
+     * method to get the speed boost affected by speed boost Elytra Attachment
+     * @param living the entity to check for Elytra Capabilities
+     * @return returns the delta {@link Vec3} of the param
+     */
+    public static Vec3 getFireworkSpeedBoost(LivingEntity living) {
         Vec3 sourceLookAngle = living.getLookAngle();
         Vec3 sourceSpeed = living.getDeltaMovement();
         double d1 = 0.1;
@@ -98,6 +109,12 @@ public class MiscHelper {
         return sourceSpeed.add(sourceLookAngle.x * d1 + (sourceLookAngle.x * d2 - sourceSpeed.x) * d3, sourceLookAngle.y * d1 + (sourceLookAngle.y * d2 - sourceSpeed.y) * d3, sourceLookAngle.z * d1 + (sourceLookAngle.z * d2 - sourceSpeed.z) * d3);
     }
 
+
+    /**
+     * @param style the Style to add the effect to
+     * @param effect the effect to be added
+     * @return the new Style with applied effect
+     */
     public static Style withSpecial(Style style, GlyphEffect effect) {
         Style newStyle = style.withColor((ChatFormatting) null);
         EffectsStyle effectsStyle = (EffectsStyle) newStyle;
@@ -105,6 +122,11 @@ public class MiscHelper {
         return newStyle;
     }
 
+    /**
+     * @param value the value to cast
+     * @param target the target class to cast to
+     * @return the casted instance or null
+     */
     public static <T, K extends T> K instance(T value, Class<K> target) {
         try {
             return (K) value;
@@ -113,10 +135,22 @@ public class MiscHelper {
         }
     }
 
+    /**
+     * @param in stream to cast
+     * @param kClass class to cast every stream element to
+     * @return the stream with the casted
+     */
     public static <T, K extends T> Stream<K> instanceStream(Stream<T> in, Class<K> kClass) {
         return CollectionHelper.mapSync(in, kClass, MiscHelper::instance);
     }
 
+    /**
+     * method to repair items simular to {@link net.minecraft.world.item.enchantment.MendingEnchantment}
+     * @param player player to repair items on
+     * @param value the base amount of repair capacity
+     * @param ench the enchantment this calculation is based on (see {@link net.kapitencraft.mysticcraft.enchantments.HealthMendingEnchantment} and {@link net.minecraft.world.item.enchantment.MendingEnchantment})
+     * @return the amount of capacity that hasn't been used
+     */
     public static int repairPlayerItems(Player player, int value, Enchantment ench) {
         Map.Entry<EquipmentSlot, ItemStack> entry = EnchantmentHelper.getRandomItemWith(ench, player, ItemStack::isDamaged);
         if (entry != null) {
@@ -132,12 +166,24 @@ public class MiscHelper {
     }
 
 
+    /**
+     * method to get the enchantment level of a stack and execute the consumer when above 0
+     * @param stack the stack to check the enchantment level of
+     * @param enchantment the enchantment to check
+     * @param enchConsumer the method to be executed when level > 0
+     */
     public static void getEnchantmentLevelAndDo(ItemStack stack, Enchantment enchantment, Consumer<Integer> enchConsumer) {
         if (stack.getEnchantmentLevel(enchantment) > 0) {
             enchConsumer.accept(stack.getEnchantmentLevel(enchantment));
         }
     }
 
+    /**
+     * method to get the Rarity of an {@link ItemStack}
+     * @param rarity the stack's item's base rarity
+     * @param stack the stack to check the rarity on
+     * @return the rarity after calculation enchantment mods
+     */
     @SuppressWarnings("ALL")
     public static Rarity getFinalRarity(Rarity rarity, ItemStack stack) {
         if (!stack.isEnchanted()) {
@@ -153,6 +199,16 @@ public class MiscHelper {
         }
     }
 
+
+    /**
+     * a simple method to get a difficulty sensitive value
+     * @param difficulty the difficulty to scan for
+     * @param easy the value if difficulty is easy
+     * @param medium the value if difficulty is medium
+     * @param hard the value if difficulty is hard
+     * @param peaceful the value if difficulty is peaceful
+     * @return the value from the check
+     */
     public static <T> T forDifficulty(Difficulty difficulty, T easy, T medium, T hard, T peaceful) {
         return switch (difficulty) {
             case EASY -> easy;
@@ -162,17 +218,38 @@ public class MiscHelper {
         };
     }
 
+    /**
+     * a method that adds a new {@link VeinMinerHolder} to being executed due to too much lag from doing it at once
+     * @param pos the start location of the {@link VeinMinerHolder}
+     * @param serverPlayer the reason of the {@link VeinMinerHolder}
+     * @param block the block to break by the {@link VeinMinerHolder}
+     * @param extra more things to be done when the {@link VeinMinerHolder} breaks a block
+     * @param shouldMine a {@link Predicate} to check if a block should be mined
+     * @param shouldBreak a {@link Predicate} to cancel the {@link VeinMinerHolder}
+     */
     public static void mineMultiple(BlockPos pos, ServerPlayer serverPlayer, Block block, Consumer<BlockPos> extra, Predicate<BlockState> shouldMine, Predicate<BlockPos> shouldBreak) {
         VeinMinerHolder holder = new VeinMinerHolder(serverPlayer, block, extra, shouldMine, shouldBreak);
         holder.start(pos);
     }
 
+    /**
+     * method to do code when a t is not null
+     * @param t value to check null of
+     * @param toDo to do when t isn't null
+     */
     public static <T> void ifNonNull(@Nullable T t, Consumer<T> toDo) {
         if (t != null) {
             toDo.accept(t);
         }
     }
 
+    /**
+     * simular method to ifNonNull but with return value and supplier for null
+     * @param t method to check null
+     * @param function transfer-method to convert it into the return value
+     * @param defaulted {@link Supplier} to get a value if t was null
+     * @return mapped result (either from function or defaulted)
+     */
     public static <T, K> @NotNull K ifNonNullOrDefault(@Nullable T t, Function<T, K> function, Supplier<K> defaulted) {
         if (t != null) {
             return function.apply(t);
@@ -180,20 +257,30 @@ public class MiscHelper {
         return defaulted.get();
     }
 
+    /**
+     * @param rarity to add to the {@link Item.Properties}
+     * @return a {@link Item.Properties} with the rarity
+     */
     public static Item.Properties rarity(Rarity rarity) {
         return new Item.Properties().rarity(rarity);
     }
 
 
+    /**
+     * method to add an achievement to a player
+     * @param player player to add achievement to
+     * @param achievementName name of the achievement
+     * @return true if the achievement has been awarded, false otherwise
+     */
     public static boolean awardAchievement(Player player, String achievementName) {
-        if (player instanceof ServerPlayer _player) {
-            ServerAdvancementManager manager = _player.server.getAdvancements();
-            Advancement _adv = manager.getAdvancement(new ResourceLocation(achievementName));
-            PlayerAdvancements advancements = _player.getAdvancements();
-            if (_adv != null) {
-                AdvancementProgress _ap = advancements.getOrStartProgress(_adv);
-                if (!_ap.isDone()) {
-                    for (String s : _ap.getRemainingCriteria()) advancements.award(_adv, s);
+        if (player instanceof ServerPlayer serverPlayer) {
+            ServerAdvancementManager manager = serverPlayer.server.getAdvancements();
+            Advancement adv = manager.getAdvancement(new ResourceLocation(achievementName));
+            PlayerAdvancements advancements = serverPlayer.getAdvancements();
+            if (adv != null) {
+                AdvancementProgress progress = advancements.getOrStartProgress(adv);
+                if (!progress.isDone()) {
+                    for (String s : progress.getRemainingCriteria()) advancements.award(adv, s);
                     return true;
                 }
             }
@@ -201,6 +288,13 @@ public class MiscHelper {
         return false;
     }
 
+    /**
+     * @param provider mapper to get value from
+     * @param defaultValue returned if none of the values does
+     * @param key key to search for
+     * @param values values to search in
+     * @return the found value or defaultValue if noting was returned
+     */
     public static <T, K> T getValue(Function<T, K> provider, T defaultValue, K key, T... values) {
         for (T t : values) {
             if (provider.apply(t).equals(key)) {
@@ -210,14 +304,12 @@ public class MiscHelper {
         return defaultValue;
     }
 
-    public interface delayRun {
-        void run();
-    }
-
-
-
-
-    public static void delayed(int delayTicks, delayRun run) {
+    /**
+     * a method to delay run by delayTicks
+     * @param delayTicks time (in ticks) to delay
+     * @param run runnable to execute at the end of the delay
+     */
+    public static void delayed(int delayTicks, Runnable run) {
         new Object() {
             private int ticks = 0;
             private float waitTicks;
@@ -241,16 +333,34 @@ public class MiscHelper {
         }.start(delayTicks);
     }
 
+    /**
+     * method to ensure that given stacks contain a {@link CompoundTag}
+     * @param stacks stacks to
+     */
     public static void ensureTags(ItemStack... stacks) {
         Arrays.stream(stacks).filter(stack -> stack != ItemStack.EMPTY).forEach(ItemStack::getOrCreateTag);
     }
 
+
+    /**
+     * test method
+     * @param entity
+     * @param maxRange
+     * @return
+     */
     public static boolean saveTeleportTest(Entity entity, double maxRange) {
         Vec3 targetPos = entity.getLookAngle().scale(maxRange).add(MathHelper.getPosition(entity));
         entity.move(MoverType.SELF, targetPos);
         return true;
     }
 
+    /**
+     * method to teleport entity maxRange blocks forward, checking block hits
+     * @param entity entity to teleport
+     * @param maxRange maximal range of the teleport, reduced when hitting a block
+     * @return if the entity has been teleported
+     */
+    @Deprecated
     public static boolean saveTeleport(Entity entity, double maxRange) {
         ArrayList<Vec3> lineOfSight = MathHelper.lineOfSight(entity, maxRange, 0.1);
         entity.stopRiding();
@@ -271,12 +381,22 @@ public class MiscHelper {
         return false;
     }
 
+    /**
+     * method to directly teleport a player to the target location
+     * sending sounds and resetting fall-distance
+     * @param entity entity to teleport
+     * @param teleportPosition target teleportation location
+     */
     public static void teleport(Entity entity, Vec3 teleportPosition) {
         entity.teleportTo(teleportPosition.x, teleportPosition.y, teleportPosition.z);
         entity.fallDistance = 0;
         entity.level.playSound(entity, new BlockPos(MathHelper.getPosition(entity)), SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1f, 1f);
     }
 
+    /**
+     * @param times amount of times the consumer will be called
+     * @param consumer usage of the integer with the index of the iteration
+     */
     public static void repeat(int times, Consumer<Integer> consumer) {
         for (int i = 0; i < times; i++) {
             consumer.accept(i);
@@ -284,6 +404,11 @@ public class MiscHelper {
     }
 
     public static final MutableComponent SPLIT = Component.literal(" ");
+
+    /**
+     * @param components all components to merge to getter
+     * @return the merged component
+     */
     public static MutableComponent buildComponent(MutableComponent... components) {
         MutableComponent empty = Component.empty();
         for (MutableComponent component : components) {
@@ -293,7 +418,11 @@ public class MiscHelper {
     }
 
 
-
+    /**
+     * method to simply get the attacker from a {@link DamageSource}
+     * @param source {@link DamageSource} to get attacker from
+     * @return the {@link Nullable} {@link LivingEntity} to get from the damagesource
+     */
     public static @Nullable LivingEntity getAttacker(DamageSource source) {
         if (source.getEntity() instanceof Projectile projectile && projectile.getOwner() instanceof LivingEntity living) {
             return living;
@@ -303,6 +432,12 @@ public class MiscHelper {
         return null;
     }
 
+    /**
+     * {@link DamageType} to get from a DamageSource
+     * used for Enchantments
+     * @param source source to get DamageType from
+     * @return DamageType from the source
+     */
     public static DamageType getDamageType(DamageSource source) {
         if (source.getMsgId().contains("ability") || source.getMsgId().contains("magic")) {
             return DamageType.MAGIC;
@@ -316,6 +451,9 @@ public class MiscHelper {
         return DamageType.MISC;
     }
 
+    /**
+     * the damage types for enchantment calculation
+     */
     public enum DamageType {
         RANGED,
         MELEE,

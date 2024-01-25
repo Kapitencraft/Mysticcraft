@@ -19,6 +19,10 @@ public class CollectionHelper {
         return null;
     }
 
+    public static <T> List<T> mutableList(List<T> immutable) {
+        return new ArrayList<>(immutable);
+    }
+
     public static <T> void removeMapping2(List<T> ts, BiPredicate<T, T> predicate) {
         ts.removeIf(t -> {
             int id = ts.indexOf(t);

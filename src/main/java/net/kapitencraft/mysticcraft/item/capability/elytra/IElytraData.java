@@ -9,6 +9,8 @@ public interface IElytraData {
 
     int getLevel();
 
+    void setLevel(int level);
+
     default int getLevelForData(ElytraData data) {
         return data == getData() ? getLevel() : 0;
     }

@@ -38,6 +38,7 @@ public class ModRegistryInit {
         register("Command Arguments", ModCommandArguments.REGISTRY);
         register("Recipe Types", ModRecipeSerializers.REGISTRY);
         register("Glyph Effects", ModGlyphEffects.REGISTRY);
+        register("Requirements", ModRequirements.REGISTRY);
         MysticcraftMod.LOGGER.info(Markers.REGISTRY, "loading {} registries took {} ms", registered, Util.getMillis() - l);
     }
 

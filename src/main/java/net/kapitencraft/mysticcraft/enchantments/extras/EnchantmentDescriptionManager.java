@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.enchantments.extras;
 
 import net.kapitencraft.mysticcraft.enchantments.abstracts.ModEnchantment;
+import net.kapitencraft.mysticcraft.helpers.ClientHelper;
 import net.kapitencraft.mysticcraft.helpers.TextHelper;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneHelper;
 import net.minecraft.ChatFormatting;
@@ -9,6 +10,7 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentContents;
 import net.minecraft.network.chat.contents.TranslatableContents;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -24,15 +26,15 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
+@Mod.EventBusSubscriber()
 public class EnchantmentDescriptionManager {
 
     @SubscribeEvent
     public static void registerTooltip(ItemTooltipEvent event) {
-        onItemTooltip(event.getItemStack(), event.getToolTip(), event.getFlags());
+        onItemTooltip(event.getItemStack(), event.getToolTip(), event.getFlags(), event.getEntity());
     }
 
-    private static void onItemTooltip(ItemStack stack, List<Component> tooltip, TooltipFlag ignoredTooltipFlag) {
+    private static void onItemTooltip(ItemStack stack, List<Component> tooltip, TooltipFlag ignoredTooltipFlag, Player player) {
         Set<Enchantment> enchantments = EnchantmentHelper.getEnchantments(stack).keySet();
         boolean fromBook = stack.getItem() instanceof EnchantedBookItem;
         if (!enchantments.isEmpty()) {
@@ -44,11 +46,13 @@ public class EnchantmentDescriptionManager {
                         ComponentContents contents = line.getContents();
                         if (contents instanceof TranslatableContents translatable) {
                             if (translatable.getKey().equals(enchantment.getDescriptionId())) {
+                                int lineIndex = tooltip.indexOf(line) + 1;
                                 if (fromBook) {
-                                    if (!enchantment.isTradeable()) tooltip.add(tooltip.indexOf(line) + 1, Component.translatable("mysticcraft.ench_desc.not_tradeable").withStyle(ChatFormatting.YELLOW));
-                                    if (enchantment.isTreasureOnly()) tooltip.add(tooltip.indexOf(line) + 1, Component.translatable("mysticcraft.ench_desc.treasure").withStyle(ChatFormatting.YELLOW));
+                                    if (!enchantment.isTradeable()) tooltip.add(lineIndex, Component.translatable("mysticcraft.ench_desc.not_tradeable").withStyle(ChatFormatting.YELLOW));
+                                    if (enchantment.isTreasureOnly()) tooltip.add(lineIndex, Component.translatable("mysticcraft.ench_desc.treasure").withStyle(ChatFormatting.YELLOW));
                                 }
-                                tooltip.addAll(tooltip.indexOf(line) + 1, getDescription(stack, enchantment));
+                                ClientHelper.addReqContent(tooltip::add, enchantment, player);
+                                tooltip.addAll(lineIndex, getDescription(stack, enchantment));
                                 break;
                             }
                         }
@@ -65,9 +69,7 @@ public class EnchantmentDescriptionManager {
         return TextHelper.getAllMatchingFilter(integer -> {
             String descId = ench.getDescriptionId() + ".desc";
             if (!I18n.exists(descId)) descId += "ription";
-            if (integer != 0) {
-                descId += integer;
-            }
+            if (integer != 0) descId += integer;
             return descId;
         }, component -> component.withStyle(ChatFormatting.DARK_GRAY), stream.map(TextHelper::wrapInRed).toArray());
     }

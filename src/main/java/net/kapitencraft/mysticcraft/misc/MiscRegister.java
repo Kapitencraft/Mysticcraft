@@ -35,6 +35,7 @@ import net.kapitencraft.mysticcraft.misc.cooldown.Cooldowns;
 import net.kapitencraft.mysticcraft.misc.particle_help.ParticleAnimator;
 import net.kapitencraft.mysticcraft.networking.ModMessages;
 import net.kapitencraft.mysticcraft.networking.packets.S2C.SyncGuildsPacket;
+import net.kapitencraft.mysticcraft.requirements.Requirement;
 import net.kapitencraft.mysticcraft.villagers.ModVillagers;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -92,8 +93,6 @@ import java.util.List;
 @Mod.EventBusSubscriber
 public class MiscRegister {
     public static final String DOUBLE_JUMP_ID = "currentDoubleJump";
-
-
 
     @SubscribeEvent
     public static void loadingLevel(LevelEvent.Load event) {
@@ -301,6 +300,7 @@ public class MiscRegister {
         }
         else if (event.getEntity() instanceof ServerPlayer serverPlayer) {
             ModMessages.sendToClientPlayer(SyncGuildsPacket.loadAll(GuildHandler.all()), serverPlayer);
+            serverPlayer.getStats().sendStats(serverPlayer);
         }
     }
     @SubscribeEvent
@@ -334,6 +334,13 @@ public class MiscRegister {
     private static void addXp(Player player, int amount) {
         player.giveExperiencePoints(MiscHelper.repairPlayerItems(player, amount, Enchantments.MENDING));
     }
+
+    @SubscribeEvent
+    public void onPlayerBreakSpeed(PlayerEvent.BreakSpeed event) {
+        event.setCanceled(Requirement.doesntMeetReqsFromEvent(event));
+    }
+
+
 
     @SuppressWarnings("all")
     @SubscribeEvent(priority = EventPriority.LOWEST)

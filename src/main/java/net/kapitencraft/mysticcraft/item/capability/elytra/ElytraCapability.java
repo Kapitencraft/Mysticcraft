@@ -37,6 +37,10 @@ public class ElytraCapability extends ModCapability<ElytraCapability, IElytraDat
     public static void merge(ItemStack stack, ItemStack stack1) {
         CapabilityHelper.exeCapability(stack, CapabilityHelper.ELYTRA, iElytraData ->
                 CapabilityHelper.exeCapability(stack1, CapabilityHelper.ELYTRA, iElytraData1 -> {
+                    int level = iElytraData.getLevel();
+                    if (level == iElytraData1.getLevel() && level < iElytraData.getData().getMaxLevel()) {
+                        iElytraData.setLevel(level+1);
+                    }
                 })
         );
     }
@@ -72,5 +76,10 @@ public class ElytraCapability extends ModCapability<ElytraCapability, IElytraDat
     @Override
     public int getLevel() {
         return level;
+    }
+
+    @Override
+    public void setLevel(int level) {
+        this.level = level;
     }
 }

@@ -2,33 +2,46 @@ package net.kapitencraft.mysticcraft.requirements;
 
 import net.kapitencraft.mysticcraft.init.custom.ModRegistries;
 import net.kapitencraft.mysticcraft.requirements.type.RequirementType;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.RegistryObject;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
 
-public class Requirement {
+public class Requirement<T> {
 
     private final RequirementType type;
-    private final RegistryObject<? extends Item> target;
+    private final Supplier<? extends T> target;
 
-    public Requirement(RequirementType type, RegistryObject<? extends Item> target) {
+    public Requirement(RequirementType type, Supplier<? extends T> target) {
         this.type = type;
         this.target = target;
     }
 
-    public boolean related(ItemStack stack) {
-        return stack.is(target.get());
+    public Component display() {
+        return type.display();
     }
 
-
-    public static boolean meetsRequirements(ServerPlayer player, ItemStack stack) {
-        return getReqs(stack).stream().allMatch(requirement -> requirement.type.matchesPlayer(player));
+    public <K> boolean related(K t) {
+        return target.get() == t;
     }
 
-    public static List<Requirement> getReqs(ItemStack stack) {
-        return ModRegistries.REQUIREMENT_REGISTRY.stream().filter(requirement -> requirement.related(stack)).toList();
+    public boolean matches(Player player) {
+        return player != null && this.type.matchesPlayer(player);
+    }
+
+    public static <T> boolean doesntMeetRequirements(Player player, T obj) {
+        List<Requirement<T>> list = (List<Requirement<T>>) getReqs(obj);
+        return !list.stream().allMatch(requirement -> requirement.matches(player));
+    }
+
+    public static boolean doesntMeetReqsFromEvent(PlayerEvent event) {
+        return doesntMeetRequirements(event.getEntity(), event.getEntity().getMainHandItem().getItem());
+    }
+
+    public static <T> List<? extends Requirement<?>> getReqs(T target) {
+        return ModRegistries.REQUIREMENT_REGISTRY.getEntries().stream().map(Map.Entry::getValue).filter(requirement -> requirement.related(target)).toList();
     }
 }

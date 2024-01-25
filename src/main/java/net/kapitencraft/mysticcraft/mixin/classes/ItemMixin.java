@@ -48,10 +48,6 @@ public abstract class ItemMixin implements IForgeItem {
 
     @Shadow @Final private Rarity rarity;
 
-    @Shadow public abstract boolean isBarVisible(ItemStack p_150899_);
-
-    @Shadow @Final private int maxDamage;
-
     private Item self() {return (Item) (Object) this;}
 
     /**
@@ -89,6 +85,7 @@ public abstract class ItemMixin implements IForgeItem {
      */
     @Inject(method = "use", at = @At("HEAD"), cancellable = true)
     public void use(@NotNull Level level, Player player, @NotNull InteractionHand hand, CallbackInfoReturnable<InteractionResultHolder<ItemStack>> cir) {
+
         CompoundTag tag = player.getPersistentData();
         ItemStack itemstack = player.getItemInHand(hand);
         if (itemstack.getItem() instanceof ISpellItem item) {

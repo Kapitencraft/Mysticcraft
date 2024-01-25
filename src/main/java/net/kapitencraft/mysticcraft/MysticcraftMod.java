@@ -79,7 +79,7 @@ public class MysticcraftMod {
     }
 
     public static void sendRegisterDisplay(String nameOfRegistered, Marker marker) {
-        LOGGER.info(marker, "Registering {}...", nameOfRegistered);
+        LOGGER.debug(marker, "Registering {}...", nameOfRegistered);
     }
     public static void sendRegisterDisplay(String nameOfRegistered) {
         sendRegisterDisplay(nameOfRegistered, Markers.REGISTRY);

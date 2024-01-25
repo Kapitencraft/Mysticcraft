@@ -4,14 +4,16 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.misc.MiscRegister;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec2;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderGuiOverlayEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
+import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -20,10 +22,8 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-@Mod.EventBusSubscriber(value = Dist.CLIENT)
+@Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class Rendering {
-    private static final int baseWidth = 427;
-    private static final int baseHeight = 240;
     private static final PoseStack BIG_SYMBOLS = new PoseStack();
     private static final PoseStack MEDIUM_SYMBOLS = new PoseStack();
     private static final PoseStack SMALL_SYMBOLS = new PoseStack();
@@ -35,22 +35,22 @@ public class Rendering {
         SMALL_SYMBOLS.scale(0.5f, 0.5f, 0.5f);
         addRenderer(new RenderHolder(
                 new PositionHolder(-203, -116),
-                player -> "§9" + MathHelper.round(player.getAttributeValue(ModAttributes.MANA.get()), 1) + " [+" + MathHelper.round(player.getPersistentData().getDouble(MiscRegister.OVERFLOW_MANA_ID), 1) + " Overflow] §r / §1" + player.getAttributeValue(ModAttributes.MAX_MANA.get()) + " (+" + MathHelper.round(player.getPersistentData().getDouble("manaRegen") * 20, 2) + "/s)",
+                player -> Component.literal(MathHelper.round(player.getAttributeValue(ModAttributes.MANA.get()), 1) + " [+" + MathHelper.round(player.getPersistentData().getDouble(MiscRegister.OVERFLOW_MANA_ID), 1) + " Overflow] §r / §1" + player.getAttributeValue(ModAttributes.MAX_MANA.get()) + " (+" + MathHelper.round(player.getPersistentData().getDouble("manaRegen") * 20, 2) + "/s)").withStyle(ChatFormatting.BLUE),
                 RenderType.BIG
         ));
         addRenderer(new RenderHolder(
                 new PositionHolder(-90, 330),
-                player -> "§1Protection: " + getDamageProtection(player) + "%",
+                player -> Component.literal("Protection: " + getDamageProtection(player) + "%").withStyle(ChatFormatting.DARK_BLUE),
                 RenderType.SMALL
         ));
         addRenderer(new RenderHolder(
                 new Rendering.PositionHolder(-90, 340),
-                player -> "§3Effective HP: " + MathHelper.defRound(player.getHealth() * 100 / (100 - getDamageProtection(player))),
+                player -> Component.literal("Effective HP: " + MathHelper.defRound(player.getHealth() * 100 / (100 - getDamageProtection(player)))).withStyle(ChatFormatting.DARK_AQUA),
                 RenderType.SMALL
         ));
         addRenderer(new RenderHolder(
                 new PositionHolder(-90, 350),
-                player -> "Current Speed: " + MathHelper.defRound(player.getDeltaMovement().length()) + " b/s",
+                player -> Component.literal("Current Speed: " + MathHelper.defRound(player.getDeltaMovement().length()) + " b/s").withStyle(ChatFormatting.YELLOW),
                 RenderType.SMALL
         ));
 
@@ -59,12 +59,14 @@ public class Rendering {
         return MathHelper.defRound(100 - MathHelper.calculateDamage(100, living.getAttributeValue(Attributes.ARMOR), living.getAttributeValue(Attributes.ARMOR_TOUGHNESS)));
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public static void overlays(RenderGuiOverlayEvent.Pre event) {
-        int w = event.getWindow().getGuiScaledWidth();
-        int h = event.getWindow().getGuiScaledHeight();
-        int posX = w * (w / baseWidth) / 2;
-        int posY = h * (h / baseHeight) / 2;
+    @SubscribeEvent
+    public static void overlays(RegisterGuiOverlaysEvent event) {
+        event.registerAboveAll("main", Rendering::render);
+    }
+
+    private static void render(ForgeGui forgeGui, PoseStack stack, float partialTicks, int screenWidth, int screenHeight) {
+        int posX = screenWidth / 2;
+        int posY = screenHeight / 2;
         Player entity = Minecraft.getInstance().player;
         if (entity != null) {
             list.forEach(renderHolder -> {
@@ -72,13 +74,14 @@ public class Rendering {
                 render(getStack(renderHolder.type), renderHolder.provider.apply(entity), posX + pos.x, posY + pos.y);
             });
         }
+
     }
 
     public static void addRenderer(RenderHolder holder) {
         list.add(holder);
     }
 
-    private static void render(PoseStack stack, String toWrite, float x, float y) {
+    private static void render(PoseStack stack, Component toWrite, float x, float y) {
         Minecraft.getInstance().font.draw(stack, toWrite, x, y, -1);
     }
 
@@ -92,10 +95,10 @@ public class Rendering {
 
     public static class RenderHolder {
         private final PositionHolder pos;
-        private final Function<Player, String> provider;
+        private final Function<Player, Component> provider;
         private final RenderType type;
 
-        public RenderHolder(PositionHolder pos, Function<Player, String> provider, RenderType type) {
+        public RenderHolder(PositionHolder pos, Function<Player, Component> provider, RenderType type) {
             this.pos = pos;
             this.provider = provider;
             this.type = type;

@@ -19,6 +19,13 @@ import java.util.function.UnaryOperator;
 public class AttributeHelper {
 
 
+    /**
+     * @param multimap {@link Multimap} to increase
+     * @param percent percentage to increase all multimap contents with filter to operations and attributeReq
+     * @param operations filter for {@link AttributeModifier.Operation}s
+     * @param attributeReq filter to only increase param's {@link Attribute}
+     * @return the multimap with all increased values
+     */
     public static Multimap<Attribute, AttributeModifier> increaseByPercent(Multimap<Attribute, AttributeModifier> multimap, double percent, AttributeModifier.Operation[] operations, @Nullable Attribute attributeReq) {
         HashMultimap<Attribute, AttributeModifier> toReturn = HashMultimap.create();
         Collection<AttributeModifier> attributeModifiers;
@@ -77,6 +84,11 @@ public class AttributeHelper {
         return multimap;
     }
 
+    /**
+     * @param list to merge into
+     * @param toMerge the Map being merged into list
+     * @return {@link Multimap} with the toMerge content added to it
+     */
     public static Multimap<Attribute, AttributeModifier> increaseAllByAmount(Multimap<Attribute, AttributeModifier> list, Map<Attribute, AttributeModifier> toMerge) {
         for (Attribute attribute : toMerge.keySet()) {
             for (AttributeModifier modifier : List.of(toMerge.get(attribute)))
@@ -85,6 +97,10 @@ public class AttributeHelper {
         return list;
     }
 
+    /**
+     * see {@link Map} version above
+     * @param toMerge map -> multimap
+     */
     public static Multimap<Attribute, AttributeModifier> increaseAllByAmount(Multimap<Attribute, AttributeModifier> map, Multimap<Attribute, AttributeModifier> toMerge) {
         for (Attribute attribute : toMerge.keySet()) {
             for (AttributeModifier modifier : toMerge.get(attribute)) {
