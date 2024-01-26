@@ -1,9 +1,12 @@
 package net.kapitencraft.mysticcraft.client.render;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
@@ -20,16 +23,17 @@ public class RenderBlock {
     @SubscribeEvent
     public static void render(RenderLevelStageEvent event) {
         if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_SOLID_BLOCKS) {
-            renderBlocks(event.getProjectionMatrix());
+            renderBlocks(event.getProjectionMatrix(), event.getPoseStack());
         }
     }
 
-    private static void renderBlocks(Matrix4f matrix) {
+    private static void renderBlocks(Matrix4f matrix, PoseStack stack) {
         RenderSystem.assertOnRenderThread();
         Tesselator tesselator = RenderSystem.renderThreadTesselator();
         MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(tesselator.getBuilder());
-        VertexConsumer builder = bufferSource.getBuffer(ModRenderTypes.OVERLAY_LINES);
+        VertexConsumer builder = bufferSource.getBuffer(RenderType.lines());
         for (BlockPos pos : toRender) {
+            Minecraft.getInstance().levelRenderer.renderHitOutline(stack, builder, );
             renderLine(builder, matrix, pos, 0, 0, 0, 1, 0, 0);
             renderLine(builder, matrix, pos, 0, 1, 0, 1, 1, 0);
             renderLine(builder, matrix, pos, 0, 0, 1, 1, 0 ,1);
