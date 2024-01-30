@@ -16,5 +16,8 @@ public interface ModRequirements {
     DeferredRegister<Requirement<?>> REGISTRY = MysticcraftMod.makeCustomRegistry(ModRegistryKeys.REQUIREMENTS, RegistryBuilder::new);
 
     RegistryObject<Requirement<Item>> ELYTRA_REQ = REGISTRY.register("elytra_req", ()-> new Requirement<>(new StatReqType(Stats.ENTITY_KILLED.get(EntityType.ENDER_DRAGON), 5), ()-> Items.ELYTRA));
-    RegistryObject<Requirement<Item>> MANA_STEEL_REQ = REGISTRY.register("mana_steel_req", ()-> new Requirement<>(new StatReqType(Stats.ENTITY_KILLED.get(EntityType.ZOMBIE), 50), ModItems.VALKYRIE));
+    RegistryObject<Requirement<Item>> HYPERION_REQ = REGISTRY.register("hyperion_req", ()-> new Requirement<>(new StatReqType(Stats.CUSTOM.get(ModStatTypes.STORMS_KILLED.get()), 10), ModItems.HYPERION));
+    RegistryObject<Requirement<Item>> VALKYRIE_REQ = REGISTRY.register("valkyrie_req", ()-> new Requirement<>(new StatReqType(Stats.CUSTOM.get(ModStatTypes.NECRONS_KILLED.get()), 10), ModItems.VALKYRIE));
+    RegistryObject<Requirement<Item>> SCYLLA_REQ = REGISTRY.register("scylla_req", ()-> new Requirement<>(new StatReqType(Stats.CUSTOM.get(ModStatTypes.MAXORS_KILLED.get()), 10), ModItems.SCYLLA));
+    RegistryObject<Requirement<Item>> ASTREA_REQ = REGISTRY.register("astrea_req", ()-> new Requirement<>(new StatReqType(Stats.CUSTOM.get(ModStatTypes.GOLDORS_KILLED.get()), 10), ModItems.ASTREA));
 }

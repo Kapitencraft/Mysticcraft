@@ -13,6 +13,7 @@ import net.kapitencraft.mysticcraft.item.combat.armor.WarpedArmorItem;
 import net.kapitencraft.mysticcraft.item.combat.totems.ModTotemItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword.ManaSteelSwordItem;
 import net.kapitencraft.mysticcraft.item.item_bonus.Bonus;
+import net.kapitencraft.mysticcraft.item.material.PrecursorRelicItem;
 import net.kapitencraft.mysticcraft.item.misc.SoulbindHelper;
 import net.kapitencraft.mysticcraft.misc.DamageCounter;
 import net.kapitencraft.mysticcraft.misc.HealingHelper;
@@ -37,6 +38,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Arrow;
@@ -289,6 +291,11 @@ public class DamageEvents {
                     itemEntity.move();
                 }
             }
+        }
+        if (toDie instanceof WitherBoss boss) {
+            PrecursorRelicItem.BossType type = PrecursorRelicItem.BossType.fromBoss(boss);
+            LivingEntity living = MiscHelper.getAttacker(event.getSource());
+            if (living instanceof Player player) player.awardStat(type.getStatLoc());
         }
     }
 }

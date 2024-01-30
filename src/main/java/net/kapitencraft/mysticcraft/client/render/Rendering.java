@@ -30,7 +30,7 @@ public class Rendering {
 
     static {
         addRenderer(new RenderHolder(
-                new PositionHolder(-203, -116),
+                new PositionHolder(203, 116).setType(PositionHolder.AssertType.BOTTOM_RIGHT),
                 player -> Component.literal(MathHelper.round(player.getAttributeValue(ModAttributes.MANA.get()), 1) + " [+" + MathHelper.round(player.getPersistentData().getDouble(MiscRegister.OVERFLOW_MANA_ID), 1) + " Overflow] §r / §1" + player.getAttributeValue(ModAttributes.MAX_MANA.get()) + " (+" + MathHelper.round(player.getPersistentData().getDouble("manaRegen") * 20, 2) + "/s)").withStyle(ChatFormatting.BLUE),
                 RenderType.BIG
         ));
@@ -68,7 +68,13 @@ public class Rendering {
             list.forEach(renderHolder -> {
                 Vec2 pos = renderHolder.pos.makePos();
                 renderHolder.type.onInit.accept(stack);
-                render(stack, renderHolder.provider.apply(entity), posX + pos.x, posY + pos.y);
+                float x = pos.x;
+                float y = pos.y;
+                if (renderHolder.pos.type == PositionHolder.AssertType.MIDDLE) {
+                    x += posX;
+                    y += posY;
+                }
+                render(stack, renderHolder.provider.apply(entity), x, y);
                 renderHolder.type.onDone.accept(stack);
                 });
         }
@@ -98,6 +104,7 @@ public class Rendering {
     public static class PositionHolder {
         private final Supplier<Float> x;
         private final Supplier<Float> y;
+        private AssertType type = AssertType.MIDDLE;
 
         public PositionHolder(Supplier<Float> x, Supplier<Float> y) {
             this.x = x;
@@ -109,15 +116,25 @@ public class Rendering {
             this.y = () -> y;
         }
 
+        public PositionHolder setType(AssertType type) {
+            this.type = type;
+            return this;
+        }
+
         public Vec2 makePos() {
             return new Vec2(x.get(), y.get());
+        }
+
+        private enum AssertType {
+            BOTTOM_RIGHT,
+            MIDDLE
         }
     }
 
     public enum RenderType {
         BIG(stack -> {}, stack -> {}),
-        MEDIUM(stack -> stack.scale(0.75f, 0.75f, 0.75f), stack -> stack.scale((float) (1/0.75), (float) (1/0.75), (float) (1/0.75))),
-        SMALL(stack -> stack.scale(0.5f, 0.5f, 0.5f), stack -> stack.scale(2, 2, 2));
+        MEDIUM(stack -> stack.scale(0.9f, 0.9f, 0.9f), stack -> stack.scale(1/0.9f, 1/0.9f, 1/0.9f)),
+        SMALL(stack -> stack.scale(0.65f, 0.65f, 0.65f), stack -> stack.scale(1/0.65f, 1/0.65f, 1/0.65f));
 
         private final Consumer<PoseStack> onInit;
         private final Consumer<PoseStack> onDone;

@@ -3,10 +3,12 @@ package net.kapitencraft.mysticcraft.item.material;
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.init.ModItems;
+import net.kapitencraft.mysticcraft.init.ModStatTypes;
 import net.kapitencraft.mysticcraft.item.misc.IModItem;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -70,7 +72,7 @@ public class PrecursorRelicItem extends Item implements IModItem {
     }
 
     public enum BossType implements StringRepresentable {
-        NECRON("diamantes_handle", "Necron", boss -> {
+        NECRON(ModStatTypes.NECRONS_KILLED, "diamantes_handle", "Necron", boss -> {
             AttributeInstance attackDamage = boss.getAttribute(Attributes.ATTACK_DAMAGE);
             AttributeInstance hp = boss.getAttribute(Attributes.MAX_HEALTH);
             if (attackDamage != null) {
@@ -81,26 +83,32 @@ public class PrecursorRelicItem extends Item implements IModItem {
             }
             boss.setHealth(boss.getMaxHealth());
         }),
-        GOLDOR("jolly_pink_rock", "Goldor", boss -> {
+        GOLDOR(ModStatTypes.GOLDORS_KILLED, "jolly_pink_rock", "Goldor", boss -> {
             AttributeInstance hp = boss.getAttribute(Attributes.MAX_HEALTH);
             if (hp != null) {
                 hp.addPermanentModifier(new AttributeModifier(HP_BOOST, "Goldor's HP Boost", 2, AttributeModifier.Operation.MULTIPLY_TOTAL));
             }
             boss.setHealth(boss.getMaxHealth());
         }),
-        MAXOR("bigfoots_lasso", "Maxor", boss -> {}),
-        STORM("lasrs_eye", "Storm", boss -> {});
+        MAXOR(ModStatTypes.MAXORS_KILLED, "bigfoots_lasso", "Maxor", boss -> {}),
+        STORM(ModStatTypes.STORMS_KILLED, "lasrs_eye", "Storm", boss -> {});
 
         private static final EnumCodec<BossType> CODEC = StringRepresentable.fromEnum(BossType::values);
 
         private final String name;
         private final Consumer<WitherBoss> toDo;
         private final String itemName;
+        private final Supplier<ResourceLocation> statLoc;
 
-        BossType(String itemName, String name, Consumer<WitherBoss> toDo) {
+        BossType(Supplier<ResourceLocation> loc, String itemName, String name, Consumer<WitherBoss> toDo) {
+            this.statLoc = loc;
             this.itemName = itemName;
             this.name = name;
             this.toDo = toDo;
+        }
+
+        public ResourceLocation getStatLoc() {
+            return statLoc.get();
         }
 
         public String getItemName() {
@@ -111,10 +119,6 @@ public class PrecursorRelicItem extends Item implements IModItem {
             boss.getPersistentData().putString("WitherType", this.name);
             toDo.accept(boss);
             boss.setCustomName(Component.literal(this.name));
-        }
-
-        public Supplier<PrecursorRelicItem> getToDrop() {
-            return ModItems.PRECURSOR_RELICTS.get(this);
         }
 
         static boolean alreadyAdded(WitherBoss boss) {

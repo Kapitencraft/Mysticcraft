@@ -1,10 +1,10 @@
 package net.kapitencraft.mysticcraft.init;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.helpers.Timer;
 import net.kapitencraft.mysticcraft.logging.Markers;
 import net.kapitencraft.mysticcraft.potion.ModPotions;
 import net.kapitencraft.mysticcraft.villagers.ModVillagers;
-import net.minecraft.Util;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
@@ -17,7 +17,7 @@ public class ModRegistryInit {
     public static void register(IEventBus bus) {
         eventBus = bus;
         MysticcraftMod.LOGGER.info(Markers.REGISTRY, "starting registration");
-        long l = Util.getMillis();
+        Timer.start();
         register("Attributes", ModAttributes.REGISTRY);
         register("Enchantments", ModEnchantments.REGISTRY);
         register("Items", ModItems.REGISTRY);
@@ -39,7 +39,8 @@ public class ModRegistryInit {
         register("Recipe Types", ModRecipeSerializers.REGISTRY);
         register("Glyph Effects", ModGlyphEffects.REGISTRY);
         register("Requirements", ModRequirements.REGISTRY);
-        MysticcraftMod.LOGGER.info(Markers.REGISTRY, "loading {} registries took {} ms", registered, Util.getMillis() - l);
+        register("Stat Types", ModStatTypes.REGISTRY);
+        MysticcraftMod.LOGGER.info(Markers.REGISTRY, "loading {} registries took {} ms", registered, Timer.getPassedTime());
     }
 
     private static void register(String registerName, DeferredRegister<?> register) {
