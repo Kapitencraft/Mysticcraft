@@ -487,5 +487,9 @@
   "upgrade.button": "§1Click here to prestige/star your item",
   "upgrade.cost": "Upgrade Requires: ",
 
-  "req_type.stat": "%1$s %2$s"
+  "req_type.stat": "%1$s %2$s",
+  "stat_req.storm": "%1§s killed Storms",
+  "stat_req.necron": "%1§s killed Necrons",
+  "stat_req.maxor": "%1§s killed Maxors",
+  "stat_req.goldor": "%1§s killed Goldors"
 }
