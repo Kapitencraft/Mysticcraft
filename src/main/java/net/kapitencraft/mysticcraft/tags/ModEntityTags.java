@@ -4,12 +4,12 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 
-public class ModEntityTags {
-    public static final TagKey<EntityType<?>> OG_NETHER_MOBS = create("forge:og_nether_mobs");
-    public static final TagKey<EntityType<?>> NETHER_MOBS = create("forge:nether_mobs");
+public interface ModEntityTags {
+    TagKey<EntityType<?>> OG_NETHER_MOBS = createForge("og_nether_mobs");
+    TagKey<EntityType<?>> NETHER_MOBS = createForge("nether_mobs");
 
 
-    private static TagKey<EntityType<?>> create(String name) {
-        return Tags.makeKey(Registries.ENTITY_TYPE, name);
+    private static TagKey<EntityType<?>> createForge(String name) {
+        return Tags.makeForgeKey(Registries.ENTITY_TYPE, name);
     }
 }

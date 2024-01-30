@@ -4,15 +4,20 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import org.joml.Matrix4f;
 
 import java.util.List;
 
@@ -23,41 +28,24 @@ public class RenderBlock {
     @SubscribeEvent
     public static void render(RenderLevelStageEvent event) {
         if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_SOLID_BLOCKS) {
-            renderBlocks(event.getProjectionMatrix(), event.getPoseStack());
+            renderBlocks(event.getPoseStack());
         }
     }
 
-    private static void renderBlocks(Matrix4f matrix, PoseStack stack) {
+    private static void renderBlocks(PoseStack stack) {
         RenderSystem.assertOnRenderThread();
         Tesselator tesselator = RenderSystem.renderThreadTesselator();
         MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(tesselator.getBuilder());
-        VertexConsumer builder = bufferSource.getBuffer(RenderType.lines());
+        VertexConsumer builder = bufferSource.getBuffer(ModRenderTypes.OVERLAY_LINES);
+        Level level = Minecraft.getInstance().level;
+        Player player = Minecraft.getInstance().player;
+        Camera camera = Minecraft.getInstance().gameRenderer.getMainCamera();
+        Vec3 camPos = camera.getPosition();
+        if (level == null || player == null) return;
         for (BlockPos pos : toRender) {
-            Minecraft.getInstance().levelRenderer.renderHitOutline(stack, builder, );
-            renderLine(builder, matrix, pos, 0, 0, 0, 1, 0, 0);
-            renderLine(builder, matrix, pos, 0, 1, 0, 1, 1, 0);
-            renderLine(builder, matrix, pos, 0, 0, 1, 1, 0 ,1);
-            renderLine(builder, matrix, pos, 0, 1, 1, 1, 1, 1);
-
-            renderLine(builder, matrix, pos, 0, 0, 0, 0, 0, 0);
-            renderLine(builder, matrix, pos, 1, 0, 0, 1, 0, 1);
-            renderLine(builder, matrix, pos, 0, 1, 0, 0, 1, 1);
-            renderLine(builder, matrix, pos, 1, 1, 0, 1, 1, 1);
-
-            renderLine(builder, matrix, pos, 0, 0, 0, 0, 1, 0);
-            renderLine(builder, matrix, pos, 1, 0, 0, 1, 1, 0);
-            renderLine(builder, matrix, pos, 0, 0, 1, 0, 1, 1);
-            renderLine(builder, matrix, pos, 1, 0, 1, 1, 1, 1);
+            BlockState state = level.getBlockState(pos);
+            LevelRenderer.renderShape(stack, builder, state.getVisualShape(level, pos, CollisionContext.of(player)), pos.getX() - camPos.x, pos.getY() - camPos.y, pos.getZ() - camPos.z, 0, 0, 1, 0.8f);
         }
         bufferSource.endBatch(ModRenderTypes.OVERLAY_LINES);
-    }
-
-    private static void renderLine(VertexConsumer consumer, Matrix4f posMat, BlockPos pos, float dx1, float dy1, float dz1, float dx2, float dy2, float dz2) {
-        consumer.vertex(posMat, pos.getX() + dx1, pos.getY() + dy1, pos.getZ() + dz1)
-                .color(0, 1, 0, 1)
-                .endVertex();
-        consumer.vertex(posMat, pos.getX() + dx2, pos.getY() + dy2, pos.getZ() + dz2)
-                .color(0, 1, 0, 1)
-                .endVertex();
     }
 }

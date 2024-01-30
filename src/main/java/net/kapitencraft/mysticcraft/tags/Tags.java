@@ -10,4 +10,12 @@ public class Tags {
     public static <T> TagKey<T> makeKey(ResourceKey<Registry<T>> key, String id) {
         return TagKey.create(key, new ResourceLocation(id));
     }
+
+    public static <T> TagKey<T> makeModKey(ResourceKey<Registry<T>> key, String id) {
+        return makeKey(key, "mysticcraft:" + id);
+    }
+
+    public static <T> TagKey<T> makeForgeKey(ResourceKey<Registry<T>> key, String id) {
+        return makeKey(key, "forge:" + id);
+    }
 }

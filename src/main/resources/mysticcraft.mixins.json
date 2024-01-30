@@ -13,6 +13,7 @@
   ],
   "mixins": [
     "AttributesMixin",
+    "BlockMixin",
     "BlockStateMixin",
     "ChatFormattingMixin",
     "DiggerItemMixin",

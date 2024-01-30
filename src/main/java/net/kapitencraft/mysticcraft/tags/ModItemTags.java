@@ -5,11 +5,11 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 
-public class ModItemTags {
-    public static final TagKey<Item> DEFAULT_HAMMER = create("default_hammer");
-    public static final TagKey<Item> TIER_1_HAMMER = create("tier_1_hammer");
-    public static final TagKey<Item> TIER_2_HAMMER = create("tier_2_hammer");
-    public static final TagKey<Item> STRIPPED_LOG = forge("stripped_logs");
+public interface ModItemTags {
+    TagKey<Item> DEFAULT_HAMMER = create("default_hammer");
+    TagKey<Item> TIER_1_HAMMER = create("tier_1_hammer");
+    TagKey<Item> TIER_2_HAMMER = create("tier_2_hammer");
+    TagKey<Item> STRIPPED_LOG = forge("stripped_logs");
 
 
 

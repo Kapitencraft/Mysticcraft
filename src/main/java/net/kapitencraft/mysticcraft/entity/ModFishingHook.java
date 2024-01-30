@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.entity;
 
-import net.kapitencraft.mysticcraft.fluid.ModFluidTags;
+import net.kapitencraft.mysticcraft.tags.ModFluidTags;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;

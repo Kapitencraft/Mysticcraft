@@ -1,0 +1,13 @@
+{
+  "values": [
+    "#forge:sand",
+    "#minecraft:snow",
+    "#forge:ores",
+    "#forge:obsidian",
+    "#forge:gravel",
+    "#forge:netherrack",
+    "#forge:stone",
+    "#forge:end_stones",
+    "#forge:cobblestone"
+  ]
+}

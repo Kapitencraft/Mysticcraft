@@ -19,20 +19,16 @@ import net.minecraftforge.fml.common.Mod;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class Rendering {
-    private static final PoseStack BIG_SYMBOLS = new PoseStack();
-    private static final PoseStack MEDIUM_SYMBOLS = new PoseStack();
-    private static final PoseStack SMALL_SYMBOLS = new PoseStack();
 
     private static final List<RenderHolder> list = new ArrayList<>();
 
     static {
-        MEDIUM_SYMBOLS.scale(0.75f, 0.75f, 0.75f);
-        SMALL_SYMBOLS.scale(0.5f, 0.5f, 0.5f);
         addRenderer(new RenderHolder(
                 new PositionHolder(-203, -116),
                 player -> Component.literal(MathHelper.round(player.getAttributeValue(ModAttributes.MANA.get()), 1) + " [+" + MathHelper.round(player.getPersistentData().getDouble(MiscRegister.OVERFLOW_MANA_ID), 1) + " Overflow] §r / §1" + player.getAttributeValue(ModAttributes.MAX_MANA.get()) + " (+" + MathHelper.round(player.getPersistentData().getDouble("manaRegen") * 20, 2) + "/s)").withStyle(ChatFormatting.BLUE),
@@ -71,8 +67,10 @@ public class Rendering {
         if (entity != null) {
             list.forEach(renderHolder -> {
                 Vec2 pos = renderHolder.pos.makePos();
-                render(getStack(renderHolder.type), renderHolder.provider.apply(entity), posX + pos.x, posY + pos.y);
-            });
+                renderHolder.type.onInit.accept(stack);
+                render(stack, renderHolder.provider.apply(entity), posX + pos.x, posY + pos.y);
+                renderHolder.type.onDone.accept(stack);
+                });
         }
 
     }
@@ -83,14 +81,6 @@ public class Rendering {
 
     private static void render(PoseStack stack, Component toWrite, float x, float y) {
         Minecraft.getInstance().font.draw(stack, toWrite, x, y, -1);
-    }
-
-    private static PoseStack getStack(RenderType type) {
-        return switch (type) {
-            case BIG -> BIG_SYMBOLS;
-            case SMALL -> SMALL_SYMBOLS;
-            case MEDIUM -> MEDIUM_SYMBOLS;
-        };
     }
 
     public static class RenderHolder {
@@ -125,8 +115,16 @@ public class Rendering {
     }
 
     public enum RenderType {
-        BIG,
-        MEDIUM,
-        SMALL
+        BIG(stack -> {}, stack -> {}),
+        MEDIUM(stack -> stack.scale(0.75f, 0.75f, 0.75f), stack -> stack.scale((float) (1/0.75), (float) (1/0.75), (float) (1/0.75))),
+        SMALL(stack -> stack.scale(0.5f, 0.5f, 0.5f), stack -> stack.scale(2, 2, 2));
+
+        private final Consumer<PoseStack> onInit;
+        private final Consumer<PoseStack> onDone;
+
+        RenderType(Consumer<PoseStack> onInit, Consumer<PoseStack> onDone) {
+            this.onInit = onInit;
+            this.onDone = onDone;
+        }
     }
 }
