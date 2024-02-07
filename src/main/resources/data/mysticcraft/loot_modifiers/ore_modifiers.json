@@ -2,8 +2,9 @@
   "type": "mysticcraft:ore_mod",
   "conditions": [
     {
-      "condition": "minecraft:match_block_tag",
-      "tag": "forge:ores"
+      "condition": "mysticcraft:tag_key",
+      "type": "blocks",
+      "id": "forge:ores"
     }
   ]
 }

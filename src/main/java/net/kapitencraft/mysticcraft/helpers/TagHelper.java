@@ -14,10 +14,8 @@ import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
+import java.util.function.Supplier;
 
 public class TagHelper {
     private static final String LENGTH_ID = "Length";
@@ -38,8 +36,9 @@ public class TagHelper {
         return value;
     }
 
-    public static <T> T getOrLog(DataResult<T> result, T defaulted) {
-        return result.resultOrPartial(MysticcraftMod::sendError).orElse(defaulted);
+    public static <T> T get(DataResult<T> result, Supplier<T> defaulted) {
+        Optional<T> optional = result.result();
+        return optional.orElseGet(defaulted);
     }
 
     public static int increaseIntegerTagValue(CompoundTag tag, String name, int i) {

@@ -2,6 +2,7 @@ package net.kapitencraft.mysticcraft.misc.serialization;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DynamicOps;
+import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.helpers.TagHelper;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,11 +22,11 @@ public abstract class Serializer<T, K extends DynamicOps<T>, L> {
     abstract T getSerializeDefault();
 
     public T serialize(@NotNull L value) {
-        return TagHelper.getOrLog(codec.encodeStart(generator, value), getSerializeDefault());
+        return TagHelper.get(codec.encodeStart(generator, value), this::getSerializeDefault);
     }
 
     public L deserialize(T object) {
         if (object == null) return defaulted.get();
-        return TagHelper.getOrLog(codec.parse(generator, object), defaulted.get());
+        return TagHelper.get(codec.parse(generator, object), MiscHelper.nonNullOr(defaulted, ()-> null));
     }
 }

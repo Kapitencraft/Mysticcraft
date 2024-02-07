@@ -91,12 +91,12 @@ public class EssenceHolder implements ICapabilityProvider, INBTSerializable<Comp
 
     @Override
     public CompoundTag serializeNBT() {
-        return (CompoundTag) TagHelper.getOrLog(CODEC.encodeStart(NbtOps.INSTANCE, this), new CompoundTag());
+        return (CompoundTag) TagHelper.get(CODEC.encodeStart(NbtOps.INSTANCE, this), CompoundTag::new);
     }
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
-        copyFrom(TagHelper.getOrLog(CODEC.parse(NbtOps.INSTANCE, nbt), new EssenceHolder()));
+        copyFrom(TagHelper.get(CODEC.parse(NbtOps.INSTANCE, nbt), EssenceHolder::new));
     }
 
     public void copyFrom(EssenceHolder oldStore) {

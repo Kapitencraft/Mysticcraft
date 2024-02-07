@@ -85,6 +85,10 @@ public class MiscHelper {
     }
 
 
+    public static <T> T nonNullOr(@Nullable T value, @NotNull T or) {
+        return value == null ? or : value;
+    }
+
     /**
      * method to get the speed boost affected by speed boost Elytra Attachment
      * @param living the entity to check for Elytra Capabilities

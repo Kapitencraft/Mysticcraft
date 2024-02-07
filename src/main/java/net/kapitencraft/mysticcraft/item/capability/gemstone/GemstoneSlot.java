@@ -2,12 +2,8 @@ package net.kapitencraft.mysticcraft.item.capability.gemstone;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.kapitencraft.mysticcraft.helpers.TagHelper;
 import net.kapitencraft.mysticcraft.init.ModItems;
 import net.minecraft.ChatFormatting;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -50,17 +46,6 @@ public class GemstoneSlot {
         return new GemstoneSlot(buf.readEnum(Type.class), buf.readEnum(GemstoneType.class), buf.readEnum(GemstoneType.Rarity.class));
     }
 
-
-    public Tag toNBT() {
-        return TagHelper.getOrLog(CODEC.encodeStart(NbtOps.INSTANCE, this), new CompoundTag());
-    }
-
-    public static GemstoneSlot fromNBT(CompoundTag tag) {
-        if (tag == null) {
-            return null;
-        }
-        return TagHelper.getOrLog(CODEC.parse(NbtOps.INSTANCE, tag), BLOCKED);
-    }
     private int getColorForRarity() {
         return this.gemRarity.colour;
     }
