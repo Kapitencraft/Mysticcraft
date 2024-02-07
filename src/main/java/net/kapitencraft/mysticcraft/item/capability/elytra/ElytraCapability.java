@@ -5,6 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.item.capability.CapabilityHelper;
 import net.kapitencraft.mysticcraft.item.capability.ModCapability;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -34,6 +35,15 @@ public class ElytraCapability extends ModCapability<ElytraCapability, IElytraDat
         this.level = i;
     }
 
+    public static void write(FriendlyByteBuf buf, ElytraCapability capability) {
+        buf.writeEnum(capability.data);
+        buf.writeInt(capability.level);
+    }
+
+    public static ElytraCapability read(FriendlyByteBuf buf) {
+        return new ElytraCapability(buf.readEnum(ElytraData.class), buf.readInt());
+    }
+
     public static void merge(ItemStack stack, ItemStack stack1) {
         CapabilityHelper.exeCapability(stack, CapabilityHelper.ELYTRA, iElytraData ->
                 CapabilityHelper.exeCapability(stack1, CapabilityHelper.ELYTRA, iElytraData1 -> {
@@ -56,6 +66,11 @@ public class ElytraCapability extends ModCapability<ElytraCapability, IElytraDat
     public void copy(ElytraCapability capability) {
         this.data = capability.data;
         this.level = capability.level;
+    }
+
+    @Override
+    public ElytraCapability asType() {
+        return this;
     }
 
     @Override
@@ -82,4 +97,5 @@ public class ElytraCapability extends ModCapability<ElytraCapability, IElytraDat
     public void setLevel(int level) {
         this.level = level;
     }
+
 }

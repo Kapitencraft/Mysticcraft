@@ -5,6 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.kapitencraft.mysticcraft.helpers.LootTableHelper;
 import net.kapitencraft.mysticcraft.misc.string_converter.converter.TextToIntConverter;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -14,6 +15,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
+import java.util.Optional;
 
 public class EnchantmentAddItemModifier extends AddItemModifier {
     public static final Codec<EnchantmentAddItemModifier> CODEC = RecordCodecBuilder.create(enchantmentAddItemModifierInstance ->
@@ -25,8 +27,9 @@ public class EnchantmentAddItemModifier extends AddItemModifier {
     );
     private final Enchantment enchantment;
     private final String provider;
-    protected EnchantmentAddItemModifier(LootItemCondition[] conditionsIn, Item item, float chance, int maxAmount, Enchantment enchantment, String provider) {
-        super(conditionsIn, item, chance, maxAmount);
+    @SuppressWarnings("all")
+    protected EnchantmentAddItemModifier(LootItemCondition[] conditionsIn, Item item, float chance, int maxAmount, Optional<CompoundTag> tag, Enchantment enchantment, String provider) {
+        super(conditionsIn, item, chance, maxAmount, tag.orElse(null));
         this.enchantment = enchantment;
         this.provider = provider;
     }

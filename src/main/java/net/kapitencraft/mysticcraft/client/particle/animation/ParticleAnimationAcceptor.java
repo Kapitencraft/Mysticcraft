@@ -9,6 +9,7 @@ import java.util.List;
 
 @OnlyIn(Dist.CLIENT)
 public class ParticleAnimationAcceptor {
+    //TODO fix
     private final List<ParticleAnimationController> controllers = new ArrayList<>();
 
     public void addAnimation(ParticleAnimationController controller) {

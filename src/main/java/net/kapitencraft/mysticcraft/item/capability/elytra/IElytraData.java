@@ -1,9 +1,10 @@
 package net.kapitencraft.mysticcraft.item.capability.elytra;
 
+import net.kapitencraft.mysticcraft.item.capability.ICapability;
 import net.minecraftforge.common.capabilities.AutoRegisterCapability;
 
 @AutoRegisterCapability
-public interface IElytraData {
+public interface IElytraData extends ICapability<ElytraCapability> {
 
     ElytraData getData();
 

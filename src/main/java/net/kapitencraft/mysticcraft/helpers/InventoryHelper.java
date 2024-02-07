@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.helpers;
 
 import net.kapitencraft.mysticcraft.item.ITieredItem;
+import net.kapitencraft.mysticcraft.item.capability.essence.IEssenceData;
 import net.kapitencraft.mysticcraft.item.combat.armor.TieredArmorItem;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Inventory;
@@ -10,10 +11,7 @@ import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -30,6 +28,14 @@ public class InventoryHelper {
         }
     }
 
+    public static Map<Integer, ItemStack> getAllContent(Inventory inventory) {
+        Map<Integer, ItemStack> data = new HashMap<>();
+        for (int i = 0; i < inventory.getContainerSize(); i++) {
+            data.put(i, inventory.getItem(i));
+        }
+        return data;
+    }
+
     public static List<ItemStack> allInventory(Inventory inventory) {
         List<ItemStack> list = new ArrayList<>();
         forInventory(inventory, list::add);
@@ -39,7 +45,6 @@ public class InventoryHelper {
     public static boolean removeFromInventory(ItemStack stack, Player player) {
         Inventory inventory = player.getInventory();
         forInventory(inventory, stack1 -> {
-            MiscHelper.ensureTags(stack, stack1);
             if (ItemStack.isSameItemSameTags(stack, stack1) && stack.getCount() > 0) {
                 int size = Math.min(stack1.getCount(), stack.getCount());
                 stack1.shrink(size);
@@ -105,10 +110,12 @@ public class InventoryHelper {
     public static List<ItemStack> getRemaining(List<ItemStack> content, Player player) {
         List<ItemStack> ret = new ArrayList<>();
         for (ItemStack stack : content) {
-            List<ItemStack> list = getByFilter(player, stack1 -> {
-                MiscHelper.ensureTags(stack, stack1);
-                return ItemStack.isSameItemSameTags(stack, stack1);
-            });
+            if (stack.getItem() instanceof IEssenceData) {
+                ItemStack essence = IEssenceData.getAllFromPlayer(player, stack);
+                stack.shrink(essence.getCount());
+                if (stack.getCount() < 0) stack.setCount(0);
+            }
+            List<ItemStack> list = getByFilter(player, stack1 -> ItemStack.isSameItemSameTags(stack, stack1));
             list.forEach(stack1 -> stack.shrink(stack1.getCount()));
             if (stack.getCount() > 0) {
                 ret.add(stack);

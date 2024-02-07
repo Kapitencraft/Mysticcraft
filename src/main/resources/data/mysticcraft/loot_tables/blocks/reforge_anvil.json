@@ -11,7 +11,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "mysticcraft:reforging_anvil"
+          "name": "mysticcraft:reforge_anvil"
         }
       ],
       "rolls": 1.0

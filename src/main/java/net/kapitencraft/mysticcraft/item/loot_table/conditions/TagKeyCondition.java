@@ -89,7 +89,7 @@ public class TagKeyCondition extends BaseCondition {
         return reference.getValue();
     }
 
-    public static final JsonSerializer<TagKeyCondition> SERIALIZER = new JsonSerializer<>(CODEC, EMPTY);
+    public static final JsonSerializer<TagKeyCondition> SERIALIZER = new JsonSerializer<>(CODEC, ()-> EMPTY);
 
     public enum Type implements StringRepresentable {
         ENTITY("entities"),

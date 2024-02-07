@@ -1,7 +1,10 @@
 package net.kapitencraft.mysticcraft.helpers;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.*;
@@ -19,8 +22,24 @@ public class CollectionHelper {
         return null;
     }
 
+    public static <T, K> Multimap<T, K> sortMap(Multimap<T, K> map, @Nullable Comparator<T> keySorter, @Nullable Comparator<K> valueSorter) {
+        List<T> sortedKeys = fromAny(map.keySet());
+        MiscHelper.ifNonNull(keySorter, sortedKeys::sort);
+        Multimap<T, K> multimap = HashMultimap.create();
+        sortedKeys.forEach(t -> {
+            List<K> values = mutableList(fromAny(map.get(t)));
+            MiscHelper.ifNonNull(valueSorter, values::sort);
+            multimap.putAll(t, values);
+        });
+        return multimap;
+    }
+
     public static <T> List<T> mutableList(List<T> immutable) {
         return new ArrayList<>(immutable);
+    }
+
+    public static <T> List<T> fromAny(Collection<T> collection) {
+        return collection.stream().toList();
     }
 
     public static <T> void removeMapping2(List<T> ts, BiPredicate<T, T> predicate) {
@@ -87,6 +106,10 @@ public class CollectionHelper {
         return Collectors.toMap(t -> t, valueMapper);
     }
 
+    public static <T, L> Collector<L, ?, Map<T, L>> createMapForKeys(Function<L, T> keyMapper) {
+        return Collectors.toMap(keyMapper, t-> t);
+    }
+
     public static <T, K> K getFirstValue(Map<T, K> map) {
         for (Map.Entry<T, K> entry : map.entrySet()) {
             return entry.getValue();
@@ -121,7 +144,7 @@ public class CollectionHelper {
         if (list.isEmpty()) {
             return List.of();
         }
-        return list.stream().sorted(Comparator.comparingDouble(living -> living.distanceToSqr(MathHelper.getPosition(source)))).collect(Collectors.toList());
+        return list.stream().sorted(Comparator.comparingDouble(living -> living.distanceToSqr(source.position()))).collect(Collectors.toList());
     }
 
     public static <T> boolean arrayContains(T[] array, T t) {

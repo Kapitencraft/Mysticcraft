@@ -5,13 +5,15 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 
+import java.util.function.Supplier;
+
 public class NbtSerializer<T> extends Serializer<Tag, NbtOps, T> {
-    public NbtSerializer(Codec<T> codec, T defaulted) {
+    public NbtSerializer(Codec<T> codec, Supplier<T> defaulted) {
         super(NbtOps.INSTANCE, codec, defaulted);
     }
 
     public NbtSerializer(Codec<T> codec) {
-        this(codec, null);
+        this(codec, ()-> null);
     }
 
     @Override

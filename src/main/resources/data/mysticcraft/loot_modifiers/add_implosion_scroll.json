@@ -1,0 +1,15 @@
+{
+  "type": "mysticcraft:add_item",
+  "conditions": [
+    {
+      "condition": "entity_properties",
+      "entity": "this",
+      "predicate": {
+        "type": "minecraft:wither"
+      }
+    }
+  ],
+  "chance": 0.1,
+  "nbt": "{SpellData: {Slots: [{Spell: implosion}], Size = 1}}",
+  "item": "mysticcraft:spell_scroll"
+}

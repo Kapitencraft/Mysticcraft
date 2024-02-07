@@ -103,7 +103,7 @@
   "death.attack.overflowMana": "%1$s was burst into pieces by an magical explosion",
   "death.attack.overflowMana.player": "%1$s was burst into pieces by an magical explosion from %2$s",
 
-  "effect.mysticcraft.ignition": "Ignition",
+  "effect.mysticcraft.blazing": "Blazing",
   "effect.mysticcraft.stun": "Stun",
   "effect.mysticcraft.vulnerability": "Vulnerability",
   "effect.stun.released": "not stunned anymore",
@@ -413,6 +413,7 @@
   "item.mysticcraft.soul_mage_leggings": "Soul Mage Leggings",
   "item.mysticcraft.soul_steel_alloy": "Soul Steel Alloy",
   "item.mysticcraft.soul_steel_nugget": "Soul Steel Nugget",
+  "item.mysticcraft.spell_scroll": "Spell Scroll",
   "item.mysticcraft.spell_shard": "Spell Shard",
   "item.mysticcraft.staff_of_destruction": "Staff of Destruction",
   "item.mysticcraft.staff_of_the_wild": "Staff of the Wild",
@@ -434,10 +435,10 @@
   "item.unbreaking_core.desc": "makes an item unbreakable when applied in an anvil",
 
   "itemGroup.mysticcraft.deco": "Mysticcraft's Decoration",
-  "itemGroup.mysticcraft.materials": "Mysticcraft Materials",
+  "itemGroup.mysticcraft.materials": "Mysticcraft's Materials",
   "itemGroup.mysticcraft.spell": "Spell Items",
   "itemGroup.mysticcraft.gemstone": "Gemstone Items",
-  "itemGroup.mysticcraft.weapons_and_tools": "Weapons and Tools from Mysticcraft",
+  "itemGroup.mysticcraft.weapons_and_tools": "Mysticcraft's Weapons and Tools",
 
   "item_tier.burning": "Burning",
   "item_tier.default": "",
@@ -454,7 +455,7 @@
   "mysticcraft.ench_desc.treasure": "Treasure Enchantment; may not be obtained from Enchantment Table",
 
   "reforge.button": "§2Click here to apply a custom reforge to your Item",
-  "reforge.cost": "Requires 5 Emeralds to be used",
+  "reforge.cost": "Requires 5 Emeralds to be used (you have %1$s)",
 
   "reforge.clean": "Clean",
   "reforge.epic": "Epic",
@@ -479,6 +480,11 @@
 
   "soulbound.toss": "You may not drop Soulbound items",
 
+  "stat.mysticcraft.goldors_killed": "Goldors killed",
+  "stat.mysticcraft.maxors_killed": "Maxors killed",
+  "stat.mysticcraft.necrons_killed": "Necrons killed",
+  "stat.mysticcraft.storms_killed": "Storms killed",
+
   "stat_req.blocks_mined": "%1$s %2$s mined",
   "stat_req.items_used": "%1$s %2$s used",
   "stat_req.items_picked_up": "%1$s %2$s picked up",
@@ -486,6 +492,7 @@
 
   "upgrade.button": "§1Click here to prestige/star your item",
   "upgrade.cost": "Upgrade Requires: ",
+  "upgrade.no_more": "there's no more upgrades for this item",
 
   "req_type.stat": "%1$s %2$s",
   "stat_req.storm": "%1§s killed Storms",

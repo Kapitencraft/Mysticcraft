@@ -59,7 +59,7 @@ public interface ModBlocks {
     }
     BlockRegistryHolder<GemstoneGrinderBlock, BlockItem> GEMSTONE_GRINDER = registerBlock("gemstone_grinder", GemstoneGrinderBlock::new, MiscHelper.rarity(Rarity.RARE), GemstoneItem.GROUP);
 
-    BlockRegistryHolder<ReforgeAnvilBlock, BlockItem> REFORGING_ANVIL = registerBlock("reforging_anvil", ReforgeAnvilBlock::new, MiscHelper.rarity(Rarity.UNCOMMON), TabGroup.MATERIAL);
+    BlockRegistryHolder<ReforgeAnvilBlock, BlockItem> REFORGING_ANVIL = registerBlock("reforge_anvil", ReforgeAnvilBlock::new, MiscHelper.rarity(Rarity.UNCOMMON), TabGroup.MATERIAL);
     RegistryObject<LiquidBlock> MANA_FLUID_BLOCK = REGISTRY.register("mana_fluid_block", ManaLiquidBlock::new);
     BlockRegistryHolder<GemstoneCreator, BlockItem> GEMSTONE_CREATOR = registerBlock("gemstone_creator", GemstoneCreator::new, MiscHelper.rarity(Rarity.RARE), TabGroup.OPERATOR);
     RegistryObject<EmptyGemstoneBlock> EMPTY_GEMSTONE_BLOCK = REGISTRY.register("empty_gemstone", EmptyGemstoneBlock::new);
@@ -67,7 +67,6 @@ public interface ModBlocks {
     BlockRegistryHolder<MangaticSlimeBlock, BlockItem> MANGATIC_SLIME = registerBlock("mangatic_slime", MangaticSlimeBlock::new, new Item.Properties().rarity(Rarity.EPIC), TabGroup.MATERIAL);
     BlockRegistryHolder<ObsidianPressurePlate, BlockItem> OBSIDIAN_PRESSURE_PLATE = registerBlock("obsidian_pressure_plate", ObsidianPressurePlate::new, new Item.Properties().rarity(Rarity.UNCOMMON), TabGroup.DECO);
     BlockRegistryHolder<Block, BlockItem> CRIMSONIUM_ORE = registerBlock("crimsonium_ore", ()-> new Block(BlockBehaviour.Properties.copy(Blocks.STONE)), new Item.Properties().rarity(Rarity.UNCOMMON), TabGroup.MATERIAL);
-    BlockRegistryHolder<ManaSAMLauncherBlock, BlockItem> MANA_SAM_LAUNCHER = registerBlock("mana_sam_launcher", ManaSAMLauncherBlock::new, new Item.Properties().rarity(Rarity.EPIC), null);
     RegistryObject<Block> FRAGILE_BASALT = REGISTRY.register("fragile_basalt", FragileBasaltBlock::new);
     RegistryObject<Block> GENERATION_BLOCK = REGISTRY.register("generation_block", GenerationBlock::new);
     BlockRegistryHolder<GuildBoardBlock, BlockItem> GUILD_BOARD = registerBlock("guild_board", GuildBoardBlock::new, new Item.Properties().rarity(Rarity.EPIC), TabGroup.MATERIAL);

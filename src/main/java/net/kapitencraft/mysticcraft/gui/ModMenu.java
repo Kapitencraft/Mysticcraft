@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 public abstract class ModMenu<T extends ICapabilityProvider> extends AbstractContainerMenu {
     private final int slotAmount;
     protected final Level level;
-    protected final Player player;
+    public final Player player;
     protected final T blockEntity;
 
     protected ModMenu(@Nullable MenuType<?> menuType, int containerId, int slotAMount, Inventory inventory, T provider) {

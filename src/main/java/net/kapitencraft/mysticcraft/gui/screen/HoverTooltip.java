@@ -1,6 +1,9 @@
 package net.kapitencraft.mysticcraft.gui.screen;
 
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.List;
 
@@ -9,7 +12,7 @@ public class HoverTooltip {
     private final int yOffsetStart;
     private final int xSize;
     private final int ySize;
-    private final List<Component> text;
+    protected List<Component> text;
 
     public HoverTooltip(int xOffsetStart, int yOffsetStart, int xSize, int ySize, List<Component> text) {
         this.xOffsetStart = xOffsetStart;
@@ -21,6 +24,10 @@ public class HoverTooltip {
 
     public boolean matches(int xPos, int yPos, int xMousePos, int yMousePos) {
         return matchesX(xPos, xMousePos) && matchesY(yPos, yMousePos);
+    }
+
+    public ImageButton createButton(ResourceLocation imageLocation, int leftPos, int topPos, Button.OnPress task) {
+        return new ImageButton(leftPos + xOffsetStart, topPos + yOffsetStart, 16, 16, 0, 0, 16, imageLocation, 16, 16, task);
     }
 
     public List<Component> getText() {

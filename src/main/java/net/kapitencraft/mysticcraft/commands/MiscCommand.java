@@ -6,6 +6,7 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.kapitencraft.mysticcraft.init.ModEnchantments;
 import net.kapitencraft.mysticcraft.item.capability.dungeon.IPrestigeAbleItem;
 import net.kapitencraft.mysticcraft.item.capability.dungeon.IStarAbleItem;
+import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -96,7 +97,7 @@ public class MiscCommand {
             exeMaxEnchant(context);
             exeEnchantmentUpgrades(context);
             exeExtraUpgrades(context);
-            stack.sendSuccess(Component.translatable("command.misc.hyper_max.success"), true);
+            stack.sendSuccess(Component.translatable("command.misc.hyper_max.success").withStyle(ChatFormatting.GREEN), true);
             return 1;
         });
     }
@@ -108,8 +109,8 @@ public class MiscCommand {
             int prestiges = 0;
             if (mainHand.getItem() instanceof IPrestigeAbleItem) {
                 ItemStack prestigedItem = mainHand;
-                while (prestigedItem.getItem() instanceof IPrestigeAbleItem prestige && prestige.mayPrestige(mainHand, true)) {
-                    prestigedItem = prestige.prestige(mainHand);
+                while (prestigedItem.getItem() instanceof IPrestigeAbleItem prestige && prestige.mayUpgrade(mainHand)) {
+                    prestigedItem = prestige.upgrade(mainHand);
                     prestiges++;
                 }
                 mainHand = prestigedItem;

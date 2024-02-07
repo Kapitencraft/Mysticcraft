@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.block;
 
-import net.kapitencraft.mysticcraft.block.entity.ReforgingAnvilBlockEntity;
+import net.kapitencraft.mysticcraft.block.entity.ReforgeAnvilBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -26,7 +26,7 @@ public class ReforgeAnvilBlock extends AnvilBlock implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
-        return new ReforgingAnvilBlockEntity(pos, state);
+        return new ReforgeAnvilBlockEntity(pos, state);
     }
 
     @Override
@@ -40,7 +40,7 @@ public class ReforgeAnvilBlock extends AnvilBlock implements EntityBlock {
     public @NotNull InteractionResult use(@NotNull BlockState pState, Level pLevel, @NotNull BlockPos pPos, @NotNull Player pPlayer, @NotNull InteractionHand pHand, @NotNull BlockHitResult pHit) {
         if (!pLevel.isClientSide()) {
             BlockEntity entity = pLevel.getBlockEntity(pPos);
-            if(entity instanceof ReforgingAnvilBlockEntity blockEntity) {
+            if(entity instanceof ReforgeAnvilBlockEntity blockEntity) {
                 NetworkHooks.openScreen(((ServerPlayer)pPlayer), blockEntity, pPos);
             } else {
                 throw new IllegalStateException("The Container provider is missing!");

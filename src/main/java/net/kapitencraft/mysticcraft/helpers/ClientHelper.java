@@ -26,7 +26,6 @@ public class ClientHelper {
     private static final ResourceLocation GUARDIAN_BEAM_LOCATION = new ResourceLocation("textures/entity/guardian_beam.png");
     private static final RenderType BEAM_RENDER_TYPE = RenderType.entityCutoutNoCull(GUARDIAN_BEAM_LOCATION);
 
-
     public static void renderBeam(Vec3 start, LivingEntity living, int r, int g, int b, float p_114831_, PoseStack stack, MultiBufferSource p_114833_) {
         float f1 = (float)living.level.getGameTime() + p_114831_;
         float f2 = f1 * 0.5F % 1.0F;

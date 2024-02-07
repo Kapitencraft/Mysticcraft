@@ -5,6 +5,7 @@ import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.init.ModEnchantments;
 import net.kapitencraft.mysticcraft.init.ModItems;
+import net.kapitencraft.mysticcraft.item.capability.ICapability;
 import net.kapitencraft.mysticcraft.logging.Markers;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -19,7 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @AutoRegisterCapability
-public interface IGemstoneHandler {
+public interface IGemstoneHandler extends ICapability<GemstoneCapability> {
 
     boolean putGemstone(GemstoneType gemstoneType, GemstoneType.Rarity rarity, int slotIndex);
 
@@ -91,5 +92,4 @@ public interface IGemstoneHandler {
         }
         return modifierHashMap;
     }
-
 }

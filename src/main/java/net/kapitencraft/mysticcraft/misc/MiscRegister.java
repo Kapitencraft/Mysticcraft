@@ -18,6 +18,7 @@ import net.kapitencraft.mysticcraft.init.ModEnchantments;
 import net.kapitencraft.mysticcraft.init.ModItems;
 import net.kapitencraft.mysticcraft.init.ModMobEffects;
 import net.kapitencraft.mysticcraft.item.ITieredItem;
+import net.kapitencraft.mysticcraft.item.capability.CapabilityHelper;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneSlot;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneType;
 import net.kapitencraft.mysticcraft.item.capability.reforging.ReforgeManager;
@@ -27,14 +28,10 @@ import net.kapitencraft.mysticcraft.item.combat.armor.SoulMageArmorItem;
 import net.kapitencraft.mysticcraft.item.combat.duel.DuelHandler;
 import net.kapitencraft.mysticcraft.item.combat.spells.SpellItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.bow.ModBowItem;
-import net.kapitencraft.mysticcraft.item.material.EssenceItem;
 import net.kapitencraft.mysticcraft.item.misc.SoulbindHelper;
 import net.kapitencraft.mysticcraft.misc.content.EssenceHolder;
-import net.kapitencraft.mysticcraft.misc.content.EssenceType;
 import net.kapitencraft.mysticcraft.misc.cooldown.Cooldowns;
 import net.kapitencraft.mysticcraft.misc.particle_help.ParticleAnimator;
-import net.kapitencraft.mysticcraft.networking.ModMessages;
-import net.kapitencraft.mysticcraft.networking.packets.S2C.SyncGuildsPacket;
 import net.kapitencraft.mysticcraft.requirements.Requirement;
 import net.kapitencraft.mysticcraft.villagers.ModVillagers;
 import net.minecraft.ChatFormatting;
@@ -103,24 +100,10 @@ public class MiscRegister {
     }
 
     @SubscribeEvent
-    public static void pickUpEssence(PlayerEvent.ItemPickupEvent event) {
-        ItemStack stack = event.getOriginalEntity().getItem();
-        Player source = event.getEntity();
-        if (stack.getItem() instanceof EssenceItem item) {
-            source.getCapability(EssenceHolder.ESSENCE).ifPresent(essenceHolder -> {
-                EssenceType type = item.loadData(stack, i -> {});
-                essenceHolder.add(type, stack.getCount());
-                source.displayClientMessage(Component.translatable("essence.pickup", type.getName(), stack.getCount()).withStyle(ChatFormatting.LIGHT_PURPLE), true);
-                InventoryHelper.removeFromInventory(stack, source);
-            });
-        }
-    }
-
-    @SubscribeEvent
     public static void onPlayerCloned(PlayerEvent.Clone event) {
         if(event.isWasDeath()) {
-            event.getOriginal().getCapability(EssenceHolder.ESSENCE).ifPresent(oldStore ->
-                    event.getOriginal().getCapability(EssenceHolder.ESSENCE).ifPresent(newStore ->
+            event.getOriginal().getCapability(CapabilityHelper.ESSENCE).ifPresent(oldStore ->
+                    event.getOriginal().getCapability(CapabilityHelper.ESSENCE).ifPresent(newStore ->
                             newStore.copyFrom(oldStore)));
         }
     }
@@ -139,7 +122,7 @@ public class MiscRegister {
     @SubscribeEvent
     public static void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof Player) {
-            if (!event.getObject().getCapability(EssenceHolder.ESSENCE).isPresent()) {
+            if (!event.getObject().getCapability(CapabilityHelper.ESSENCE).isPresent()) {
                 event.addCapability(MysticcraftMod.res("essence"), new EssenceHolder());
             }
         }
@@ -236,7 +219,7 @@ public class MiscRegister {
         }
         if (tag.contains("lastFullSet", 8)) {
             if (ModArmorItem.hadFullSet(ModArmorMaterials.SOUL_MAGE, living)) {
-                ParticleAnimator.clearAllHelpers(SoulMageArmorItem.helperString, living);
+                ParticleAnimator.clearAllHelpers(SoulMageArmorItem.HELPER_STRING, living);
                 tag.putString("lastFullSet", "");
             } else if (ModArmorItem.hadFullSet(ModArmorMaterials.SHADOW_ASSASSIN, living)) {
                 living.setInvisible(false);
@@ -299,8 +282,7 @@ public class MiscRegister {
             }
         }
         else if (event.getEntity() instanceof ServerPlayer serverPlayer) {
-            ModMessages.sendToClientPlayer(SyncGuildsPacket.loadAll(GuildHandler.all()), serverPlayer);
-            serverPlayer.getStats().sendStats(serverPlayer);
+            NetworkingHelper.syncAll(serverPlayer);
         }
     }
     @SubscribeEvent
@@ -375,7 +357,7 @@ public class MiscRegister {
                 Reference<Integer> brokenBlocks = Reference.of(-1);
                 MiscHelper.mineMultiple(pos, serverPlayer, block,
                         pos1 -> MathHelper.up1(brokenBlocks),
-                        state1 -> true, pos1 -> brokenBlocks.getValue() > integer);
+                        state1 -> true, pos1 -> brokenBlocks.getIntValue() > integer);
             });
         }
         MiscHelper.getEnchantmentLevelAndDo(mainHandItem, ModEnchantments.EXPERIENCED.get(), integer -> {

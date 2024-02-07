@@ -8,6 +8,7 @@ import net.kapitencraft.mysticcraft.init.ModItems;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneType;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.IGemstoneItem;
 import net.kapitencraft.mysticcraft.spell.Elements;
+import net.kapitencraft.mysticcraft.spell.Spells;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
@@ -30,7 +31,8 @@ public class TabRegister {
                 builder.title(Component.translatable("itemGroup.mysticcraft.spell"))
                         .icon(() -> new ItemStack(ModItems.SCYLLA.get()))
                         .displayItems((featureFlagSet, output, flag) -> {
-                                    TabGroup.registerAll(TabTypes.SPELL, output::acceptAll);
+                            output.acceptAll(Spells.createAll().values());
+                            TabGroup.registerAll(TabTypes.SPELL, output::acceptAll);
                         })
         );
         event.registerCreativeModeTab(MysticcraftMod.res("gemstone"), builder ->

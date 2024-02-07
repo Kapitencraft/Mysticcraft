@@ -4,7 +4,7 @@ import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.helpers.TagHelper;
 import net.kapitencraft.mysticcraft.logging.Markers;
-import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -32,7 +32,7 @@ public class ParticleAnimator {
     private static final String CURRENT_ROTATION_ID = "curRotation";
     private static final String MAX_HEIGHT_ID = "maxHeight";
     private static final String ROTATION_PER_TICK_ID = "rotPerTick";
-    private static final String PARTICLE_TYPE_ID = "particleType";
+    private static final String PARTICLE_OPTIONS = "particleType";
     private static final ParticleHelperQueueWorker worker = new ParticleHelperQueueWorker();
     public static void tickHelper(Entity living) {
         if (!worker.hasTarget(living.getUUID())) {
@@ -57,7 +57,7 @@ public class ParticleAnimator {
         return tag;
     }
 
-    public static CompoundTag createOrbitProperties(int cooldown, int maxTicksAlive, float initRotation, float maxHeight, float rotPerTick, ParticleType<SimpleParticleType> particleType, float distance) {
+    public static CompoundTag createOrbitProperties(int cooldown, int maxTicksAlive, float initRotation, float maxHeight, float rotPerTick, ParticleOptions particleType, float distance) {
         CompoundTag tag = new CompoundTag();
         tag.putInt(COOLDOWN_ID, cooldown);
         tag.putInt(TICKS_ALIVE_ID, 0);
@@ -66,13 +66,13 @@ public class ParticleAnimator {
         tag.putFloat(CURRENT_ROTATION_ID, initRotation);
         tag.putFloat(MAX_HEIGHT_ID, maxHeight);
         tag.putFloat(ROTATION_PER_TICK_ID, rotPerTick);
-        tag.putString(PARTICLE_TYPE_ID, toTag((SimpleParticleType) particleType));
+        tag.putString(PARTICLE_OPTIONS, toTag(particleType));
         tag.putFloat(DISTANCE_ID, distance);
         return tag;
     }
 
-    public static String toTag(SimpleParticleType type) {
-        ResourceLocation location = BuiltInRegistries.PARTICLE_TYPE.getKey(type);
+    public static String toTag(ParticleOptions type) {
+        ResourceLocation location = BuiltInRegistries.PARTICLE_TYPE.getKey(type.getType());
         if (location == null) location = BuiltInRegistries.PARTICLE_TYPE.getKey(ParticleTypes.ANGRY_VILLAGER);
         return location == null ? "null" : location.toString();
     }
@@ -210,7 +210,7 @@ public class ParticleAnimator {
         float currentRot = TagHelper.increaseFloatTagValue(this.properties, CURRENT_ROTATION_ID, this.properties.getFloat(ROTATION_PER_TICK_ID));
         Vec3 targetPos;
         if (this.target instanceof Projectile) {
-            targetPos = MathHelper.setLength(MathHelper.calculateViewVector(currentRot, 0), this.properties.getFloat(DISTANCE_ID)).add(MathHelper.getPosition(target));
+            targetPos = MathHelper.setLength(MathHelper.calculateViewVector(currentRot, 0), this.properties.getFloat(DISTANCE_ID)).add(target.position());
         } else {
             TagHelper.increaseFloatTagValue(this.properties, Y_OFFSET_ID, (currentTick >= (ticksPerCycle / 2)) ? -this.heightChange : this.heightChange);
             targetPos = MathHelper.setLength(MathHelper.calculateViewVector(0, currentRot), this.properties.getFloat(DISTANCE_ID)).add(target.getX(), target.getY() +  this.properties.getFloat(Y_OFFSET_ID), target.getZ());

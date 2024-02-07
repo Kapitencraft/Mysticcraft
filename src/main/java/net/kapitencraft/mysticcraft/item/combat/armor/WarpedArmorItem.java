@@ -2,7 +2,6 @@ package net.kapitencraft.mysticcraft.item.combat.armor;
 
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.client.particle.MagicCircleParticleType;
-import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.helpers.ParticleHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.item.combat.armor.client.NetherArmorItem;
@@ -43,7 +42,7 @@ public class WarpedArmorItem extends NetherArmorItem {
         if (magicalShieldCooldown <= 0) {
             if (!hasSpawned) {
                 living.getPersistentData().putBoolean(SHIELD_ID, true);
-                ParticleHelper.sendParticles(level, new MagicCircleParticleType(living.getId()), true, MathHelper.getPosition(living), 1, 0, 0, 0, 0);
+                ParticleHelper.sendParticles(level, new MagicCircleParticleType(living.getId()), true, living.position(), 1, 0, 0, 0, 0);
                 hasSpawned = true;
             }
             if (living.getAttributeValue(ModAttributes.MANA.get()) == 0) {
@@ -70,10 +69,6 @@ public class WarpedArmorItem extends NetherArmorItem {
         return null;
     }
 
-    @Override
-    public List<ItemStack> getStarCost(ItemStack stack, int curStars) {
-        return null;
-    }
 
     @Override
     public Consumer<Multimap<Attribute, AttributeModifier>> getModifiersForSlot(ItemStack stack, ItemTier tier) {

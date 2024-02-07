@@ -1,11 +1,9 @@
-package net.kapitencraft.mysticcraft.client.particle;
+package net.kapitencraft.mysticcraft.client.particle.options;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.kapitencraft.mysticcraft.client.particle.options.ColoredParticleOptions;
-import net.kapitencraft.mysticcraft.client.render.ColorAnimator;
 import net.kapitencraft.mysticcraft.helpers.NetworkingHelper;
 import net.kapitencraft.mysticcraft.init.ModParticleTypes;
 import net.minecraft.core.particles.DustParticleOptionsBase;
@@ -17,7 +15,7 @@ import net.minecraft.util.ExtraCodecs;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
-public class CircleParticleOptions extends ColoredParticleOptions<CircleParticleOptions> {
+public class CircleParticleOptions extends SimpleColoredParticleOptions<CircleParticleOptions> {
     private static final Codec<CircleParticleOptions> CODEC = RecordCodecBuilder.create(optionsInstance ->
             optionsInstance.group(
                 ExtraCodecs.VECTOR3F.fieldOf("color")
@@ -27,19 +25,13 @@ public class CircleParticleOptions extends ColoredParticleOptions<CircleParticle
                 Codec.DOUBLE.fieldOf("expandSpeed")
                     .forGetter(CircleParticleOptions::getExpandSpeed)
             ).apply(optionsInstance, CircleParticleOptions::new));
-    private final Vector3f color;
     private final double size;
     private final double expandSpeed;
 
     public CircleParticleOptions(Vector3f color, double size, double expandSpeed) {
-        super(true, new Deserializer(), ColorAnimator.simple(color));
-        this.color = color;
+        super(true, new Deserializer(), color);
         this.size = size;
         this.expandSpeed = expandSpeed;
-    }
-
-    public Vector3f getColor() {
-        return color;
     }
 
     public double getExpandSpeed() {
@@ -59,12 +51,12 @@ public class CircleParticleOptions extends ColoredParticleOptions<CircleParticle
     public void writeToNetwork(FriendlyByteBuf buf) {
         buf.writeDouble(size);
         buf.writeDouble(expandSpeed);
-        NetworkingHelper.writeVector3f(buf, color);
+        NetworkingHelper.writeVector3f(buf, getColor());
     }
 
     @Override
     public @NotNull String writeToString() {
-        return String.format("%s %.2f %.2f %.2f %.2f %.2f", BuiltInRegistries.PARTICLE_TYPE.getKey(this.getType()), this.size, this.expandSpeed, this.color.x, this.color.y, this.color.z);
+        return String.format("%s %.2f %.2f %.2f %.2f %.2f", BuiltInRegistries.PARTICLE_TYPE.getKey(this.getType()), this.size, this.expandSpeed, this.getColor().x, this.getColor().y, this.getColor().z);
     }
 
     @Override

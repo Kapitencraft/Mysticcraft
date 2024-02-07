@@ -31,5 +31,5 @@ public class LootTableTypeCondition extends BaseCondition {
         return type.is(context);
     }
 
-    public static final JsonSerializer<LootTableTypeCondition> SERIALIZER = new JsonSerializer<>(CODEC, EMPTY);
+    public static final JsonSerializer<LootTableTypeCondition> SERIALIZER = new JsonSerializer<>(CODEC, () -> EMPTY);
 }

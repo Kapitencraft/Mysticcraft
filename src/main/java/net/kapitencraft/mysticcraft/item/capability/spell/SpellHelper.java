@@ -10,6 +10,7 @@ import net.kapitencraft.mysticcraft.init.ModItems;
 import net.kapitencraft.mysticcraft.item.capability.ItemData;
 import net.kapitencraft.mysticcraft.item.misc.RNGDropHelper;
 import net.kapitencraft.mysticcraft.misc.ManaMain;
+import net.kapitencraft.mysticcraft.requirements.Requirement;
 import net.kapitencraft.mysticcraft.spell.Element;
 import net.kapitencraft.mysticcraft.spell.SpellSlot;
 import net.kapitencraft.mysticcraft.spell.Spells;
@@ -116,7 +117,7 @@ public class SpellHelper implements ItemData<SpellSlot[], SpellHelper> {
     }
 
     public boolean handleManaAndExecute(LivingEntity user, Spell spell, ItemStack stack) {
-        if (user.getAttribute(ModAttributes.INTELLIGENCE.get()) == null) {
+        if (user.getAttribute(ModAttributes.INTELLIGENCE.get()) == null || user instanceof Player player && Requirement.doesntMeetRequirements(player, stack.getItem())) {
             return false;
         }
         double manaToUse = AttributeHelper.getAttributeValue(user.getAttribute(ModAttributes.MANA_COST.get()), spell.getDefaultManaCost());
@@ -125,13 +126,12 @@ public class SpellHelper implements ItemData<SpellSlot[], SpellHelper> {
         }
         AttributeInstance manaInstance = user.getAttribute(ModAttributes.MANA.get());
         if (manaInstance != null) {
-            if (ManaMain.consumeMana(user, manaToUse)) {
+            if (ManaMain.consumeMana(user, manaToUse) && spell.execute(user, stack)) {
                 sendUseDisplay(user, spell);
-                spell.execute(user, stack);
                 List<Element> elements = spell.elements();
-                if (!elements.isEmpty()) {
+                if (!elements.isEmpty()) {//spawn spell shards
                     ItemStack spellShardRNG = new ItemStack(ModItems.ELEMENTAL_SHARDS.get(MathHelper.pickRandom(elements)).get());
-                    RNGDropHelper.calculateAndDrop(spellShardRNG, 0.00002f, user, MathHelper.getPosition(user));
+                    RNGDropHelper.calculateAndDrop(spellShardRNG, 0.00002f, user, user.position());
                 }
                 return true;
             }
@@ -203,7 +203,7 @@ public class SpellHelper implements ItemData<SpellSlot[], SpellHelper> {
     public SpellSlot[] loadData(ItemStack stack, Consumer<SpellHelper> stackConsumer) {
         CompoundTag tag = stack.getTagElement(getTagId());
         if (tag != null) {
-            ListTag listTag = tag.getList("slots", Tag.TAG_COMPOUND);
+            ListTag listTag = tag.getList("Slots", Tag.TAG_COMPOUND);
             int i = 0;
             for (Tag tag1 : listTag) {
                 if (tag1 instanceof CompoundTag cTag) {
@@ -243,7 +243,7 @@ public class SpellHelper implements ItemData<SpellSlot[], SpellHelper> {
             slotsTag.add(i, slot.toNbt());
         }
         tag.putShort("Size", (short) slots.length);
-        tag.put("slots", slotsTag);
+        tag.put("Slots", slotsTag);
         stack.addTagElement(getTagId(), tag);
     }
 }

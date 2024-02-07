@@ -43,27 +43,29 @@ public class AnvilUses {
 
     public static void registerUses() {
         registerAnvilUse(
-                both(ItemStack::isDamageableItem,
-                stack -> stack.is(ModItems.UNBREAKING_CORE.get())),
+                both(
+                        ItemStack::isDamageableItem,
+                        stack -> stack.is(ModItems.UNBREAKING_CORE.get())
+                ),
                 (stack, stack1) -> stack.getOrCreateTag().putBoolean("Unbreakable", true),
                 10
         );
         registerAnvilUse(
                 both(
-                    stack -> stack.getItem() instanceof NecronSword sword && !sword.hasSpell(stack, Spells.WITHER_IMPACT),
-                    stack -> stack.getItem() instanceof SpellScrollItem scrollItem && scrollItem.getSpell().canApply(ModItems.NECRON_SWORD.get())
-                        ),
+                        stack -> stack.getItem() instanceof NecronSword sword && !sword.hasSpell(stack, Spells.WITHER_IMPACT),
+                        stack -> stack.getItem() instanceof SpellScrollItem && SpellScrollItem.getSpell(stack).canApply(ModItems.NECRON_SWORD.get())
+                ),
                 (stack, stack1) -> {
                     NecronSword sword = (NecronSword) stack.getItem();
                     if (sword.hasAnySpell(stack)) sword.setSlot(0, new SpellSlot(Spells.WITHER_IMPACT), stack);
-                    else sword.setSlot(0, new SpellSlot(((SpellScrollItem) stack1.getItem()).getSpell()), stack);
+                    else sword.setSlot(0, new SpellSlot(SpellScrollItem.getSpell(stack)), stack);
                 },
                 20
         );
         registerAnvilUse(
                 both(
-                SoulbindHelper::isNotSoulbound,
-                stack -> stack.getItem() == ModItems.SOULBOUND_CORE.get()
+                        SoulbindHelper::isNotSoulbound,
+                        stack -> stack.getItem() == ModItems.SOULBOUND_CORE.get()
                 ),
                 (stack, stack1) -> SoulbindHelper.setSoulbound(stack),
                 15

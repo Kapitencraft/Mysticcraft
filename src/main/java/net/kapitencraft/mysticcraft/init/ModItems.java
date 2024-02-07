@@ -32,7 +32,6 @@ import net.kapitencraft.mysticcraft.item.tools.HammerItem;
 import net.kapitencraft.mysticcraft.item.tools.fishing_rods.LavaFishingRod;
 import net.kapitencraft.mysticcraft.misc.ModRarities;
 import net.kapitencraft.mysticcraft.spell.Element;
-import net.kapitencraft.mysticcraft.spell.Spells;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -109,7 +108,7 @@ public interface ModItems {
     RegistryObject<InfernalScythe> INFERNAL_SCYTHE = register("infernal_scythe", InfernalScythe::new, IFireScytheItem.FIRE_SCYTHE_GROUP);
     RegistryObject<FireLance> FIRE_LANCE = register("fire_lance", FireLance::new, SpellItem.SPELL_GROUP);
     RegistryObject<LavaFishingRod> LAVA_FISHING_ROD_TEST = register("lava_fishing_rod", () -> new LavaFishingRod(Rarity.RARE), TabGroup.MATERIAL);
-    HashMap<Spells, RegistryObject<SpellScrollItem>> SCROLLS = Spells.registerAll();
+    RegistryObject<SpellScrollItem> SPELL_SCROLL = register("spell_scroll", SpellScrollItem::new, null);
     RegistryObject<MaterialModItem> ORB_OF_CONSUMPTION = registerNonStackableMaterial("orb_of_consumption", Rarity.EPIC, TabGroup.MATERIAL);
     RegistryObject<MaterialModItem> NECRONS_HANDLE = registerNonStackableMaterial("necrons_handle", ModRarities.LEGENDARY, TabGroup.MATERIAL);
     RegistryObject<SoulboundCore> SOULBOUND_CORE = register("soulbound_core", SoulboundCore::new, TabGroup.MATERIAL);

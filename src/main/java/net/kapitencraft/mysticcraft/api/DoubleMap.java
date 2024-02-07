@@ -7,7 +7,13 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+/**
+ * class that contains a map of a map making it able to contain 3 different types
+ */
 public class DoubleMap<T, K, L> extends HashMap<T, Map<K, L>> {
+    /**
+     * used to make a double map immutable, crashing the game when trying to modify it
+     */
     private boolean immutable = false;
 
     public void forValues(Consumer<L> consumer) {

@@ -7,6 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
@@ -45,6 +46,10 @@ public class MathHelper {
         return (float) (damage * (1f - defencePercentage));
     }
 
+    public static Vec3 getHandHoldingItemAngle(HumanoidArm arm, Entity entity) {
+        return entity.position().add(entity.calculateViewVector(0.0F, entity.getYRot() + (float)(arm == HumanoidArm.RIGHT ? 80 : -80)).scale(0.5D));
+    }
+
     public static Vec3 rotateHorizontalVec(Vec3 source, Vec3 target, int angle) {
         double x = (target.x - source.x) * Math.cos(angle) - (target.y - source.y) * Math.sin(angle) + source.x;
         double z = (target.x - source.x) * Math.sin(angle) + (target.y - source.y) * Math.cos(angle) + source.y;
@@ -62,7 +67,7 @@ public class MathHelper {
     }
 
     public static void up1(Reference<Integer> reference) {
-        add(reference::getValue, reference::setValue, 1);
+        add(reference::getIntValue, reference::setValue, 1);
     }
 
     public static void mul(Supplier<Integer> getter, Consumer<Integer> setter, int mul) {
@@ -219,7 +224,7 @@ public class MathHelper {
             Vec3 axisVec = sourcePos.subtract(endMid);
             float halfSpan = span / 2;
             for (Entity entity : level.getEntitiesOfClass(Entity.class, testAABB)) {
-                Vec3 apexToTarget = sourcePos.subtract(getPosition(entity));
+                Vec3 apexToTarget = sourcePos.subtract(entity.position());
                 boolean isInInfiniteCone = apexToTarget.dot(axisVec) / apexToTarget.length() / axisVec.length() > Mth.cos(halfSpan);
                 if (isInInfiniteCone && apexToTarget.dot(axisVec) / axisVec.length() < axisVec.length()) {
                     list.add(entity);
@@ -235,18 +240,14 @@ public class MathHelper {
         ArrayList<Vec3> lineOfSight = lineOfSight(rot, sourcePos, range, 0.1);
         lineOfSight.forEach(vec3 -> {
             AABB aabb = new AABB(vec3.add(radius, radius, radius), vec3.subtract(radius, radius, radius));
-            List<Entity> entities = level.getEntitiesOfClass(Entity.class, aabb, entity -> vec3.distanceTo(MathHelper.getPosition(entity)) < radius);
+            List<Entity> entities = level.getEntitiesOfClass(Entity.class, aabb, entity -> vec3.distanceTo(entity.position()) < radius);
             toReturn.addAll(entities.stream().filter(entity -> !toReturn.contains(entity)).toList());
         });
         return toReturn;
     }
-    public static Vec3 getPosition(Entity entity) {
-        return new Vec3(entity.getX(), entity.getY(), entity.getZ());
-    }
-    public static Vec3 getEyePosition(Entity entity) {return getPosition(entity).add(0, entity.getEyeHeight(), 0);}
 
     public static Vec2 createTargetRotation(Entity source, Entity target) {
-        return createTargetRotationFromPos(getPosition(source), getPosition(target));
+        return createTargetRotationFromPos(source.position(), target.position());
     }
 
     public static Vec2 createTargetRotationFromPos(Vec3 source, Vec3 target) {
@@ -258,11 +259,11 @@ public class MathHelper {
     }
 
     public static Vec2 createTargetRotationFromEyeHeight(Entity source, Entity target) {
-        return createTargetRotationFromPos(getEyePosition(source), getEyePosition(target));
+        return createTargetRotationFromPos(source.getEyePosition(), target.getEyePosition());
     }
 
     public static boolean isBehind(Entity source, Entity target) {
-        Vec3 vec32 = getPosition(source);
+        Vec3 vec32 = source.position();
         Vec3 vec31 = vec32.vectorTo(target.position()).normalize();
         vec31 = new Vec3(vec31.x, 0.0D, vec31.z);
         return !(vec31.dot(target.getViewVector(1)) < 0.0D);

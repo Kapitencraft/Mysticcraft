@@ -134,7 +134,7 @@ public class GemstoneGrinderBlockEntity extends BlockEntity implements MenuProvi
                 default -> throw new RuntimeException("there are only 5 gemstone Slots");
             });
         });
-        return reference.getValue();
+        return reference.getIntValue();
     }
 
 

@@ -1,6 +1,5 @@
 package net.kapitencraft.mysticcraft.mixin.classes;
 
-import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.item.material.containable.ContainableItem;
 import net.minecraft.world.inventory.MerchantContainer;
 import net.minecraft.world.inventory.MerchantMenu;
@@ -25,7 +24,6 @@ public abstract class MerchantMenuMixin {
     @Overwrite
     private void moveFromInventoryToPaymentSlot(int p_40061_, ItemStack stack2) {
         if (!stack2.isEmpty()) {
-            MiscHelper.ensureTags(stack2);
             for(int i = 3; i < 39; ++i) {
                 ItemStack current = self().slots.get(i).getItem();
                 ItemStack newItem;

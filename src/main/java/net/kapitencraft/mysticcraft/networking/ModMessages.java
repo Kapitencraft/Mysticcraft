@@ -3,10 +3,11 @@ package net.kapitencraft.mysticcraft.networking;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.networking.packets.C2S.ReforgingPacket;
 import net.kapitencraft.mysticcraft.networking.packets.C2S.UpgradeItemPacket;
-import net.kapitencraft.mysticcraft.networking.packets.S2C.DisplayTotemActivationPacket;
-import net.kapitencraft.mysticcraft.networking.packets.S2C.SyncGuildsPacket;
+import net.kapitencraft.mysticcraft.networking.packets.ModPacket;
+import net.kapitencraft.mysticcraft.networking.packets.S2C.*;
 import net.kapitencraft.mysticcraft.networking.packets.SendCompoundTagPacket;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundExplodePacket;
 import net.minecraft.server.level.ServerLevel;
@@ -56,41 +57,21 @@ public class ModMessages {
                 .serverAcceptedVersions(s -> true)
                 .simpleChannel();
         PACKET_HANDLER = net;
-        net.messageBuilder(ReforgingPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
-                .decoder(ReforgingPacket::new)
-                .encoder(ReforgingPacket::toBytes)
-                .consumerMainThread(ReforgingPacket::handle)
-                .add();
-        net.messageBuilder(UpgradeItemPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
-                .decoder(UpgradeItemPacket::new)
-                .encoder(UpgradeItemPacket::toBytes)
-                .consumerMainThread(UpgradeItemPacket::handle)
-                .add();
-        net.messageBuilder(SendCompoundTagPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
-                .decoder(SendCompoundTagPacket::new)
-                .encoder(SendCompoundTagPacket::toBytes)
-                .consumerMainThread(SendCompoundTagPacket::handle)
-                .add();
-        net.messageBuilder(SendCompoundTagPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
-                .decoder(SendCompoundTagPacket::new)
-                .encoder(SendCompoundTagPacket::toBytes)
-                .consumerMainThread(SendCompoundTagPacket::handle)
-                .add();
-        net.messageBuilder(SyncGuildsPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
-                .decoder(SyncGuildsPacket::new)
-                .encoder(SyncGuildsPacket::toBytes)
-                .consumerMainThread(SyncGuildsPacket::handle)
-                .add();
-        net.messageBuilder(DisplayTotemActivationPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
-                .decoder(DisplayTotemActivationPacket::new)
-                .encoder(DisplayTotemActivationPacket::toBytes)
-                .consumerMainThread(DisplayTotemActivationPacket::handle)
-                .add();
         net.messageBuilder(ClientboundExplodePacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
                 .decoder(ClientboundExplodePacket::new)
                 .encoder(ClientboundExplodePacket::write)
                 .consumerMainThread(ModMessages::handleExplosionPacket)
                 .add();
+        addMessage(ReforgingPacket.class, NetworkDirection.PLAY_TO_SERVER, ReforgingPacket::new);
+        addMessage(UpgradeItemPacket.class, NetworkDirection.PLAY_TO_SERVER, UpgradeItemPacket::new);
+        addMessage(SendCompoundTagPacket.class, NetworkDirection.PLAY_TO_SERVER, SendCompoundTagPacket::new);
+        addMessage(SendCompoundTagPacket.class, NetworkDirection.PLAY_TO_CLIENT, SendCompoundTagPacket::new);
+        addMessage(SyncGuildsPacket.class, NetworkDirection.PLAY_TO_CLIENT, SyncGuildsPacket::new);
+        addMessage(DisplayTotemActivationPacket.class, NetworkDirection.PLAY_TO_CLIENT, DisplayTotemActivationPacket::new);
+        addMessage(SyncEssenceDataPacket.class, NetworkDirection.PLAY_TO_CLIENT, SyncEssenceDataPacket::new);
+        addMessage(SyncGemstoneDataToBlockPacket.class, NetworkDirection.PLAY_TO_CLIENT, SyncGemstoneDataToBlockPacket::new);
+        addMessage(SyncGemstoneDataToPlayerPacket.class, NetworkDirection.PLAY_TO_CLIENT, SyncGemstoneDataToPlayerPacket::new);
+        addMessage(SyncElytraDataToPlayerPacket.class, NetworkDirection.PLAY_TO_CLIENT, SyncElytraDataToPlayerPacket::new);
     }
 
     private static boolean handleExplosionPacket(ClientboundExplodePacket packet, Supplier<NetworkEvent.Context> supplier) {
@@ -99,5 +80,13 @@ public class ModMessages {
             if (listener != null) listener.handleExplosion(packet);
         });
         return true;
+    }
+
+    private static <T extends ModPacket> void addMessage(Class<T> tClass, NetworkDirection direction, Function<FriendlyByteBuf, T> decoder) {
+        PACKET_HANDLER.messageBuilder(tClass, id(), direction)
+                .decoder(decoder)
+                .encoder(T::toBytes)
+                .consumerMainThread(T::handle)
+                .add();
     }
 }

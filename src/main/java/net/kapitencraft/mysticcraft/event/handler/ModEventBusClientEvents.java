@@ -7,9 +7,8 @@ import net.kapitencraft.mysticcraft.client.particle.DamageIndicatorParticle;
 import net.kapitencraft.mysticcraft.client.particle.FireNormalParticle;
 import net.kapitencraft.mysticcraft.client.particle.MagicCircleParticle;
 import net.kapitencraft.mysticcraft.client.particle.animation.ParticleAnimationProvider;
-import net.kapitencraft.mysticcraft.client.particle.flame.*;
+import net.kapitencraft.mysticcraft.client.particle.flame.ModFlameParticle;
 import net.kapitencraft.mysticcraft.entity.client.renderer.*;
-import net.kapitencraft.mysticcraft.gui.containable.ContainableScreen;
 import net.kapitencraft.mysticcraft.gui.gemstone_grinder.GemstoneGrinderScreen;
 import net.kapitencraft.mysticcraft.gui.reforging_anvil.ReforgeAnvilScreen;
 import net.kapitencraft.mysticcraft.init.*;
@@ -55,7 +54,6 @@ public class ModEventBusClientEvents {
     private static void registerMenuScreens() {
         MenuScreens.register(ModMenuTypes.GEM_GRINDER.get(), GemstoneGrinderScreen::new);
         MenuScreens.register(ModMenuTypes.REFORGING_ANVIL.get(), ReforgeAnvilScreen::new);
-        MenuScreens.register(ModMenuTypes.CONTAINABLE.get(), ContainableScreen::new);
     }
 
 
@@ -73,16 +71,11 @@ public class ModEventBusClientEvents {
     @SubscribeEvent
     public static void registerParticles(RegisterParticleProvidersEvent event) {
         event.register((SimpleParticleType) ModParticleTypes.FIRE_NORMAL.get(), FireNormalParticle.FireNormalParticleProvider::new);
-        event.register((SimpleParticleType) ModParticleTypes.RED_FLAME.get(), RedFlameParticle.RisingFlameParticleProvider::new);
-        event.register((SimpleParticleType) ModParticleTypes.DARK_BLUE_FLAME.get(), DarkBlueFlame.RisingFlameParticleProvider::new);
-        event.register((SimpleParticleType) ModParticleTypes.LIGHT_BLUE_FLAME.get(), LightBlueFlame.RisingFlameParticleProvider::new);
-        event.register((SimpleParticleType) ModParticleTypes.LIGHT_GREEN_FLAME.get(), LightGreenFlame.RisingFlameParticleProvider::new);
-        event.register((SimpleParticleType) ModParticleTypes.DARK_GREEN_FLAME.get(), DarkGreenFlame.RisingFlameParticleProvider::new);
-        event.register((SimpleParticleType) ModParticleTypes.PURPLE_FLAME.get(), PurpleFlame.RisingFlameParticleProvider::new);
         event.register(ModParticleTypes.MAGIC_CIRCLE.get(), MagicCircleParticle.MagicCircleParticleProvider::new);
         event.register(ModParticleTypes.DAMAGE_INDICATOR.get(), DamageIndicatorParticle.Provider::new);
         event.register(ModParticleTypes.CIRCLE.get(), CircleParticle.Provider::new);
         event.register(ModParticleTypes.ANIMATION.get(), ParticleAnimationProvider::new);
+        event.register(ModParticleTypes.FLAME.get(), ModFlameParticle.FlameParticleProvider::new);
     }
 
     @SubscribeEvent

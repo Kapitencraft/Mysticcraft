@@ -21,20 +21,25 @@ public interface ITieredItem extends IStarAbleItem, IPrestigeAbleItem {
     List<ItemTier> getAvailableTiers();
 
     @Override
-    default ItemStack prestige(ItemStack stack) {
+    default ItemStack upgrade(ItemStack stack) {
+        if (IStarAbleItem.super.mayUpgrade(stack)) {
+            IStarAbleItem.super.upgrade(stack);
+            return stack;
+        }
         ItemTier tier = getTier(stack);
         if (tier == ItemTier.DEFAULT) {
             fromDefault().saveToStack(stack);
         } else if (tier.next != null) {
             tier.next.saveToStack(stack);
         }
+        IStarAbleItem.setStars(stack, 0);
         return stack;
     }
 
     @Override
-    default boolean mayPrestige(ItemStack stack, boolean fromCommand) {
+    default boolean mayUpgrade(ItemStack stack) {
         ItemTier tier = getTier(stack);
-        return (tier == ItemTier.DEFAULT || tier.next != null) && (IStarAbleItem.getStars(stack) == getMaxStars(stack) || fromCommand);
+        return (tier == ItemTier.DEFAULT || tier.next != null) || IStarAbleItem.super.mayUpgrade(stack);
     }
 
     static @NotNull ItemTier getTier(ItemStack stack) {

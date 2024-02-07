@@ -29,7 +29,7 @@ public class CrimsonDeathRayProjectile extends AbstractArrow {
         this.setOwner(owner);
         this.setYRot(yRot);
         new ParticleAnimator("crimsonProjectile", this, ParticleAnimator.Type.ARROW_HEAD, ParticleAnimator.createArrowHeadProperties(10, 20, ParticleTypes.FLAME, ParticleTypes.ASH));
-        this.setPos(MathHelper.getPosition(owner).add(0, 0.1, 0));
+        this.setPos(owner.position().add(0, 0.1, 0));
         this.setNoGravity(true);
         this.setNoPhysics(true);
         this.setDeltaMovement(this.getViewVector(1));
@@ -53,7 +53,7 @@ public class CrimsonDeathRayProjectile extends AbstractArrow {
         List<LivingEntity> possibleTargetEntities = CollectionHelper.sortLowestDistance(this, MathHelper.getLivingAround(this, 3));
         for (LivingEntity living : possibleTargetEntities) {
             if (!this.ownedBy(living) && !living.isDeadOrDying()) {
-                Vec3 targetVec = MathHelper.getPosition(living).subtract(MathHelper.getPosition(this));
+                Vec3 targetVec = living.position().subtract(this.position());
                 this.setDeltaMovement(MathHelper.maximiseLength(targetVec, 0.5));
                 break;
             }

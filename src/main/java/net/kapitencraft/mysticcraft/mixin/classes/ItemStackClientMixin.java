@@ -170,7 +170,7 @@ public abstract class ItemStackClientMixin {
             } else {
                 list.add(Component.translatable("elytra_data.tooltip").withStyle(ChatFormatting.YELLOW));
             }
-            addEmpty(list);
+            TextHelper.addEmpty(list);
         });
         ClientHelper.addReqContent(list::add, self().getItem(), player);
         if (shouldShowInTooltip(j, ItemStack.TooltipPart.MODIFIERS)) {
@@ -180,6 +180,7 @@ public abstract class ItemStackClientMixin {
                 if (!multimap.isEmpty()) {
                     list.add(CommonComponents.EMPTY);
                     list.add(Component.translatable("item.modifiers." + equipmentslot.getName()).withStyle(ChatFormatting.GRAY));
+                    multimap = CollectionHelper.sortMap(multimap, null, Comparator.comparingInt(value -> value.getOperation().toValue()));
                     for(Map.Entry<Attribute, AttributeModifier> entry : multimap.entries()) {
                         AttributeModifier modifier = entry.getValue();
                         double d0 = modifier.getAmount();
@@ -251,8 +252,7 @@ public abstract class ItemStackClientMixin {
                 }
             }
         }
-        addEmpty(list);
-        addEmpty(list);
+        TextHelper.addEmpty(list);
         if (self().hasTag()) {
             if (shouldShowInTooltip(j, ItemStack.TooltipPart.UNBREAKABLE)) {
                 if (tag.getBoolean("Unbreakable")) list.add(TextHelper.wrapInObfuscation(Component.translatable("item.unbreakable"), true).withStyle(ChatFormatting.BLUE));
@@ -315,10 +315,6 @@ public abstract class ItemStackClientMixin {
         return list;
     }
 
-    @SuppressWarnings("all")
-    private static void addEmpty(List<Component> components) {
-        components.add(CommonComponents.EMPTY);
-    }
 
     @SuppressWarnings("all")
     private static Component getNameModifier(ItemStack stack) {

@@ -14,6 +14,10 @@ public class ModRegistryInit {
     private static IEventBus eventBus;
     private static int registered = 0;
 
+    /**
+     * loads all {@link DeferredRegister} in the mod registries classes
+     * @param bus the event bus from the mod which
+     */
     public static void register(IEventBus bus) {
         eventBus = bus;
         MysticcraftMod.LOGGER.info(Markers.REGISTRY, "starting registration");

@@ -1,7 +1,6 @@
 package net.kapitencraft.mysticcraft.item.combat.totems;
 
 import net.kapitencraft.mysticcraft.entity.portal.TransferForcer;
-import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.minecraft.core.BlockPos;
@@ -34,7 +33,7 @@ public class VoidTotemItem extends ModTotemItem {
                 }
             }
             if (!handled) {
-                setPos(living, MathHelper.getPosition(living).add(0, 300, 0));
+                setPos(living, living.position().add(0, 300, 0));
             }
             return true;
         }

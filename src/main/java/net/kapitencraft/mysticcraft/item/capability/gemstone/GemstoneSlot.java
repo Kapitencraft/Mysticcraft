@@ -8,6 +8,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
@@ -34,10 +35,21 @@ public class GemstoneSlot {
     @NotNull
     private GemstoneType appliedGemstoneType;
     GemstoneSlot(Type gem_type, GemstoneType appliedGemstoneType, GemstoneType.Rarity rarity) {
-        this.appliedGemstoneType = Objects.requireNonNull(appliedGemstoneType);
         this.type = gem_type;
+        this.appliedGemstoneType = Objects.requireNonNull(appliedGemstoneType);
         this.gemRarity = rarity;
     }
+
+    public static void saveToBytes(FriendlyByteBuf buf, GemstoneSlot slot) {
+        buf.writeEnum(slot.type);
+        buf.writeEnum(slot.appliedGemstoneType);
+        buf.writeEnum(slot.gemRarity);
+    }
+
+    public static GemstoneSlot readFromBytes(FriendlyByteBuf buf) {
+        return new GemstoneSlot(buf.readEnum(Type.class), buf.readEnum(GemstoneType.class), buf.readEnum(GemstoneType.Rarity.class));
+    }
+
 
     public Tag toNBT() {
         return TagHelper.getOrLog(CODEC.encodeStart(NbtOps.INSTANCE, this), new CompoundTag());

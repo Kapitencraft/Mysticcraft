@@ -6,8 +6,12 @@ import net.kapitencraft.mysticcraft.gui.ModMenu;
 import net.kapitencraft.mysticcraft.init.ModBlocks;
 import net.kapitencraft.mysticcraft.init.ModItems;
 import net.kapitencraft.mysticcraft.init.ModMenuTypes;
+import net.kapitencraft.mysticcraft.item.capability.CapabilityHelper;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.*;
+import net.kapitencraft.mysticcraft.networking.ModMessages;
+import net.kapitencraft.mysticcraft.networking.packets.S2C.SyncGemstoneDataToBlockPacket;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
@@ -16,6 +20,8 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Map;
 
 public class GemstoneGrinderMenu extends ModMenu<GemstoneGrinderBlockEntity> {
 
@@ -37,6 +43,15 @@ public class GemstoneGrinderMenu extends ModMenu<GemstoneGrinderBlockEntity> {
             this.addSlot(new CCSlotItemHandler(handler, 0, 79, 17));
         });
         this.blockEntity.emptyItemHandler(true);
+        ItemStack applicable = this.blockEntity.itemHandler.getStackInSlot(0);
+        if (!applicable.isEmpty() && this.player instanceof ServerPlayer serverPlayer) {
+            applicable.getCapability(CapabilityHelper.GEMSTONE).ifPresent(handler -> sendGemstoneCapability(handler, serverPlayer)
+            );
+        }
+    }
+
+    private void sendGemstoneCapability(IGemstoneHandler capability, ServerPlayer player) {
+        ModMessages.sendToClientPlayer(new SyncGemstoneDataToBlockPacket(this.blockEntity.getBlockPos(), Map.of(0, (GemstoneCapability) capability)), player);
     }
 
 
@@ -66,11 +81,13 @@ public class GemstoneGrinderMenu extends ModMenu<GemstoneGrinderBlockEntity> {
             if (this.getSlotIndex() == 0) {
                 blockEntity.emptyItemHandler(false);
             }
-            else GemstoneHelper.getCapability(getApplicable(), iGemstoneHandler -> iGemstoneHandler.putGemstone(GemstoneType.EMPTY, GemstoneType.Rarity.EMPTY, blockEntity.getSlotForItem(getSlotIndex())));
+            else GemstoneHelper.getCapability(getApplicable(), handler -> {
+                handler.putGemstone(GemstoneType.EMPTY, GemstoneType.Rarity.EMPTY, blockEntity.getSlotForItem(getSlotIndex()));
+
+                if (player instanceof ServerPlayer serverPlayer) sendGemstoneCapability(handler, serverPlayer);
+            });
             super.onTake(p_150645_, p_150646_);
         }
-
-        //TODO fix gemstones being removed
 
         @Override
         public boolean mayPlace(@NotNull ItemStack stack) {
@@ -78,9 +95,11 @@ public class GemstoneGrinderMenu extends ModMenu<GemstoneGrinderBlockEntity> {
                 return GemstoneHelper.hasCapability(stack);
             } else {
                 ItemStack applicableStack = getApplicable();
-                return GemstoneHelper.exCapability(applicableStack, iGemstoneHandler -> {
+                return GemstoneHelper.exCapability(applicableStack, handler -> {
                     int slotId = GemstoneGrinderBlockEntity.getSlotForItem(this.getSlotIndex(), applicableStack);
-                    return iGemstoneHandler.putGemstoneFromStack(stack, slotId);
+                    boolean flag = handler.putGemstoneFromStack(stack, slotId);
+                    if (player instanceof ServerPlayer serverPlayer && flag) sendGemstoneCapability(handler, serverPlayer);
+                    return flag;
                 });
             }
         }

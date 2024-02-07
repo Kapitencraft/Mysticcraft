@@ -30,7 +30,7 @@ public class Rendering {
 
     static {
         addRenderer(new RenderHolder(
-                new PositionHolder(203, 116).setType(PositionHolder.AssertType.BOTTOM_RIGHT),
+                new PositionHolder(-203, -116),
                 player -> Component.literal(MathHelper.round(player.getAttributeValue(ModAttributes.MANA.get()), 1) + " [+" + MathHelper.round(player.getPersistentData().getDouble(MiscRegister.OVERFLOW_MANA_ID), 1) + " Overflow] §r / §1" + player.getAttributeValue(ModAttributes.MAX_MANA.get()) + " (+" + MathHelper.round(player.getPersistentData().getDouble("manaRegen") * 20, 2) + "/s)").withStyle(ChatFormatting.BLUE),
                 RenderType.BIG
         ));

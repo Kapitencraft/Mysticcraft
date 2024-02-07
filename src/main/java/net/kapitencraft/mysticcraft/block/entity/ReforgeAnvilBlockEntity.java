@@ -31,15 +31,15 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class ReforgingAnvilBlockEntity extends BlockEntity implements MenuProvider {
+public class ReforgeAnvilBlockEntity extends BlockEntity implements MenuProvider {
     public final ReforgeAnvilItemStackHandler handler = new ReforgeAnvilItemStackHandler();
     LazyOptional<ReforgeAnvilItemStackHandler> lazyItemHandler = LazyOptional.empty();
 
-    public ReforgingAnvilBlockEntity(BlockPos pos, BlockState state) {
+    public ReforgeAnvilBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.REFORGING_ANVIL.get(), pos, state);
     }
 
-    public static <E extends ReforgingAnvilBlockEntity> void tick(Level ignoredLevel, BlockPos ignoredPos, BlockState ignoredState, E blockEntity) {
+    public static <E extends ReforgeAnvilBlockEntity> void tick(Level ignoredLevel, BlockPos ignoredPos, BlockState ignoredState, E blockEntity) {
     }
 
     @Override

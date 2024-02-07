@@ -4,8 +4,10 @@
     {
       "condition": "entity_properties",
       "entity": "this",
-      "type": "minecraft:wither",
-      "nbt": "{WitherType:Necron}"
+      "predicate": {
+        "type": "minecraft:wither",
+        "nbt": "{WitherType:Necron}"
+      }
     }
   ],
   "chance": 0.1,

@@ -3,7 +3,6 @@ package net.kapitencraft.mysticcraft.enchantments.armor;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.ExtendedCalculationEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.IArmorEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.IUltimateEnchantment;
-import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.helpers.ParticleHelper;
 import net.kapitencraft.mysticcraft.misc.cooldown.Cooldowns;
 import net.minecraft.core.particles.ParticleTypes;
@@ -33,7 +32,7 @@ public class BonkEnchantment extends ExtendedCalculationEnchantment implements I
             String name = slot.getName();
             boolean isActive = tag1.getBoolean(name);
             if (isActive) {
-                ParticleHelper.sendParticles(attacked.level, ParticleTypes.EXPLOSION, false, MathHelper.getPosition(attacked), 2, 0, 0, 0, 0);
+                ParticleHelper.sendParticles(attacked.level, ParticleTypes.EXPLOSION, false, attacked.position(), 2, 0, 0, 0, 0);
                 Cooldowns.BONK_ENCHANTMENT(slot).applyCooldown(attacked, true);
                 return 0;
             }

@@ -2,9 +2,9 @@ package net.kapitencraft.mysticcraft.item.combat.armor;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import net.kapitencraft.mysticcraft.client.particle.flame.FlamesForColors;
 import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
-import net.kapitencraft.mysticcraft.init.ModParticleTypes;
 import net.kapitencraft.mysticcraft.item.ITieredItem;
 import net.kapitencraft.mysticcraft.item.capability.dungeon.IPrestigeAbleItem;
 import net.kapitencraft.mysticcraft.item.capability.dungeon.IStarAbleItem;
@@ -21,7 +21,6 @@ import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
 import net.kapitencraft.mysticcraft.misc.content.EssenceType;
 import net.kapitencraft.mysticcraft.misc.particle_help.ParticleAnimator;
-import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -45,8 +44,8 @@ public class CrimsonArmorItem extends NetherArmorItem implements IArmorBonusItem
 
     @Override
     protected void initFullSetTick(ItemStack stack, Level level, LivingEntity living) {
-        new ParticleAnimator(helperString, living, ParticleAnimator.Type.ORBIT, ParticleAnimator.createOrbitProperties(0, 1000, 0, 0, 3, (SimpleParticleType) ModParticleTypes.RED_FLAME.get(), 0.75f));
-        new ParticleAnimator(helperString, living, ParticleAnimator.Type.ORBIT, ParticleAnimator.createOrbitProperties(0, 1000, 180, 0, 3, (SimpleParticleType) ModParticleTypes.RED_FLAME.get(), 0.75f));
+        new ParticleAnimator(helperString, living, ParticleAnimator.Type.ORBIT, ParticleAnimator.createOrbitProperties(0, 1000, 0, 0, 3, FlamesForColors.RED, 0.75f));
+        new ParticleAnimator(helperString, living, ParticleAnimator.Type.ORBIT, ParticleAnimator.createOrbitProperties(0, 1000, 180, 0, 3, FlamesForColors.RED, 0.75f));
 
     }
 
@@ -97,11 +96,6 @@ public class CrimsonArmorItem extends NetherArmorItem implements IArmorBonusItem
         return List.of(
                 IPrestigeAbleItem.essence(EssenceType.CRIMSON, (int) Math.pow(stars, prestige))
         );
-    }
-
-    @Override
-    public List<ItemStack> getStarCost(ItemStack stack, int curStars) {
-        return null;
     }
 
     @Override

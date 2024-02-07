@@ -4,8 +4,10 @@
     {
       "condition": "entity_properties",
       "entity": "this",
-      "type": "minecraft:wither",
-      "nbt": "{WitherType:Goldor}"
+      "predicate": {
+        "type": "minecraft:wither",
+        "nbt": "{WitherType:Goldor}"
+      }
     }
   ],
   "chance": 0.1,

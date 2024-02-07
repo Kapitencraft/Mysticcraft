@@ -66,7 +66,7 @@ public class ControlledArrow extends Arrow {
                 deltaPos.scale(-2);
             }
             deltaPos.scale(1 + (arrowOffset - ARROW_SPAWN_LENGTH / 2));
-            this.setPos(new Vec3(deltaPos.x, 0.5 + height, deltaPos.z).add(MathHelper.getPosition(this.getOwner())));
+            this.setPos(new Vec3(deltaPos.x, 0.5 + height, deltaPos.z).add(this.getOwner().position()));
             this.setRot(this.getOwner().getXRot(), this.getOwner().getYRot());
         }
     }

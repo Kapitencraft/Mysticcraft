@@ -10,6 +10,9 @@ import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+/**
+ * a stream for a map (how obvious)
+ */
 public class MapStream<T, K> {
     private final Map<T, K> map = new HashMap<>();
 
@@ -35,12 +38,16 @@ public class MapStream<T, K> {
     }
 
 
-    public <J> Stream<J> map(BiFunction<T, K, J> mapper) {
+    public <J> Stream<J> mapToSimple(BiFunction<T, K, J> mapper) {
         List<J> list = new ArrayList<>();
         this.map.forEach((t, k) -> list.add(mapper.apply(t, k)));
         return list.stream();
     }
 
+    /**
+     * method to remove any elements that do <i>not</i> match the predicate
+     * @return the filtered {@link MapStream}
+     */
     public MapStream<T, K> filter(BiPredicate<T, K> predicate) {
         Map<T, K> map = new HashMap<>();
         this.map.forEach((t, k) -> {
@@ -63,12 +70,16 @@ public class MapStream<T, K> {
         return create(keys, values);
     }
 
+    public MapStream<T, K> filterNulls() {
+        return filter((t, k) -> t != null && k != null);
+    }
+
     public Map<T, K> toMap() {
         return Map.copyOf(this.map);
     }
 
     public <J, I> MapStream<J, I> biMap(BiFunction<T, K, StreamEntry<J, I>> mapper) {
-        return of(map(mapper).toList());
+        return of(mapToSimple(mapper).toList());
     }
 
     public MapStream<T, K> forEach(BiConsumer<T, K> consumer) {

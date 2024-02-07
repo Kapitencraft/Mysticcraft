@@ -2,10 +2,13 @@ package net.kapitencraft.mysticcraft.item.capability.gemstone;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.kapitencraft.mysticcraft.item.capability.CapabilityHelper;
 import net.kapitencraft.mysticcraft.item.capability.ModCapability;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 public class GemstoneCapability extends ModCapability<GemstoneCapability, IGemstoneHandler> implements IGemstoneHandler {
@@ -21,9 +24,15 @@ public class GemstoneCapability extends ModCapability<GemstoneCapability, IGemst
         super(CODEC);
     }
 
-    private static GemstoneCapability create(List<GemstoneSlot> slots) {
+    public static GemstoneCapability create(Collection<GemstoneSlot> slots) {
         GemstoneCapability capability = new GemstoneCapability();
         capability.slots = slots.toArray(GemstoneSlot[]::new);
+        return capability;
+    }
+
+    public static GemstoneCapability of(GemstoneSlot[] slots) {
+        GemstoneCapability capability = new GemstoneCapability();
+        capability.slots = slots;
         return capability;
     }
 
@@ -62,18 +71,28 @@ public class GemstoneCapability extends ModCapability<GemstoneCapability, IGemst
         }
     }
 
+    @Override
+    public GemstoneCapability asType() {
+        return this;
+    }
+
     public void copy(GemstoneCapability capability) {
         this.slots = capability.slots;
+
         ensureFilledSlots();
     }
 
     @Override
     public Capability<IGemstoneHandler> getCapability() {
-        return null;
+        return CapabilityHelper.GEMSTONE;
     }
 
     @Override
     public LazyOptional<GemstoneCapability> get() {
         return self;
+    }
+
+    public List<GemstoneSlot> listSlots() {
+        return Arrays.asList(slots);
     }
 }

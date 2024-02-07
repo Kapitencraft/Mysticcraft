@@ -1,7 +1,11 @@
 package net.kapitencraft.mysticcraft.api;
 
+import net.kapitencraft.mysticcraft.MysticcraftMod;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * type of variable able to be used from inside lambda
+ */
 public class Reference<T> {
 
     private T value;
@@ -21,5 +25,17 @@ public class Reference<T> {
 
     public T getValue() {
         return value;
+    }
+
+    public int getIntValue() {
+        if (value == null) {
+            return 0;
+        }
+        try {
+            return (int) value;
+        } catch (Exception e) {
+            MysticcraftMod.LOGGER.warn("error whilst attempting to get value: {}", e.getMessage());
+        }
+        return 0;
     }
 }

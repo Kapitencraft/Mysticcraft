@@ -19,7 +19,7 @@ public class EssenceItem extends Item implements IEssenceData, IModItem {
 
     @Override
     public @NotNull Component getName(@NotNull ItemStack stack) {
-        EssenceType id = loadData(stack, i -> {});
+        EssenceType id = IEssenceData.loadData(stack);
         return id.getName().append(super.getName(stack));
     }
 

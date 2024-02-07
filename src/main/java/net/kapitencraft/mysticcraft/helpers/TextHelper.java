@@ -8,6 +8,7 @@ import net.minecraft.Util;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
@@ -44,6 +45,11 @@ public class TextHelper {
             serverPlayer.connection.send(function.apply(title));
         }
     }
+
+    public static void addEmpty(List<Component> components) {
+        components.add(CommonComponents.EMPTY);
+    }
+
 
     public static List<Component> getAllMatchingFilter(Function<Integer, String> keyMapper, @Nullable UnaryOperator<MutableComponent> styleMods, Object... args) {
         List<Component> list = new ArrayList<>();

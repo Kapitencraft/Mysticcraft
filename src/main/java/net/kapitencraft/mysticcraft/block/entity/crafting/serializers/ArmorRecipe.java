@@ -36,7 +36,7 @@ public class ArmorRecipe extends CustomRecipe {
         super(location, p_249010_);
         this.material = material;
         this.group = group;
-        this.all = MapStream.of(all).map(this::create).toList();
+        this.all = MapStream.of(all).mapToSimple(this::create).toList();
     }
 
     private ShapedRecipe create(ArmorType type, ItemStack stack) {

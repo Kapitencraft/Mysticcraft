@@ -12,8 +12,6 @@ import net.kapitencraft.mysticcraft.item.combat.spells.FireLance;
 import net.kapitencraft.mysticcraft.item.combat.spells.IFireScytheItem;
 import net.kapitencraft.mysticcraft.item.combat.spells.SpellScrollItem;
 import net.kapitencraft.mysticcraft.item.combat.spells.necron_sword.NecronSword;
-import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
-import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
 import net.kapitencraft.mysticcraft.misc.ModRarities;
 import net.kapitencraft.mysticcraft.spell.spells.*;
 import net.minecraft.ChatFormatting;
@@ -25,7 +23,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
-import net.minecraftforge.registries.RegistryObject;
 
 import java.util.HashMap;
 import java.util.List;
@@ -50,15 +47,19 @@ public enum Spells implements Spell {
     FIRE_BOLT_2("Fire Bolt 2", "0110011", Type.RELEASE, 50, createFireBold(1.4, false), item -> item instanceof IFireScytheItem, createFireBoldDesc(1.4f), Rarity.UNCOMMON, true, 0, Elements.FIRE),
     FIRE_BOLT_3("Fire Bolt 3", "0110011", Type.RELEASE, 50, createFireBold(2.8, true), item -> item instanceof IFireScytheItem, createFireBoldDesc(2.8f), Rarity.UNCOMMON, true, 0, Elements.FIRE),
     FIRE_BOLT_4("Fire Bolt 4", "0110011", Type.RELEASE, 50, createFireBold(5.2, true), item -> item instanceof IFireScytheItem, createFireBoldDesc(5.2f), Rarity.UNCOMMON, true, 0, Elements.FIRE),
-    FIRE_LANCE("Fire Lance", "1011100", Type.CYCLE, 5, FireLanceSpell::execute, item -> item instanceof FireLance, FireLanceSpell::getDescription, Rarity.UNCOMMON, true, 0,     Elements.FIRE, Elements.AIR);
+    FIRE_LANCE("Fire Lance", "1011100", Type.CYCLE, 5, FireLanceSpell::execute, item -> item instanceof FireLance, FireLanceSpell::getDescription, Rarity.UNCOMMON, true, 0, Elements.FIRE, Elements.AIR);
 
-    private static final TabGroup SPELL_GROUP = new TabGroup(TabRegister.TabTypes.SPELL);
     private static final List<Spells> WITHOUT_EMPTY = CollectionHelper.remove(values(), EMPTY_SPELL);
-    public static HashMap<Spells, RegistryObject<SpellScrollItem>> registerAll() {
-        return ModItems.createRegistry(SpellScrollItem::new, (spell) -> spell.REGISTRY_NAME + "_spell_scroll", WITHOUT_EMPTY, SPELL_GROUP);
+    public static HashMap<Spells, ItemStack> createAll() {
+        HashMap<Spells, ItemStack> map = new HashMap<>();
+        Spells.WITHOUT_EMPTY.forEach(spells -> {
+            ItemStack stack = new ItemStack(ModItems.SPELL_SCROLL.get());
+            SpellScrollItem scrollItem = ModItems.SPELL_SCROLL.get();
+            scrollItem.setSlot(0, new SpellSlot(spells), stack);
+            map.put(spells, stack);
+        });
+        return map;
     }
-
-    //TODO add scroll loot table
 
     private static BiPredicate<LivingEntity, ItemStack> createFireBold(double baseDamage, boolean explosive) {
         return (user, stack) -> {

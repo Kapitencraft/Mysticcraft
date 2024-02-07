@@ -3,12 +3,12 @@ package net.kapitencraft.mysticcraft.misc.content;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.kapitencraft.mysticcraft.helpers.TagHelper;
+import net.kapitencraft.mysticcraft.item.capability.CapabilityHelper;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
+import net.minecraftforge.common.capabilities.AutoRegisterCapability;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
@@ -18,25 +18,19 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
+@AutoRegisterCapability
 public class EssenceHolder implements ICapabilityProvider, INBTSerializable<CompoundTag> {
-    public static final Capability<EssenceHolder> ESSENCE = CapabilityManager.get(new CapabilityToken<>() {
-    });
 
     private static final Codec<EssenceHolder> CODEC = RecordCodecBuilder.create(essenceHolderInstance ->
             essenceHolderInstance.group(
             Codec.unboundedMap(EssenceType.CODEC, Codec.INT).fieldOf("content").forGetter(EssenceHolder::getContent)
     ).apply(essenceHolderInstance, EssenceHolder::new));
 
-    private final LazyOptional<EssenceHolder> optional = LazyOptional.of(this::createEssenceHolder);
-
-    private EssenceHolder createEssenceHolder() {
-        return this;
-    }
-
+    private final LazyOptional<EssenceHolder> optional = LazyOptional.of(()-> this);
 
     private final HashMap<EssenceType, Integer> content = new HashMap<>();
 
-    private EssenceHolder(Map<EssenceType, Integer> content) {
+    public EssenceHolder(Map<EssenceType, Integer> content) {
         this.content.putAll(content);
     }
 
@@ -54,6 +48,11 @@ public class EssenceHolder implements ICapabilityProvider, INBTSerializable<Comp
         } else {
             content.put(type, toAdd);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Content: " + content;
     }
 
     public void remove(EssenceType type, int remove) {
@@ -84,7 +83,7 @@ public class EssenceHolder implements ICapabilityProvider, INBTSerializable<Comp
 
     @Override
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        if (cap == ESSENCE) {
+        if (cap == CapabilityHelper.ESSENCE) {
             return optional.cast();
         }
         return LazyOptional.empty();

@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.networking.packets.C2S;
 
-import net.kapitencraft.mysticcraft.block.entity.ReforgingAnvilBlockEntity;
+import net.kapitencraft.mysticcraft.block.entity.ReforgeAnvilBlockEntity;
+import net.kapitencraft.mysticcraft.networking.packets.ModPacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
@@ -10,17 +11,18 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class ReforgingPacket {
+public class ReforgingPacket implements ModPacket {
     private final BlockPos BEPos;
     private final String reforgeName;
+
+    public ReforgingPacket(FriendlyByteBuf buf) {
+        this.BEPos = buf.readBlockPos();
+        this.reforgeName = buf.readUtf();
+    }
 
     public ReforgingPacket(BlockPos pos, String reforgeName) {
         this.BEPos = pos;
         this.reforgeName = reforgeName;
-    }
-    public ReforgingPacket(FriendlyByteBuf buf) {
-        this.BEPos = buf.readBlockPos();
-        this.reforgeName = buf.readUtf();
     }
 
     public void toBytes(FriendlyByteBuf buf) {
@@ -35,7 +37,7 @@ public class ReforgingPacket {
             if (player != null) {
                 ServerLevel serverLevel = player.getLevel();
                 BlockEntity entity = serverLevel.getBlockEntity(BEPos);
-                if (entity instanceof ReforgingAnvilBlockEntity rAEntity) {
+                if (entity instanceof ReforgeAnvilBlockEntity rAEntity) {
                     if (this.reforgeName != null) {
                         rAEntity.updateButtonPress(this.reforgeName);
                     } else {

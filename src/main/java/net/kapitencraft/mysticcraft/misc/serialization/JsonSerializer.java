@@ -8,8 +8,10 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.function.Supplier;
+
 public class JsonSerializer<T> extends Serializer<JsonElement, JsonOps, T> implements net.minecraft.world.level.storage.loot.Serializer<T> {
-    public JsonSerializer(Codec<T> codec, T defaulted) {
+    public JsonSerializer(Codec<T> codec, Supplier<T> defaulted) {
         super(JsonOps.INSTANCE, codec, defaulted);
     }
 

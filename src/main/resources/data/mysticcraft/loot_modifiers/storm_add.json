@@ -4,8 +4,10 @@
     {
       "condition": "entity_properties",
       "entity": "this",
-      "type": "minecraft:wither",
-      "nbt": "{WitherType:Storm}"
+      "predicate": {
+        "type": "minecraft:wither",
+        "nbt": "{WitherType:Storm}"
+      }
     }
   ],
   "chance": 0.1,

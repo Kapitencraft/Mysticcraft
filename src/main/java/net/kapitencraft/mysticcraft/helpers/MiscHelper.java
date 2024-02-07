@@ -90,7 +90,7 @@ public class MiscHelper {
      * @param living the entity to check for Elytra Capabilities
      * @return returns the delta {@link Vec3} of the param
      */
-    public static Vec3 getFireworkSpeedBoost(LivingEntity living) {
+    public static Vec3 getFireworkSpeedBoost(LivingEntity living, int scale) {
         Vec3 sourceLookAngle = living.getLookAngle();
         Vec3 sourceSpeed = living.getDeltaMovement();
         double d1 = 0.1;
@@ -100,11 +100,11 @@ public class MiscHelper {
         LazyOptional<IElytraData> dataOptional = chest.getCapability(CapabilityHelper.ELYTRA);
         if (dataOptional.isPresent()) {
             IElytraData data = dataOptional.orElse(new ElytraCapability());
-            int i = data.getLevelForData(ElytraData.SPEED_BOOST);
-            if (i > 0) {
-                d1 *= i;
-                d3 *= i / 5.;
-            }
+            scale += data.getLevelForData(ElytraData.SPEED_BOOST);
+        }
+        if (scale > 0) {
+            d1 *= scale;
+            d3 *= scale / 5.;
         }
         return sourceSpeed.add(sourceLookAngle.x * d1 + (sourceLookAngle.x * d2 - sourceSpeed.x) * d3, sourceLookAngle.y * d1 + (sourceLookAngle.y * d2 - sourceSpeed.y) * d3, sourceLookAngle.z * d1 + (sourceLookAngle.z * d2 - sourceSpeed.z) * d3);
     }
@@ -349,7 +349,7 @@ public class MiscHelper {
      * @return
      */
     public static boolean saveTeleportTest(Entity entity, double maxRange) {
-        Vec3 targetPos = entity.getLookAngle().scale(maxRange).add(MathHelper.getPosition(entity));
+        Vec3 targetPos = entity.getLookAngle().scale(maxRange).add(entity.position());
         entity.move(MoverType.SELF, targetPos);
         return true;
     }
@@ -390,7 +390,7 @@ public class MiscHelper {
     public static void teleport(Entity entity, Vec3 teleportPosition) {
         entity.teleportTo(teleportPosition.x, teleportPosition.y, teleportPosition.z);
         entity.fallDistance = 0;
-        entity.level.playSound(entity, new BlockPos(MathHelper.getPosition(entity)), SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1f, 1f);
+        entity.level.playSound(entity, new BlockPos(entity.position()), SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1f, 1f);
     }
 
     /**
@@ -490,7 +490,7 @@ public class MiscHelper {
     }
 
     private static Vec3 getUpdateForPos(Vec3 cam, LivingEntity living) {
-        Vec3 livingPos = MathHelper.getPosition(living);
+        Vec3 livingPos = living.position();
         Vec3 delta = cam.subtract(livingPos);
         return MathHelper.setLength(delta, 0.5);
     }
@@ -498,7 +498,7 @@ public class MiscHelper {
     public static final char HEART = '\u2661';
 
     public static ArmorStand createHealthIndicator(LivingEntity target) {
-        ArmorStand marker = createMarker(MathHelper.getPosition(target).add(0, 0.5, 0), target.getLevel(), true);
+        ArmorStand marker = createMarker(target.position().add(0, 0.5, 0), target.getLevel(), true);
         CompoundTag tag = marker.getPersistentData();
         tag.putBoolean("healthMarker", true);
         marker.setCustomName(Component.literal(HEART + " " + target.getHealth() + "/" + target.getMaxHealth()));

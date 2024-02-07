@@ -6,6 +6,7 @@ import net.minecraft.nbt.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 
 public class SpellSlot {
+
     private @NotNull Spell spell;
 
     public SpellSlot(@NotNull Spell spell) {

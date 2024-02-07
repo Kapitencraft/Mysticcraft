@@ -8,6 +8,10 @@ import net.minecraft.stats.StatType;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.entity.EntityType;
 
+/**
+ * only use when Stat is entry from block mined, item used, item picked up or entity killed <br>
+ * otherwise use {@link CustomStatReqType}
+ */
 public class StatReqType extends RequirementType {
     private final Stat<?> stat;
     public StatReqType(Stat<?> stat, int level) {

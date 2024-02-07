@@ -156,6 +156,7 @@ public class Reforge {
 
 
     public static boolean reforgeAble(ItemStack stack) {
+        if (stack.isEmpty()) return false;
         for (Type type : Type.values()) {
             if (type.mayApply(stack)) {
                 return true;

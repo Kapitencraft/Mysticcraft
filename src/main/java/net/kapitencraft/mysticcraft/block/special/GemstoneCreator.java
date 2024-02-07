@@ -76,7 +76,7 @@ public class GemstoneCreator extends Block implements StructureExecutioner {
                 }
             } catch (IllegalArgumentException ignored) {}
         });
-        MysticcraftMod.LOGGER.info("Changed " + ref.getValue() + " blocks");
+        MysticcraftMod.LOGGER.info("Changed " + ref.getIntValue() + " blocks");
 
     }
 

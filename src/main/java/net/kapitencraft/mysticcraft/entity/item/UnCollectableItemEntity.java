@@ -42,7 +42,7 @@ public class UnCollectableItemEntity extends ItemEntity {
             List<Entity> targets = collectors.stream().map(serverLevel::getEntity).filter(Objects::nonNull).sorted(Comparator.comparingDouble(value -> value.distanceTo(this))).toList();
             if (targets.size() > 0) {
                 Entity target0 = targets.get(0);
-                Vec3 offSet = MathHelper.getPosition(target0).subtract(MathHelper.getPosition(this));
+                Vec3 offSet = target0.position().subtract(this.position());
                 this.move(MoverType.SELF, MathHelper.setLength(offSet, 5));
             }
         }

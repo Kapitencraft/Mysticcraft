@@ -6,6 +6,9 @@ import net.minecraft.stats.Stat;
 
 import java.util.function.Function;
 
+/**
+ * used for custom Stat Types to add custom display-translations
+ */
 public class CustomStatReqType extends StatReqType {
     private final Function<Integer, Component> display;
     public CustomStatReqType(Stat<ResourceLocation> stat, int level, Function<Integer, Component> display) {

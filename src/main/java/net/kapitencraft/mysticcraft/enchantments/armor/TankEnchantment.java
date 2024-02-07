@@ -22,7 +22,6 @@ public class TankEnchantment extends ArmorStatBoostEnchantment implements IUltim
         super(Rarity.VERY_RARE, EnchantmentCategory.ARMOR, MiscHelper.ARMOR_EQUIPMENT);
     }
 
-    //TODO fix scale being extremly high
     @Override
     public String[] getDescriptionMods(int level) {
         return new String[] {-level + "%", "+" + level * 2};
@@ -43,8 +42,8 @@ public class TankEnchantment extends ArmorStatBoostEnchantment implements IUltim
     public Consumer<Multimap<Attribute, AttributeModifier>> getArmorModifiers(int level, ItemStack enchanted, EquipmentSlot slot) {
         return multimap -> {
             ArmorItem armorItem = (ArmorItem) enchanted.getItem();
-            multimap.put(Attributes.MOVEMENT_SPEED, AttributeHelper.createModifierForSlot("Tank Enchantment", AttributeModifier.Operation.MULTIPLY_BASE, -level, armorItem.getSlot()));
-            multimap.put(Attributes.ARMOR, AttributeHelper.createModifierForSlot("Tank Enchantment", AttributeModifier.Operation.MULTIPLY_BASE, level * 2, armorItem.getSlot()));
+            multimap.put(Attributes.MOVEMENT_SPEED, AttributeHelper.createModifierForSlot("Tank Enchantment", AttributeModifier.Operation.MULTIPLY_BASE, -level / 100., armorItem.getSlot()));
+            multimap.put(Attributes.ARMOR, AttributeHelper.createModifierForSlot("Tank Enchantment", AttributeModifier.Operation.ADDITION, level * 2, armorItem.getSlot()));
         };
     }
 }

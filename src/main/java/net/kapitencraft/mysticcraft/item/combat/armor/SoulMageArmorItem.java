@@ -3,9 +3,9 @@ package net.kapitencraft.mysticcraft.item.combat.armor;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.client.particle.flame.FlamesForColors;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
-import net.kapitencraft.mysticcraft.init.ModParticleTypes;
 import net.kapitencraft.mysticcraft.item.combat.armor.client.NetherArmorItem;
 import net.kapitencraft.mysticcraft.item.item_bonus.ExtraBonus;
 import net.kapitencraft.mysticcraft.item.item_bonus.FullSetBonus;
@@ -19,7 +19,6 @@ import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
 import net.kapitencraft.mysticcraft.misc.ModRarities;
 import net.kapitencraft.mysticcraft.misc.particle_help.ParticleAnimator;
-import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -33,7 +32,7 @@ import java.util.function.Consumer;
 
 public class SoulMageArmorItem extends NetherArmorItem implements IArmorBonusItem {
     public static final ArmorTabGroup SOUL_MAGE_ARMOR_GROUP = new ArmorTabGroup(TabRegister.TabTypes.WEAPONS_AND_TOOLS);
-    public static final String helperString = "SoulMageFullSet";
+    public static final String HELPER_STRING = "SoulMageFullSet";
     private static final PieceBonus HELMET_BONUS = new SoulMageHelmetBonus();
     private static final PieceBonus CHEST_BONUS = new SoulMageChestplateBonus();
     private static final FullSetBonus SET_BONUS = new SoulMageArmorFullSetBonus();
@@ -51,13 +50,13 @@ public class SoulMageArmorItem extends NetherArmorItem implements IArmorBonusIte
 
     @Override
     protected void initFullSetTick(ItemStack stack, Level level, LivingEntity living) {
-        new ParticleAnimator(helperString, living, ParticleAnimator.Type.ORBIT, ParticleAnimator.createOrbitProperties(0, 1000, 0, 0, 3, (SimpleParticleType) ModParticleTypes.PURPLE_FLAME.get(), 0.75f));
-        new ParticleAnimator(helperString, living, ParticleAnimator.Type.ORBIT, ParticleAnimator.createOrbitProperties(0, 1000, 180, 0, 3, (SimpleParticleType) ModParticleTypes.PURPLE_FLAME.get(), 0.75f));
+        new ParticleAnimator(HELPER_STRING, living, ParticleAnimator.Type.ORBIT, ParticleAnimator.createOrbitProperties(0, 1000, 0, 0, 3, FlamesForColors.PURPLE, 0.75f));
+        new ParticleAnimator(HELPER_STRING, living, ParticleAnimator.Type.ORBIT, ParticleAnimator.createOrbitProperties(0, 1000, 180, 0, 3, FlamesForColors.PURPLE, 0.75f));
     }
 
     @Override
     protected void postFullSetTick(ItemStack stack, Level level, LivingEntity living) {
-        ParticleAnimator.clearAllHelpers(helperString, living);
+        ParticleAnimator.clearAllHelpers(HELPER_STRING, living);
     }
 
     @Override
@@ -99,10 +98,6 @@ public class SoulMageArmorItem extends NetherArmorItem implements IArmorBonusIte
         return null;
     }
 
-    @Override
-    public List<ItemStack> getStarCost(ItemStack stack, int curStars) {
-        return null;
-    }
 
     @Override
     public Consumer<Multimap<Attribute, AttributeModifier>> getModifiersForSlot(ItemStack stack, ItemTier tier) {

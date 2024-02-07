@@ -35,7 +35,7 @@ public class AimEnchantment extends ModBowEnchantment implements IWeaponEnchantm
             List<LivingEntity> livingEntities = MathHelper.getLivingAround(arrow, tag.getInt("Level"));
             for (LivingEntity living : livingEntities) {
                 if (arrow.getOwner() != living && !living.isDeadOrDying()) {
-                    arrow.setDeltaMovement(MathHelper.setLength(MathHelper.getPosition(living).subtract(MathHelper.getPosition(arrow)), arrow.getDeltaMovement().length()));
+                    arrow.setDeltaMovement(MathHelper.setLength(living.position().subtract(arrow.position()), arrow.getDeltaMovement().length()));
                     break;
                 }
             }

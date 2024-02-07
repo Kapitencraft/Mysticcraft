@@ -27,6 +27,11 @@ public class TagHelper {
         return tag.contains(name) && tag.getInt(name) > 0;
     }
 
+
+    public static boolean isTagEmpty(@Nullable CompoundTag tag) {
+        return tag == null || tag.isEmpty();
+    }
+
     public static float increaseFloatTagValue(CompoundTag tag, String name, float f) {
         float value = tag.getFloat(name)+f;
         tag.putFloat(name, value);

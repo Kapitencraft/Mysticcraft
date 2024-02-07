@@ -31,6 +31,7 @@
     "PlayerMixin",
     "ProjectileMixin",
     "RandomChanceConditionMixin",
+    "ServerPlaceRecipeMixin",
     "SharedConstantsMixin",
     "StructureTemplateMixin",
     "StyleMixin",

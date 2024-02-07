@@ -1,7 +1,17 @@
 added some new reforges;
 added Requirements:
 Elytras now require 5 killed Enderdragons to be used;
-implemented requirements disabling damaging, mining or using items;
+implemented requirements disabling damaging, mining or using items (+spells);
 moved Registry display to debug;
 
+removed Mana-Sam-Launcher due to no necessity;
+
+fixed Tank-Enchantment's scale being extremely high;
+fixed Star-able items not being able to be upgrade from
+fixed wither Drops dropping from any mob;
+fixed shadow dagger's Shadow Step ability not working;
+fixed crafting-book not putting items into crafting slots;
+fixed Essence requirement not being shown;
+fixed Gemstones not showing client side;
+fixed star amount not being reset upon prestiging;
 found and fixed error with quivers;

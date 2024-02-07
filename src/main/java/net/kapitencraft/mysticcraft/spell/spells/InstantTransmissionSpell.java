@@ -11,7 +11,7 @@ public class InstantTransmissionSpell {
     private static final Component[] description = new Component[]{Component.literal("teleports you 8 blocks ahead")};
 
     public static boolean execute(LivingEntity user, ItemStack ignored) {
-        MiscHelper.saveTeleport(user, 8);
+        MiscHelper.saveTeleportTest(user, 8);
         return true;
     }
 

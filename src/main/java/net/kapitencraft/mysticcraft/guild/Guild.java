@@ -64,7 +64,7 @@ public class Guild {
     }
 
     private List<GuildPlayerHolder> save() {
-        return MapStream.of(this.ranks).map(GuildPlayerHolder::new).toList();
+        return MapStream.of(this.ranks).mapToSimple(GuildPlayerHolder::new).toList();
     }
 
     private void add(GuildPlayerHolder holder) {

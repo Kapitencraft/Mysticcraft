@@ -4,6 +4,7 @@ import net.kapitencraft.mysticcraft.event.ModEventFactory;
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -46,7 +47,7 @@ public class Reforges {
         return reforges;
     }
 
-    public static Reforge makeRandom(boolean withStones, ItemStack stack) {
+    public static @NotNull Reforge makeRandom(boolean withStones, ItemStack stack) {
         List<Reforge> list = reforges.values().stream().filter(reforge -> reforge.getType().mayApply(stack)).toList();
         if (withStones) {
             return MathHelper.pickRandom(list);

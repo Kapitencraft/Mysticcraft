@@ -10,7 +10,7 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
-public interface IStarAbleItem {
+public interface IStarAbleItem extends IReAnUpgradeable {
     char STAR = '\u2606';
     int MAX_STARS = 25;
     String TAG_ID = "StarData";
@@ -21,7 +21,7 @@ public interface IStarAbleItem {
         int row = (stars - tillNextColor) / 5;
         StringBuilder builder = new StringBuilder();
         if (tillNextColor > 0) builder.append(COLOR_FOR_STAR_ROW.get(row));
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < Math.min(stars, 5); i++) {
             if (i == tillNextColor) {
                 builder.append(COLOR_FOR_STAR_ROW.get(row-1));
             }
@@ -40,12 +40,19 @@ public interface IStarAbleItem {
         stack.getOrCreateTag().putInt(TAG_ID, stars);
     }
 
+    default ItemStack upgrade(ItemStack in) {
+        setStars(in, getStars(in) + 1);
+        return in;
+    }
+
+    @Override
+    default boolean mayUpgrade(ItemStack stack) {
+        return getStars(stack) < getMaxStars(stack);
+    }
+
     static Multimap<Attribute, AttributeModifier> modifyData(ItemStack stack, Multimap<Attribute, AttributeModifier> map) {
         return AttributeHelper.increaseByPercent(map, getStars(stack) * 0.02, AttributeModifier.Operation.values(), null);
     }
 
     int getMaxStars(ItemStack stack);
-
-    List<ItemStack> getStarCost(ItemStack stack, int curStars);
-
 }

@@ -63,7 +63,6 @@ import java.util.Map;
 @Mod.EventBusSubscriber
 public class DamageEvents {
     private DamageEvents() {}
-//TODO merge
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void miscDamageEvents(LivingHurtEvent event) {
         LivingEntity attacked = event.getEntity();
@@ -166,7 +165,7 @@ public class DamageEvents {
             if (MathHelper.chance(ferocity / 100, attacker)) {
                 MiscHelper.delayed(40, () -> {
                     float ferocityDamage = (float) (source instanceof FerociousDamageSource ferociousDamageSource ? ferociousDamageSource.damage : source.getEntity() instanceof AbstractArrow arrow ?                             arrow.getBaseDamage() : attacker.getAttributeValue(Attributes.ATTACK_DAMAGE));
-                    attacked.level.playSound(attacked, new BlockPos(MathHelper.getPosition(attacked)), SoundEvents.IRON_GOLEM_ATTACK, SoundSource.HOSTILE, 1f, 0.5f);
+                    attacked.level.playSound(attacked, new BlockPos(attacked.position()), SoundEvents.IRON_GOLEM_ATTACK, SoundSource.HOSTILE, 1f, 0.5f);
                     attacked.hurt(new FerociousDamageSource(attacker, (ferocity - 100), ferocityDamage), ferocityDamage);
                 });
             }

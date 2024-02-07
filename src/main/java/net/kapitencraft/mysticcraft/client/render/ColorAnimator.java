@@ -35,6 +35,13 @@ public class ColorAnimator {
     }
 
 
+    public Vector3f getAsSimple() {
+        if (this.colors.size() == 1) {
+            return this.colors.get(0);
+        }
+        throw new IllegalStateException("color animator was not simple");
+    }
+
     public static ColorAnimator create(int nextColorTime) {
         return new ColorAnimator(nextColorTime);
     }
