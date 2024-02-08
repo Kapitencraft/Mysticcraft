@@ -92,6 +92,7 @@ public class MiscHelper {
     /**
      * method to get the speed boost affected by speed boost Elytra Attachment
      * @param living the entity to check for Elytra Capabilities
+     * @param scale extra changes to increase speed
      * @return returns the delta {@link Vec3} of the param
      */
     public static Vec3 getFireworkSpeedBoost(LivingEntity living, int scale) {
@@ -239,7 +240,6 @@ public class MiscHelper {
     /**
      * method to do code when a t is not null
      * @param t value to check null of
-     * @param toDo to do when t isn't null
      */
     public static <T> void ifNonNull(@Nullable T t, Consumer<T> toDo) {
         if (t != null) {

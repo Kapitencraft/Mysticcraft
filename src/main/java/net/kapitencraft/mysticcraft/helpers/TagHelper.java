@@ -36,7 +36,7 @@ public class TagHelper {
         return value;
     }
 
-    public static <T> T get(DataResult<T> result, Supplier<T> defaulted) {
+    public static <T> T get(DataResult<T> result, @NotNull Supplier<T> defaulted) {
         Optional<T> optional = result.result();
         return optional.orElseGet(defaulted);
     }

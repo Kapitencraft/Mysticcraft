@@ -24,7 +24,6 @@ public class OreModifier extends ModLootModifier implements IConditional {
     }
 
 
-    //TODO fix block tag not working
     @Override
     protected @NotNull ObjectArrayList<ItemStack> doApply(ObjectArrayList<ItemStack> generatedLoot, LootContext context) {
         double attributeValue = AttributeHelper.getSaveAttributeValue(ModAttributes.MINING_FORTUNE.get(), LootTableHelper.getLivingSource(context));
