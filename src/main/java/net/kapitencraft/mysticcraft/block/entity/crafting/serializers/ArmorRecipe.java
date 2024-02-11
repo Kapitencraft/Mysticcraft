@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.kapitencraft.mysticcraft.api.MapStream;
+import net.kapitencraft.mysticcraft.block.entity.crafting.ModRecipeTypes;
 import net.kapitencraft.mysticcraft.helpers.CollectionHelper;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.helpers.TextHelper;
@@ -49,6 +50,10 @@ public class ArmorRecipe extends CustomRecipe {
         return this.all.stream().anyMatch(recipe -> recipe.matches(container, level));
     }
 
+    public List<ShapedRecipe> getAll() {
+        return all;
+    }
+
     @Override
     public @NotNull String getGroup() {
         return group;
@@ -63,6 +68,11 @@ public class ArmorRecipe extends CustomRecipe {
             }
         }
         return ItemStack.EMPTY;
+    }
+
+    @Override
+    public @NotNull RecipeType<?> getType() {
+        return ModRecipeTypes.ARMOR_RECIPE.get();
     }
 
     @Override
@@ -139,7 +149,7 @@ public class ArmorRecipe extends CustomRecipe {
             MapStream<ArmorType, Item> map = MapStream.create();
             List<ArmorType> toUse = Arrays.stream(ArmorType.values()).filter(armorType -> !unusedSlots.contains(armorType)).toList();
             if (results != null) {
-                Stream<String> stream = CollectionHelper.mapSync(toUse.stream().map(ArmorType::getSerializedName), results, TextHelper::swappedMergeRegister);
+                Stream<String> stream = toUse.stream().map(ArmorType::getSerializedName).map(CollectionHelper.biMap(results, TextHelper::swappedMergeRegister));
                 map = MapStream.create(toUse, stream.toList())
                         .mapValues(ResourceLocation::new)
                         .mapValues(BuiltInRegistries.ITEM::get);

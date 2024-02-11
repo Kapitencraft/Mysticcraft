@@ -17,7 +17,7 @@ public class DoubleMap<T, K, L> extends HashMap<T, Map<K, L>> {
     private boolean immutable = false;
 
     public void forValues(Consumer<L> consumer) {
-        CollectionHelper.merge(this.values().stream().map(Map::values).toList()).forEach(consumer);
+        this.values().stream().map(Map::values).collect(CollectionHelper.merge()).forEach(consumer);
     }
 
     public static <T, K, L> DoubleMap<T, K, L> of(Map<T, Map<K, L>> map) {

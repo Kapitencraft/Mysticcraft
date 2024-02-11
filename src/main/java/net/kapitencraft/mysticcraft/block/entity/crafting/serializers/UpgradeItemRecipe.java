@@ -45,6 +45,14 @@ public class UpgradeItemRecipe extends CustomRecipe {
         return toUpgrade.test(craftingContainer.getItem(4)) && required.stream().allMatch(upgradeItem);
     }
 
+    public Ingredient getUpgradeItem() {
+        return upgradeItem;
+    }
+
+    public Ingredient getToUpgrade() {
+        return toUpgrade;
+    }
+
     @Override
     public @NotNull String getGroup() {
         return group;
@@ -58,6 +66,17 @@ public class UpgradeItemRecipe extends CustomRecipe {
         return result;
     }
 
+
+
+    @Override
+    public @NotNull ItemStack getResultItem() {
+        return result;
+    }
+
+    public CraftType getCraftType() {
+        return type;
+    }
+
     @Override
     public boolean canCraftInDimensions(int i, int j) {
         return i == 3 && j == 3;
@@ -69,7 +88,7 @@ public class UpgradeItemRecipe extends CustomRecipe {
     }
 
     private interface PositionPredicate {
-        public boolean apply(int x, int y);
+        boolean apply(int x, int y);
     }
 
     public enum CraftType implements StringRepresentable, BiPredicate<Integer, Integer> {

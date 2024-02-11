@@ -56,6 +56,35 @@ public class MathHelper {
         return new Vec3(x, 0, z);
     }
 
+    //somewhere
+    public static AABB getMineBox(LivingEntity entity, int size) {
+        AABB aabb = new AABB(-size, -size, -size, size, size, size);//creating a normal box
+        switch (entity.getDirection().getAxis()) { //set the length of the rotation's Axis to 0
+            case X -> {
+                aabb.setMinX(0);
+                aabb.setMaxX(0);
+            }
+            case Y -> {
+                aabb.setMinY(0);
+                aabb.setMaxY(0);
+            }
+            case Z -> {
+                aabb.setMinZ(0);
+                aabb.setMaxZ(0);
+            }
+        }
+        return aabb; //return the aabb
+    }
+
+    //the code you need
+    public static void useBox(LivingEntity living, int size, BlockPos minePos) {
+        AABB mineBox = getMineBox(living, size);
+        mineBox = mineBox.move(minePos);
+        BlockPos.betweenClosedStream(mineBox).forEach(pos -> {
+            //what you want to do with every block-pos
+        });
+    }
+
 
     public static <T extends Entity> List<T> getEntitiesAround(Class<T> tClass, Entity source, double range) {
         Level level = source.getLevel();

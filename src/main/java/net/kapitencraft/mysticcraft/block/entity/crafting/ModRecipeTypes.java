@@ -1,29 +1,24 @@
 package net.kapitencraft.mysticcraft.block.entity.crafting;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.kapitencraft.mysticcraft.block.entity.crafting.serializers.ArmorRecipe;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 public interface ModRecipeTypes {
-    RecipeType<LargeCraftingRecipe> LARGE_CRAFTING = register("large_crafting");
+    DeferredRegister<RecipeType<?>> REGISTRY = MysticcraftMod.makeRegistry(ForgeRegistries.RECIPE_TYPES);
 
-    static <T extends Recipe<?>> RecipeType<T> register(final String name) {
-        return Registry.register(BuiltInRegistries.RECIPE_TYPE, MysticcraftMod.res(name), new RecipeType<T>() {
+    RegistryObject<RecipeType<ArmorRecipe>> ARMOR_RECIPE = register("armor");
+
+    static <T extends Recipe<?>> RegistryObject<RecipeType<T>> register(final String name) {
+        return REGISTRY.register(name, ()-> new RecipeType<T>() {
+            @Override
             public String toString() {
                 return name;
             }
         });
-    }
-
-    static <T extends Recipe<?>> RecipeType<T> simple(ResourceLocation name) {
-        final String toString = name.toString();
-        return new RecipeType<T>() {
-            public String toString() {
-                return toString;
-            }
-        };
     }
 }

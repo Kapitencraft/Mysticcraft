@@ -67,7 +67,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
-import java.util.stream.Stream;
 
 public class MiscHelper {
     //EAST = new Rotation("x+", 90, 1);
@@ -140,15 +139,9 @@ public class MiscHelper {
         }
     }
 
-    /**
-     * @param in stream to cast
-     * @param kClass class to cast every stream element to
-     * @return the stream with the casted
-     */
-    public static <T, K extends T> Stream<K> instanceStream(Stream<T> in, Class<K> kClass) {
-        return CollectionHelper.mapSync(in, kClass, MiscHelper::instance);
+    public static <T, K extends T> Function<T, K> instanceMapper(Class<K> kClass) {
+        return CollectionHelper.biMap(kClass, MiscHelper::instance);
     }
-
     /**
      * method to repair items simular to {@link net.minecraft.world.item.enchantment.MendingEnchantment}
      * @param player player to repair items on

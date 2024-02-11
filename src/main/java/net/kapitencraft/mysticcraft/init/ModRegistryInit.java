@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.init;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.block.entity.crafting.ModRecipeTypes;
 import net.kapitencraft.mysticcraft.helpers.Timer;
 import net.kapitencraft.mysticcraft.logging.Markers;
 import net.kapitencraft.mysticcraft.potion.ModPotions;
@@ -44,6 +45,7 @@ public class ModRegistryInit {
         register("Glyph Effects", ModGlyphEffects.REGISTRY);
         register("Requirements", ModRequirements.REGISTRY);
         register("Stat Types", ModStatTypes.REGISTRY);
+        register("Recipes Types", ModRecipeTypes.REGISTRY);
         MysticcraftMod.LOGGER.info(Markers.REGISTRY, "loading {} registries took {} ms", registered, Timer.getPassedTime());
     }
 

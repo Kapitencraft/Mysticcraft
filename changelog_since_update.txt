@@ -3,8 +3,11 @@ added Requirements:
 Elytras now require 5 killed Enderdragons to be used;
 implemented requirements disabling damaging, mining or using items (+spells);
 moved Registry display to debug;
+moved Enchantment descriptions being in Mixin instead of event
 
 removed Mana-Sam-Launcher due to no necessity;
+
+compat with jei;
 
 fixed Tank-Enchantment's scale being extremely high;
 fixed Star-able items not being able to be upgrade from

@@ -54,7 +54,7 @@ public class ParticleAnimationController {
 
     public void animate(int time) {
         ParticleAnimations animation = forTimeStamp(time, parameters);
-        if (animation != null && animation.test(parameters)) CollectionHelper.sync(toAnimate.stream(), parameters, animation);
+        if (animation != null && animation.test(parameters)) toAnimate.forEach(CollectionHelper.biUsage(parameters, animation));
     }
 
     public boolean isDone() {

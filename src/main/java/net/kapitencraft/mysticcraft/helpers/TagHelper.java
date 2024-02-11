@@ -60,8 +60,8 @@ public class TagHelper {
 
     public static @NotNull CompoundTag putHashMapTag(@NotNull HashMap<UUID, Integer> hashMap) {
         CompoundTag mapTag = new CompoundTag();
-        List<Integer> IntArray = CollectionHelper.colToList(hashMap.values());
-        mapTag.put("Uuids", putUuidList(CollectionHelper.colToList(hashMap.keySet())));
+        List<Integer> IntArray = CollectionHelper.fromAny(hashMap.values());
+        mapTag.put("Uuids", putUuidList(CollectionHelper.fromAny(hashMap.keySet())));
         mapTag.putIntArray("Ints", IntArray);
         mapTag.putInt(LENGTH_ID, hashMap.size());
         return mapTag;

@@ -80,7 +80,7 @@ public class ReforgeAnvilMenu extends ModMenu<ReforgeAnvilBlockEntity> {
                         essenceHolder.remove(IEssenceData.read(stack), stack.getCount())
                 )
         );
-        CollectionHelper.sync(toRemove.stream(), this.player, InventoryHelper::removeFromInventory);
+        toRemove.forEach(CollectionHelper.biUsage(this.player, InventoryHelper::removeFromInventory));
     }
 
     @Override

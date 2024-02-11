@@ -13,8 +13,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.stream.Stream;
-
 @Mixin(Font.StringRenderOutput.class)
 public abstract class StringRenderOutputMixin {
     private Font.StringRenderOutput self() {
@@ -49,8 +47,7 @@ public abstract class StringRenderOutputMixin {
             settings.isShadow = isDropShadow();
             settings.index = index;
 
-            Stream<GlyphEffect> effectStream = effects.getEffects().stream();
-            CollectionHelper.sync(effectStream, settings, GlyphEffect::apply);
+            effects.getEffects().forEach(CollectionHelper.biUsage(settings, GlyphEffect::apply));
             this.x = settings.x;
             this.y = settings.y;
             if (r != settings.r || g != settings.g || b != settings.b) {

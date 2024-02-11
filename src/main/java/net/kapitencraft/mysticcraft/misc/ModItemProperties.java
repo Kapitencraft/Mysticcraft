@@ -36,7 +36,6 @@ public class ModItemProperties {
         makeQuiver(ModItems.AMETHYST_QUIVER);
         makeTieredArmor(ModItems.CRIMSON_ARMOR);
         makeTieredArmor(ModItems.SOUL_MAGE_ARMOR);
-        makeTieredArmor(ModItems.WARPED_ARMOR);
         ItemProperties.register(Items.BOW, new ResourceLocation("pull"), (stack, level, living, p_174679_) -> {
             if (living == null || living.getAttribute(ModAttributes.DRAW_SPEED.get()) == null) {
                 return 0.0F;

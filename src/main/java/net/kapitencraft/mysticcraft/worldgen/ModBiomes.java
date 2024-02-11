@@ -7,6 +7,6 @@ import net.minecraft.world.level.biome.Biome;
 
 public class ModBiomes {
 
-    //TODO add gemstone crystal structure
+    //TODO add crystal gorge structures
     public static final ResourceKey<Biome> GEMSTONE_GORGE = ResourceKey.create(Registries.BIOME, MysticcraftMod.res("gemstone_gorge"));
 }

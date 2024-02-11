@@ -9,7 +9,6 @@ import net.kapitencraft.mysticcraft.entity.item.UnCollectableItemEntity;
 import net.kapitencraft.mysticcraft.helpers.*;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModMobEffects;
-import net.kapitencraft.mysticcraft.item.combat.armor.WarpedArmorItem;
 import net.kapitencraft.mysticcraft.item.combat.totems.ModTotemItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword.ManaSteelSwordItem;
 import net.kapitencraft.mysticcraft.item.item_bonus.Bonus;
@@ -36,7 +35,6 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.player.Player;
@@ -128,20 +126,6 @@ public class DamageEvents {
         if (event.getSource().getDirectEntity() instanceof SmallFireball smallFireball) {
             if (smallFireball.getOwner() instanceof FrozenBlazeEntity) {
                 living.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 60, 5));
-            }
-        }
-        if (tag.getBoolean(WarpedArmorItem.SHIELD_ID)) {
-            AttributeInstance instance = living.getAttribute(ModAttributes.MANA.get());
-            if (instance != null) {
-                double manaValue = instance.getBaseValue();
-                if (event.getAmount() < manaValue) {
-                    manaValue -= event.getAmount();
-                    event.setAmount(0);
-                } else {
-                    event.setAmount((float) (event.getAmount() - manaValue));
-                    manaValue = 0;
-                }
-                instance.setBaseValue(manaValue);
             }
         }
     }

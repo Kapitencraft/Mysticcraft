@@ -74,7 +74,7 @@ public interface IGemstoneHandler extends ICapability<GemstoneCapability> {
                         gemstoneType = slot.getAppliedGemstone();
                         if (gemstoneType != null) {
                             attribute = gemstoneType.modifiedAttribute.get();
-                            gemstoneModifier = gemstoneType.BASE_VALUE * slot.getGemRarity().modMul * (1 + stack.getEnchantmentLevel(ModEnchantments.EFFICIENT_JEWELLING.get()) * 0.02);
+                            gemstoneModifier = gemstoneType.BASE_VALUE * slot.getGemRarity().modMul * (1 + stack.getEnchantmentLevel(ModEnchantments.EFFICIENT_JEWELLING.get()) * 0.08);
                             if (attributeModifier.containsKey(attribute)) {
                                 attributeModifier.put(attribute, attributeModifier.get(attribute) + gemstoneModifier);
                             } else {

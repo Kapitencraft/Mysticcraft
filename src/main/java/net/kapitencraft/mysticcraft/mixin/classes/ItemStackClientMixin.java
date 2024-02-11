@@ -3,6 +3,7 @@ package net.kapitencraft.mysticcraft.mixin.classes;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.IUltimateEnchantment;
+import net.kapitencraft.mysticcraft.enchantments.extras.EnchantmentDescriptionManager;
 import net.kapitencraft.mysticcraft.gui.IGuiHelper;
 import net.kapitencraft.mysticcraft.helpers.*;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
@@ -15,6 +16,7 @@ import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneHelper;
 import net.kapitencraft.mysticcraft.item.capability.reforging.Reforge;
 import net.kapitencraft.mysticcraft.item.capability.spell.ISpellItem;
 import net.kapitencraft.mysticcraft.item.combat.spells.SpellItem;
+import net.kapitencraft.mysticcraft.item.combat.spells.SpellScrollItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword.LongSwordItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.QuiverItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.bow.ShortBowItem;
@@ -24,6 +26,7 @@ import net.kapitencraft.mysticcraft.item.misc.IModItem;
 import net.kapitencraft.mysticcraft.item.misc.SoulbindHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -42,13 +45,11 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.event.ForgeEventFactory;
 import org.jetbrains.annotations.NotNull;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.*;
 
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.function.Predicate;
 
 import static net.minecraft.world.item.ItemStack.ATTRIBUTE_MODIFIER_FORMAT;
 
@@ -70,6 +71,15 @@ public abstract class ItemStackClientMixin {
     @Shadow public abstract ItemStack copy();
 
     @Shadow public abstract boolean is(TagKey<Item> p_204118_);
+
+    @Shadow public abstract boolean is(Item p_150931_);
+
+    @Shadow public abstract boolean is(Predicate<Holder<Item>> p_220168_);
+
+    @Shadow @Final @Deprecated private Item item;
+
+    @Shadow public abstract boolean isFramed();
+
     @Unique
     private static final Style LORE_STYLE = Style.EMPTY.withColor(ChatFormatting.DARK_PURPLE).withItalic(true);
 
@@ -85,7 +95,6 @@ public abstract class ItemStackClientMixin {
     @Overwrite
     public List<Component> getTooltipLines(@Nullable Player player, TooltipFlag tooltipFlag) {
         List<Component> list = Lists.newArrayList();
-        Item item = self().getItem();
         CompoundTag tag = self().getOrCreateTag();
         MutableComponent name = Component.empty().append(self().getHoverName()).withStyle(self().getRarity().getStyleModifier());
         if (hasCustomHoverName()) {
@@ -117,6 +126,7 @@ public abstract class ItemStackClientMixin {
         }
         if (shouldShowInTooltip(j, ItemStack.TooltipPart.ENCHANTMENTS)) {
             ListTag enchantmentTags = self().getEnchantmentTags();
+            if (enchantmentTags.size() > 0 && !Screen.hasShiftDown() && !EnchantmentDescriptionManager.fromBook(item) && tooltipFlag.isAdvanced()) list.add(Component.translatable("mysticcraft.ench_desc.shift").withStyle(ChatFormatting.DARK_GRAY));
             for(int i = 0; i < enchantmentTags.size(); ++i) {
                 CompoundTag compoundtag = enchantmentTags.getCompound(i);
                 Optional<Enchantment> enchantmentOptional = BuiltInRegistries.ENCHANTMENT.getOptional(EnchantmentHelper.getEnchantmentId(compoundtag));
@@ -134,6 +144,7 @@ public abstract class ItemStackClientMixin {
                         }
                     }
                     list.add(component);
+                    if (Screen.hasShiftDown()) EnchantmentDescriptionManager.addTooltipForEnchant(self(), list, enchantment, player);
                 }
             }
         }
@@ -307,7 +318,7 @@ public abstract class ItemStackClientMixin {
         ForgeEventFactory.onItemTooltip(self(), player, list, tooltipFlag);
         if (!(item instanceof IGuiHelper)) {
             Rarity rarity = item.getRarity(self());
-            boolean flag = rarity != MiscHelper.getItemRarity(item);
+            boolean flag = rarity != MiscHelper.getItemRarity(item) && !(item instanceof SpellScrollItem);
             list.add(Component.literal(""));
             list.add(TextHelper.wrapInObfuscation(createNameMod(self()), flag).withStyle(rarity.getStyleModifier()).withStyle(ChatFormatting.BOLD));
         }
@@ -319,6 +330,9 @@ public abstract class ItemStackClientMixin {
     @SuppressWarnings("all")
     private static Component getNameModifier(ItemStack stack) {
         Item item = stack.getItem();
+        if (item instanceof SpellScrollItem) {
+            return indicator("spell_scroll");
+        }
         if (item instanceof LongSwordItem) {
             return indicator("longsword");
         } else if (item instanceof ShortBowItem) {

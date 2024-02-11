@@ -18,6 +18,10 @@ public class MysticcraftServer {
     }
     private final GemstoneData data = new GemstoneData();
 
+    public GemstoneData getData() {
+        return data;
+    }
+
     @SubscribeEvent
     public void registerStackCapabilities(AttachCapabilitiesEvent<ItemStack> event) {
         ItemStack obj = event.getObject();

@@ -3,6 +3,7 @@ package net.kapitencraft.mysticcraft.mixin.classes;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.StatBoostEnchantment;
 import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
+import net.kapitencraft.mysticcraft.helpers.CollectionHelper;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.helpers.TextHelper;
 import net.kapitencraft.mysticcraft.item.ITieredItem;
@@ -62,7 +63,7 @@ public abstract class ItemMixin implements IForgeItem {
             builder.merge(reforge.applyModifiers(self().getRarity(stack)), AttributeModifier.Operation.ADDITION);
         }
         GemstoneHelper.getCapability(stack, iGemstoneHandler ->
-                builder.merge(AttributeHelper.fromMap(iGemstoneHandler.getAttributeModifiers(slot, stack)))
+                builder.merge(CollectionHelper.fromMap(iGemstoneHandler.getAttributeModifiers(slot, stack)))
         );
         CapabilityHelper.exeCapability(stack, CapabilityHelper.ELYTRA, data1 -> {
             ElytraData data = data1.getData();

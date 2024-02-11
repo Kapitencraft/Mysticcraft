@@ -1,65 +1,39 @@
 package net.kapitencraft.mysticcraft.enchantments.extras;
 
+import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.ModEnchantment;
 import net.kapitencraft.mysticcraft.helpers.ClientHelper;
 import net.kapitencraft.mysticcraft.helpers.TextHelper;
-import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneHelper;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.ComponentContents;
-import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.EnchantedBookItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Stream;
 
 
 @Mod.EventBusSubscriber()
 public class EnchantmentDescriptionManager {
 
-    @SubscribeEvent
-    public static void registerTooltip(ItemTooltipEvent event) {
-        onItemTooltip(event.getItemStack(), event.getToolTip(), event.getFlags(), event.getEntity());
+    public static void addTooltipForEnchant(ItemStack stack, List<Component> list, Enchantment enchantment, Player player) {
+        if (fromBook(stack.getItem())) {
+            if (!enchantment.isTradeable()) list.add(Component.translatable("mysticcraft.ench_desc.not_tradeable").withStyle(ChatFormatting.YELLOW));
+            if (enchantment.isTreasureOnly()) list.add(Component.translatable("mysticcraft.ench_desc.treasure").withStyle(ChatFormatting.YELLOW));
+        }
+        ClientHelper.addReqContent(list::add, enchantment, player);
+        list.addAll(getDescription(stack, enchantment));
     }
 
-    private static void onItemTooltip(ItemStack stack, List<Component> tooltip, TooltipFlag ignoredTooltipFlag, Player player) {
-        Set<Enchantment> enchantments = EnchantmentHelper.getEnchantments(stack).keySet();
-        boolean fromBook = stack.getItem() instanceof EnchantedBookItem;
-        if (!enchantments.isEmpty()) {
-            if (!Screen.hasShiftDown() && !fromBook) {
-                tooltip.add(GemstoneHelper.hasCapability(stack) ? 2:1, Component.translatable("mysticcraft.ench_desc.shift").withStyle(ChatFormatting.DARK_GRAY));
-            } else {
-                for (Enchantment enchantment : enchantments) {
-                    for (Component line : tooltip) {
-                        ComponentContents contents = line.getContents();
-                        if (contents instanceof TranslatableContents translatable) {
-                            if (translatable.getKey().equals(enchantment.getDescriptionId())) {
-                                int lineIndex = tooltip.indexOf(line) + 1;
-                                if (fromBook) {
-                                    if (!enchantment.isTradeable()) tooltip.add(lineIndex, Component.translatable("mysticcraft.ench_desc.not_tradeable").withStyle(ChatFormatting.YELLOW));
-                                    if (enchantment.isTreasureOnly()) tooltip.add(lineIndex, Component.translatable("mysticcraft.ench_desc.treasure").withStyle(ChatFormatting.YELLOW));
-                                }
-                                ClientHelper.addReqContent(tooltip::add, enchantment, player);
-                                tooltip.addAll(lineIndex, getDescription(stack, enchantment));
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-        }
+    public static boolean fromBook(Item item) {
+        return item instanceof EnchantedBookItem;
     }
 
     public static List<Component> getDescription(ItemStack stack, Enchantment ench) {
@@ -69,6 +43,7 @@ public class EnchantmentDescriptionManager {
         return TextHelper.getAllMatchingFilter(integer -> {
             String descId = ench.getDescriptionId() + ".desc";
             if (!I18n.exists(descId)) descId += "ription";
+            if (!I18n.exists(descId)) MysticcraftMod.LOGGER.warn("couldn't find translation for enchant '{}'", ench.getDescriptionId());
             if (integer != 0) descId += integer;
             return descId;
         }, component -> component.withStyle(ChatFormatting.DARK_GRAY), stream.map(TextHelper::wrapInRed).toArray());

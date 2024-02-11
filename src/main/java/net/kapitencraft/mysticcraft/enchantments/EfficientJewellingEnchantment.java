@@ -11,13 +11,13 @@ public class EfficientJewellingEnchantment extends Enchantment implements IToolE
 
 
     public int getMaxLevel() {
-        return 100;
+        return 25;
     }
 
 
 
     @Override
     public String[] getDescriptionMods(int level) {
-        return new String[] {"+" + 2*level + "%"};
+        return new String[] {"+" + 8*level + "%"};
     }
 }

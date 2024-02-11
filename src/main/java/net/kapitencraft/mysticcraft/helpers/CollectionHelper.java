@@ -2,6 +2,7 @@ package net.kapitencraft.mysticcraft.helpers;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import net.kapitencraft.mysticcraft.api.MapStream;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
@@ -74,16 +75,12 @@ public class CollectionHelper {
         return list;
     }
 
-    public static <T> ArrayList<T> colToList(Collection<T> collection) {
-        return new ArrayList<>(collection);
+    public static <T, K, J> Function<K, J> biMap(T always, BiFunction<K, T, J> mapper) {
+        return k -> mapper.apply(k, always);
     }
 
-    public static <J, T, K> Stream<J> mapSync(Stream<K> in, T always, BiFunction<K, T, J> func) {
-        return in.map(k -> func.apply(k, always));
-    }
-
-    public static <T, K> void sync(Stream<T> in, K always, BiConsumer<T, K> consumer) {
-        in.forEach(t -> consumer.accept(t, always));
+    public static <T, K> Consumer<T> biUsage(K always, BiConsumer<T, K> consumer) {
+        return t -> consumer.accept(t, always);
     }
 
     public static <T> ArrayList<T> toList(T ts) {
@@ -92,14 +89,71 @@ public class CollectionHelper {
         return target;
     }
 
-    public static <T> List<T> merge(Collection<Collection<T>> toMerge) {
-        List<T> list = new ArrayList<>();
-        toMerge.forEach(list::addAll);
-        return list;
+    private static class CollectorImpl<T, L, K> implements Collector<T, L, K> {
+        private final Supplier<L> supplier;
+        private final BiConsumer<L, T> accumulator;
+        private final BinaryOperator<L> combiner;
+        private final Function<L, K> finisher;
+        private final Set<Characteristics> characteristics;
+
+        CollectorImpl(Supplier<L> supplier, BiConsumer<L, T> accumulator, BinaryOperator<L> combiner, Function<L, K> finisher, Set<Characteristics> characteristics) {
+            this.supplier = supplier;
+            this.accumulator = accumulator;
+            this.combiner = combiner;
+            this.finisher = finisher;
+            this.characteristics = characteristics;
+        }
+
+        @Override
+        public Supplier<L> supplier() {
+            return supplier;
+        }
+
+        @Override
+        public BiConsumer<L, T> accumulator() {
+            return accumulator;
+        }
+
+        @Override
+        public BinaryOperator<L> combiner() {
+            return combiner;
+        }
+
+        @Override
+        public Function<L, K> finisher() {
+            return finisher;
+        }
+
+        @Override
+        public Set<Characteristics> characteristics() {
+            return characteristics;
+        }
+    }
+
+    public static <T, K> Multimap<T, K> fromMap(Map<T, K> map) {
+        Multimap<T, K> multimap = HashMultimap.create();
+        for (T t : map.keySet()) {
+            multimap.put(t, map.get(t));
+        }
+        return multimap;
+    }
+    public static <T> Collector<Collection<T>, List<T>, Stream<T>> merge() {
+        return new CollectorImpl<>(ArrayList::new, List::addAll, (list, list2) -> {
+            list.addAll(list2);
+            return list;
+        }, List::stream, Collections.emptySet());
+    }
+
+    public static <T, J, K> Collector<T, HashMap<T, K>, MapStream<T, K>> toMapStream(Function<T, J> keyMapper, Function<T, K> valueMapper) {
+        return copyWithFinish(Collectors.toMap(keyMapper, valueMapper), MapStream::of);
+    }
+
+    public static <T, K, L, J> Collector<T, K, J> copyWithFinish(Collector<T, K, L> collector, Function<K, J> finish) {
+        return new CollectorImpl<>(collector.supplier(), collector.accumulator(), collector.combiner(), finish, collector.characteristics());
     }
 
     public static <T, K, L, J extends Map<K, L>> List<L> values(Map<T, J> map) {
-        return merge(map.values().stream().map(Map::values).toList());
+        return map.values().stream().map(Map::values).collect(merge()).toList();
     }
 
     public static <T, L> Collector<T, ?, Map<T, L>> createMap(Function<T, L> valueMapper) {

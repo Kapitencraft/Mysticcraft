@@ -89,17 +89,17 @@ public class InventoryHelper {
 
     public static boolean hasSetInInventory(Player player,  ArmorMaterial material) {
         List<EquipmentSlot> slots = new ArrayList<>();
-        MiscHelper.instanceStream(allInventory(player.getInventory()).stream().map(ItemStack::getItem).filter(
+        allInventory(player.getInventory()).stream().map(ItemStack::getItem).filter(
                 item -> item instanceof ArmorItem armorItem && armorItem.getMaterial() == material
-        ), ArmorItem.class).map(ArmorItem::getSlot).forEach(slots::add);
+        ).map(MiscHelper.instanceMapper(ArmorItem.class)).map(ArmorItem::getSlot).forEach(slots::add);
         return !slots.isEmpty() && new HashSet<>(slots).containsAll(Arrays.stream(MiscHelper.ARMOR_EQUIPMENT).toList());
     }
 
     public static boolean hasSetInInventory(Player player, ITieredItem.ItemTier armorTier) {
         List<EquipmentSlot> slots = new ArrayList<>();
-        MiscHelper.instanceStream(allInventory(player.getInventory()).stream().filter(
+        allInventory(player.getInventory()).stream().filter(
                 stack -> stack.getItem() instanceof TieredArmorItem && ITieredItem.getTier(stack) == armorTier
-        ).map(ItemStack::getItem), TieredArmorItem.class).map(ArmorItem::getSlot).forEach(slots::add);
+        ).map(ItemStack::getItem).map(MiscHelper.instanceMapper(TieredArmorItem.class)).map(ArmorItem::getSlot).forEach(slots::add);
         return !slots.isEmpty() && new HashSet<>(slots).containsAll(Arrays.stream(MiscHelper.ARMOR_EQUIPMENT).toList());
     }
 
