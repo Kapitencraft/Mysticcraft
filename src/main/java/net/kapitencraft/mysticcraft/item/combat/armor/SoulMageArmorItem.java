@@ -37,8 +37,6 @@ public class SoulMageArmorItem extends NetherArmorItem implements IArmorBonusIte
     private static final PieceBonus CHEST_BONUS = new SoulMageChestplateBonus();
     private static final FullSetBonus SET_BONUS = new SoulMageArmorFullSetBonus();
 
-
-    //TODO add crafting recipe
     @Override
     public boolean withCustomModel() {
         return false;

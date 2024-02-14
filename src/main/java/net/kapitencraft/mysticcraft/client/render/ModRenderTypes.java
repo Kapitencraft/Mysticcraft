@@ -14,10 +14,6 @@ public class ModRenderTypes extends RenderType {
         super(p_173178_, p_173179_, p_173180_, p_173181_, p_173182_, p_173183_, p_173184_, p_173185_);
     }
 
-
-    //TODO fix / add cutout translucent
-
-
     public static final RenderType OVERLAY_LINES = create("overlay_lines",
             DefaultVertexFormat.POSITION_COLOR,
             VertexFormat.Mode.LINES,

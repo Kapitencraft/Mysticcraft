@@ -21,6 +21,7 @@ import net.kapitencraft.mysticcraft.item.ITieredItem;
 import net.kapitencraft.mysticcraft.item.capability.CapabilityHelper;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneSlot;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneType;
+import net.kapitencraft.mysticcraft.item.capability.item_stat.ItemStatCapability;
 import net.kapitencraft.mysticcraft.item.capability.reforging.ReforgeManager;
 import net.kapitencraft.mysticcraft.item.combat.armor.ModArmorItem;
 import net.kapitencraft.mysticcraft.item.combat.armor.ModArmorMaterials;
@@ -33,6 +34,7 @@ import net.kapitencraft.mysticcraft.misc.content.EssenceHolder;
 import net.kapitencraft.mysticcraft.misc.cooldown.Cooldowns;
 import net.kapitencraft.mysticcraft.misc.particle_help.ParticleAnimator;
 import net.kapitencraft.mysticcraft.requirements.Requirement;
+import net.kapitencraft.mysticcraft.tags.ModBlockTags;
 import net.kapitencraft.mysticcraft.villagers.ModVillagers;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -210,7 +212,7 @@ public class MiscRegister {
                         player.noJumpDelay = 10; player.fallDistance = 0;
                         Vec3 targetLoc = MathHelper.setLength(player.getLookAngle().multiply(1, 0, 1), 0.75).add(0, 1, 0);
                         player.setDeltaMovement(targetLoc.x, targetLoc.y > 0 ? targetLoc.y : -targetLoc.y, targetLoc.z);
-                        TagHelper.increaseIntegerTagValue(player.getPersistentData(), DOUBLE_JUMP_ID, 1);
+                        IOHelper.increaseIntegerTagValue(player.getPersistentData(), DOUBLE_JUMP_ID, 1);
                     }
                 }
             } else if (tag.getInt(DOUBLE_JUMP_ID) > 0) {
@@ -326,28 +328,35 @@ public class MiscRegister {
 
     @SuppressWarnings("all")
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void telekinesisRegister(BlockEvent.BreakEvent event) {
+    public static void blockBreakRegister(BlockEvent.BreakEvent event) {
         Player player = event.getPlayer(); ItemStack mainHandItem = player.getMainHandItem(); BlockState state = event.getState();
         Block block = state.getBlock(); Level level = player.level; final BlockPos pos = event.getPos();
 
         ServerLevel serverLevel = level instanceof ServerLevel serverLevel1 ? serverLevel1 : null;
-        ServerPlayer serverPlayer = (ServerPlayer) player;
         if (serverLevel == null) return;
+        ServerPlayer serverPlayer = (ServerPlayer) player;
         LootContext.Builder context = (new LootContext.Builder(serverLevel)).withRandom(level.random).withParameter(LootContextParams.ORIGIN, new Vec3(pos.getX(), pos.getY(), pos.getZ())).withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(pos)).withParameter(LootContextParams.TOOL, mainHandItem).withOptionalParameter(LootContextParams.THIS_ENTITY, serverPlayer);
         if (block instanceof CropBlock || block instanceof NetherWartBlock) {
             IntegerProperty ageProperty = block instanceof CropBlock cropBlock ? cropBlock.getAgeProperty() : BlockStateProperties.AGE_3;
-            if (mainHandItem.getEnchantmentLevel(ModEnchantments.DELICATE.get()) > 0) {
-                if (state.getValue(ageProperty) < MathHelper.getHighest(ageProperty.getPossibleValues())) {
+            if (state.getValue(ageProperty) < MathHelper.getHighest(ageProperty.getPossibleValues())) {
+                if (mainHandItem.getEnchantmentLevel(ModEnchantments.DELICATE.get()) > 0) {
                     event.setCanceled(true);
                     return;
                 }
+            } else {
             }
+
             if (mainHandItem.getEnchantmentLevel(ModEnchantments.REPLENISH.get()) > 0) {
                 event.setCanceled(true);
                 Block.dropResources(state, context);
                 state.setValue(ageProperty, 0);
                 level.setBlockAndUpdate(pos, state);
             }
+        }
+        if (state.is(ModBlockTags.FARMABLE) || state.is(ModBlockTags.FORAGEABLE)) {
+            mainHandItem.getCapability(CapabilityHelper.ITEM_STAT).ifPresent(iItemStatHandler -> iItemStatHandler.increase(ItemStatCapability.Type.FARMED, 1));
+        } else if (state.is(ModBlockTags.MINEABLE)) {
+            mainHandItem.getCapability(CapabilityHelper.ITEM_STAT).ifPresent(iItemStatHandler -> iItemStatHandler.increase(ItemStatCapability.Type.MINED, 1));
         }
         if (mainHandItem.getEnchantmentLevel(ModEnchantments.LUMBERJACK.get()) > 0 && state.is(BlockTags.LOGS)) {
             MiscHelper.mineMultiple(pos, serverPlayer, block, pos1 -> {}, state1 -> true, pos1 -> false);

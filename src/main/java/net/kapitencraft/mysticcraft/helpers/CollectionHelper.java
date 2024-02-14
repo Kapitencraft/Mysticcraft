@@ -79,6 +79,14 @@ public class CollectionHelper {
         return k -> mapper.apply(k, always);
     }
 
+    public static <T, K, J> Function<K, J> reversedBiMap(T always, BiFunction<T, K, J> mapper) {
+        return k -> mapper.apply(always, k);
+    }
+
+    public static <T, K> Predicate<T> biFilter(K always, BiPredicate<T, K> predicate) {
+        return t -> predicate.test(t, always);
+    }
+
     public static <T, K> Consumer<T> biUsage(K always, BiConsumer<T, K> consumer) {
         return t -> consumer.accept(t, always);
     }
@@ -144,12 +152,12 @@ public class CollectionHelper {
         }, List::stream, Collections.emptySet());
     }
 
-    public static <T, J, K> Collector<T, HashMap<T, K>, MapStream<T, K>> toMapStream(Function<T, J> keyMapper, Function<T, K> valueMapper) {
+    public static <T, J, K> Collector<T, ?, MapStream<J, K>> toMapStream(Function<T, J> keyMapper, Function<T, K> valueMapper) {
         return copyWithFinish(Collectors.toMap(keyMapper, valueMapper), MapStream::of);
     }
 
-    public static <T, K, L, J> Collector<T, K, J> copyWithFinish(Collector<T, K, L> collector, Function<K, J> finish) {
-        return new CollectorImpl<>(collector.supplier(), collector.accumulator(), collector.combiner(), finish, collector.characteristics());
+    public static <A, B, C, D> Collector<A, B, D> copyWithFinish(Collector<A, B, C> collector, Function<C, D> finish) {
+        return new CollectorImpl<>(collector.supplier(), collector.accumulator(), collector.combiner(), b -> finish.apply(collector.finisher().apply(b)) , collector.characteristics());
     }
 
     public static <T, K, L, J extends Map<K, L>> List<L> values(Map<T, J> map) {

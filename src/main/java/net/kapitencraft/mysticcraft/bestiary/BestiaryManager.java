@@ -30,9 +30,8 @@ public class BestiaryManager extends SimpleJsonResourceReloadListener {
     @Override
     protected void apply(@NotNull Map<ResourceLocation, JsonElement> map, @NotNull ResourceManager manager, @NotNull ProfilerFiller filler) {
         Timer.start();
-        for (Map.Entry<ResourceLocation, JsonElement> entry : map.entrySet()) {
-            EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(entry.getKey());
-            JsonElement element = entry.getValue();
+        map.forEach((location, element) -> {
+            EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(location);
             try {
                 JsonObject object = element.getAsJsonObject();
                 List<String> description = object.getAsJsonArray("description").asList().stream().map(JsonElement::getAsString).toList();
@@ -40,9 +39,9 @@ public class BestiaryManager extends SimpleJsonResourceReloadListener {
                 String s = object.getAsJsonPrimitive("type").getAsString();
                 bestiariesForType.put(type, new Bestiary(description, combatXp, Bestiary.Type.getByName(s)));
             } catch (Exception e) {
-                MysticcraftMod.LOGGER.warn(Markers.BESTIARY_MANAGER, "Unable to load bestiary for '{}': {}", entry.getKey().toString(), e.getMessage());
+                MysticcraftMod.LOGGER.warn(Markers.BESTIARY_MANAGER, "Unable to load bestiary for '{}': {}", location.toString(), e.getMessage());
             }
-        }
+        });
         MysticcraftMod.LOGGER.info(Markers.BESTIARY_MANAGER, "Loading {} bestiaries took {} ms", bestiariesForType.size(), Timer.getPassedTime());
     }
 

@@ -64,7 +64,7 @@ public class GemstoneCreator extends Block implements StructureExecutioner {
     public void execute(BlockState state, BlockPos pos, ServerLevel level) {
         GemstoneType type = createType(level, pos);
         BlockPos rangeOffset = new BlockPos(RANGE, HEIGHT, RANGE);
-        List<BlockPos> allPos = MathHelper.between(pos.subtract(rangeOffset), pos.offset(rangeOffset.offset(1, 1, 1))).toList();
+        List<BlockPos> allPos = BlockPos.betweenClosedStream(pos.subtract(rangeOffset), pos.offset(rangeOffset.offset(1, 1, 1))).toList();
         Reference<Integer> ref = Reference.of(0);
         allPos.forEach(pos1 -> {
             BlockState state2 = level.getBlockState(pos1);

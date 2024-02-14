@@ -67,6 +67,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 public class MiscHelper {
     //EAST = new Rotation("x+", 90, 1);
@@ -139,11 +140,25 @@ public class MiscHelper {
         }
     }
 
+    public static <T, K extends T> boolean isInstance(T value, Class<K> target) {
+        try {
+            K ignored  = (K) value;
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public static <T, K extends T> Function<T, K> instanceMapper(Class<K> kClass) {
         return CollectionHelper.biMap(kClass, MiscHelper::instance);
     }
+    public static <T, K extends T> Predicate<T> instanceFilter(Class<K> kClass) {
+        return CollectionHelper.biFilter(kClass, MiscHelper::isInstance);
+    }
+
+
     /**
-     * method to repair items simular to {@link net.minecraft.world.item.enchantment.MendingEnchantment}
+     * method to repair items similar to {@link net.minecraft.world.item.enchantment.MendingEnchantment}
      * @param player player to repair items on
      * @param value the base amount of repair capacity
      * @param ench the enchantment this calculation is based on (see {@link net.kapitencraft.mysticcraft.enchantments.HealthMendingEnchantment} and {@link net.minecraft.world.item.enchantment.MendingEnchantment})
@@ -516,11 +531,9 @@ public class MiscHelper {
     public static final EquipmentSlot[] ARMOR_EQUIPMENT = new EquipmentSlot[]{EquipmentSlot.LEGS, EquipmentSlot.CHEST, EquipmentSlot.HEAD, EquipmentSlot.FEET};
     public static final EquipmentSlot[] WEAPON_SLOT = new EquipmentSlot[]{EquipmentSlot.MAINHAND};
 
-
-
-
-
-
+    public static Stream<ItemStack> getArmorEquipment(LivingEntity living) {
+        return Arrays.stream(ARMOR_EQUIPMENT).map(living::getItemBySlot);
+    }
     public static int createCustomIndex(EquipmentSlot slot) {
         return switch (slot) {
             case HEAD -> 0;

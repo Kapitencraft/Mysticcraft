@@ -34,7 +34,7 @@ Ritual Magic?
 Tutorial ideen:
 Codecs
 Custom-Model-Armor
-Attributes
+Event
 Debugger
 Json-Daten
 

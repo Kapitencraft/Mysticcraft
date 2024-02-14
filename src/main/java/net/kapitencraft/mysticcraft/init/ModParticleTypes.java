@@ -23,6 +23,6 @@ public interface ModParticleTypes {
     RegistryObject<MagicCircleParticleType> MAGIC_CIRCLE = REGISTRY.register("magic_circle", ()-> new MagicCircleParticleType(0));
     RegistryObject<DamageIndicatorParticleOptions> DAMAGE_INDICATOR = REGISTRY.register("damage_indicator", () -> new DamageIndicatorParticleOptions(TextHelper.damageIndicatorCoder("heal"), 1, 1));
     RegistryObject<CircleParticleOptions> CIRCLE = REGISTRY.register("circle_particle", () -> new CircleParticleOptions(new Vector3f(1, 0, 0), 4, 7));
-    RegistryObject<ParticleAnimationOptions> ANIMATION = REGISTRY.register("animation", () -> new ParticleAnimationOptions(ParticleTypes.ASH, ParticleAnimationParameters.create(), ParticleAnimationInfo.EMPTY));
+    RegistryObject<ParticleAnimationOptions> ANIMATION = REGISTRY.register("animation", () -> new ParticleAnimationOptions(ParticleTypes.ASH, ParticleAnimationParameters.create(), ParticleAnimationInfo.EMPTY, 1));
     RegistryObject<FlameParticleOptions> FLAME = REGISTRY.register("flame", () -> new FlameParticleOptions(new Vector3f(1, 0, 0)));
 }

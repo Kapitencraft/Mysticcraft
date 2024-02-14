@@ -1,8 +1,8 @@
 package net.kapitencraft.mysticcraft.misc.particle_help;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.helpers.IOHelper;
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
-import net.kapitencraft.mysticcraft.helpers.TagHelper;
 import net.kapitencraft.mysticcraft.logging.Markers;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -189,7 +189,7 @@ public class ParticleAnimator {
 
     public void tick(int ticks) {
         int cooldown = this.properties.getInt(COOLDOWN_ID);
-        if (!(TagHelper.increaseIntegerTagValue(this.properties, TICKS_ALIVE_ID, 1) > this.properties.getInt(MAX_TICKS_ALIVE_ID) && this.target.isRemoved()) || this.liveUntilTargetDeath && (cooldown == 0 || ticks % cooldown == 0) && !this.isRemoved) {
+        if (!(IOHelper.increaseIntegerTagValue(this.properties, TICKS_ALIVE_ID, 1) > this.properties.getInt(MAX_TICKS_ALIVE_ID) && this.target.isRemoved()) || this.liveUntilTargetDeath && (cooldown == 0 || ticks % cooldown == 0) && !this.isRemoved) {
             Level level = this.target.level;
             if (this.currentTick++ >= this.ticksPerCycle) {
                 this.currentTick = 0;
@@ -207,12 +207,12 @@ public class ParticleAnimator {
     }
 
     private void tickOrbit(Level level) {
-        float currentRot = TagHelper.increaseFloatTagValue(this.properties, CURRENT_ROTATION_ID, this.properties.getFloat(ROTATION_PER_TICK_ID));
+        float currentRot = IOHelper.increaseFloatTagValue(this.properties, CURRENT_ROTATION_ID, this.properties.getFloat(ROTATION_PER_TICK_ID));
         Vec3 targetPos;
         if (this.target instanceof Projectile) {
             targetPos = MathHelper.setLength(MathHelper.calculateViewVector(currentRot, 0), this.properties.getFloat(DISTANCE_ID)).add(target.position());
         } else {
-            TagHelper.increaseFloatTagValue(this.properties, Y_OFFSET_ID, (currentTick >= (ticksPerCycle / 2)) ? -this.heightChange : this.heightChange);
+            IOHelper.increaseFloatTagValue(this.properties, Y_OFFSET_ID, (currentTick >= (ticksPerCycle / 2)) ? -this.heightChange : this.heightChange);
             targetPos = MathHelper.setLength(MathHelper.calculateViewVector(0, currentRot), this.properties.getFloat(DISTANCE_ID)).add(target.getX(), target.getY() +  this.properties.getFloat(Y_OFFSET_ID), target.getZ());
         }
         net.kapitencraft.mysticcraft.helpers.ParticleHelper.sendParticles(level, getFromTag(this.properties.getString("particleType")), false, targetPos, 2, 0,0, 0, 0);

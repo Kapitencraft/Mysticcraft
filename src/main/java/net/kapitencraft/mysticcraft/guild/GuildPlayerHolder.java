@@ -2,7 +2,7 @@ package net.kapitencraft.mysticcraft.guild;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.kapitencraft.mysticcraft.helpers.TagHelper;
+import net.kapitencraft.mysticcraft.helpers.IOHelper;
 
 import java.util.UUID;
 
@@ -10,7 +10,7 @@ import java.util.UUID;
 public class GuildPlayerHolder {
     public static final Codec<GuildPlayerHolder> CODEC = RecordCodecBuilder.create(guildPlayerHolderInstance ->
             guildPlayerHolderInstance.group(
-                    TagHelper.UUID_CODEC.fieldOf("name").forGetter(GuildPlayerHolder::getPlayerId),
+                    IOHelper.UUID_CODEC.fieldOf("name").forGetter(GuildPlayerHolder::getPlayerId),
                     Guild.GuildRank.CODEC.fieldOf("rank").forGetter(GuildPlayerHolder::getRank)
             ).apply(guildPlayerHolderInstance, GuildPlayerHolder::new)
     );

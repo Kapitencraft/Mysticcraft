@@ -3,7 +3,7 @@ package net.kapitencraft.mysticcraft.guild;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.kapitencraft.mysticcraft.api.MapStream;
-import net.kapitencraft.mysticcraft.helpers.TagHelper;
+import net.kapitencraft.mysticcraft.helpers.IOHelper;
 import net.kapitencraft.mysticcraft.helpers.TextHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -21,7 +21,7 @@ import java.util.*;
 public class Guild {
     private static final Codec<Guild> CODEC = RecordCodecBuilder.create(guildInstance -> guildInstance.group(
             Codec.STRING.fieldOf("name").forGetter(Guild::getName),
-            TagHelper.UUID_CODEC.fieldOf("owner").forGetter(Guild::getOwner),
+            IOHelper.UUID_CODEC.fieldOf("owner").forGetter(Guild::getOwner),
             ItemStack.CODEC.fieldOf("banner").forGetter(Guild::getBanner),
             GuildUpgradeInstance.CODEC.fieldOf("upgrades").forGetter(Guild::getUpgrades),
             GuildPlayerHolder.CODEC.listOf().fieldOf("players").forGetter(Guild::save)

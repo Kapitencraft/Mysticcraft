@@ -3,5 +3,5 @@
   "textures": {
     "cross": "mysticcraft:block/gemstone/large_crystal"
   },
-  "render_type": "translucent"
+  "render_type": "cutout"
 }

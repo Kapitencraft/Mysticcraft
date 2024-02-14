@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.item.combat.weapon.ranged.bow;
 
-import net.kapitencraft.mysticcraft.helpers.TagHelper;
+import net.kapitencraft.mysticcraft.helpers.IOHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
@@ -47,14 +47,14 @@ public abstract class ShortBowItem extends ModBowItem {
     public abstract float getShotCooldown();
 
     public boolean canShoot(CompoundTag tag, Level world) {
-        return !world.isClientSide && !TagHelper.checkForIntAbove0(tag, COOLDOWN_ID);
+        return !world.isClientSide && !IOHelper.checkForIntAbove0(tag, COOLDOWN_ID);
     }
 
     @Override
     public void inventoryTick(ItemStack bow, @NotNull Level p_41405_, @NotNull Entity p_41406_, int p_41407_, boolean p_41408_) {
         if (bow.getTag() != null) {
             CompoundTag tag = bow.getTag();
-            if (TagHelper.checkForIntAbove0(tag, COOLDOWN_ID)) {
+            if (IOHelper.checkForIntAbove0(tag, COOLDOWN_ID)) {
                 tag.putInt(COOLDOWN_ID, tag.getInt(COOLDOWN_ID) - 1);
             }
         }

@@ -10,7 +10,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
@@ -25,18 +24,16 @@ public class FireLanceSpell {
             if (user.level.getBlockState(new BlockPos(vec3)).canOcclude()) {
                 break;
             }
-            List<LivingEntity> entities = user.level.getEntitiesOfClass(LivingEntity.class, new AABB(vec3.x - 0.1, vec3.y - 0.1, vec3.z - 0.1, vec3.x + 0.1, vec3.y + 0.1, vec3.z + 0.1));
             ParticleHelper.sendParticles(user.level, ParticleTypes.SMALL_FLAME, false, vec3, 10, 0.1/8, 0.1/8, 0.1/8, 0);
-            for (LivingEntity living : entities) {
-                if (living != user && !hit.contains(living)) {
+            MathHelper.getEntitiesAround(LivingEntity.class, user.level, vec3, 0.1).stream().filter(living -> living != user && !hit.contains(living))
+                    .forEach(living -> {
                     if (living.getLastDamageSource() instanceof AbilityDamageSource abilitySource && Objects.equals(abilitySource.getSpellType(), "fire_lance")) {
                         living.invulnerableTime = 0;
                     }
                     living.hurt(new AbilityDamageSource(user, 0.2f, "fire_lance"), 4);
                     living.addEffect(new MobEffectInstance(ModMobEffects.BLAZING.get(), 40, 2));
                     hit.add(living);
-                }
-            }
+                });
         }
         return true;
     }

@@ -2,9 +2,10 @@
   "type": "mysticcraft:armor",
   "category": "equipment",
   "material": {
-    "type": "mysticcraft:amount",
+    "type": "forge:nbt",
     "item": "mysticcraft:frozen_blaze_rod",
-    "amount": 10
+    "nbt": "{}",
+    "count": 10
   },
   "results": "mysticcraft:frozen_blaze"
 }

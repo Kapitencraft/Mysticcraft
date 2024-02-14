@@ -19,21 +19,14 @@ public class ParticleAnimationController {
 
     public ParticleAnimationController(List<Particle> toAnimate, Map<Integer, ParticleAnimations> animationsForTime, ParticleAnimationParameters parameters) {
         this.toAnimate = toAnimate;
+        this.toAnimate.forEach(particle -> particle.lifetime = this.animationLength() + 1);
         this.animationsForTime = animationsForTime;
         this.parameters = parameters;
         this.toAnimate.forEach(particle -> particle.lifetime = animationLength());
     }
 
-    public List<Particle> getToAnimate() {
-        return toAnimate;
-    }
-
     public ParticleAnimationParameters getParameters() {
         return parameters;
-    }
-
-    public Map<Integer, ParticleAnimations> getAnimationsForTime() {
-        return animationsForTime;
     }
 
     public boolean mergeable(ParticleAnimationController controller) {

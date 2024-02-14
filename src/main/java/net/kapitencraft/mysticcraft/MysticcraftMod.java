@@ -10,7 +10,6 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -29,6 +28,7 @@ import java.util.function.Supplier;
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(MysticcraftMod.MOD_ID)
 public class MysticcraftMod {
+
     public static final String MOD_ID = "mysticcraft";
 
     public static ResourceLocation res(String name) {
@@ -69,9 +69,6 @@ public class MysticcraftMod {
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, CommonModConfig.SPEC);
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ServerModConfig.SPEC);
 
-        MinecraftForge.EVENT_BUS.register(MysticcraftServer.getInstance());
-
-        MinecraftForge.EVENT_BUS.register(this);
     }
 
     public static String doubleFormat(double d) {
@@ -83,9 +80,5 @@ public class MysticcraftMod {
     }
     public static void sendRegisterDisplay(String nameOfRegistered) {
         sendRegisterDisplay(nameOfRegistered, Markers.REGISTRY);
-    }
-
-    public static void sendError(String error) {
-        LOGGER.error(Markers.ERROR, error);
     }
 }

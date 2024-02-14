@@ -4,10 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
-import java.util.function.BiPredicate;
-import java.util.function.Function;
+import java.util.function.*;
 import java.util.stream.Stream;
 
 /**
@@ -54,6 +51,15 @@ public class MapStream<T, K> {
             if (predicate.test(t, k)) {
                 map.put(t, k);
             }
+        });
+        return of(map);
+    }
+
+    public MapStream<T, K> filterKeys(Predicate<T> keyFilter) {
+        Map<T, K> map = new HashMap<>();
+        this.map.forEach((t, k) -> {
+            if (keyFilter.test(t))
+                map.put(t, k);
         });
         return of(map);
     }

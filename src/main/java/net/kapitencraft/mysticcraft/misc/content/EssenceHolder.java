@@ -2,7 +2,7 @@ package net.kapitencraft.mysticcraft.misc.content;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.kapitencraft.mysticcraft.helpers.TagHelper;
+import net.kapitencraft.mysticcraft.helpers.IOHelper;
 import net.kapitencraft.mysticcraft.item.capability.CapabilityHelper;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -91,12 +91,12 @@ public class EssenceHolder implements ICapabilityProvider, INBTSerializable<Comp
 
     @Override
     public CompoundTag serializeNBT() {
-        return (CompoundTag) TagHelper.get(CODEC.encodeStart(NbtOps.INSTANCE, this), CompoundTag::new);
+        return (CompoundTag) IOHelper.get(CODEC.encodeStart(NbtOps.INSTANCE, this), CompoundTag::new);
     }
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
-        copyFrom(TagHelper.get(CODEC.parse(NbtOps.INSTANCE, nbt), EssenceHolder::new));
+        copyFrom(IOHelper.get(CODEC.parse(NbtOps.INSTANCE, nbt), EssenceHolder::new));
     }
 
     public void copyFrom(EssenceHolder oldStore) {

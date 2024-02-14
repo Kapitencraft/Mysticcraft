@@ -9,6 +9,7 @@
     "HandItemLayerRendererMixin",
     "ItemStackClientMixin",
     "KeyMappingMixin",
+    "MakeCutoutTranslucentMixin",
     "StringRenderOutputMixin"
   ],
   "mixins": [

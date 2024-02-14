@@ -5,7 +5,6 @@ import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 
@@ -15,16 +14,9 @@ import java.util.List;
 public class ShadowStepSpell {
 
     public static boolean execute(LivingEntity user, ItemStack ignored) {
-        ArrayList<Vec3> lineOfSight = MathHelper.lineOfSight(user, 20, 0.25);
+        List<LivingEntity> entities = MathHelper.getAllEntitiesInsideCone(LivingEntity.class, 15, 20, user.position(), user.getRotationVector(), user.level);
         List<LivingEntity> hit = new ArrayList<>();
-        for (Vec3 vec3 : lineOfSight) {
-            List<LivingEntity> entities = user.level.getEntitiesOfClass(LivingEntity.class, new AABB(vec3.x - 0.5, vec3.y - 0.5, vec3.z - 0.5, vec3.x + 0.5, vec3.y + 0.5, vec3.z + 0.5));
-            for (LivingEntity living : entities) {
-                if (living != user && !hit.contains(living)) {
-                    hit.add(living);
-                }
-            }
-        }
+        entities.stream().filter(living -> living != user).forEach(hit::add);
         if (next(hit, user)) MiscHelper.delayed(10, ()-> {
                     if (next(hit, user)) MiscHelper.delayed(10, ()-> next(hit, user));
                 }

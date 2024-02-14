@@ -1,5 +1,6 @@
 package net.kapitencraft.mysticcraft.helpers;
 
+import net.kapitencraft.mysticcraft.api.MapStream;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.ExtendedAbilityEnchantment;
 import net.kapitencraft.mysticcraft.item.capability.reforging.Reforge;
 import net.kapitencraft.mysticcraft.item.capability.reforging.Reforges;
@@ -10,23 +11,18 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.Enchantment;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 
 public class BonusHelper {
     public static void tickEnchantments(LivingEntity living) {
         doForSlot((stack, slot) -> {
-            Map<Enchantment, Integer> map = stack.getAllEnchantments();
-            for (Map.Entry<Enchantment, Integer> e: map.entrySet()) {
-                if (e.getKey() instanceof ExtendedAbilityEnchantment enchantment) {
-                    enchantment.onTick(living, e.getValue());
-                }
-            }
+            MapStream.of(stack.getAllEnchantments())
+                    .mapKeys(MiscHelper.instanceMapper(ExtendedAbilityEnchantment.class))
+                    .forEach((enchantment, integer) -> enchantment.onTick(living, integer));
         }, living);
     }
 

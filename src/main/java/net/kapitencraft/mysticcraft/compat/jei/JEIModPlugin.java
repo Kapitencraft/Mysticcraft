@@ -34,7 +34,6 @@ public class JEIModPlugin implements IModPlugin {
         registration.addRecipes(RecipeTypes.CRAFTING, manager.getAllRecipesFor(ModRecipeTypes.ARMOR_RECIPE.get()).stream()
                 .map(ArmorRecipe::getAll).collect(CollectionHelper.merge()).map(MiscHelper.instanceMapper(CraftingRecipe.class)).toList()
         );
-        IModPlugin.super.registerRecipes(registration);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package net.kapitencraft.mysticcraft.event.handler;
 
+import net.kapitencraft.mysticcraft.api.MapStream;
 import net.kapitencraft.mysticcraft.client.particle.animation.*;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.ExtendedCalculationEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.IToolEnchantment;
@@ -9,9 +10,10 @@ import net.kapitencraft.mysticcraft.entity.item.UnCollectableItemEntity;
 import net.kapitencraft.mysticcraft.helpers.*;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModMobEffects;
+import net.kapitencraft.mysticcraft.item.capability.CapabilityHelper;
+import net.kapitencraft.mysticcraft.item.capability.item_stat.ItemStatCapability;
 import net.kapitencraft.mysticcraft.item.combat.totems.ModTotemItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword.ManaSteelSwordItem;
-import net.kapitencraft.mysticcraft.item.item_bonus.Bonus;
 import net.kapitencraft.mysticcraft.item.material.PrecursorRelicItem;
 import net.kapitencraft.mysticcraft.item.misc.SoulbindHelper;
 import net.kapitencraft.mysticcraft.misc.DamageCounter;
@@ -57,16 +59,17 @@ import net.minecraftforge.fml.common.Mod;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Mod.EventBusSubscriber
 public class DamageEvents {
-    private DamageEvents() {}
+    private DamageEvents() {}//dummy constructor
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void miscDamageEvents(LivingHurtEvent event) {
         LivingEntity attacked = event.getEntity();
         LivingEntity attacker = MiscHelper.getAttacker(event.getSource());
         CompoundTag tag = attacked.getPersistentData();
-        if (TagHelper.checkForIntAbove0(tag, WitherShieldSpell.DAMAGE_REDUCTION_TIME)) {
+        if (IOHelper.checkForIntAbove0(tag, WitherShieldSpell.DAMAGE_REDUCTION_TIME)) {
             MathHelper.mul(event::getAmount, event::setAmount, 0.9f);
         }
         if (attacker != null) {
@@ -101,10 +104,13 @@ public class DamageEvents {
         MiscHelper.DamageType type = MiscHelper.getDamageType(source);
         LivingEntity killed = event.getEntity();
         if (attacker != null) {
-            for (EquipmentSlot slot : MiscHelper.ARMOR_EQUIPMENT) {
-                List<Bonus> bonuses = BonusHelper.getBonusesFromStack(attacker.getItemBySlot(slot));
-                bonuses.forEach(bonus -> bonus.onEntityKilled(killed, attacker, type));
-            }
+            MiscHelper.getArmorEquipment(attacker)
+                    .map(BonusHelper::getBonusesFromStack)
+                    .collect(CollectionHelper.merge())
+                    .forEach(bonus -> bonus.onEntityKilled(killed, attacker, type));
+            attacker.getItemBySlot(EquipmentSlot.MAINHAND).getCapability(CapabilityHelper.ITEM_STAT).ifPresent(iItemStatHandler -> {
+                iItemStatHandler.increase(ItemStatCapability.Type.KILLED, 1);
+            });
         }
     }
 
@@ -117,11 +123,11 @@ public class DamageEvents {
             MathHelper.mul(event::getAmount, event::setAmount, 1 + 0.2f * living.getEffect(ModMobEffects.BLAZING.get()).getAmplifier());
         }
         if (living.hasEffect(ModMobEffects.VULNERABILITY.get())) {
-            MathHelper.mul(event::getAmount, event::setAmount, 1 + living.getEffect(ModMobEffects.VULNERABILITY.get()).getAmplifier() * 0.05f);
+            MathHelper.mul(event::getAmount, event::setAmount, 1 + 0.05f * living.getEffect(ModMobEffects.VULNERABILITY.get()).getAmplifier());
         }
         if (living.hasEffect(ModMobEffects.NUMBNESS.get())) {
             event.setCanceled(true);
-            TagHelper.increaseFloatTagValue(tag, NumbnessMobEffect.NUMBNESS_ID, event.getAmount());
+            IOHelper.increaseFloatTagValue(tag, NumbnessMobEffect.NUMBNESS_ID, event.getAmount());
         }
         if (event.getSource().getDirectEntity() instanceof SmallFireball smallFireball) {
             if (smallFireball.getOwner() instanceof FrozenBlazeEntity) {
@@ -178,11 +184,7 @@ public class DamageEvents {
         Map<Enchantment, Integer> enchantments = stack.getAllEnchantments();
         if (enchantments != null) {
             event.setAmount(ExtendedCalculationEnchantment.runWithPriority(stack, attacker, attacked, event.getAmount(), type, true, source));
-        }
-        for (EquipmentSlot slot : MiscHelper.ARMOR_EQUIPMENT) {
-            stack = attacked.getItemBySlot(slot);
-            assert enchantments != null;
-            event.setAmount(ExtendedCalculationEnchantment.runWithPriority(stack, attacker, attacked, event.getAmount(), type, false, source));
+            MiscHelper.getArmorEquipment(attacked).forEach(stack1 -> event.setAmount(ExtendedCalculationEnchantment.runWithPriority(stack1, attacker, attacked, event.getAmount(), type, false, source)));
         }
     }
 
@@ -205,10 +207,8 @@ public class DamageEvents {
         LivingEntity attacked = event.getEntity();
         if (AttributeHelper.getSaveAttributeValue(ModAttributes.ARMOR_SHREDDER.get(), attacker) != -1) {
             double armorShredder = AttributeHelper.getSaveAttributeValue(ModAttributes.ARMOR_SHREDDER.get(), attacker);
-            for (int i = 0; i < 4; i++) {
-                ItemStack stack = attacked.getItemBySlot(MiscHelper.ARMOR_EQUIPMENT[i]);
-                stack.hurt((int) (armorShredder / 3), attacked.level.getRandom(), attacker instanceof ServerPlayer serverPlayer ? serverPlayer : null);
-            }
+            MiscHelper.getArmorEquipment(attacked)
+                    .forEach(stack -> stack.hurt((int) (armorShredder / 3), attacked.level.getRandom(), attacker instanceof ServerPlayer serverPlayer ? serverPlayer : null));
         }
         double liveSteal = AttributeHelper.getSaveAttributeValue(ModAttributes.LIVE_STEAL.get(), attacker);
         if (liveSteal != -1) {
@@ -216,8 +216,9 @@ public class DamageEvents {
             ParticleHelper.sendParticles(new ParticleAnimationOptions(
                     new DustParticleOptions(MathHelper.color(130, 0, 0), 1.9f),
                     ParticleAnimationParameters.create().withParam(ParticleAnimParams.TARGET, attacker),
-                    ParticleAnimationInfo.create(Map.of(10, ParticleAnimations.MOVE_TO))
-            ), false, attacked, 5, attacked.getBbWidth(), attacked.getBbHeight(), attacked.getBbWidth(), 0.2);
+                    ParticleAnimationInfo.create(Map.of(50, ParticleAnimations.MOVE_TO)),
+                    5
+            ), false, attacked, 5, attacked.getBbWidth(), attacked.getBbHeight(), attacked.getBbWidth(), 0.1);
 
             attacker.heal(Math.min((float) liveSteal, event.getAmount()));
         }
@@ -243,11 +244,11 @@ public class DamageEvents {
         MiscHelper.DamageType type = MiscHelper.getDamageType(event.getDamageSource());
         Map<Enchantment, Integer> enchantments = stack.getAllEnchantments();
         if (enchantments != null && !enchantments.isEmpty()) {
-            for (Enchantment enchantment : enchantments.keySet()) {
-                if (enchantment instanceof ExtendedCalculationEnchantment modEnchantment && enchantment instanceof IToolEnchantment) {
-                    modEnchantment.tryExecute(enchantments.get(enchantment), stack, attacker, attacked, event.getBlockedDamage(), type, event.getDamageSource());
-                }
-            }
+            MapStream.of(enchantments)
+                    .mapKeys(MiscHelper.instanceMapper(ExtendedCalculationEnchantment.class))
+                    .filterKeys(Objects::nonNull)
+                    .filterKeys(ench -> ench instanceof IToolEnchantment)
+                    .forEach((enchantment, integer) -> enchantment.tryExecute(integer, stack, attacker, attacked, event.getBlockedDamage(), type, event.getDamageSource()));
         }
     }
 
@@ -268,11 +269,11 @@ public class DamageEvents {
             }
             if (!event.isCanceled()) {
                 List<ItemStack> soulbound = InventoryHelper.getByFilter(player, SoulbindHelper::isSoulbound);
-                for (ItemStack stack : soulbound) {
+                soulbound.forEach(stack -> {
                     UnCollectableItemEntity itemEntity = new UnCollectableItemEntity(toDie.level, toDie.getX(), toDie.getY(), toDie.getZ(), stack);
                     itemEntity.addPlayer(player);
                     itemEntity.move();
-                }
+                });
             }
         }
         if (toDie instanceof WitherBoss boss) {

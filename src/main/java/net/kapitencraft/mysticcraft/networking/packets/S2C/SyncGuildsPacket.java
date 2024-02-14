@@ -4,7 +4,7 @@ import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.guild.Guild;
 import net.kapitencraft.mysticcraft.guild.GuildHandler;
 import net.kapitencraft.mysticcraft.guild.GuildUpgradeInstance;
-import net.kapitencraft.mysticcraft.helpers.TagHelper;
+import net.kapitencraft.mysticcraft.helpers.IOHelper;
 import net.kapitencraft.mysticcraft.logging.Markers;
 import net.kapitencraft.mysticcraft.networking.packets.ModPacket;
 import net.minecraft.client.Minecraft;
@@ -34,46 +34,46 @@ public class SyncGuildsPacket implements ModPacket {
     }
 
     public SyncGuildsPacket(FriendlyByteBuf buf) {
-        this(buf.readEnum(Type.class), TagHelper.fromString(buf.readUtf()));
+        this(buf.readEnum(Type.class), IOHelper.fromString(buf.readUtf()));
     }
 
     public static SyncGuildsPacket loadAll(Collection<Guild> guilds) {
         ListTag savedGuilds = new ListTag();
         savedGuilds.addAll(guilds.stream().map(Guild::saveToTag).toList());
-        return new SyncGuildsPacket(Type.LOAD_ALL, TagHelper.TagBuilder.create()
+        return new SyncGuildsPacket(Type.LOAD_ALL, IOHelper.TagBuilder.create()
                 .withArg("guilds", savedGuilds, CompoundTag::put)
                 .build()
         );
     }
     public static SyncGuildsPacket addGuild(Player player, Guild guild) {
-        return new SyncGuildsPacket(Type.ADD_GUILD, TagHelper.TagBuilder.create()
+        return new SyncGuildsPacket(Type.ADD_GUILD, IOHelper.TagBuilder.create()
                 .withArg("owner", player.getUUID(), CompoundTag::putUUID)
                 .withArg("name", guild.getName(), CompoundTag::putString)
                 .build()
         );
     }
     public static SyncGuildsPacket addPlayer(Player player, Guild guild) {
-        return new SyncGuildsPacket(Type.ADD_PLAYER, TagHelper.TagBuilder.create()
+        return new SyncGuildsPacket(Type.ADD_PLAYER, IOHelper.TagBuilder.create()
                 .withArg("player", player.getUUID(), CompoundTag::putUUID)
                 .withArg("name", guild.getName(), CompoundTag::putString)
                 .build()
         );
     }
     public static SyncGuildsPacket removeGuild(Guild guild) {
-        return new SyncGuildsPacket(Type.REMOVE_GUILD, TagHelper.TagBuilder.create()
+        return new SyncGuildsPacket(Type.REMOVE_GUILD, IOHelper.TagBuilder.create()
                 .withArg("name", guild.getName(), CompoundTag::putString)
                 .build()
         );
     }
     public static SyncGuildsPacket changeRank(Player player, Guild.GuildRank rank) {
-        return new SyncGuildsPacket(Type.CHANGE_RANK, TagHelper.TagBuilder.create()
+        return new SyncGuildsPacket(Type.CHANGE_RANK, IOHelper.TagBuilder.create()
                 .withArg("player", player.getUUID(), CompoundTag::putUUID)
                 .withArg("rank", rank.getRegistryName(), CompoundTag::putString)
                 .build()
         );
     }
     public static SyncGuildsPacket leaveGuild(Player player) {
-        return new SyncGuildsPacket(Type.LEAVE_GUILD, TagHelper.TagBuilder.create()
+        return new SyncGuildsPacket(Type.LEAVE_GUILD, IOHelper.TagBuilder.create()
                 .withArg("player", player.getUUID(), CompoundTag::putUUID)
                 .build()
         );
@@ -82,7 +82,7 @@ public class SyncGuildsPacket implements ModPacket {
     @Override
     public void toBytes(FriendlyByteBuf buf) {
         buf.writeEnum(type);
-        buf.writeUtf(TagHelper.fromCompoundTag(tag));
+        buf.writeUtf(IOHelper.fromCompoundTag(tag));
     }
 
     @Override

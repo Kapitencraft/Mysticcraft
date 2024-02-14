@@ -24,7 +24,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-import java.util.stream.Stream;
 
 public class MathHelper {
 
@@ -170,18 +169,6 @@ public class MathHelper {
         })));
     }
 
-    public static Stream<BlockPos> between(BlockPos start, BlockPos end) {
-        List<BlockPos> pos = new ArrayList<>();
-        for (int x = Math.min(start.getX(), end.getX()); x < Math.max(start.getX(), end.getX()); x++) {
-            for (int y = Math.min(start.getY(), end.getY()); y < Math.max(start.getY(), end.getY()); y++) {
-                for (int z = Math.min(start.getZ(), end.getZ()); z < Math.max(start.getZ(), end.getZ()); z++) {
-                    pos.add(new BlockPos(x, y, z));
-                }
-            }
-        }
-        return pos.stream();
-    }
-
     private static BlockPos makeLinePos(double t, BlockPos a, BlockPos diff) {
         return new BlockPos(a.getX() + diff.getX() * t, a.getY() + diff.getY() * t, a.getZ() + diff.getZ() * t);
     }
@@ -244,32 +231,27 @@ public class MathHelper {
         return setLength(new Vec3(f3 * f4, -f5, f2 * f4), 1);
     }
 
-    public static List<Entity> getAllEntitiesInsideCone(float span, double range, Vec3 sourcePos, Vec2 sourceRot, Level level) {
-        if (range > 0) {
-            AABB testAABB = new AABB(sourcePos.subtract(2, 2, 2), sourcePos.add(2, 2, 2)).inflate(range/2);
-            List<Entity> list = new ArrayList<>();
-            Vec3 endRight = calculateViewVector(sourceRot.x, sourceRot.y - span).scale(range);
-            Vec3 endMid = calculateViewVector(sourceRot.x, sourceRot.y + span).scale(range).subtract(endRight).scale(0.5).add(endRight);
-            Vec3 axisVec = sourcePos.subtract(endMid);
-            float halfSpan = span / 2;
-            for (Entity entity : level.getEntitiesOfClass(Entity.class, testAABB)) {
-                Vec3 apexToTarget = sourcePos.subtract(entity.position());
-                boolean isInInfiniteCone = apexToTarget.dot(axisVec) / apexToTarget.length() / axisVec.length() > Mth.cos(halfSpan);
-                if (isInInfiniteCone && apexToTarget.dot(axisVec) / axisVec.length() < axisVec.length()) {
-                    list.add(entity);
-                }
-            }
-            return list;
-        }
-        throw new IllegalArgumentException("range should be greater than 0");
+    public static <T extends Entity> List<T> getAllEntitiesInsideCone(Class<T> tClass, float span, double range, Vec3 sourcePos, Vec2 sourceRot, Level level) {
+        double halfSpan = span / 2;
+        double incremental = Math.sin(halfSpan) * 0.1;
+        List<Vec3> lineOfSight = lineOfSight(sourceRot, sourcePos, range, 0.1);
+        List<T> toReturn = new ArrayList<>();
+        lineOfSight.stream().collect(CollectionHelper.toMapStream(CollectionHelper.reversedBiMap(lineOfSight, List::indexOf), i -> i)).forEach((integer, vec3) -> {
+            toReturn.addAll(getEntitiesAround(tClass, level, vec3, incremental * integer).stream().filter(entity -> !toReturn.contains(entity)).toList());
+        });
+        return toReturn;
+    }
+
+    public static <T extends Entity> List<T> getEntitiesAround(Class<T> tClass, Level level, Vec3 loc, double range) {
+        return level.getEntitiesOfClass(tClass, new AABB(loc.x - range, loc.y - range, loc.z - range, loc.x + range, loc.y + range, loc.z + range)).stream()
+                .filter(entity -> entity.position().distanceTo(loc) <= range).toList();
     }
 
     public static List<Entity> getAllEntitiesInsideCylinder(float radius, Vec3 sourcePos, Vec2 rot, double range, Level level) {
         List<Entity> toReturn = new ArrayList<>();
         ArrayList<Vec3> lineOfSight = lineOfSight(rot, sourcePos, range, 0.1);
         lineOfSight.forEach(vec3 -> {
-            AABB aabb = new AABB(vec3.add(radius, radius, radius), vec3.subtract(radius, radius, radius));
-            List<Entity> entities = level.getEntitiesOfClass(Entity.class, aabb, entity -> vec3.distanceTo(entity.position()) < radius);
+            List<Entity> entities = getEntitiesAround(Entity.class, level, vec3, radius);
             toReturn.addAll(entities.stream().filter(entity -> !toReturn.contains(entity)).toList());
         });
         return toReturn;

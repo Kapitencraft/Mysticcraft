@@ -16,12 +16,14 @@ public class ParticleAnimationOptions extends ParticleType<ParticleAnimationOpti
     final ParticleOptions options;
     final ParticleAnimationParameters params;
     final ParticleAnimationInfo info;
+    final int amount;
 
-    public ParticleAnimationOptions(ParticleOptions options, ParticleAnimationParameters context, ParticleAnimationInfo info) {
+    public ParticleAnimationOptions(ParticleOptions options, ParticleAnimationParameters context, ParticleAnimationInfo info, int amount) {
         super(true, new Deserializer());
         this.options = options;
         this.params = context;
         this.info = info;
+        this.amount = amount;
     }
 
     @Override
@@ -34,6 +36,7 @@ public class ParticleAnimationOptions extends ParticleType<ParticleAnimationOpti
         options.writeToNetwork(buf);
         params.writeToNetwork(buf);
         info.writeToNetwork(buf);
+        buf.writeInt(amount);
     }
 
     @Override
@@ -59,7 +62,7 @@ public class ParticleAnimationOptions extends ParticleType<ParticleAnimationOpti
             ParticleOptions options = readParticle(buf, type1);
             ParticleAnimationParameters context = ParticleAnimationParameters.loadFromNetwork(buf, Minecraft.getInstance().level);
             ParticleAnimationInfo info = ParticleAnimationInfo.loadFromNetwork(buf);
-            return new ParticleAnimationOptions(options, context, info);
+            return new ParticleAnimationOptions(options, context, info, buf.readInt());
         }
     }
 

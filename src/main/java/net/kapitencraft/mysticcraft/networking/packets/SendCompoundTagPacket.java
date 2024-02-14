@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.networking.packets;
 
-import net.kapitencraft.mysticcraft.helpers.TagHelper;
+import net.kapitencraft.mysticcraft.helpers.IOHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.nbt.CompoundTag;
@@ -24,12 +24,12 @@ public class SendCompoundTagPacket implements ModPacket {
     }
 
     public SendCompoundTagPacket(FriendlyByteBuf buf) {
-        this(TagHelper.fromString(buf.readUtf()), buf.readInt(), buf.readBoolean());
+        this(IOHelper.fromString(buf.readUtf()), buf.readInt(), buf.readBoolean());
     }
 
     @Override
     public void toBytes(FriendlyByteBuf buf) {
-        buf.writeUtf(TagHelper.fromCompoundTag(toSend));
+        buf.writeUtf(IOHelper.fromCompoundTag(toSend));
         buf.writeInt(entityIdToReceive);
         buf.writeBoolean(toServer);
     }
@@ -43,7 +43,7 @@ public class SendCompoundTagPacket implements ModPacket {
                 if (serverPlayer != null) {
                     ServerLevel level = serverPlayer.getLevel();
                     Entity entity = level.getEntity(entityIdToReceive);
-                    if (entity != null) TagHelper.injectCompoundTag(entity, toSend);
+                    if (entity != null) IOHelper.injectCompoundTag(entity, toSend);
                 }
             });
         } else {
@@ -51,7 +51,7 @@ public class SendCompoundTagPacket implements ModPacket {
                 ClientLevel level = Minecraft.getInstance().level;
                 if (level != null) {
                     Entity entity = level.getEntity(entityIdToReceive);
-                    if (entity != null) TagHelper.injectCompoundTag(entity, toSend);
+                    if (entity != null) IOHelper.injectCompoundTag(entity, toSend);
                 }
             });
         }

@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.mixin.classes;
 
 import net.kapitencraft.mysticcraft.event.ModEventFactory;
-import net.kapitencraft.mysticcraft.helpers.TagHelper;
+import net.kapitencraft.mysticcraft.helpers.IOHelper;
 import net.kapitencraft.mysticcraft.requirements.Requirement;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
@@ -30,7 +30,7 @@ public abstract class ItemStackMixin {
 
     @Inject(method = "tagMatches", at = @At("HEAD"), cancellable = true)
     private static void secureTagsEmpty(ItemStack stack, ItemStack stack1, CallbackInfoReturnable<Boolean> cir) {
-        if (TagHelper.isTagEmpty(stack.getTag()) && TagHelper.isTagEmpty(stack1.getTag())) cir.setReturnValue(stack.areCapsCompatible(stack1));
+        if (IOHelper.isTagEmpty(stack.getTag()) && IOHelper.isTagEmpty(stack1.getTag())) cir.setReturnValue(stack.areCapsCompatible(stack1));
     }
 
 

@@ -3,6 +3,7 @@ package net.kapitencraft.mysticcraft.item.capability;
 import net.kapitencraft.mysticcraft.api.Reference;
 import net.kapitencraft.mysticcraft.item.capability.elytra.IElytraData;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.IGemstoneHandler;
+import net.kapitencraft.mysticcraft.item.capability.item_stat.IItemStatHandler;
 import net.kapitencraft.mysticcraft.misc.content.EssenceHolder;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
@@ -19,6 +20,7 @@ public class CapabilityHelper {
     public static final Capability<IGemstoneHandler> GEMSTONE = CapabilityManager.get(new CapabilityToken<>(){});
     public static final Capability<IElytraData> ELYTRA = CapabilityManager.get(new CapabilityToken<>(){});
     public static final Capability<EssenceHolder> ESSENCE = CapabilityManager.get(new CapabilityToken<>(){});
+    public static final Capability<IItemStatHandler> ITEM_STAT = CapabilityManager.get(new CapabilityToken<>(){});
 
     public static <K> boolean exeCapability(ItemStack stack, Capability<K> capability, NonNullConsumer<K> consumer) {
         LazyOptional<K> optional = stack.getCapability(capability);

@@ -1,13 +1,22 @@
 package net.kapitencraft.mysticcraft.api;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class APITools {
+
+    private static final List<Character> CONVERT = List.of(
+            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
+            'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
+            'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd',
+            'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
+            'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x',
+            'y', 'z', ' ', '-', '+', '*', '/', '!', '?', '.', ',',
+            '\'', '\"', '<', '>', '(', ')', '§', '$', '%', '&', '\\', '=', '`', '´');
+
+    private static final int DEFAULT = 55;
     private static List<Character> convertList(int value) {
-        int d = value == 27 ? 10 : 0;
+        int d = value == DEFAULT ? 10 : 0;
         List<Character> list = new ArrayList<>();
         for (int i = d; i < (value + d); i++) {
             list.add(CONVERT.get(i));
@@ -15,12 +24,7 @@ public class APITools {
         return list;
     }
 
-    private static final List<Character> CONVERT = List.of(
-            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-                    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
-                    'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
-                    'U', 'V', 'W', 'X', 'Y', 'Z', ' ', '-', '+', '*', '/',
-                    '!', '?', '.', ',', '\'', '\"', '<', '>', '(', ')', '§', '$', '%', '&', '\\', '=', '`', '´');
+
 
     private static char[] invertCharArray(char[] ts) {
         char[] temp = Arrays.copyOf(ts, ts.length);
@@ -32,9 +36,16 @@ public class APITools {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("input: ");
-        String in = scanner.nextLine();
-        System.out.println("output: " + transfer(in));
+        System.out.println("Key-Length: " + CONVERT.size());
+        System.out.println("Default (no numbers or special): " + DEFAULT);
+        System.out.println("write '<break>' to stop");
+        while (true) {
+            System.out.println("input: ");
+            String in = scanner.nextLine();
+            if (Objects.equals(in, "<break>")) break;
+            System.out.println("output: " + transfer(in));
+        }
+        System.out.println("completed! re-run java command to start");
     }
 
     public static long compiler(int convert, String in) {
@@ -49,9 +60,7 @@ public class APITools {
                 int buffer = convertList.indexOf(ch);
                 ret += buffer * Math.pow(convert, i);
             } else {
-                System.out.print("Found unknown char '");
-                System.out.print(ch);
-                System.out.println("', skipping");
+                System.out.println("Found unknown char '" + ch + "', skipping");
             }
         }
         return ret;
@@ -81,7 +90,7 @@ public class APITools {
             String transfer = transfer(Integer.parseInt(inConvert), Integer.parseInt(outConvert), in.substring(4));
             return outConvert + inConvert + transfer;
         } catch (NumberFormatException e) {
-            System.out.println("unable to read data, skipping");
+            System.out.println("unable to read data, skipping (" + e.getMessage() + ")");
         }
         return "";
     }

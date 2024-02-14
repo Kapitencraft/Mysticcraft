@@ -1,0 +1,12 @@
+{
+  "type": "mysticcraft:add_item",
+  "conditions": [
+    {
+      "type": "forge:loot_table_id",
+      "loot_table_id": "minecraft:chests/nether_bridge"
+    }
+  ],
+  "item": "mysticcraft:soul_steel_alloy",
+  "chance": "0.1",
+  "maxAmount": 5
+}

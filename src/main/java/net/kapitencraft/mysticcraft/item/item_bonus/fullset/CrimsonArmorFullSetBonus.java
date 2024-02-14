@@ -4,8 +4,8 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.content.CrimsonDeathRayHelper;
 import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
+import net.kapitencraft.mysticcraft.helpers.IOHelper;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
-import net.kapitencraft.mysticcraft.helpers.TagHelper;
 import net.kapitencraft.mysticcraft.item.item_bonus.FullSetBonus;
 import net.kapitencraft.mysticcraft.misc.cooldown.Cooldowns;
 import net.minecraft.nbt.CompoundTag;
@@ -36,7 +36,7 @@ public class CrimsonArmorFullSetBonus extends FullSetBonus {
         if (type != MiscHelper.DamageType.MELEE) return;
         CompoundTag data = user.getPersistentData();
         if (data.getInt(DOMINUS_ID) < 10) {
-            TagHelper.increaseIntegerTagValue(user.getPersistentData(), DOMINUS_ID, 1);
+            IOHelper.increaseIntegerTagValue(user.getPersistentData(), DOMINUS_ID, 1);
         } else {
             CrimsonDeathRayHelper.add(user);
         }

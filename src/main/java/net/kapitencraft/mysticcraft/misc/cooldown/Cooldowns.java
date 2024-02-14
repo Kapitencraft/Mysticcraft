@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.misc.cooldown;
 
 import net.kapitencraft.mysticcraft.enchantments.armor.BonkEnchantment;
-import net.kapitencraft.mysticcraft.helpers.TagHelper;
+import net.kapitencraft.mysticcraft.helpers.IOHelper;
 import net.kapitencraft.mysticcraft.item.item_bonus.fullset.CrimsonArmorFullSetBonus;
 import net.kapitencraft.mysticcraft.misc.HealingHelper;
 import net.kapitencraft.mysticcraft.spell.spells.WitherShieldSpell;
@@ -25,7 +25,7 @@ public interface Cooldowns {
         }
     });
     Cooldown DOMINUS = new Cooldown(CompoundPath.builder(CrimsonArmorFullSetBonus.COOLDOWN_ID).build(), 120, living -> {
-        if (TagHelper.reduceBy1(living.getPersistentData(), CrimsonArmorFullSetBonus.DOMINUS_ID) > 0)
+        if (IOHelper.reduceBy1(living.getPersistentData(), CrimsonArmorFullSetBonus.DOMINUS_ID) > 0)
             Cooldowns.DOMINUS.applyCooldown(living, false);
     });
     static Cooldown BONK_ENCHANTMENT(EquipmentSlot slot) {
@@ -46,7 +46,7 @@ public interface Cooldowns {
             CompoundTag tag = path.getTag(entity);
             if (tag != null) {
                 String tagName = cooldown.getPath().getPath();
-                TagHelper.reduceBy1(tag, tagName);
+                IOHelper.reduceBy1(tag, tagName);
                 if (tag.contains(tagName, 3) && tag.getInt(tagName) <= 0) {
                     cooldown.onDone(entity);
                     return true;

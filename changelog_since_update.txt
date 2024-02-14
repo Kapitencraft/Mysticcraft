@@ -1,4 +1,5 @@
 added some new reforges;
+added soul_steel_alloys to Nether fortress chests;
 added Requirements:
 Elytras now require 5 killed Enderdragons to be used;
 implemented requirements disabling damaging, mining or using items (+spells);
@@ -7,10 +8,14 @@ moved Enchantment descriptions being in Mixin instead of event
 
 removed Mana-Sam-Launcher due to no necessity;
 
-compat with jei;
+compat with jei:
+added Armor Recipe to JEI;
+added Upgrade Recipe to JEI;
+fixed JEI not showing Frozen-Blaze armor recipe;
 
 fixed Tank-Enchantment's scale being extremely high;
-fixed Star-able items not being able to be upgrade from
+fixed Cutout not being transparent;
+fixed Star-able items not being able to be upgrade from;
 fixed wither Drops dropping from any mob;
 fixed shadow dagger's Shadow Step ability not working;
 fixed crafting-book not putting items into crafting slots;

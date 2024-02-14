@@ -1,9 +1,15 @@
 package net.kapitencraft.mysticcraft.helpers;
 
+import com.google.gson.JsonObject;
+import com.google.gson.internal.Streams;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
+import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.PrimitiveCodec;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.api.TriConsumer;
@@ -14,10 +20,11 @@ import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
+import java.io.*;
 import java.util.*;
 import java.util.function.Supplier;
 
-public class TagHelper {
+public class IOHelper {
     private static final String LENGTH_ID = "Length";
 
 
@@ -39,6 +46,35 @@ public class TagHelper {
     public static <T> T get(DataResult<T> result, @NotNull Supplier<T> defaulted) {
         Optional<T> optional = result.result();
         return optional.orElseGet(defaulted);
+    }
+
+    @SuppressWarnings("all")
+    public static <T> T loadFile(File file, Codec<T> codec, Supplier<T> defaulted) {
+        try {
+            file.createNewFile();
+            return get(codec.parse(JsonOps.INSTANCE, Streams.parse(createReader(file))), defaulted);
+        } catch (IOException e) {
+            MysticcraftMod.LOGGER.warn("unable to load file: {}", e.getMessage());
+        }
+        return defaulted.get();
+    }
+
+    private static JsonReader createReader(File file) throws FileNotFoundException {
+        return new JsonReader(new FileReader(file));
+    }
+
+    private static JsonWriter createWriter(File file) throws IOException {
+        return new JsonWriter(new FileWriter(file));
+    }
+
+    @SuppressWarnings("all")
+    public static <T> void saveFile(File file, Codec<T> codec, T in) {
+        try {
+            file.createNewFile();
+            Streams.write(get(codec.encodeStart(JsonOps.INSTANCE, in), JsonObject::new), createWriter(file));
+        } catch (IOException e) {
+            MysticcraftMod.LOGGER.warn("unable to save file: {}", e.getMessage());
+        }
     }
 
     public static int increaseIntegerTagValue(CompoundTag tag, String name, int i) {
