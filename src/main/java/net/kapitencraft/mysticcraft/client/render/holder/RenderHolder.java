@@ -3,6 +3,7 @@ package net.kapitencraft.mysticcraft.client.render.holder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.kapitencraft.mysticcraft.client.render.RenderController;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.Vec2;
@@ -24,6 +25,10 @@ public abstract class RenderHolder {
     protected void renderString(Component toWrite, float x, float y) {
         Minecraft.getInstance().font.draw(poseStack, toWrite, x, y, -1);
     }
+
+    public abstract float getHeight(LocalPlayer player, Font font);
+
+    public abstract float getWidth(LocalPlayer player, Font font);
 
 
     public abstract void render(int posX, int posY, LocalPlayer player);

@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.client.render.holder;
 
 import net.kapitencraft.mysticcraft.client.render.RenderController;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.Vec2;
@@ -12,6 +13,16 @@ public class SimpleHolder extends RenderHolder {
     public SimpleHolder(RenderController.PositionHolder pos, Function<LocalPlayer, Component> mapper, RenderController.RenderType type) {
         super(pos, type);
         this.mapper = mapper;
+    }
+
+    @Override
+    public float getHeight(LocalPlayer player, Font font) {
+        return 9;
+    }
+
+    @Override
+    public float getWidth(LocalPlayer player, Font font) {
+        return font.width(mapper.apply(player));
     }
 
     @Override

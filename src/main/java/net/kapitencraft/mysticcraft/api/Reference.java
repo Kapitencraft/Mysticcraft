@@ -3,6 +3,8 @@ package net.kapitencraft.mysticcraft.api;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import org.jetbrains.annotations.Nullable;
 
+import java.sql.Ref;
+
 /**
  * type of variable able to be used from inside lambda
  */
@@ -13,6 +15,8 @@ public class Reference<T> {
     private Reference(@Nullable T defaultValue) {
         value = defaultValue;
     }
+
+    public Reference() {}
 
     public static <T> Reference<T> of(@Nullable T t) {
         return new Reference<>(t);

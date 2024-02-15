@@ -1,6 +1,9 @@
 package net.kapitencraft.mysticcraft.client.render.holder;
 
 import net.kapitencraft.mysticcraft.client.render.RenderController;
+import net.kapitencraft.mysticcraft.helpers.CollectionHelper;
+import net.kapitencraft.mysticcraft.helpers.CollectorHelper;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.Vec2;
@@ -15,6 +18,16 @@ public class MultiHolder extends RenderHolder {
         super(pos, type);
         this.yChange = yChange;
         this.list = allText;
+    }
+
+    @Override
+    public float getHeight(LocalPlayer player, Font font) {
+        return list.size() * yChange;
+    }
+
+    @Override
+    public float getWidth(LocalPlayer player, Font font) {
+        return list.stream().map(function -> function.apply(player)).collect(CollectorHelper.getBiggest(font::width));
     }
 
     @Override

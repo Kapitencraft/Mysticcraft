@@ -14,11 +14,14 @@ import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.misc.MiscRegister;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.phys.Vec2;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
@@ -35,6 +38,7 @@ import java.util.function.Consumer;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class RenderController {
+    private static final int WHITE_COLOR = MathHelper.RGBtoInt(255, 255, 255);
     private static final Codec<RenderController> CODEC = RecordCodecBuilder.create(
             renderControllerInstance -> renderControllerInstance.group(
                     Codec.unboundedMap(IOHelper.UUID_CODEC, PositionHolder.CODEC).fieldOf("storage").forGetter(RenderController::getLocations)
@@ -87,6 +91,28 @@ public class RenderController {
     }
     private static double getDamageProtection(LivingEntity living) {
         return MathHelper.defRound(100 - MathHelper.calculateDamage(100, living.getAttributeValue(Attributes.ARMOR), living.getAttributeValue(Attributes.ARMOR_TOUGHNESS)));
+    }
+
+    public void renderSavable(LocalPlayer player, Font font) {
+        map.values().forEach(renderHolder -> {
+            List<Vec2> vertexPoints = getVertexPoints(renderHolder, player, font);
+            for (Vec2 loc : vertexPoints) {
+                Gui.fill(new PoseStack(), (int) (loc.x - 3), (int) (loc.y - 3), (int) (loc.x + 3), (int) (loc.y + 3), WHITE_COLOR);
+            }
+
+        });
+    }
+
+    private static List<Vec2> getVertexPoints(RenderHolder renderHolder, LocalPlayer player, Font font) {
+        PositionHolder holder = renderHolder.getPos();
+        float x = holder.getX();
+        float y = holder.getY();
+        return List.of(
+                new Vec2(x, y),
+                new Vec2(x, y + renderHolder.getHeight(player, font)),
+                new Vec2(x + renderHolder.getWidth(player, font), y),
+                new Vec2(x + renderHolder.getWidth(player, font), y)
+        );
     }
 
     @SubscribeEvent
