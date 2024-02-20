@@ -20,15 +20,17 @@ public class ChainLightningEnchantment extends ExtendedCalculationEnchantment im
 
     @Override
     protected double execute(int level, ItemStack enchanted, LivingEntity attacker, LivingEntity attacked, double damage, DamageSource source) {
-        if (MathHelper.chance(level * 0.001, attacker)) {
+        if (MathHelper.chance(level * 1., attacker)) {
             ChainLightningHelper.spawnLightnings(level, attacked, attacker, (float) damage);
         }
         return damage;
     }
 
+    //TODO visuals
+
     @Override
     public String[] getDescriptionMods(int level) {
-        return new String[] {(level * 0.1) + "%", (int) (Math.sqrt(level)) + "", level / 2 + "", 1 + level * 0.05 + "%"};
+        return new String[] {MathHelper.defRound(level * 10) + "%", (int) (Math.sqrt(level)) + "", level / 2 + "", 1 + level * 0.05 + "%"};
     }
 
 

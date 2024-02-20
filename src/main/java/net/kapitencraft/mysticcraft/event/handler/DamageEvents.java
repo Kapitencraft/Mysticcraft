@@ -106,7 +106,7 @@ public class DamageEvents {
         if (attacker != null) {
             MiscHelper.getArmorEquipment(attacker)
                     .map(BonusHelper::getBonusesFromStack)
-                    .collect(CollectionHelper.merge())
+                    .collect(CollectorHelper.merge())
                     .forEach(bonus -> bonus.onEntityKilled(killed, attacker, type));
             attacker.getItemBySlot(EquipmentSlot.MAINHAND).getCapability(CapabilityHelper.ITEM_STAT).ifPresent(iItemStatHandler -> {
                 iItemStatHandler.increase(ItemStatCapability.Type.KILLED, 1);

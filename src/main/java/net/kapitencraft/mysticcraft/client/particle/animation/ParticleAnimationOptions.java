@@ -14,6 +14,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class ParticleAnimationOptions extends ParticleType<ParticleAnimationOptions> implements ParticleOptions {
     final ParticleOptions options;
+
     final ParticleAnimationParameters params;
     final ParticleAnimationInfo info;
     final int amount;

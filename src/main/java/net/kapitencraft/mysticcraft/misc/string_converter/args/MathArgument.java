@@ -23,11 +23,13 @@ public class MathArgument<T extends Number> implements CalculationArgument<T> {
             case "+" -> ADD.apply(a, b);
             case "-" -> REDUCE.apply(a, b);
             case "%" -> MODULO.apply(a, b);
+            case "^" -> SQUARE.apply(a, b);
             default -> (T) (Number) 0;
         };
     }
 
-    private final UnaryBiOperator<T> MULTIPLY = (value1, value2) -> (T) (Number) (((Double) value1) * ((Double) value1));
+    private final UnaryBiOperator<T> MULTIPLY = (value1, value2) -> (T) (Number) (((Double) value1) * ((Double) value2));
+    private final UnaryBiOperator<T> SQUARE = (value1, value2) -> (T) (Number) Math.pow(((Double) value1), ((Double) value2));
     private final UnaryBiOperator<T> DIVIDE = (value1, value2) -> (T) (Number) (((Double) value1) / ((Double) value2));
     private final UnaryBiOperator<T> ADD = (value1, value2) -> (T) (Number) (((Double) value1) + ((Double) value2));
     private final UnaryBiOperator<T> REDUCE = (value1, value2) -> (T) (Number) (((Double) value1) - ((Double) value2));

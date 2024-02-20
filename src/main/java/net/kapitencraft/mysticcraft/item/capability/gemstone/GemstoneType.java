@@ -5,6 +5,7 @@ import net.kapitencraft.mysticcraft.api.DoubleMap;
 import net.kapitencraft.mysticcraft.block.gemstone.GemstoneBlock;
 import net.kapitencraft.mysticcraft.block.gemstone.GemstoneCrystal;
 import net.kapitencraft.mysticcraft.helpers.CollectionHelper;
+import net.kapitencraft.mysticcraft.helpers.CollectorHelper;
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
@@ -87,7 +88,7 @@ public enum GemstoneType implements StringRepresentable {
     }
 
     public static Map<GemstoneType, ItemStack> allBlocks() {
-        return Arrays.stream(values()).collect(CollectionHelper.createMap(GemstoneType::registerBlock));
+        return Arrays.stream(values()).collect(CollectorHelper.createMap(GemstoneType::registerBlock));
     }
 
     public ItemStack registerBlock() {
@@ -99,13 +100,13 @@ public enum GemstoneType implements StringRepresentable {
     }
 
     public static DoubleMap<GemstoneType, GemstoneCrystal.Size, ItemStack> allCrystals() {
-        return DoubleMap.of(Arrays.stream(values()).collect(CollectionHelper.createMap(GemstoneType::crystals)));
+        return DoubleMap.of(Arrays.stream(values()).collect(CollectorHelper.createMap(GemstoneType::crystals)));
     }
 
 
     public Map<GemstoneCrystal.Size, ItemStack> crystals() {
         ItemStack stack = registerCrystal();
-        return Arrays.stream(GemstoneCrystal.Size.values()).collect(CollectionHelper.createMap(size -> {
+        return Arrays.stream(GemstoneCrystal.Size.values()).collect(CollectorHelper.createMap(size -> {
             ItemStack copy = stack.copy();
             copy.getOrCreateTag().putString("Size", size.getSerializedName());
             return copy;

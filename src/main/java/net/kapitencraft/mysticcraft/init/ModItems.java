@@ -54,7 +54,7 @@ import java.util.function.Supplier;
 @SuppressWarnings("unused")
 public interface ModItems {
 
-    static <T extends Item & IModItem> RegistryObject<T> register(String name, Supplier<T> supplier, TabGroup group) {
+    static <T extends Item & IModItem> RegistryObject<T> register(String name, final Supplier<T> supplier, TabGroup group) {
         RegistryObject<T> registryObject = REGISTRY.register(name, supplier);
         if (group != null) group.add(registryObject);
         return registryObject;

@@ -13,7 +13,7 @@ import java.io.File;
 public class MysticcraftClient {
     private static MysticcraftClient instance;
 
-    public final RenderController renderController = RenderController.load();
+    public final RenderController renderController = new RenderController(); // RenderController.load();
     public static final File CLIENT_FILES = new File(Minecraft.getInstance().gameDirectory, MysticcraftMod.MOD_ID);
 
     public static MysticcraftClient getInstance() {

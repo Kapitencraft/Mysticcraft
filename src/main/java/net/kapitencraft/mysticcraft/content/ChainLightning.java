@@ -18,11 +18,12 @@ public class ChainLightning {
         this.damage = damage;
     }
 
-    public void tick() {
-        if (this.tickCooldown-- <= 0 && !canceled) {
+    public boolean tick() {
+        if (this.tickCooldown-- <= 0) {
             target.hurt(new EntityDamageSource("chain_lightning", owner), damage);
             updateTarget();
         }
+        return this.canceled;
     }
 
     private void updateCooldown() {

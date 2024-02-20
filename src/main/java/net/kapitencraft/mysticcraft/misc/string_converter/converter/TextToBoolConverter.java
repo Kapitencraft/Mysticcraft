@@ -4,20 +4,10 @@ import net.kapitencraft.mysticcraft.misc.string_converter.args.BoolCalcArg;
 import net.kapitencraft.mysticcraft.misc.string_converter.args.CalculationArgument;
 
 import java.util.List;
-import java.util.Map;
-import java.util.function.Supplier;
 
 public class TextToBoolConverter extends TextConverter<Boolean> {
-    protected TextToBoolConverter(Map<String, Supplier<Boolean>> map) {
-        super(map);
-    }
-
-    protected Boolean createFromString(String s) {
-        if (stringTransfers.containsKey(s)) {
-            return stringTransfers.get(s).get();
-        } else {
-            return Boolean.parseBoolean(s);
-        }
+    protected TextToBoolConverter(String args) {
+        super(Boolean::valueOf, args);
     }
 
     @Override

@@ -208,9 +208,10 @@ public class MathHelper {
         return level.getEntitiesOfClass(tClass, source.inflate(range));
     }
 
-    public static <T extends Entity> T getClosestEntity(Class<T> tClass, Entity source, double range) {
-        List<T> entities = getEntitiesAround(tClass, source, range);
-        return entities.stream().filter(t -> t.is(source)).sorted(Comparator.comparingDouble(value -> value.distanceTo(source))).toList().get(0);
+    public static <T extends Entity> @Nullable T getClosestEntity(Class<T> tClass, Entity source, double range) {
+        List<T> entities = getEntitiesAround(tClass, source, range).stream().filter(t -> t.is(source)).sorted(Comparator.comparingDouble(value -> value.distanceTo(source))).toList();
+        if (entities.isEmpty()) return null;
+        return entities.get(0);
     }
 
     public static LivingEntity getClosestLiving(Entity source, double range) {
@@ -236,7 +237,7 @@ public class MathHelper {
         double incremental = Math.sin(halfSpan) * 0.1;
         List<Vec3> lineOfSight = lineOfSight(sourceRot, sourcePos, range, 0.1);
         List<T> toReturn = new ArrayList<>();
-        lineOfSight.stream().collect(CollectionHelper.toMapStream(CollectionHelper.reversedBiMap(lineOfSight, List::indexOf), i -> i)).forEach((integer, vec3) -> {
+        lineOfSight.stream().collect(CollectorHelper.toMapStream(CollectionHelper.reversedBiMap(lineOfSight, List::indexOf), i -> i)).forEach((integer, vec3) -> {
             toReturn.addAll(getEntitiesAround(tClass, level, vec3, incremental * integer).stream().filter(entity -> !toReturn.contains(entity)).toList());
         });
         return toReturn;
@@ -336,15 +337,16 @@ public class MathHelper {
         int r = in.x;
         int g = in.y;
         int b = in.z;
-        return RGBtoInt(r, g, b);
+        return RGBtoInt(r, g, b, 1);
     }
 
     public static int RGBtoInt(Vector3f in) {
         return RGBtoInt(fromFloat(in, 255));
     }
 
-    public static int RGBtoInt(int r, int g, int b) {
-        int returnable = (r << 8) + g;
+    public static int RGBtoInt(int r, int g, int b, int a) {
+        int returnable = (a << 8) + r;
+        returnable = (returnable << 8) + g;
         return (returnable << 8) + b;
     }
 

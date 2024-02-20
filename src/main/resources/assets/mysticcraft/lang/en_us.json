@@ -499,5 +499,6 @@
   "stat_req.storm": "%1§s killed Storms",
   "stat_req.necron": "%1§s killed Necrons",
   "stat_req.maxor": "%1§s killed Maxors",
-  "stat_req.goldor": "%1§s killed Goldors"
+  "stat_req.goldor": "%1§s killed Goldors",
+  "change_gui_locations.title": "Change GUI locations"
 }

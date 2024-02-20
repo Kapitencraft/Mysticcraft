@@ -2,11 +2,13 @@ package net.kapitencraft.mysticcraft.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
+import net.kapitencraft.mysticcraft.commands.args.ChangeGUILocationsCommand;
 import net.kapitencraft.mysticcraft.config.ServerModConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.client.event.RegisterClientCommandsEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -23,6 +25,12 @@ public class ModCommands {
         ShowItemCommand.register(dispatcher);
     }
 
+    @SubscribeEvent
+    public static void registerClient(RegisterClientCommandsEvent event) {
+        CommandDispatcher<CommandSourceStack> dispatcher = event.getDispatcher();
+        ChangeGUILocationsCommand.register(dispatcher);
+    }
+
     public static void sendSuccess(CommandSourceStack stack, String msg, Object... args) {
         stack.sendSuccess(Component.translatable(msg, args).withStyle(ChatFormatting.GREEN), true);
     }
@@ -32,7 +40,7 @@ public class ModCommands {
         if (stack.getPlayer() != null) {
             return function.apply(stack.getPlayer(), stack);
         }
-        stack.sendFailure(Component.translatable("command.failed.console"));
+        stack.sendFailure(Component.translatable("command.failed.console").withStyle(ChatFormatting.RED));
         return 0;
     }
 

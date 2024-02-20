@@ -1,7 +1,6 @@
 package net.kapitencraft.mysticcraft.item.misc;
 
 import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
-import net.kapitencraft.mysticcraft.helpers.TextHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModEnchantments;
 import net.minecraft.ChatFormatting;
@@ -15,14 +14,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
-
 public class RNGDropHelper {
 
 
 
     public static ItemEntity calculateAndDrop(ItemStack stack, float chance, LivingEntity source, Vec3 spawnPos) {
-        double magicFind = source.getAttributeValue(ModAttributes.MAGIC_FIND.get());
+        double magicFind = getMagicFind(source);
         if (Math.random() <= getFinalChance(chance, magicFind)) {
             trySendDropMessage(stack, magicFind, source, chance);
             if (source instanceof Player player && player.getMainHandItem().getEnchantmentLevel(ModEnchantments.TELEKINESIS.get()) > 0){
@@ -36,23 +33,30 @@ public class RNGDropHelper {
         return null;
     }
 
-    public static void addToDrops(ItemStack stack, float chance, LivingEntity source, Vec3 spawn, Collection<ItemEntity> collection) {
-        ItemEntity entity = calculateAndDrop(stack, chance, source, spawn);
-        if (entity != null) collection.add(entity);
-    }
-
     private static double getFinalChance(float chance, double magicFind) {
         return chance * (1 + magicFind / 100);
     }
 
-    public static ItemStack dontDrop(Item item, int maxAmount, @Nullable LivingEntity source, float chance) {
-        double magicFind = (source != null) ? AttributeHelper.getSaveAttributeValue(ModAttributes.MAGIC_FIND.get(), source) : 0;
+    private static double getMagicFind(@Nullable LivingEntity source) {
+        return (source != null) ? AttributeHelper.getSaveAttributeValue(ModAttributes.MAGIC_FIND.get(), source) : 0;
+    }
+
+    public static ItemStack calculateAndDontDrop(Item item, int maxAmount, @Nullable LivingEntity source, float chance) {
+        double magicFind = getMagicFind(source);
         int amount = 0;
+        while (chance > 1) {
+            amount++;
+            chance -= 1;
+        }
         for (int i = 0; i < maxAmount; i++) {
             if (Math.random() <= getFinalChance(chance, magicFind)) {
                 amount++;
             }
         }
+        return finalize(item, amount, magicFind, chance, source);
+    }
+
+    private static ItemStack finalize(Item item, int amount, double magicFind, float chance, LivingEntity source) {
         if (amount > 0) {
             ItemStack stack = new ItemStack(item, amount);
             trySendDropMessage(stack, magicFind, source, chance);
@@ -63,7 +67,7 @@ public class RNGDropHelper {
 
 
     private static Component createRareDropMessage(ItemStack drop, double magic_find, float chance) {
-        return DropRarities.getRarity(chance).makeDisplay().append("§l: §r").append(TextHelper.getStackNameWithoutBrackets(drop)).append("§b (+" + magic_find + ")");
+        return DropRarities.getRarity(chance).makeDisplay().append("§l: §r").append(drop.getHoverName()).append("§b (+" + magic_find + " Magic Find)");
     }
 
     public static void trySendDropMessage(ItemStack drop, double magicFind, LivingEntity toSend, float chance) {

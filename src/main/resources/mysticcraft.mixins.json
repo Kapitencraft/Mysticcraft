@@ -5,6 +5,7 @@
   "refmap": "mysticcraft.mixin-refmap.json",
   "client": [
     "BannerItemMixin",
+    "ChatScreenMixin",
     "ClientTooltipPositionerMixin",
     "HandItemLayerRendererMixin",
     "ItemStackClientMixin",

@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.client.render.holder;
 
 import net.kapitencraft.mysticcraft.client.render.RenderController;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.Vec2;
@@ -18,7 +19,23 @@ public class MultiHolder extends RenderHolder {
     }
 
     @Override
-    public void render(int posX, int posY, LocalPlayer player) {
+    public float getWidth(LocalPlayer player, Font font) {
+        float f = 0;
+        for (Function<LocalPlayer, Component> func : list) {
+            Component comp = func.apply(player);
+            float f1 = font.width(comp);
+            if (f < f1) f = f1;
+        }
+        return f;
+    }
+
+    @Override
+    public float getHeight(LocalPlayer player, Font font) {
+        return list.size() * -yChange;
+    }
+
+    @Override
+    public void render(float posX, float posY, LocalPlayer player) {
         Vec2 loc = getLoc(posX, posY);
         for (int i = 0; i < list.size(); i++) {
             Function<LocalPlayer, Component> mapper = list.get(i);

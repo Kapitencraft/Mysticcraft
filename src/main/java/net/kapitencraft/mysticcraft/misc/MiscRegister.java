@@ -4,8 +4,10 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.api.Queue;
 import net.kapitencraft.mysticcraft.api.Reference;
 import net.kapitencraft.mysticcraft.bestiary.BestiaryManager;
+import net.kapitencraft.mysticcraft.content.ChainLightningHelper;
 import net.kapitencraft.mysticcraft.enchantments.HealthMendingEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.ModBowEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.armor.BasaltWalkerEnchantment;
@@ -87,6 +89,7 @@ import net.minecraftforge.fml.common.Mod;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 
 @Mod.EventBusSubscriber
@@ -169,7 +172,7 @@ public class MiscRegister {
     }
 
 
-    private static final ArrowQueueHelper helper = new ArrowQueueHelper();
+    private static final Queue<UUID> helper = Queue.create();
     public static final String OVERFLOW_MANA_ID = "overflowMana";
 
 
@@ -254,7 +257,9 @@ public class MiscRegister {
             for (Entity entity : serverLevel.getEntities().getAll()) {
                 ParticleAnimator.tickHelper(entity);
             }
-            helper.update((uuid)-> {
+            List<UUID> helperMembers = helper.getAll();
+            helper.startQueuing();
+            helperMembers.forEach(uuid -> {
                 Arrow arrow = (Arrow) serverLevel.getEntity(uuid);
                 if (arrow != null) {
                     CompoundTag arrowTag = arrow.getPersistentData();
@@ -264,6 +269,7 @@ public class MiscRegister {
                 }
             });
         }
+        ChainLightningHelper.tick();
     }
 
     @SubscribeEvent

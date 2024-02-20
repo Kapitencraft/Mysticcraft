@@ -5,6 +5,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.kapitencraft.mysticcraft.api.MapStream;
 import net.kapitencraft.mysticcraft.client.MysticcraftClient;
+import net.kapitencraft.mysticcraft.client.render.box.ResizeBox;
 import net.kapitencraft.mysticcraft.client.render.holder.MultiHolder;
 import net.kapitencraft.mysticcraft.client.render.holder.RenderHolder;
 import net.kapitencraft.mysticcraft.client.render.holder.SimpleHolder;
@@ -14,6 +15,7 @@ import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.misc.MiscRegister;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.StringRepresentable;
@@ -71,7 +73,7 @@ public class RenderController {
                 RenderType.BIG
         ));
         controller.addRenderer(UUID.fromString("cf4eb19d-aec8-4e65-8b43-c5e573b4561b"), new MultiHolder(
-                new PositionHolder(-90, 330),
+                new PositionHolder(-150, 220),
                 RenderType.SMALL,
                 -10,
                 List.of(
@@ -94,9 +96,13 @@ public class RenderController {
         event.registerAboveAll("main", MysticcraftClient.getInstance().renderController::render);
     }
 
+    public void fillRenderBoxes(Consumer<ResizeBox> acceptor, LocalPlayer player, Font font, float posX, float posY) {
+        this.map.values().stream().map(renderHolder -> renderHolder.newBox(posX, posY, player, font)).forEach(acceptor);
+    }
+
     private void render(ForgeGui forgeGui, PoseStack ignored, float partialTicks, int screenWidth, int screenHeight) {
-        int posX = screenWidth / 2;
-        int posY = screenHeight / 2;
+        float posX = screenWidth / 2f;
+        float posY = screenHeight / 2f;
         LocalPlayer entity = Minecraft.getInstance().player;
         if (entity != null) {
             map.forEach((uuid, renderHolder) -> renderHolder.render(posX, posY, entity));
@@ -180,20 +186,22 @@ public class RenderController {
     }
 
     public enum RenderType implements StringRepresentable {
-        BIG("big", stack -> {}, stack -> {}),
-        MEDIUM("medium", stack -> stack.scale(0.9f, 0.9f, 0.9f), stack -> stack.scale(1/0.9f, 1/0.9f, 1/0.9f)),
-        SMALL("small", stack -> stack.scale(0.65f, 0.65f, 0.65f), stack -> stack.scale(1/0.65f, 1/0.65f, 1/0.65f));
+        BIG("big", 1),
+        MEDIUM("medium", .9f),
+        SMALL("small", .65f);
 
         private static final StringRepresentable.EnumCodec<RenderType> CODEC = StringRepresentable.fromEnum(RenderType::values);
 
-        public final Consumer<PoseStack> onInit;
-        public final Consumer<PoseStack> onDone;
+        private final float size;
         private final String name;
 
-        RenderType(String name, Consumer<PoseStack> onInit, Consumer<PoseStack> onDone) {
-            this.onInit = onInit;
-            this.onDone = onDone;
+        RenderType(String name, float size) {
+            this.size = size;
             this.name = name;
+        }
+
+        public float getSize() {
+            return size;
         }
 
         @Override

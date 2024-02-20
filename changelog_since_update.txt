@@ -1,5 +1,6 @@
 added some new reforges;
 added soul_steel_alloys to Nether fortress chests;
+added a change-gui-locations screen (wip)
 added Requirements:
 Elytras now require 5 killed Enderdragons to be used;
 implemented requirements disabling damaging, mining or using items (+spells);
@@ -12,8 +13,10 @@ compat with jei:
 added Armor Recipe to JEI;
 added Upgrade Recipe to JEI;
 fixed JEI not showing Frozen-Blaze armor recipe;
+fixed enchanted items crashing game;
 
 fixed Tank-Enchantment's scale being extremely high;
+fixed Chain lightnings crashing the game
 fixed Cutout not being transparent;
 fixed Star-able items not being able to be upgrade from;
 fixed wither Drops dropping from any mob;
