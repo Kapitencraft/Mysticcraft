@@ -268,6 +268,7 @@ public class MiscRegister {
                     helper.remove(uuid);
                 }
             });
+            helper.stopQueuing();
         }
         ChainLightningHelper.tick();
     }

@@ -13,15 +13,18 @@ public class InteractiveBox extends RenderBox {
     }
 
 
-    public boolean isClicked(float x, float y) {
+    public boolean isHovering(double x, double y) {
         return check(start.x, finish.x, x) && check(start.y, finish.y, y);
     }
 
-    private static boolean check(float s, float f, float t) {
+    private static boolean check(float s, float f, double t) {
         return s < f ? s < t && t < f : s > t && t > f;
     }
 
-    public void click() {
+    public void click(double x, double y) {
+    }
+
+    public void release() {
 
     }
 }

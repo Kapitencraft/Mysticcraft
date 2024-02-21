@@ -5,7 +5,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.kapitencraft.mysticcraft.api.MapStream;
 import net.kapitencraft.mysticcraft.client.MysticcraftClient;
-import net.kapitencraft.mysticcraft.client.render.box.ResizeBox;
+import net.kapitencraft.mysticcraft.client.render.box.InteractiveBox;
 import net.kapitencraft.mysticcraft.client.render.holder.MultiHolder;
 import net.kapitencraft.mysticcraft.client.render.holder.RenderHolder;
 import net.kapitencraft.mysticcraft.client.render.holder.SimpleHolder;
@@ -36,15 +36,15 @@ import java.util.UUID;
 import java.util.function.Consumer;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
-public class RenderController {
-    private static final Codec<RenderController> CODEC = RecordCodecBuilder.create(
+public class OverlayRenderer {
+    private static final Codec<OverlayRenderer> CODEC = RecordCodecBuilder.create(
             renderControllerInstance -> renderControllerInstance.group(
-                    Codec.unboundedMap(IOHelper.UUID_CODEC, PositionHolder.CODEC).fieldOf("storage").forGetter(RenderController::getLocations)
-            ).apply(renderControllerInstance, RenderController::fromCodec)
+                    Codec.unboundedMap(IOHelper.UUID_CODEC, PositionHolder.CODEC).fieldOf("storage").forGetter(OverlayRenderer::getLocations)
+            ).apply(renderControllerInstance, OverlayRenderer::fromCodec)
     );
 
-    private static RenderController fromCodec(Map<UUID, PositionHolder> map) {
-        RenderController controller = new RenderController();
+    private static OverlayRenderer fromCodec(Map<UUID, PositionHolder> map) {
+        OverlayRenderer controller = new OverlayRenderer();
         controller.loadedPositions.putAll(map);
         return controller;
     }
@@ -58,15 +58,15 @@ public class RenderController {
 
     private static final File PERSISTENT_FILE = new File(MysticcraftClient.CLIENT_FILES, "gui-locations.json");
 
-    public static RenderController load() {
-        return IOHelper.loadFile(PERSISTENT_FILE, CODEC, RenderController::new);
+    public static OverlayRenderer load() {
+        return IOHelper.loadFile(PERSISTENT_FILE, CODEC, OverlayRenderer::new);
     }
 
     private final Map<UUID, RenderHolder> map = new HashMap<>();
     private final Map<UUID, PositionHolder> loadedPositions = new HashMap<>();
 
     static {
-        RenderController controller = MysticcraftClient.getInstance().renderController;
+        OverlayRenderer controller = MysticcraftClient.getInstance().renderController;
         controller.addRenderer(UUID.fromString("589c7ac3-4dc1-487b-b4b8-90524ce97bdc"), new SimpleHolder(
                 new PositionHolder(-203, -116),
                 player -> Component.literal(MathHelper.round(player.getAttributeValue(ModAttributes.MANA.get()), 1) + " [+" + MathHelper.round(player.getPersistentData().getDouble(MiscRegister.OVERFLOW_MANA_ID), 1) + " Overflow] §r / §1" + player.getAttributeValue(ModAttributes.MAX_MANA.get()) + " (+" + MathHelper.round(player.getPersistentData().getDouble("manaRegen") * 20, 2) + "/s)").withStyle(ChatFormatting.BLUE),
@@ -96,7 +96,7 @@ public class RenderController {
         event.registerAboveAll("main", MysticcraftClient.getInstance().renderController::render);
     }
 
-    public void fillRenderBoxes(Consumer<ResizeBox> acceptor, LocalPlayer player, Font font, float posX, float posY) {
+    public void fillRenderBoxes(Consumer<InteractiveBox> acceptor, LocalPlayer player, Font font, float posX, float posY) {
         this.map.values().stream().map(renderHolder -> renderHolder.newBox(posX, posY, player, font)).forEach(acceptor);
     }
 

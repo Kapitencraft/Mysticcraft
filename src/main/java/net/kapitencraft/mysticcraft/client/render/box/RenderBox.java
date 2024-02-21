@@ -23,7 +23,7 @@ public class RenderBox {
         return cursorType;
     }
 
-    public void render() {
+    public void render(double mouseX, double mouseY) {
         Gui.fill(stack, (int) start.x, (int) start.y, (int) finish.x, (int) finish.y, color);
     }
 }
