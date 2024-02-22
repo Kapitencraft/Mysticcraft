@@ -3,8 +3,8 @@ package net.kapitencraft.mysticcraft.gui.screen;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.kapitencraft.mysticcraft.client.MysticcraftClient;
 import net.kapitencraft.mysticcraft.client.render.OverlayRenderer;
-import net.kapitencraft.mysticcraft.client.render.box.InteractiveBox;
-import net.kapitencraft.mysticcraft.client.render.box.ScreenDebugBox;
+import net.kapitencraft.mysticcraft.client.render.overlay.box.InteractiveBox;
+import net.kapitencraft.mysticcraft.client.render.overlay.box.ScreenDebugBox;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
@@ -40,8 +40,10 @@ public class ChangeGUILocationsScreen extends Screen {
     }
 
     @Override
-    public boolean mouseReleased(double p_94722_, double p_94723_, int p_94724_) {
-        return super.mouseReleased(p_94722_, p_94723_, p_94724_);
+    public boolean mouseReleased(double x, double y, int z) {
+        List<InteractiveBox> list = boxes.stream().filter(interactiveBox -> interactiveBox.isHovering(x, y)).toList();
+        list.forEach(box -> box.release(x, y));
+        return list.size() > 0;
     }
 
     @Override

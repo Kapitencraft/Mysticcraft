@@ -5,10 +5,11 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.kapitencraft.mysticcraft.api.MapStream;
 import net.kapitencraft.mysticcraft.client.MysticcraftClient;
-import net.kapitencraft.mysticcraft.client.render.box.InteractiveBox;
-import net.kapitencraft.mysticcraft.client.render.holder.MultiHolder;
-import net.kapitencraft.mysticcraft.client.render.holder.RenderHolder;
-import net.kapitencraft.mysticcraft.client.render.holder.SimpleHolder;
+import net.kapitencraft.mysticcraft.client.render.overlay.PositionHolder;
+import net.kapitencraft.mysticcraft.client.render.overlay.box.InteractiveBox;
+import net.kapitencraft.mysticcraft.client.render.overlay.holder.MultiHolder;
+import net.kapitencraft.mysticcraft.client.render.overlay.holder.RenderHolder;
+import net.kapitencraft.mysticcraft.client.render.overlay.holder.SimpleHolder;
 import net.kapitencraft.mysticcraft.helpers.IOHelper;
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
@@ -68,12 +69,12 @@ public class OverlayRenderer {
     static {
         OverlayRenderer controller = MysticcraftClient.getInstance().renderController;
         controller.addRenderer(UUID.fromString("589c7ac3-4dc1-487b-b4b8-90524ce97bdc"), new SimpleHolder(
-                new PositionHolder(-203, -116),
+                new PositionHolder(0.1f, 10, PositionHolder.Alignment.TOP),
                 player -> Component.literal(MathHelper.round(player.getAttributeValue(ModAttributes.MANA.get()), 1) + " [+" + MathHelper.round(player.getPersistentData().getDouble(MiscRegister.OVERFLOW_MANA_ID), 1) + " Overflow] §r / §1" + player.getAttributeValue(ModAttributes.MAX_MANA.get()) + " (+" + MathHelper.round(player.getPersistentData().getDouble("manaRegen") * 20, 2) + "/s)").withStyle(ChatFormatting.BLUE),
                 RenderType.BIG
         ));
         controller.addRenderer(UUID.fromString("cf4eb19d-aec8-4e65-8b43-c5e573b4561b"), new MultiHolder(
-                new PositionHolder(-150, 220),
+                new PositionHolder(0.3f, 10, PositionHolder.Alignment.BOTTOM),
                 RenderType.SMALL,
                 -10,
                 List.of(
@@ -114,75 +115,6 @@ public class OverlayRenderer {
         if (loadedPositions.containsKey(uuid))
             holder.getPos().copy(loadedPositions.get(uuid));
         map.put(uuid, holder);
-    }
-
-
-    public static class PositionHolder {
-        private static final Codec<PositionHolder> CODEC = RecordCodecBuilder.create(positionHolderInstance ->
-                positionHolderInstance.group(
-                        Codec.FLOAT.fieldOf("x").forGetter(PositionHolder::getX),
-                        Codec.FLOAT.fieldOf("y").forGetter(PositionHolder::getY),
-                        Codec.FLOAT.optionalFieldOf("sX", 1f).forGetter(PositionHolder::getSX),
-                        Codec.FLOAT.optionalFieldOf("sY", 1f).forGetter(PositionHolder::getSY)
-                ).apply(positionHolderInstance, PositionHolder::new)
-        );
-        private float x;
-        private float y;
-        private float sX;
-        private float sY;
-
-        public PositionHolder(float x, float y) {
-            this.x = x;
-            this.y = y;
-            this.sX = 1;
-            this.sY = 1;
-        }
-
-        public PositionHolder(float x, float y, float sX, float sY) {
-            this(x, y);
-            this.sX = sX;
-            this.sY = sY;
-        }
-
-        public void setX(float x) {
-            this.x = x;
-        }
-
-        public void setY(float y) {
-            this.y = y;
-        }
-
-        public void setSX(float sX) {
-            this.sX = sX;
-        }
-
-        public void setSY(float sY) {
-            this.sY = sY;
-        }
-
-        public float getX() {
-            return x;
-        }
-
-        public float getY() {
-            return y;
-        }
-
-        public PositionHolder copy(PositionHolder other) {
-            this.x = other.x;
-            this.y = other.y;
-            this.sX = other.sX;
-            this.sY = other.sY;
-            return this;
-        }
-
-        public float getSX() {
-            return sX;
-        }
-
-        public float getSY() {
-            return sY;
-        }
     }
 
     public enum RenderType implements StringRepresentable {

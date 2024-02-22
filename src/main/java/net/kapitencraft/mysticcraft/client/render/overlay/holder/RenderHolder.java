@@ -1,8 +1,9 @@
-package net.kapitencraft.mysticcraft.client.render.holder;
+package net.kapitencraft.mysticcraft.client.render.overlay.holder;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.kapitencraft.mysticcraft.client.render.OverlayRenderer;
-import net.kapitencraft.mysticcraft.client.render.box.ResizeBox;
+import net.kapitencraft.mysticcraft.client.render.overlay.PositionHolder;
+import net.kapitencraft.mysticcraft.client.render.overlay.box.ResizeBox;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.player.LocalPlayer;
@@ -10,11 +11,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.Vec2;
 
 public abstract class RenderHolder {
-    private final OverlayRenderer.PositionHolder pos;
+    private final PositionHolder pos;
     protected final PoseStack poseStack = new PoseStack();
     private final OverlayRenderer.RenderType type;
 
-    public RenderHolder(OverlayRenderer.PositionHolder pos, OverlayRenderer.RenderType type) {
+    public RenderHolder(PositionHolder pos, OverlayRenderer.RenderType type) {
         this.pos = pos;
         this.type = type;
         if (type.getSize() != 1) this.poseStack.scale(type.getSize(), type.getSize(), 1);
@@ -26,7 +27,7 @@ public abstract class RenderHolder {
     }
 
     public Vec2 getLoc(float screenX, float screenY) {
-        return new Vec2(screenX + pos.getX(), screenY + pos.getY());
+        return pos.getLoc(screenX, screenY);
     }
 
     protected void renderString(Component toWrite, float x, float y) {
@@ -46,7 +47,7 @@ public abstract class RenderHolder {
 
     public abstract void render(float posX, float posY, LocalPlayer player);
 
-    public OverlayRenderer.PositionHolder getPos() {
+    public PositionHolder getPos() {
         return pos;
     }
 }

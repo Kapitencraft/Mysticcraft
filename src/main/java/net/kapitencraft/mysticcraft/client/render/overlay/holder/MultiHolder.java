@@ -1,6 +1,7 @@
-package net.kapitencraft.mysticcraft.client.render.holder;
+package net.kapitencraft.mysticcraft.client.render.overlay.holder;
 
 import net.kapitencraft.mysticcraft.client.render.OverlayRenderer;
+import net.kapitencraft.mysticcraft.client.render.overlay.PositionHolder;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
@@ -12,7 +13,7 @@ import java.util.function.Function;
 public class MultiHolder extends RenderHolder {
     private final float yChange;
     private final List<Function<LocalPlayer, Component>> list;
-    public MultiHolder(OverlayRenderer.PositionHolder pos, OverlayRenderer.RenderType type, float yChange, List<Function<LocalPlayer, Component>> allText) {
+    public MultiHolder(PositionHolder pos, OverlayRenderer.RenderType type, float yChange, List<Function<LocalPlayer, Component>> allText) {
         super(pos, type);
         this.yChange = yChange;
         this.list = allText;

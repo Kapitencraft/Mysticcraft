@@ -1,6 +1,7 @@
-package net.kapitencraft.mysticcraft.client.render.holder;
+package net.kapitencraft.mysticcraft.client.render.overlay.holder;
 
 import net.kapitencraft.mysticcraft.client.render.OverlayRenderer;
+import net.kapitencraft.mysticcraft.client.render.overlay.PositionHolder;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
@@ -10,7 +11,7 @@ import java.util.function.Function;
 
 public class SimpleHolder extends RenderHolder {
     private final Function<LocalPlayer, Component> mapper;
-    public SimpleHolder(OverlayRenderer.PositionHolder pos, Function<LocalPlayer, Component> mapper, OverlayRenderer.RenderType type) {
+    public SimpleHolder(PositionHolder pos, Function<LocalPlayer, Component> mapper, OverlayRenderer.RenderType type) {
         super(pos, type);
         this.mapper = mapper;
     }

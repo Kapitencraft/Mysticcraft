@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.client.render.box;
+package net.kapitencraft.mysticcraft.client.render.overlay.box;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.world.phys.Vec2;
@@ -24,7 +24,6 @@ public class InteractiveBox extends RenderBox {
     public void click(double x, double y) {
     }
 
-    public void release() {
-
+    public void release(double x, double y) {
     }
 }

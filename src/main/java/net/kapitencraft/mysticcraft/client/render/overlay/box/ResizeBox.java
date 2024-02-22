@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.client.render.box;
+package net.kapitencraft.mysticcraft.client.render.overlay.box;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.kapitencraft.mysticcraft.helpers.CollectionHelper;
@@ -59,11 +59,14 @@ public class ResizeBox extends InteractiveBox {
 
     @Override
     public void click(double x, double y) {
-        List<InteractiveBox> list = boxes.stream().filter(box -> box.isHovering(x, y)).findFirst()
-                .ifPresentOrElse();
-        if (!list.isEmpty()) {
-
-        }
+        boxes.stream().filter(box -> box.isHovering(x, y)).findFirst()
+                .ifPresentOrElse(box -> this.setActive(box, x, y), ()-> {});
         super.click(x, y);
+    }
+
+    private void setActive(InteractiveBox box, double dragStartX, double dragStartY) {
+        this.active = box;
+        this.dragStartX = dragStartX;
+        this.dragStartY = dragStartY;
     }
 }

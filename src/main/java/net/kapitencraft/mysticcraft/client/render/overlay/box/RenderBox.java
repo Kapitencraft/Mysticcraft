@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.client.render.box;
+package net.kapitencraft.mysticcraft.client.render.overlay.box;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.Gui;
