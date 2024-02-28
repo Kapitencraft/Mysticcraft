@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.kapitencraft.mysticcraft.requirements.Requirement;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -16,12 +17,15 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 
 import java.util.List;
 import java.util.function.Consumer;
 
+@OnlyIn(Dist.CLIENT)
 public class ClientHelper {
     public static Screen postCommandScreen = null;
 
@@ -95,5 +99,9 @@ public class ClientHelper {
             reqs.stream().map(Requirement::display).forEach(reqList::append);
             consumer.accept(Component.translatable("item.requires", reqList).withStyle(ChatFormatting.RED));
         }
+    }
+
+    public static boolean hideGui() {
+        return Minecraft.getInstance().options.hideGui;
     }
 }

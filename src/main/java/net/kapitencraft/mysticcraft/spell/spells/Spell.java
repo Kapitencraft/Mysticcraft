@@ -3,6 +3,7 @@ package net.kapitencraft.mysticcraft.spell.spells;
 import net.kapitencraft.mysticcraft.item.capability.spell.ISpellItem;
 import net.kapitencraft.mysticcraft.item.item_bonus.Bonus;
 import net.kapitencraft.mysticcraft.spell.Element;
+import net.kapitencraft.mysticcraft.spell.SpellExecutionFailedException;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -16,7 +17,7 @@ public interface Spell extends Bonus {
     Rarity getRarity();
     String getCastingType();
     String getName();
-    boolean execute(LivingEntity living, ItemStack stack);
+    void execute(LivingEntity living, ItemStack stack) throws SpellExecutionFailedException;
     List<Component> getDescription();
     boolean canApply(Item item);
     void addDescription(List<Component> list, ISpellItem item, ItemStack ignoredStack, Player player);

@@ -1,23 +1,21 @@
 package net.kapitencraft.mysticcraft.item.combat.weapon.melee.dagger;
 
-import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.item.capability.spell.ISpellItem;
 import net.kapitencraft.mysticcraft.item.capability.spell.SpellHelper;
 import net.kapitencraft.mysticcraft.item.item_bonus.ExtraBonus;
 import net.kapitencraft.mysticcraft.item.item_bonus.IItemBonusItem;
 import net.kapitencraft.mysticcraft.item.item_bonus.PieceBonus;
 import net.kapitencraft.mysticcraft.item.item_bonus.piece.ShadowDaggerBonus;
-import net.kapitencraft.mysticcraft.item.misc.ModTiers;
 import net.kapitencraft.mysticcraft.misc.ModRarities;
 import net.kapitencraft.mysticcraft.spell.SpellSlot;
 import net.kapitencraft.mysticcraft.spell.Spells;
 import org.jetbrains.annotations.Nullable;
 
-public class ShadowDagger extends ModDaggerItem implements IItemBonusItem, ISpellItem {
+public class ShadowDagger extends DarkDagger implements IItemBonusItem, ISpellItem {
     private static final ShadowDaggerBonus BONUS = new ShadowDaggerBonus();
 
     public ShadowDagger() {
-        super(ModTiers.SHADOW_TIER, 3, MiscHelper.rarity(ModRarities.LEGENDARY));
+        super(ModRarities.LEGENDARY, 3);
     }
 
     @Override

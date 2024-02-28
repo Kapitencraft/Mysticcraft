@@ -237,7 +237,7 @@ public class MathHelper {
         double incremental = Math.sin(halfSpan) * 0.1;
         List<Vec3> lineOfSight = lineOfSight(sourceRot, sourcePos, range, 0.1);
         List<T> toReturn = new ArrayList<>();
-        lineOfSight.stream().collect(CollectorHelper.toMapStream(CollectionHelper.reversedBiMap(lineOfSight, List::indexOf), i -> i)).forEach((integer, vec3) -> {
+        lineOfSight.stream().collect(CollectorHelper.createMapForKeys(CollectionHelper.reversedBiMap(lineOfSight, List::indexOf))).forEach((integer, vec3) -> {
             toReturn.addAll(getEntitiesAround(tClass, level, vec3, incremental * integer).stream().filter(entity -> !toReturn.contains(entity)).toList());
         });
         return toReturn;

@@ -6,7 +6,11 @@ import net.minecraft.world.item.Rarity;
 
 public class DarkDagger extends ModDaggerItem {
     public DarkDagger() {
-        super(ModTiers.SHADOW_TIER, 1, MiscHelper.rarity(Rarity.EPIC));
+        this(Rarity.EPIC, 1);
+    }
+
+    protected DarkDagger(Rarity rarity, int damage) {
+        super(ModTiers.SHADOW_TIER, damage, MiscHelper.rarity(rarity));
     }
 
     @Override

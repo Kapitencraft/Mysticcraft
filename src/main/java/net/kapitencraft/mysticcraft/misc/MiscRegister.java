@@ -37,6 +37,7 @@ import net.kapitencraft.mysticcraft.misc.cooldown.Cooldowns;
 import net.kapitencraft.mysticcraft.misc.particle_help.ParticleAnimator;
 import net.kapitencraft.mysticcraft.requirements.Requirement;
 import net.kapitencraft.mysticcraft.tags.ModBlockTags;
+import net.kapitencraft.mysticcraft.tags.ModItemTags;
 import net.kapitencraft.mysticcraft.villagers.ModVillagers;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -279,6 +280,9 @@ public class MiscRegister {
             if (arrow.getOwner() instanceof LivingEntity living) {
                 ItemStack bow = living.getMainHandItem();
                 CompoundTag arrowTag = arrow.getPersistentData();
+                if (bow.is(ModItemTags.ENDER_HITTABLE)) {
+                    arrowTag.putBoolean("HitsEnderMan", true);
+                }
                 for (Enchantment enchantment : bow.getAllEnchantments().keySet()) {
                     if (enchantment instanceof ModBowEnchantment bowEnchantment) {
                         arrowTag.put(bowEnchantment.getTagName(), bowEnchantment.write(bow.getEnchantmentLevel(enchantment), bow, living, arrow));

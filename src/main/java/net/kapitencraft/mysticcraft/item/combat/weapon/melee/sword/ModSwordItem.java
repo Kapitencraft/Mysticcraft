@@ -7,6 +7,8 @@ import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.item.misc.IModItem;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -29,6 +31,9 @@ public abstract class ModSwordItem extends SwordItem implements IModItem {
     public abstract double getStrenght();
     public abstract double getCritDamage();
 
+    public ParticleOptions getSweepParticle(ItemStack stack) {
+        return ParticleTypes.SWEEP_ATTACK;
+    }
     @Override
     public TabGroup getGroup() {
         return SWORD_GROUP;

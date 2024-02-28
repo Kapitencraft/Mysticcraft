@@ -10,7 +10,7 @@ import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
 
-import java.util.List;
+import java.util.Comparator;
 
 public class AimEnchantment extends ModBowEnchantment implements IWeaponEnchantment {
     public AimEnchantment() {
@@ -32,13 +32,10 @@ public class AimEnchantment extends ModBowEnchantment implements IWeaponEnchantm
     @Override
     public float execute(LivingEntity target, CompoundTag tag, ExecuteType type, float oldDamage, AbstractArrow arrow) {
         if (type == ExecuteType.TICK) {
-            List<LivingEntity> livingEntities = MathHelper.getLivingAround(arrow, tag.getInt("Level"));
-            for (LivingEntity living : livingEntities) {
-                if (arrow.getOwner() != living && !living.isDeadOrDying()) {
-                    arrow.setDeltaMovement(MathHelper.setLength(living.position().subtract(arrow.position()), arrow.getDeltaMovement().length()));
-                    break;
-                }
-            }
+            MathHelper.getLivingAround(arrow, tag.getInt("Level") * 2).stream()
+                    .filter(living -> arrow.getOwner() != living && !living.isDeadOrDying())
+                    .sorted(Comparator.comparingDouble(value -> value.distanceTo(arrow)))
+                    .findAny().ifPresent(living -> arrow.setDeltaMovement(MathHelper.setLength(living.position().subtract(arrow.position()), arrow.getDeltaMovement().length())));
         }
         return oldDamage;
     }

@@ -111,7 +111,7 @@ public interface ModItems {
     RegistryObject<SpellScrollItem> SPELL_SCROLL = register("spell_scroll", SpellScrollItem::new, null);
     RegistryObject<MaterialModItem> ORB_OF_CONSUMPTION = registerNonStackableMaterial("orb_of_consumption", Rarity.EPIC, TabGroup.MATERIAL);
     RegistryObject<MaterialModItem> NECRONS_HANDLE = registerNonStackableMaterial("necrons_handle", ModRarities.LEGENDARY, TabGroup.MATERIAL);
-    RegistryObject<SoulboundCore> SOULBOUND_CORE = register("soulbound_core", SoulboundCore::new, TabGroup.MATERIAL);
+    RegistryObject<SouldbindNucleus> SOULBOUND_CORE = register("soulbound_nucleus", SouldbindNucleus::new, TabGroup.MATERIAL);
     RegistryObject<UnbreakingCore> UNBREAKING_CORE = register("unbreaking_core", UnbreakingCore::new, TabGroup.MATERIAL);
     RegistryObject<MaterialModItem> MANA_STEEL_INGOT = registerMaterial("mana_steel_ingot", Rarity.RARE, TabGroup.MATERIAL);
     RegistryObject<MaterialModItem> UPPER_BlADE_MS = registerNonStackableMaterial("upper_mana_steel_sword_part", Rarity.RARE, TabGroup.MATERIAL);

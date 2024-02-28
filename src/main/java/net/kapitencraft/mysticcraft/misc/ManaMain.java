@@ -22,16 +22,15 @@ import static net.kapitencraft.mysticcraft.misc.MiscRegister.OVERFLOW_MANA_ID;
 @Mod.EventBusSubscriber()
 public class ManaMain {
 
+    @SuppressWarnings("all")
     @SubscribeEvent
     public static void manaChange(TickEvent.PlayerTickEvent event) {
         Player player = event.player;
         AttributeInstance maxManaInstance = player.getAttribute(ModAttributes.MAX_MANA.get());
-        AttributeInstance manaInstance = player.getAttribute(ModAttributes.MANA.get());
-        if (maxManaInstance == null || manaInstance == null) {
-            return;
+        if (!isMagical(player)) {
+            throw new IllegalStateException("detected Player unable to use mana, expecting broken mod-state!");
         }
         double maxMana = maxManaInstance.getValue();
-        double mana = manaInstance.getBaseValue();
         double intel = player.getAttributeValue(ModAttributes.INTELLIGENCE.get());
         double curManaRegen = player.getAttributeValue(ModAttributes.MANA_REGEN.get());
         double manaRegen = maxMana / 500 * (1 + curManaRegen / 100);
@@ -48,25 +47,16 @@ public class ManaMain {
                 }
             }
         }
-        if (mana < maxMana) {
-             mana += manaRegen;
-        }
-        if (mana > maxMana) {
-            mana = maxMana;
-        }
+        growMana(player, manaRegen);
         maxMana = 100 + intel;
 
-        manaInstance.setBaseValue(mana);
         maxManaInstance.setBaseValue(maxMana);
     }
 
     public static boolean consumeMana(LivingEntity living, double manaToConsume) {
-        if (manaToConsume <= 0) return true;
+        if (!hasMana(living, manaToConsume)) return false;
         double mana = getMana(living);
         double overflow = getOverflow(living);
-        if (mana + overflow < manaToConsume) {
-            return false;
-        }
         if (overflow > manaToConsume) {
             overflow -= manaToConsume;
             manaToConsume = 0;
@@ -82,8 +72,16 @@ public class ManaMain {
         return true;
     }
 
+    public static boolean hasMana(LivingEntity living, double manaToConsume) {
+        if (manaToConsume <= 0) return true;
+        if (!isMagical(living)) return false;
+        double mana = getMana(living);
+        double overflow = getOverflow(living);
+        return mana + overflow >= manaToConsume;
+    }
+
     public static double getOverflow(LivingEntity living) {
-        return living.getPersistentData().getDouble(OVERFLOW_MANA_ID);
+        return isMagical(living) ? living.getPersistentData().getDouble(OVERFLOW_MANA_ID) : 0;
     }
 
     public static double getMana(LivingEntity living) {
@@ -93,8 +91,17 @@ public class ManaMain {
     public static void setMana(LivingEntity living, double mana) {
         AttributeInstance instance = living.getAttribute(ModAttributes.MANA.get());
         if (instance != null) {
-            instance.setBaseValue(mana);
+            instance.setBaseValue(Math.min(mana, living.getAttributeValue(ModAttributes.MAX_MANA.get())));
         }
+    }
+
+    public static boolean growMana(LivingEntity living, double mana) {
+        setMana(living, getMana(living) + mana);
+        return isMagical(living);
+    }
+
+    public static boolean isMagical(LivingEntity living) {
+        return living.getAttribute(ModAttributes.MANA.get()) != null && living.getAttribute(ModAttributes.MAX_MANA.get()) != null;
     }
 
     public static void setOverflow(LivingEntity living, double overflow) {

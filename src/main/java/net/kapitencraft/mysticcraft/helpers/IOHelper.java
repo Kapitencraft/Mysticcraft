@@ -84,7 +84,7 @@ public class IOHelper {
     }
 
     public static int increaseIntOnlyAbove0(CompoundTag tag, String name, int i) {
-        if (tag.getInt(name) > 0) {
+        if (checkForIntAbove0(tag, name)) {
             return increaseIntegerTagValue(tag, name, i);
         }
         return tag.getInt(name);

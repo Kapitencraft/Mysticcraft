@@ -24,15 +24,14 @@ import net.kapitencraft.mysticcraft.item.item_bonus.IItemBonusItem;
 import net.kapitencraft.mysticcraft.item.misc.CreativeItems;
 import net.kapitencraft.mysticcraft.item.misc.IModItem;
 import net.kapitencraft.mysticcraft.item.misc.SoulbindHelper;
+import net.kapitencraft.mysticcraft.tags.ModItemTags;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.*;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -49,7 +48,6 @@ import org.spongepowered.asm.mixin.*;
 
 import javax.annotation.Nullable;
 import java.util.*;
-import java.util.function.Predicate;
 
 import static net.minecraft.world.item.ItemStack.ATTRIBUTE_MODIFIER_FORMAT;
 
@@ -68,17 +66,7 @@ public abstract class ItemStackClientMixin {
 
     @Shadow protected abstract int getHideFlags();
 
-    @Shadow public abstract ItemStack copy();
-
-    @Shadow public abstract boolean is(TagKey<Item> p_204118_);
-
-    @Shadow public abstract boolean is(Item p_150931_);
-
-    @Shadow public abstract boolean is(Predicate<Holder<Item>> p_220168_);
-
-    @Shadow @Final @Deprecated private Item item;
-
-    @Shadow public abstract boolean isFramed();
+    @Shadow @Final private Item item;
 
     @Unique
     private static final Style LORE_STYLE = Style.EMPTY.withColor(ChatFormatting.DARK_PURPLE).withItalic(true);
@@ -116,6 +104,10 @@ public abstract class ItemStackClientMixin {
             } else {
                 item.appendHoverText(self(), player == null ? null : player.level, list, tooltipFlag);
             }
+        }
+        if (self().is(ModItemTags.ENDER_HITTABLE)) {
+            list.add(Component.translatable("tooltip.can_hit_enderman").withStyle(ChatFormatting.RED));
+            list.add(CommonComponents.EMPTY);
         }
         if (item instanceof ISpellItem spellItem) {
             spellItem.appendDisplay(list, self(), player);

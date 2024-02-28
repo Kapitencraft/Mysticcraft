@@ -19,7 +19,8 @@ import org.joml.Vector3f;
 
 public interface ModParticleTypes {
     DeferredRegister<ParticleType<?>> REGISTRY = MysticcraftMod.makeRegistry(ForgeRegistries.PARTICLE_TYPES);
-    RegistryObject<ParticleType<?>> FIRE_NORMAL = REGISTRY.register("fire_normal", ()-> new SimpleParticleType(true));
+    RegistryObject<SimpleParticleType> FIRE_NORMAL = REGISTRY.register("fire_normal", ()-> new SimpleParticleType(true));
+    RegistryObject<SimpleParticleType> SHADOW_SWEEP = REGISTRY.register("shadow_sweep", ()-> new SimpleParticleType(true));
     RegistryObject<MagicCircleParticleType> MAGIC_CIRCLE = REGISTRY.register("magic_circle", ()-> new MagicCircleParticleType(0));
     RegistryObject<DamageIndicatorParticleOptions> DAMAGE_INDICATOR = REGISTRY.register("damage_indicator", () -> new DamageIndicatorParticleOptions(TextHelper.damageIndicatorCoder("heal"), 1, 1));
     RegistryObject<CircleParticleOptions> CIRCLE = REGISTRY.register("circle_particle", () -> new CircleParticleOptions(new Vector3f(1, 0, 0), 4, 7));

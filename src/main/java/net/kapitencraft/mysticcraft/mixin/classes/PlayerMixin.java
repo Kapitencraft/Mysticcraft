@@ -3,12 +3,13 @@ package net.kapitencraft.mysticcraft.mixin.classes;
 
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.init.ModEnchantments;
+import net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword.ModSwordItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.QuiverItem;
 import net.kapitencraft.mysticcraft.item.material.containable.ContainableHolder;
 import net.kapitencraft.mysticcraft.misc.HealingHelper;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.Entity;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
@@ -26,6 +27,7 @@ import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
@@ -36,7 +38,7 @@ public abstract class PlayerMixin extends LivingEntity {
 
     @Shadow @Final private Inventory inventory;
 
-    @Shadow public abstract InteractionResult interactOn(Entity p_36158_, InteractionHand p_36159_);
+    @Shadow public abstract boolean mayBuild();
 
     @Shadow public abstract void remove(RemovalReason p_150097_);
 
@@ -97,5 +99,14 @@ public abstract class PlayerMixin extends LivingEntity {
                 return ForgeHooks.getProjectile(this, stack, own().getAbilities().instabuild ? new ItemStack(Items.ARROW) : ItemStack.EMPTY);
             }
         }
+    }
+
+    @Redirect(method = "sweepAttack", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;sendParticles(Lnet/minecraft/core/particles/ParticleOptions;DDDIDDDD)I"))
+    private int sendParticles(ServerLevel level, ParticleOptions options, double d, double d1, double d2, int i, double d3, double d4, double d5, double d6) {
+        ItemStack mainHand = own().getMainHandItem();
+        if (mainHand.getItem() instanceof ModSwordItem modSwordItem) {
+            return level.sendParticles(modSwordItem.getSweepParticle(mainHand), d, d1, d2, i, d3, d4, d5, d6);
+        }
+        return level.sendParticles(ParticleTypes.SWEEP_ATTACK, d, d1, d2, i, d3, d4, d5, d6);
     }
 }

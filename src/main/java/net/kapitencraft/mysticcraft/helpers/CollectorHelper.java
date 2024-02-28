@@ -25,8 +25,8 @@ public class CollectorHelper {
         }, List::stream, Collections.emptySet());
     }
 
-    public static <T, J, K> Collector<T, ?, MapStream<J, K>> toMapStream(Function<T, J> keyMapper, Function<T, K> valueMapper) {
-        return copyWithFinish(Collectors.toMap(keyMapper, valueMapper), MapStream::of);
+    public static <T, J, K> Collector<T, ?, MapStream<J, K>> toMapStream(Collector<T, ?, Map<J, K>> in) {
+        return copyWithFinish((Collector<T, Map<J, K>, Map<J, K>>) in, MapStream::of);
     }
 
     public static <A, B, C, D> Collector<A, B, D> copyWithFinish(Collector<A, B, C> collector, Function<C, D> finish) {

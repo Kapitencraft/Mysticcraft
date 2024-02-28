@@ -1,7 +1,6 @@
 package net.kapitencraft.mysticcraft.client.render.overlay.holder;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.kapitencraft.mysticcraft.client.render.OverlayRenderer;
 import net.kapitencraft.mysticcraft.client.render.overlay.PositionHolder;
 import net.kapitencraft.mysticcraft.client.render.overlay.box.ResizeBox;
 import net.minecraft.client.Minecraft;
@@ -13,21 +12,26 @@ import net.minecraft.world.phys.Vec2;
 public abstract class RenderHolder {
     private final PositionHolder pos;
     protected final PoseStack poseStack = new PoseStack();
-    private final OverlayRenderer.RenderType type;
 
-    public RenderHolder(PositionHolder pos, OverlayRenderer.RenderType type) {
+    public RenderHolder(PositionHolder pos) {
         this.pos = pos;
-        this.type = type;
-        if (type.getSize() != 1) this.poseStack.scale(type.getSize(), type.getSize(), 1);
-        this.poseStack.scale(pos.getSX(), pos.getSY(), 1);
-    }
-
-    private float getSizeScale() {
-        return 1 / this.type.getSize();
+        this.poseStack.scale(pos.getXScale(), pos.getYScale(), 0);
     }
 
     public Vec2 getLoc(float screenX, float screenY) {
         return pos.getLoc(screenX, screenY);
+    }
+
+    public void scale(float x, float y) {
+        this.poseStack.scale(x, y, 0);
+    }
+
+    public void move(Vec2 toAdd) {
+        this.pos.add(toAdd);
+    }
+
+    protected Vec2 getVisualLoc(float screenX, float screenY) {
+        return pos.getVisualLoc(screenX, screenY);
     }
 
     protected void renderString(Component toWrite, float x, float y) {
@@ -38,7 +42,7 @@ public abstract class RenderHolder {
         Vec2 loc = this.getLoc(posX, posY);
         float width = this.getWidth(player, font);
         float height = this.getHeight(player, font);
-        return new ResizeBox(loc.add(-1f), loc.add(new Vec2(width, height)).add(1f), this.poseStack, 1.5f * getSizeScale(), getSizeScale());
+        return new ResizeBox(loc.add(-1f), loc.add(new Vec2(width, height)).add(1f), this); //TODO fix size of dots and lines
     }
 
     public abstract float getWidth(LocalPlayer player, Font font);

@@ -1,6 +1,5 @@
 package net.kapitencraft.mysticcraft.client.render.overlay.holder;
 
-import net.kapitencraft.mysticcraft.client.render.OverlayRenderer;
 import net.kapitencraft.mysticcraft.client.render.overlay.PositionHolder;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.player.LocalPlayer;
@@ -13,8 +12,8 @@ import java.util.function.Function;
 public class MultiHolder extends RenderHolder {
     private final float yChange;
     private final List<Function<LocalPlayer, Component>> list;
-    public MultiHolder(PositionHolder pos, OverlayRenderer.RenderType type, float yChange, List<Function<LocalPlayer, Component>> allText) {
-        super(pos, type);
+    public MultiHolder(PositionHolder pos, float yChange, List<Function<LocalPlayer, Component>> allText) {
+        super(pos);
         this.yChange = yChange;
         this.list = allText;
     }
@@ -36,8 +35,8 @@ public class MultiHolder extends RenderHolder {
     }
 
     @Override
-    public void render(float posX, float posY, LocalPlayer player) {
-        Vec2 loc = getLoc(posX, posY);
+    public void render(float width, float height, LocalPlayer player) {
+        Vec2 loc = getLoc(width, height);
         for (int i = 0; i < list.size(); i++) {
             Function<LocalPlayer, Component> mapper = list.get(i);
             renderString(mapper.apply(player), loc.x, loc.y - yChange * i);

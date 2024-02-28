@@ -1,9 +1,11 @@
 package net.kapitencraft.mysticcraft.item.combat.weapon.ranged.bow;
 
 import net.kapitencraft.mysticcraft.helpers.IOHelper;
+import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -41,7 +43,7 @@ public abstract class ShortBowItem extends ModBowItem {
     public float createCooldown(LivingEntity archer) {
         float base_cooldown = this.getShotCooldown();
         if (archer != null) base_cooldown *= (1 / (archer.getAttributeValue(ModAttributes.DRAW_SPEED.get()) / 100));
-        return base_cooldown;
+        return (float) MathHelper.defRound(base_cooldown);
     }
 
     public abstract float getShotCooldown();
@@ -54,9 +56,7 @@ public abstract class ShortBowItem extends ModBowItem {
     public void inventoryTick(ItemStack bow, @NotNull Level p_41405_, @NotNull Entity p_41406_, int p_41407_, boolean p_41408_) {
         if (bow.getTag() != null) {
             CompoundTag tag = bow.getTag();
-            if (IOHelper.checkForIntAbove0(tag, COOLDOWN_ID)) {
-                tag.putInt(COOLDOWN_ID, tag.getInt(COOLDOWN_ID) - 1);
-            }
+            IOHelper.reduceBy1(tag, COOLDOWN_ID);
         }
     }
 
@@ -64,9 +64,9 @@ public abstract class ShortBowItem extends ModBowItem {
     @Override
     public void appendHoverTextWithPlayer(@NotNull ItemStack stack, @Nullable Level level, @NotNull List<Component> list, @NotNull TooltipFlag flag, Player player) {
         super.appendHoverText(stack, level, list, flag);
-        list.add(Component.literal(""));
+        list.add(CommonComponents.EMPTY);
         list.add(Component.literal("Shot Cooldown: ").append(this.createCooldown(player) + "s").withStyle(ChatFormatting.GREEN));
-        list.add(Component.literal(""));
+        list.add(CommonComponents.EMPTY);
         list.add(Component.literal("Short Bow: Instantly Shoots!").withStyle(ChatFormatting.DARK_PURPLE));
     }
 

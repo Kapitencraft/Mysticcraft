@@ -9,7 +9,7 @@ import org.joml.Vector2ic;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(DefaultTooltipPositioner.class)
-public class ClientTooltipPositionerMixin implements ClientTooltipPositioner {
+public abstract class ClientTooltipPositionerMixin implements ClientTooltipPositioner {
 
     @Override
     public @NotNull Vector2ic positionTooltip(@NotNull Screen screen, int x, int y, int toolTipWidth, int toolTipHeight) {

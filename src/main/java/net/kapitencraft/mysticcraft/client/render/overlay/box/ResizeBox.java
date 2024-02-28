@@ -1,72 +1,181 @@
 package net.kapitencraft.mysticcraft.client.render.overlay.box;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.kapitencraft.mysticcraft.client.render.overlay.holder.RenderHolder;
 import net.kapitencraft.mysticcraft.helpers.CollectionHelper;
-import net.minecraft.client.Minecraft;
 import net.minecraft.world.phys.Vec2;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-public class ResizeBox extends InteractiveBox {
-    private final List<InteractiveBox> boxes = new ArrayList<>();
-
+public class ResizeBox extends ResizeAccessBox {
+    private final List<ResizeAccessBox> boxes = new ArrayList<>();
     private static final int boxColor = 0xFFFFFFFF;
     private static final int fillColor = 0x30FFFFFF;
-    private double dragStartX;
-    private double dragStartY;
-    private InteractiveBox active;
+    private ResizeAccessBox active;
+    private boolean dirty = false;
 
 
+    public ResizeBox(Vec2 start, Vec2 finish, RenderHolder dedicatedHolder) {
+        super(start, finish, GLFW.GLFW_RESIZE_ALL_CURSOR, new PoseStack(), fillColor, dedicatedHolder, Type.C, null);
+        fillBoxes();
+    }
 
-    public ResizeBox(Vec2 start, Vec2 finish, PoseStack stack, float dotSize, float lineSize) {
-        super(start, finish, GLFW.GLFW_RESIZE_ALL_CURSOR, stack, fillColor);
-        Vec2 extra1 = new Vec2(start.x, finish.y);
-        Vec2 extra2 = new Vec2(finish.x, start.y);
+    private void fillBoxes() {
+        this.boxes.clear();
         boxes.addAll(
                 List.of(
-                        new InteractiveBox(stack, start, dotSize, boxColor, GLFW.GLFW_RESIZE_NWSE_CURSOR),
-                        new InteractiveBox(stack, extra1, dotSize, boxColor, GLFW.GLFW_RESIZE_NESW_CURSOR),
-                        new InteractiveBox(stack, extra2, dotSize, boxColor, GLFW.GLFW_RESIZE_NESW_CURSOR),
-                        new InteractiveBox(stack, finish, dotSize, boxColor, GLFW.GLFW_RESIZE_NWSE_CURSOR),
-                        new InteractiveBox(start.add(new Vec2(0, -lineSize)), extra1.add(new Vec2(0, lineSize)), GLFW.GLFW_RESIZE_NS_CURSOR, stack, boxColor),
-                        new InteractiveBox(start.add(new Vec2(-lineSize, 0)), extra2.add(new Vec2(lineSize, 0)), GLFW.GLFW_RESIZE_EW_CURSOR, stack, boxColor),
-                        new InteractiveBox(extra1.add(new Vec2(-lineSize, 0)), finish.add(new Vec2(lineSize, 0)), GLFW.GLFW_RESIZE_NS_CURSOR, stack, boxColor),
-                        new InteractiveBox(extra2.add(new Vec2(0, -lineSize)), finish.add(new Vec2(0, lineSize)), GLFW.GLFW_RESIZE_EW_CURSOR, stack, boxColor)
+                        new ResizeAccessBox(stack, boxColor, dedicatedHolder, Type.NW, this),
+                        new ResizeAccessBox(stack, boxColor, dedicatedHolder, Type.SW, this),
+                        new ResizeAccessBox(stack, boxColor, dedicatedHolder, Type.NE, this),
+                        new ResizeAccessBox(stack, boxColor, dedicatedHolder, Type.SE, this),
+                        new ResizeAccessBox(stack, boxColor, dedicatedHolder, Type.W, this),
+                        new ResizeAccessBox(stack, boxColor, dedicatedHolder, Type.N, this),
+                        new ResizeAccessBox(stack, boxColor, dedicatedHolder, Type.S, this),
+                        new ResizeAccessBox(stack, boxColor, dedicatedHolder, Type.E, this)
                 )
         );
+        reapplyPosition();
     }
 
     @Override
     public void render(double mouseX, double mouseY) {
+        if (dirty) {
+            this.reapplyPosition();
+            dirty = false;
+        }
         super.render(mouseX, mouseY);
-        boxes.forEach(box -> box.render(mouseX, mouseY));
-        long windowId = Minecraft.getInstance().getWindow().getWindow();
-        boxes.stream().filter(box -> box.isHovering(mouseX, mouseY))
-                .map(RenderBox::getCursorType)
-                .map(GLFW::glfwCreateStandardCursor)
-                .findFirst() //expecting 1 but who knows...
-                .ifPresentOrElse(CollectionHelper.biUsage(windowId, GLFW::glfwSetCursor),
-                        ()-> GLFW.glfwSetCursor(windowId, GLFW.glfwCreateStandardCursor(GLFW.GLFW_ARROW_CURSOR))
-                );
+        boxes.forEach(CollectionHelper.triUsage(mouseX, mouseY, InteractiveBox::render));
+    }
+
+    @Override
+    public int getCursorType(double mouseX, double mouseY) {
+        return boxes.stream().filter(CollectionHelper.triFilter(mouseX, mouseY, InteractiveBox::isHovering))
+                .map(box -> box.getCursorType(mouseX, mouseY))
+                .findFirst().orElse(getSelfCursor(mouseX, mouseY));
+    }
+
+    private int getSelfCursor(double mouseX, double mouseY) {
+        int cursorId = GLFW.GLFW_ARROW_CURSOR;
+        if (this.isHovering(mouseX, mouseY)) cursorId = GLFW.GLFW_RESIZE_ALL_CURSOR;
+        return cursorId;
+    }
+
+    public void move(Vec2 delta) {
+        super.move(delta);
+        this.boxes.forEach(CollectionHelper.biUsage(delta, RenderBox::move));
+    }
+
+    @Override
+    protected void reapplyPosition() {
+        this.boxes.forEach(ResizeAccessBox::reapplyPosition);
     }
 
     @Override
     public boolean isHovering(double x, double y) {
-        return super.isHovering(x, y) || boxes.stream().anyMatch(box -> box.isHovering(x, y));
+        return super.isHovering(x, y) || boxes.stream().anyMatch(CollectionHelper.triFilter(x, y, InteractiveBox::isHovering));
     }
 
     @Override
-    public void click(double x, double y) {
-        boxes.stream().filter(box -> box.isHovering(x, y)).findFirst()
-                .ifPresentOrElse(box -> this.setActive(box, x, y), ()-> {});
-        super.click(x, y);
+    public void mouseDrag(double x, double y, int mouseType, double xChange, double yChange, double oldX, double oldY) {
+        if (this.active == null) {
+            boxes.stream().filter(CollectionHelper.triFilter(oldX, oldY, InteractiveBox::isHovering)).findFirst()
+                    .ifPresentOrElse(this::setActive, ()-> {
+                        if (this.isHovering(oldX, oldY)) {
+                            this.setActive(this);
+                        }
+                    });
+        } else {
+            if (active == this) {
+                this.move(new Vec2((float) xChange, (float) yChange));
+            } else {
+                float width = width();
+                float height = height();
+                float scaleX = (float) ((width + xChange) / width);
+                float scaleY = (float) ((height + yChange) / height);
+                this.scale(scaleX, scaleY);
+            }
+            this.dirty = true;
+        }
     }
 
-    private void setActive(InteractiveBox box, double dragStartX, double dragStartY) {
+    @Override
+    public void scale(float x, float y) {
+        float height = height();
+        float width = width();
+        float xChange = width * x - width;
+        float yChange = height * x - height;
+        Map<Axis, Boolean> map = getTypeAxes();
+        if (map.containsKey(Axis.X) && map.get(Axis.X)) {
+            xChange *= -1;
+            this.dedicatedHolder.move(new Vec2(xChange, 0));
+        }
+        if (map.containsKey(Axis.Y) && map.get(Axis.Y)) {
+            yChange *= -1;
+            this.dedicatedHolder.move(new Vec2(0, yChange));
+        }
+        reapplyPosition(new Vec2(xChange, yChange));
+        super.scale(x, y);
+    }
+
+    private void reapplyPosition(Vec2 change) {
+        Map<Axis, Boolean> map = getTypeAxes();
+        if (map.containsKey(Axis.X)) {
+            if (map.get(Axis.X)) {
+                this.start = this.start.add(new Vec2(change.x, 0));
+            } else {
+                this.finish = this.finish.add(new Vec2(change.x, 0));
+            }
+        }
+        if (map.containsKey(Axis.Y)) {
+            if (map.get(Axis.Y)) {
+                this.start = this.start.add(new Vec2(0, change.y));
+            } else {
+                this.finish = this.finish.add(new Vec2(0, change.y));
+            }
+        }
+        fillBoxes();
+    }
+
+    private Map<Axis, Boolean> getTypeAxes() {
+        return getType().axes;
+    }
+
+    protected Type getType() {
+        return this.active.getType();
+    }
+
+    @Override
+    public void mouseRelease(double x, double y) {
+        this.active = null;
+    }
+
+    private void setActive(ResizeAccessBox box) {
         this.active = box;
-        this.dragStartX = dragStartX;
-        this.dragStartY = dragStartY;
+    }
+
+    public enum Type {
+        N(Map.of(Axis.Y, true)),
+        NE(Map.of(Axis.Y, true, Axis.X, false)),
+        E(Map.of(Axis.X, false)),
+        SE(Map.of(Axis.Y, false, Axis.X, false)),
+        S(Map.of(Axis.Y, false)),
+        SW(Map.of(Axis.Y, false, Axis.X, true)),
+        W(Map.of(Axis.X, true)),
+        NW(Map.of(Axis.Y, true, Axis.X, false)),
+        C(Map.of());
+
+        private final Map<Axis, Boolean> axes;
+
+        Type(Map<Axis, Boolean> map) {
+            this.axes = map;
+        }
+    }
+
+    private enum Axis {
+        X,
+        Y
     }
 }

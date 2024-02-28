@@ -104,6 +104,7 @@ public class ParticleAnimator {
         return new ParticleAnimator(helperReason, target, type, properties);
     }
 
+    //TODO rewrite
     public ParticleAnimator(String helperReason, Entity target, Type type, CompoundTag properties) {
         this.liveUntilTargetDeath = type == Type.ARROW_HEAD;
         this.properties = properties;
