@@ -70,6 +70,8 @@ public abstract class ShortBowItem extends ModBowItem {
         list.add(Component.literal("Short Bow: Instantly Shoots!").withStyle(ChatFormatting.DARK_PURPLE));
     }
 
+    //TODO change multishot amount being handled with new system
+
     public void createArrows(@NotNull ItemStack bow, @NotNull Level world, @NotNull LivingEntity archer) {
         createLegolasExtraArrows(bow, archer, this.getKB());
         createArrowProperties(archer, bow, this.getKB(), archer.getXRot(), archer.getYRot());
