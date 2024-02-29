@@ -73,7 +73,7 @@ public abstract class ShortBowItem extends ModBowItem {
     //TODO change multishot amount being handled with new system
 
     public void createArrows(@NotNull ItemStack bow, @NotNull Level world, @NotNull LivingEntity archer) {
-        createLegolasExtraArrows(bow, archer, this.getKB());
+        ModBowItem.addAllExtraArrows(bow, archer, this.getKB());
         createArrowProperties(archer, bow, this.getKB(), archer.getXRot(), archer.getYRot());
     }
 }

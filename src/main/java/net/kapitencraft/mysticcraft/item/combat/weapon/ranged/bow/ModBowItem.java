@@ -69,7 +69,7 @@ public abstract class ModBowItem extends BowItem implements IModItem {
                         if (flag1 || player.getAbilities().instabuild && (itemstack.is(Items.SPECTRAL_ARROW) || itemstack.is(Items.TIPPED_ARROW))) {
                             abstractarrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
                         }
-                        createLegolasExtraArrows(bow, archer, this.getKB());
+                        addAllExtraArrows(bow, archer, this.getKB());
                         abstractarrow.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, (float) (f * mul * (1+ getSpeedMul(abstractarrow, fbSpeedMul, speedMul))), 1.0F);
                         world.addFreshEntity(abstractarrow);
                     }
@@ -95,14 +95,18 @@ public abstract class ModBowItem extends BowItem implements IModItem {
         }
     }
 
-    private final float OFFSET_DEGREES = 4f;
+    private static final float OFFSET_DEGREES = 4f;
 
     public static void addAllExtraArrows(@NotNull ItemStack bow, @NotNull LivingEntity archer, int kb) {
         createLegolasExtraArrows(bow, archer, kb);
         double extraArrows = AttributeHelper.getSaveAttributeValue(ModAttributes.ARROW_COUNT.get(), archer);
         int extraArrowCount = RNGHelper.getCount(0.5f, archer, extraArrows);
         for (int i = 0; i < extraArrowCount; i++) {
-
+            float degrees = OFFSET_DEGREES * (i / 2);
+            if (i % 2 == 0) {
+                degrees *= -1;
+            }
+            createArrowProperties(archer, bow, kb, archer.getXRot(), archer.getYRot() + degrees);
         }
     }
 

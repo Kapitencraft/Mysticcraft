@@ -154,7 +154,7 @@ public class MiscRegister {
         Player player = event.getEntity();
         ItemStack bow = event.getBow();
         if (bow.getItem() instanceof ModBowItem) return;
-        ModBowItem.createLegolasExtraArrows(bow, player, 0);
+        ModBowItem.addAllExtraArrows(bow, player, 0);
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
