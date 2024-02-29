@@ -25,6 +25,9 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = MysticcraftMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class TabRegister {
+    /**
+     * registry method for custom Creative mod tabs
+     */
     @SubscribeEvent
     public static void registerTabs(CreativeModeTabEvent.Register event) {
         event.registerCreativeModeTab(MysticcraftMod.res("spell"), builder ->
@@ -90,6 +93,10 @@ public class TabRegister {
             TabGroup.registerAll(TabTypes.OPERATOR, event::acceptAll);
         }
     }
+
+    /**
+     * different Tab-Types relating to different {@link net.minecraft.world.item.CreativeModeTab}s
+     */
     public enum TabTypes {
         SPELL,
         GEMSTONE,

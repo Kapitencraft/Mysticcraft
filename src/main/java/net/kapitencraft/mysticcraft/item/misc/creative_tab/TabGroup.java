@@ -10,6 +10,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 
+/**
+ * used to group items into {@link net.minecraft.world.item.CreativeModeTab}s
+ */
 public class TabGroup {
     private static final List<TabGroup> groups = new ArrayList<>();
     public static final TabGroup MATERIAL = new TabGroup(TabRegister.TabTypes.MOD_MATERIALS);

@@ -10,6 +10,7 @@ import java.util.function.Consumer;
 
 public class Cooldown {
 
+    //TODO fix not working for spells
     private final CompoundPath path;
     private final int defaultTime;
     private final Consumer<Entity> toDo;

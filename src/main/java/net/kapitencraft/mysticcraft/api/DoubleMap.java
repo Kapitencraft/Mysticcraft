@@ -1,6 +1,5 @@
 package net.kapitencraft.mysticcraft.api;
 
-import net.kapitencraft.mysticcraft.helpers.CollectionHelper;
 import net.kapitencraft.mysticcraft.helpers.CollectorHelper;
 
 import java.util.HashMap;

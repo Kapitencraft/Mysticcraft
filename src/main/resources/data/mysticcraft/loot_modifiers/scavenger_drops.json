@@ -7,7 +7,7 @@
     }
   ],
   "enchantment": "mysticcraft:scavenger",
-  "chance": "0.1",
+  "chance": 0.1,
   "provider": "ench * 2",
   "item": "minecraft:emerald"
 }

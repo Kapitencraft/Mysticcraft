@@ -2,16 +2,15 @@ package net.kapitencraft.mysticcraft.helpers;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import net.kapitencraft.mysticcraft.api.MapStream;
+import net.kapitencraft.mysticcraft.api.TriConsumer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraftforge.common.util.TriPredicate;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.*;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @SuppressWarnings("ALL")
 public class CollectionHelper {
@@ -21,6 +20,12 @@ public class CollectionHelper {
             return entry.getKey();
         }
         return null;
+    }
+
+    public static <T, K> Map<K, T> mirror(Map<T, K> in) {
+        Map<K, T> returnMap = new HashMap<>();
+        in.forEach((t, k) -> returnMap.put(k, t));
+        return returnMap;
     }
 
     public static <T, K> Multimap<T, K> sortMap(Multimap<T, K> map, @Nullable Comparator<T> keySorter, @Nullable Comparator<K> valueSorter) {
@@ -87,8 +92,16 @@ public class CollectionHelper {
         return t -> predicate.test(t, always);
     }
 
+    public static <T, K, J> Predicate<T> triFilter(K kAlways, J jAlways, TriPredicate<T, K, J> predicate) {
+        return t -> predicate.test(t, kAlways, jAlways);
+    }
+
     public static <T, K> Consumer<T> biUsage(K always, BiConsumer<T, K> consumer) {
         return t -> consumer.accept(t, always);
+    }
+
+    public static <T, K, J> Consumer<T> triUsage(K kAlways, J jAlways, TriConsumer<T, K, J> consumer) {
+        return t -> consumer.accept(t, kAlways, jAlways);
     }
 
     public static <T> ArrayList<T> toList(T ts) {
@@ -105,6 +118,11 @@ public class CollectionHelper {
         return multimap;
     }
 
+    public static <T> ArrayList<T> toList(T ts) {
+        ArrayList<T> target = new ArrayList<>();
+        Collections.addAll(target, ts);
+        return target;
+    }
 
 
     public static <T, K, L, J extends Map<K, L>> List<L> values(Map<T, J> map) {

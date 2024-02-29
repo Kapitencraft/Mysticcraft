@@ -27,7 +27,6 @@ import net.minecraft.world.item.Rarity;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -40,7 +39,7 @@ public enum Spells implements Spell {
     INSTANT_TRANSMISSION("Instant Transmission", "1110111", Type.RELEASE, 50, InstantTransmissionSpell::execute, item -> true, InstantTransmissionSpell::getDescription, Rarity.COMMON, true, 0, Elements.VOID),
     ETHER_WARP("Ether Transmission", "1000111", Type.RELEASE, 50, EtherWarpSpell::execute, item -> item instanceof AspectOfTheVoidItem, EtherWarpSpell::getDescription, Rarity.EPIC, true, 20, Elements.VOID, Elements.AIR),
     EXPLOSIVE_SIGHT("Explosive Sight", "1010110", Type.RELEASE, 150, ExplosiveSightSpell::execute, item -> true, ExplosiveSightSpell::getDescription, Rarity.UNCOMMON, true, 600, Elements.FIRE),
-    EMPTY_SPELL("Empty Spell", null, Type.RELEASE, 0, (living, itemStack)-> true, item -> false, EmptySpell::getDescription, Rarity.UNCOMMON, false, 0),
+    EMPTY_SPELL("Empty Spell", null, Type.RELEASE, 0, (living, itemStack)-> {}, item -> false, EmptySpell::getDescription, Rarity.UNCOMMON, false, 0),
     SHADOW_STEP("Shadow Step", "1110011", Type.RELEASE, 80, ShadowStepSpell::execute, item -> true, ShadowStepSpell::getDescription, Rarity.EPIC, true, 1200, Elements.SHADOW),
     HUGE_HEAL("Huge Heal", "0011011", Type.RELEASE, 70, HugeHealSpell::execute, item -> true, HugeHealSpell::getDescription, Rarity.UNCOMMON, true, 40, Elements.WATER),
     FIRE_BOLT_1("Fire Bolt 1", "0110011", Type.RELEASE, 50, createFireBold(1, false), item -> item instanceof IFireScytheItem, createFireBoldDesc(1f), Rarity.UNCOMMON, true, 0, Elements.FIRE),
@@ -61,22 +60,22 @@ public enum Spells implements Spell {
         return map;
     }
 
-    private static BiPredicate<LivingEntity, ItemStack> createFireBold(double baseDamage, boolean explosive) {
+    private static SpellExecutioner createFireBold(double baseDamage, boolean explosive) {
         return (user, stack) -> {
             FireBoltProjectile projectile = FireBoltProjectile.createProjectile(user.level, user, explosive, baseDamage, "Fire Bolt");
             projectile.shootFromRotation(user, user.getXRot(), user.getYRot(), 0, 2, 1);
             projectile.setBaseDamage(baseDamage);
             user.level.addFreshEntity(projectile);
-            return true;
         };
     }
     private static Supplier<List<Component>> createFireBoldDesc(float damage) {
         return ()-> List.of(Component.literal("Fires a Fire Bolt dealing"), Component.literal(TextHelper.wrapInRed(damage) + " Base Ability Damage"));
     }
+
     private final String castingType, name;
     public final Type TYPE;
     public final double MANA_COST;
-    private final BiPredicate<LivingEntity, ItemStack> run;
+    private final SpellExecutioner run;
     private final Predicate<Item> helper;
     private final Supplier<List<Component>> description;
     public final String REGISTRY_NAME;
@@ -84,11 +83,11 @@ public enum Spells implements Spell {
     private final List<Element> elements;
     private final int cooldown;
 
-    Spells(String name, String castingType, Type type, double manaCost, BiPredicate<LivingEntity, ItemStack> toRun, Predicate<Item> helper, Supplier<List<Component>> description, Rarity rarity, boolean shouldBeItem, int cooldown, Element... elements) {
+    Spells(String name, String castingType, Type type, double manaCost, SpellExecutioner executioner, Predicate<Item> helper, Supplier<List<Component>> description, Rarity rarity, boolean shouldBeItem, int cooldown, Element... elements) {
         this.name = TextHelper.removeNumbers(name);
         this.TYPE = type;
         this.MANA_COST = manaCost;
-        this.run = toRun;
+        this.run = executioner;
         this.helper = helper;
         this.description = description;
         this.castingType = castingType;
@@ -100,6 +99,10 @@ public enum Spells implements Spell {
 
     private int getRemainingCooldownTicks(LivingEntity player) {
         return player.getPersistentData().getCompound("SpellCooldowns").getInt(this.name);
+    }
+
+    private interface SpellExecutioner {
+        void executeSpell(LivingEntity user, ItemStack hand) throws SpellExecutionFailedException;
     }
 
     @Override
@@ -150,18 +153,16 @@ public enum Spells implements Spell {
         return this.RARITY;
     }
 
-    public boolean execute(LivingEntity living, ItemStack stack) {
-        boolean success = false;
+    public void execute(LivingEntity living, ItemStack stack) throws SpellExecutionFailedException {
         CompoundTag SpellCooldowns = living.getPersistentData().getCompound("SpellCooldowns");
         int cooldown = SpellCooldowns.getInt(this.name);
         if (cooldown < 1) {
-            success = this.run.test(living, stack);
-            cooldown =MathHelper.cooldown(living, this.cooldown);
+            this.run.executeSpell(living, stack);
+            cooldown = MathHelper.cooldown(living, this.cooldown);
         } else {
             cooldown--;
         }
         SpellCooldowns.putInt(this.name, cooldown);
-        return success;
     }
 
     public List<Component> getDescription() {

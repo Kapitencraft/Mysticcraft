@@ -10,8 +10,10 @@ import net.kapitencraft.mysticcraft.init.ModItems;
 import net.kapitencraft.mysticcraft.item.capability.ItemData;
 import net.kapitencraft.mysticcraft.item.misc.RNGDropHelper;
 import net.kapitencraft.mysticcraft.misc.ManaMain;
+import net.kapitencraft.mysticcraft.misc.cooldown.SpellCooldown;
 import net.kapitencraft.mysticcraft.requirements.Requirement;
 import net.kapitencraft.mysticcraft.spell.Element;
+import net.kapitencraft.mysticcraft.spell.SpellExecutionFailedException;
 import net.kapitencraft.mysticcraft.spell.SpellSlot;
 import net.kapitencraft.mysticcraft.spell.Spells;
 import net.kapitencraft.mysticcraft.spell.spells.Spell;
@@ -28,11 +30,14 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nullable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 
 public class SpellHelper implements ItemData<SpellSlot[], SpellHelper> {
+    public static final Map<Player, List<SpellCooldown>> spells = new HashMap<>();
 
     private final SpellSlot[] spellSlots;
     private final Item item;
@@ -126,7 +131,16 @@ public class SpellHelper implements ItemData<SpellSlot[], SpellHelper> {
         }
         AttributeInstance manaInstance = user.getAttribute(ModAttributes.MANA.get());
         if (manaInstance != null) {
-            if (ManaMain.consumeMana(user, manaToUse) && spell.execute(user, stack)) {
+            try {
+                spell.execute(user, stack);
+            } catch (SpellExecutionFailedException e) {
+                if (user instanceof Player player) {
+                    player.displayClientMessage(Component.translatable(e.getMsg()), true);
+                    return false;
+                }
+            }
+
+            if (ManaMain.consumeMana(user, manaToUse)) {
                 sendUseDisplay(user, spell);
                 List<Element> elements = spell.elements();
                 if (!elements.isEmpty()) {//spawn spell shards

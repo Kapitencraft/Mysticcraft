@@ -500,5 +500,6 @@
   "stat_req.necron": "%1§s killed Necrons",
   "stat_req.maxor": "%1§s killed Maxors",
   "stat_req.goldor": "%1§s killed Goldors",
-  "change_gui_locations.title": "Change Gui Locations"
+  "change_gui_locations.title": "Change GUI locations",
+  "tooltip.can_hit_enderman": "Hits Enderman"
 }

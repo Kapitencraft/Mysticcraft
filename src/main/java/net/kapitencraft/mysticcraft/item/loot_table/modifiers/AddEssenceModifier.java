@@ -29,7 +29,7 @@ public class AddEssenceModifier extends ModLootModifier implements IConditional 
         if (living instanceof Mob mob) {
             if (mob.getMobType() == MobType.UNDEAD) {
                 EssenceItem essenceItem = ModItems.ESSENCE.get();
-                ItemStack stack = RNGDropHelper.dontDrop(essenceItem, 5, living, 0.0001f);
+                ItemStack stack = RNGDropHelper.calculateAndDontDrop(essenceItem, 5, living, 0.0001f);
                 essenceItem.saveData(stack, EssenceType.UNDEAD);
                 if (stack != ItemStack.EMPTY) {
                     generatedLoot.add(stack);

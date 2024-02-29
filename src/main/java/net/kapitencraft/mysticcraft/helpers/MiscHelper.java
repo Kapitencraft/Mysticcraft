@@ -142,7 +142,7 @@ public class MiscHelper {
 
     public static <T, K extends T> boolean isInstance(T value, Class<K> target) {
         try {
-            K ignored  = (K) value;
+            K ignored = (K) value;
             return true;
         } catch (Exception e) {
             return false;

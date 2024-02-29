@@ -16,14 +16,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.BiConsumer;
+import java.util.function.BiPredicate;
 
 public class BonusHelper {
     public static void tickEnchantments(LivingEntity living) {
-        doForSlot((stack, slot) -> {
-            MapStream.of(stack.getAllEnchantments())
-                    .mapKeys(MiscHelper.instanceMapper(ExtendedAbilityEnchantment.class))
-                    .forEach((enchantment, integer) -> enchantment.onTick(living, integer));
-        }, living);
+        doForSlot((stack, slot) -> MapStream.of(stack.getAllEnchantments())
+                .filterKeys(e -> e instanceof ExtendedAbilityEnchantment)
+                .mapKeys(MiscHelper.instanceMapper(ExtendedAbilityEnchantment.class))
+                .forEach((enchantment, integer) -> enchantment.onTick(living, integer)), living, (stack, slot) -> stack.isEnchanted());
     }
 
     public static void useBonuses(LivingEntity living, BiConsumer<Bonus, ItemStack> user) {
@@ -41,7 +41,7 @@ public class BonusHelper {
                 MiscHelper.ifNonNull(bonusItem.getBonus(), pieceBonus -> user.accept(pieceBonus, stack));
                 MiscHelper.ifNonNull(bonusItem.getExtraBonus(), extraBonus -> user.accept(extraBonus, stack));
             }
-        }, living);
+        }, living, (stack, slot) -> true);
     }
 
     public static List<Bonus> getBonusesFromStack(ItemStack stack) {
@@ -63,10 +63,10 @@ public class BonusHelper {
 
 
 
-    private static void doForSlot(BiConsumer<ItemStack, EquipmentSlot> stackConsumer, LivingEntity living) {
+    private static void doForSlot(BiConsumer<ItemStack, EquipmentSlot> stackConsumer, LivingEntity living, BiPredicate<ItemStack, EquipmentSlot> usagePredicate) {
         for (EquipmentSlot slot : EquipmentSlot.values()) {
             ItemStack stack = living.getItemBySlot(slot);
-            stackConsumer.accept(stack, slot);
+            if (usagePredicate.test(stack, slot)) stackConsumer.accept(stack, slot);
         }
     }
 }

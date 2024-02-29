@@ -12,7 +12,6 @@ import net.kapitencraft.mysticcraft.block.entity.crafting.ModRecipeTypes;
 import net.kapitencraft.mysticcraft.block.entity.crafting.serializers.ArmorRecipe;
 import net.kapitencraft.mysticcraft.block.entity.crafting.serializers.UpgradeItemRecipe;
 import net.kapitencraft.mysticcraft.compat.jei.crafting.UpgradeItemExtension;
-import net.kapitencraft.mysticcraft.helpers.CollectionHelper;
 import net.kapitencraft.mysticcraft.helpers.CollectorHelper;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.minecraft.client.Minecraft;

@@ -1,13 +1,12 @@
 package net.kapitencraft.mysticcraft.misc.string_converter.converter;
 
 import java.util.List;
-import java.util.Map;
-import java.util.function.Supplier;
+import java.util.function.Function;
 
 public abstract class TextToNumConverter<T extends Number> extends TextConverter<T> {
 
-    public TextToNumConverter(Map<String, Supplier<T>> stringTransfers) {
-        super(stringTransfers);
+    public TextToNumConverter(String args, Function<String, T> function) {
+        super(function, args);
     }
 
 

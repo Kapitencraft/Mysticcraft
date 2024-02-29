@@ -4,32 +4,45 @@ import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.misc.string_converter.args.CalculationArgument;
 import net.kapitencraft.mysticcraft.misc.string_converter.args.TransferArg;
 import net.kapitencraft.mysticcraft.misc.string_converter.args.ValueArgument;
+import net.kapitencraft.mysticcraft.misc.string_converter.param_storage.ParamStorage;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Supplier;
+import java.util.function.Function;
 
 public abstract class TextConverter<T> {
-    protected final Map<String, Supplier<T>> stringTransfers;
+    private final Function<String, T> creator;
+    private final String args;
 
-    protected TextConverter(Map<String, Supplier<T>> map) {
-        this.stringTransfers = map;
+    protected TextConverter(Function<String, T> creator, String args) {
+        this.creator = creator;
+        this.args = args;
     }
 
-    protected abstract T createFromString(String s);
+    protected T createFromString(ParamStorage<T> storage, String s) {
+        return storage.contains(s) ? storage.get(s) : creator.apply(s);
+    }
 
     protected abstract CalculationArgument<T> getCalcArg(String value);
 
-    public T transfer(String s) {
-        String[] toTransfer = s.split(" ");
+    public String getArgs() {
+        return args;
+    }
+
+    @Override
+    public String toString() {
+        return "Converting: '" + args + "'";
+    }
+
+    public T transfer(ParamStorage<T> storage) {
+        String[] toTransfer = args.split(" ");
         List<TransferArg<T>> args = new ArrayList<>();
         for (String value : toTransfer) {
             if (isArg(value)) {
                 args.add(getCalcArg(value));
             } else {
-                args.add(new ValueArgument<>(createFromString(value)));
+                args.add(new ValueArgument<>(createFromString(storage, value)));
             }
         }
         List<TransferArg<T>> currentArgs = copyOf(args);
@@ -49,7 +62,7 @@ public abstract class TextConverter<T> {
             }
             cycle++;
         }
-        if (cycle == 1000) MysticcraftMod.LOGGER.warn("the converter failed to convert value from args: {}; out of time", s);
+        if (cycle == 1000) MysticcraftMod.LOGGER.warn("the converter failed to convert value from args: {}; out of time", args);
         return currentArgs.get(0).value();
     }
 

@@ -26,7 +26,8 @@ public abstract class ModBowEnchantment extends Enchantment implements ModEnchan
     public static float loadFromTag(LivingEntity target, CompoundTag tag, ExecuteType type, float oldDamage, AbstractArrow arrow) {
         for (String string : executionMap.keySet()) {
             if (tag.contains(string, 10)) {
-                oldDamage = executionMap.get(string).execute(target, tag, type, oldDamage, arrow);
+                CompoundTag elementTag = tag.getCompound(string);
+                oldDamage = executionMap.get(string).execute(target, elementTag, type, oldDamage, arrow);
             }
         }
         return oldDamage;

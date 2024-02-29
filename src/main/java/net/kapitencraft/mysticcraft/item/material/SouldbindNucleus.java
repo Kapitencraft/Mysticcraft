@@ -6,8 +6,8 @@ import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 
-public class SoulboundCore extends Item implements IModItem {
-    public SoulboundCore() {
+public class SouldbindNucleus extends Item implements IModItem {
+    public SouldbindNucleus() {
         super(MiscHelper.rarity(Rarity.EPIC));
     }
 

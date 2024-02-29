@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.gui.screen;
+package net.kapitencraft.mysticcraft.gui.screen.tooltip;
 
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ImageButton;

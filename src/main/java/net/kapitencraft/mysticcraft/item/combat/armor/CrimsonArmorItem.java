@@ -5,7 +5,7 @@ import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.client.particle.flame.FlamesForColors;
 import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
-import net.kapitencraft.mysticcraft.item.ITieredItem;
+import net.kapitencraft.mysticcraft.item.capability.ITieredItem;
 import net.kapitencraft.mysticcraft.item.capability.dungeon.IPrestigeAbleItem;
 import net.kapitencraft.mysticcraft.item.capability.dungeon.IStarAbleItem;
 import net.kapitencraft.mysticcraft.item.combat.armor.client.NetherArmorItem;

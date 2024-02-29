@@ -19,8 +19,8 @@ public class ParticleAnimationController {
 
     public ParticleAnimationController(List<Particle> toAnimate, Map<Integer, ParticleAnimations> animationsForTime, ParticleAnimationParameters parameters) {
         this.toAnimate = toAnimate;
-        this.toAnimate.forEach(particle -> particle.lifetime = this.animationLength() + 1);
         this.animationsForTime = animationsForTime;
+        this.toAnimate.forEach(particle -> particle.lifetime = this.animationLength() + 1);
         this.parameters = parameters;
         this.toAnimate.forEach(particle -> particle.lifetime = animationLength());
     }

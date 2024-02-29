@@ -4,8 +4,10 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.api.Queue;
 import net.kapitencraft.mysticcraft.api.Reference;
 import net.kapitencraft.mysticcraft.bestiary.BestiaryManager;
+import net.kapitencraft.mysticcraft.content.ChainLightningHelper;
 import net.kapitencraft.mysticcraft.enchantments.HealthMendingEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.ModBowEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.armor.BasaltWalkerEnchantment;
@@ -17,8 +19,8 @@ import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModEnchantments;
 import net.kapitencraft.mysticcraft.init.ModItems;
 import net.kapitencraft.mysticcraft.init.ModMobEffects;
-import net.kapitencraft.mysticcraft.item.ITieredItem;
 import net.kapitencraft.mysticcraft.item.capability.CapabilityHelper;
+import net.kapitencraft.mysticcraft.item.capability.ITieredItem;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneSlot;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneType;
 import net.kapitencraft.mysticcraft.item.capability.item_stat.ItemStatCapability;
@@ -35,6 +37,7 @@ import net.kapitencraft.mysticcraft.misc.cooldown.Cooldowns;
 import net.kapitencraft.mysticcraft.misc.particle_help.ParticleAnimator;
 import net.kapitencraft.mysticcraft.requirements.Requirement;
 import net.kapitencraft.mysticcraft.tags.ModBlockTags;
+import net.kapitencraft.mysticcraft.tags.ModItemTags;
 import net.kapitencraft.mysticcraft.villagers.ModVillagers;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -87,6 +90,7 @@ import net.minecraftforge.fml.common.Mod;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 
 @Mod.EventBusSubscriber
@@ -169,7 +173,7 @@ public class MiscRegister {
     }
 
 
-    private static final ArrowQueueHelper helper = new ArrowQueueHelper();
+    private static final Queue<UUID> helper = Queue.create();
     public static final String OVERFLOW_MANA_ID = "overflowMana";
 
 
@@ -254,7 +258,9 @@ public class MiscRegister {
             for (Entity entity : serverLevel.getEntities().getAll()) {
                 ParticleAnimator.tickHelper(entity);
             }
-            helper.update((uuid)-> {
+            List<UUID> helperMembers = helper.getAll();
+            helper.startQueuing();
+            helperMembers.forEach(uuid -> {
                 Arrow arrow = (Arrow) serverLevel.getEntity(uuid);
                 if (arrow != null) {
                     CompoundTag arrowTag = arrow.getPersistentData();
@@ -263,7 +269,9 @@ public class MiscRegister {
                     helper.remove(uuid);
                 }
             });
+            helper.stopQueuing();
         }
+        ChainLightningHelper.tick();
     }
 
     @SubscribeEvent
@@ -272,6 +280,9 @@ public class MiscRegister {
             if (arrow.getOwner() instanceof LivingEntity living) {
                 ItemStack bow = living.getMainHandItem();
                 CompoundTag arrowTag = arrow.getPersistentData();
+                if (bow.is(ModItemTags.ENDER_HITTABLE)) {
+                    arrowTag.putBoolean("HitsEnderMan", true);
+                }
                 for (Enchantment enchantment : bow.getAllEnchantments().keySet()) {
                     if (enchantment instanceof ModBowEnchantment bowEnchantment) {
                         arrowTag.put(bowEnchantment.getTagName(), bowEnchantment.write(bow.getEnchantmentLevel(enchantment), bow, living, arrow));

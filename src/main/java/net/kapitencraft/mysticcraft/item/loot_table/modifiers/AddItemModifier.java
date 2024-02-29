@@ -18,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
+import java.util.function.Consumer;
 
 @SuppressWarnings("ALL")
 public class AddItemModifier extends ModLootModifier implements IConditional {
@@ -48,12 +49,16 @@ public class AddItemModifier extends ModLootModifier implements IConditional {
 
     @Override
     protected @NotNull ObjectArrayList<ItemStack> doApply(ObjectArrayList<ItemStack> generatedLoot, LootContext context) {
-        ItemStack stack = RNGDropHelper.dontDrop(item, maxAmount, LootTableHelper.getLivingSource(context), chance);
-        if (this.tag != null) stack.setTag(this.tag);
-        if (stack != ItemStack.EMPTY) {
-            generatedLoot.add(stack);
-        }
+        addItem(generatedLoot::add, context, chance);
         return generatedLoot;
+    }
+
+    public void addItem(Consumer<ItemStack> consumer, LootContext context, float chance) {
+        ItemStack stack = RNGDropHelper.calculateAndDontDrop(item, maxAmount, LootTableHelper.getLivingSource(context), chance);
+        if (tag != null) stack.setTag(tag);
+        if (stack != ItemStack.EMPTY) {
+            consumer.accept(stack);
+        }
     }
 
     @Override

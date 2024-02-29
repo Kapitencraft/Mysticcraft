@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.gui.ModMenu;
+import net.kapitencraft.mysticcraft.gui.screen.tooltip.HoverTooltip;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-public abstract class ModScreen<K extends ICapabilityProvider, T extends ModMenu<K>> extends AbstractContainerScreen<T> {
+public abstract class ModScreen<K extends ICapabilityProvider, T extends ModMenu<K>> extends AbstractContainerScreen<T> implements IModScreen {
     public ModScreen(T p_97741_, Inventory p_97742_, Component p_97743_) {
         super(p_97741_, p_97742_, p_97743_);
     }
@@ -25,7 +26,8 @@ public abstract class ModScreen<K extends ICapabilityProvider, T extends ModMenu
 
     protected abstract String getTextureName();
 
-    protected void addHoverTooltip(HoverTooltip tooltip) {
+    @Override
+    public void addHoverTooltip(HoverTooltip tooltip) {
         this.hoverTooltips.add(tooltip);
     }
 

@@ -2,10 +2,7 @@ package net.kapitencraft.mysticcraft.event.handler;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.block.gemstone.GemstoneBlock;
-import net.kapitencraft.mysticcraft.client.particle.CircleParticle;
-import net.kapitencraft.mysticcraft.client.particle.DamageIndicatorParticle;
-import net.kapitencraft.mysticcraft.client.particle.FireNormalParticle;
-import net.kapitencraft.mysticcraft.client.particle.MagicCircleParticle;
+import net.kapitencraft.mysticcraft.client.particle.*;
 import net.kapitencraft.mysticcraft.client.particle.animation.ParticleAnimationProvider;
 import net.kapitencraft.mysticcraft.client.particle.flame.ModFlameParticle;
 import net.kapitencraft.mysticcraft.entity.client.renderer.*;
@@ -20,7 +17,6 @@ import net.kapitencraft.mysticcraft.misc.ModItemProperties;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
@@ -70,12 +66,13 @@ public class ModEventBusClientEvents {
 
     @SubscribeEvent
     public static void registerParticles(RegisterParticleProvidersEvent event) {
-        event.register((SimpleParticleType) ModParticleTypes.FIRE_NORMAL.get(), FireNormalParticle.FireNormalParticleProvider::new);
+        event.register(ModParticleTypes.FIRE_NORMAL.get(), FireNormalParticle.FireNormalParticleProvider::new);
         event.register(ModParticleTypes.MAGIC_CIRCLE.get(), MagicCircleParticle.MagicCircleParticleProvider::new);
         event.register(ModParticleTypes.DAMAGE_INDICATOR.get(), DamageIndicatorParticle.Provider::new);
         event.register(ModParticleTypes.CIRCLE.get(), CircleParticle.Provider::new);
         event.register(ModParticleTypes.ANIMATION.get(), ParticleAnimationProvider::new);
         event.register(ModParticleTypes.FLAME.get(), ModFlameParticle.FlameParticleProvider::new);
+        event.register(ModParticleTypes.SHADOW_SWEEP.get(), ShadowSweepParticle.Provider::new);
     }
 
     @SubscribeEvent

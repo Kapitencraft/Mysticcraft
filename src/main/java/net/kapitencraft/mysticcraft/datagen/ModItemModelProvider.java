@@ -14,6 +14,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class ModItemModelProvider extends ItemModelProvider {
+    //TODO add textures
 
     public ModItemModelProvider(PackOutput output, ExistingFileHelper existingFileHelper) {
         super(output, MysticcraftMod.MOD_ID, existingFileHelper);
@@ -22,8 +23,6 @@ public class ModItemModelProvider extends ItemModelProvider {
     @SuppressWarnings("all")
     @Override
     protected void registerModels() {
-        //registerScrolls();
-        //registerGemstones();
 
 
         List<RegistryObject<Item>> items = List.of(

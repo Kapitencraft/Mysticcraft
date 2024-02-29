@@ -2,7 +2,7 @@ package net.kapitencraft.mysticcraft.client;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.client.particle.animation.ParticleAnimationAcceptor;
-import net.kapitencraft.mysticcraft.client.render.RenderController;
+import net.kapitencraft.mysticcraft.client.render.OverlayRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -13,7 +13,7 @@ import java.io.File;
 public class MysticcraftClient {
     private static MysticcraftClient instance;
 
-    public final RenderController renderController = RenderController.load();
+    public final OverlayRenderer renderController = new OverlayRenderer(); // RenderController.load();
     public static final File CLIENT_FILES = new File(Minecraft.getInstance().gameDirectory, MysticcraftMod.MOD_ID);
 
     public static MysticcraftClient getInstance() {

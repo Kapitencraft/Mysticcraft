@@ -52,15 +52,15 @@ public class AttributeHelper {
 
     /**
      * @param multimap the map to add to
-     * @param amount the amount of the addition
-     * @param operation the operation of the addition
      * @param attributeReq if there's a requirement for the attribute
      * @return the merged map
      */
-    public static Multimap<Attribute, AttributeModifier> increaseByAmount(Multimap<Attribute, AttributeModifier> multimap, double amount, AttributeModifier.Operation operation, @Nullable Attribute attributeReq) {
+    public static Multimap<Attribute, AttributeModifier> increaseByAmount(Multimap<Attribute, AttributeModifier> multimap, Attribute attributeReq, AttributeModifier modifier) {
         HashMultimap<Attribute, AttributeModifier> toReturn = HashMultimap.create();
         boolean hasBeenAdded = attributeReq == null;
         Collection<AttributeModifier> attributeModifiers;
+        AttributeModifier.Operation operation = modifier.getOperation();
+        double amount = modifier.getAmount();
         //switch operation of movement speed to multiply base since addition is to powerful
         if ((attributeReq == Attributes.MOVEMENT_SPEED || attributeReq == ForgeMod.SWIM_SPEED.get()) && operation == AttributeModifier.Operation.ADDITION) {
             operation = AttributeModifier.Operation.MULTIPLY_BASE;
@@ -68,17 +68,17 @@ public class AttributeHelper {
         }
         for (Attribute attribute : multimap.keys()) {
             attributeModifiers = multimap.get(attribute);
-            for (AttributeModifier modifier : attributeModifiers) {
-                if (!hasBeenAdded && attribute == attributeReq && operation == modifier.getOperation()) {
-                    toReturn.put(attribute, copyWithValue(modifier, modifier.getAmount() + amount));
+            for (AttributeModifier newModifier : attributeModifiers) {
+                if (!hasBeenAdded && attribute == attributeReq && operation == newModifier.getOperation()) {
+                    toReturn.put(attribute, copyWithValue(newModifier, newModifier.getAmount() + amount));
                     hasBeenAdded = true;
                 } else {
-                    toReturn.put(attribute, modifier);
+                    toReturn.put(attribute, newModifier);
                 }
             }
         }
         if (!hasBeenAdded) {
-            toReturn.put(attributeReq, new AttributeModifier(UUID.randomUUID(), "Custom Attribute", amount, operation));
+            toReturn.put(attributeReq, modifier);
         }
         multimap = toReturn;
         return multimap;
@@ -92,7 +92,7 @@ public class AttributeHelper {
     public static Multimap<Attribute, AttributeModifier> increaseAllByAmount(Multimap<Attribute, AttributeModifier> list, Map<Attribute, AttributeModifier> toMerge) {
         for (Attribute attribute : toMerge.keySet()) {
             for (AttributeModifier modifier : List.of(toMerge.get(attribute)))
-                list = increaseByAmount(list, modifier.getAmount(), modifier.getOperation(), attribute);
+                list = increaseByAmount(list, attribute, modifier);
         }
         return list;
     }
@@ -104,7 +104,7 @@ public class AttributeHelper {
     public static Multimap<Attribute, AttributeModifier> increaseAllByAmount(Multimap<Attribute, AttributeModifier> map, Multimap<Attribute, AttributeModifier> toMerge) {
         for (Attribute attribute : toMerge.keySet()) {
             for (AttributeModifier modifier : toMerge.get(attribute)) {
-                map = increaseByAmount(map, modifier.getAmount(), modifier.getOperation(), attribute);
+                map = increaseByAmount(map, attribute, modifier);
             }
         }
         return map;
@@ -252,7 +252,7 @@ public class AttributeHelper {
          */
         public void merge(HashMap<Attribute, Double> toMerge, AttributeModifier.Operation operation) {
             for (Attribute attribute : toMerge.keySet()) {
-                this.modifiers = increaseByAmount(this.modifiers, toMerge.get(attribute), operation, attribute);
+                this.modifiers = increaseByAmount(this.modifiers, attribute, new AttributeModifier("AttributeBuilderMerged", toMerge.get(attribute), operation));
             }
         }
 

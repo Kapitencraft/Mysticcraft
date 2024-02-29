@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.gui.screen;
 
 import net.kapitencraft.mysticcraft.gui.ModMenu;
+import net.kapitencraft.mysticcraft.gui.screen.tooltip.HoverTooltip;
 
 import java.util.ArrayList;
 

@@ -1,6 +1,5 @@
 package net.kapitencraft.mysticcraft.block.special;
 
-import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.api.Reference;
 import net.kapitencraft.mysticcraft.block.gemstone.GemstoneBlock;
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
@@ -76,12 +75,10 @@ public class GemstoneCreator extends Block implements StructureExecutioner {
                 }
             } catch (IllegalArgumentException ignored) {}
         });
-        MysticcraftMod.LOGGER.info("Changed " + ref.getIntValue() + " blocks");
-
     }
 
     @Override
     public Type getType() {
-        return null;
+        return Type.AFTER_COMPLETE;
     }
 }

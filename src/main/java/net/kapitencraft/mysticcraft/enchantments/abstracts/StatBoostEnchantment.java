@@ -2,6 +2,9 @@ package net.kapitencraft.mysticcraft.enchantments.abstracts;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import net.kapitencraft.mysticcraft.api.MapStream;
+import net.kapitencraft.mysticcraft.helpers.CollectionHelper;
+import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -28,11 +31,10 @@ public abstract class StatBoostEnchantment extends Enchantment implements ModEnc
     public static Multimap<Attribute, AttributeModifier> getAllModifiers(ItemStack stack, EquipmentSlot slot) {
         Map<Enchantment, Integer> enchantments = stack.getAllEnchantments();
         Multimap<Attribute, AttributeModifier> multimap = HashMultimap.create();
-        enchantments.forEach((enchantment, integer) -> {
-            if (enchantment instanceof StatBoostEnchantment boostEnchantment && boostEnchantment.hasModifiersForThatSlot(slot, stack)) {
-                boostEnchantment.getModifiers(integer, stack, slot).accept(multimap);
-            }
-        });
+        MapStream.of(enchantments).filterKeys(ench -> ench instanceof StatBoostEnchantment)
+                .mapKeys(MiscHelper.instanceMapper(StatBoostEnchantment.class))
+                .filterKeys(boostEnchantment -> boostEnchantment.hasModifiersForThatSlot(slot, stack))
+                .mapToSimple((boostEnchantment, integer) -> boostEnchantment.getModifiers(integer, stack, slot)).forEach(CollectionHelper.biUsage(multimap, Consumer::accept));
         return multimap;
     }
 }

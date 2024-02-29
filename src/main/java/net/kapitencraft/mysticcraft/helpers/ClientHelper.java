@@ -5,6 +5,8 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.kapitencraft.mysticcraft.requirements.Requirement;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -15,13 +17,17 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 
 import java.util.List;
 import java.util.function.Consumer;
 
+@OnlyIn(Dist.CLIENT)
 public class ClientHelper {
+    public static Screen postCommandScreen = null;
 
     private static final ResourceLocation GUARDIAN_BEAM_LOCATION = new ResourceLocation("textures/entity/guardian_beam.png");
     private static final RenderType BEAM_RENDER_TYPE = RenderType.entityCutoutNoCull(GUARDIAN_BEAM_LOCATION);
@@ -84,6 +90,7 @@ public class ClientHelper {
         p_253637_.vertex(p_253920_, p_253994_, p_254492_, p_254474_).color(p_254080_, p_253655_, p_254133_, 255).uv(p_254233_, p_253939_).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(15728880).normal(p_253881_, 0.0F, 1.0F, 0.0F).endVertex();
     }
 
+
     public static <T> void addReqContent(Consumer<Component> consumer, T t, Player player) {
         List<Requirement<T>> reqs = CollectionHelper.mutableList((List<Requirement<T>>) Requirement.getReqs(t));
         reqs.removeIf(itemRequirement -> itemRequirement.matches(player));
@@ -92,5 +99,9 @@ public class ClientHelper {
             reqs.stream().map(Requirement::display).forEach(reqList::append);
             consumer.accept(Component.translatable("item.requires", reqList).withStyle(ChatFormatting.RED));
         }
+    }
+
+    public static boolean hideGui() {
+        return Minecraft.getInstance().options.hideGui;
     }
 }

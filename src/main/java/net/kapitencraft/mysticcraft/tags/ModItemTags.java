@@ -10,6 +10,7 @@ public interface ModItemTags {
     TagKey<Item> TIER_1_HAMMER = create("tier_1_hammer");
     TagKey<Item> TIER_2_HAMMER = create("tier_2_hammer");
     TagKey<Item> STRIPPED_LOG = forge("stripped_logs");
+    TagKey<Item> ENDER_HITTABLE = create("ender_hittable");
 
 
 
