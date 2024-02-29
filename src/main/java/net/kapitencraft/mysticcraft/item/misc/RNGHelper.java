@@ -14,7 +14,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-public class RNGDropHelper {
+public class RNGHelper {
 
 
 
@@ -39,6 +39,18 @@ public class RNGDropHelper {
 
     private static double getMagicFind(@Nullable LivingEntity source) {
         return (source != null) ? AttributeHelper.getSaveAttributeValue(ModAttributes.MAGIC_FIND.get(), source) : 0;
+    }
+
+    public static int getCount(float chance, LivingEntity source, double value) {
+        int i = 0;
+        while (value > 0) {
+            i++;
+            value--;
+        }
+        if (Math.random() <= getFinalChance(chance, getMagicFind(source))) {
+            i++;
+        }
+        return i;
     }
 
     public static ItemStack calculateAndDontDrop(Item item, int maxAmount, @Nullable LivingEntity source, float chance) {

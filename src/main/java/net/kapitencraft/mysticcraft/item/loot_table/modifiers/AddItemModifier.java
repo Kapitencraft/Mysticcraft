@@ -6,7 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.kapitencraft.mysticcraft.helpers.LootTableHelper;
 import net.kapitencraft.mysticcraft.item.loot_table.IConditional;
-import net.kapitencraft.mysticcraft.item.misc.RNGDropHelper;
+import net.kapitencraft.mysticcraft.item.misc.RNGHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -54,7 +54,7 @@ public class AddItemModifier extends ModLootModifier implements IConditional {
     }
 
     public void addItem(Consumer<ItemStack> consumer, LootContext context, float chance) {
-        ItemStack stack = RNGDropHelper.calculateAndDontDrop(item, maxAmount, LootTableHelper.getLivingSource(context), chance);
+        ItemStack stack = RNGHelper.calculateAndDontDrop(item, maxAmount, LootTableHelper.getLivingSource(context), chance);
         if (tag != null) stack.setTag(tag);
         if (stack != ItemStack.EMPTY) {
             consumer.accept(stack);

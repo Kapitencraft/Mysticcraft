@@ -104,12 +104,6 @@ public class CollectionHelper {
         return t -> consumer.accept(t, kAlways, jAlways);
     }
 
-    public static <T> ArrayList<T> toList(T ts) {
-        ArrayList<T> target = new ArrayList<>();
-        Collections.addAll(target, ts);
-        return target;
-    }
-
     public static <T, K> Multimap<T, K> fromMap(Map<T, K> map) {
         Multimap<T, K> multimap = HashMultimap.create();
         for (T t : map.keySet()) {
