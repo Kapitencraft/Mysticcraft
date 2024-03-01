@@ -8,7 +8,7 @@ import net.kapitencraft.mysticcraft.helpers.TextHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModItems;
 import net.kapitencraft.mysticcraft.item.capability.ItemData;
-import net.kapitencraft.mysticcraft.item.misc.RNGDropHelper;
+import net.kapitencraft.mysticcraft.item.misc.RNGHelper;
 import net.kapitencraft.mysticcraft.misc.ManaMain;
 import net.kapitencraft.mysticcraft.misc.cooldown.SpellCooldown;
 import net.kapitencraft.mysticcraft.requirements.Requirement;
@@ -145,7 +145,7 @@ public class SpellHelper implements ItemData<SpellSlot[], SpellHelper> {
                 List<Element> elements = spell.elements();
                 if (!elements.isEmpty()) {//spawn spell shards
                     ItemStack spellShardRNG = new ItemStack(ModItems.ELEMENTAL_SHARDS.get(MathHelper.pickRandom(elements)).get());
-                    RNGDropHelper.calculateAndDrop(spellShardRNG, 0.00002f, user, user.position());
+                    RNGHelper.calculateAndDrop(spellShardRNG, 0.00002f, user, user.position());
                 }
                 return true;
             }

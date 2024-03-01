@@ -6,7 +6,7 @@ import net.kapitencraft.mysticcraft.helpers.LootTableHelper;
 import net.kapitencraft.mysticcraft.init.ModItems;
 import net.kapitencraft.mysticcraft.item.loot_table.IConditional;
 import net.kapitencraft.mysticcraft.item.material.EssenceItem;
-import net.kapitencraft.mysticcraft.item.misc.RNGDropHelper;
+import net.kapitencraft.mysticcraft.item.misc.RNGHelper;
 import net.kapitencraft.mysticcraft.misc.content.EssenceType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -29,7 +29,7 @@ public class AddEssenceModifier extends ModLootModifier implements IConditional 
         if (living instanceof Mob mob) {
             if (mob.getMobType() == MobType.UNDEAD) {
                 EssenceItem essenceItem = ModItems.ESSENCE.get();
-                ItemStack stack = RNGDropHelper.calculateAndDontDrop(essenceItem, 5, living, 0.0001f);
+                ItemStack stack = RNGHelper.calculateAndDontDrop(essenceItem, 5, living, 0.0001f);
                 essenceItem.saveData(stack, EssenceType.UNDEAD);
                 if (stack != ItemStack.EMPTY) {
                     generatedLoot.add(stack);

@@ -3,9 +3,11 @@ package net.kapitencraft.mysticcraft.item.combat.weapon.ranged.bow;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModEnchantments;
 import net.kapitencraft.mysticcraft.item.misc.IModItem;
+import net.kapitencraft.mysticcraft.item.misc.RNGHelper;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
 import net.minecraft.sounds.SoundEvents;
@@ -67,7 +69,7 @@ public abstract class ModBowItem extends BowItem implements IModItem {
                         if (flag1 || player.getAbilities().instabuild && (itemstack.is(Items.SPECTRAL_ARROW) || itemstack.is(Items.TIPPED_ARROW))) {
                             abstractarrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
                         }
-                        createLegolasExtraArrows(bow, archer, this.getKB());
+                        addAllExtraArrows(bow, archer, this.getKB());
                         abstractarrow.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, (float) (f * mul * (1+ getSpeedMul(abstractarrow, fbSpeedMul, speedMul))), 1.0F);
                         world.addFreshEntity(abstractarrow);
                     }
@@ -90,6 +92,21 @@ public abstract class ModBowItem extends BowItem implements IModItem {
             float yChange = (float) (Math.random() * (5 - legolasLevel) - (5 - legolasLevel) / 2);
             float xChange = (float) (Math.random() * (5 - legolasLevel) - (5 - legolasLevel) / 2);
             createArrowProperties(archer, bow, kb, archer.getXRot() + xChange, archer.getYRot() + yChange);
+        }
+    }
+
+    private static final float OFFSET_DEGREES = 4f;
+
+    public static void addAllExtraArrows(@NotNull ItemStack bow, @NotNull LivingEntity archer, int kb) {
+        createLegolasExtraArrows(bow, archer, kb);
+        double extraArrows = AttributeHelper.getSaveAttributeValue(ModAttributes.ARROW_COUNT.get(), archer);
+        int extraArrowCount = RNGHelper.getCount(0.5f, archer, extraArrows);
+        for (int i = 0; i < extraArrowCount; i++) {
+            float degrees = OFFSET_DEGREES * (i / 2);
+            if (i % 2 == 0) {
+                degrees *= -1;
+            }
+            createArrowProperties(archer, bow, kb, archer.getXRot(), archer.getYRot() + degrees);
         }
     }
 

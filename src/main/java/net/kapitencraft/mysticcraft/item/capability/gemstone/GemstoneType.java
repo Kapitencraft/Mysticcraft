@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
+import java.util.stream.Collector;
 
 public enum GemstoneType implements StringRepresentable {
     EMPTY(colorFromCFormat(ChatFormatting.WHITE), ()-> null, 0, "empty", 0),

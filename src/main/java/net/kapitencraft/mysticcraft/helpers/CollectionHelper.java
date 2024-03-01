@@ -118,6 +118,7 @@ public class CollectionHelper {
         return target;
     }
 
+
     public static <T, K, L, J extends Map<K, L>> List<L> values(Map<T, J> map) {
         return map.values().stream().map(Map::values).collect(CollectorHelper.merge()).toList();
     }

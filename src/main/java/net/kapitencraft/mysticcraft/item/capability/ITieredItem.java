@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.item;
+package net.kapitencraft.mysticcraft.item.capability;
 
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.item.capability.dungeon.IPrestigeAbleItem;
@@ -20,6 +20,7 @@ public interface ITieredItem extends IStarAbleItem, IPrestigeAbleItem {
 
     List<ItemTier> getAvailableTiers();
 
+    @SuppressWarnings("all")
     @Override
     default ItemStack upgrade(ItemStack stack) {
         if (IStarAbleItem.super.mayUpgrade(stack)) {
@@ -29,7 +30,7 @@ public interface ITieredItem extends IStarAbleItem, IPrestigeAbleItem {
         ItemTier tier = getTier(stack);
         if (tier == ItemTier.DEFAULT) {
             fromDefault().saveToStack(stack);
-        } else if (tier.next != null) {
+        } else {
             tier.next.saveToStack(stack);
         }
         IStarAbleItem.setStars(stack, 0);

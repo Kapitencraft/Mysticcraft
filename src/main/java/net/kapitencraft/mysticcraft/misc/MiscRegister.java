@@ -19,8 +19,8 @@ import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModEnchantments;
 import net.kapitencraft.mysticcraft.init.ModItems;
 import net.kapitencraft.mysticcraft.init.ModMobEffects;
-import net.kapitencraft.mysticcraft.item.ITieredItem;
 import net.kapitencraft.mysticcraft.item.capability.CapabilityHelper;
+import net.kapitencraft.mysticcraft.item.capability.ITieredItem;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneSlot;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneType;
 import net.kapitencraft.mysticcraft.item.capability.item_stat.ItemStatCapability;
@@ -154,7 +154,7 @@ public class MiscRegister {
         Player player = event.getEntity();
         ItemStack bow = event.getBow();
         if (bow.getItem() instanceof ModBowItem) return;
-        ModBowItem.createLegolasExtraArrows(bow, player, 0);
+        ModBowItem.addAllExtraArrows(bow, player, 0);
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
