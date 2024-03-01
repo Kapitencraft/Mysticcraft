@@ -119,6 +119,7 @@ public interface ModItems {
     RegistryObject<MaterialModItem> MS_HANDLE = registerNonStackableMaterial("mana_steel_sword_handle", Rarity.RARE, TabGroup.MATERIAL);
     RegistryObject<MaterialModItem> HEART_OF_THE_NETHER = registerNonStackableMaterial("heart_of_the_nether", ModRarities.MYTHIC, TabGroup.MATERIAL);
     RegistryObject<MaterialModItem> CRIMSON_STEEL_INGOT = registerMaterial("crimson_steel_ingot", Rarity.EPIC, TabGroup.CRIMSON_MATERIAL);
+    RegistryObject<MaterialModItem> TERROR_STEEL_INGOT = registerMaterial("terror_steel_ingot", Rarity.EPIC, TabGroup.TERROR_MATERIAL);
     RegistryObject<MaterialModItem> CRIMSON_STEEL_DUST = registerMaterial("crimson_steel_dust", Rarity.EPIC, TabGroup.CRIMSON_MATERIAL);
     RegistryObject<MaterialModItem> CRIMSONITE_CLUSTER = registerMaterial("crimsonite_cluster", Rarity.UNCOMMON, TabGroup.CRIMSON_MATERIAL);
     RegistryObject<MaterialModItem> CRIMSONITE_DUST = registerMaterial("crimsonite_dust", Rarity.RARE, TabGroup.CRIMSON_MATERIAL);
@@ -161,6 +162,8 @@ public interface ModItems {
     RegistryObject<GUISlotBlockItem> EMPTY_APPLICABLE_SLOT = register("empty_applicable", ()-> new GUISlotBlockItem().putTooltip(List.of(Component.literal("There is no Gemstone Applicable in it's slot").withStyle(ChatFormatting.RED))), null);
     RegistryObject<BucketItem> BUCKET_OF_MANA = REGISTRY.register("bucket_of_mana", ()-> new BucketItem(ModFluids.SOURCE_MANA_FLUID, MiscHelper.rarity(Rarity.EPIC).stacksTo(1)));
     RegistryObject<GemstoneItem> GEMSTONE = REGISTRY.register("gemstone", GemstoneItem::new);
+
+    HashMap<EquipmentSlot, RegistryObject<TerrorArmorItem>> TERROR_ARMOR = ModArmorItem.createRegistry("terror",TerrorArmorItem::new, TerrorArmorItem.TERROR_ARMOR_GROUP);
     //HashMap<GuildUpgrades, RegistryObject<GuildUpgradeItem>> GUILD_UPGRADES = GuildUpgrades.createRegistry();
     HashMap<PrecursorRelicItem.BossType, RegistryObject<PrecursorRelicItem>> PRECURSOR_RELICTS = PrecursorRelicItem.makeRegistry();
 }

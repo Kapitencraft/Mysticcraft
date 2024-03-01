@@ -18,6 +18,7 @@ public class TabGroup {
     public static final TabGroup MATERIAL = new TabGroup(TabRegister.TabTypes.MOD_MATERIALS);
     public static final TabGroup COMBAT = new TabGroup(TabRegister.TabTypes.WEAPONS_AND_TOOLS);
     public static final TabGroup CRIMSON_MATERIAL = new TabGroup(TabRegister.TabTypes.MOD_MATERIALS);
+    public static final TabGroup TERROR_MATERIAL = new TabGroup(TabRegister.TabTypes.MOD_MATERIALS);
     public static final TabGroup UTILITIES = new TabGroup(TabRegister.TabTypes.TOOLS_AND_UTILITIES);
     public static final TabGroup DECO = new TabGroup(TabRegister.TabTypes.DECO);
     public static final TabGroup GOLDEN_DECO = new TabGroup(TabRegister.TabTypes.DECO);

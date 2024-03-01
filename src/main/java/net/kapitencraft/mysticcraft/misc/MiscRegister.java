@@ -279,6 +279,12 @@ public class MiscRegister {
         if (event.getEntity() instanceof Arrow arrow) {
             if (arrow.getOwner() instanceof LivingEntity living) {
                 ItemStack bow = living.getMainHandItem();
+                if (living.getPersistentData().getBoolean("GetTwoArrows")) {
+                    living.getPersistentData().putBoolean("GetTwoArrows", false);
+
+                    ModBowItem.createArrowProperties(living, bow, 1, living.getXRot(), living.getYRot() + 5f);
+                    ModBowItem.createArrowProperties(living, bow, 1, living.getXRot(), living.getYRot() - 5f);
+                }
                 CompoundTag arrowTag = arrow.getPersistentData();
                 if (bow.is(ModItemTags.ENDER_HITTABLE)) {
                     arrowTag.putBoolean("HitsEnderMan", true);
