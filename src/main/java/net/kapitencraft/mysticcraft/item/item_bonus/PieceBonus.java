@@ -1,13 +1,33 @@
 package net.kapitencraft.mysticcraft.item.item_bonus;
 
+import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.function.Consumer;
 
 public abstract class PieceBonus implements Bonus {
     private final String name;
+
+    @Override
+    public void onApply(LivingEntity living) {
+    }
+
+    @Override
+    public void onRemove(LivingEntity living) {
+    }
+
+    @Override
+    public void onTick(Level level, @NotNull LivingEntity entity) {
+    }
+
+    @Override
+    public void onEntityKilled(LivingEntity killed, LivingEntity user, MiscHelper.DamageType type) {
+    }
 
     public PieceBonus(String name) {
         this.name = name;

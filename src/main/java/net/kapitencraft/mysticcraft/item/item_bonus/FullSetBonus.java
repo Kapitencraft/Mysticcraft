@@ -1,14 +1,29 @@
 package net.kapitencraft.mysticcraft.item.item_bonus;
 
-public abstract class FullSetBonus implements Bonus{
-    private final String name;
+import net.kapitencraft.mysticcraft.helpers.MiscHelper;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
+
+public abstract class FullSetBonus extends MultiPieceBonus {
     protected FullSetBonus(String name) {
-        this.name = name;
+        super(name);
     }
 
     @Override
-    public String getName() {
-        return name;
+    public void onApply(LivingEntity living) {
+    }
+
+    @Override
+    public void onTick(Level level, @NotNull LivingEntity entity) {
+    }
+
+    @Override
+    public void onEntityKilled(LivingEntity killed, LivingEntity user, MiscHelper.DamageType type) {
+    }
+
+    @Override
+    public void onRemove(LivingEntity living) {
     }
 
     @Override

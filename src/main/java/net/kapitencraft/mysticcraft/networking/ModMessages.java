@@ -3,6 +3,7 @@ package net.kapitencraft.mysticcraft.networking;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.networking.packets.C2S.ReforgingPacket;
 import net.kapitencraft.mysticcraft.networking.packets.C2S.UpgradeItemPacket;
+import net.kapitencraft.mysticcraft.networking.packets.C2S.UseShortBowPacket;
 import net.kapitencraft.mysticcraft.networking.packets.ModPacket;
 import net.kapitencraft.mysticcraft.networking.packets.S2C.*;
 import net.kapitencraft.mysticcraft.networking.packets.SendCompoundTagPacket;
@@ -62,6 +63,7 @@ public class ModMessages {
                 .encoder(ClientboundExplodePacket::write)
                 .consumerMainThread(ModMessages::handleExplosionPacket)
                 .add();
+        addMessage(UseShortBowPacket.class, NetworkDirection.PLAY_TO_SERVER, UseShortBowPacket::new);
         addMessage(ReforgingPacket.class, NetworkDirection.PLAY_TO_SERVER, ReforgingPacket::new);
         addMessage(UpgradeItemPacket.class, NetworkDirection.PLAY_TO_SERVER, UpgradeItemPacket::new);
         addMessage(SendCompoundTagPacket.class, NetworkDirection.PLAY_TO_SERVER, SendCompoundTagPacket::new);

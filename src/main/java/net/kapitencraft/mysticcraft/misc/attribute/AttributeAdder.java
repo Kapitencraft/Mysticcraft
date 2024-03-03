@@ -31,6 +31,7 @@ public class AttributeAdder {
         addAll(event, ModAttributes.STRENGTH.get(), ONLY_WITH_BRAIN);
         addAll(event, ModAttributes.CRIT_DAMAGE.get(), ONLY_WITH_BRAIN);
         addAll(event, ModAttributes.RANGED_DAMAGE.get(), ONLY_WITH_BRAIN);
+        addAll(event, ModAttributes.ARROW_COUNT.get(), ONLY_WITH_BRAIN);
         addAll(event, ModAttributes.HEALTH_REGEN.get(), ONLY_WITH_BRAIN);
         addAll(event, ModAttributes.MAGIC_DEFENCE.get(), ONLY_WITH_BRAIN);
         addAll(event, ModAttributes.TRUE_DEFENCE.get(), ONLY_WITH_BRAIN);

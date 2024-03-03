@@ -1,5 +1,6 @@
-package net.kapitencraft.mysticcraft;
+package net.kapitencraft.mysticcraft.inst;
 
+import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.helpers.CollectionHelper;
 import net.kapitencraft.mysticcraft.item.capability.elytra.ElytraCapability;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneCapability;

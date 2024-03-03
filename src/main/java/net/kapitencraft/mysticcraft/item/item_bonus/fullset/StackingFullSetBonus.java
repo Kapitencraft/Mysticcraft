@@ -3,7 +3,7 @@ package net.kapitencraft.mysticcraft.item.item_bonus.fullset;
 import net.kapitencraft.mysticcraft.item.item_bonus.FullSetBonus;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,7 +22,7 @@ public abstract class StackingFullSetBonus extends FullSetBonus {
     }
 
     @Override
-    public void onTick(@NotNull ItemStack stack, Level level, @NotNull Entity entity) {
+    public void onTick(Level level, @NotNull LivingEntity entity) {
         CompoundTag data = entity.getPersistentData();
         int cooldown = data.getInt(cooldownId);
         int stackCount = getStackCount(entity);

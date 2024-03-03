@@ -44,21 +44,20 @@ public abstract class ModBowItem extends BowItem implements IModItem {
     public void releaseUsing(@NotNull ItemStack bow, @NotNull Level world, @NotNull LivingEntity archer, int timeLeft) {
         if (archer instanceof Player player) {
             boolean flag = player.getAbilities().instabuild || bow.getEnchantmentLevel(Enchantments.INFINITY_ARROWS) > 0;
-            ItemStack itemstack = player.getProjectile(bow);
+            ItemStack itemStack = player.getProjectile(bow);
             int i = this.getUseDuration(bow) - timeLeft;
-            i = net.minecraftforge.event.ForgeEventFactory.onArrowLoose(bow, world, player, i, !itemstack.isEmpty() || flag);
+            i = net.minecraftforge.event.ForgeEventFactory.onArrowLoose(bow, world, player, i, !itemStack.isEmpty() || flag);
             if (i < 0) return;
-            if (flag) itemstack = new ItemStack(Items.ARROW);
-            if (!itemstack.isEmpty()) {
+            if (flag) itemStack = new ItemStack(Items.ARROW);
+            if (!itemStack.isEmpty()) {
                 float f = getPowerForTime(i);
                 if (!(f < 0.1f)) {
-                    boolean flag1 = player.getAbilities().instabuild || (itemstack.getItem() instanceof ArrowItem && ((ArrowItem)itemstack.getItem()).isInfinite(itemstack, bow, player));
+                    boolean flag1 = player.getAbilities().instabuild || (itemStack.getItem() instanceof ArrowItem && ((ArrowItem)itemStack.getItem()).isInfinite(itemStack, bow, player));
                     if (!world.isClientSide) {
                         final int mul = 3;
-                        ArrowItem arrowitem = (ArrowItem)(itemstack.getItem() instanceof ArrowItem ? itemstack.getItem() : Items.ARROW);
-                        AbstractArrow abstractarrow = arrowitem.createArrow(world, itemstack, player);
+                        ArrowItem arrowitem = (ArrowItem)(itemStack.getItem() instanceof ArrowItem ? itemStack.getItem() : Items.ARROW);
+                        AbstractArrow abstractarrow = arrowitem.createArrow(world, itemStack, player);
                         double fbSpeedMul = LongBowItem.ARROW_SPEED_MUL / mul;
-                        double speedMul = archer.getAttributeValue(ModAttributes.ARROW_SPEED.get());
                         abstractarrow.setBaseDamage(player.getAttributeValue(ModAttributes.RANGED_DAMAGE.get()));
                         abstractarrow.setKnockback(2);
                         if (f == 1.0F) {
@@ -66,18 +65,18 @@ public abstract class ModBowItem extends BowItem implements IModItem {
                         }
                         registerEnchant(bow, abstractarrow);
                         bow.hurtAndBreak(1, player, (p_40665_) -> p_40665_.broadcastBreakEvent(player.getUsedItemHand()));
-                        if (flag1 || player.getAbilities().instabuild && (itemstack.is(Items.SPECTRAL_ARROW) || itemstack.is(Items.TIPPED_ARROW))) {
+                        if (isInfinite(player, itemStack, bow)) {
                             abstractarrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
                         }
                         addAllExtraArrows(bow, archer, this.getKB());
-                        abstractarrow.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, (float) (f * mul * (1+ getSpeedMul(abstractarrow, fbSpeedMul, speedMul))), 1.0F);
+                        abstractarrow.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, (float) (f * mul * (1 + getSpeedMul(abstractarrow, fbSpeedMul))), 1.0F);
                         world.addFreshEntity(abstractarrow);
                     }
                     world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ARROW_SHOOT, SoundSource.PLAYERS, 1.0F, 1.0F / (world.getRandom().nextFloat() * 0.4F + 1.2F) + f * 0.5F);
                     if (!flag1 && !player.getAbilities().instabuild) {
-                        itemstack.shrink(1);
-                        if (itemstack.isEmpty()) {
-                            player.getInventory().removeItem(itemstack);
+                        itemStack.shrink(1);
+                        if (itemStack.isEmpty()) {
+                            player.getInventory().removeItem(itemStack);
                         }
                     }
                     player.awardStat(Stats.ITEM_USED.get(this));
@@ -86,44 +85,55 @@ public abstract class ModBowItem extends BowItem implements IModItem {
         }
     }
 
+    private static boolean isInfinite(Player player, ItemStack itemStack, ItemStack bow) {
+        boolean flag1 = player.getAbilities().instabuild || (itemStack.getItem() instanceof ArrowItem && ((ArrowItem)itemStack.getItem()).isInfinite(itemStack, bow, player));
+        return flag1 || player.getAbilities().instabuild && (itemStack.is(Items.SPECTRAL_ARROW) || itemStack.is(Items.TIPPED_ARROW));
+    }
+
     public static void createLegolasExtraArrows(@NotNull ItemStack bow, @NotNull LivingEntity archer, int kb) {
         int legolasLevel = bow.getEnchantmentLevel(ModEnchantments.LEGOLAS_EMULATION.get());
         for (int j = 0; j < legolasLevel; j++) {
             float yChange = (float) (Math.random() * (5 - legolasLevel) - (5 - legolasLevel) / 2);
             float xChange = (float) (Math.random() * (5 - legolasLevel) - (5 - legolasLevel) / 2);
-            createArrowProperties(archer, bow, kb, archer.getXRot() + xChange, archer.getYRot() + yChange);
+            createArrowProperties(archer, true, bow, kb, archer.getXRot() + xChange, archer.getYRot() + yChange);
         }
     }
 
     private static final float OFFSET_DEGREES = 4f;
 
+    @SuppressWarnings("all")
     public static void addAllExtraArrows(@NotNull ItemStack bow, @NotNull LivingEntity archer, int kb) {
         createLegolasExtraArrows(bow, archer, kb);
         double extraArrows = AttributeHelper.getSaveAttributeValue(ModAttributes.ARROW_COUNT.get(), archer);
-        int extraArrowCount = RNGHelper.getCount(0.5f, archer, extraArrows);
+        int extraArrowCount = RNGHelper.getCount(archer, extraArrows);
+        archer.getPersistentData().putBoolean("SpawnExtraArrows", false);
         for (int i = 0; i < extraArrowCount; i++) {
-            float degrees = OFFSET_DEGREES * (i / 2);
+            float degrees = OFFSET_DEGREES * (i / 2 + 1);
             if (i % 2 == 0) {
                 degrees *= -1;
             }
-            createArrowProperties(archer, bow, kb, archer.getXRot(), archer.getYRot() + degrees);
+            createArrowProperties(archer, true, bow, kb, archer.getXRot(), archer.getYRot() + degrees);
         }
     }
 
-    public static AbstractArrow createArrowProperties(LivingEntity archer, ItemStack bow, int kb, float rotX, float rotY) {
+    public static AbstractArrow createArrowProperties(LivingEntity archer, boolean crit, ItemStack bow, int kb, float rotX, float rotY) {
         Level world = archer.level;
         ItemStack arrowStack = archer.getProjectile(bow);
         if (!arrowStack.isEmpty() && arrowStack.getItem() instanceof ArrowItem arrowItem) {
             AbstractArrow arrow = arrowItem.createArrow(world, arrowStack, archer);
-            arrow.shootFromRotation(archer, rotX, rotY, 0.0F, (float) (5 + archer.getAttributeValue(ModAttributes.ARROW_SPEED.get()) * 0.02), 1.0F);
+            arrow.shootFromRotation(archer, rotX, rotY, 0.0F, 5, 1.0F);
             arrow.setBaseDamage(archer.getAttributeValue(ModAttributes.RANGED_DAMAGE.get()));
             arrow.setKnockback(kb);
-            arrow.setCritArrow(true);
+            arrow.setCritArrow(crit);
             registerEnchant(bow, arrow);
+            if (archer instanceof Player player && isInfinite(player, arrowStack, bow)) {
+                arrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
+            }
             bow.hurtAndBreak(1, archer, (p_40665_) -> p_40665_.broadcastBreakEvent(archer.getUsedItemHand()));
             world.addFreshEntity(arrow);
-            if (!(archer instanceof Player player && player.getAbilities().instabuild) || bow.getEnchantmentLevel(Enchantments.INFINITY_ARROWS) > 0) {
+            if ( !(archer instanceof Player player && player.getAbilities().instabuild) || bow.getEnchantmentLevel(Enchantments.INFINITY_ARROWS) > 0) {
                 arrowStack.shrink(1);
+                if (arrowStack.isEmpty() && archer instanceof Player player) player.getInventory().removeItem(arrowStack);
             }
             world.playSound(null, archer.getX(), archer.getY(), archer.getZ(), SoundEvents.ARROW_SHOOT, SoundSource.PLAYERS, 1.0F, 1.0F / (world.getRandom().nextFloat() * 0.4F + 1.2F) + 0.5F);
             return arrow;
@@ -148,8 +158,8 @@ public abstract class ModBowItem extends BowItem implements IModItem {
         }
         return arrow;
     }
-    protected double getSpeedMul(AbstractArrow arrow, double mul1, double mul2) {
-        return arrow.getDeltaMovement().x * mul1 * (1 + mul2 * 0.1);
+    protected double getSpeedMul(AbstractArrow arrow, double mul1) {
+        return arrow.getDeltaMovement().x * mul1;
     }
 
     public abstract double getDamage();

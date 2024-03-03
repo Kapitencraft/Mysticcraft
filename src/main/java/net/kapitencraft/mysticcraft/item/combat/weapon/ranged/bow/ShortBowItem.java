@@ -60,7 +60,6 @@ public abstract class ShortBowItem extends ModBowItem {
         }
     }
 
-
     @Override
     public void appendHoverTextWithPlayer(@NotNull ItemStack stack, @Nullable Level level, @NotNull List<Component> list, @NotNull TooltipFlag flag, Player player) {
         super.appendHoverText(stack, level, list, flag);
@@ -70,10 +69,8 @@ public abstract class ShortBowItem extends ModBowItem {
         list.add(Component.literal("Short Bow: Instantly Shoots!").withStyle(ChatFormatting.DARK_PURPLE));
     }
 
-    //TODO change multishot amount being handled with new system
-
     public void createArrows(@NotNull ItemStack bow, @NotNull Level world, @NotNull LivingEntity archer) {
         ModBowItem.addAllExtraArrows(bow, archer, this.getKB());
-        createArrowProperties(archer, bow, this.getKB(), archer.getXRot(), archer.getYRot());
+        createArrowProperties(archer, true, bow, this.getKB(), archer.getXRot(), archer.getYRot());
     }
 }

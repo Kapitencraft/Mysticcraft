@@ -1,9 +1,6 @@
 package net.kapitencraft.mysticcraft.spell;
 
-import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
-import net.kapitencraft.mysticcraft.helpers.CollectionHelper;
-import net.kapitencraft.mysticcraft.helpers.MathHelper;
-import net.kapitencraft.mysticcraft.helpers.TextHelper;
+import net.kapitencraft.mysticcraft.helpers.*;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModItems;
 import net.kapitencraft.mysticcraft.item.capability.spell.ISpellItem;
@@ -23,6 +20,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.List;
@@ -99,6 +98,22 @@ public enum Spells implements Spell {
 
     private int getRemainingCooldownTicks(LivingEntity player) {
         return player.getPersistentData().getCompound("SpellCooldowns").getInt(this.name);
+    }
+
+    @Override
+    public void onEntityKilled(LivingEntity killed, LivingEntity user, MiscHelper.DamageType type) {
+    }
+
+    @Override
+    public void onTick(Level level, @NotNull LivingEntity entity) {
+    }
+
+    @Override
+    public void onApply(LivingEntity living) {
+    }
+
+    @Override
+    public void onRemove(LivingEntity living) {
     }
 
     private interface SpellExecutioner {

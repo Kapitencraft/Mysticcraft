@@ -9,8 +9,8 @@ import net.kapitencraft.mysticcraft.helpers.TextHelper;
 import net.kapitencraft.mysticcraft.init.ModItems;
 import net.kapitencraft.mysticcraft.item.combat.armor.client.renderer.ArmorRenderer;
 import net.kapitencraft.mysticcraft.item.item_bonus.ExtraBonus;
-import net.kapitencraft.mysticcraft.item.item_bonus.FullSetBonus;
 import net.kapitencraft.mysticcraft.item.item_bonus.IArmorBonusItem;
+import net.kapitencraft.mysticcraft.item.item_bonus.MultiPieceBonus;
 import net.kapitencraft.mysticcraft.item.item_bonus.PieceBonus;
 import net.kapitencraft.mysticcraft.item.misc.IModItem;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
@@ -168,13 +168,14 @@ public abstract class ModArmorItem extends ArmorItem implements IModItem {
                         builder.putAll(bonusMods);
                     }
                 }
-                FullSetBonus fullSetBonus = bonusItem.getFullSetBonus();
-                if (fullSetBonus != null) {
-                    Multimap<Attribute, AttributeModifier> bonusMods = fullSetBonus.getModifiers(living);
+                List<MultiPieceBonus> bonni = bonusItem.getPieceBonni();
+                bonni.forEach(bonus -> {
+                    if (!bonus.isActive(living, slot)) return;
+                    Multimap<Attribute, AttributeModifier> bonusMods = bonus.getModifiers(living);
                     if (this.getSlot() == EquipmentSlot.CHEST && this.isFullSetActive(living) && bonusMods != null) {
                         builder.putAll(bonusMods);
                     }
-                }
+                });
                 ExtraBonus extraBonus = bonusItem.getExtraBonus(this.getSlot());
                 if (extraBonus != null) {
                     Multimap<Attribute, AttributeModifier> extraMods = extraBonus.getModifiers(living);

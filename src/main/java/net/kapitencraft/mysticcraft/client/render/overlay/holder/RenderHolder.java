@@ -42,7 +42,7 @@ public abstract class RenderHolder {
         Vec2 loc = this.getLoc(posX, posY);
         float width = this.getWidth(player, font);
         float height = this.getHeight(player, font);
-        return new ResizeBox(loc.add(-1f), loc.add(new Vec2(width, height)).add(1f), this); //TODO fix size of dots and lines
+        return new ResizeBox(loc.add(-1f), loc.add(new Vec2(width, height)).add(1f), this);
     }
 
     public abstract float getWidth(LocalPlayer player, Font font);

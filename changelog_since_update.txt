@@ -13,6 +13,7 @@ moved Enchantment descriptions being in Mixin instead of event;
 removed Mana-Sam-Launcher due to no necessity;
 
 fixed Overlays being aligned to the center;
+fixed Tallin armor not working correctly;
 fixed Aim enchantment not working;
 fixed most attribute modifying enchantments applying multiple effects;
 fixed Overlay change screen's cursor visuals being buggy;

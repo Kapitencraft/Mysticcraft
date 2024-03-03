@@ -4,8 +4,8 @@ import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.item.combat.armor.client.model.FrozenBlazeArmorModel;
 import net.kapitencraft.mysticcraft.item.combat.armor.client.renderer.ArmorRenderer;
 import net.kapitencraft.mysticcraft.item.item_bonus.ExtraBonus;
-import net.kapitencraft.mysticcraft.item.item_bonus.FullSetBonus;
 import net.kapitencraft.mysticcraft.item.item_bonus.IArmorBonusItem;
+import net.kapitencraft.mysticcraft.item.item_bonus.MultiPieceBonus;
 import net.kapitencraft.mysticcraft.item.item_bonus.PieceBonus;
 import net.kapitencraft.mysticcraft.item.item_bonus.fullset.FrozenBlazeFullSetBonus;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.ArmorTabGroup;
@@ -40,8 +40,8 @@ public class FrozenBlazeArmorItem extends ModArmorItem implements IArmorBonusIte
     }
 
     @Override
-    public FullSetBonus getFullSetBonus() {
-        return FULL_SET_BONUS;
+    public List<MultiPieceBonus> getPieceBonni() {
+        return List.of(FULL_SET_BONUS);
     }
 
     @Override

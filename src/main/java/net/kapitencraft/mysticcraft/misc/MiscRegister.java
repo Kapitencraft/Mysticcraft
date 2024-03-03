@@ -19,6 +19,7 @@ import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModEnchantments;
 import net.kapitencraft.mysticcraft.init.ModItems;
 import net.kapitencraft.mysticcraft.init.ModMobEffects;
+import net.kapitencraft.mysticcraft.inst.MysticcraftPlayerInstance;
 import net.kapitencraft.mysticcraft.item.capability.CapabilityHelper;
 import net.kapitencraft.mysticcraft.item.capability.ITieredItem;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneSlot;
@@ -31,15 +32,20 @@ import net.kapitencraft.mysticcraft.item.combat.armor.SoulMageArmorItem;
 import net.kapitencraft.mysticcraft.item.combat.duel.DuelHandler;
 import net.kapitencraft.mysticcraft.item.combat.spells.SpellItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.bow.ModBowItem;
+import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.bow.ShortBowItem;
 import net.kapitencraft.mysticcraft.item.misc.SoulbindHelper;
 import net.kapitencraft.mysticcraft.misc.content.EssenceHolder;
 import net.kapitencraft.mysticcraft.misc.cooldown.Cooldowns;
 import net.kapitencraft.mysticcraft.misc.particle_help.ParticleAnimator;
+import net.kapitencraft.mysticcraft.networking.ModMessages;
+import net.kapitencraft.mysticcraft.networking.packets.C2S.UseShortBowPacket;
 import net.kapitencraft.mysticcraft.requirements.Requirement;
 import net.kapitencraft.mysticcraft.tags.ModBlockTags;
 import net.kapitencraft.mysticcraft.tags.ModItemTags;
 import net.kapitencraft.mysticcraft.villagers.ModVillagers;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -49,6 +55,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -72,6 +79,7 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.common.BasicItemListing;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
@@ -102,6 +110,16 @@ public class MiscRegister {
         if (event.getLevel() instanceof ServerLevel serverLevel && serverLevel.dimension() == Level.OVERWORLD) {
             GuildHandler.setInstance(serverLevel.getDataStorage().computeIfAbsent((tag -> GuildHandler.load(tag, serverLevel.getServer())), GuildHandler::createDefault, "guilds"));
             DuelHandler.setInstance(serverLevel.getDataStorage().computeIfAbsent(tag -> DuelHandler.load(tag, serverLevel.getServer()), DuelHandler::new, "duels"));
+        }
+    }
+
+    @SubscribeEvent
+    public static void sendLeftClickShortBow(InputEvent.InteractionKeyMappingTriggered event) {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (event.isAttack() && player != null && player.getMainHandItem().getItem() instanceof ShortBowItem) {
+            event.setCanceled(true);
+            player.swing(InteractionHand.MAIN_HAND);
+            ModMessages.sendToServer(new UseShortBowPacket());
         }
     }
 
@@ -187,7 +205,6 @@ public class MiscRegister {
         if (i > 0) {
             BasaltWalkerEnchantment.onEntityMoved(living, living.blockPosition(), i);
         }
-        BonusHelper.useBonuses(living, (bonus, stack) -> bonus.onTick(stack, living.getLevel(), living));
         if (living instanceof Player player) {
             MobEffectInstance stunInstance = player.getEffect(ModMobEffects.STUN.get());
             if (stunInstance != null && player.level.isClientSide) {
@@ -279,12 +296,6 @@ public class MiscRegister {
         if (event.getEntity() instanceof Arrow arrow) {
             if (arrow.getOwner() instanceof LivingEntity living) {
                 ItemStack bow = living.getMainHandItem();
-                if (living.getPersistentData().getBoolean("GetTwoArrows")) {
-                    living.getPersistentData().putBoolean("GetTwoArrows", false);
-
-                    ModBowItem.createArrowProperties(living, bow, 1, living.getXRot(), living.getYRot() + 5f);
-                    ModBowItem.createArrowProperties(living, bow, 1, living.getXRot(), living.getYRot() - 5f);
-                }
                 CompoundTag arrowTag = arrow.getPersistentData();
                 if (bow.is(ModItemTags.ENDER_HITTABLE)) {
                     arrowTag.putBoolean("HitsEnderMan", true);
@@ -300,10 +311,14 @@ public class MiscRegister {
                 }
             }
         }
-        else if (event.getEntity() instanceof ServerPlayer serverPlayer) {
-            NetworkingHelper.syncAll(serverPlayer);
+        if (event.getEntity() instanceof Player player) {
+            new MysticcraftPlayerInstance(player);
+            if (event.getEntity() instanceof ServerPlayer serverPlayer) {
+                NetworkingHelper.syncAll(serverPlayer);
+            }
         }
     }
+
     @SubscribeEvent
     public static void healthRegenRegister(LivingHealEvent event) {
         LivingEntity living = event.getEntity();

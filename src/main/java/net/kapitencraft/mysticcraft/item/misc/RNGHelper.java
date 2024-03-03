@@ -41,13 +41,14 @@ public class RNGHelper {
         return (source != null) ? AttributeHelper.getSaveAttributeValue(ModAttributes.MAGIC_FIND.get(), source) : 0;
     }
 
-    public static int getCount(float chance, LivingEntity source, double value) {
+    public static int getCount(LivingEntity source, double value) {
         int i = 0;
         while (value > 0) {
             i++;
             value--;
         }
-        if (Math.random() <= getFinalChance(chance, getMagicFind(source))) {
+        if (value <= 0) return i;
+        if (Math.random() <= getFinalChance((float) value, getMagicFind(source))) {
             i++;
         }
         return i;

@@ -2,17 +2,21 @@ package net.kapitencraft.mysticcraft.item.item_bonus.fullset;
 
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.helpers.ParticleHelper;
+import net.kapitencraft.mysticcraft.init.ModItems;
 import net.kapitencraft.mysticcraft.item.item_bonus.FullSetBonus;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.EnumMap;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -33,7 +37,7 @@ public class ShadowAssassinArmorFullSetBonus extends FullSetBonus {
     }
 
     @Override
-    public void onTick(@NotNull ItemStack stack, Level level, @NotNull Entity entity) {
+    public void onTick(Level level, @NotNull LivingEntity entity) {
         CompoundTag tag = entity.getPersistentData();
         if (entity.isCrouching()) {
             if (!tag.getBoolean("isCrouching") || !tag.contains("isCrouching")) {
@@ -50,6 +54,11 @@ public class ShadowAssassinArmorFullSetBonus extends FullSetBonus {
         if (tag.getBoolean("Invisible")) {
             entity.setInvisible(true);
         }
+    }
+
+    @Override
+    public EnumMap<EquipmentSlot, @Nullable RegistryObject<? extends Item>> getReqPieces() {
+        return new EnumMap<>(ModItems.SHADOW_ASSASSIN_ARMOR);
     }
 
     @Override

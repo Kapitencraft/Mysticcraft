@@ -98,16 +98,10 @@ public class DamageEvents {
     }
 
     @SubscribeEvent
-    public static void itemBonusRegister(LivingDeathEvent event) {
+    public static void statUpgradeRegister(LivingDeathEvent event) {
         DamageSource source = event.getSource();
         LivingEntity attacker = MiscHelper.getAttacker(source);
-        MiscHelper.DamageType type = MiscHelper.getDamageType(source);
-        LivingEntity killed = event.getEntity();
         if (attacker != null) {
-            MiscHelper.getArmorEquipment(attacker)
-                    .map(BonusHelper::getBonusesFromStack)
-                    .collect(CollectorHelper.merge())
-                    .forEach(bonus -> bonus.onEntityKilled(killed, attacker, type));
             attacker.getItemBySlot(EquipmentSlot.MAINHAND).getCapability(CapabilityHelper.ITEM_STAT).ifPresent(iItemStatHandler -> {
                 iItemStatHandler.increase(ItemStatCapability.Type.KILLED, 1);
             });
@@ -178,8 +172,6 @@ public class DamageEvents {
         @Nullable LivingEntity attacker = MiscHelper.getAttacker(source);
         if (attacker == null) { return; }
         MiscHelper.DamageType type = MiscHelper.getDamageType(source);
-        BonusHelper.useBonuses(attacked, (bonus, stack) -> event.setAmount(bonus.onTakeDamage(attacked, attacker, type, event.getAmount())));
-        BonusHelper.useBonuses(attacker, (bonus, stack) -> event.setAmount(bonus.onEntityHurt(attacked, attacker, type, event.getAmount())));
         ItemStack stack = attacker.getMainHandItem();
         Map<Enchantment, Integer> enchantments = stack.getAllEnchantments();
         if (enchantments != null) {

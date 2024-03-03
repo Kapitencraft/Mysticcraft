@@ -4,8 +4,8 @@ import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.item.combat.armor.client.model.ShadowAssassinArmorModel;
 import net.kapitencraft.mysticcraft.item.combat.armor.client.renderer.ArmorRenderer;
 import net.kapitencraft.mysticcraft.item.item_bonus.ExtraBonus;
-import net.kapitencraft.mysticcraft.item.item_bonus.FullSetBonus;
 import net.kapitencraft.mysticcraft.item.item_bonus.IArmorBonusItem;
+import net.kapitencraft.mysticcraft.item.item_bonus.MultiPieceBonus;
 import net.kapitencraft.mysticcraft.item.item_bonus.PieceBonus;
 import net.kapitencraft.mysticcraft.item.item_bonus.fullset.ShadowAssassinArmorFullSetBonus;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.ArmorTabGroup;
@@ -22,8 +22,11 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
+
 public class ShadowAssassinArmorItem extends ModArmorItem implements IArmorBonusItem {
     public static final ArmorTabGroup SA_ARMOR_GROUP = new ArmorTabGroup(TabRegister.TabTypes.WEAPONS_AND_TOOLS);
+    private static final ShadowAssassinArmorFullSetBonus FULL_SET_BONUS = new ShadowAssassinArmorFullSetBonus();
 
     @Override
     public TabGroup getGroup() {
@@ -63,8 +66,8 @@ public class ShadowAssassinArmorItem extends ModArmorItem implements IArmorBonus
     }
 
     @Override
-    public FullSetBonus getFullSetBonus() {
-        return new ShadowAssassinArmorFullSetBonus();
+    public List<MultiPieceBonus> getPieceBonni() {
+        return List.of(FULL_SET_BONUS);
     }
 
     @Override

@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.enchantments.abstracts;
 
-import net.kapitencraft.mysticcraft.MysticcraftServer;
+import net.kapitencraft.mysticcraft.inst.MysticcraftServer;
 import net.kapitencraft.mysticcraft.item.combat.spells.SpellItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.QuiverItem;
 import net.kapitencraft.mysticcraft.item.material.containable.ContainableItem;

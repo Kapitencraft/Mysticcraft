@@ -91,8 +91,9 @@ public class TextHelper {
     public static void removeUnnecessaryEmptyLines(List<Component> components) {
         Reference<Component> reference = Reference.of(null);
         components.removeIf(component -> {
-            if (component.getString().equals("")) {
-                if (reference.getValue() != null && reference.getValue().getString().equals("")) {
+            if (component.getString().equals("") || component == CommonComponents.EMPTY) {
+                Component value = reference.getValue();
+                if (value != null && value.getString().equals("") || value == CommonComponents.EMPTY) {
                     return true;
                 }
             }

@@ -7,10 +7,7 @@ import net.kapitencraft.mysticcraft.client.particle.flame.FlamesForColors;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.item.combat.armor.client.NetherArmorItem;
-import net.kapitencraft.mysticcraft.item.item_bonus.ExtraBonus;
-import net.kapitencraft.mysticcraft.item.item_bonus.FullSetBonus;
-import net.kapitencraft.mysticcraft.item.item_bonus.IArmorBonusItem;
-import net.kapitencraft.mysticcraft.item.item_bonus.PieceBonus;
+import net.kapitencraft.mysticcraft.item.item_bonus.*;
 import net.kapitencraft.mysticcraft.item.item_bonus.fullset.SoulMageArmorFullSetBonus;
 import net.kapitencraft.mysticcraft.item.item_bonus.piece.SoulMageChestplateBonus;
 import net.kapitencraft.mysticcraft.item.item_bonus.piece.SoulMageHelmetBonus;
@@ -67,8 +64,8 @@ public class SoulMageArmorItem extends NetherArmorItem implements IArmorBonusIte
     }
 
     @Override
-    public FullSetBonus getFullSetBonus() {
-        return SET_BONUS;
+    public List<MultiPieceBonus> getPieceBonni() {
+        return List.of(SET_BONUS);
     }
 
     @Override

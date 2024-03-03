@@ -11,10 +11,7 @@ import net.kapitencraft.mysticcraft.item.capability.dungeon.IStarAbleItem;
 import net.kapitencraft.mysticcraft.item.combat.armor.client.NetherArmorItem;
 import net.kapitencraft.mysticcraft.item.combat.armor.client.model.CrimsonArmorModel;
 import net.kapitencraft.mysticcraft.item.combat.armor.client.renderer.ArmorRenderer;
-import net.kapitencraft.mysticcraft.item.item_bonus.ExtraBonus;
-import net.kapitencraft.mysticcraft.item.item_bonus.FullSetBonus;
-import net.kapitencraft.mysticcraft.item.item_bonus.IArmorBonusItem;
-import net.kapitencraft.mysticcraft.item.item_bonus.PieceBonus;
+import net.kapitencraft.mysticcraft.item.item_bonus.*;
 import net.kapitencraft.mysticcraft.item.item_bonus.fullset.CrimsonArmorFullSetBonus;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.ArmorTabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
@@ -55,8 +52,8 @@ public class CrimsonArmorItem extends NetherArmorItem implements IArmorBonusItem
     }
 
     @Override
-    public FullSetBonus getFullSetBonus() {
-        return FULL_SET_BONUS;
+    public List<MultiPieceBonus> getPieceBonni() {
+        return List.of(FULL_SET_BONUS);
     }
 
     @Override

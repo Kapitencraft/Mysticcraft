@@ -9,6 +9,7 @@
   "attribute.name.generic.ability_damage": "§cAbility Damage",
   "attribute.name.generic.armor_shredder": "Armor Shredding",
   "attribute.name.generic.arrow_speed": "Arrow Speed",
+  "attribute.name.generic.arrow_count": "Arrow Count",
   "attribute.name.generic.bonus_attack_speed": "Bonus Attack Speed",
   "attribute.name.generic.crit_damage": "§1Crit Damage",
   "attribute.name.generic.dodge": "§0Dodge",
@@ -293,6 +294,7 @@
   "generic.mining_speed": "Mining Speed",
   "generic.ranged_damage": "Ranged Damage",
   "generic.strenght": "§gStrenght",
+  "generic.arrow_count": "Arrow Count",
 
   "guild.banner.name": "%1$s's Banner",
   "guild.invite": "%1$s has invited you to join %2$s",

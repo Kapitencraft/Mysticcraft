@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 /**
  * class that contains a map of a map making it able to contain 3 different types
  */
-public class DoubleMap<T, K, L> extends HashMap<T, Map<K, L>> {
+public class    DoubleMap<T, K, L> extends HashMap<T, Map<K, L>> {
     /**
      * used to make a double map immutable, crashing the game when trying to modify it
      */
@@ -24,6 +24,13 @@ public class DoubleMap<T, K, L> extends HashMap<T, Map<K, L>> {
         DoubleMap<T, K, L> map1 = DoubleMap.create();
         map1.putAll(map);
         return map1;
+    }
+
+    public Map<K, L> getOrCreate(T element) {
+        if (get(element) == null) {
+            this.put(element, new HashMap<>());
+        }
+        return get(element);
     }
 
     @Override
