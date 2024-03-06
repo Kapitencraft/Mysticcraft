@@ -10,9 +10,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundClearTitlesPacket;
 import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
@@ -25,7 +23,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Vector3f;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,8 +38,7 @@ public class TextHelper {
 
     public static void sendTitle(Player player, Component title) {
         if (player instanceof ServerPlayer serverPlayer) {
-            Function<Component, Packet<?>> function = ClientboundSetTitleTextPacket::new;
-            serverPlayer.connection.send(function.apply(title));
+            serverPlayer.connection.send(new ClientboundSetTitleTextPacket(title));
         }
     }
 
@@ -106,17 +102,6 @@ public class TextHelper {
         return "/give " + name + " " + BuiltInRegistries.ITEM.getKey(stack.getItem()) + stack.getOrCreateTag();
     }
 
-    public static Component getStackNameWithoutBrackets(ItemStack stack) {
-        MutableComponent mutablecomponent = Component.empty().append(stack.getHoverName());
-        if (stack.hasCustomHoverName()) {
-            mutablecomponent.withStyle(ChatFormatting.ITALIC);
-        }
-
-        mutablecomponent.withStyle(stack.getRarity().getStyleModifier()).withStyle((p_220170_) ->
-                p_220170_.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ITEM, new HoverEvent.ItemStackInfo(stack))));
-        return mutablecomponent;
-    }
-
     public static MutableComponent wrapInObfuscation(MutableComponent source, boolean really) {
         return really ? Component.literal("§kA§r ").append(source).append(" §kA§r") : source;
     }
@@ -137,14 +122,10 @@ public class TextHelper {
         player.displayClientMessage(display, true);
     }
 
-    public static String Vec3fToString(Vector3f vector3f) {
-        return "[" + vector3f.x + ", " + vector3f.y + ", " + vector3f.z + "]";
-    }
 
     public static void sendSubTitle(Player player, Component subtitle) {
         if (player instanceof ServerPlayer serverPlayer) {
-            Function<Component, Packet<?>> function = ClientboundSetSubtitleTextPacket::new;
-            serverPlayer.connection.send(function.apply(subtitle));
+            serverPlayer.connection.send(new ClientboundSetSubtitleTextPacket(subtitle));
         }
     }
 
@@ -158,8 +139,7 @@ public class TextHelper {
 
     public static void clearTitle(Player player) {
         if (player instanceof ServerPlayer serverPlayer) {
-            ClientboundClearTitlesPacket clearTitlesPacket = new ClientboundClearTitlesPacket(true);
-            serverPlayer.connection.send(clearTitlesPacket);
+            serverPlayer.connection.send(new ClientboundClearTitlesPacket(true));
         }
     }
 
