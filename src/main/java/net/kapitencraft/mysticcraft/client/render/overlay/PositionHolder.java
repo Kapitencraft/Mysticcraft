@@ -39,6 +39,11 @@ public class PositionHolder {
         this.y.value += loc.y;
     }
 
+    public void scale(float x, float y) {
+        this.x.scale *= x;
+        this.y.scale *= y;
+    }
+
     public float getXScale() {
         return x.getScale();
     }

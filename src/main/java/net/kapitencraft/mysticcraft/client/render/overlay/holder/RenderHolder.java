@@ -18,8 +18,8 @@ public abstract class RenderHolder {
         this.poseStack.scale(pos.getXScale(), pos.getYScale(), 0);
     }
 
-    public Vec2 getLoc(float screenX, float screenY) {
-        return pos.getLoc(screenX, screenY);
+    public Vec2 getLoc(float screenWidth, float screenHeight) {
+        return pos.getLoc(screenWidth, screenHeight);
     }
 
     public void scale(float x, float y) {
@@ -28,18 +28,15 @@ public abstract class RenderHolder {
 
     public void move(Vec2 toAdd) {
         this.pos.add(toAdd);
-    }
-
-    protected Vec2 getVisualLoc(float screenX, float screenY) {
-        return pos.getVisualLoc(screenX, screenY);
+        this.poseStack.translate(toAdd.x, toAdd.y, 0);
     }
 
     protected void renderString(Component toWrite, float x, float y) {
         Minecraft.getInstance().font.draw(poseStack, toWrite, x, y, -1);
     }
 
-    public ResizeBox newBox(float posX, float posY, LocalPlayer player, Font font) {
-        Vec2 loc = this.getLoc(posX, posY);
+    public ResizeBox newBox(float screenWidth, float screenHeight, LocalPlayer player, Font font) {
+        Vec2 loc = this.getLoc(screenWidth, screenHeight);
         float width = this.getWidth(player, font);
         float height = this.getHeight(player, font);
         return new ResizeBox(loc.add(-1f), loc.add(new Vec2(width, height)).add(1f), this);

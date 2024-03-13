@@ -30,7 +30,6 @@ public interface Spell extends Bonus {
     String getRegistryName();
 
     double getDefaultManaCost();
-    int getCooldown();
 
     enum Type {
         RELEASE("release"),

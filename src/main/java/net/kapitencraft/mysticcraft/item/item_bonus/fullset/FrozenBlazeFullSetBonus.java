@@ -23,6 +23,7 @@ public class FrozenBlazeFullSetBonus extends FullSetBonus {
     }
     private int i = 0;
 
+
     @Override
     public void onTick(Level level, @NotNull LivingEntity entity) {
         List<LivingEntity> entities = MathHelper.getLivingAround(entity, 3);

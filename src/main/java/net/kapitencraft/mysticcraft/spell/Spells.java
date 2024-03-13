@@ -10,10 +10,12 @@ import net.kapitencraft.mysticcraft.item.combat.spells.IFireScytheItem;
 import net.kapitencraft.mysticcraft.item.combat.spells.SpellScrollItem;
 import net.kapitencraft.mysticcraft.item.combat.spells.necron_sword.NecronSword;
 import net.kapitencraft.mysticcraft.misc.ModRarities;
+import net.kapitencraft.mysticcraft.misc.cooldown.Cooldown;
+import net.kapitencraft.mysticcraft.misc.cooldown.Cooldowns;
 import net.kapitencraft.mysticcraft.spell.spells.*;
 import net.minecraft.ChatFormatting;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.player.Player;
@@ -31,7 +33,7 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 @Deprecated //change to new System after 1.0
-public enum Spells implements Spell {
+public enum Spells implements Spell, StringRepresentable {
     WITHER_IMPACT("Wither Impact", "1101110", Type.RELEASE, 300, WitherImpactSpell::execute, item -> item instanceof NecronSword, WitherImpactSpell::getDescription, Rarity.RARE, true, 0, Elements.SHADOW),
     WITHER_SHIELD("Wither Shield", "1101111", Type.RELEASE, 150, WitherShieldSpell::execute, item -> item instanceof NecronSword, WitherShieldSpell::getDescription, Rarity.RARE, true, 0, Elements.EARTH, Elements.SHADOW),
     IMPLOSION("Implosion", "0000000", Type.RELEASE, 300, ImplosionSpell::execute, item -> item instanceof NecronSword, ImplosionSpell::getDescription, ModRarities.LEGENDARY, true, 0, Elements.FIRE, Elements.SHADOW),
@@ -80,7 +82,6 @@ public enum Spells implements Spell {
     public final String REGISTRY_NAME;
     public final Rarity RARITY;
     private final List<Element> elements;
-    private final int cooldown;
 
     Spells(String name, String castingType, Type type, double manaCost, SpellExecutioner executioner, Predicate<Item> helper, Supplier<List<Component>> description, Rarity rarity, boolean shouldBeItem, int cooldown, Element... elements) {
         this.name = TextHelper.removeNumbers(name);
@@ -92,7 +93,7 @@ public enum Spells implements Spell {
         this.castingType = castingType;
         this.REGISTRY_NAME = name.toLowerCase().replace(" ", "_");
         this.RARITY = rarity;
-        this.cooldown = cooldown;
+        if (cooldown > 0) Cooldowns.SPELLS.add(this, cooldown);
         this.elements = List.of(elements);
     }
 
@@ -105,6 +106,10 @@ public enum Spells implements Spell {
     }
 
     @Override
+    public void onUse() {
+    }
+
+    @Override
     public void onTick(Level level, @NotNull LivingEntity entity) {
     }
 
@@ -114,6 +119,11 @@ public enum Spells implements Spell {
 
     @Override
     public void onRemove(LivingEntity living) {
+    }
+
+    @Override
+    public String getSerializedName() {
+        return getRegistryName();
     }
 
     private interface SpellExecutioner {
@@ -159,8 +169,8 @@ public enum Spells implements Spell {
     }
 
     @Override
-    public int getCooldown() {
-        return cooldown;
+    public Cooldown getCooldown() {
+        return Cooldowns.SPELLS.get(this);
     }
 
     @Override
@@ -169,15 +179,11 @@ public enum Spells implements Spell {
     }
 
     public void execute(LivingEntity living, ItemStack stack) throws SpellExecutionFailedException {
-        CompoundTag SpellCooldowns = living.getPersistentData().getCompound("SpellCooldowns");
-        int cooldown = SpellCooldowns.getInt(this.name);
-        if (cooldown < 1) {
+        Cooldown cooldown = Cooldowns.SPELLS.get(this);
+        if (cooldown == null || !cooldown.isActive(living)) {
             this.run.executeSpell(living, stack);
-            cooldown = MathHelper.cooldown(living, this.cooldown);
-        } else {
-            cooldown--;
+            if (cooldown != null) cooldown.applyCooldown(living, true);
         }
-        SpellCooldowns.putInt(this.name, cooldown);
     }
 
     public List<Component> getDescription() {
@@ -193,9 +199,9 @@ public enum Spells implements Spell {
             list.add(Component.literal("Mana-Cost: §4" + getManaCostForPlayer(player)).withStyle(ChatFormatting.DARK_GRAY));
         }
         if (this.castingType != null && item.getSlotAmount() > 1) list.add(Component.literal("Pattern: [" + this.getPattern() + "§r]"));
-        if (this.cooldown != 0 && player != null) {
-            int cooldownTicks = getRemainingCooldownTicks(player);
-            list.add(Component.literal("Cooldown: " + (cooldownTicks > 0 ? TextHelper.wrapInRed("ACTIVE") + "(" + MathHelper.round(cooldownTicks / 20., 1) + "s)" : "INACTIVE, " + MathHelper.round(MathHelper.cooldown(player, this.cooldown) / 20., 1) + "s")).withStyle(ChatFormatting.DARK_GRAY));
+        Cooldown cooldown = Cooldowns.SPELLS.get(this);
+        if (cooldown != null && player != null) {
+            list.add(cooldown.createDisplay(player));
         }
     }
 

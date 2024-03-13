@@ -100,8 +100,8 @@ public class OverlayRenderer {
         event.registerAboveAll("main", MysticcraftClient.getInstance().renderController::render);
     }
 
-    public void fillRenderBoxes(Consumer<InteractiveBox> acceptor, LocalPlayer player, Font font, float posX, float posY) {
-        this.map.values().stream().map(renderHolder -> renderHolder.newBox(posX, posY, player, font)).forEach(acceptor);
+    public void fillRenderBoxes(Consumer<InteractiveBox> acceptor, LocalPlayer player, Font font, float width, float height) {
+        this.map.values().stream().map(renderHolder -> renderHolder.newBox(width, height, player, font)).forEach(acceptor);
     }
 
     private void render(ForgeGui forgeGui, PoseStack ignored, float partialTicks, int screenWidth, int screenHeight) {
@@ -109,7 +109,6 @@ public class OverlayRenderer {
         if (entity != null) {
             map.forEach((uuid, renderHolder) -> renderHolder.render(screenWidth, screenHeight, entity));
         }
-
     }
 
     public void addRenderer(UUID uuid, RenderHolder holder) {

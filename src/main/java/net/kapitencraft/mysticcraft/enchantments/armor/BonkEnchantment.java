@@ -4,9 +4,9 @@ import net.kapitencraft.mysticcraft.enchantments.abstracts.ExtendedCalculationEn
 import net.kapitencraft.mysticcraft.enchantments.abstracts.IArmorEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.IUltimateEnchantment;
 import net.kapitencraft.mysticcraft.helpers.ParticleHelper;
+import net.kapitencraft.mysticcraft.misc.cooldown.Cooldown;
 import net.kapitencraft.mysticcraft.misc.cooldown.Cooldowns;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -25,15 +25,11 @@ public class BonkEnchantment extends ExtendedCalculationEnchantment implements I
 
     @Override
     protected double execute(int level, ItemStack enchanted, LivingEntity attacker, LivingEntity attacked, double damage, DamageSource source) {
-        CompoundTag tag = attacked.getPersistentData();
-        CompoundTag tag1 = tag.getCompound(BONK_ID);
         EquipmentSlot slot = enchanted.getItem() instanceof ArmorItem armorItem ? armorItem.getSlot() : null;
         if (slot != null) {
-            String name = slot.getName();
-            boolean isActive = tag1.getBoolean(name);
-            if (isActive) {
+            Cooldown cooldown = Cooldowns.BONK_ENCHANTMENT.getOrCreate(slot, 1200);
+            if (!cooldown.isActive(attacked)) {
                 ParticleHelper.sendParticles(attacked.level, ParticleTypes.EXPLOSION, false, attacked.position(), 2, 0, 0, 0, 0);
-                Cooldowns.BONK_ENCHANTMENT(slot).applyCooldown(attacked, true);
                 return 0;
             }
         }

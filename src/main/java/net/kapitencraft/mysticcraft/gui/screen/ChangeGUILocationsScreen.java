@@ -5,6 +5,7 @@ import net.kapitencraft.mysticcraft.client.MysticcraftClient;
 import net.kapitencraft.mysticcraft.client.render.OverlayRenderer;
 import net.kapitencraft.mysticcraft.client.render.overlay.box.InteractiveBox;
 import net.kapitencraft.mysticcraft.client.render.overlay.box.RenderBox;
+import net.kapitencraft.mysticcraft.client.render.overlay.box.ScreenDebugBox;
 import net.kapitencraft.mysticcraft.helpers.CollectionHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -30,7 +31,7 @@ public class ChangeGUILocationsScreen extends Screen {
         LocalPlayer player = minecraft.player;
         boxes.clear();
         controller.fillRenderBoxes(boxes::add, player, font, width, height);
-        //boxes.add(new ScreenDebugBox());
+        boxes.add(new ScreenDebugBox());
         super.init();
     }
 

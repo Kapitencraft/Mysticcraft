@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/handheld",
   "textures": {
-    "layer0": "mysticcraft:item/stone_hammer"
+    "layer0": "mysticcraft:item/hammer/stone"
   }
 }

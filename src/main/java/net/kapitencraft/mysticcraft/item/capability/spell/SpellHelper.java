@@ -130,7 +130,7 @@ public class SpellHelper implements ItemData<SpellSlot[], SpellHelper> {
             MiscHelper.awardAchievement(player, "mysticcraft:archmage");
         }
         AttributeInstance manaInstance = user.getAttribute(ModAttributes.MANA.get());
-        if (manaInstance != null) {
+        if (manaInstance != null && ManaMain.hasMana(user, manaToUse)) {
             try {
                 spell.execute(user, stack);
             } catch (SpellExecutionFailedException e) {

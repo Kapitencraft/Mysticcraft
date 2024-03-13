@@ -25,18 +25,9 @@ public class ResizeBox extends ResizeAccessBox {
 
     private void fillBoxes() {
         this.boxes.clear();
-        boxes.addAll(
-                List.of(
-                        new ResizeAccessBox(stack, boxColor, dedicatedHolder, Type.NW, this),
-                        new ResizeAccessBox(stack, boxColor, dedicatedHolder, Type.SW, this),
-                        new ResizeAccessBox(stack, boxColor, dedicatedHolder, Type.NE, this),
-                        new ResizeAccessBox(stack, boxColor, dedicatedHolder, Type.SE, this),
-                        new ResizeAccessBox(stack, boxColor, dedicatedHolder, Type.W, this),
-                        new ResizeAccessBox(stack, boxColor, dedicatedHolder, Type.N, this),
-                        new ResizeAccessBox(stack, boxColor, dedicatedHolder, Type.S, this),
-                        new ResizeAccessBox(stack, boxColor, dedicatedHolder, Type.E, this)
-                )
-        );
+        for (Type type : Type.values()) {
+            boxes.add(new ResizeAccessBox(stack, boxColor, dedicatedHolder, type, this));
+        }
         reapplyPosition();
     }
 

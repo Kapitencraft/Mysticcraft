@@ -3,6 +3,7 @@ package net.kapitencraft.mysticcraft.misc.cooldown;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
@@ -10,7 +11,7 @@ import java.util.function.Predicate;
 
 public class CompoundPath {
     public static final CompoundPath ROOT = new CompoundPath("", null, entity -> true);
-
+    public static final CompoundPath COOLDOWN = new CompoundPath("Cooldowns", ROOT, entity -> entity instanceof LivingEntity);
     private final String path;
     private final CompoundPath parent;
     private final Predicate<Entity> useAbles;
