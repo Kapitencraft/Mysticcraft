@@ -3,7 +3,7 @@ package net.kapitencraft.mysticcraft.item.item_bonus.piece;
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.item.item_bonus.ExtraBonus;
-import net.kapitencraft.mysticcraft.misc.cooldown.Cooldown;
+import net.kapitencraft.mysticcraft.cooldown.Cooldown;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;

@@ -5,6 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.kapitencraft.mysticcraft.api.MapStream;
 import net.kapitencraft.mysticcraft.helpers.IOHelper;
 import net.kapitencraft.mysticcraft.helpers.TextHelper;
+import net.kapitencraft.mysticcraft.misc.visuals.Pingable;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
@@ -18,7 +19,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.*;
 
 @ParametersAreNonnullByDefault
-public class Guild {
+public class Guild implements Pingable {
     private static final Codec<Guild> CODEC = RecordCodecBuilder.create(guildInstance -> guildInstance.group(
             Codec.STRING.fieldOf("name").forGetter(Guild::getName),
             IOHelper.UUID_CODEC.fieldOf("owner").forGetter(Guild::getOwner),
@@ -255,6 +256,16 @@ public class Guild {
         }
         if (tag.getInt("size") == i) return guild;
         throw new RuntimeException("loaded tag without real guild");
+    }
+
+    @Override
+    public boolean hasPinged(Player player) {
+        return this.members.contains(player.getUUID());
+    }
+
+    @Override
+    public String display() {
+        return this.name;
     }
 
     public enum GuildRank implements StringRepresentable {

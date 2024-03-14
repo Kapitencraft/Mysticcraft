@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.misc.cooldown;
+package net.kapitencraft.mysticcraft.cooldown;
 
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.helpers.TextHelper;

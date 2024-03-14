@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.config;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.minecraft.ChatFormatting;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -20,12 +21,16 @@ public class ClientModConfig {
     private static final ForgeConfigSpec.IntValue RGB_SPEED = BUILDER
             .comment("the speed of rgb text")
             .defineInRange("rgb_speed", 1, 1, 10);
+    private static final ForgeConfigSpec.EnumValue<ChatFormatting> PING_COLOR = BUILDER
+            .comment("the color in which pings will be displayed")
+            .defineEnum("ping_color", ChatFormatting.YELLOW);
 
     public static final ForgeConfigSpec SPEC = BUILDER.build();
 
     public static int scrollScale = 1;
     public static int rgbSpeed = 1;
     public static boolean extraDebug = false;
+    public static ChatFormatting pingColor = ChatFormatting.YELLOW;
 
     @SubscribeEvent
     public static void registerConfig(final ModConfigEvent event) {
@@ -34,6 +39,7 @@ public class ClientModConfig {
             scrollScale = SCROLL_SCALE.get();
             rgbSpeed = RGB_SPEED.get();
             extraDebug = SHOW_EXTRA_DEBUG.get();
+            pingColor = PING_COLOR.get();
         }
     }
 }

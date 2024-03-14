@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.spell.spells;
 
 import net.kapitencraft.mysticcraft.init.ModAttributes;
-import net.kapitencraft.mysticcraft.misc.cooldown.Cooldowns;
+import net.kapitencraft.mysticcraft.cooldown.Cooldowns;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;

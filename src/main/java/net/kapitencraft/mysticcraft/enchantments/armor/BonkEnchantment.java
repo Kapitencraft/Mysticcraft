@@ -4,8 +4,8 @@ import net.kapitencraft.mysticcraft.enchantments.abstracts.ExtendedCalculationEn
 import net.kapitencraft.mysticcraft.enchantments.abstracts.IArmorEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.IUltimateEnchantment;
 import net.kapitencraft.mysticcraft.helpers.ParticleHelper;
-import net.kapitencraft.mysticcraft.misc.cooldown.Cooldown;
-import net.kapitencraft.mysticcraft.misc.cooldown.Cooldowns;
+import net.kapitencraft.mysticcraft.cooldown.Cooldown;
+import net.kapitencraft.mysticcraft.cooldown.Cooldowns;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EquipmentSlot;

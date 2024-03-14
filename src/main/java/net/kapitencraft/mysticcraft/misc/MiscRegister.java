@@ -35,7 +35,7 @@ import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.bow.ModBowItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.bow.ShortBowItem;
 import net.kapitencraft.mysticcraft.item.misc.SoulbindHelper;
 import net.kapitencraft.mysticcraft.misc.content.EssenceHolder;
-import net.kapitencraft.mysticcraft.misc.cooldown.Cooldowns;
+import net.kapitencraft.mysticcraft.cooldown.Cooldowns;
 import net.kapitencraft.mysticcraft.misc.particle_help.ParticleAnimator;
 import net.kapitencraft.mysticcraft.networking.ModMessages;
 import net.kapitencraft.mysticcraft.networking.packets.C2S.UseShortBowPacket;

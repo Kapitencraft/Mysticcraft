@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.item.item_bonus;
 
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
-import net.kapitencraft.mysticcraft.misc.cooldown.Cooldown;
+import net.kapitencraft.mysticcraft.cooldown.Cooldown;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;

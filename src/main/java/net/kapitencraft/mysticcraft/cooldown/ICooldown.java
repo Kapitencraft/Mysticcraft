@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.misc.cooldown;
+package net.kapitencraft.mysticcraft.cooldown;
 
 public interface ICooldown {
 

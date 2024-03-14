@@ -10,7 +10,7 @@ import net.kapitencraft.mysticcraft.init.ModItems;
 import net.kapitencraft.mysticcraft.item.capability.ItemData;
 import net.kapitencraft.mysticcraft.item.misc.RNGHelper;
 import net.kapitencraft.mysticcraft.misc.ManaMain;
-import net.kapitencraft.mysticcraft.misc.cooldown.SpellCooldown;
+import net.kapitencraft.mysticcraft.cooldown.SpellCooldown;
 import net.kapitencraft.mysticcraft.requirements.Requirement;
 import net.kapitencraft.mysticcraft.spell.Element;
 import net.kapitencraft.mysticcraft.spell.SpellExecutionFailedException;

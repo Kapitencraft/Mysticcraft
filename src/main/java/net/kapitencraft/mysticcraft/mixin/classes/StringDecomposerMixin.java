@@ -2,6 +2,7 @@ package net.kapitencraft.mysticcraft.mixin.classes;
 
 import net.kapitencraft.mysticcraft.client.font.effect.EffectsStyle;
 import net.kapitencraft.mysticcraft.client.font.effect.GlyphEffect;
+import net.kapitencraft.mysticcraft.config.ClientModConfig;
 import net.kapitencraft.mysticcraft.init.ModGlyphEffects;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Style;
@@ -27,6 +28,9 @@ public class StringDecomposerMixin {
 
         for(int j = length; j < i; ++j) {
             char c0 = s.charAt(j);
+            if (c0 == '@') {
+                formattedStyle = formattedStyle.withColor(ClientModConfig.pingColor);
+            }
             if (c0 == 167) {
                 if (j + 1 >= i) {
                     break;
