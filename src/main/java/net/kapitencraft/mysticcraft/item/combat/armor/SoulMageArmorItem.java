@@ -3,7 +3,6 @@ package net.kapitencraft.mysticcraft.item.combat.armor;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.client.particle.flame.FlamesForColors;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.item.combat.armor.client.NetherArmorItem;
@@ -15,7 +14,6 @@ import net.kapitencraft.mysticcraft.item.misc.creative_tab.ArmorTabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
 import net.kapitencraft.mysticcraft.misc.ModRarities;
-import net.kapitencraft.mysticcraft.misc.particle_help.ParticleAnimator;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -29,7 +27,6 @@ import java.util.function.Consumer;
 
 public class SoulMageArmorItem extends NetherArmorItem implements IArmorBonusItem {
     public static final ArmorTabGroup SOUL_MAGE_ARMOR_GROUP = new ArmorTabGroup(TabRegister.TabTypes.WEAPONS_AND_TOOLS);
-    public static final String HELPER_STRING = "SoulMageFullSet";
     private static final PieceBonus HELMET_BONUS = new SoulMageHelmetBonus();
     private static final PieceBonus CHEST_BONUS = new SoulMageChestplateBonus();
     private static final FullSetBonus SET_BONUS = new SoulMageArmorFullSetBonus();
@@ -45,13 +42,10 @@ public class SoulMageArmorItem extends NetherArmorItem implements IArmorBonusIte
 
     @Override
     protected void initFullSetTick(ItemStack stack, Level level, LivingEntity living) {
-        new ParticleAnimator(HELPER_STRING, living, ParticleAnimator.Type.ORBIT, ParticleAnimator.createOrbitProperties(0, 1000, 0, 0, 3, FlamesForColors.PURPLE, 0.75f));
-        new ParticleAnimator(HELPER_STRING, living, ParticleAnimator.Type.ORBIT, ParticleAnimator.createOrbitProperties(0, 1000, 180, 0, 3, FlamesForColors.PURPLE, 0.75f));
     }
 
     @Override
     protected void postFullSetTick(ItemStack stack, Level level, LivingEntity living) {
-        ParticleAnimator.clearAllHelpers(HELPER_STRING, living);
     }
 
     @Override

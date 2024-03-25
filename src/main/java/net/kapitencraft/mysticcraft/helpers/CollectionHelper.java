@@ -22,6 +22,10 @@ public class CollectionHelper {
         return null;
     }
 
+    public static <T> @Nullable T getOptionalOrNull(Optional<T> optional) {
+        return optional.orElse(null);
+    }
+
     public static <T, K> Map<K, T> mirror(Map<T, K> in) {
         Map<K, T> returnMap = new HashMap<>();
         in.forEach((t, k) -> returnMap.put(k, t));

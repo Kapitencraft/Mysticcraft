@@ -26,6 +26,7 @@ public class ResizeBox extends ResizeAccessBox {
     private void fillBoxes() {
         this.boxes.clear();
         for (Type type : Type.values()) {
+            if (type == Type.C) continue;
             boxes.add(new ResizeAccessBox(stack, boxColor, dedicatedHolder, type, this));
         }
         reapplyPosition();

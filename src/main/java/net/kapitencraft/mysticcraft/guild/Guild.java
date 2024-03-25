@@ -1,83 +1,86 @@
 package net.kapitencraft.mysticcraft.guild;
 
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.mojang.authlib.GameProfile;
+import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.api.MapStream;
+import net.kapitencraft.mysticcraft.helpers.CollectionHelper;
 import net.kapitencraft.mysticcraft.helpers.IOHelper;
 import net.kapitencraft.mysticcraft.helpers.TextHelper;
+import net.kapitencraft.mysticcraft.logging.Markers;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.network.chat.Style;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.players.PlayerList;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.players.GameProfileCache;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.apache.commons.compress.utils.Lists;
 import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @ParametersAreNonnullByDefault
 public class Guild {
-    private static final Codec<Guild> CODEC = RecordCodecBuilder.create(guildInstance -> guildInstance.group(
-            Codec.STRING.fieldOf("name").forGetter(Guild::getName),
-            IOHelper.UUID_CODEC.fieldOf("owner").forGetter(Guild::getOwner),
-            ItemStack.CODEC.fieldOf("banner").forGetter(Guild::getBanner),
-            GuildUpgradeInstance.CODEC.fieldOf("upgrades").forGetter(Guild::getUpgrades),
-            GuildPlayerHolder.CODEC.listOf().fieldOf("players").forGetter(Guild::save)
-        ).apply(guildInstance, Guild::createFromData)
-    );
 
-    private static Guild createFromData(String name, UUID owner, ItemStack banner, GuildUpgradeInstance instance, List<GuildPlayerHolder> holders) {
-        Guild guild = new Guild(name, owner, banner, instance);
-        guild.recreate(holders);
-        return guild;
-    }
-
+    //Fields
     private final String name;
+    private final MemberContainer container;
     private boolean isPublic = false;
-    private final UUID owner;
-    private final List<UUID> members = new ArrayList<>();
-    private final HashMap<UUID, GuildRank> ranks = new HashMap<>();
-    private final HashMap<UUID, String> invites = new HashMap<>();
-    private final List<Guild> inWar = new ArrayList<>();
+    private final WarInstance wars;
     private final ItemStack banner;
     private final GuildUpgradeInstance instance;
 
     private boolean removed = false;
 
-    public Guild(String name, UUID owner, ItemStack banner, GuildUpgradeInstance instance) {
+    public Guild(String name, UUID ownerId, ItemStack banner, GuildUpgradeInstance instance) {
         this.name = name;
-        this.owner = owner;
+        this.container = new MemberContainer(ownerId);
         this.banner = banner;
         this.instance = instance;
+        this.wars = new WarInstance(Lists.newArrayList());
     }
 
-    public void setRank(UUID player, GuildRank rank) {
-        if (!ranks.containsKey(player) && !removed) {
-            ranks.put(player, rank);
+    public Guild(CompoundTag in) {
+        this.name = in.getString("Name");
+        this.container = loadMembers(in.getCompound("Members"));
+        this.banner = ItemStack.of(in.getCompound("Banner"));
+        this.instance = GuildUpgradeInstance.load(in.getCompound("Upgrades"));
+        this.wars = loadWarOpponents(in.getCompound("Wars"));
+        if (in.contains("PlayerNames", 9)) {
+            this.container.memberNames.putAll(IOHelper.readMap(in, "PlayerNames", CompoundTag::getUUID, CompoundTag::getString).toMap());
         }
     }
 
-    private void recreate(List<GuildPlayerHolder> list) {
-        list.forEach(this::add);
+    public CompoundTag save() {
+        CompoundTag tag = new CompoundTag();
+        tag.putString("Name", name);
+        tag.put("Members", container.save());
+        tag.put("Banner", this.banner.save(new CompoundTag()));
+        tag.put("Upgrades", instance.save());
+        tag.put("Wars", wars.save());
+        return tag;
     }
 
-    private List<GuildPlayerHolder> save() {
-        return MapStream.of(this.ranks).mapToSimple(GuildPlayerHolder::new).toList();
-    }
-
-    private void add(GuildPlayerHolder holder) {
-        this.setMember(holder.getPlayerId());
-        this.setRank(holder.getPlayerId(), holder.getRank());
+    public CompoundTag saveWithPlayers() {
+        CompoundTag tag = save();
+        tag.put("PlayerNames", IOHelper.writeMap(this.container.memberNames, CompoundTag::putUUID, CompoundTag::putString));
+        return tag;
     }
 
 
-    private GuildUpgradeInstance getUpgrades() {
-        return instance;
-    }
-    public final UUID getOwner() {
-        return owner;
+    public void setRank(Player player, GuildRank rank) {
+        this.container.addMember(player, rank);
     }
 
     public int getProtectionRange() {
@@ -89,64 +92,289 @@ public class Guild {
     }
 
     public int getMemberAmount() {
-        return members.size();
+        return container.size();
     }
 
+    public String addInvitation(Player player) {
+        return this.container.addInvitation(player);
+    }
 
+    public boolean isOwner(Player player) {
+        return this.container.owner == player;
+    }
 
+    public Guild reviveMembers(MinecraftServer server) {
+        ServerLevel level = server.getLevel(Level.OVERWORLD);
+        if (level != null) {
+            this.container.load(level);
+            server.getPlayerList().getPlayers().forEach(this.container::setOnline);
+        }
+        return this;
+    }
 
-    public String addInvitation(UUID player) {
-        if (!removed) {
-            if (members.contains(player)) {
+    public void activate() {
+        MinecraftForge.EVENT_BUS.register(this.container);
+    }
+
+    public void deactivate() {
+        MinecraftForge.EVENT_BUS.unregister(this.container);
+    }
+
+    public void reviveWarOpponents() {
+        this.wars.load();
+    }
+
+    public class MemberContainer {
+        public static final String PLAYER_GUILD_NAME_TAG = "GuildName";
+
+        private final Map<UUID, String> invites = new HashMap<>();
+        private final Map<UUID, String> memberNames = new HashMap<>();
+        private final Map<UUID, Guild.GuildRank> rawMembers = new HashMap<>();
+        private final UUID rawOwner;
+        Player owner = null;
+        private final Map<Player, Guild.GuildRank> onlineMembers = new HashMap<>();
+
+        public MemberContainer(UUID rawOwner) {
+            this.rawOwner = rawOwner;
+            this.rawMembers.put(rawOwner, GuildRank.OWNER);
+        }
+
+        int size() {
+            return rawMembers.size();
+        }
+
+        String getOwnerName() {
+            return memberNames.get(this.rawOwner);
+        }
+
+        public void load(ServerLevel level) {
+            MinecraftServer server = level.getServer();
+            GameProfileCache cache = server.getProfileCache();
+            MysticcraftMod.LOGGER.info("Guild {} is loading their members", Guild.this.getName());
+            this.memberNames.putAll(MapStream.of(this.rawMembers.keySet().stream().collect(Collectors.toMap(uuid -> uuid, uuid -> uuid)))
+                    .mapValues(cache::get)
+                    .mapValues(CollectionHelper::getOptionalOrNull)
+                    .filterValues(Objects::nonNull)
+                    .mapValues(GameProfile::getName).toMap());
+        }
+
+        @SubscribeEvent
+        public void playerJoin(PlayerEvent.PlayerLoggedInEvent event) {
+            Player player = event.getEntity();
+            setOnline(player);
+        }
+
+        void setOnline(Player player) {
+            if (this.rawMembers.containsKey(player.getUUID())) {
+                GuildRank rank = rawMembers.get(player.getUUID());
+                this.onlineMembers.put(player, rawMembers.get(player.getUUID()));
+                if (rank == GuildRank.OWNER) {
+                    if (owner != null) {
+                        throw new IllegalStateException("Found guild with multiple owners (" + Guild.this.getName() + ")");
+                    }
+                    owner = player;
+                }
+                if (!Objects.equals(player.getGameProfile().getName(), this.memberNames.get(player.getUUID()))) {
+                    this.memberNames.put(player.getUUID(), player.getGameProfile().getName());
+                }
+            }
+        }
+
+        @SubscribeEvent
+        public void setOffline(PlayerEvent.PlayerLoggedOutEvent event) {
+            Player player = event.getEntity();
+            this.onlineMembers.remove(player);
+            if (player == owner) owner = null;
+        }
+
+        public void disband() {
+            this.onlineMembers.keySet().forEach(player -> player.getPersistentData().remove(PLAYER_GUILD_NAME_TAG));
+        }
+
+        int getOnlineMembers() {
+            return this.onlineMembers.size();
+        }
+
+        public String addInvitation(Player player) {
+            if (rawMembers.containsKey(player.getUUID())) {
                 return "isMember";
-            } else if (invites.containsKey(player)) {
+            } else if (invites.containsKey(player.getUUID())) {
                 return "isInvited";
             }
             String inviteKey = TextHelper.createRandom(8);
-            invites.put(player, inviteKey);
+            invites.put(player.getUUID(), inviteKey);
             return inviteKey;
         }
-        return "removed";
-    }
 
-    public boolean acceptInvitation(Player player, String inviteKey) {
-        if (!removed) {
+        void sendMSGtoAllMembers(Component toSend) {
+            this.onlineMembers.keySet().forEach(CollectionHelper.biUsage(toSend, Player::sendSystemMessage));
+        }
+
+        public void addMember(Player player) {
+            insertNewMember(player, GuildRank.DEFAULT);
+        }
+
+        private void insertNewMember(Player player, GuildRank rank) {
+            this.onlineMembers.put(player, rank);
+            this.rawMembers.put(player.getUUID(), rank);
+            player.getPersistentData().putString(PLAYER_GUILD_NAME_TAG, Guild.this.getName());
+        }
+
+        public void addMember(Player player, Guild.GuildRank rank) {
+            insertNewMember(player, rank);
+        }
+
+        boolean acceptInvite(Player player, String inviteKey) {
             UUID playerId = player.getUUID();
             if (this.invites.containsKey(playerId) && Objects.equals(this.invites.get(playerId), inviteKey)) {
                 this.addMember(player);
                 this.invites.remove(playerId);
                 return true;
             }
+            return false;
         }
-        return false;
+
+        public void removeMember(Player player) {
+            this.onlineMembers.remove(player);
+            this.rawMembers.remove(player.getUUID());
+            player.getPersistentData().remove(PLAYER_GUILD_NAME_TAG);
+        }
+
+        public String promotePlayer(Player player, @Nullable GuildRank rank) {
+            if (onlineMembers.containsKey(player) && !removed) {
+                GuildRank nextRank;
+                GuildRank currentRank = onlineMembers.get(player);
+                if (rank != null) {
+                    if (currentRank == rank) {
+                        return "isSame";
+                    }
+                    nextRank = rank;
+                } else {
+                    switch (currentRank) {
+                        case DEFAULT -> nextRank = GuildRank.APPRENTICE;
+                        case APPRENTICE -> nextRank = GuildRank.OFFICER;
+                        case OFFICER -> nextRank = GuildRank.MASTER;
+                        default -> {
+                            return "alreadyMax";
+                        }
+                    }
+                }
+                onlineMembers.put(player, nextRank);
+                rawMembers.put(player.getUUID(), nextRank);
+                return "success";
+            }
+            return player == owner ? "isOwner" : "notMember";
+        }
+
+        public CompoundTag save() {
+            CompoundTag tag = new CompoundTag();
+            tag.putUUID("Owner", rawOwner);
+            tag.put("Invites", IOHelper.writeMap(this.invites, CompoundTag::putUUID, CompoundTag::putString));
+            tag.put("Members", IOHelper.writeMap(this.rawMembers, CompoundTag::putUUID, GuildRank::saveToTag));
+            return tag;
+        }
     }
 
-    public List<Guild> getInWar() {
-        return inWar;
+    MemberContainer loadMembers(CompoundTag tag) {
+        UUID owner = tag.getUUID("Owner");
+        Map<UUID, String> invites = IOHelper.readMap(tag, "Invites", CompoundTag::getUUID, CompoundTag::getString).toMap();
+        Map<UUID, GuildRank> members = IOHelper.readMap(tag, "Members", CompoundTag::getUUID, GuildRank::readFromTag).toMap();
+        MemberContainer container = new MemberContainer(owner);
+        container.rawMembers.putAll(members);
+        container.invites.putAll(invites);
+        return container;
     }
 
-    public void declareWar(Guild guild) {
-        if (!removed) {
-            inWar.add(guild);
-            guild.sendDeclareWar(this);
+    public void disband() {
+        this.container.disband();
+        this.deactivate();
+    }
+
+    WarInstance loadWarOpponents(CompoundTag tag) {
+        return new WarInstance(IOHelper.readList(tag, "Opponents", String.class, 8).toList());
+    }
+
+    public boolean acceptInvitation(Player player, String inviteKey) {
+        return this.container.acceptInvite(player, inviteKey);
+    }
+
+    public String promote(Player player, @Nullable GuildRank rank) {
+        return this.container.promotePlayer(player, rank);
+    }
+
+    public WarInstance getWarInstance() {
+        return wars;
+    }
+
+    public class WarInstance {
+        private final List<Guild> opponents = new ArrayList<>();
+        private final List<String> rawOpponents;
+
+        public WarInstance(List<String> rawOpponents) {
+            this.rawOpponents = rawOpponents;
         }
+
+        public String finalizeWar(Guild opponent) {
+            if (opponents.contains(opponent)) {
+                opponent.wars.opponents.remove(Guild.this);
+                opponents.remove(opponent);
+                return "success";
+            }
+            return "noOpponent";
+        }
+
+        void load() {
+            GuildHandler handler = GuildHandler.getInstance();
+            rawOpponents.stream().map(handler::getGuild).forEach(opponents::add);
+        }
+
+        public String startWar(Guild other) {
+            if (checkStartPossible()) {
+                Guild.this.container.sendMSGtoAllMembers(Component.translatable("guild.war.start", other.display()));
+                return "success";
+            }
+            return "fail";
+        }
+
+        private boolean checkStartPossible() {
+            return Guild.this.container.getOnlineMembers() > Guild.this.container.size() / 2;
+        }
+
+        public CompoundTag save() {
+            CompoundTag tag = new CompoundTag();
+            tag.put("Opponents", IOHelper.writeList(rawOpponents, StringTag::valueOf));
+            return tag;
+        }
+    }
+
+
+    private Component display() {
+        return Component.literal(this.getName()).withStyle(Style.EMPTY
+                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextHelper.listToPlainText(description(false)))));
+    }
+
+    private List<Component> description(boolean suppressed) {
+        List<Component> list = Lists.newArrayList();
+        list.add(Component.literal(getName()));
+        list.add(Component.translatable("guild.owner", this.container.getOwnerName()));
+        list.add(Component.translatable("guild.member_count", getMemberAmount()));
+        if (suppressed || getMemberAmount() > 5) {
+
+        }
+        return list;
     }
 
     public void remove() {
-        this.members.clear();
-        this.invites.clear();
-        this.inWar.clear();
-        this.ranks.clear();
         isPublic = false;
         removed = true;
     }
 
-    private void sendDeclareWar(Guild warOpponent) {
-        if (!removed) inWar.add(warOpponent);
+    public GuildRank getRank(Player player) {
+        return this.container.onlineMembers.get(player);
     }
 
-    public GuildRank getRank(UUID player) {
-        return this.ranks.get(player);
+    public void addMember(Player player) {
+        this.container.addMember(player);
     }
 
     public String getName() {
@@ -156,33 +384,14 @@ public class Guild {
     public boolean kickMember(Player member) {
         if (containsMember(member.getUUID()) && !removed) {
             removeMember(member);
-            member.sendSystemMessage(Component.translatable("guild.kick"));
+            member.sendSystemMessage(Component.translatable("guild.kick", this.getName()));
             return true;
         }
         return false;
     }
 
-    public void addMember(@NotNull Player newMember) {
-        if (!removed) {
-            UUID playerId = newMember.getUUID();
-            members.add(playerId);
-            ranks.put(playerId, GuildRank.DEFAULT);
-            newMember.getPersistentData().putString("GuildName", this.getName());
-        }
-    }
-
-    private void setMember(UUID member) {
-        members.add(member);
-        ranks.put(member, GuildRank.DEFAULT);
-    }
-
     private void removeMember(Player player) {
-        if (!removed) {
-            UUID playerId = player.getUUID();
-            members.remove(playerId);
-            ranks.remove(playerId);
-            player.getPersistentData().remove("GuildName");
-        }
+        this.container.removeMember(player);
     }
 
     public boolean isPublic() {
@@ -193,78 +402,37 @@ public class Guild {
         if (!removed) isPublic = aPublic;
     }
 
-    public List<UUID> getAllMembers() {
-        return members;
-    }
-
     public boolean containsMember(UUID member) {
-        return members.contains(member);
+        return this.container.rawMembers.containsKey(member);
     }
-
-    public CompoundTag saveToTag() {
-        CompoundTag tag = new CompoundTag();
-        if (removed) return tag;
-        tag.putUUID("owner", owner);
-        tag.put("banner", this.banner.save(new CompoundTag()));
-        tag.putString("name", this.name);
-        tag.put("upgrades", this.instance.save());
-        int i = 0;
-        for (UUID player : getAllMembers()) {
-            CompoundTag playerTag = new CompoundTag();
-            playerTag.putUUID("name", player);
-            playerTag.putString("rank", ranks.get(player).getRegistryName());
-            tag.put("Player" + i, playerTag);
-        }
-        tag.putInt("size", i);
-        return tag;
-    }
-
-    public String promotePlayer(UUID player) {
-        if (members.contains(player) && !removed) {
-            GuildRank currentRank = ranks.get(player);
-            ranks.remove(player);
-            GuildRank nextRank;
-            switch (currentRank) {
-                case MOD -> nextRank = GuildRank.ADMIN;
-                case DEFAULT -> nextRank = GuildRank.MOD;
-                default -> {
-                    return "alreadyMax";
-                }
-            }
-            ranks.put(player, nextRank);
-            return "success";
-        }
-        return player == owner ? "owner" : "notMember";
-    }
-
 
     public ItemStack getBanner() {
         return banner;
     }
 
     @SuppressWarnings("ALL")
-    public static Guild loadFromTag(CompoundTag tag, MinecraftServer server) {
-        PlayerList playerList = server.getPlayerList();
-        int i = 0;
-        Guild guild = new Guild(tag.getString("name"), UUID.fromString(tag.getString("owner")), ItemStack.of(tag.getCompound("banner")), GuildUpgradeInstance.load(tag.getCompound("upgrades")));
-        while (tag.contains("Player" + i, 10)) {
-            CompoundTag tag1 = tag.getCompound("Player" + i);
-            UUID player = UUID.fromString(tag1.getString("name"));
-            guild.setMember(player);
-            guild.setRank(player, GuildRank.getByName(tag1.getString("rank")));
+    public static Guild loadFromTag(CompoundTag tag) {
+        try {
+            return new Guild(tag);
+        } catch (Exception e) {
+            MysticcraftMod.LOGGER.warn(Markers.GUILD, "unable to read Guild: {}", e.getMessage());
+            return null;
         }
-        if (tag.getInt("size") == i) return guild;
-        throw new RuntimeException("loaded tag without real guild");
     }
 
     public enum GuildRank implements StringRepresentable {
         DEFAULT("default", "Default"),
-        MOD("moderator", "Moderator"),
-        ADMIN("admin", "Admin"),
+        APPRENTICE("apprentice", "Apprentice"),
+        OFFICER("officer", "Officer"),
+        MASTER("master", "Master"),
         OWNER("owner", "Owner");
 
 
-        static final Codec<GuildRank> CODEC = StringRepresentable.fromEnum(GuildRank::values);
+        public static GuildRank readFromTag(CompoundTag tag, String id) {
+            return CODEC.byName(tag.getString(id), GuildRank.DEFAULT);
+        }
+
+        static final EnumCodec<GuildRank> CODEC = StringRepresentable.fromEnum(GuildRank::values);
         private final String registryName;
         private final String name;
 
@@ -294,6 +462,10 @@ public class Guild {
         @Override
         public @NotNull String getSerializedName() {
             return registryName;
+        }
+
+        public static void saveToTag(CompoundTag tag, String s, GuildRank rank) {
+            tag.putString(s, rank.registryName);
         }
     }
 }

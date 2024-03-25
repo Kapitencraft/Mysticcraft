@@ -1,7 +1,8 @@
-package net.kapitencraft.mysticcraft.misc;
+package net.kapitencraft.mysticcraft.misc.content.mana;
 
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.helpers.TextHelper;
+import net.kapitencraft.mysticcraft.misc.DamageCounter;
 import net.kapitencraft.mysticcraft.misc.damage_source.AbilityDamageSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;

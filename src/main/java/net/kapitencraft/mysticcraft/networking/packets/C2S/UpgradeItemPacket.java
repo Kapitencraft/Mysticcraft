@@ -13,9 +13,6 @@ public class UpgradeItemPacket implements ModPacket {
     public UpgradeItemPacket() {
     }
 
-    public UpgradeItemPacket(FriendlyByteBuf ignored) {
-    }
-
     public void toBytes(FriendlyByteBuf ignored) {
     }
 

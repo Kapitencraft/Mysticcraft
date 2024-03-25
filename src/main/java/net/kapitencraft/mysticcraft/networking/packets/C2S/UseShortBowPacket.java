@@ -13,9 +13,6 @@ public class UseShortBowPacket implements ModPacket {
     public UseShortBowPacket() {
     }
 
-    public UseShortBowPacket(FriendlyByteBuf ignored) {
-    }
-
     @Override
     public void toBytes(FriendlyByteBuf buf) {
     }

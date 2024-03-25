@@ -8,6 +8,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -19,7 +20,8 @@ import java.util.Map;
 @Mixin(StructureTemplate.class)
 public abstract class StructureTemplateMixin {
 
-    private Map<BlockPos, BlockState> structureExecutioners = new HashMap<>();
+    @Unique
+    private final Map<BlockPos, BlockState> structureExecutioners = new HashMap<>();
 
     @Inject(method = "placeInWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/levelgen/structure/templatesystem/StructureTemplate;processBlockInfos(Lnet/minecraft/world/level/LevelAccessor;Lnet/minecraft/core/BlockPos;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/levelgen/structure/templatesystem/StructurePlaceSettings;Ljava/util/List;Lnet/minecraft/world/level/levelgen/structure/templatesystem/StructureTemplate;)Ljava/util/List;"))
     public void placeInWorldInjector(ServerLevelAccessor accessor, BlockPos pos, BlockPos pos1, StructurePlaceSettings settings, RandomSource source, int i, CallbackInfoReturnable<Boolean> cir) {

@@ -4,6 +4,7 @@ added a change-gui-locations screen (wip)
 compat with jei:
 added Armor Recipe to JEI;
 added Upgrade Recipe to JEI;
+added Suggestions to guild arguments;
 added Requirements:
 Elytras now require 5 killed Enderdragons to be used;
 implemented requirements disabling damaging, mining or using items (+spells);
@@ -23,7 +24,7 @@ fixed Tank-Enchantment's scale being extremely high;
 fixed 'Current Speed' including entity gravity;
 fixed Chain lightnings crashing the game;
 fixed Cutout not being transparent;
-fixed Star-able items not being able to be upgrade from;
+fixed Star-able items not being able to be upgraded from;
 fixed wither Drops dropping from any mob;
 fixed shadow dagger's Shadow Step ability not working;
 fixed crafting-book not putting items into crafting slots;

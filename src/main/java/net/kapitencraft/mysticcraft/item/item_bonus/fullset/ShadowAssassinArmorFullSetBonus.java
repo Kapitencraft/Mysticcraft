@@ -57,6 +57,12 @@ public class ShadowAssassinArmorFullSetBonus extends FullSetBonus {
     }
 
     @Override
+    public void onRemove(LivingEntity living) {
+        living.setInvisible(false);
+        living.getPersistentData().putBoolean("Invisible", false);
+    }
+
+    @Override
     public EnumMap<EquipmentSlot, @Nullable RegistryObject<? extends Item>> getReqPieces() {
         return new EnumMap<>(ModItems.SHADOW_ASSASSIN_ARMOR);
     }

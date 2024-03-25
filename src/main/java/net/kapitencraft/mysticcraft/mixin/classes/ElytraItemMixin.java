@@ -4,7 +4,7 @@ import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.item.capability.CapabilityHelper;
 import net.kapitencraft.mysticcraft.item.capability.elytra.ElytraData;
-import net.kapitencraft.mysticcraft.misc.ManaMain;
+import net.kapitencraft.mysticcraft.misc.content.mana.ManaMain;
 import net.kapitencraft.mysticcraft.requirements.Requirement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;

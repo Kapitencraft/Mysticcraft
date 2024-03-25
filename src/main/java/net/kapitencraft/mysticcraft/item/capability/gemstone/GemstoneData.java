@@ -36,6 +36,6 @@ public class GemstoneData {
     }
 
     public boolean has(Item item) {
-        return createStream().toMap().containsKey(item);
+        return data.keySet().stream().map(RegistryObject::get).anyMatch(item1 -> item1 == item);
     }
 }

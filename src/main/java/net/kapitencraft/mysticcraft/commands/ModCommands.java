@@ -2,7 +2,6 @@ package net.kapitencraft.mysticcraft.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
-import net.kapitencraft.mysticcraft.commands.args.ChangeGUILocationsCommand;
 import net.kapitencraft.mysticcraft.config.ServerModConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
@@ -12,6 +11,7 @@ import net.minecraftforge.client.event.RegisterClientCommandsEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.BiFunction;
 
@@ -35,7 +35,7 @@ public class ModCommands {
         stack.sendSuccess(Component.translatable(msg, args).withStyle(ChatFormatting.GREEN), true);
     }
 
-    public static int checkNonConsoleCommand(CommandContext<CommandSourceStack> context, BiFunction<ServerPlayer, CommandSourceStack, Integer> function) {
+    public static int checkNonConsoleCommand(CommandContext<CommandSourceStack> context, BiFunction<@NotNull ServerPlayer, CommandSourceStack, Integer> function) {
         CommandSourceStack stack = context.getSource();
         if (stack.getPlayer() != null) {
             return function.apply(stack.getPlayer(), stack);

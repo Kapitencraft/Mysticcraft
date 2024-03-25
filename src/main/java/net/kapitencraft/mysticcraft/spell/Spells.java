@@ -179,11 +179,7 @@ public enum Spells implements Spell, StringRepresentable {
     }
 
     public void execute(LivingEntity living, ItemStack stack) throws SpellExecutionFailedException {
-        Cooldown cooldown = Cooldowns.SPELLS.get(this);
-        if (cooldown == null || !cooldown.isActive(living)) {
-            this.run.executeSpell(living, stack);
-            if (cooldown != null) cooldown.applyCooldown(living, true);
-        }
+        this.run.executeSpell(living, stack);
     }
 
     public List<Component> getDescription() {

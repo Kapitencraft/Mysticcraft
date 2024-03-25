@@ -8,42 +8,43 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
 public class Cooldown {
 
-    //TODO fix not working for spells
     private final CompoundPath path;
     private final int defaultTime;
-    private final Consumer<Entity> toDo;
+    private final Consumer<LivingEntity> toDo;
 
-    public Cooldown(CompoundPath path, int defaultTime, Consumer<Entity> toDo) {
-        this.path = path;
+    public Cooldown(CompoundPath.Builder path, int defaultTime, Consumer<LivingEntity> toDo) {
+        this.path = path.withParentIfNull(CompoundPath.COOLDOWN).build();
         this.defaultTime = defaultTime;
         this.toDo = toDo;
-        Cooldowns.addCooldown(this);
     }
 
-    public void applyCooldown(Entity entity, boolean reduceWithTime) {
-        CompoundTag tag = getTag(entity);
-        if (tag != null) {
-            double mul = reduceWithTime && entity instanceof LivingEntity living ? living.getAttributeValue(ModAttributes.COOLDOWN_REDUCTION.get()) : 0;
-            tag.putInt(path.getPath(), (int) (defaultTime * (1 - mul / 100)));
-        }
+    public void applyCooldown(LivingEntity living, boolean reduceWithTime) {
+        CompoundTag tag = getTag(living);
+        double mul = reduceWithTime ? living.getAttributeValue(ModAttributes.COOLDOWN_REDUCTION.get()) : 0;
+        tag.putInt(path.getPath(), (int) (defaultTime * (1 - mul / 100)));
+        cast(living).addCooldown(this);
+    }
+
+    private static ICooldownable cast(LivingEntity living) {
+        return (ICooldownable) living;
     }
 
     public int getCooldownTime(Entity living) {
         CompoundTag tag = getTag(living);
-        return tag == null ? 0 : tag.getInt(path.getPath());
+        return tag.getInt(path.getPath());
     }
 
     public boolean isActive(Entity entity) {
         return getCooldownTime(entity) > 0;
     }
 
-    public void onDone(Entity living) {
+    public void onDone(LivingEntity living) {
         toDo.accept(living);
     }
 
@@ -51,13 +52,17 @@ public class Cooldown {
         return path.getParent();
     }
 
-    public @Nullable CompoundTag getTag(Entity entity) {
-        return path.getTag(entity);
+    public String getId() {
+        return path.getPath();
+    }
+
+    public @NotNull CompoundTag getTag(Entity entity) {
+        return path.getParent().getOrCreateTag(entity);
     }
 
     public Component createDisplay(Entity entity) {
         int cooldownTicks = getCooldownTime(entity);
         int defaultTime = entity instanceof LivingEntity living ? MathHelper.cooldown(living, this.defaultTime) : this.defaultTime;
-        return Component.literal("Cooldown: " + (cooldownTicks > 0 ? TextHelper.wrapInRed("ACTIVE") + "(" + MathHelper.round(cooldownTicks / 20., 1) + "s)" : "§aINACTIVE§r, " + MathHelper.round(defaultTime / 20., 1) + "s")).withStyle(ChatFormatting.DARK_GRAY);
+        return Component.literal("Cooldown: " + (cooldownTicks > 0 ? TextHelper.wrapInRed("ACTIVE ") + "(" + MathHelper.round(cooldownTicks / 20., 1) + "s)" : "§aINACTIVE§r, " + MathHelper.round(defaultTime / 20., 1) + "s")).withStyle(ChatFormatting.DARK_GRAY);
     }
 }

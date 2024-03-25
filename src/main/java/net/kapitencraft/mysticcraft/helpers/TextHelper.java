@@ -42,6 +42,15 @@ public class TextHelper {
         }
     }
 
+    public static Component listToPlainText(List<Component> list) {
+        MutableComponent component = Component.empty();
+        for (Component c : list) {
+            component.append(c);
+            component.append("\n");
+        }
+        return component;
+    }
+
     public static void addEmpty(List<Component> components) {
         components.add(CommonComponents.EMPTY);
     }
@@ -57,6 +66,15 @@ public class TextHelper {
             i++;
         }
         return list;
+    }
+
+    public static List<Component> getDescriptionList(String name, @Nullable UnaryOperator<MutableComponent> styleMods, Object... args) {
+        return getAllMatchingFilter(integer -> {
+            String descId = name + ".desc";
+            if (!I18n.exists(descId)) descId += "ription";
+            if (integer != 0) descId += integer;
+            return descId;
+        }, styleMods, args);
     }
 
     public static String wrapInObfuscation(String source) {

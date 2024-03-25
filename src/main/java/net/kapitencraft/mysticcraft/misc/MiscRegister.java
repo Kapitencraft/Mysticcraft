@@ -26,17 +26,12 @@ import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneSlot;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneType;
 import net.kapitencraft.mysticcraft.item.capability.item_stat.ItemStatCapability;
 import net.kapitencraft.mysticcraft.item.capability.reforging.ReforgeManager;
-import net.kapitencraft.mysticcraft.item.combat.armor.ModArmorItem;
-import net.kapitencraft.mysticcraft.item.combat.armor.ModArmorMaterials;
-import net.kapitencraft.mysticcraft.item.combat.armor.SoulMageArmorItem;
 import net.kapitencraft.mysticcraft.item.combat.duel.DuelHandler;
 import net.kapitencraft.mysticcraft.item.combat.spells.SpellItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.bow.ModBowItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.bow.ShortBowItem;
 import net.kapitencraft.mysticcraft.item.misc.SoulbindHelper;
 import net.kapitencraft.mysticcraft.misc.content.EssenceHolder;
-import net.kapitencraft.mysticcraft.misc.cooldown.Cooldowns;
-import net.kapitencraft.mysticcraft.misc.particle_help.ParticleAnimator;
 import net.kapitencraft.mysticcraft.networking.ModMessages;
 import net.kapitencraft.mysticcraft.networking.packets.C2S.UseShortBowPacket;
 import net.kapitencraft.mysticcraft.requirements.Requirement;
@@ -50,6 +45,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.BlockTags;
@@ -108,8 +104,9 @@ public class MiscRegister {
     @SubscribeEvent
     public static void loadingLevel(LevelEvent.Load event) {
         if (event.getLevel() instanceof ServerLevel serverLevel && serverLevel.dimension() == Level.OVERWORLD) {
-            GuildHandler.setInstance(serverLevel.getDataStorage().computeIfAbsent((tag -> GuildHandler.load(tag, serverLevel.getServer())), GuildHandler::createDefault, "guilds"));
-            DuelHandler.setInstance(serverLevel.getDataStorage().computeIfAbsent(tag -> DuelHandler.load(tag, serverLevel.getServer()), DuelHandler::new, "duels"));
+            MinecraftServer server = serverLevel.getServer();
+            GuildHandler.setInstance(serverLevel.getDataStorage().computeIfAbsent(CollectionHelper.biMap(server, GuildHandler::load), GuildHandler::createDefault, "guilds"));
+            DuelHandler.setInstance(serverLevel.getDataStorage().computeIfAbsent(CollectionHelper.biMap(server, DuelHandler::load), DuelHandler::new, "duels"));
         }
     }
 
@@ -198,7 +195,6 @@ public class MiscRegister {
     @SubscribeEvent
     public static void entityTick(LivingEvent.LivingTickEvent event) {
         LivingEntity living = event.getEntity();
-        Cooldowns.tickCooldowns(living);
         BonusHelper.tickEnchantments(living);
         CompoundTag tag = living.getPersistentData();
         int i = EnchantmentHelper.getEnchantmentLevel(ModEnchantments.BASALT_WALKER.get(), living);
@@ -240,15 +236,6 @@ public class MiscRegister {
                 tag.putInt(DOUBLE_JUMP_ID, 0);
             }
         }
-        if (tag.contains("lastFullSet", 8)) {
-            if (ModArmorItem.hadFullSet(ModArmorMaterials.SOUL_MAGE, living)) {
-                ParticleAnimator.clearAllHelpers(SoulMageArmorItem.HELPER_STRING, living);
-                tag.putString("lastFullSet", "");
-            } else if (ModArmorItem.hadFullSet(ModArmorMaterials.SHADOW_ASSASSIN, living)) {
-                living.setInvisible(false);
-                living.getPersistentData().putBoolean("Invisible", false);
-            }
-        }
         if (living instanceof Mob mob) {
             if (mob.getTarget() != null && mob.getTarget().isInvisible()) {
                 mob.setTarget(null);
@@ -272,9 +259,6 @@ public class MiscRegister {
     @SubscribeEvent
     public static void serverTick(TickEvent.LevelTickEvent event) {
         if (event.level instanceof ServerLevel serverLevel) {
-            for (Entity entity : serverLevel.getEntities().getAll()) {
-                ParticleAnimator.tickHelper(entity);
-            }
             List<UUID> helperMembers = helper.getAll();
             helper.startQueuing();
             helperMembers.forEach(uuid -> {

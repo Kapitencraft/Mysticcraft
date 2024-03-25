@@ -1,8 +1,7 @@
 package net.kapitencraft.mysticcraft.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.tree.LiteralCommandNode;
-import net.kapitencraft.mysticcraft.commands.args.type.EquipmentSlotArgumentType;
+import net.kapitencraft.mysticcraft.commands.args.EquipmentSlotArg;
 import net.kapitencraft.mysticcraft.helpers.TextHelper;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -17,9 +16,9 @@ import net.minecraft.world.item.ItemStack;
 public class ShowItemCommand {
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        LiteralCommandNode<CommandSourceStack> main = dispatcher.register(Commands.literal("show").requires(ModCommands::isSocialEnabled)
-                .then(Commands.argument("slot", EquipmentSlotArgumentType.slot())
-                        .executes(commandContext -> showItem(commandContext.getSource(), EquipmentSlotArgumentType.getSlot(commandContext, "slot")))
+        dispatcher.register(Commands.literal("show").requires(ModCommands::isSocialEnabled)
+                .then(Commands.argument("slot", EquipmentSlotArg.slot())
+                        .executes(commandContext -> showItem(commandContext.getSource(), EquipmentSlotArg.getSlot(commandContext, "slot")))
                 )
         );
     }

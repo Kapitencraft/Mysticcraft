@@ -6,6 +6,8 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.kapitencraft.mysticcraft.init.ModEnchantments;
 import net.kapitencraft.mysticcraft.item.capability.dungeon.IPrestigeAbleItem;
 import net.kapitencraft.mysticcraft.item.capability.dungeon.IStarAbleItem;
+import net.kapitencraft.mysticcraft.networking.ModMessages;
+import net.kapitencraft.mysticcraft.networking.packets.S2C.ResetCooldownsPacket;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -29,6 +31,8 @@ public class MiscCommand {
                         .executes(MiscCommand::exeEnchantmentUpgrades)
                 ).then(Commands.literal("hyper_max")
                         .executes(MiscCommand::exeHyperMax)
+                ).then(Commands.literal("reset_cooldowns")
+                        .executes(MiscCommand::resetCooldowns)
                 )
         );
     }
@@ -121,6 +125,14 @@ public class MiscCommand {
                 IStarAbleItem.setStars(mainHand, starAbleItem.getMaxStars(mainHand));
             }
             stack.sendSuccess(Component.translatable("command.misc.extra_upgrade.success", prestiges, stars), true);
+            return 1;
+        });
+    }
+
+    private static int resetCooldowns(CommandContext<CommandSourceStack> context) {
+        return ModCommands.checkNonConsoleCommand(context, (player, stack) -> {
+            ResetCooldownsPacket.resetCooldowns(player);
+            ModMessages.sendToClientPlayer(new ResetCooldownsPacket(), player);
             return 1;
         });
     }
