@@ -9,14 +9,22 @@ import net.kapitencraft.mysticcraft.logging.Markers;
 import net.kapitencraft.mysticcraft.networking.ModMessages;
 import net.kapitencraft.mysticcraft.networking.packets.S2C.SyncGuildsPacket;
 import net.minecraft.Util;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BannerItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -24,29 +32,41 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.stream.Stream;
 
+
+@Mod.EventBusSubscriber
 public class GuildHandler extends SavedData {
-    private static GuildHandler instance;
+    private static GuildHandler clientInstance;
     private final HashMap<String, Guild> guilds = new HashMap<>();
+
+    public static GuildHandler getInstance(Level level) {
+        if (level instanceof ClientLevel) {
+            return clientInstance;
+        } else {
+            ServerLevel serverLevel = (ServerLevel) level;
+            MinecraftServer server = serverLevel.getServer();
+            return serverLevel.getDataStorage().computeIfAbsent(CollectionHelper.biMap(server, GuildHandler::load), GuildHandler::createDefault, "guilds");
+        }
+    }
 
     public static GuildHandler createDefault() {
         MysticcraftMod.LOGGER.info(Markers.GUILD, "no Guilds found; using default");
         return new GuildHandler();
     }
 
-    public static Collection<Guild> all() {
-        return instance.allGuilds();
+    public static Collection<Guild> all(Level level) {
+        return getInstance(level).allGuilds();
     }
 
-    private Collection<Guild> allGuilds() {
+    public Collection<Guild> allGuilds() {
         return guilds.values();
     }
 
     public static void ensureInstanceNotNull() {
-        if (instance == null) instance = new GuildHandler();
+        if (clientInstance == null) clientInstance = new GuildHandler();
     }
 
     public static void setInstance(GuildHandler newInstance) {
-        instance = newInstance;
+        clientInstance = newInstance;
     }
 
     @Override
@@ -60,7 +80,7 @@ public class GuildHandler extends SavedData {
 
     public static GuildHandler load(CompoundTag tag, MinecraftServer server) {
         MysticcraftMod.LOGGER.info(Markers.GUILD, "loading Guilds...");
-        return loadAllGuilds(server, tag);
+        return loadAllGuilds(server.getLevel(Level.OVERWORLD), tag);
     }
 
     public String addNewGuild(String newGuildName, Player owner) {
@@ -72,7 +92,6 @@ public class GuildHandler extends SavedData {
                 this.setDirty();
                 Guild guild = new Guild(newGuildName, owner.getUUID(), stack, new GuildUpgradeInstance());
                 guilds.put(newGuildName, guild);
-                guild.activate();
                 owner.getPersistentData().putString(Guild.MemberContainer.PLAYER_GUILD_NAME_TAG, newGuildName);
                 if (owner instanceof ServerPlayer player) {
                     ModMessages.sendToAllConnectedPlayers(value -> SyncGuildsPacket.addGuild(owner, guilds.get(newGuildName)), player.getLevel());
@@ -118,9 +137,19 @@ public class GuildHandler extends SavedData {
         return getGuild(player.getPersistentData().getString(Guild.MemberContainer.PLAYER_GUILD_NAME_TAG));
     }
 
-    public static void addNewGuild(Guild guild) {
+    @SubscribeEvent
+    public static void playerJoin(PlayerEvent.PlayerLoggedInEvent event) {
+        all(event.getEntity().level).forEach(CollectionHelper.biUsage(event.getEntity(), Guild::setOnline));
+    }
+
+    @SubscribeEvent
+    public static void playerLeave(PlayerEvent.PlayerLoggedOutEvent event) {
+        all(event.getEntity().level).forEach(CollectionHelper.biUsage(event.getEntity(), Guild::setOffline));
+    }
+
+    public static void addGuildClient(Guild guild) {
         ensureInstanceNotNull();
-        instance.addGuild(guild);
+        clientInstance.addGuild(guild);
     }
 
     private void addGuild(Guild guild) {
@@ -128,16 +157,15 @@ public class GuildHandler extends SavedData {
             this.setDirty();
             return;
         }
-        guild.activate();
         this.guilds.put(guild.getName(), guild);
     }
 
-    public static GuildHandler loadAllGuilds(MinecraftServer server, CompoundTag tag) {
+    public static GuildHandler loadAllGuilds(Level level, CompoundTag tag) {
         GuildHandler guildHandler = new GuildHandler();
         long j = Util.getMillis();
         Stream<CompoundTag> tags = IOHelper.readCompoundList(tag, "Guilds");
-        long count = tags.map(Guild::loadFromTag).map(CollectionHelper.biMap(server, Guild::reviveMembers)).peek(guildHandler::addGuild).count();
-        guildHandler.allGuilds().forEach(Guild::reviveWarOpponents);
+        long count = tags.map(Guild::loadFromTag).peek(guildHandler::addGuild).count();
+        guildHandler.allGuilds().forEach(CollectionHelper.biUsage(guildHandler, Guild::reviveWarOpponents));
         MysticcraftMod.LOGGER.info(Markers.GUILD, "loading {} Guilds took {} ms", count, Util.getMillis() - j);
         return guildHandler;
     }
@@ -152,13 +180,13 @@ public class GuildHandler extends SavedData {
     public ListTag saveAllGuilds() {
         ListTag listTag = new ListTag();
         listTag.addAll(allGuilds().stream().map(Guild::save).toList());
-        this.allGuilds().forEach(Guild::deactivate);
         this.guilds.clear();
         return listTag;
     }
 
+    @OnlyIn(Dist.CLIENT)
     public static GuildHandler getInstance() {
         ensureInstanceNotNull();
-        return instance;
+        return clientInstance;
     }
 }

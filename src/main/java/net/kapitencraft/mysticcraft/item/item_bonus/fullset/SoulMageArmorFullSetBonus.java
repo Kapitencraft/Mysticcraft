@@ -26,7 +26,7 @@ public class SoulMageArmorFullSetBonus extends FullSetBonus {
 
     @Override
     public void onApply(LivingEntity living) {
-        IAnimatable.get(living).addElement(element);
+        if (living.getLevel().isClientSide()) IAnimatable.get(living).addElement(element);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.helpers;
 
-import net.kapitencraft.mysticcraft.api.MapStream;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 
 import java.util.*;
 import java.util.function.BiConsumer;
@@ -19,18 +20,10 @@ public class CollectorHelper {
     }
 
     public static <T> Collector<Collection<T>, List<T>, Stream<T>> merge() {
-        return new CollectorImpl<>(ArrayList::new, List::addAll, (list, list2) -> {
+        return Collector.of(ArrayList::new, List::addAll, (list, list2) -> {
             list.addAll(list2);
             return list;
-        }, List::stream, Collections.emptySet());
-    }
-
-    public static <T, J, K> Collector<T, ?, MapStream<J, K>> toMapStream(Collector<T, ?, Map<J, K>> in) {
-        return copyWithFinish((Collector<T, Map<J, K>, Map<J, K>>) in, MapStream::of);
-    }
-
-    public static <A, B, C, D> Collector<A, B, D> copyWithFinish(Collector<A, B, C> collector, Function<C, D> finish) {
-        return new CollectorImpl<>(collector.supplier(), collector.accumulator(), collector.combiner(), b -> finish.apply(collector.finisher().apply(b)) , collector.characteristics());
+        }, List::stream);
     }
 
     public static <T, L> Collector<T, ?, Map<T, L>> createMap(Function<T, L> valueMapper) {
@@ -39,5 +32,12 @@ public class CollectorHelper {
 
     public static <T, L> Collector<L, ?, Map<T, L>> createMapForKeys(Function<L, T> keyMapper) {
         return Collectors.toMap(keyMapper, t-> t);
+    }
+
+    public static Collector<Component, MutableComponent, Component> joinComponent(Component filler) {
+        return Collector.of(Component::empty, MutableComponent::append, (component, component2) -> {
+            component.append(filler).append(component2);
+            return component;
+        }, Component::copy);
     }
 }

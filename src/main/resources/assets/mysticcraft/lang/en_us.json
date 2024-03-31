@@ -79,6 +79,7 @@
   "command.guild.add.success": "Successfully created a new Guild called %1$s",
   "command.guild.add.alreadyMember": "You are already member of %1$s",
   "command.guild.add.duplicateBanner": "This Banner has already been used",
+  "command.guild.disband.success": "Successfully disbanded guild %1§s",
   "command.guild.fail.noGuild": "You are in no Guild",
   "command.guild.invite.isInvited": "%1$s has already been invited",
   "command.guild.invite.isMember": "%1$s is already member of this Guild",
@@ -91,6 +92,7 @@
   "command.guild.kick.failed": "Could not kick %1$s from the guild",
   "command.guild.kick.isOwner": "Can not kick Owner",
   "command.guild.kick.success": "Successfully kicked %1$s from the guild",
+  "command.guild.leave.success": "Successfully left %1$s",
   "command.guild.promote.failed": "Failed to promote %1$s",
   "command.guild.promote.isOwner": "The target Player (%1$s) is the Guild Owner",
   "command.guild.promote.alreadyMax": "The target Player (%1$s) can not be promoted further",
@@ -517,5 +519,6 @@
   "stat_req.maxor": "%1§s killed Maxors",
   "stat_req.goldor": "%1§s killed Goldors",
 
-  "tooltip.can_hit_enderman": "Hits Enderman"
+  "tooltip.can_hit_enderman": "Hits Enderman",
+  "command.guild.leave.fail": "Unable to leave guild '%1$s': You are no member xD"
 }

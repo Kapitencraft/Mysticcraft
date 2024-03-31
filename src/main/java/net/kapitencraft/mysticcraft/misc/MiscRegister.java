@@ -13,7 +13,6 @@ import net.kapitencraft.mysticcraft.enchantments.abstracts.ModBowEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.armor.BasaltWalkerEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.weapon.ranged.OverloadEnchantment;
 import net.kapitencraft.mysticcraft.event.custom.AddGemstonesToItemEvent;
-import net.kapitencraft.mysticcraft.guild.GuildHandler;
 import net.kapitencraft.mysticcraft.helpers.*;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModEnchantments;
@@ -29,18 +28,13 @@ import net.kapitencraft.mysticcraft.item.capability.reforging.ReforgeManager;
 import net.kapitencraft.mysticcraft.item.combat.duel.DuelHandler;
 import net.kapitencraft.mysticcraft.item.combat.spells.SpellItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.bow.ModBowItem;
-import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.bow.ShortBowItem;
 import net.kapitencraft.mysticcraft.item.misc.SoulbindHelper;
 import net.kapitencraft.mysticcraft.misc.content.EssenceHolder;
-import net.kapitencraft.mysticcraft.networking.ModMessages;
-import net.kapitencraft.mysticcraft.networking.packets.C2S.UseShortBowPacket;
 import net.kapitencraft.mysticcraft.requirements.Requirement;
 import net.kapitencraft.mysticcraft.tags.ModBlockTags;
 import net.kapitencraft.mysticcraft.tags.ModItemTags;
 import net.kapitencraft.mysticcraft.villagers.ModVillagers;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -51,7 +45,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -75,7 +68,6 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.common.BasicItemListing;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
@@ -105,20 +97,10 @@ public class MiscRegister {
     public static void loadingLevel(LevelEvent.Load event) {
         if (event.getLevel() instanceof ServerLevel serverLevel && serverLevel.dimension() == Level.OVERWORLD) {
             MinecraftServer server = serverLevel.getServer();
-            GuildHandler.setInstance(serverLevel.getDataStorage().computeIfAbsent(CollectionHelper.biMap(server, GuildHandler::load), GuildHandler::createDefault, "guilds"));
             DuelHandler.setInstance(serverLevel.getDataStorage().computeIfAbsent(CollectionHelper.biMap(server, DuelHandler::load), DuelHandler::new, "duels"));
         }
     }
 
-    @SubscribeEvent
-    public static void sendLeftClickShortBow(InputEvent.InteractionKeyMappingTriggered event) {
-        LocalPlayer player = Minecraft.getInstance().player;
-        if (event.isAttack() && player != null && player.getMainHandItem().getItem() instanceof ShortBowItem) {
-            event.setCanceled(true);
-            player.swing(InteractionHand.MAIN_HAND);
-            ModMessages.sendToServer(new UseShortBowPacket());
-        }
-    }
 
     @SubscribeEvent
     public static void onPlayerCloned(PlayerEvent.Clone event) {

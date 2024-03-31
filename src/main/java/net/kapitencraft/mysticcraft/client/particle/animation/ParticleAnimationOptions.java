@@ -4,7 +4,6 @@ import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Codec;
 import net.kapitencraft.mysticcraft.init.ModParticleTypes;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -61,7 +60,7 @@ public class ParticleAnimationOptions extends ParticleType<ParticleAnimationOpti
         public @NotNull ParticleAnimationOptions fromNetwork(@NotNull ParticleType<ParticleAnimationOptions> type, FriendlyByteBuf buf) {
             ParticleType<?> type1 = buf.readById(BuiltInRegistries.PARTICLE_TYPE);
             ParticleOptions options = readParticle(buf, type1);
-            ParticleAnimationParameters context = ParticleAnimationParameters.loadFromNetwork(buf, Minecraft.getInstance().level);
+            ParticleAnimationParameters context = ParticleAnimationParameters.loadFromNetwork(buf);
             ParticleAnimationInfo info = ParticleAnimationInfo.loadFromNetwork(buf);
             return new ParticleAnimationOptions(options, context, info, buf.readInt());
         }

@@ -2,6 +2,7 @@ package net.kapitencraft.mysticcraft.networking.packets.S2C;
 
 import net.kapitencraft.mysticcraft.networking.packets.ModPacket;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
@@ -18,7 +19,12 @@ public class ResetCooldownsPacket implements ModPacket {
     @Override
     public boolean handle(Supplier<NetworkEvent.Context> sup) {
         NetworkEvent.Context context = sup.get();
-        context.enqueueWork(()-> resetCooldowns(Minecraft.getInstance().player));
+        context.enqueueWork(()-> {
+            LocalPlayer player = Minecraft.getInstance().player;
+            if (player != null) {
+                player.getPersistentData().put("Cooldowns", new CompoundTag());
+            }
+        });
         return false;
     }
 

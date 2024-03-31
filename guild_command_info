@@ -1,4 +1,0 @@
-/guild create <GuildName>
-/guild join <GuildName>
-/guild invite <PlayerName>
-/guild public <TRUE/FALSE>

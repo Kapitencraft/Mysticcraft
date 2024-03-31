@@ -49,6 +49,8 @@ public class GuildCommand {
                         .then(Commands.argument("name", EntityArgument.player())
                                 .executes(context -> kickPlayer(EntityArgument.getPlayer(context, "name"), context))
                         )
+                ).then(Commands.literal("leave")
+                        .executes(GuildCommand::leaveGuild)
                 ).then(Commands.literal("promote")
                         .then(Commands.argument("name", EntityArgument.player())
                             .executes(context -> promotePlayer(EntityArgument.getPlayer(context, "name"), context, null))
@@ -94,7 +96,7 @@ public class GuildCommand {
                 stack.sendFailure(Component.translatable("command.guild.add.alreadyMember", guild.getName()));
                 return 0;
             }
-            String guildAdd = GuildHandler.getInstance().addNewGuild(name, player);
+            String guildAdd = GuildHandler.getInstance(player.level).addNewGuild(name, player);
             if (Objects.equals(guildAdd, "success")) {
                 ModCommands.sendSuccess(stack, "command.guild.add.success", name);
                 return 1;
@@ -108,15 +110,16 @@ public class GuildCommand {
     private static int disbandGuild(CommandContext<CommandSourceStack> context) {
         return checkGuildCommand(context, (player, stack, guild) -> {
             if (guild.isOwner(player)) {
-                String result = GuildHandler.getInstance().removeGuild(guild.getName());
+                String result = GuildHandler.getInstance(player.getLevel()).removeGuild(guild.getName());
                 if (Objects.equals(result, "success")) {
                     ModMessages.sendToAllConnectedPlayers(value -> SyncGuildsPacket.removeGuild(guild), player.getLevel());
-                    ModCommands.sendSuccess(stack, "guild.disband.success");
+                    ModCommands.sendSuccess(stack, "command.guild.disband.success", guild.getName());
                     return guild.getMemberAmount();
                 } else if (Objects.equals(result, "noSuchGuild")) {
                     throw new IllegalArgumentException("Found Guild with Wrong Name!");
                 }
             }
+            stack.sendFailure(Component.translatable("command.guild.disband.fail.notOwner", guild.getName()));
             return 0;
         });
     }
@@ -165,6 +168,16 @@ public class GuildCommand {
         });
     }
 
+    private static int leaveGuild(CommandContext<CommandSourceStack> context) {
+        return checkGuildCommand(context, (player, stack, guild) -> {
+            if (guild.memberLeave(player)) {
+                ModCommands.sendSuccess(stack, "command.guild.leave.success", guild.getName());
+                return 1;
+            }
+            stack.sendFailure(Component.translatable("command.guild.leave.fail", guild.getName()));
+            return 0;
+        });
+    }
 
     private static int kickPlayer(Player target, CommandContext<CommandSourceStack> context) {
         return checkGuildCommand(context, (player, stack, guild) -> {
@@ -200,7 +213,7 @@ public class GuildCommand {
     }
 
     private static @Nullable Guild getGuild(@Nullable Player target) {
-        return target == null ? null : GuildHandler.getInstance().getGuildForPlayer(target);
+        return target == null ? null : GuildHandler.getInstance(target.getLevel()).getGuildForPlayer(target);
     }
 
     private static int declareWar(Guild guild, CommandContext<CommandSourceStack> context) {

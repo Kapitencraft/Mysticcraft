@@ -1,5 +1,6 @@
 package net.kapitencraft.mysticcraft.helpers;
 
+import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.client.font.effect.EffectsStyle;
 import net.kapitencraft.mysticcraft.client.font.effect.GlyphEffect;
 import net.kapitencraft.mysticcraft.client.particle.DamageIndicatorParticleOptions;
@@ -9,6 +10,7 @@ import net.kapitencraft.mysticcraft.item.capability.elytra.ElytraCapability;
 import net.kapitencraft.mysticcraft.item.capability.elytra.ElytraData;
 import net.kapitencraft.mysticcraft.item.capability.elytra.IElytraData;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneItem;
+import net.kapitencraft.mysticcraft.logging.Markers;
 import net.kapitencraft.mysticcraft.misc.ModRarities;
 import net.kapitencraft.mysticcraft.misc.VeinMinerHolder;
 import net.minecraft.ChatFormatting;
@@ -27,6 +29,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.damagesource.DamageSource;
@@ -62,7 +65,10 @@ import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -114,6 +120,9 @@ public class MiscHelper {
         return sourceSpeed.add(sourceLookAngle.x * d1 + (sourceLookAngle.x * d2 - sourceSpeed.x) * d3, sourceLookAngle.y * d1 + (sourceLookAngle.y * d2 - sourceSpeed.y) * d3, sourceLookAngle.z * d1 + (sourceLookAngle.z * d2 - sourceSpeed.z) * d3);
     }
 
+    public static void sendManaBoostParticles(Entity target, RandomSource random, Vec3 delta) {
+        ClientHelper.sendManaBoostParticles(target, random, delta);
+    }
 
     /**
      * @param style the Style to add the effect to
@@ -141,12 +150,7 @@ public class MiscHelper {
     }
 
     public static <T, K extends T> boolean isInstance(T value, Class<K> target) {
-        try {
-            K ignored = (K) value;
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
+        return target.isInstance(value);
     }
 
     public static <T, K extends T> Function<T, K> instanceMapper(Class<K> kClass) {
@@ -335,36 +339,16 @@ public class MiscHelper {
                 if (event.phase == TickEvent.Phase.END) {
                     this.ticks += 1;
                     if (this.ticks >= this.waitTicks)
-                        run();
+                        end();
                 }
             }
-            private void run() {
+            private void end() {
                 MinecraftForge.EVENT_BUS.unregister(this);
                 run.run();
             }
         }.start(delayTicks);
     }
 
-    /**
-     * method to ensure that given stacks contain a {@link CompoundTag}
-     * @param stacks stacks to
-     */
-    public static void ensureTags(ItemStack... stacks) {
-        Arrays.stream(stacks).filter(stack -> stack != ItemStack.EMPTY).forEach(ItemStack::getOrCreateTag);
-    }
-
-
-    /**
-     * test method
-     * @param entity
-     * @param maxRange
-     * @return
-     */
-    public static boolean saveTeleportTest(Entity entity, double maxRange) {
-        Vec3 targetPos = entity.getLookAngle().scale(maxRange).add(entity.position());
-        entity.move(MoverType.SELF, targetPos);
-        return true;
-    }
 
     /**
      * method to teleport entity maxRange blocks forward, checking block hits
@@ -372,26 +356,18 @@ public class MiscHelper {
      * @param maxRange maximal range of the teleport, reduced when hitting a block
      * @return if the entity has been teleported
      */
-    @Deprecated
     public static boolean saveTeleport(Entity entity, double maxRange) {
-        ArrayList<Vec3> lineOfSight = MathHelper.lineOfSight(entity, maxRange, 0.1);
-        entity.stopRiding();
-        Level level = entity.level;
-        Vec3 teleportPosition;
-        for (Vec3 vec3 : lineOfSight) {
-            BlockPos pos = new BlockPos(vec3);
-            if (level.getBlockState(pos).canOcclude() && lineOfSight.indexOf(vec3) > 0) {
-                teleportPosition = lineOfSight.get(lineOfSight.indexOf(vec3) - 1);
-                teleport(entity, teleportPosition);
-                return true;
-            } else if (lineOfSight.indexOf(vec3) == lineOfSight.size() - 1) {
-                teleportPosition = lineOfSight.get(lineOfSight.indexOf(vec3) - 1);
-                teleport(entity, teleportPosition);
-                return true;
-            }
+        try {
+            Vec3 targetPos = entity.getLookAngle().scale(maxRange).add(entity.position());
+            entity.stopRiding();
+            entity.move(MoverType.SELF, targetPos);
+        } catch (Exception e) {
+            MysticcraftMod.LOGGER.warn(Markers.MOD_MARKER, "error trying to teleport entity '{}': {}", entity, e.getMessage());
+            return false;
         }
-        return false;
+        return true;
     }
+
 
     /**
      * method to directly teleport a player to the target location

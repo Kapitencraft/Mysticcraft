@@ -1,9 +1,11 @@
 package net.kapitencraft.mysticcraft.client.particle.animation;
 
 import net.minecraft.client.particle.Particle;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 public class ParticleMoveControl {
+    public Level level;
     Vec3 deltaVec;
     Vec3 loc;
     float r;
@@ -19,6 +21,7 @@ public class ParticleMoveControl {
         control.g = particle.gCol;
         control.b = particle.bCol;
         control.a = particle.alpha;
+        control.level = particle.level;
         return control;
     }
 

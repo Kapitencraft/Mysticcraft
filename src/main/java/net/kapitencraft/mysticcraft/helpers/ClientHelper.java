@@ -7,20 +7,31 @@ import net.kapitencraft.mysticcraft.requirements.Requirement;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.particle.FireworkParticles;
+import net.minecraft.client.particle.ParticleEngine;
+import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -32,8 +43,8 @@ public class ClientHelper {
     private static final ResourceLocation GUARDIAN_BEAM_LOCATION = new ResourceLocation("textures/entity/guardian_beam.png");
     private static final RenderType BEAM_RENDER_TYPE = RenderType.entityCutoutNoCull(GUARDIAN_BEAM_LOCATION);
 
-    public static void renderBeam(Vec3 start, LivingEntity living, int r, int g, int b, float p_114831_, PoseStack stack, MultiBufferSource p_114833_) {
-        float f1 = (float)living.level.getGameTime() + p_114831_;
+    public static void renderBeam(Vec3 start, LivingEntity living, int r, int g, int b, PoseStack stack, MultiBufferSource p_114833_) {
+        float f1 = (float)living.level.getGameTime();
         float f2 = f1 * 0.5F % 1.0F;
         stack.pushPose();
         Vec3 stop = new Vec3(living.getX(), living.getY(), living.getZ()).add(0, living.getBbHeight() * 0.5, 0);
@@ -103,5 +114,26 @@ public class ClientHelper {
 
     public static boolean hideGui() {
         return Minecraft.getInstance().options.hideGui;
+    }
+
+    @SuppressWarnings("all")
+    public static void sendManaBoostParticles(Entity target, RandomSource random, Vec3 delta) {
+        Level level = target.getLevel();
+        if (!level.isClientSide()) return;
+        ClientLevel clientLevel = (ClientLevel) level;
+        Vec3 loc = MathHelper.getHandHoldingItemAngle(HumanoidArm.LEFT, target);
+        addParticle(clientLevel, loc, random, delta);
+        loc = MathHelper.getHandHoldingItemAngle(HumanoidArm.RIGHT, target);
+        addParticle(clientLevel, loc, random, delta);
+    }
+
+    @SuppressWarnings("all")
+    private static void addParticle(ClientLevel level, Vec3 loc, RandomSource random, Vec3 delta) {
+        ParticleEngine engine = Minecraft.getInstance().particleEngine;
+        SpriteSet spriteSet = engine.spriteSets.get(BuiltInRegistries.PARTICLE_TYPE.getKey(ParticleTypes.FIREWORK.getType()));
+        FireworkParticles.SparkParticle particle = new FireworkParticles.SparkParticle(level, loc.x, loc.y, loc.z, random.nextGaussian() * 0.05D, -delta.y * 0.5D, random.nextGaussian() * 0.05D, engine, spriteSet);
+        particle.setColor(0, 0, 1);
+        particle.setFadeColor(MathHelper.RGBtoInt(new Vector3f(0.5f, 0, 0.5f)));
+        engine.add(particle);
     }
 }

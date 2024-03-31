@@ -207,7 +207,7 @@ public class DamageEvents {
             HealingHelper.setEffectReason(attacker);
             ParticleHelper.sendParticles(new ParticleAnimationOptions(
                     new DustParticleOptions(MathHelper.color(130, 0, 0), 1.9f),
-                    ParticleAnimationParameters.create().withParam(ParticleAnimParams.TARGET, attacker),
+                    ParticleAnimationParameters.create().withParam(ParticleAnimParams.TARGET, attacker.getId()),
                     ParticleAnimationInfo.create(Map.of(50, ParticleAnimations.MOVE_TO)),
                     5
             ), false, attacked, 5, attacked.getBbWidth(), attacked.getBbHeight(), attacked.getBbWidth(), 0.1);

@@ -27,8 +27,8 @@ public class GuildUpgradeItem extends Item implements IModItem {
     }
 
     @Override
-    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level p_41432_, @NotNull Player player, @NotNull InteractionHand hand) {
-        Guild guild = GuildHandler.getInstance().getGuildForPlayer(player);
+    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand) {
+        Guild guild = GuildHandler.getInstance(level).getGuildForPlayer(player);
         if (guild != null && guild.upgrade(this.upgrade)) {
             player.sendSystemMessage(Component.translatable("guild.upgrade.gain", Component.translatable("guild.upgrade.name." + this.upgrade.getName())));
             return InteractionResultHolder.success(player.getItemInHand(hand));

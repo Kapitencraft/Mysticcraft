@@ -18,8 +18,6 @@ import net.kapitencraft.mysticcraft.item.capability.spell.ISpellItem;
 import net.kapitencraft.mysticcraft.item.combat.spells.SpellItem;
 import net.kapitencraft.mysticcraft.item.combat.spells.SpellScrollItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword.LongSwordItem;
-import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.QuiverItem;
-import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.bow.ShortBowItem;
 import net.kapitencraft.mysticcraft.item.item_bonus.IItemBonusItem;
 import net.kapitencraft.mysticcraft.item.misc.CreativeItems;
 import net.kapitencraft.mysticcraft.item.misc.IModItem;
@@ -67,6 +65,8 @@ public abstract class ItemStackClientMixin {
     @Shadow protected abstract int getHideFlags();
 
     @Shadow @Final private Item item;
+
+    @Shadow public abstract ItemStack copy();
 
     @Unique
     private static final Style LORE_STYLE = Style.EMPTY.withColor(ChatFormatting.DARK_PURPLE).withItalic(true);
@@ -318,72 +318,17 @@ public abstract class ItemStackClientMixin {
         return list;
     }
 
-
-    @SuppressWarnings("all")
-    private static Component getNameModifier(ItemStack stack) {
-        Item item = stack.getItem();
-        if (item instanceof SpellScrollItem) {
-            return indicator("spell_scroll");
-        }
-        if (item instanceof LongSwordItem) {
-            return indicator("longsword");
-        } else if (item instanceof ShortBowItem) {
-            return indicator("short_bow");
-        } else if (item instanceof SwordItem) {
-            return indicator("sword");
-        } else if (item instanceof PickaxeItem) {
-            return indicator("pickaxe");
-        } else if (item instanceof AxeItem) {
-            return indicator("axe");
-        } else if (item instanceof ShovelItem) {
-            return indicator("shovel");
-        } else if (item instanceof HoeItem) {
-            return indicator("hoe");
-        } else if (item instanceof BowItem) {
-            return indicator("bow");
-        } else if (item instanceof CrossbowItem) {
-            return indicator("crossbow");
-        } else if (item instanceof EnchantedBookItem) {
-            return indicator("enchanted_book");
-        } else if (item instanceof ArmorItem armorItem) {
-            if (armorItem.getSlot() == EquipmentSlot.FEET) {
-                return indicator("boots");
-            } else if (armorItem.getSlot() == EquipmentSlot.LEGS) {
-                return indicator("legs");
-            } else if (armorItem.getSlot() == EquipmentSlot.CHEST) {
-                return indicator("chestplate");
-            } else if (armorItem.getSlot() == EquipmentSlot.HEAD) {
-                return indicator("helmet");
-            }
-        } else if (item instanceof BlockItem) {
-            return indicator("block");
-        } else if (item instanceof BoatItem) {
-            return indicator("boat");
-        } else if (item instanceof FishingRodItem) {
-            return indicator("fishing_rod");
-        } else if (item instanceof QuiverItem) {
-            return indicator("quiver");
-        } else if (item instanceof ShieldItem) {
-            return indicator("shield");
-        }
-        return indicator("item");
-    }
-
-    @SuppressWarnings("all")
-    private static MutableComponent indicator(String id) {
-        return Component.translatable("item.indicator." + id);
-    }
-
     @SuppressWarnings("all")
     private static MutableComponent createNameMod(ItemStack stack) {
         MutableComponent component = Component.empty();
         Rarity rarity = stack.getItem().getRarity(stack);
+
         component.append(Component.literal(rarity + " "));
-        if (stack.getItem() instanceof ISpellItem) {
-            component.append(Component.translatable("item.indicator.spell_catalyst"));
-            component.append(" ");
-        }
-        component.append(getNameModifier(stack));
+        //component.append(ModRegistries.LORE_CATEGORY_REGISTRY.getValues().stream()
+        //        .sorted(Comparator.comparingInt(ItemLoreCategory::getPriority))
+        //        .map(CollectionHelper.biMap(stack, ItemLoreCategory::apply))
+        //        .filter(Objects::nonNull)
+        //        .collect(CollectorHelper.joinComponent(Component.literal(" "))));
         return component;
     }
 

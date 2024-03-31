@@ -2,7 +2,6 @@ package net.kapitencraft.mysticcraft.client.particle.animation;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.logging.Markers;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.network.FriendlyByteBuf;
 
 import java.util.Arrays;
@@ -58,17 +57,17 @@ public class ParticleAnimationParameters {
                 interactiveParticleContextParam.accept(buf, o));
     }
 
-    public static ParticleAnimationParameters loadFromNetwork(FriendlyByteBuf buf, ClientLevel target) {
+    public static ParticleAnimationParameters loadFromNetwork(FriendlyByteBuf buf) {
         ParticleAnimationParameters context = new ParticleAnimationParameters();
-        context.readFromNetwork(buf, target);
+        context.readFromNetwork(buf);
         return context;
     }
 
-    public void readFromNetwork(FriendlyByteBuf buf, ClientLevel level) {
+    public void readFromNetwork(FriendlyByteBuf buf) {
         while (true) {
             try {
                 ParticleAnimParam<?> param = ParticleAnimParam.getParam(buf.readUtf());
-                params.put(param, param.apply(buf, level));
+                params.put(param, param.apply(buf));
             } catch (Exception e) {
                 break;
             }

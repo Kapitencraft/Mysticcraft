@@ -19,9 +19,6 @@ import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.commons.compress.utils.Lists;
 import org.jetbrains.annotations.NotNull;
 
@@ -100,7 +97,11 @@ public class Guild {
     }
 
     public boolean isOwner(Player player) {
-        return this.container.owner == player;
+        return this.container.cachedOwner == player;
+    }
+
+    boolean isMember(Player player) {
+        return this.container.onlineMembers.containsKey(player);
     }
 
     public Guild reviveMembers(MinecraftServer server) {
@@ -112,16 +113,12 @@ public class Guild {
         return this;
     }
 
-    public void activate() {
-        MinecraftForge.EVENT_BUS.register(this.container);
+    public void reviveWarOpponents(GuildHandler handler) {
+        this.wars.load(handler);
     }
 
-    public void deactivate() {
-        MinecraftForge.EVENT_BUS.unregister(this.container);
-    }
-
-    public void reviveWarOpponents() {
-        this.wars.load();
+    void setOffline(Player player) {
+        this.container.setOffline(player);
     }
 
     public class MemberContainer {
@@ -131,7 +128,7 @@ public class Guild {
         private final Map<UUID, String> memberNames = new HashMap<>();
         private final Map<UUID, Guild.GuildRank> rawMembers = new HashMap<>();
         private final UUID rawOwner;
-        Player owner = null;
+        Player cachedOwner = null;
         private final Map<Player, Guild.GuildRank> onlineMembers = new HashMap<>();
 
         public MemberContainer(UUID rawOwner) {
@@ -158,21 +155,15 @@ public class Guild {
                     .mapValues(GameProfile::getName).toMap());
         }
 
-        @SubscribeEvent
-        public void playerJoin(PlayerEvent.PlayerLoggedInEvent event) {
-            Player player = event.getEntity();
-            setOnline(player);
-        }
-
         void setOnline(Player player) {
             if (this.rawMembers.containsKey(player.getUUID())) {
                 GuildRank rank = rawMembers.get(player.getUUID());
                 this.onlineMembers.put(player, rawMembers.get(player.getUUID()));
                 if (rank == GuildRank.OWNER) {
-                    if (owner != null) {
-                        throw new IllegalStateException("Found guild with multiple owners (" + Guild.this.getName() + ")");
+                    if (cachedOwner != null) {
+                        throw new IllegalStateException("Found guild (" + Guild.this.getName() + ") with multiple owners (" + cachedOwner.getGameProfile().getName() + " & " + player.getGameProfile().getName() + ")");
                     }
-                    owner = player;
+                    cachedOwner = player;
                 }
                 if (!Objects.equals(player.getGameProfile().getName(), this.memberNames.get(player.getUUID()))) {
                     this.memberNames.put(player.getUUID(), player.getGameProfile().getName());
@@ -180,11 +171,9 @@ public class Guild {
             }
         }
 
-        @SubscribeEvent
-        public void setOffline(PlayerEvent.PlayerLoggedOutEvent event) {
-            Player player = event.getEntity();
+        public void setOffline(Player player) {
             this.onlineMembers.remove(player);
-            if (player == owner) owner = null;
+            if (player == cachedOwner) cachedOwner = null;
         }
 
         public void disband() {
@@ -263,7 +252,7 @@ public class Guild {
                 rawMembers.put(player.getUUID(), nextRank);
                 return "success";
             }
-            return player == owner ? "isOwner" : "notMember";
+            return player == cachedOwner ? "isOwner" : "notMember";
         }
 
         public CompoundTag save() {
@@ -273,6 +262,10 @@ public class Guild {
             tag.put("Members", IOHelper.writeMap(this.rawMembers, CompoundTag::putUUID, GuildRank::saveToTag));
             return tag;
         }
+    }
+
+    public void setOnline(Player player) {
+        this.container.setOnline(player);
     }
 
     MemberContainer loadMembers(CompoundTag tag) {
@@ -287,7 +280,6 @@ public class Guild {
 
     public void disband() {
         this.container.disband();
-        this.deactivate();
     }
 
     WarInstance loadWarOpponents(CompoundTag tag) {
@@ -323,8 +315,7 @@ public class Guild {
             return "noOpponent";
         }
 
-        void load() {
-            GuildHandler handler = GuildHandler.getInstance();
+        void load(GuildHandler handler) {
             rawOpponents.stream().map(handler::getGuild).forEach(opponents::add);
         }
 
@@ -379,6 +370,14 @@ public class Guild {
 
     public String getName() {
         return name;
+    }
+
+    public boolean memberLeave(Player member) {
+        if (containsMember(member.getUUID())) {
+            removeMember(member);
+            return true;
+        }
+        return false;
     }
 
     public boolean kickMember(Player member) {

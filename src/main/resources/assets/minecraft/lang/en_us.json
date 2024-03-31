@@ -136,5 +136,6 @@
   "enchantment.level.97": "XCVII",
   "enchantment.level.98": "XCVIII",
   "enchantment.level.99": "IC",
-  "enchantment.level.100": "C"
+  "enchantment.level.100": "C",
+  "command.guild.disband.fail.notOwner": "You are not owner of %1$s (try /g leave instead)"
 }

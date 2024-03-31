@@ -33,7 +33,7 @@ public class NetworkingHelper {
     }
 
     public static void syncAll(ServerPlayer player) {
-        ModMessages.sendToClientPlayer(SyncGuildsPacket.loadAll(GuildHandler.all()), player);
+        ModMessages.sendToClientPlayer(SyncGuildsPacket.loadAll(GuildHandler.all(player.getLevel())), player);
         ModMessages.sendToClientPlayer(new SyncEssenceDataPacket(player.getCapability(CapabilityHelper.ESSENCE).orElseGet(EssenceHolder::new)), player);
         ModMessages.sendToClientPlayer(SyncGemstoneDataToPlayerPacket.fromPlayer(player), player);
         ModMessages.sendToClientPlayer(SyncElytraDataToPlayerPacket.fromPlayer(player), player);
