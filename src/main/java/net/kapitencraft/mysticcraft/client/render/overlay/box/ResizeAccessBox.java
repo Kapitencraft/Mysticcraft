@@ -38,20 +38,23 @@ public class ResizeAccessBox extends InteractiveBox {
         return getCursorType();
     }
 
+    private static final float lineWidth = 0.5f;
+    private static final float squareSize = 1.5f;
+
     protected void reapplyPosition() {
         Vec2 start = this.parent.start;
         Vec2 finish = this.parent.finish;
         Vec2 bottomLeft = new Vec2(start.x, finish.y);
         Vec2 topRight = new Vec2(finish.x, start.y);
         switch (this.type) {
-            case E -> this.applyLine(topRight, finish, 0.2f);
-            case SE -> this.applySquare(finish, 1.5f);
-            case S -> this.applyLine(bottomLeft, finish, 0.2f);
-            case SW -> this.applySquare(bottomLeft, 1.5f);
-            case W -> this.applyLine(start, bottomLeft, 0.2f);
-            case NW -> this.applySquare(start, 1.5f);
-            case N -> this.applyLine(start, topRight, 0.2f);
-            case NE -> this.applySquare(topRight, 1.5f);
+            case E -> this.applyLine(topRight, finish, lineWidth);
+            case SE -> this.applySquare(finish, squareSize);
+            case S -> this.applyLine(bottomLeft, finish, lineWidth);
+            case SW -> this.applySquare(bottomLeft, squareSize);
+            case W -> this.applyLine(start, bottomLeft, lineWidth);
+            case NW -> this.applySquare(start, squareSize);
+            case N -> this.applyLine(start, topRight, lineWidth);
+            case NE -> this.applySquare(topRight, squareSize);
         }
     }
 
@@ -61,7 +64,7 @@ public class ResizeAccessBox extends InteractiveBox {
         this.finish = new Vec2(horizontal ? finish.x + lineW : finish.x, horizontal ? finish.y : finish.y  + lineW);
     }
 
-    //TODO fix scale not being right
+    //TODO fix scaling not moving resize box
 
     public void applySquare(Vec2 center, float size) {
         this.start = center.add(new Vec2(-size, -size));

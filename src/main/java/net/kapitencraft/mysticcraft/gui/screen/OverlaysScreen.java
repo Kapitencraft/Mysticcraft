@@ -2,10 +2,9 @@ package net.kapitencraft.mysticcraft.gui.screen;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.kapitencraft.mysticcraft.client.MysticcraftClient;
-import net.kapitencraft.mysticcraft.client.render.OverlayRenderer;
+import net.kapitencraft.mysticcraft.client.render.OverlayController;
 import net.kapitencraft.mysticcraft.client.render.overlay.box.InteractiveBox;
 import net.kapitencraft.mysticcraft.client.render.overlay.box.RenderBox;
-import net.kapitencraft.mysticcraft.client.render.overlay.box.ScreenDebugBox;
 import net.kapitencraft.mysticcraft.helpers.CollectionHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -17,11 +16,11 @@ import org.lwjgl.glfw.GLFW;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChangeGUILocationsScreen extends Screen {
-    private final OverlayRenderer controller = MysticcraftClient.getInstance().renderController;
+public class OverlaysScreen extends Screen {
+    private final OverlayController controller = MysticcraftClient.getInstance().overlayController;
     private final List<InteractiveBox> boxes = new ArrayList<>();
 
-    public ChangeGUILocationsScreen() {
+    public OverlaysScreen() {
         super(Component.translatable("change_gui_locations.title"));
     }
 
@@ -31,7 +30,6 @@ public class ChangeGUILocationsScreen extends Screen {
         LocalPlayer player = minecraft.player;
         boxes.clear();
         controller.fillRenderBoxes(boxes::add, player, font, width, height);
-        boxes.add(new ScreenDebugBox());
         super.init();
     }
 
@@ -77,5 +75,11 @@ public class ChangeGUILocationsScreen extends Screen {
                 .findFirst().orElse(GLFW.GLFW_ARROW_CURSOR);
         long windowId = minecraft.getWindow().getWindow();
         minecraft.execute(()-> GLFW.glfwSetCursor(windowId, GLFW.glfwCreateStandardCursor(arrowId)));
+    }
+
+    @Override
+    public void onClose() {
+        OverlayController.save();
+        super.onClose();
     }
 }

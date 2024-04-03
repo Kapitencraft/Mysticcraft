@@ -57,6 +57,7 @@ public class ResizeBox extends ResizeAccessBox {
 
     public void move(Vec2 delta) {
         super.move(delta);
+        this.dedicatedHolder.move(delta);
         this.boxes.forEach(CollectionHelper.biUsage(delta, RenderBox::move));
     }
 
@@ -128,7 +129,7 @@ public class ResizeBox extends ResizeAccessBox {
                 this.finish = this.finish.add(new Vec2(0, change.y));
             }
         }
-        fillBoxes();
+        reapplyPosition();
     }
 
     private Map<Axis, Boolean> getTypeAxes() {

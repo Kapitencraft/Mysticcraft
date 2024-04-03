@@ -28,7 +28,7 @@ public class ModCommands {
     @SubscribeEvent
     public static void registerClient(RegisterClientCommandsEvent event) {
         CommandDispatcher<CommandSourceStack> dispatcher = event.getDispatcher();
-        ChangeGUILocationsCommand.register(dispatcher);
+        OverlaysCommand.register(dispatcher);
     }
 
     public static void sendSuccess(CommandSourceStack stack, String msg, Object... args) {

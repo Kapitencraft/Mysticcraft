@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.helpers;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Axis;
 import net.kapitencraft.mysticcraft.requirements.Requirement;
 import net.minecraft.ChatFormatting;
@@ -11,6 +11,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.FireworkParticles;
 import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.client.particle.SpriteSet;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -136,4 +137,41 @@ public class ClientHelper {
         particle.setFadeColor(MathHelper.RGBtoInt(new Vector3f(0.5f, 0, 0.5f)));
         engine.add(particle);
     }
+
+    public static void fill(PoseStack p_93173_, float xStart, float yStart, float xEnd, float yEnd, int color) {
+        innerFill(p_93173_.last().pose(), xStart, yStart, xEnd, yEnd, color);
+    }
+
+    private static void innerFill(Matrix4f p_254518_, float xStart, float yStart, float xEnd, float yEnd, int color) {
+        if (xStart < xEnd) {
+            float i = xStart;
+            xStart = xEnd;
+            xEnd = i;
+        }
+
+        if (yStart < yEnd) {
+            float i = yStart;
+            yStart = yEnd;
+            yEnd = i;
+        }
+
+        float f3 = (float)(color >> 24 & 255) / 255.0F;
+        float f = (float)(color >> 16 & 255) / 255.0F;
+        float f1 = (float)(color >> 8 & 255) / 255.0F;
+        float f2 = (float)(color & 255) / 255.0F;
+        BufferBuilder bufferbuilder = Tesselator.getInstance().getBuilder();
+        RenderSystem.enableBlend();
+        RenderSystem.disableTexture();
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.setShader(GameRenderer::getPositionColorShader);
+        bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+        bufferbuilder.vertex(p_254518_, xStart, yEnd, 0.0F).color(f, f1, f2, f3).endVertex();
+        bufferbuilder.vertex(p_254518_, xEnd, yEnd, 0.0F).color(f, f1, f2, f3).endVertex();
+        bufferbuilder.vertex(p_254518_, xEnd, yStart, 0.0F).color(f, f1, f2, f3).endVertex();
+        bufferbuilder.vertex(p_254518_, xStart, yStart, 0.0F).color(f, f1, f2, f3).endVertex();
+        BufferUploader.drawWithShader(bufferbuilder.end());
+        RenderSystem.enableTexture();
+        RenderSystem.disableBlend();
+    }
+
 }

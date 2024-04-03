@@ -2,6 +2,7 @@ package net.kapitencraft.mysticcraft.client.render.overlay.box;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.world.phys.Vec2;
 import org.lwjgl.glfw.GLFW;
 
@@ -15,8 +16,9 @@ public class ScreenDebugBox extends InteractiveBox {
         PoseStack stack = new PoseStack();
         float screenX = Minecraft.getInstance().getWindow().getGuiScaledWidth();
         float screenY = Minecraft.getInstance().getWindow().getGuiScaledHeight();
-        Minecraft.getInstance().font.draw(stack, "Mouse location: " + mouseX + ", " + mouseY, (float) mouseX, (float) mouseY, -1);
-        Minecraft.getInstance().font.draw(stack, "Screen Height: " + screenX + ", " + screenY, (float) mouseX, (float) (mouseY + 10), -1);
+        Font font = Minecraft.getInstance().font;
+        font.draw(stack, "Mouse location: " + mouseX + ", " + mouseY, (float) mouseX, (float) mouseY, -1);
+        font.draw(stack, "Screen Height: " + screenX + ", " + screenY, (float) mouseX, (float) (mouseY + 10), -1);
     }
 
     @Override

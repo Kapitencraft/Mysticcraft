@@ -9,21 +9,6 @@ public class InteractiveBox extends RenderBox {
         super(start, finish, cursorType, stack, color, dedicatedHolder);
     }
 
-    public static InteractiveBox line(Vec2 start, Vec2 finish, float lineW, int color, int cursorType, PoseStack stack, RenderHolder dedicated) {
-        boolean horizontal = start.x == finish.x;
-        Vec2 finalStart = new Vec2(horizontal ? start.x - lineW : start.x, horizontal ? start.y : start.y - lineW);
-        Vec2 finalFinish = new Vec2(horizontal ? finish.x + lineW : finish.x, horizontal ? finish.y : finish.y  + lineW);
-        return new InteractiveBox(finalStart, finalFinish, cursorType, stack, color, dedicated);
-    }
-
-    public static InteractiveBox centeredQuad(Vec2 center, float xSize, float ySize, int cursorType, int fillColor, PoseStack stack, RenderHolder dedicated) {
-        return new InteractiveBox(center.add(new Vec2(-xSize, -ySize)), center.add(new Vec2(xSize, ySize)), cursorType, stack, fillColor, dedicated);
-    }
-
-    public static InteractiveBox square(Vec2 center, float size, int fillColor, int cursorType, PoseStack stack, RenderHolder dedicated) {
-        return centeredQuad(center, size, size, cursorType, fillColor, stack, dedicated);
-    }
-
     public boolean isHovering(double x, double y) {
         return check(start.x, finish.x, x) && check(start.y, finish.y, y);
     }

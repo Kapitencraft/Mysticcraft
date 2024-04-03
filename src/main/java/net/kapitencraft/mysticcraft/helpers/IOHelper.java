@@ -1,5 +1,7 @@
 package net.kapitencraft.mysticcraft.helpers;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.internal.Streams;
 import com.google.gson.stream.JsonReader;
@@ -27,6 +29,7 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 public class IOHelper {
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final String LENGTH_ID = "Length";
 
 
@@ -53,12 +56,23 @@ public class IOHelper {
     @SuppressWarnings("all")
     public static <T> T loadFile(File file, Codec<T> codec, Supplier<T> defaulted) {
         try {
-            file.createNewFile();
+            createFile(file);
             return get(codec.parse(JsonOps.INSTANCE, Streams.parse(createReader(file))), defaulted);
         } catch (IOException e) {
-            MysticcraftMod.LOGGER.warn("unable to load file: {}", e.getMessage());
         }
         return defaulted.get();
+    }
+
+    @SuppressWarnings("all")
+    private static void createFile(File file) {
+        try {
+            file.getParentFile().mkdirs();
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+        } catch (IOException e) {
+            MysticcraftMod.LOGGER.warn("unable to create file '{}': {}", file.getName(),  e.getMessage());
+        }
     }
 
     private static JsonReader createReader(File file) throws FileNotFoundException {
@@ -72,9 +86,11 @@ public class IOHelper {
     @SuppressWarnings("all")
     public static <T> void saveFile(File file, Codec<T> codec, T in) {
         try {
-            file.createNewFile();
-            Streams.write(get(codec.encodeStart(JsonOps.INSTANCE, in), JsonObject::new), createWriter(file));
-        } catch (IOException e) {
+            createFile(file);
+            FileWriter writer = new FileWriter(file);
+            writer.write(GSON.toJson(get(codec.encodeStart(JsonOps.INSTANCE, in), JsonObject::new)));
+            writer.close();
+        } catch (Exception e) {
             MysticcraftMod.LOGGER.warn("unable to save file: {}", e.getMessage());
         }
     }
