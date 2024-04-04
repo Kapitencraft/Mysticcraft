@@ -4,6 +4,8 @@ package net.kapitencraft.mysticcraft.mixin.classes;
 import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
+import net.kapitencraft.mysticcraft.misc.cooldown.Cooldown;
+import net.kapitencraft.mysticcraft.misc.cooldown.ICooldownable;
 import net.kapitencraft.mysticcraft.misc.damage_source.IAbilitySource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -14,14 +16,20 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Mixin(LivingEntity.class)
-public abstract class LivingEntityMixin extends Entity {
+public abstract class LivingEntityMixin extends Entity implements ICooldownable {
+    private final List<Cooldown> cooldowns = new ArrayList<>();
 
 
     public LivingEntityMixin(EntityType<?> p_19870_, Level p_19871_) {
@@ -81,5 +89,20 @@ public abstract class LivingEntityMixin extends Entity {
                 own().invulnerableTime = (int) (20 - (attackSpeed * 0.15));
             }
         }
+    }
+
+    @Override
+    public @NotNull List<Cooldown> getActiveCooldowns() {
+        return cooldowns;
+    }
+
+    @Override
+    public LivingEntity self() {
+        return own();
+    }
+
+    @Inject(method = "tick", at = @At("HEAD"))
+    public void tick(CallbackInfo ci) {
+        tickCooldowns();
     }
 }

@@ -3,7 +3,7 @@ package net.kapitencraft.mysticcraft.spell.spells;
 import net.kapitencraft.mysticcraft.client.particle.options.CircleParticleOptions;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.helpers.ParticleHelper;
-import net.kapitencraft.mysticcraft.misc.ManaAOE;
+import net.kapitencraft.mysticcraft.misc.content.mana.ManaAOE;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;

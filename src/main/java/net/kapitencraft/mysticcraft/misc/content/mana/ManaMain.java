@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.misc;
+package net.kapitencraft.mysticcraft.misc.content.mana;
 
 import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
 import net.kapitencraft.mysticcraft.helpers.MathHelper;

@@ -1,14 +1,13 @@
 package net.kapitencraft.mysticcraft.misc.particle_help;
 
-import net.minecraft.core.particles.ParticleType;
-import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.core.particles.ParticleOptions;
 
 public class ParticleGradient {
     private final int maxSteps, particleCount;
-    private final ParticleType<SimpleParticleType> firstParticle, secondParticle;
+    private final ParticleOptions firstParticle, secondParticle;
     private final int changePerStep;
 
-    public ParticleGradient(int maxSteps, int particleCount, ParticleType<SimpleParticleType> firstParticle, ParticleType<SimpleParticleType> secondParticle) {
+    public ParticleGradient(int maxSteps, int particleCount, ParticleOptions firstParticle, ParticleOptions secondParticle) {
         this.maxSteps = maxSteps;
         this.particleCount = particleCount;
         this.firstParticle = firstParticle;

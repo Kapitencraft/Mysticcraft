@@ -1,25 +1,21 @@
 package net.kapitencraft.mysticcraft.cooldown;
 
-import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 public class CompoundPath {
-    public static final CompoundPath ROOT = new CompoundPath("", null, entity -> true);
-    public static final CompoundPath COOLDOWN = new CompoundPath("Cooldowns", ROOT, entity -> entity instanceof LivingEntity);
+    public static final CompoundPath ROOT = new CompoundPath("", null);
+    public static final CompoundPath COOLDOWN = new CompoundPath("Cooldowns", ROOT);
     private final String path;
     private final CompoundPath parent;
-    private final Predicate<Entity> useAbles;
 
-    public CompoundPath(String path, CompoundPath parent, Predicate<Entity> useAbles) {
+    public CompoundPath(String path, CompoundPath parent) {
         this.path = path;
         this.parent = parent;
-        this.useAbles = useAbles;
     }
 
     public CompoundPath getParent() {
@@ -30,23 +26,25 @@ public class CompoundPath {
         return path;
     }
 
-    public @Nullable CompoundTag getTag(Entity entity) {
+    public @NotNull CompoundTag getOrCreateTag(Entity entity) {
         if (this == ROOT) return entity.getPersistentData();
-        if (applicable(entity)) {
-            CompoundTag parentPath = parent.getTag(entity);
-            if (parentPath != null) {
-                return parentPath.getCompound(this.path);
-            } else {
-                return null;
-            }
-        } else {
-            MysticcraftMod.LOGGER.warn("unable to read compound '{}': wrong entity", path);
+        CompoundTag parentPath = parent.getOrCreateTag(entity);
+        if (!parentPath.contains(this.path, 10)) {
+            CompoundTag tag = new CompoundTag();
+            parentPath.put(this.path, tag);
+            return tag;
         }
-        return null;
+        return parentPath.getCompound(this.path);
     }
 
-    public boolean applicable(Entity entity) {
-        return useAbles.test(entity);
+    public @Nullable CompoundTag getTag(Entity entity) {
+        if (this == ROOT) return entity.getPersistentData();
+        CompoundTag parentPath = parent.getTag(entity);
+        if (parentPath != null && parentPath.contains(this.path, 10)) {
+            return parentPath.getCompound(this.path);
+        } else {
+            return null;
+        }
     }
 
     public static Builder builder(String path) {
@@ -55,20 +53,20 @@ public class CompoundPath {
 
     public static class Builder {
         private final String path;
-        private Predicate<Entity> predicate;
         private CompoundPath parent;
 
         public Builder(String path) {
             this.path = path;
         }
 
-        public Builder withUseAbles(Predicate<Entity> predicate) {
-            this.predicate = predicate;
-            return this;
-        }
 
         public Builder withParent(CompoundPath parent) {
             this.parent = parent;
+            return this;
+        }
+
+        public Builder withParentIfNull(CompoundPath parent) {
+            if (this.parent == null) this.parent = parent;
             return this;
         }
 
@@ -80,7 +78,7 @@ public class CompoundPath {
         }
 
         public CompoundPath build() {
-            return new CompoundPath(path, parent == null ? ROOT : parent, predicate == null ? entity -> true : predicate);
+            return new CompoundPath(path, parent == null ? ROOT : parent);
         }
     }
 }

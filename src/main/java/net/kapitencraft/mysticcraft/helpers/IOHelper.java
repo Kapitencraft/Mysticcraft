@@ -1,5 +1,7 @@
 package net.kapitencraft.mysticcraft.helpers;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.internal.Streams;
 import com.google.gson.stream.JsonReader;
@@ -12,19 +14,22 @@ import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.PrimitiveCodec;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.api.MapStream;
 import net.kapitencraft.mysticcraft.api.TriConsumer;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.StringTagVisitor;
-import net.minecraft.nbt.TagParser;
+import net.minecraft.nbt.*;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.io.*;
 import java.util.*;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 public class IOHelper {
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final String LENGTH_ID = "Length";
 
 
@@ -51,12 +56,23 @@ public class IOHelper {
     @SuppressWarnings("all")
     public static <T> T loadFile(File file, Codec<T> codec, Supplier<T> defaulted) {
         try {
-            file.createNewFile();
+            createFile(file);
             return get(codec.parse(JsonOps.INSTANCE, Streams.parse(createReader(file))), defaulted);
         } catch (IOException e) {
-            MysticcraftMod.LOGGER.warn("unable to load file: {}", e.getMessage());
         }
         return defaulted.get();
+    }
+
+    @SuppressWarnings("all")
+    private static void createFile(File file) {
+        try {
+            file.getParentFile().mkdirs();
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+        } catch (IOException e) {
+            MysticcraftMod.LOGGER.warn("unable to create file '{}': {}", file.getName(),  e.getMessage());
+        }
     }
 
     private static JsonReader createReader(File file) throws FileNotFoundException {
@@ -70,9 +86,11 @@ public class IOHelper {
     @SuppressWarnings("all")
     public static <T> void saveFile(File file, Codec<T> codec, T in) {
         try {
-            file.createNewFile();
-            Streams.write(get(codec.encodeStart(JsonOps.INSTANCE, in), JsonObject::new), createWriter(file));
-        } catch (IOException e) {
+            createFile(file);
+            FileWriter writer = new FileWriter(file);
+            writer.write(GSON.toJson(get(codec.encodeStart(JsonOps.INSTANCE, in), JsonObject::new)));
+            writer.close();
+        } catch (Exception e) {
             MysticcraftMod.LOGGER.warn("unable to save file: {}", e.getMessage());
         }
     }
@@ -118,6 +136,23 @@ public class IOHelper {
 
     public static String fromCompoundTag(CompoundTag tag) {
         return new StringTagVisitor().visit(tag);
+    }
+
+    public static Stream<CompoundTag> readCompoundList(CompoundTag tag, String name) {
+        return readList(tag, name, CompoundTag.class, 10);
+    }
+
+    public static <T> Stream<T> readList(CompoundTag tag, String name, Class<T> targetId, int elementId) {
+        ListTag listTag = tag.getList(name, elementId);
+        return listTag.stream().filter(MiscHelper.instanceFilter(targetId))
+                .map(MiscHelper.instanceMapper(targetId));
+    }
+
+    public static <T, K> MapStream<T, K> readMap(CompoundTag tag, String name, BiFunction<CompoundTag, String, T> keyMapper, BiFunction<CompoundTag, String, K> valueMapper) {
+        HashMap<T, K> map = new HashMap<>();
+        readCompoundList(tag, name)
+                .forEach(tag1 -> map.put(keyMapper.apply(tag1, "Key"), valueMapper.apply(tag1, "Value")));
+        return MapStream.of(map);
     }
 
     public static CompoundTag fromString(String s) {
@@ -180,6 +215,23 @@ public class IOHelper {
         return arrayTag;
     }
 
+    public static <T, K> ListTag writeMap(Map<T, K> map, TriConsumer<CompoundTag, String, T> keyMapper, TriConsumer<CompoundTag, String, K> valueMapper) {
+        ListTag listTag = new ListTag();
+        map.forEach((t, k) -> {
+            CompoundTag tag = new CompoundTag();
+            keyMapper.accept(tag, "Key", t);
+            valueMapper.accept(tag, "Value", k);
+            listTag.add(tag);
+        });
+        return listTag;
+    }
+
+    public static <T> ListTag writeList(List<T> list, Function<T, Tag> mapper) {
+        ListTag tag = new ListTag();
+        list.stream().map(mapper).forEach(tag::add);
+        return tag;
+    }
+
     public static class TagBuilder {
         private final CompoundTag tag = new CompoundTag();
 
@@ -190,6 +242,14 @@ public class IOHelper {
         public <T> TagBuilder withArg(String name, T value, TriConsumer<CompoundTag, String, T> consumer) {
             consumer.accept(tag, name, value);
             return this;
+        }
+
+        public TagBuilder withString(String name, String val) {
+            return withArg(name, val, CompoundTag::putString);
+        }
+
+        public TagBuilder withUUID(String name, UUID val) {
+            return withArg(name, val, CompoundTag::putUUID);
         }
 
         public CompoundTag build() {

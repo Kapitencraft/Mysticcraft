@@ -2,16 +2,16 @@ package net.kapitencraft.mysticcraft.client.render.overlay.box;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.kapitencraft.mysticcraft.client.render.overlay.holder.RenderHolder;
-import net.minecraft.client.gui.Gui;
+import net.kapitencraft.mysticcraft.helpers.ClientHelper;
 import net.minecraft.world.phys.Vec2;
 
 public class RenderBox {
-    protected Vec2 start;
+    public Vec2 start;
     protected Vec2 finish;
     private final int cursorType;
     protected final PoseStack stack;
     private final int color;
-    protected final RenderHolder dedicatedHolder;
+    public final RenderHolder dedicatedHolder;
 
     public RenderBox(Vec2 start, Vec2 finish, int cursorType, PoseStack stack, int color, RenderHolder dedicatedHolder) {
         this.start = start;
@@ -27,7 +27,7 @@ public class RenderBox {
     }
 
     protected float height() {
-        return Math.abs(this.finish.y - this.finish.x);
+        return Math.abs(this.finish.y - this.start.y);
     }
 
     public void scale(float x, float y) {
@@ -41,10 +41,9 @@ public class RenderBox {
     public void move(Vec2 toAdd) {
         this.start = this.start.add(toAdd);
         this.finish = this.finish.add(toAdd);
-        this.dedicatedHolder.move(toAdd);
     }
 
     public void render(double mouseX, double mouseY) {
-        Gui.fill(stack, (int) start.x, (int) start.y, (int) finish.x, (int) finish.y, color);
+        ClientHelper.fill(stack, start.x, start.y, finish.x, finish.y, color);
     }
 }

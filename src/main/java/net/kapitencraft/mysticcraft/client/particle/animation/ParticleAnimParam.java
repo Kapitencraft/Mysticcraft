@@ -1,19 +1,18 @@
 package net.kapitencraft.mysticcraft.client.particle.animation;
 
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.network.FriendlyByteBuf;
 
 import java.util.HashMap;
 import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
+import java.util.function.Function;
 
-public class ParticleAnimParam<T> implements BiFunction<FriendlyByteBuf, ClientLevel, T>, BiConsumer<FriendlyByteBuf, Object> {
+public class ParticleAnimParam<T> implements Function<FriendlyByteBuf, T>, BiConsumer<FriendlyByteBuf, Object> {
     private static final HashMap<String, ParticleAnimParam<?>> KEYS = new HashMap<>();
     private final String id;
     private final BiConsumer<FriendlyByteBuf, T> serializer;
-    private final BiFunction<FriendlyByteBuf, ClientLevel, T> deserializer;
+    private final Function<FriendlyByteBuf, T> deserializer;
 
-    public ParticleAnimParam(String id, BiConsumer<FriendlyByteBuf, T> serializer, BiFunction<FriendlyByteBuf, ClientLevel, T> deserializer) {
+    public ParticleAnimParam(String id, BiConsumer<FriendlyByteBuf, T> serializer, Function<FriendlyByteBuf, T> deserializer) {
         this.id = id;
         this.serializer = serializer;
         this.deserializer = deserializer;
@@ -21,8 +20,8 @@ public class ParticleAnimParam<T> implements BiFunction<FriendlyByteBuf, ClientL
     }
 
     @Override
-    public T apply(FriendlyByteBuf buf, ClientLevel level) {
-        return deserializer.apply(buf, level);
+    public T apply(FriendlyByteBuf buf) {
+        return deserializer.apply(buf);
     }
 
     @Override

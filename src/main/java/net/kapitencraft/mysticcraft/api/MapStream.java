@@ -64,6 +64,16 @@ public class MapStream<T, K> {
         return of(map);
     }
 
+    public MapStream<T, K> filterValues(Predicate<K> keyFilter) {
+        Map<T, K> map = new HashMap<>();
+        this.map.forEach((t, k) -> {
+            if (keyFilter.test(k))
+                map.put(t, k);
+        });
+        return of(map);
+    }
+
+
     public <J> MapStream<T, J> mapValues(Function<K, J> mapper) {
         List<T> keys = this.map.keySet().stream().toList();
         List<J> values = this.map.values().stream().map(mapper).toList();

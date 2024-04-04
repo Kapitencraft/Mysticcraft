@@ -42,7 +42,7 @@ public class ContainableHolder<T extends Item> {
     public static <T extends Item> ContainableHolder<T> fromTag(CompoundTag tag) {
         int amount = tag.getInt("Amount");
         T item = (T) TextHelper.getFromId(tag.getString("Item"));
-        CompoundTag compoundTag = tag.getCompound("Info");
+        CompoundTag compoundTag = tag.getCompound("Data");
         if (item != Items.AIR) {
             ContainableHolder<T> holder = new ContainableHolder<>(item);
             holder.setTag(compoundTag);
@@ -56,11 +56,11 @@ public class ContainableHolder<T extends Item> {
         CompoundTag tag1 = new CompoundTag();
         tag1.putInt("Amount", this.amount);
         tag1.putString("Item", TextHelper.getTextId(this.item));
-        tag1.put("Info", this.getTag());
+        tag1.put("Data", this.getTag());
         return tag1;
     }
 
-    public ItemStack makeStack(int maxAmount) {
+    public ItemStack takeStack(int maxAmount) {
         ItemStack stack = getDefaultStack();
         stack.setCount(Math.min(this.amount, maxAmount));
         this.amount -= stack.getCount();

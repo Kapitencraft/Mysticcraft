@@ -61,7 +61,7 @@ public abstract class ContainableItem<T extends Item> extends Item implements IM
     }
 
 
-    public List<ContainableHolder<T>> getContents(@NotNull ItemStack stack) {
+    public static <T extends Item> List<ContainableHolder<T>> getContents(@NotNull ItemStack stack) {
         CompoundTag tag = stack.getTagElement("Contents");
         List<ContainableHolder<T>> list = new ArrayList<>();
         if (tag != null) {
@@ -172,7 +172,7 @@ public abstract class ContainableItem<T extends Item> extends Item implements IM
         if (item == null) return ItemStack.EMPTY;
         List<ContainableHolder<T>> contents = getContents(source);
         ContainableHolder<T> holder = getHolder(item, contents);
-        ItemStack stack = holder.makeStack(maxAmount);
+        ItemStack stack = holder.takeStack(maxAmount);
         saveContents(source, contents);
         return stack;
     }

@@ -1,26 +1,38 @@
 package net.kapitencraft.mysticcraft.helpers;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Axis;
 import net.kapitencraft.mysticcraft.requirements.Requirement;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.particle.FireworkParticles;
+import net.minecraft.client.particle.ParticleEngine;
+import net.minecraft.client.particle.SpriteSet;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -32,8 +44,8 @@ public class ClientHelper {
     private static final ResourceLocation GUARDIAN_BEAM_LOCATION = new ResourceLocation("textures/entity/guardian_beam.png");
     private static final RenderType BEAM_RENDER_TYPE = RenderType.entityCutoutNoCull(GUARDIAN_BEAM_LOCATION);
 
-    public static void renderBeam(Vec3 start, LivingEntity living, int r, int g, int b, float p_114831_, PoseStack stack, MultiBufferSource p_114833_) {
-        float f1 = (float)living.level.getGameTime() + p_114831_;
+    public static void renderBeam(Vec3 start, LivingEntity living, int r, int g, int b, PoseStack stack, MultiBufferSource p_114833_) {
+        float f1 = (float)living.level.getGameTime();
         float f2 = f1 * 0.5F % 1.0F;
         stack.pushPose();
         Vec3 stop = new Vec3(living.getX(), living.getY(), living.getZ()).add(0, living.getBbHeight() * 0.5, 0);
@@ -104,4 +116,62 @@ public class ClientHelper {
     public static boolean hideGui() {
         return Minecraft.getInstance().options.hideGui;
     }
+
+    @SuppressWarnings("all")
+    public static void sendManaBoostParticles(Entity target, RandomSource random, Vec3 delta) {
+        Level level = target.getLevel();
+        if (!level.isClientSide()) return;
+        ClientLevel clientLevel = (ClientLevel) level;
+        Vec3 loc = MathHelper.getHandHoldingItemAngle(HumanoidArm.LEFT, target);
+        addParticle(clientLevel, loc, random, delta);
+        loc = MathHelper.getHandHoldingItemAngle(HumanoidArm.RIGHT, target);
+        addParticle(clientLevel, loc, random, delta);
+    }
+
+    @SuppressWarnings("all")
+    private static void addParticle(ClientLevel level, Vec3 loc, RandomSource random, Vec3 delta) {
+        ParticleEngine engine = Minecraft.getInstance().particleEngine;
+        SpriteSet spriteSet = engine.spriteSets.get(BuiltInRegistries.PARTICLE_TYPE.getKey(ParticleTypes.FIREWORK.getType()));
+        FireworkParticles.SparkParticle particle = new FireworkParticles.SparkParticle(level, loc.x, loc.y, loc.z, random.nextGaussian() * 0.05D, -delta.y * 0.5D, random.nextGaussian() * 0.05D, engine, spriteSet);
+        particle.setColor(0, 0, 1);
+        particle.setFadeColor(MathHelper.RGBtoInt(new Vector3f(0.5f, 0, 0.5f)));
+        engine.add(particle);
+    }
+
+    public static void fill(PoseStack p_93173_, float xStart, float yStart, float xEnd, float yEnd, int color) {
+        innerFill(p_93173_.last().pose(), xStart, yStart, xEnd, yEnd, color);
+    }
+
+    private static void innerFill(Matrix4f p_254518_, float xStart, float yStart, float xEnd, float yEnd, int color) {
+        if (xStart < xEnd) {
+            float i = xStart;
+            xStart = xEnd;
+            xEnd = i;
+        }
+
+        if (yStart < yEnd) {
+            float i = yStart;
+            yStart = yEnd;
+            yEnd = i;
+        }
+
+        float f3 = (float)(color >> 24 & 255) / 255.0F;
+        float f = (float)(color >> 16 & 255) / 255.0F;
+        float f1 = (float)(color >> 8 & 255) / 255.0F;
+        float f2 = (float)(color & 255) / 255.0F;
+        BufferBuilder bufferbuilder = Tesselator.getInstance().getBuilder();
+        RenderSystem.enableBlend();
+        RenderSystem.disableTexture();
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.setShader(GameRenderer::getPositionColorShader);
+        bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+        bufferbuilder.vertex(p_254518_, xStart, yEnd, 0.0F).color(f, f1, f2, f3).endVertex();
+        bufferbuilder.vertex(p_254518_, xEnd, yEnd, 0.0F).color(f, f1, f2, f3).endVertex();
+        bufferbuilder.vertex(p_254518_, xEnd, yStart, 0.0F).color(f, f1, f2, f3).endVertex();
+        bufferbuilder.vertex(p_254518_, xStart, yStart, 0.0F).color(f, f1, f2, f3).endVertex();
+        BufferUploader.drawWithShader(bufferbuilder.end());
+        RenderSystem.enableTexture();
+        RenderSystem.disableBlend();
+    }
+
 }

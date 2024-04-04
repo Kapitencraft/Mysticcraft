@@ -52,7 +52,7 @@ public abstract class MakeParticlePacket implements ModPacket {
             ClientLevel level = Minecraft.getInstance().level;
             if (level != null && Minecraft.getInstance().getCameraEntity() != null) {
                 changeValues(level);
-                level.addParticle(options,  pos.x, pos.y, pos.z, delta.x, delta.y, delta.z);
+                level.addParticle(options, pos.x, pos.y, pos.z, delta.x, delta.y, delta.z);
             }
         });
         return true;

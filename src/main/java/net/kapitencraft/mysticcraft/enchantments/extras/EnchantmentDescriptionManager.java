@@ -1,11 +1,9 @@
 package net.kapitencraft.mysticcraft.enchantments.extras;
 
-import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.ModEnchantment;
 import net.kapitencraft.mysticcraft.helpers.ClientHelper;
 import net.kapitencraft.mysticcraft.helpers.TextHelper;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.EnchantedBookItem;
@@ -40,12 +38,6 @@ public class EnchantmentDescriptionManager {
         int level = stack.getItem() instanceof EnchantedBookItem ? (EnchantmentHelper.deserializeEnchantments(EnchantedBookItem.getEnchantments(stack)).get(ench)) : EnchantmentHelper.getTagEnchantmentLevel(ench, stack);
         String[] objects = ench instanceof ModEnchantment modEnchantment ? modEnchantment.getDescriptionMods(level) : new String[]{String.valueOf(level)};
         Stream<String> stream = Arrays.stream(objects);
-        return TextHelper.getAllMatchingFilter(integer -> {
-            String descId = ench.getDescriptionId() + ".desc";
-            if (!I18n.exists(descId)) descId += "ription";
-            if (!I18n.exists(descId)) MysticcraftMod.LOGGER.warn("couldn't find translation for enchant '{}'", ench.getDescriptionId());
-            if (integer != 0) descId += integer;
-            return descId;
-        }, component -> component.withStyle(ChatFormatting.DARK_GRAY), stream.map(TextHelper::wrapInRed).toArray());
+        return TextHelper.getDescriptionList(ench.getDescriptionId(), component -> component.withStyle(ChatFormatting.DARK_GRAY), stream.map(TextHelper::wrapInRed).toArray());
     }
 }

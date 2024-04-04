@@ -28,7 +28,6 @@ public abstract class RenderHolder {
 
     public void move(Vec2 toAdd) {
         this.pos.add(toAdd);
-        this.poseStack.translate(toAdd.x, toAdd.y, 0);
     }
 
     protected void renderString(Component toWrite, float x, float y) {
@@ -39,7 +38,7 @@ public abstract class RenderHolder {
         Vec2 loc = this.getLoc(screenWidth, screenHeight);
         float width = this.getWidth(player, font);
         float height = this.getHeight(player, font);
-        return new ResizeBox(loc.add(-1f), loc.add(new Vec2(width, height)).add(1f), this);
+        return new ResizeBox(loc.add(new Vec2(-1, -2)), loc.add(new Vec2(width + 1, height)), this);
     }
 
     public abstract float getWidth(LocalPlayer player, Font font);

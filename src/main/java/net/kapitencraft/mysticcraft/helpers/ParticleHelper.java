@@ -34,7 +34,7 @@ public class ParticleHelper {
     }
 
     public static <T extends ParticleOptions> int sendParticles(Level level, boolean force, Vec3 loc, double deltaX, double deltaY, double deltaZ, double speed, ParticleAmountHolder holder) {
-        return sendParticles(level, (ParticleOptions) holder.particleType(), force, loc.x, loc.y, loc.z, holder.amount(), deltaX, deltaY, deltaZ, speed);
+        return sendParticles(level, holder.particleType(), force, loc.x, loc.y, loc.z, holder.amount(), deltaX, deltaY, deltaZ, speed);
     }
 
     public static <T extends ParticleOptions> int sendParticles(Level level, boolean force, Vec3 loc, double deltaX, double deltaY, double deltaZ, double speed, ParticleGradientHolder holder) {

@@ -63,9 +63,9 @@ public class ModMessages {
                 .encoder(ClientboundExplodePacket::write)
                 .consumerMainThread(ModMessages::handleExplosionPacket)
                 .add();
-        addMessage(UseShortBowPacket.class, NetworkDirection.PLAY_TO_SERVER, UseShortBowPacket::new);
+        addSimpleMessage(UseShortBowPacket.class, NetworkDirection.PLAY_TO_SERVER, UseShortBowPacket::new);
         addMessage(ReforgingPacket.class, NetworkDirection.PLAY_TO_SERVER, ReforgingPacket::new);
-        addMessage(UpgradeItemPacket.class, NetworkDirection.PLAY_TO_SERVER, UpgradeItemPacket::new);
+        addSimpleMessage(UpgradeItemPacket.class, NetworkDirection.PLAY_TO_SERVER, UpgradeItemPacket::new);
         addMessage(SendCompoundTagPacket.class, NetworkDirection.PLAY_TO_SERVER, SendCompoundTagPacket::new);
         addMessage(SendCompoundTagPacket.class, NetworkDirection.PLAY_TO_CLIENT, SendCompoundTagPacket::new);
         addMessage(SyncGuildsPacket.class, NetworkDirection.PLAY_TO_CLIENT, SyncGuildsPacket::new);
@@ -74,7 +74,9 @@ public class ModMessages {
         addMessage(SyncGemstoneDataToBlockPacket.class, NetworkDirection.PLAY_TO_CLIENT, SyncGemstoneDataToBlockPacket::new);
         addMessage(SyncGemstoneDataToPlayerPacket.class, NetworkDirection.PLAY_TO_CLIENT, SyncGemstoneDataToPlayerPacket::new);
         addMessage(SyncElytraDataToPlayerPacket.class, NetworkDirection.PLAY_TO_CLIENT, SyncElytraDataToPlayerPacket::new);
+        addSimpleMessage(ResetCooldownsPacket.class, NetworkDirection.PLAY_TO_CLIENT, ResetCooldownsPacket::new);
     }
+
 
     private static boolean handleExplosionPacket(ClientboundExplodePacket packet, Supplier<NetworkEvent.Context> supplier) {
         supplier.get().enqueueWork(()->{
@@ -90,5 +92,9 @@ public class ModMessages {
                 .encoder(T::toBytes)
                 .consumerMainThread(T::handle)
                 .add();
+    }
+
+    private static <T extends ModPacket> void addSimpleMessage(Class<T> packetClass, NetworkDirection direction, Supplier<T> supplier) {
+        addMessage(packetClass, direction, buf -> supplier.get());
     }
 }

@@ -37,17 +37,20 @@ public enum ParticleAnimations implements Predicate<ParticleAnimationParameters>
                 control.deltaVec = moveVec;
             }
             case MOVE_TO -> {
-                Entity entity = params.getParamOrThrow(ParticleAnimParams.TARGET);
+                int id = params.getParamOrThrow(ParticleAnimParams.TARGET);
+                Entity entity = control.level.getEntity(id);
                 Vec3 move = control.loc.subtract(entity.position());
                 control.deltaVec = control.loc.add(move.scale(move.length() / remaining));
             }
             case MOVE_AWAY -> {
-                Entity entity = params.getParamOrThrow(ParticleAnimParams.SOURCE);
+                int id = params.getParamOrThrow(ParticleAnimParams.SOURCE);
+                Entity entity = control.level.getEntity(id);
                 Vec3 move = entity.position().subtract(control.loc);
                 control.deltaVec = move.scale(remaining * 5);
             }
             case ROTATE -> {
-                Entity entity = params.getParamOrThrow(ParticleAnimParams.SOURCE);
+                int id = params.getParamOrThrow(ParticleAnimParams.SOURCE);
+                Entity entity = control.level.getEntity(id);
                 int rot = params.getParamOrThrow(ParticleAnimParams.ROTATION);
                 Vec3 outRot = MathHelper.calculateViewVector(0, rot);
                 Vec3 dist = entity.position().subtract(control.loc);

@@ -8,10 +8,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class GuildUpgradeInstance {
-    private static final Codec<Map<GuildUpgrades, Integer>> VALUE_CODEC = Codec.unboundedMap(GuildUpgrades.CODEC, Codec.INT);
     public static final Codec<GuildUpgradeInstance> CODEC = RecordCodecBuilder.create(guildUpgradeInstanceInstance ->
             guildUpgradeInstanceInstance.group(
-                    VALUE_CODEC.fieldOf("content").forGetter(GuildUpgradeInstance::getUpgrades)
+                    Codec.unboundedMap(GuildUpgrades.CODEC, Codec.INT).fieldOf("Content").forGetter(GuildUpgradeInstance::getUpgrades)
             ).apply(guildUpgradeInstanceInstance, GuildUpgradeInstance::new)
     );
 

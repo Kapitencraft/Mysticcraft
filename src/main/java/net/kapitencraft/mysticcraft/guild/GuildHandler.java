@@ -1,61 +1,98 @@
 package net.kapitencraft.mysticcraft.guild;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.helpers.TextHelper;
+import net.kapitencraft.mysticcraft.api.MapStream;
+import net.kapitencraft.mysticcraft.helpers.CollectionHelper;
+import net.kapitencraft.mysticcraft.helpers.CollectorHelper;
+import net.kapitencraft.mysticcraft.helpers.IOHelper;
 import net.kapitencraft.mysticcraft.logging.Markers;
 import net.kapitencraft.mysticcraft.networking.ModMessages;
 import net.kapitencraft.mysticcraft.networking.packets.S2C.SyncGuildsPacket;
 import net.minecraft.Util;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BannerItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.stream.Stream;
 
+
+@Mod.EventBusSubscriber
 public class GuildHandler extends SavedData {
-    private static GuildHandler instance;
+    private static GuildHandler clientInstance;
     private final HashMap<String, Guild> guilds = new HashMap<>();
+
+    public static GuildHandler getInstance(Level level) {
+        if (level instanceof ClientLevel) {
+            return clientInstance;
+        } else {
+            ServerLevel serverLevel = (ServerLevel) level;
+            MinecraftServer server = serverLevel.getServer();
+            return serverLevel.getDataStorage().computeIfAbsent(CollectionHelper.biMap(server, GuildHandler::load), GuildHandler::createDefault, "guilds");
+        }
+    }
 
     public static GuildHandler createDefault() {
         MysticcraftMod.LOGGER.info(Markers.GUILD, "no Guilds found; using default");
         return new GuildHandler();
     }
 
-    public static Collection<Guild> all() {
-        return instance.guilds.values();
+    public static Collection<Guild> all(Level level) {
+        return getInstance(level).allGuilds();
+    }
+
+    public Collection<Guild> allGuilds() {
+        return guilds.values();
     }
 
     public static void ensureInstanceNotNull() {
-        if (instance == null) instance = new GuildHandler();
+        if (clientInstance == null) clientInstance = new GuildHandler();
     }
 
     public static void setInstance(GuildHandler newInstance) {
-        instance = newInstance;
+        clientInstance = newInstance;
     }
 
     @Override
-    public @NotNull CompoundTag save(@NotNull CompoundTag p_77763_) {
-        return saveAllGuilds();
+    public @NotNull CompoundTag save(@NotNull CompoundTag tag) {
+        MysticcraftMod.LOGGER.info("saving Guilds...");
+        long time = Util.getMillis();
+        tag.put("Guilds", saveAllGuilds());
+        MysticcraftMod.LOGGER.info("saving Guilds took {} ms", Util.getMillis() - time);
+        return tag;
     }
 
     public static GuildHandler load(CompoundTag tag, MinecraftServer server) {
         MysticcraftMod.LOGGER.info(Markers.GUILD, "loading Guilds...");
-        return loadAllGuilds(server, tag);
+        return loadAllGuilds(server.getLevel(Level.OVERWORLD), tag);
     }
 
     public String addNewGuild(String newGuildName, Player owner) {
         if (!guilds.containsKey(newGuildName)) {
             ItemStack stack = owner.getMainHandItem();
             if (stack.getItem() instanceof BannerItem) {
+                Guild bannerGuild = getGuildForBanner(stack);
+                if (bannerGuild != null) return "duplicateBanner";
                 this.setDirty();
-                guilds.put(newGuildName, new Guild(newGuildName, owner.getUUID(), stack, new GuildUpgradeInstance()));
+                Guild guild = new Guild(newGuildName, owner.getUUID(), stack, new GuildUpgradeInstance());
+                guilds.put(newGuildName, guild);
+                owner.getPersistentData().putString(Guild.MemberContainer.PLAYER_GUILD_NAME_TAG, newGuildName);
                 if (owner instanceof ServerPlayer player) {
                     ModMessages.sendToAllConnectedPlayers(value -> SyncGuildsPacket.addGuild(owner, guilds.get(newGuildName)), player.getLevel());
                 }
@@ -70,6 +107,9 @@ public class GuildHandler extends SavedData {
         if (!this.guilds.containsKey(guildName)) {
             return "noSuchGuild";
         } else {
+            this.setDirty();
+            Guild guild = this.guilds.get(guildName);
+            guild.disband();
             this.guilds.remove(guildName);
             return "success";
         }
@@ -79,12 +119,14 @@ public class GuildHandler extends SavedData {
         if (!(banner.getItem() instanceof BannerItem)) {
             return null;
         }
-        for (Guild guild : guilds.values()) {
-            if (ItemStack.matches(guild.getBanner(), banner)) {
-                return guild;
-            }
-        }
-        return null;
+        return MapStream.of(allGuilds().stream()
+                .collect(CollectorHelper.createMapForKeys(Guild::getBanner)))
+                .filterKeys(CollectionHelper.biFilter(banner, ItemStack::matches))
+                .toMap()
+                .values()
+                .stream()
+                .findFirst()
+                .orElse(null);
     }
 
     public Guild getGuild(String name) {
@@ -92,53 +134,59 @@ public class GuildHandler extends SavedData {
     }
 
     public Guild getGuildForPlayer(Player player) {
-        return getGuild(player.getPersistentData().getString("GuildName"));
+        return getGuild(player.getPersistentData().getString(Guild.MemberContainer.PLAYER_GUILD_NAME_TAG));
     }
 
-    public static void addNewGuild(Guild guild) {
+    @SubscribeEvent
+    public static void playerJoin(PlayerEvent.PlayerLoggedInEvent event) {
+        all(event.getEntity().level).forEach(CollectionHelper.biUsage(event.getEntity(), Guild::setOnline));
+    }
+
+    @SubscribeEvent
+    public static void playerLeave(PlayerEvent.PlayerLoggedOutEvent event) {
+        all(event.getEntity().level).forEach(CollectionHelper.biUsage(event.getEntity(), Guild::setOffline));
+    }
+
+    public static void addGuildClient(Guild guild) {
         ensureInstanceNotNull();
-        instance.addGuild(guild);
+        clientInstance.addGuild(guild);
     }
 
     private void addGuild(Guild guild) {
+        if (guild == null) {
+            this.setDirty();
+            return;
+        }
         this.guilds.put(guild.getName(), guild);
     }
 
-    public static GuildHandler loadAllGuilds(MinecraftServer server, CompoundTag tag) {
-        int i = 0;
+    public static GuildHandler loadAllGuilds(Level level, CompoundTag tag) {
         GuildHandler guildHandler = new GuildHandler();
         long j = Util.getMillis();
-        while (tag.contains("Guild" + i, 10)) {
-            Guild guild = Guild.loadFromTag(tag.getCompound("Guild" + i), server);
-            MysticcraftMod.LOGGER.info(Markers.GUILD, "Loaded Guild called " + TextHelper.wrapInNameMarkers(guild.getName()));
-            guildHandler.addGuild(guild);
-            i++;
-        }
-        MysticcraftMod.LOGGER.info(Markers.GUILD, "loading {} Guilds took {} ms", i, Util.getMillis() - j);
+        Stream<CompoundTag> tags = IOHelper.readCompoundList(tag, "Guilds");
+        long count = tags.map(Guild::loadFromTag).peek(guildHandler::addGuild).count();
+        guildHandler.allGuilds().forEach(CollectionHelper.biUsage(guildHandler, Guild::reviveWarOpponents));
+        MysticcraftMod.LOGGER.info(Markers.GUILD, "loading {} Guilds took {} ms", count, Util.getMillis() - j);
         return guildHandler;
     }
 
     public boolean isStackFromGuildBanner(ItemStack stack) {
-        for (Guild guild : this.guilds.values()) {
-            if (ItemStack.matches(stack, guild.getBanner())) {
-                return true;
-            }
-        }
-        return false;
+        return this.allGuilds()
+                .stream()
+                .map(Guild::getBanner)
+                .anyMatch(CollectionHelper.biFilter(stack, ItemStack::matches));
     }
 
-    public CompoundTag saveAllGuilds() {
-        CompoundTag save = new CompoundTag();
-        int i = 0;
-        for (Guild guild : guilds.values()) {
-            save.put("Guild" + i, guild.saveToTag());
-            i++;
-        }
-        return save;
+    public ListTag saveAllGuilds() {
+        ListTag listTag = new ListTag();
+        listTag.addAll(allGuilds().stream().map(Guild::save).toList());
+        this.guilds.clear();
+        return listTag;
     }
 
+    @OnlyIn(Dist.CLIENT)
     public static GuildHandler getInstance() {
         ensureInstanceNotNull();
-        return instance;
+        return clientInstance;
     }
 }

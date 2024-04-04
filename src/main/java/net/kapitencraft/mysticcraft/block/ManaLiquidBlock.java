@@ -20,7 +20,7 @@ public class ManaLiquidBlock extends LiquidBlock {
 
     @Override
     public void randomTick(@NotNull BlockState state, ServerLevel serverLevel, BlockPos pos, @NotNull RandomSource source) {
-        if (serverLevel.getBlockState(pos.below()).getBlock() == Blocks.SLIME_BLOCK && source.nextInt(1, 1000) == 1000) {
+        if (serverLevel.getBlockState(pos.below()).getBlock() == Blocks.SLIME_BLOCK && source.nextInt(1, 10) == 1) {
             serverLevel.setBlock(pos.below(), ModBlocks.MANGATIC_SLIME.getBlock().defaultBlockState(), 3);
         }
     }

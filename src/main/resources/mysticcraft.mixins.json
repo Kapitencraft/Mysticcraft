@@ -7,10 +7,13 @@
     "BannerItemMixin",
     "ChatScreenMixin",
     "ClientTooltipPositionerMixin",
+    "EntityClientMixin",
     "HandItemLayerRendererMixin",
     "ItemStackClientMixin",
     "KeyMappingMixin",
     "MakeCutoutTranslucentMixin",
+    "RecipeBookComponentMixin",
+    "ScreenMixin",
     "StringRenderOutputMixin"
   ],
   "mixins": [
@@ -29,12 +32,14 @@
     "ItemStackMixin",
     "LivingEntityMixin",
     "MerchantMenuMixin",
+    "MoveControlMixin",
     "OverworldBiomeBuilderMixin",
     "PlayerMixin",
     "ProjectileMixin",
     "RandomChanceConditionMixin",
     "ServerPlaceRecipeMixin",
     "SharedConstantsMixin",
+    "StringDecomposerMixin",
     "StructureTemplateMixin",
     "StyleMixin",
     "WitherSkullMixin"

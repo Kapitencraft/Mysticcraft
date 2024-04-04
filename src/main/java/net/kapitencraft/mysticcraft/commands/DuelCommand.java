@@ -2,7 +2,6 @@ package net.kapitencraft.mysticcraft.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.kapitencraft.mysticcraft.item.combat.duel.Duel;
 import net.kapitencraft.mysticcraft.item.combat.duel.DuelHandler;
 import net.minecraft.commands.CommandSourceStack;
@@ -14,7 +13,7 @@ import net.minecraft.server.level.ServerPlayer;
 public class DuelCommand {
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        LiteralCommandNode<CommandSourceStack> main = dispatcher.register(Commands.literal("duel")
+        dispatcher.register(Commands.literal("duel")
                 .then(Commands.literal("challenge")
                         .then(Commands.argument("player", EntityArgument.player())
                                 .executes(commandContext -> makeDuel(commandContext.getSource(), EntityArgument.getPlayer(commandContext, "player")))

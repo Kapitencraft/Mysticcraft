@@ -17,7 +17,8 @@ import net.kapitencraft.mysticcraft.item.misc.creative_tab.ArmorTabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
 import net.kapitencraft.mysticcraft.misc.content.EssenceType;
-import net.kapitencraft.mysticcraft.misc.particle_help.ParticleAnimator;
+import net.kapitencraft.mysticcraft.misc.particle_help.animation.IAnimatable;
+import net.kapitencraft.mysticcraft.misc.particle_help.animation.elements.OrbitAnimationElement;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -34,6 +35,7 @@ import java.util.function.Consumer;
 public class CrimsonArmorItem extends NetherArmorItem implements IArmorBonusItem {
     public static final ArmorTabGroup CRIMSON_ARMOR_GROUP = new ArmorTabGroup(TabRegister.TabTypes.WEAPONS_AND_TOOLS);
     private static final String helperString = "crimsonParticles";
+    private static final OrbitAnimationElement element = new OrbitAnimationElement("CrimsonArmorFullset", 2, 3, FlamesForColors.RED, -1, 0, 0);
     private static final FullSetBonus FULL_SET_BONUS = new CrimsonArmorFullSetBonus();
     public CrimsonArmorItem(EquipmentSlot p_40387_) {
         super(ModArmorMaterials.CRIMSON, p_40387_, NETHER_ARMOR_PROPERTIES);
@@ -41,14 +43,12 @@ public class CrimsonArmorItem extends NetherArmorItem implements IArmorBonusItem
 
     @Override
     protected void initFullSetTick(ItemStack stack, Level level, LivingEntity living) {
-        new ParticleAnimator(helperString, living, ParticleAnimator.Type.ORBIT, ParticleAnimator.createOrbitProperties(0, 1000, 0, 0, 3, FlamesForColors.RED, 0.75f));
-        new ParticleAnimator(helperString, living, ParticleAnimator.Type.ORBIT, ParticleAnimator.createOrbitProperties(0, 1000, 180, 0, 3, FlamesForColors.RED, 0.75f));
-
+        IAnimatable.get(living).addElement(element);
     }
 
     @Override
     protected void postFullSetTick(ItemStack stack, Level level, LivingEntity living) {
-        ParticleAnimator.clearAllHelpers(helperString, living);
+        IAnimatable.get(living).removeElement(element);
     }
 
     @Override

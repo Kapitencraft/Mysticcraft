@@ -9,8 +9,8 @@ import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModItems;
 import net.kapitencraft.mysticcraft.item.capability.ItemData;
 import net.kapitencraft.mysticcraft.item.misc.RNGHelper;
-import net.kapitencraft.mysticcraft.misc.ManaMain;
-import net.kapitencraft.mysticcraft.cooldown.SpellCooldown;
+import net.kapitencraft.mysticcraft.misc.content.mana.ManaMain;
+import net.kapitencraft.mysticcraft.misc.cooldown.Cooldown;
 import net.kapitencraft.mysticcraft.requirements.Requirement;
 import net.kapitencraft.mysticcraft.spell.Element;
 import net.kapitencraft.mysticcraft.spell.SpellExecutionFailedException;
@@ -30,14 +30,11 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nullable;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 
 public class SpellHelper implements ItemData<SpellSlot[], SpellHelper> {
-    public static final Map<Player, List<SpellCooldown>> spells = new HashMap<>();
 
     private final SpellSlot[] spellSlots;
     private final Item item;
@@ -130,7 +127,9 @@ public class SpellHelper implements ItemData<SpellSlot[], SpellHelper> {
             MiscHelper.awardAchievement(player, "mysticcraft:archmage");
         }
         AttributeInstance manaInstance = user.getAttribute(ModAttributes.MANA.get());
-        if (manaInstance != null && ManaMain.hasMana(user, manaToUse)) {
+        Cooldown cooldown = spell.getCooldown();
+        boolean hasCooldown = cooldown != null;
+        if (!hasCooldown || !cooldown.isActive(user) && manaInstance != null && ManaMain.hasMana(user, manaToUse)) {
             try {
                 spell.execute(user, stack);
             } catch (SpellExecutionFailedException e) {
@@ -141,6 +140,7 @@ public class SpellHelper implements ItemData<SpellSlot[], SpellHelper> {
             }
 
             if (ManaMain.consumeMana(user, manaToUse)) {
+                if (cooldown != null) cooldown.applyCooldown(user, true);
                 sendUseDisplay(user, spell);
                 List<Element> elements = spell.elements();
                 if (!elements.isEmpty()) {//spawn spell shards

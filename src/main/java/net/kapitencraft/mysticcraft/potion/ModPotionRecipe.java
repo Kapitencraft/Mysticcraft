@@ -8,8 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * Used in BrewingRecipeRegistry to maintain the mysticcraft behaviour.
- *
- * Most of the code was simply adapted from net.minecraftforge.common.brewing.VanillaBrewingRecipe
+ * Most of the code was simply adapted from {@link net.minecraftforge.common.brewing.VanillaBrewingRecipe}
  */
 public class ModPotionRecipe implements IBrewingRecipe {
     @Override
