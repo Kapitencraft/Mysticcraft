@@ -26,8 +26,6 @@ public class StringDecomposerMixin {
         Style formattedStyle = style;
         EffectsStyle effects = (EffectsStyle) formattedStyle;
 
-        //TODO implement pings being visible (import from school's project)
-
         for(int j = length; j < i; ++j) {
 
             char c0 = s.charAt(j);
