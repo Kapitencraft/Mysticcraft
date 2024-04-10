@@ -2,7 +2,6 @@ package net.kapitencraft.mysticcraft.enchantments.armor;
 
 import net.kapitencraft.mysticcraft.enchantments.abstracts.ExtendedAbilityEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.IArmorEnchantment;
-import net.kapitencraft.mysticcraft.helpers.CollectionHelper;
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.misc.HealingHelper;
@@ -19,7 +18,7 @@ public class TransylvanianEnchantment extends ExtendedAbilityEnchantment impleme
     @Override
     public void onTick(LivingEntity source, int level) {
         List<LivingEntity> livings = MathHelper.getLivingAround(source, level * 1.5);
-        livings = livings.stream().filter(CollectionHelper.biFilter(source, LivingEntity::is)).toList();
+        livings = livings.stream().filter(living -> living.is(source)).toList();
         HealingHelper.setEffectReason(source);
         source.heal(livings.size() / 2f);
     }

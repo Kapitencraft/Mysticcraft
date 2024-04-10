@@ -18,7 +18,6 @@ import net.minecraft.server.players.GameProfileCache;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import org.apache.commons.compress.utils.Lists;
 import org.jetbrains.annotations.NotNull;
 
@@ -104,15 +103,6 @@ public class Guild {
         return this.container.onlineMembers.containsKey(player);
     }
 
-    public Guild reviveMembers(MinecraftServer server) {
-        ServerLevel level = server.getLevel(Level.OVERWORLD);
-        if (level != null) {
-            this.container.load(level);
-            server.getPlayerList().getPlayers().forEach(this.container::setOnline);
-        }
-        return this;
-    }
-
     public void reviveWarOpponents(GuildHandler handler) {
         this.wars.load(handler);
     }
@@ -196,7 +186,7 @@ public class Guild {
         }
 
         void sendMSGtoAllMembers(Component toSend) {
-            this.onlineMembers.keySet().forEach(CollectionHelper.biUsage(toSend, Player::sendSystemMessage));
+            this.onlineMembers.keySet().forEach(player -> player.sendSystemMessage(toSend));
         }
 
         public void addMember(Player player) {

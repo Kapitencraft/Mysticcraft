@@ -13,7 +13,6 @@ import net.kapitencraft.mysticcraft.block.entity.crafting.serializers.ArmorRecip
 import net.kapitencraft.mysticcraft.block.entity.crafting.serializers.UpgradeItemRecipe;
 import net.kapitencraft.mysticcraft.compat.jei.crafting.UpgradeItemExtension;
 import net.kapitencraft.mysticcraft.helpers.CollectorHelper;
-import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.CraftingRecipe;
@@ -32,7 +31,7 @@ public class JEIModPlugin implements IModPlugin {
     public void registerRecipes(IRecipeRegistration registration) {
         RecipeManager manager = Minecraft.getInstance().level.getRecipeManager();
         registration.addRecipes(RecipeTypes.CRAFTING, manager.getAllRecipesFor(ModRecipeTypes.ARMOR_RECIPE.get()).stream()
-                .map(ArmorRecipe::getAll).collect(CollectorHelper.merge()).map(MiscHelper.instanceMapper(CraftingRecipe.class)).toList()
+                .map(ArmorRecipe::getAll).collect(CollectorHelper.merge()).map(CraftingRecipe.class::cast).toList()
         );
     }
 

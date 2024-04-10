@@ -2,14 +2,16 @@ package net.kapitencraft.mysticcraft.client.render.overlay.box;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.kapitencraft.mysticcraft.client.render.overlay.holder.RenderHolder;
+import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.world.phys.Vec2;
 
-public class InteractiveBox extends RenderBox {
+public class InteractiveBox extends RenderBox implements GuiEventListener {
     protected InteractiveBox(Vec2 start, Vec2 finish, int cursorType, PoseStack stack, int color, RenderHolder dedicatedHolder) {
         super(start, finish, cursorType, stack, color, dedicatedHolder);
     }
 
-    public boolean isHovering(double x, double y) {
+    @Override
+    public boolean isMouseOver(double x, double y) {
         return check(start.x, finish.x, x) && check(start.y, finish.y, y);
     }
 
@@ -17,8 +19,15 @@ public class InteractiveBox extends RenderBox {
         return s < f ? s < t && t < f : s > t && t > f;
     }
 
+    @Override
+    public boolean mouseDragged(double newX, double newY, int clickType, double changeX, double changeY) {
+        double oldX = -changeX + newX;
+        double oldY = -changeY + newY;
+        return this.mouseDrag(newX, newY, clickType, changeX, changeY, oldX, oldY);
+    }
 
-    public void mouseDrag(double x, double y, int mouseType, double xChange, double yChange, double oldX, double oldY) {
+    public boolean mouseDrag(double x, double y, int mouseType, double xChange, double yChange, double oldX, double oldY) {
+        return false;
     }
     public void mouseClick(double x, double y) {
     }

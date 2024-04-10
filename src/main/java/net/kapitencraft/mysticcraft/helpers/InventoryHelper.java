@@ -74,11 +74,15 @@ public class InventoryHelper {
         return !stack.isEmpty() && stack.is(item);
     }
 
-    public static List<ItemStack> getByFilter(Player player, Predicate<ItemStack> predicate) {
-        List<ItemStack> itemStacks = new ArrayList<>();
+    public static Collection<ItemStack> getByFilter(Player player, Predicate<ItemStack> predicate) {
+        return getContentByFilter(player, predicate).values();
+    }
+
+    public static Map<Integer, ItemStack> getContentByFilter(Player player, Predicate<ItemStack> predicate) {
+        Map<Integer, ItemStack> itemStacks = new HashMap<>();
         for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
             ItemStack stack = player.getInventory().getItem(i);
-            if (predicate.test(stack)) itemStacks.add(stack);
+            if (predicate.test(stack)) itemStacks.put(i, stack);
         }
         return itemStacks;
     }
@@ -91,7 +95,7 @@ public class InventoryHelper {
         List<EquipmentSlot> slots = new ArrayList<>();
         allInventory(player.getInventory()).stream().map(ItemStack::getItem).filter(
                 item -> item instanceof ArmorItem armorItem && armorItem.getMaterial() == material
-        ).map(MiscHelper.instanceMapper(ArmorItem.class)).map(ArmorItem::getSlot).forEach(slots::add);
+        ).map(ArmorItem.class::cast).map(ArmorItem::getSlot).forEach(slots::add);
         return !slots.isEmpty() && new HashSet<>(slots).containsAll(Arrays.stream(MiscHelper.ARMOR_EQUIPMENT).toList());
     }
 
@@ -99,7 +103,7 @@ public class InventoryHelper {
         List<EquipmentSlot> slots = new ArrayList<>();
         allInventory(player.getInventory()).stream().filter(
                 stack -> stack.getItem() instanceof TieredArmorItem && ITieredItem.getTier(stack) == armorTier
-        ).map(ItemStack::getItem).map(MiscHelper.instanceMapper(TieredArmorItem.class)).map(ArmorItem::getSlot).forEach(slots::add);
+        ).map(ItemStack::getItem).map(TieredArmorItem.class::cast).map(ArmorItem::getSlot).forEach(slots::add);
         return !slots.isEmpty() && new HashSet<>(slots).containsAll(Arrays.stream(MiscHelper.ARMOR_EQUIPMENT).toList());
     }
 
@@ -115,7 +119,7 @@ public class InventoryHelper {
                 stack.shrink(essence.getCount());
                 if (stack.getCount() < 0) stack.setCount(0);
             }
-            List<ItemStack> list = getByFilter(player, stack1 -> ItemStack.isSameItemSameTags(stack, stack1));
+            Collection<ItemStack> list = getByFilter(player, stack1 -> ItemStack.isSameItemSameTags(stack, stack1));
             list.forEach(stack1 -> stack.shrink(stack1.getCount()));
             if (stack.getCount() > 0) {
                 ret.add(stack);

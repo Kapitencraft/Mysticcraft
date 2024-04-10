@@ -3,9 +3,11 @@ package net.kapitencraft.mysticcraft.commands;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.LiteralCommandNode;
+import net.kapitencraft.mysticcraft.helpers.InventoryHelper;
 import net.kapitencraft.mysticcraft.init.ModEnchantments;
 import net.kapitencraft.mysticcraft.item.capability.dungeon.IPrestigeAbleItem;
 import net.kapitencraft.mysticcraft.item.capability.dungeon.IStarAbleItem;
+import net.kapitencraft.mysticcraft.item.misc.SoulbindHelper;
 import net.kapitencraft.mysticcraft.networking.ModMessages;
 import net.kapitencraft.mysticcraft.networking.packets.S2C.ResetCooldownsPacket;
 import net.minecraft.ChatFormatting;
@@ -33,8 +35,17 @@ public class MiscCommand {
                         .executes(MiscCommand::exeHyperMax)
                 ).then(Commands.literal("reset_cooldowns")
                         .executes(MiscCommand::resetCooldowns)
+                ).then(Commands.literal("soulbind_all")
+                        .executes(MiscCommand::soulbindAll)
                 )
         );
+    }
+
+    private static int soulbindAll(CommandContext<CommandSourceStack> context) {
+        return ModCommands.checkNonConsoleCommand(context, (player, stack) -> {
+            InventoryHelper.allInventory(player.getInventory()).forEach(SoulbindHelper::setSoulbound);
+            return 1;
+        });
     }
 
     private static int exeMaxEnchant(CommandContext<CommandSourceStack> context) {

@@ -137,31 +137,6 @@ public class MiscHelper {
     }
 
     /**
-     * @param value the value to cast
-     * @param target the target class to cast to
-     * @return the casted instance or null
-     */
-    public static <T, K extends T> K instance(T value, Class<K> target) {
-        try {
-            return (K) value;
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    public static <T, K extends T> boolean isInstance(T value, Class<K> target) {
-        return target.isInstance(value);
-    }
-
-    public static <T, K extends T> Function<T, K> instanceMapper(Class<K> kClass) {
-        return CollectionHelper.biMap(kClass, MiscHelper::instance);
-    }
-    public static <T, K extends T> Predicate<T> instanceFilter(Class<K> kClass) {
-        return CollectionHelper.biFilter(kClass, MiscHelper::isInstance);
-    }
-
-
-    /**
      * method to repair items similar to {@link net.minecraft.world.item.enchantment.MendingEnchantment}
      * @param player player to repair items on
      * @param value the base amount of repair capacity

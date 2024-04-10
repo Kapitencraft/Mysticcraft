@@ -22,6 +22,8 @@ import java.util.concurrent.CompletableFuture;
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class GuildArg implements ArgumentType<Guild> {
+
+    //TODO fix not working on the server due to missing `level` object
     @Override
     public Guild parse(StringReader reader) throws CommandSyntaxException {
         return GuildHandler.getInstance().getGuild(reader.readString());

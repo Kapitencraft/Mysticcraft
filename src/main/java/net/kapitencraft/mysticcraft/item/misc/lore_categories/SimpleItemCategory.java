@@ -1,6 +1,5 @@
 package net.kapitencraft.mysticcraft.item.misc.lore_categories;
 
-import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -17,6 +16,6 @@ public class SimpleItemCategory<T> extends ItemLoreCategory {
 
     @Override
     public @Nullable Component apply(ItemStack stack) {
-        return MiscHelper.isInstance(stack.getItem(), tClass) ? component : null;
+        return tClass.isInstance(stack.getItem()) ? component : null;
     }
 }

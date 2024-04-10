@@ -55,6 +55,14 @@ public class MathHelper {
         return new Vec3(x, 0, z);
     }
 
+    public static int getLargest(Collection<Integer> floats) {
+        int largest = 0;
+        for (int f : floats) {
+            if (f > largest) largest = f;
+        }
+        return largest;
+    }
+
     //somewhere
     public static AABB getMineBox(LivingEntity entity, int size) {
         AABB aabb = new AABB(-size, -size, -size, size, size, size);//creating a normal box
@@ -237,9 +245,8 @@ public class MathHelper {
         double incremental = Math.sin(halfSpan) * 0.1;
         List<Vec3> lineOfSight = lineOfSight(sourceRot, sourcePos, range, 0.1);
         List<T> toReturn = new ArrayList<>();
-        lineOfSight.stream().collect(CollectorHelper.createMapForKeys(CollectionHelper.reversedBiMap(lineOfSight, List::indexOf))).forEach((integer, vec3) -> {
-            toReturn.addAll(getEntitiesAround(tClass, level, vec3, incremental * integer).stream().filter(entity -> !toReturn.contains(entity)).toList());
-        });
+        lineOfSight.stream().collect(CollectorHelper.createMapForKeys(lineOfSight::indexOf))
+                .forEach((integer, vec3) -> toReturn.addAll(getEntitiesAround(tClass, level, vec3, incremental * integer).stream().filter(entity -> !toReturn.contains(entity)).toList()));
         return toReturn;
     }
 

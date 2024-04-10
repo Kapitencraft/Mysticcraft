@@ -2,7 +2,6 @@ package net.kapitencraft.mysticcraft.gui.reforging_anvil;
 
 import net.kapitencraft.mysticcraft.block.entity.ReforgeAnvilBlockEntity;
 import net.kapitencraft.mysticcraft.gui.ModMenu;
-import net.kapitencraft.mysticcraft.helpers.CollectionHelper;
 import net.kapitencraft.mysticcraft.helpers.InventoryHelper;
 import net.kapitencraft.mysticcraft.init.ModBlocks;
 import net.kapitencraft.mysticcraft.init.ModMenuTypes;
@@ -80,7 +79,7 @@ public class ReforgeAnvilMenu extends ModMenu<ReforgeAnvilBlockEntity> {
                         essenceHolder.remove(IEssenceData.read(stack), stack.getCount())
                 )
         );
-        toRemove.forEach(CollectionHelper.biUsage(this.player, InventoryHelper::removeFromInventory));
+        toRemove.forEach(stack -> InventoryHelper.removeFromInventory(stack, player));
     }
 
     @Override

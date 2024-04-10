@@ -2,8 +2,6 @@ package net.kapitencraft.mysticcraft.mixin.classes;
 
 import net.kapitencraft.mysticcraft.client.font.effect.EffectSettings;
 import net.kapitencraft.mysticcraft.client.font.effect.EffectsStyle;
-import net.kapitencraft.mysticcraft.client.font.effect.GlyphEffect;
-import net.kapitencraft.mysticcraft.helpers.CollectionHelper;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Style;
 import org.spongepowered.asm.mixin.Mixin;
@@ -47,7 +45,7 @@ public abstract class StringRenderOutputMixin {
             settings.isShadow = isDropShadow();
             settings.index = index;
 
-            effects.getEffects().forEach(CollectionHelper.biUsage(settings, GlyphEffect::apply));
+            effects.getEffects().forEach(glyphEffect -> glyphEffect.apply(settings));
             this.x = settings.x;
             this.y = settings.y;
             if (r != settings.r || g != settings.g || b != settings.b) {

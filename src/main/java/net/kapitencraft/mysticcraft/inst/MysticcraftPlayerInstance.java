@@ -1,7 +1,6 @@
 package net.kapitencraft.mysticcraft.inst;
 
 import net.kapitencraft.mysticcraft.helpers.BonusHelper;
-import net.kapitencraft.mysticcraft.helpers.CollectionHelper;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.item.IEventListener;
 import net.kapitencraft.mysticcraft.item.item_bonus.MultiPieceBonus;
@@ -41,13 +40,13 @@ public class MysticcraftPlayerInstance {
             EquipmentSlot slot = event.getSlot();
             List<IEventListener> list = listeners.getOrDefault(slot, new ArrayList<>());
             List<IEventListener> toRemove = BonusHelper.getListenersFromStack(slot, event.getFrom(), this.player);
-            toRemove.forEach(CollectionHelper.biUsage(this.player, IEventListener::onRemove));
+            toRemove.forEach(listener -> listener.onRemove(this.player));
             List<IEventListener> multiPieceToRemove = toRemove.stream().filter(listener -> listener instanceof MultiPieceBonus).toList();
             multiPieceListeners.removeAll(multiPieceToRemove);
             list.removeAll(toRemove);
             list.addAll(BonusHelper.getListenersFromStack(slot, event.getTo(), this.player));
             list.removeIf(multiPieceListeners::contains);
-            list.forEach(CollectionHelper.biUsage(this.player, IEventListener::onApply));
+            list.forEach(listener -> listener.onApply(this.player));
             List<IEventListener> multiPieces = list.stream().filter(listener -> listener instanceof MultiPieceBonus).toList();
             list.removeAll(multiPieces);
             multiPieceListeners.addAll(multiPieces);
@@ -68,7 +67,7 @@ public class MysticcraftPlayerInstance {
 
     private void useAll(Consumer<IEventListener> consumer) {
         this.multiPieceListeners.forEach(consumer);
-        this.listeners.values().forEach(CollectionHelper.biUsage(consumer, List::forEach));
+        this.listeners.values().forEach(list -> list.forEach(consumer));
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)

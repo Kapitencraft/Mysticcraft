@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.client.render.overlay.holder;
 
 import net.kapitencraft.mysticcraft.client.render.overlay.PositionHolder;
+import net.kapitencraft.mysticcraft.helpers.TextHelper;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
@@ -20,13 +21,7 @@ public class MultiHolder extends RenderHolder {
 
     @Override
     public float getWidth(LocalPlayer player, Font font) {
-        float f = 0;
-        for (Function<LocalPlayer, Component> func : list) {
-            Component comp = func.apply(player);
-            float f1 = font.width(comp);
-            if (f < f1) f = f1;
-        }
-        return f;
+        return TextHelper.getWidthFromMultiple(list.stream().map(func -> func.apply(player)).toList(), font);
     }
 
     @Override

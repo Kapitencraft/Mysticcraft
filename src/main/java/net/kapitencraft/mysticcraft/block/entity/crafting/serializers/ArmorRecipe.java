@@ -149,7 +149,9 @@ public class ArmorRecipe extends CustomRecipe {
             MapStream<ArmorType, Item> map = MapStream.create();
             List<ArmorType> toUse = Arrays.stream(ArmorType.values()).filter(armorType -> !unusedSlots.contains(armorType)).toList();
             if (results != null) {
-                Stream<String> stream = toUse.stream().map(ArmorType::getSerializedName).map(CollectionHelper.biMap(results, TextHelper::swappedMergeRegister));
+                Stream<String> stream = toUse.stream()
+                        .map(ArmorType::getSerializedName)
+                        .map(s -> TextHelper.mergeRegister(results, s));
                 map = MapStream.create(toUse, stream.toList())
                         .mapValues(ResourceLocation::new)
                         .mapValues(BuiltInRegistries.ITEM::get);

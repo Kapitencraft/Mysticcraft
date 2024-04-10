@@ -144,8 +144,8 @@ public class IOHelper {
 
     public static <T> Stream<T> readList(CompoundTag tag, String name, Class<T> targetId, int elementId) {
         ListTag listTag = tag.getList(name, elementId);
-        return listTag.stream().filter(MiscHelper.instanceFilter(targetId))
-                .map(MiscHelper.instanceMapper(targetId));
+        return listTag.stream().filter(targetId::isInstance)
+                .map(targetId::cast);
     }
 
     public static <T, K> MapStream<T, K> readMap(CompoundTag tag, String name, BiFunction<CompoundTag, String, T> keyMapper, BiFunction<CompoundTag, String, K> valueMapper) {

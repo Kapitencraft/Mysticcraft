@@ -520,5 +520,6 @@
   "stat_req.goldor": "%1§s killed Goldors",
 
   "tooltip.can_hit_enderman": "Hits Enderman",
-  "command.guild.leave.fail": "Unable to leave guild '%1$s': You are no member xD"
+  "command.guild.leave.fail": "Unable to leave guild '%1$s': You are no member xD",
+  "gui.alignment": "Alignment"
 }

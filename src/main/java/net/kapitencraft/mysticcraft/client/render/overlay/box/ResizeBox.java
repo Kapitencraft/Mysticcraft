@@ -1,8 +1,13 @@
 package net.kapitencraft.mysticcraft.client.render.overlay.box;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.kapitencraft.mysticcraft.client.render.overlay.PositionHolder;
 import net.kapitencraft.mysticcraft.client.render.overlay.holder.RenderHolder;
-import net.kapitencraft.mysticcraft.helpers.CollectionHelper;
+import net.kapitencraft.mysticcraft.gui.IMenuBuilder;
+import net.kapitencraft.mysticcraft.gui.menu.Menu;
+import net.kapitencraft.mysticcraft.gui.menu.drop_down.DropDownMenu;
+import net.kapitencraft.mysticcraft.gui.menu.drop_down.elements.EnumElement;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.Vec2;
 import org.lwjgl.glfw.GLFW;
 
@@ -10,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class ResizeBox extends ResizeAccessBox {
+public class ResizeBox extends ResizeAccessBox implements IMenuBuilder {
     private final List<ResizeAccessBox> boxes = new ArrayList<>();
     private static final int boxColor = 0xFFFFFFFF;
     private static final int fillColor = 0x30FFFFFF;
@@ -39,26 +44,26 @@ public class ResizeBox extends ResizeAccessBox {
             dirty = false;
         }
         super.render(mouseX, mouseY);
-        boxes.forEach(CollectionHelper.triUsage(mouseX, mouseY, InteractiveBox::render));
+        boxes.forEach(resizeAccessBox -> resizeAccessBox.render(mouseX, mouseY));
     }
 
     @Override
     public int getCursorType(double mouseX, double mouseY) {
-        return boxes.stream().filter(CollectionHelper.triFilter(mouseX, mouseY, InteractiveBox::isHovering))
+        return boxes.stream().filter(resizeAccessBox -> resizeAccessBox.isMouseOver(mouseX, mouseY))
                 .map(box -> box.getCursorType(mouseX, mouseY))
                 .findFirst().orElse(getSelfCursor(mouseX, mouseY));
     }
 
     private int getSelfCursor(double mouseX, double mouseY) {
         int cursorId = GLFW.GLFW_ARROW_CURSOR;
-        if (this.isHovering(mouseX, mouseY)) cursorId = GLFW.GLFW_RESIZE_ALL_CURSOR;
+        if (this.isMouseOver(mouseX, mouseY)) cursorId = GLFW.GLFW_RESIZE_ALL_CURSOR;
         return cursorId;
     }
 
     public void move(Vec2 delta) {
         super.move(delta);
         this.dedicatedHolder.move(delta);
-        this.boxes.forEach(CollectionHelper.biUsage(delta, RenderBox::move));
+        this.boxes.forEach(resizeAccessBox -> resizeAccessBox.move(delta));
     }
 
     @Override
@@ -67,19 +72,32 @@ public class ResizeBox extends ResizeAccessBox {
     }
 
     @Override
-    public boolean isHovering(double x, double y) {
-        return super.isHovering(x, y) || boxes.stream().anyMatch(CollectionHelper.triFilter(x, y, InteractiveBox::isHovering));
+    public boolean mouseClicked(double x, double y, int clickId) {
+        if (clickId == 1) {
+            Menu menu = this.createMenu((int) x, (int) y);
+            menu.show();
+        }
+        return super.mouseClicked(x, y, clickId);
+    }
+
+
+    @Override
+    public boolean isMouseOver(double x, double y) {
+        return super.isMouseOver(x, y) || boxes.stream().anyMatch(resizeAccessBox -> resizeAccessBox.isMouseOver(x, y));
     }
 
     @Override
-    public void mouseDrag(double x, double y, int mouseType, double xChange, double yChange, double oldX, double oldY) {
+    public boolean mouseDrag(double x, double y, int mouseType, double xChange, double yChange, double oldX, double oldY) {
         if (this.active == null) {
-            boxes.stream().filter(CollectionHelper.triFilter(oldX, oldY, InteractiveBox::isHovering)).findFirst()
+            boolean[] flag = new boolean[]{false};
+            boxes.stream().filter(resizeAccessBox -> resizeAccessBox.isMouseOver(oldX, oldY)).findFirst()
                     .ifPresentOrElse(this::setActive, ()-> {
-                        if (this.isHovering(oldX, oldY)) {
+                        if (this.isMouseOver(oldX, oldY)) {
                             this.setActive(this);
+                            flag[0] = true;
                         }
                     });
+            return flag[0];
         } else {
             if (active == this) {
                 this.move(new Vec2((float) xChange, (float) yChange));
@@ -91,6 +109,7 @@ public class ResizeBox extends ResizeAccessBox {
                 this.scale(scaleX, scaleY);
             }
             this.dirty = true;
+            return true;
         }
     }
 
@@ -147,6 +166,13 @@ public class ResizeBox extends ResizeAccessBox {
 
     private void setActive(ResizeAccessBox box) {
         this.active = box;
+    }
+
+    @Override
+    public Menu createMenu(int x, int y) {
+        DropDownMenu menu = new DropDownMenu(x, y, this);
+        menu.addElement(menu1 -> new EnumElement<>(menu1, Component.translatable("gui.alignment"), PositionHolder.Alignment.values(), PositionHolder.Alignment::getName));
+        return menu;
     }
 
     public enum Type {

@@ -16,7 +16,7 @@ public class SoulbindHelper {
         return !isSoulbound(stack);
     }
 
-    public static void  setSoulbound(ItemStack stack) {
+    public static void setSoulbound(ItemStack stack) {
         CompoundTag tag = stack.getOrCreateTag();
         tag.putBoolean(SOULBOUND_TAG_ID, true);
     }

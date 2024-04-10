@@ -19,14 +19,10 @@ public class ScreenDebugBox extends InteractiveBox {
         Font font = Minecraft.getInstance().font;
         font.draw(stack, "Mouse location: " + mouseX + ", " + mouseY, (float) mouseX, (float) mouseY, -1);
         font.draw(stack, "Screen Height: " + screenX + ", " + screenY, (float) mouseX, (float) (mouseY + 10), -1);
+
     }
 
     @Override
     public void move(Vec2 toAdd) {
-    }
-
-    @Override
-    public boolean isHovering(double x, double y) {
-        return false;
     }
 }
