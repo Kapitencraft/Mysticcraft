@@ -2,6 +2,7 @@ package net.kapitencraft.mysticcraft.client.render.overlay;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.phys.Vec2;
 import org.jetbrains.annotations.NotNull;
@@ -70,6 +71,33 @@ public class PositionHolder {
 
         Alignment(String name) {
             this.name = name;
+        }
+
+        public float convert(Alignment other, float value, float axisWidth) {
+            return switch (this) {
+                case TOP_LEFT ->
+                    switch (other) {
+                        case BOTTOM_RIGHT -> axisWidth - value;
+                        case MIDDLE -> value - (axisWidth / 2);
+                        case TOP_LEFT -> value;
+                    };
+                case MIDDLE ->
+                    switch (other) {
+                        case BOTTOM_RIGHT -> (axisWidth / 2) - value;
+                        case MIDDLE -> value;
+                        case TOP_LEFT -> (axisWidth / 2) + value;
+                    };
+                case BOTTOM_RIGHT ->
+                    switch (other) {
+                        case BOTTOM_RIGHT -> value;
+                        case MIDDLE -> (axisWidth / 2) - value;
+                        case TOP_LEFT -> axisWidth - value;
+                    };
+            };
+        }
+
+        public Component getName() {
+            return Component.translatable("alignment." + this.name);
         }
 
         @Override

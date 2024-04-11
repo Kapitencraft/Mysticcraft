@@ -1,6 +1,5 @@
 package net.kapitencraft.mysticcraft.client.particle.animation;
 
-import net.kapitencraft.mysticcraft.helpers.CollectionHelper;
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.minecraft.client.particle.Particle;
 import net.minecraftforge.api.distmarker.Dist;
@@ -47,7 +46,7 @@ public class ParticleAnimationController {
 
     public void animate(int time) {
         ParticleAnimations animation = forTimeStamp(time, parameters);
-        if (animation != null && animation.test(parameters)) toAnimate.forEach(CollectionHelper.biUsage(parameters, animation));
+        if (animation != null && animation.test(parameters)) toAnimate.forEach(particle -> animation.test(parameters));
     }
 
     public boolean isDone() {

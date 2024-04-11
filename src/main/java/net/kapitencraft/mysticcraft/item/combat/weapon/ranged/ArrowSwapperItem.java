@@ -1,6 +1,5 @@
 package net.kapitencraft.mysticcraft.item.combat.weapon.ranged;
 
-import net.kapitencraft.mysticcraft.helpers.CollectionHelper;
 import net.kapitencraft.mysticcraft.helpers.CollectorHelper;
 import net.kapitencraft.mysticcraft.helpers.InventoryHelper;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
@@ -32,7 +31,8 @@ public class ArrowSwapperItem extends Item {
 
     private static void swapArrow(Player player, int change) {
         List<ItemStack> stacks = findProjectiles(player);
-        stacks.stream().filter(CollectionHelper.biFilter(getActiveArrow(player), ItemStack::isSameItemSameTags))
+        ItemStack active = getActiveArrow(player);
+        stacks.stream().filter(stack -> ItemStack.isSameItemSameTags(active, stack))
                 .findFirst().ifPresent(stack -> {
                     int index = stacks.indexOf(stack);
                     if (index == -1) throw new IllegalStateException("Arrow Missing: " + stack);

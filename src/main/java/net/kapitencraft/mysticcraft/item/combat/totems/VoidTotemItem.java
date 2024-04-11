@@ -23,11 +23,12 @@ public class VoidTotemItem extends ModTotemItem {
             boolean handled = false;
             if (living instanceof ServerPlayer player) {
                 BlockPos respawnPoint = player.getRespawnPosition();
-                if (respawnPoint != null) {
-                    ServerLevel serverLevel = player.getLevel();
-                    MinecraftServer server = serverLevel.getServer();
+                ServerLevel serverLevel = player.getLevel();
+                MinecraftServer server = serverLevel.getServer();
+                ServerLevel respawnLevel = server.getLevel(player.getRespawnDimension());
+                if (respawnPoint != null && respawnLevel != null) {
                     TransferForcer forcer = new TransferForcer(serverLevel);
-                    player.changeDimension(server.overworld(), forcer);
+                    player.changeDimension(respawnLevel, forcer);
                     setPos(player, respawnPoint.getCenter());
                     handled = true;
                 }

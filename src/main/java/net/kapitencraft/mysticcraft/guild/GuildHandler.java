@@ -2,7 +2,6 @@ package net.kapitencraft.mysticcraft.guild;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.api.MapStream;
-import net.kapitencraft.mysticcraft.helpers.CollectionHelper;
 import net.kapitencraft.mysticcraft.helpers.CollectorHelper;
 import net.kapitencraft.mysticcraft.helpers.IOHelper;
 import net.kapitencraft.mysticcraft.logging.Markers;
@@ -44,7 +43,7 @@ public class GuildHandler extends SavedData {
         } else {
             ServerLevel serverLevel = (ServerLevel) level;
             MinecraftServer server = serverLevel.getServer();
-            return serverLevel.getDataStorage().computeIfAbsent(CollectionHelper.biMap(server, GuildHandler::load), GuildHandler::createDefault, "guilds");
+            return serverLevel.getDataStorage().computeIfAbsent(tag -> GuildHandler.load(tag, server), GuildHandler::createDefault, "guilds");
         }
     }
 
@@ -121,7 +120,7 @@ public class GuildHandler extends SavedData {
         }
         return MapStream.of(allGuilds().stream()
                 .collect(CollectorHelper.createMapForKeys(Guild::getBanner)))
-                .filterKeys(CollectionHelper.biFilter(banner, ItemStack::matches))
+                .filterKeys(stack -> ItemStack.matches(stack, banner))
                 .toMap()
                 .values()
                 .stream()
@@ -139,12 +138,12 @@ public class GuildHandler extends SavedData {
 
     @SubscribeEvent
     public static void playerJoin(PlayerEvent.PlayerLoggedInEvent event) {
-        all(event.getEntity().level).forEach(CollectionHelper.biUsage(event.getEntity(), Guild::setOnline));
+        all(event.getEntity().level).forEach(guild -> guild.setOnline(event.getEntity()));
     }
 
     @SubscribeEvent
     public static void playerLeave(PlayerEvent.PlayerLoggedOutEvent event) {
-        all(event.getEntity().level).forEach(CollectionHelper.biUsage(event.getEntity(), Guild::setOffline));
+        all(event.getEntity().level).forEach(guild -> guild.setOffline(event.getEntity()));
     }
 
     public static void addGuildClient(Guild guild) {
@@ -165,7 +164,7 @@ public class GuildHandler extends SavedData {
         long j = Util.getMillis();
         Stream<CompoundTag> tags = IOHelper.readCompoundList(tag, "Guilds");
         long count = tags.map(Guild::loadFromTag).peek(guildHandler::addGuild).count();
-        guildHandler.allGuilds().forEach(CollectionHelper.biUsage(guildHandler, Guild::reviveWarOpponents));
+        guildHandler.allGuilds().forEach(guild -> guild.reviveWarOpponents(guildHandler));
         MysticcraftMod.LOGGER.info(Markers.GUILD, "loading {} Guilds took {} ms", count, Util.getMillis() - j);
         return guildHandler;
     }
@@ -174,7 +173,7 @@ public class GuildHandler extends SavedData {
         return this.allGuilds()
                 .stream()
                 .map(Guild::getBanner)
-                .anyMatch(CollectionHelper.biFilter(stack, ItemStack::matches));
+                .anyMatch(stack1 -> ItemStack.matches(stack1, stack));
     }
 
     public ListTag saveAllGuilds() {

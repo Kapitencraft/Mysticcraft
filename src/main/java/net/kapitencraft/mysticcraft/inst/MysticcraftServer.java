@@ -1,7 +1,6 @@
 package net.kapitencraft.mysticcraft.inst;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.helpers.CollectionHelper;
 import net.kapitencraft.mysticcraft.item.capability.elytra.ElytraCapability;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneCapability;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneData;
@@ -57,7 +56,7 @@ public class MysticcraftServer {
             event.addCapability(MysticcraftMod.res("elytra"), ElytraCapability.create());
         }
         ItemStatCapability capability = new ItemStatCapability();
-        Arrays.stream(ItemStatCapability.Type.values()).filter(CollectionHelper.biFilter(item, ItemStatCapability.Type::test))
+        Arrays.stream(ItemStatCapability.Type.values()).filter(type -> type.test(item))
                 .forEach(capability::add);
         if (capability.has())
             event.addCapability(MysticcraftMod.res("stats"), capability);

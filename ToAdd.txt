@@ -32,7 +32,7 @@ Ritual Magic?
 
 
 Tutorial ideen:
-Codecs
+Codecs (+NBT)
 Custom-Model-Armor
 Event
 Debugger

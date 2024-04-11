@@ -2,14 +2,15 @@ package net.kapitencraft.mysticcraft.helpers;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import net.kapitencraft.mysticcraft.api.TriConsumer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.common.util.TriPredicate;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.function.*;
+import java.util.function.BiConsumer;
+import java.util.function.BiPredicate;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("ALL")
@@ -82,30 +83,6 @@ public class CollectionHelper {
         List<T> list = new ArrayList<>();
         MiscHelper.repeat(size, integer -> list.add(sup.get()));
         return list;
-    }
-
-    public static <T, K, J> Function<K, J> biMap(T always, BiFunction<K, T, J> mapper) {
-        return k -> mapper.apply(k, always);
-    }
-
-    public static <T, K, J> Function<K, J> reversedBiMap(T always, BiFunction<T, K, J> mapper) {
-        return k -> mapper.apply(always, k);
-    }
-
-    public static <T, K> Predicate<T> biFilter(K always, BiPredicate<T, K> predicate) {
-        return t -> predicate.test(t, always);
-    }
-
-    public static <T, K, J> Predicate<T> triFilter(K kAlways, J jAlways, TriPredicate<T, K, J> predicate) {
-        return t -> predicate.test(t, kAlways, jAlways);
-    }
-
-    public static <T, K> Consumer<T> biUsage(K always, BiConsumer<T, K> consumer) {
-        return t -> consumer.accept(t, always);
-    }
-
-    public static <T, K, J> Consumer<T> triUsage(K kAlways, J jAlways, TriConsumer<T, K, J> consumer) {
-        return t -> consumer.accept(t, kAlways, jAlways);
     }
 
     public static <T, K> Multimap<T, K> fromMap(Map<T, K> map) {

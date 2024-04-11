@@ -174,4 +174,16 @@ public class ClientHelper {
         RenderSystem.disableBlend();
     }
 
+    public static void blit(PoseStack stack, float xStart, float xEnd, float yStart, float yEnd, float blitOffset, float u0, float u1, float v0, float v1) {
+        Matrix4f matrix4f = stack.last().pose();
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        BufferBuilder bufferbuilder = Tesselator.getInstance().getBuilder();
+        bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        bufferbuilder.vertex(matrix4f, xStart, yEnd, blitOffset).uv(u0, v1).endVertex();
+        bufferbuilder.vertex(matrix4f, xEnd, yEnd, blitOffset).uv(u1, v1).endVertex();
+        bufferbuilder.vertex(matrix4f, xEnd, yStart, blitOffset).uv(u1, v0).endVertex();
+        bufferbuilder.vertex(matrix4f, xStart, yStart, blitOffset).uv(u0, v0).endVertex();
+        BufferUploader.drawWithShader(bufferbuilder.end());
+    }
+
 }

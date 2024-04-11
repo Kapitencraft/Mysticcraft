@@ -5,6 +5,7 @@ import net.kapitencraft.mysticcraft.misc.string_converter.args.MathArgument;
 import net.kapitencraft.mysticcraft.misc.string_converter.args.TransferArg;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -24,10 +25,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -49,6 +47,15 @@ public class TextHelper {
             component.append("\n");
         }
         return component;
+    }
+
+    public static float getWidthFromMultiple(Collection<Component> collection, Font font) {
+        float f = 0;
+        for (Component comp : collection) {
+            float f1 = font.width(comp);
+            if (f < f1) f = f1;
+        }
+        return f;
     }
 
     public static void addEmpty(List<Component> components) {

@@ -101,7 +101,7 @@ public class MiscRegister {
     public static void loadingLevel(LevelEvent.Load event) {
         if (event.getLevel() instanceof ServerLevel serverLevel && serverLevel.dimension() == Level.OVERWORLD) {
             MinecraftServer server = serverLevel.getServer();
-            DuelHandler.setInstance(serverLevel.getDataStorage().computeIfAbsent(CollectionHelper.biMap(server, DuelHandler::load), DuelHandler::new, "duels"));
+            DuelHandler.setInstance(serverLevel.getDataStorage().computeIfAbsent(tag -> DuelHandler.load(tag, server), DuelHandler::new, "duels"));
         }
     }
 

@@ -3,7 +3,6 @@ package net.kapitencraft.mysticcraft.networking.packets.S2C;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.guild.Guild;
 import net.kapitencraft.mysticcraft.guild.GuildHandler;
-import net.kapitencraft.mysticcraft.helpers.CollectionHelper;
 import net.kapitencraft.mysticcraft.helpers.IOHelper;
 import net.kapitencraft.mysticcraft.logging.Markers;
 import net.kapitencraft.mysticcraft.networking.packets.ModPacket;
@@ -92,7 +91,7 @@ public class SyncGuildsPacket implements ModPacket {
                         List<Guild> list = getAll(tag);
                         MysticcraftMod.LOGGER.info(Markers.GUILD, "received data for {} guilds", list.size());
                         list.forEach(GuildHandler::addGuildClient);
-                        clientLevel.players().forEach(player -> GuildHandler.all(clientLevel).forEach(CollectionHelper.biUsage(player, Guild::setOnline)));
+                        clientLevel.players().forEach(player -> GuildHandler.all(clientLevel).forEach(guild -> guild.setOnline(player)));
                         MysticcraftMod.LOGGER.info(Markers.GUILD, "loaded {} Guilds", GuildHandler.all(clientLevel).size());
                     }
                     case ADD_GUILD -> {

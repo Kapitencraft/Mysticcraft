@@ -6,7 +6,6 @@ import net.kapitencraft.mysticcraft.enchantments.abstracts.ExtendedCalculationEn
 import net.kapitencraft.mysticcraft.enchantments.abstracts.IToolEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.ModBowEnchantment;
 import net.kapitencraft.mysticcraft.entity.FrozenBlazeEntity;
-import net.kapitencraft.mysticcraft.entity.item.UnCollectableItemEntity;
 import net.kapitencraft.mysticcraft.helpers.*;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModMobEffects;
@@ -39,6 +38,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.boss.wither.WitherBoss;
+import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Arrow;
@@ -57,7 +57,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import javax.annotation.Nullable;
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
 
@@ -237,7 +237,7 @@ public class DamageEvents {
         Map<Enchantment, Integer> enchantments = stack.getAllEnchantments();
         if (enchantments != null && !enchantments.isEmpty()) {
             MapStream.of(enchantments)
-                    .mapKeys(MiscHelper.instanceMapper(ExtendedCalculationEnchantment.class))
+                    .mapKeys(ExtendedCalculationEnchantment.class::cast)
                     .filterKeys(Objects::nonNull)
                     .filterKeys(ench -> ench instanceof IToolEnchantment)
                     .forEach((enchantment, integer) -> enchantment.tryExecute(integer, stack, attacker, attacked, event.getBlockedDamage(), type, event.getDamageSource()));
@@ -248,7 +248,7 @@ public class DamageEvents {
     public static void entityDeathEvents(LivingDeathEvent event) {
         LivingEntity toDie = event.getEntity();
         if (toDie instanceof ServerPlayer player) {
-            List<ItemStack> totems = InventoryHelper.getByFilter(player, stack -> stack.getItem() instanceof ModTotemItem);
+            Collection<ItemStack> totems = InventoryHelper.getByFilter(player, stack -> stack.getItem() instanceof ModTotemItem);
             if (!event.isCanceled()) for (ItemStack stack : totems) {
                 ModTotemItem totemItem = (ModTotemItem) stack.getItem();
                 if (totemItem.onUse(player, event.getSource())) {
@@ -260,11 +260,12 @@ public class DamageEvents {
                 }
             }
             if (!event.isCanceled()) {
-                List<ItemStack> soulbound = InventoryHelper.getByFilter(player, SoulbindHelper::isSoulbound);
-                soulbound.forEach(stack -> {
-                    UnCollectableItemEntity itemEntity = new UnCollectableItemEntity(toDie.level, toDie.getX(), toDie.getY(), toDie.getZ(), stack);
-                    itemEntity.addPlayer(player);
-                    itemEntity.move();
+                Map<Integer, ItemStack> soulbound = InventoryHelper.getContentByFilter(player, SoulbindHelper::isSoulbound);
+                soulbound.forEach((integer, stack) -> {
+                    ArmorStand armorStand = new ArmorStand(toDie.level, toDie.getX(), toDie.getY(), toDie.getZ());
+                    CompoundTag tag = armorStand.getPersistentData();
+                    tag.putInt("SlotId", integer);
+                    tag.put("SlotContent", stack.save(new CompoundTag()));
                 });
             }
         }

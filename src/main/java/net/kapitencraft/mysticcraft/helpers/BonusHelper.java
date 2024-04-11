@@ -7,7 +7,6 @@ import net.kapitencraft.mysticcraft.item.IEventListener;
 import net.kapitencraft.mysticcraft.item.capability.reforging.Reforge;
 import net.kapitencraft.mysticcraft.item.item_bonus.IArmorBonusItem;
 import net.kapitencraft.mysticcraft.item.item_bonus.IItemBonusItem;
-import net.kapitencraft.mysticcraft.item.item_bonus.MultiPieceBonus;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ArmorItem;
@@ -27,7 +26,7 @@ public class BonusHelper {
     public static void tickEnchantments(LivingEntity living) {
         doForSlot((stack, slot) -> MapStream.of(stack.getAllEnchantments())
                 .filterKeys(e -> e instanceof ExtendedAbilityEnchantment)
-                .mapKeys(MiscHelper.instanceMapper(ExtendedAbilityEnchantment.class))
+                .mapKeys(ExtendedAbilityEnchantment.class::cast)
                 .forEach((enchantment, integer) -> enchantment.onTick(living, integer)), living, (stack, slot) -> stack.isEnchanted());
     }
 
@@ -47,7 +46,7 @@ public class BonusHelper {
     private static List<IEventListener> getArmorBonuses(ArmorItem armorItem, LivingEntity living, EquipmentSlot slot) {
         List<IEventListener> list = new ArrayList<>();
         if (armorItem instanceof IArmorBonusItem armorBonusItem && armorItem.getSlot() == slot) {
-            armorBonusItem.getPieceBonni().stream().filter(CollectionHelper.triFilter(living, slot, MultiPieceBonus::isActive)).forEach(list::add);
+            armorBonusItem.getPieceBonni().stream().filter(multiPieceBonus -> multiPieceBonus.isActive(living, slot)).forEach(list::add);
             list.add(armorBonusItem.getExtraBonus(slot));
             list.add(armorBonusItem.getPieceBonusForSlot(slot));
         }

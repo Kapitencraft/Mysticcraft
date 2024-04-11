@@ -2,6 +2,7 @@ package net.kapitencraft.mysticcraft.init;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.entity.*;
+import net.kapitencraft.mysticcraft.entity.item.SoulBoundAnimator;
 import net.kapitencraft.mysticcraft.entity.skeleton_master.SkeletonMaster;
 import net.kapitencraft.mysticcraft.entity.vampire.VampireBat;
 import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.firework.NapalmRocketEntity;
@@ -31,4 +32,5 @@ public interface ModEntityTypes {
     RegistryObject<EntityType<LavaFishingHook>> LAVA_FISHING_HOOK = register("lava_fishing_hook", LavaFishingHook::new, MobCategory.MISC, (builder) -> builder.sized(0.25f, 0.25f));
     RegistryObject<EntityType<SkeletonMaster>> SKELETON_MASTER = register("skeleton_master", SkeletonMaster::new, MobCategory.MONSTER, (builder) -> builder.sized(0.6F, 1.99F));
     RegistryObject<EntityType<RifleProjectile>> RIFLE_PROJECTILE = register("rifle_projectile", RifleProjectile::new, MobCategory.MISC, value -> value.sized(0.5f, 0.5f));
+    RegistryObject<EntityType<SoulBoundAnimator>> SOUL_BOUND_ANIMATOR = register("soul_bound_animator", SoulBoundAnimator::new, MobCategory.MISC, builder -> builder.sized(0.5f, 1.975f).clientTrackingRange(10));
 }
