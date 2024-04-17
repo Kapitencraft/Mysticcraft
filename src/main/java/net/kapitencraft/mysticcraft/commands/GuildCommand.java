@@ -93,7 +93,7 @@ public class GuildCommand {
         return ModCommands.checkNonConsoleCommand(context, (player, stack) -> {
             Guild guild = getGuild(player);
             if (guild != null) {
-                stack.sendFailure(Component.translatable("command.guild.add.alreadyMember", guild.getName()));
+                stack.sendFailure(Component.translatable("command.guild.add.alreadyMember", guild.getGuildName()));
                 return 0;
             }
             String guildAdd = GuildHandler.getInstance(player.level).addNewGuild(name, player);
@@ -110,23 +110,23 @@ public class GuildCommand {
     private static int disbandGuild(CommandContext<CommandSourceStack> context) {
         return checkGuildCommand(context, (player, stack, guild) -> {
             if (guild.isOwner(player)) {
-                String result = GuildHandler.getInstance(player.getLevel()).removeGuild(guild.getName());
+                String result = GuildHandler.getInstance(player.getLevel()).removeGuild(guild.getGuildName());
                 if (Objects.equals(result, "success")) {
                     ModMessages.sendToAllConnectedPlayers(value -> SyncGuildsPacket.removeGuild(guild), player.getLevel());
-                    ModCommands.sendSuccess(stack, "command.guild.disband.success", guild.getName());
+                    ModCommands.sendSuccess(stack, "command.guild.disband.success", guild.getGuildName());
                     return guild.getMemberAmount();
                 } else if (Objects.equals(result, "noSuchGuild")) {
                     throw new IllegalArgumentException("Found Guild with Wrong Name!");
                 }
             }
-            stack.sendFailure(Component.translatable("command.guild.disband.fail.notOwner", guild.getName()));
+            stack.sendFailure(Component.translatable("command.guild.disband.fail.notOwner", guild.getGuildName()));
             return 0;
         });
     }
 
     private static int joinGuild(Guild guild, CommandContext<CommandSourceStack> context, @Nullable String inviteKey) {
         return ModCommands.checkNonConsoleCommand(context, (player, stack) -> {
-            String guildName = guild.getName();
+            String guildName = guild.getGuildName();
             if (inviteKey != null) {
                 if (guild.acceptInvitation(player, inviteKey)) {
                     ModMessages.sendToAllConnectedPlayers(value -> SyncGuildsPacket.addPlayer(player, guild), player.getLevel());
@@ -161,8 +161,8 @@ public class GuildCommand {
                 stack.sendFailure(Component.translatable("command.guild.invite.isInvited", target.getName()));
                 return 0;
             }
-            target.sendSystemMessage(Component.translatable("guild.invite", component, guild.getName()).withStyle(ChatFormatting.GREEN));
-            target.sendSystemMessage(Component.translatable("text.click_here").withStyle(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/guild join " + guild.getName() + " " + inviteKey)).withColor(ChatFormatting.YELLOW)).append(Component.translatable("guild.invite.accept.append").withStyle(ChatFormatting.GREEN)));
+            target.sendSystemMessage(Component.translatable("guild.invite", component, guild.getGuildName()).withStyle(ChatFormatting.GREEN));
+            target.sendSystemMessage(Component.translatable("text.click_here").withStyle(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/guild join " + guild.getGuildName() + " " + inviteKey)).withColor(ChatFormatting.YELLOW)).append(Component.translatable("guild.invite.accept.append").withStyle(ChatFormatting.GREEN)));
             ModCommands.sendSuccess(stack, "command.guild.invite.success", player.getName());
             return 1;
         });
@@ -171,10 +171,10 @@ public class GuildCommand {
     private static int leaveGuild(CommandContext<CommandSourceStack> context) {
         return checkGuildCommand(context, (player, stack, guild) -> {
             if (guild.memberLeave(player)) {
-                ModCommands.sendSuccess(stack, "command.guild.leave.success", guild.getName());
+                ModCommands.sendSuccess(stack, "command.guild.leave.success", guild.getGuildName());
                 return 1;
             }
-            stack.sendFailure(Component.translatable("command.guild.leave.fail", guild.getName()));
+            stack.sendFailure(Component.translatable("command.guild.leave.fail", guild.getGuildName()));
             return 0;
         });
     }

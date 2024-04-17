@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class FireLanceSpell {
+    //TODO fix not working
     public static boolean execute(LivingEntity user, ItemStack ignored) {
         ArrayList<Vec3> lineOfSight = MathHelper.lineOfSight(user, 10, 0.05);
         List<LivingEntity> hit = new ArrayList<>();

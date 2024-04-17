@@ -2,7 +2,7 @@ package net.kapitencraft.mysticcraft.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
-import net.kapitencraft.mysticcraft.client.render.OverlayController;
+import net.kapitencraft.mysticcraft.client.render.overlay.OverlayController;
 import net.kapitencraft.mysticcraft.gui.screen.OverlaysScreen;
 import net.kapitencraft.mysticcraft.helpers.ClientHelper;
 import net.minecraft.commands.CommandSourceStack;
@@ -28,7 +28,8 @@ public class OverlaysCommand {
     }
 
     private static int reset(CommandContext<CommandSourceStack> context) {
-        OverlayController.reset();
+        OverlayController.resetAll();
+        ModCommands.sendSuccess(context.getSource(), "command.overlays.reset.success");
         return 1;
     }
 }

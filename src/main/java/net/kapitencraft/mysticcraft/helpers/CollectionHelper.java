@@ -17,8 +17,12 @@ import java.util.stream.Collectors;
 public class CollectionHelper {
 
     public static <T, K> T getFirstKey(Map<T, K> collection) {
-        for (Map.Entry<T, K> entry : collection.entrySet()) {
-            return entry.getKey();
+        return collection.keySet().stream().findFirst().get();
+    }
+
+    public static <T, K> T getKeyForValue(Map<T, K> map, K value) {
+        for (Map.Entry<T, K> entry : map.entrySet()) {
+            if (entry.getValue() == value) return entry.getKey();
         }
         return null;
     }

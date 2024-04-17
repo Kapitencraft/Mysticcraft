@@ -1,17 +1,20 @@
-package net.kapitencraft.mysticcraft.client.render;
+package net.kapitencraft.mysticcraft.client.render.overlay;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.kapitencraft.mysticcraft.api.MapStream;
 import net.kapitencraft.mysticcraft.client.MysticcraftClient;
-import net.kapitencraft.mysticcraft.client.render.overlay.PositionHolder;
 import net.kapitencraft.mysticcraft.client.render.overlay.box.InteractiveBox;
 import net.kapitencraft.mysticcraft.client.render.overlay.holder.MultiHolder;
 import net.kapitencraft.mysticcraft.client.render.overlay.holder.RenderHolder;
 import net.kapitencraft.mysticcraft.client.render.overlay.holder.SimpleHolder;
+import net.kapitencraft.mysticcraft.event.ModEventFactory;
+import net.kapitencraft.mysticcraft.event.custom.mod.RegisterOverlaysEvent;
+import net.kapitencraft.mysticcraft.helpers.CollectionHelper;
 import net.kapitencraft.mysticcraft.helpers.IOHelper;
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
+import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.misc.MiscRegister;
 import net.minecraft.ChatFormatting;
@@ -30,11 +33,9 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class OverlayController {
@@ -51,7 +52,7 @@ public class OverlayController {
     }
 
     private Map<UUID, PositionHolder> getLocations() {
-        return MapStream.of(map).mapValues(RenderHolder::getPos).toMap();
+        return MapStream.of(map).mapValues(RenderHolder::getPos).mapKeys(OverlayLocation::getUUID).toMap();
     }
 
     private static final File PERSISTENT_FILE = new File(MysticcraftClient.CLIENT_FILES, "gui-locations.json");
@@ -60,31 +61,21 @@ public class OverlayController {
         return IOHelper.loadFile(PERSISTENT_FILE, CODEC, OverlayController::new);
     }
 
-    public final Map<UUID, RenderHolder> map = new HashMap<>();
+    private final Map<OverlayLocation, Function<PositionHolder, RenderHolder>> constructors = new HashMap<>();
+    public final Map<OverlayLocation, RenderHolder> map = new HashMap<>();
     private final Map<UUID, PositionHolder> loadedPositions = new HashMap<>();
 
-    static {
-        load(false);
+    private OverlayController() {
+        this.register();
     }
 
-    private static void load(boolean replace) {
-        OverlayController renderer = MysticcraftClient.getInstance().overlayController;
-        renderer.reload(replace);
-    }
-
-    public static void reset() {
-        load(true);
-        save();
-    }
-
-    private void reload(boolean replace) {
-        this.map.clear();
-        this.addRenderer(replace, UUID.fromString("589c7ac3-4dc1-487b-b4b8-90524ce97bdc"), new SimpleHolder(
-                new PositionHolder( 2f, 5, 1, 1, PositionHolder.Alignment.TOP_LEFT, PositionHolder.Alignment.TOP_LEFT),
+    private void register() {
+        this.createRenderer(OverlayLocations.MANA, positionHolder -> new SimpleHolder(
+                positionHolder,
                 player -> Component.literal(MathHelper.round(player.getAttributeValue(ModAttributes.MANA.get()), 1) + " [+" + MathHelper.round(player.getPersistentData().getDouble(MiscRegister.OVERFLOW_MANA_ID), 1) + " Overflow] §r / §1" + player.getAttributeValue(ModAttributes.MAX_MANA.get()) + " (+" + MathHelper.round(player.getPersistentData().getDouble("manaRegen") * 20, 2) + "/s)").withStyle(ChatFormatting.BLUE)
         ));
-        this.addRenderer(replace, UUID.fromString("cf4eb19d-aec8-4e65-8b43-c5e573b4561b"), new MultiHolder(
-                new PositionHolder(-183, 21, .75f, .75f, PositionHolder.Alignment.MIDDLE, PositionHolder.Alignment.BOTTOM_RIGHT),
+        this.createRenderer(OverlayLocations.STATS, positionHolder -> new MultiHolder(
+                positionHolder,
                 -10,
                 List.of(
                         player -> Component.literal("Protection: " + getDamageProtection(player) + "%").withStyle(ChatFormatting.DARK_BLUE),
@@ -92,6 +83,14 @@ public class OverlayController {
                         player -> Component.literal("Current Speed: " + cancelGravityMovement(player) + " b/s").withStyle(ChatFormatting.YELLOW)
                 )
         ));
+        ModEventFactory.fireModEvent(new RegisterOverlaysEvent(this::createRenderer));
+        construct();
+    }
+
+    private void createRenderer(OverlayLocation provider, Function<PositionHolder, RenderHolder> constructor) {
+        if (this.constructors.containsKey(provider))
+            throw new IllegalStateException("detected double registered Overlay with UUID '" + provider.getUUID() + "'");
+        this.constructors.put(provider, constructor);
     }
 
     public static void save() {
@@ -124,21 +123,29 @@ public class OverlayController {
         }
     }
 
-    /**
-     * adds a new Holder to the internal loading map. <br>
-     * for extensions, use {@link OverlayController#addRenderer(UUID, RenderHolder)} instead
-     * @param replace if the loaded position should be searched for changes or not
-     * @param uuid the {@link UUID} of the holder must be unique (use {@link UUID#fromString(String)}
-     * @param holder the holder to display
-     */
-    private void addRenderer(boolean replace, UUID uuid, RenderHolder holder) {
-        if (!replace && loadedPositions.containsKey(uuid))
-            holder.getPos().copy(loadedPositions.get(uuid));
-        map.put(uuid, holder);
+    private void construct() {
+        this.constructors.forEach((location, constructor) -> {
+            PositionHolder holder = MiscHelper.nonNullOr(this.loadedPositions.get(location.getUUID()), location.getDefault());
+            this.map.put(location, constructor.apply(holder));
+        });
     }
 
-    public static void addRenderer(UUID uuid, RenderHolder holder) {
+    @SuppressWarnings("all")
+    public void reset(RenderHolder dedicatedHolder) {
+        if (this.map.containsValue(dedicatedHolder)) {
+            OverlayLocation location = CollectionHelper.getKeyForValue(this.map, dedicatedHolder);
+            dedicatedHolder.getPos().copy(location.getDefault());
+            return;
+        }
+        throw new IllegalStateException("attempted to reset non-existing Holder");
+    }
+
+    public static void resetAll() {
         OverlayController controller = MysticcraftClient.getInstance().overlayController;
-        controller.addRenderer(false, uuid, holder);
+        Collection<OverlayLocation> locations = controller.constructors.keySet();
+        locations.forEach(location -> {
+            RenderHolder holder = controller.map.get(location);
+            holder.getPos().copy(location.getDefault());
+        });
     }
 }

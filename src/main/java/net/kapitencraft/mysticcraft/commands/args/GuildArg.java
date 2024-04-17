@@ -39,7 +39,7 @@ public class GuildArg implements ArgumentType<Guild> {
 
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
-        return SharedSuggestionProvider.suggest(GuildHandler.getInstance().allGuilds().stream().map(Guild::getName), builder);
+        return SharedSuggestionProvider.suggest(GuildHandler.getInstance().allGuilds().stream().map(Guild::getGuildName), builder);
     }
 
     public static class Info implements ArgumentTypeInfo<GuildArg, GuildArg.Info.Template> {

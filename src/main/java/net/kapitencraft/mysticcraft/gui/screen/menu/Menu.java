@@ -1,9 +1,10 @@
-package net.kapitencraft.mysticcraft.gui.menu;
+package net.kapitencraft.mysticcraft.gui.screen.menu;
 
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 
-public abstract class Menu implements GuiEventListener {
+public abstract class Menu implements GuiEventListener, Renderable {
     protected final int x, y;
     private final GuiEventListener parent;
 
@@ -18,6 +19,4 @@ public abstract class Menu implements GuiEventListener {
     public void hide(Screen screen) {
         screen.setFocused(parent);
     }
-
-    protected abstract void render();
 }

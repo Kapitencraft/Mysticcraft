@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.gui.menu.range.simple;
+package net.kapitencraft.mysticcraft.gui.screen.menu.range.simple;
 
 public class IntegerNumberRange extends NumberRange<Integer> {
     private final int min;

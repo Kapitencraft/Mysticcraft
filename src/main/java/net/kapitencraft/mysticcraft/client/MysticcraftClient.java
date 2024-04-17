@@ -2,7 +2,7 @@ package net.kapitencraft.mysticcraft.client;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.client.particle.animation.ParticleAnimationAcceptor;
-import net.kapitencraft.mysticcraft.client.render.OverlayController;
+import net.kapitencraft.mysticcraft.client.render.overlay.OverlayController;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;

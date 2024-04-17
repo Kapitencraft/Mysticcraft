@@ -1,12 +1,15 @@
 package net.kapitencraft.mysticcraft.client.render.overlay.box;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.kapitencraft.mysticcraft.client.MysticcraftClient;
+import net.kapitencraft.mysticcraft.client.render.overlay.OverlayController;
 import net.kapitencraft.mysticcraft.client.render.overlay.PositionHolder;
 import net.kapitencraft.mysticcraft.client.render.overlay.holder.RenderHolder;
 import net.kapitencraft.mysticcraft.gui.IMenuBuilder;
-import net.kapitencraft.mysticcraft.gui.menu.Menu;
-import net.kapitencraft.mysticcraft.gui.menu.drop_down.DropDownMenu;
-import net.kapitencraft.mysticcraft.gui.menu.drop_down.elements.EnumElement;
+import net.kapitencraft.mysticcraft.gui.screen.menu.Menu;
+import net.kapitencraft.mysticcraft.gui.screen.menu.drop_down.DropDownMenu;
+import net.kapitencraft.mysticcraft.gui.screen.menu.drop_down.elements.ButtonElement;
+import net.kapitencraft.mysticcraft.gui.screen.menu.drop_down.elements.EnumElement;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.Vec2;
 import org.lwjgl.glfw.GLFW;
@@ -70,16 +73,6 @@ public class ResizeBox extends ResizeAccessBox implements IMenuBuilder {
     protected void reapplyPosition() {
         this.boxes.forEach(ResizeAccessBox::reapplyPosition);
     }
-
-    @Override
-    public boolean mouseClicked(double x, double y, int clickId) {
-        if (clickId == 1) {
-            Menu menu = this.createMenu((int) x, (int) y);
-            menu.show();
-        }
-        return super.mouseClicked(x, y, clickId);
-    }
-
 
     @Override
     public boolean isMouseOver(double x, double y) {
@@ -171,8 +164,16 @@ public class ResizeBox extends ResizeAccessBox implements IMenuBuilder {
     @Override
     public Menu createMenu(int x, int y) {
         DropDownMenu menu = new DropDownMenu(x, y, this);
-        menu.addElement(menu1 -> new EnumElement<>(menu1, Component.translatable("gui.alignment"), PositionHolder.Alignment.values(), PositionHolder.Alignment::getName));
+        PositionHolder holder = this.dedicatedHolder.getPos();
+        menu.addElement(listElement -> new EnumElement<>(listElement, menu, Component.translatable("gui.alignment.x"), PositionHolder.Alignment.values(), PositionHolder.Alignment::getWidthName, holder::setXAlignment).setValue(holder.getXAlignment()));
+        menu.addElement(listElement -> new EnumElement<>(listElement, menu, Component.translatable("gui.alignment.y"), PositionHolder.Alignment.values(), PositionHolder.Alignment::getHeightName, holder::setYAlignment).setValue(holder.getYAlignment()));
+        menu.addElement(listElement -> new ButtonElement(listElement, menu, Component.translatable("gui.reset_overlay"), this::reset));
         return menu;
+    }
+
+    private void reset() {
+        OverlayController controller = MysticcraftClient.getInstance().overlayController;
+        controller.reset(this.dedicatedHolder);
     }
 
     public enum Type {

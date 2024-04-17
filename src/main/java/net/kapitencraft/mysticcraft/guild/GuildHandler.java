@@ -156,7 +156,7 @@ public class GuildHandler extends SavedData {
             this.setDirty();
             return;
         }
-        this.guilds.put(guild.getName(), guild);
+        this.guilds.put(guild.getGuildName(), guild);
     }
 
     public static GuildHandler loadAllGuilds(Level level, CompoundTag tag) {

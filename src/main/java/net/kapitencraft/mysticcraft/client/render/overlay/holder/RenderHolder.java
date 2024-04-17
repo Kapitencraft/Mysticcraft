@@ -13,9 +13,8 @@ public abstract class RenderHolder {
     private final PositionHolder pos;
     protected final PoseStack poseStack = new PoseStack();
 
-    public RenderHolder(PositionHolder pos) {
-        this.pos = pos;
-        this.poseStack.scale(pos.getXScale(), pos.getYScale(), 0);
+    public RenderHolder(PositionHolder holder) {
+        this.pos = holder;
     }
 
     public Vec2 getLoc(float screenWidth, float screenHeight) {

@@ -35,6 +35,22 @@ public class PositionHolder {
         return this;
     }
 
+    public void setXAlignment(Alignment alignment) {
+        this.x.alignment = alignment;
+    }
+
+    public void setYAlignment(Alignment alignment) {
+        this.y.alignment = alignment;
+    }
+
+    public Alignment getXAlignment() {
+        return this.x.getAlignment();
+    }
+
+    public Alignment getYAlignment() {
+        return this.y.getAlignment();
+    }
+
     public void add(Vec2 loc) {
         this.x.value += loc.x;
         this.y.value += loc.y;
@@ -62,7 +78,7 @@ public class PositionHolder {
 
     public enum Alignment implements StringRepresentable {
         TOP_LEFT("top"),
-        BOTTOM_RIGHT("right"),
+        BOTTOM_RIGHT("bottom"),
         MIDDLE("middle");
 
         private static final EnumCodec<Alignment> CODEC = StringRepresentable.fromEnum(Alignment::values);
@@ -96,8 +112,16 @@ public class PositionHolder {
             };
         }
 
-        public Component getName() {
-            return Component.translatable("alignment." + this.name);
+        public Component getName(boolean x) {
+            return Component.translatable("alignment." + (x ? "x" : "y") + "." + this.name);
+        }
+
+        public Component getWidthName() {
+            return getName(true);
+        }
+
+        public Component getHeightName() {
+            return getName(false);
         }
 
         @Override

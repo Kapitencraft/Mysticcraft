@@ -29,7 +29,7 @@ public abstract class BannerItemMixin extends StandingAndWallBlockItem {
     @Override
     public @NotNull Component getName(@NotNull ItemStack stack) {
         Guild guild = GuildHandler.getInstance().getGuildForBanner(stack);
-        return guild != null ? Component.translatable("guild.banner.name", guild.getName()).withStyle(ChatFormatting.GREEN) : super.getName(stack);
+        return guild != null ? Component.translatable("guild.banner.name", guild.getGuildName()).withStyle(ChatFormatting.GREEN) : super.getName(stack);
     }
 
     @Override

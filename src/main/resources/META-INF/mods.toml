@@ -7,16 +7,14 @@ modId="mysticcraft" #mandatory
 version="0.9.9i" #mandatory
 displayName="Mysticcraft" #mandatory
 logoFile="examplemod.png" #optional
-credits="" #optional
-authors="Kapitencraft: Dev; Beefrient, WarpBeat(, Lenori): Textures"
-description='''
-CREDITS:
+credits='''
     Some Textures mad by the author(s) of Necron's Pack Hypixel Skyblock
-    some Textures made by Beefrient
+    most Textures made by Beefrient
     some Textures made by Jendrikose08
     heart of the nether texture made by Lenori
-
-
+''' #optional
+authors="Kapitencraft: Dev; Beefrient, WarpBeat(, Lenori): Textures"
+description='''
 A very magical mod
 '''
 [[dependencies.mysticcraft]] #optional

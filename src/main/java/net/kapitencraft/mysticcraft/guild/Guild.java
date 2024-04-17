@@ -1,12 +1,23 @@
 package net.kapitencraft.mysticcraft.guild;
 
 import com.mojang.authlib.GameProfile;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.datafixers.util.Pair;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.api.MapStream;
+import net.kapitencraft.mysticcraft.gui.browse.IBrowsable;
 import net.kapitencraft.mysticcraft.helpers.CollectionHelper;
 import net.kapitencraft.mysticcraft.helpers.IOHelper;
 import net.kapitencraft.mysticcraft.helpers.TextHelper;
 import net.kapitencraft.mysticcraft.logging.Markers;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.geom.ModelLayers;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BannerRenderer;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.resources.model.ModelBakery;
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
@@ -17,7 +28,11 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.players.GameProfileCache;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BannerItem;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BannerBlockEntity;
+import net.minecraft.world.level.block.entity.BannerPattern;
 import org.apache.commons.compress.utils.Lists;
 import org.jetbrains.annotations.NotNull;
 
@@ -27,7 +42,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @ParametersAreNonnullByDefault
-public class Guild {
+public class Guild implements IBrowsable {
 
     //Fields
     private final String name;
@@ -137,7 +152,7 @@ public class Guild {
         public void load(ServerLevel level) {
             MinecraftServer server = level.getServer();
             GameProfileCache cache = server.getProfileCache();
-            MysticcraftMod.LOGGER.info("Guild {} is loading their members", Guild.this.getName());
+            MysticcraftMod.LOGGER.info("Guild {} is loading their members", Guild.this.getGuildName());
             this.memberNames.putAll(MapStream.of(this.rawMembers.keySet().stream().collect(Collectors.toMap(uuid -> uuid, uuid -> uuid)))
                     .mapValues(cache::get)
                     .mapValues(CollectionHelper::getOptionalOrNull)
@@ -151,7 +166,7 @@ public class Guild {
                 this.onlineMembers.put(player, rawMembers.get(player.getUUID()));
                 if (rank == GuildRank.OWNER) {
                     if (cachedOwner != null) {
-                        throw new IllegalStateException("Found guild (" + Guild.this.getName() + ") with multiple owners (" + cachedOwner.getGameProfile().getName() + " & " + player.getGameProfile().getName() + ")");
+                        throw new IllegalStateException("Found guild (" + Guild.this.getGuildName() + ") with multiple owners (" + cachedOwner.getGameProfile().getName() + " & " + player.getGameProfile().getName() + ")");
                     }
                     cachedOwner = player;
                 }
@@ -196,7 +211,7 @@ public class Guild {
         private void insertNewMember(Player player, GuildRank rank) {
             this.onlineMembers.put(player, rank);
             this.rawMembers.put(player.getUUID(), rank);
-            player.getPersistentData().putString(PLAYER_GUILD_NAME_TAG, Guild.this.getName());
+            player.getPersistentData().putString(PLAYER_GUILD_NAME_TAG, Guild.this.getGuildName());
         }
 
         public void addMember(Player player, Guild.GuildRank rank) {
@@ -330,17 +345,17 @@ public class Guild {
 
 
     private Component display() {
-        return Component.literal(this.getName()).withStyle(Style.EMPTY
+        return Component.literal(this.getGuildName()).withStyle(Style.EMPTY
                 .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextHelper.listToPlainText(description(false)))));
     }
 
     private List<Component> description(boolean suppressed) {
         List<Component> list = Lists.newArrayList();
-        list.add(Component.literal(getName()));
+        list.add(Component.literal(getGuildName()));
         list.add(Component.translatable("guild.owner", this.container.getOwnerName()));
         list.add(Component.translatable("guild.member_count", getMemberAmount()));
         if (suppressed || getMemberAmount() > 5) {
-
+            //TODO complete guild description
         }
         return list;
     }
@@ -358,7 +373,45 @@ public class Guild {
         this.container.addMember(player);
     }
 
-    public String getName() {
+    //IBrowsable code
+
+    private final ModelPart flag = Minecraft.getInstance().getEntityModels().bakeLayer(ModelLayers.BANNER).getChild("flag");;
+    private final List<Pair<Holder<BannerPattern>, DyeColor>> bannerPatterns = generatePatterns();
+
+    private List<Pair<Holder<BannerPattern>, DyeColor>> generatePatterns() {
+        ItemStack bannerStack = this.getBanner();
+        BannerItem banner = (BannerItem) bannerStack.getItem();
+        return BannerBlockEntity.createPatterns(banner.getColor(), BannerBlockEntity.getItemPatterns(bannerStack));
+    }
+
+    @Override
+    public void render(PoseStack stack, int leftPos, int topPos, int mouseX, int mouseY, Minecraft minecraft) {
+        renderBanner(stack, leftPos, topPos, minecraft);
+    }
+
+    @SuppressWarnings("all")
+    private void renderBanner(PoseStack pPoseStack, int leftPos, int topPos, Minecraft minecraft) {
+        MultiBufferSource.BufferSource source = minecraft.renderBuffers().bufferSource();
+        pPoseStack.translate(leftPos + 14, topPos + 11, 0.0F);
+        pPoseStack.scale(24.0F, -24.0F, 1.0F);
+        pPoseStack.translate(0.5F, 0.5F, 0.5F);
+        float f = 0.6666667F;
+        pPoseStack.scale(f, -f, -f);
+        this.flag.xRot = 0.0F;
+        this.flag.y = -32.0F;
+        BannerRenderer.renderPatterns(pPoseStack, source, 15728880, OverlayTexture.NO_OVERLAY, this.flag, ModelBakery.BANNER_BASE, true, this.bannerPatterns);
+        pPoseStack.popPose();
+        source.endBatch();
+    }
+
+    @Override
+    public Component getName() {
+        return Component.literal(this.getGuildName());
+    }
+
+    //IBrowsable end
+
+    public String getGuildName() {
         return name;
     }
 
@@ -373,7 +426,7 @@ public class Guild {
     public boolean kickMember(Player member) {
         if (containsMember(member.getUUID()) && !removed) {
             removeMember(member);
-            member.sendSystemMessage(Component.translatable("guild.kick", this.getName()));
+            member.sendSystemMessage(Component.translatable("guild.kick", this.getGuildName()));
             return true;
         }
         return false;

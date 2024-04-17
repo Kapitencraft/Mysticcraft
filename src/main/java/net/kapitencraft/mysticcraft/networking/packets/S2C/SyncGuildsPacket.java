@@ -47,18 +47,18 @@ public class SyncGuildsPacket implements ModPacket {
     public static SyncGuildsPacket addGuild(Player player, Guild guild) {
         return new SyncGuildsPacket(Type.ADD_GUILD, builder -> builder
                 .withUUID("owner", player.getUUID())
-                .withString("name", guild.getName())
+                .withString("name", guild.getGuildName())
         );
     }
     public static SyncGuildsPacket addPlayer(Player player, Guild guild) {
         return new SyncGuildsPacket(Type.ADD_PLAYER, builder -> builder
                 .withUUID("player", player.getUUID())
-                .withString("name", guild.getName())
+                .withString("name", guild.getGuildName())
         );
     }
     public static SyncGuildsPacket removeGuild(Guild guild) {
         return new SyncGuildsPacket(Type.REMOVE_GUILD, builder -> builder
-                .withString("name", guild.getName())
+                .withString("name", guild.getGuildName())
         );
     }
     public static SyncGuildsPacket changeRank(Player player, Guild.GuildRank rank) {

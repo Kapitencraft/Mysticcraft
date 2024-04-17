@@ -138,11 +138,11 @@ public class ClientHelper {
         engine.add(particle);
     }
 
-    public static void fill(PoseStack p_93173_, float xStart, float yStart, float xEnd, float yEnd, int color) {
-        innerFill(p_93173_.last().pose(), xStart, yStart, xEnd, yEnd, color);
+    public static void fill(PoseStack p_93173_, float xStart, float yStart, float xEnd, float yEnd, int color, int blitOffset) {
+        innerFill(p_93173_.last().pose(), xStart, yStart, xEnd, yEnd, color, blitOffset);
     }
 
-    private static void innerFill(Matrix4f p_254518_, float xStart, float yStart, float xEnd, float yEnd, int color) {
+    private static void innerFill(Matrix4f p_254518_, float xStart, float yStart, float xEnd, float yEnd, int color, int blitOffset) {
         if (xStart < xEnd) {
             float i = xStart;
             xStart = xEnd;
@@ -165,10 +165,10 @@ public class ClientHelper {
         RenderSystem.defaultBlendFunc();
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
-        bufferbuilder.vertex(p_254518_, xStart, yEnd, 0.0F).color(f, f1, f2, f3).endVertex();
-        bufferbuilder.vertex(p_254518_, xEnd, yEnd, 0.0F).color(f, f1, f2, f3).endVertex();
-        bufferbuilder.vertex(p_254518_, xEnd, yStart, 0.0F).color(f, f1, f2, f3).endVertex();
-        bufferbuilder.vertex(p_254518_, xStart, yStart, 0.0F).color(f, f1, f2, f3).endVertex();
+        bufferbuilder.vertex(p_254518_, xStart, yEnd, blitOffset).color(f, f1, f2, f3).endVertex();
+        bufferbuilder.vertex(p_254518_, xEnd, yEnd, blitOffset).color(f, f1, f2, f3).endVertex();
+        bufferbuilder.vertex(p_254518_, xEnd, yStart, blitOffset).color(f, f1, f2, f3).endVertex();
+        bufferbuilder.vertex(p_254518_, xStart, yStart, blitOffset).color(f, f1, f2, f3).endVertex();
         BufferUploader.drawWithShader(bufferbuilder.end());
         RenderSystem.enableTexture();
         RenderSystem.disableBlend();
