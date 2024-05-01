@@ -52,10 +52,6 @@ public abstract class ModArmorItem extends ArmorItem implements IModItem {
         return ModItems.createRegistry(creator, slot -> registryName + "_" + TextHelper.getRegistryNameForSlot(slot), List.of(MiscHelper.ARMOR_EQUIPMENT), group);
     }
 
-    public static boolean hadFullSet(ModArmorMaterials materials, LivingEntity living) {
-        return !ModArmorItem.isFullSetActive(living, materials) && living.getPersistentData().getString("lastFullSet").equals(materials.getName());
-    }
-
     @Override
     public void appendHoverTextWithPlayer(@NotNull ItemStack stack, @Nullable Level level, @NotNull List<Component> toolTip, @NotNull TooltipFlag flag, Player player) {
 

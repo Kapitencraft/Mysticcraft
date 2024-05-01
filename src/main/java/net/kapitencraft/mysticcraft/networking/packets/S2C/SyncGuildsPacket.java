@@ -13,6 +13,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.Collection;
@@ -41,35 +42,37 @@ public class SyncGuildsPacket implements ModPacket {
         ListTag savedGuilds = new ListTag();
         savedGuilds.addAll(guilds.stream().map(Guild::saveWithPlayers).toList());
         return new SyncGuildsPacket(Type.LOAD_ALL, builder -> builder
-                .withArg("guilds", savedGuilds, CompoundTag::put)
+                .withArg("Guilds", savedGuilds, CompoundTag::put)
         );
     }
     public static SyncGuildsPacket addGuild(Player player, Guild guild) {
         return new SyncGuildsPacket(Type.ADD_GUILD, builder -> builder
-                .withUUID("owner", player.getUUID())
-                .withString("name", guild.getGuildName())
+                .withUUID("Owner", player.getUUID())
+                .withString("Name", guild.getGuildName())
+                .withArg("IsPublic", guild.isPublic(), CompoundTag::putBoolean)
+                .withArg("Banner", guild.getBanner(), (tag1, s, stack) -> tag1.put(s, stack.save(new CompoundTag())))
         );
     }
     public static SyncGuildsPacket addPlayer(Player player, Guild guild) {
         return new SyncGuildsPacket(Type.ADD_PLAYER, builder -> builder
-                .withUUID("player", player.getUUID())
-                .withString("name", guild.getGuildName())
+                .withUUID("Player", player.getUUID())
+                .withString("Name", guild.getGuildName())
         );
     }
     public static SyncGuildsPacket removeGuild(Guild guild) {
         return new SyncGuildsPacket(Type.REMOVE_GUILD, builder -> builder
-                .withString("name", guild.getGuildName())
+                .withString("Name", guild.getGuildName())
         );
     }
-    public static SyncGuildsPacket changeRank(Player player, Guild.GuildRank rank) {
+    public static SyncGuildsPacket changeRank(Player player, Guild.IRank rank) {
         return new SyncGuildsPacket(Type.CHANGE_RANK, builder -> builder
-                .withUUID("player", player.getUUID())
-                .withString("rank", rank.getRegistryName())
+                .withUUID("Player", player.getUUID())
+                .withString("Rank", rank.getRegistryName())
         );
     }
     public static SyncGuildsPacket leaveGuild(Player player) {
         return new SyncGuildsPacket(Type.LEAVE_GUILD, builder -> builder
-                .withUUID("player", player.getUUID())
+                .withUUID("Player", player.getUUID())
         );
     }
 
@@ -84,7 +87,7 @@ public class SyncGuildsPacket implements ModPacket {
         sup.get().enqueueWork(()-> {
             ClientLevel level = Minecraft.getInstance().level;
             if (level != null && Minecraft.getInstance().getCameraEntity() != null) {
-                GuildHandler handler = GuildHandler.getInstance();
+                GuildHandler handler = GuildHandler.getClientInstance();
                 clientLevel = level;
                 switch (type) {
                     case LOAD_ALL -> {
@@ -95,30 +98,32 @@ public class SyncGuildsPacket implements ModPacket {
                         MysticcraftMod.LOGGER.info(Markers.GUILD, "loaded {} Guilds", GuildHandler.all(clientLevel).size());
                     }
                     case ADD_GUILD -> {
-                        Player player = getPlayer(tag.getUUID("owner"));
-                        String name = tag.getString("name");
+                        Player player = getPlayer(tag.getUUID("Owner"));
+                        String name = tag.getString("Name");
+                        boolean isPublic = tag.getBoolean("IsPublic");
+                        ItemStack banner = ItemStack.of(tag.getCompound("Banner"));
                         MysticcraftMod.LOGGER.info(Markers.GUILD, "received data for adding new guild '{}' from {}", name, player.getName());
-                        handler.addNewGuild(name, player);
+                        handler.addGuild(name, player, banner, isPublic);
                     }
                     case ADD_PLAYER -> {
-                        Player player = getPlayer(tag.getUUID("player"));
-                        String guildName = tag.getString("name");
+                        Player player = getPlayer(tag.getUUID("Player"));
+                        String guildName = tag.getString("Name");
                         MysticcraftMod.LOGGER.info(Markers.GUILD, "received data for adding {} to '{}'", player.getName(), guildName);
                         handler.getGuild(guildName).addMember(player);
                     }
                     case REMOVE_GUILD -> {
-                        String guildName = tag.getString("name");
+                        String guildName = tag.getString("Name");
                         MysticcraftMod.LOGGER.info(Markers.GUILD, "received data to remove '{}'", guildName);
                         handler.removeGuild(guildName);
                     }
                     case CHANGE_RANK -> {
-                        Player player = getPlayer(tag.getUUID("player"));
-                        Guild.GuildRank rank = Guild.GuildRank.getByName(tag.getString("rank"));
+                        Player player = getPlayer(tag.getUUID("Player"));
+                        String rank = tag.getString("Rank");
                         MysticcraftMod.LOGGER.info(Markers.GUILD, "received data to change rank of {} to {}", player.getName(), rank);
                         handler.getGuildForPlayer(player).setRank(player, rank);
                     }
                     case LEAVE_GUILD -> {
-                        Player player = getPlayer(tag.getUUID("player"));
+                        Player player = getPlayer(tag.getUUID("Player"));
                         MysticcraftMod.LOGGER.info("received data to remove {} from their guild", player);
                         handler.getGuildForPlayer(player).kickMember(player);
                     }
@@ -138,7 +143,7 @@ public class SyncGuildsPacket implements ModPacket {
     }
 
     private List<Guild> getAll(CompoundTag tag) {
-        return IOHelper.readCompoundList(tag, "guilds")
+        return IOHelper.readCompoundList(tag, "Guilds")
                 .map(Guild::new)
                 .toList();
     }

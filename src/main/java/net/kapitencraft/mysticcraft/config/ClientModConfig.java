@@ -1,39 +1,67 @@
 package net.kapitencraft.mysticcraft.config;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.client.rainbow.ChromaOrigin;
+import net.kapitencraft.mysticcraft.client.rainbow.ChromaType;
+import net.kapitencraft.mysticcraft.gui.screen.menu.drop_down.elements.Element;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
 
 @Mod.EventBusSubscriber(modid = MysticcraftMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ClientModConfig {
 
     private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
 
-    private static final ForgeConfigSpec.IntValue SCROLL_SCALE = BUILDER
+
+    static {
+        SCROLL_SCALE = BUILDER
                 .comment("the scale of how quick tooltips are scrolled with")
-            .defineInRange("scroll_scale", 5, 1, 20);
-    private static final ForgeConfigSpec.BooleanValue SHOW_EXTRA_DEBUG = BUILDER
-            .comment("determines if extra debug log should be shown")
-            .define("extra_debug", false);
-    private static final ForgeConfigSpec.IntValue RGB_SPEED = BUILDER
-            .comment("the speed of rgb text")
-            .defineInRange("rgb_speed", 1, 1, 10);
+                .defineInRange("scroll_scale", 5, 1, 20);
+        FOCUS_TYPE = BUILDER
+                .comment("what focus type should be used for highlighting")
+                .defineEnum("focus_type", Element.FocusTypes.OUTLINE);
+        BUILDER.comment("data to determine how chroma text should be rendered [WIP]").push("chroma");
+        CHROMA_SPEED = BUILDER
+                .comment("the speed of chroma")
+                .defineInRange("speed", 4., 1., 50.);
+        CHROMA_TYPE = BUILDER.comment("the type of chroma ")
+                .defineEnum("type", ChromaType.LINEAR);
+        CHROMA_SPACING = BUILDER.comment("how wide each color should be rendered\nwith large values = less spread")
+                .defineInRange("spacing", 10., 0.5, 50.);
+        CHROMA_ORIGIN = BUILDER.comment("where the origin of the chroma (eg it's rotation and animation direction) should be")
+                .defineEnum("origin", ChromaOrigin.BOTTOM_RIGHT);
+    }
+
+    private static final ForgeConfigSpec.IntValue SCROLL_SCALE;
+    private static final ForgeConfigSpec.EnumValue<Element.FocusTypes> FOCUS_TYPE;
+    private static final ForgeConfigSpec.DoubleValue CHROMA_SPEED;
+    private static final ForgeConfigSpec.EnumValue<ChromaType> CHROMA_TYPE;
+    private static final ForgeConfigSpec.DoubleValue CHROMA_SPACING;
+    private static final ForgeConfigSpec.EnumValue<ChromaOrigin> CHROMA_ORIGIN;
 
     public static final ForgeConfigSpec SPEC = BUILDER.build();
 
-    public static int scrollScale = 1;
-    public static int rgbSpeed = 1;
-    public static boolean extraDebug = false;
+    public static int getScrollScale() {
+        return SCROLL_SCALE.get();
+    }
 
-    @SubscribeEvent
-    public static void registerConfig(final ModConfigEvent event) {
-        if (SPEC.isLoaded()) {
-            MysticcraftMod.LOGGER.info("loading client config...");
-            scrollScale = SCROLL_SCALE.get();
-            rgbSpeed = RGB_SPEED.get();
-            extraDebug = SHOW_EXTRA_DEBUG.get();
-        }
+    public static ChromaType getChromaType() {
+        return CHROMA_TYPE.get();
+    }
+
+    public static float getChromaSpeed() {
+        return (float) (double) CHROMA_SPEED.get();
+    }
+
+    public static float getChromaSpacing() {
+        return (float) (double) CHROMA_SPACING.get();
+    }
+
+    public static Element.FocusTypes getFocusType() {
+        return FOCUS_TYPE.get();
+    }
+
+    public static ChromaOrigin getChromaOrigin() {
+        return CHROMA_ORIGIN.get();
     }
 }

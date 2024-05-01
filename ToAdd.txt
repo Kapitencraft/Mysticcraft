@@ -32,11 +32,8 @@ Ritual Magic?
 
 
 Tutorial ideen:
-Codecs (+NBT)
 Custom-Model-Armor
-Event
 Debugger
-Json-Daten
 
 
 

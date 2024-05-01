@@ -1,48 +1,40 @@
 package net.kapitencraft.mysticcraft.gui.browse;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.kapitencraft.mysticcraft.gui.screen.IBackgroundScreen;
+import net.kapitencraft.mysticcraft.gui.screen.DefaultBackgroundScreen;
+import net.kapitencraft.mysticcraft.gui.screen.menu.IMenuElement;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiComponent;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import org.jetbrains.annotations.NotNull;
 
-public class BrowserScreen extends Screen implements IBackgroundScreen {
-    private static final ResourceLocation BACKGROUND_TEXTURE = new ResourceLocation("mysticcraft:textures/gui/browsable_background");
-    private final IBrowsable browsable;
-    private int leftPos;
-    private int topPos;
+import java.util.ArrayList;
+import java.util.List;
 
-    public BrowserScreen(IBrowsable browsable) {
+public abstract class BrowserScreen<T extends IBrowsable> extends DefaultBackgroundScreen {
+    private final List<IMenuElement> browseables = new ArrayList<>();
+    protected final T browsable;
+
+    public BrowserScreen(T browsable) {
         super(browsable.getName());
         this.browsable = browsable;
     }
 
-    @Override
-    public void renderBackground(@NotNull PoseStack pPoseStack) {
-        RenderSystem.setShaderTexture(0, BACKGROUND_TEXTURE);
-        GuiComponent.blit(pPoseStack, this.leftPos, this.topPos, 0, 0, 0, getImageWidth(),  getImageHeight(), getImageWidth(), getImageHeight());
+
+    private byte lastDotCount = 0;
+
+    protected void renderFetchingString(PoseStack poseStack) {
+        Font font = Minecraft.getInstance().font;
+        MutableComponent toShow = Component.translatable("gui.fetching");
+        GuiComponent.drawCenteredString(poseStack, font, toShow.append(" " + ".".repeat(Math.max(0, lastDotCount++))), (int) (this.leftPos + this.getImageWidth() / 2.), (int) (this.topPos + (this.getImageHeight() / 2.)), -1);
+        if (lastDotCount == 3) lastDotCount = 0;
     }
 
     @Override
-    public void render(@NotNull PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
-        this.browsable.render(pPoseStack, this.leftPos, this.topPos, pMouseX, pMouseY, this.minecraft);
+    public @NotNull List<IMenuElement> children() {
+        return this.browseables;
     }
 
-    @Override
-    protected void init() {
-        this.leftPos = this.leftPos(this.width);
-        this.topPos = this.topPos(this.height);
-    }
-
-    @Override
-    public int getImageWidth() {
-        return 219;
-    }
-
-    @Override
-    public int getImageHeight() {
-        return 180;
-    }
 }

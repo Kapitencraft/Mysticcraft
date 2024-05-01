@@ -31,6 +31,7 @@ import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.*;
@@ -55,10 +56,17 @@ public class OverlayController {
         return MapStream.of(map).mapValues(RenderHolder::getPos).mapKeys(OverlayLocation::getUUID).toMap();
     }
 
-    private static final File PERSISTENT_FILE = new File(MysticcraftClient.CLIENT_FILES, "gui-locations.json");
+    private static File PERSISTENT_FILE;
+
+    private static @NotNull File getPersistentFile() {
+        if (PERSISTENT_FILE == null) {
+            PERSISTENT_FILE = new File(MysticcraftClient.getBaseClientDirectory(), "gui-locations.json");
+        }
+        return PERSISTENT_FILE;
+    }
 
     public static OverlayController load() {
-        return IOHelper.loadFile(PERSISTENT_FILE, CODEC, OverlayController::new);
+        return IOHelper.loadFile(getPersistentFile(), CODEC, OverlayController::new);
     }
 
     private final Map<OverlayLocation, Function<PositionHolder, RenderHolder>> constructors = new HashMap<>();
@@ -94,7 +102,7 @@ public class OverlayController {
     }
 
     public static void save() {
-        IOHelper.saveFile(PERSISTENT_FILE, CODEC, MysticcraftClient.getInstance().overlayController);
+        IOHelper.saveFile(getPersistentFile(), CODEC, MysticcraftClient.getInstance().overlayController);
     }
     private static double getDamageProtection(LivingEntity living) {
         return MathHelper.defRound(100 - MathHelper.calculateDamage(100, living.getAttributeValue(Attributes.ARMOR), living.getAttributeValue(Attributes.ARMOR_TOUGHNESS)));

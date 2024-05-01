@@ -29,6 +29,7 @@ public class ModCommands {
     public static void registerClient(RegisterClientCommandsEvent event) {
         CommandDispatcher<CommandSourceStack> dispatcher = event.getDispatcher();
         OverlaysCommand.register(dispatcher);
+        GuildCommand.register(dispatcher);
     }
 
     public static void sendSuccess(CommandSourceStack stack, String msg, Object... args) {

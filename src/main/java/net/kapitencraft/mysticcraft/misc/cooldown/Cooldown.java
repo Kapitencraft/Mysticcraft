@@ -27,8 +27,11 @@ public class Cooldown {
     public void applyCooldown(LivingEntity living, boolean reduceWithTime) {
         CompoundTag tag = getTag(living);
         double mul = reduceWithTime ? living.getAttributeValue(ModAttributes.COOLDOWN_REDUCTION.get()) : 0;
-        tag.putInt(path.getPath(), (int) (defaultTime * (1 - mul / 100)));
-        cast(living).addCooldown(this);
+        int value = (int) (defaultTime * (1 - mul / 100));
+        if (value > 0) {
+            tag.putInt(path.getPath(), value);
+            cast(living).addCooldown(this);
+        }
     }
 
     private static ICooldownable cast(LivingEntity living) {

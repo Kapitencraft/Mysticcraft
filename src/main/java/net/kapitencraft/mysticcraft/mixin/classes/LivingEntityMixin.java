@@ -3,6 +3,7 @@ package net.kapitencraft.mysticcraft.mixin.classes;
 
 import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
+import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.misc.cooldown.Cooldown;
 import net.kapitencraft.mysticcraft.misc.cooldown.ICooldownable;
@@ -21,6 +22,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -104,5 +106,10 @@ public abstract class LivingEntityMixin extends Entity implements ICooldownable 
     @Inject(method = "tick", at = @At("HEAD"))
     public void tick(CallbackInfo ci) {
         tickCooldowns();
+    }
+
+    @ModifyConstant(method = "tryAddFrost")
+    private float increaseFreezeSlowness(float in) {
+        return MiscHelper.forDifficulty(self().getLevel().getDifficulty(), in * 1.5f, in * 2.5f, in * 4f, in);
     }
 }

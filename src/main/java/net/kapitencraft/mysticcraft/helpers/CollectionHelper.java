@@ -105,7 +105,7 @@ public class CollectionHelper {
 
 
     public static <T, K, L, J extends Map<K, L>> List<L> values(Map<T, J> map) {
-        return map.values().stream().map(Map::values).collect(CollectorHelper.merge()).toList();
+        return map.values().stream().map(Map::values).flatMap(Collection::stream).toList();
     }
 
     public static <T, K> K getFirstValue(Map<T, K> map) {

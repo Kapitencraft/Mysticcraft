@@ -139,13 +139,14 @@ public class IOHelper {
     }
 
     public static Stream<CompoundTag> readCompoundList(CompoundTag tag, String name) {
-        return readList(tag, name, CompoundTag.class, 10);
+        return readList(tag, name, CompoundTag.class, Function.identity(), 10);
     }
 
-    public static <T> Stream<T> readList(CompoundTag tag, String name, Class<T> targetId, int elementId) {
+    public static <K, T extends Tag> Stream<K> readList(CompoundTag tag, String name, Class<T> tClass, Function<T, K> creator, int elementId) {
         ListTag listTag = tag.getList(name, elementId);
-        return listTag.stream().filter(targetId::isInstance)
-                .map(targetId::cast);
+        return listTag.stream().filter(tClass::isInstance)
+                .map(tClass::cast)
+                .map(creator);
     }
 
     public static <T, K> MapStream<T, K> readMap(CompoundTag tag, String name, BiFunction<CompoundTag, String, T> keyMapper, BiFunction<CompoundTag, String, K> valueMapper) {
@@ -215,15 +216,20 @@ public class IOHelper {
         return arrayTag;
     }
 
-    public static <T, K> ListTag writeMap(Map<T, K> map, TriConsumer<CompoundTag, String, T> keyMapper, TriConsumer<CompoundTag, String, K> valueMapper) {
+    public static <T, K> ListTag writeMap(Map<T, K> map, DataWriter<T> keyWriter, DataWriter<K> valueWriter) {
         ListTag listTag = new ListTag();
         map.forEach((t, k) -> {
             CompoundTag tag = new CompoundTag();
-            keyMapper.accept(tag, "Key", t);
-            valueMapper.accept(tag, "Value", k);
+            tag.put("Key", keyWriter.createData(t));
+            tag.put("Value", valueWriter.createData(k));
             listTag.add(tag);
         });
         return listTag;
+    }
+
+    @FunctionalInterface
+    public interface DataWriter<T> {
+        Tag createData(T t);
     }
 
     public static <T> ListTag writeList(List<T> list, Function<T, Tag> mapper) {

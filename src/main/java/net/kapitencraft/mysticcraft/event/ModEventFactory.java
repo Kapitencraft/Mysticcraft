@@ -6,7 +6,6 @@ import net.kapitencraft.mysticcraft.item.IEventListener;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneData;
 import net.kapitencraft.mysticcraft.item.capability.reforging.Reforge;
 import net.kapitencraft.mysticcraft.logging.Markers;
-import net.kapitencraft.mysticcraft.misc.MiscRegister;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
@@ -29,8 +28,7 @@ public class ModEventFactory {
     public static void onGemstoneDataCreated(GemstoneData helper) {
         MysticcraftMod.sendRegisterDisplay("Gemstone Slots");
         AddGemstonesToItemEvent event = new AddGemstonesToItemEvent(helper);
-        MiscRegister.registerGemstones(event);
-        MinecraftForge.EVENT_BUS.post(event);
+        fireModEvent(event);
         MysticcraftMod.LOGGER.info(Markers.REGISTRY, "Registered {} Gemstone Slots", helper.getAmount());
     }
 

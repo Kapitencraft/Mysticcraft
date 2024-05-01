@@ -2,8 +2,7 @@ package net.kapitencraft.mysticcraft.client.font.effect.effects;
 
 import net.kapitencraft.mysticcraft.client.font.effect.EffectSettings;
 import net.kapitencraft.mysticcraft.client.font.effect.GlyphEffect;
-import net.minecraft.Util;
-import net.minecraft.util.Mth;
+import net.kapitencraft.mysticcraft.config.ClientModConfig;
 
 public class RainbowEffect extends GlyphEffect {
     @Override
@@ -11,10 +10,15 @@ public class RainbowEffect extends GlyphEffect {
         if (settings.isShadow) {
             return;
         }
-        int color = Mth.hsvToRgb(((Util.getMillis() * 0.02f + settings.index) % 30) / 30, 0.8F, 0.8F);
-        settings.r = (color >> 16 & 255) / 255F;
-        settings.g = (color >> 8 & 255) / 255F;
-        settings.b = (color & 255) / 255F;
+        settings.r = makeLocationData() / 255f;
+        settings.g = ClientModConfig.getChromaSpacing() / 255f;
+        settings.b = ClientModConfig.getChromaSpeed() / 255f;
+    }
+
+    private static int makeLocationData() {
+        int chromaType = ClientModConfig.getChromaType().getConfigId();
+        int chromaOrigin = ClientModConfig.getChromaOrigin().getConfigId();
+        return (chromaType << 2) | chromaOrigin;
     }
 
     @Override

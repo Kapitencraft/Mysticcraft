@@ -1,17 +1,19 @@
 package net.kapitencraft.mysticcraft.gui.screen.menu.drop_down.elements;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.kapitencraft.mysticcraft.config.ClientModConfig;
 import net.kapitencraft.mysticcraft.gui.screen.menu.drop_down.DropDownMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.StringRepresentable;
 
 import javax.annotation.Nullable;
 
 public abstract class Element implements Renderable {
-    private static final int BACKGROUND_COLOR = 0xFF090909;
+    private static final int BACKGROUND_COLOR = 0xFF090909, FOCUS_COLOR = 0xFF7F7F7F;
     public static final int OFFSET_PER_ELEMENT = 10;
     protected static final Font font = Minecraft.getInstance().font;
     protected final @Nullable ListElement parent;
@@ -30,10 +32,15 @@ public abstract class Element implements Renderable {
         if (this.parent != null) {
             int maxX = x + effectiveWidth();
             int maxY = y + OFFSET_PER_ELEMENT;
-            if (this.focused) {
-                GuiComponent.fill(stack, x, y, maxX, maxY, 0xFF7F7F7F);
+            switch (ClientModConfig.getFocusType()) {
+                case OUTLINE -> {
+                    if (this.focused) {
+                        GuiComponent.fill(stack, x, y, maxX, maxY, FOCUS_COLOR);
+                    }
+                    GuiComponent.fill(stack, focused ? x + 1 : x, focused ? y + 1 : y, focused ? maxX - 1 : maxX, focused ? maxY - 1 : maxY, BACKGROUND_COLOR);
+                }
+                case BACKGROUND -> GuiComponent.fill(stack, x, y, maxX, maxY, focused ? FOCUS_COLOR : BACKGROUND_COLOR);
             }
-            GuiComponent.fill(stack, focused ? x + 1 : x, focused ? y + 1 : y, focused ? maxX - 1 : maxX, focused ? maxY - 1 : maxY, BACKGROUND_COLOR);
             font.draw(stack, name, x + 1, y + 1, -1);
         }
         render(stack, mouseX, mouseY, partialTick);
@@ -100,5 +107,22 @@ public abstract class Element implements Renderable {
 
     protected boolean isFocused() {
         return focused;
+    }
+
+    public enum FocusTypes implements StringRepresentable {
+        OUTLINE("outline"),
+        BACKGROUND("background");
+
+
+        private final String serializedName;
+
+        FocusTypes(String serializedName) {
+            this.serializedName = serializedName;
+        }
+
+        @Override
+        public String getSerializedName() {
+            return serializedName;
+        }
     }
 }

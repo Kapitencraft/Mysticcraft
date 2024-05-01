@@ -24,6 +24,7 @@ public interface ICooldownable {
                 if (tag.contains(tagName, 3) && tag.getInt(tagName) > 0) {
                     IOHelper.reduceBy1(tag, tagName);
                     if (tag.getInt(tagName) <= 0) {
+                        tag.remove(tagName);
                         cooldown.onDone(self());
                         return true;
                     }

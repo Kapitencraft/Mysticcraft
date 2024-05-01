@@ -1,19 +1,20 @@
 package net.kapitencraft.mysticcraft.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.LiteralCommandNode;
-import net.kapitencraft.mysticcraft.commands.args.GuildArg;
-import net.kapitencraft.mysticcraft.commands.args.GuildRankArg;
+import net.kapitencraft.mysticcraft.gui.browse.browsables.GuildScreen;
+import net.kapitencraft.mysticcraft.gui.screen.guild.CreateGuildScreen;
 import net.kapitencraft.mysticcraft.guild.Guild;
 import net.kapitencraft.mysticcraft.guild.GuildHandler;
+import net.kapitencraft.mysticcraft.helpers.ClientHelper;
 import net.kapitencraft.mysticcraft.networking.ModMessages;
 import net.kapitencraft.mysticcraft.networking.packets.S2C.SyncGuildsPacket;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -29,48 +30,20 @@ import java.util.Objects;
 public class GuildCommand {
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        LiteralCommandNode<CommandSourceStack> main = dispatcher.register(net.minecraft.commands.Commands.literal("guild")
-                .then(Commands.literal("create")
-                        .then(Commands.argument("name", StringArgumentType.greedyString())
-                                .executes(context -> addGuild(StringArgumentType.getString(context, "name"), context))
-                        )
-                ).then(Commands.literal("join")
-                        .then(Commands.argument("name", GuildArg.guild())
-                            .executes(context -> joinGuild(GuildArg.getGuild(context, "name"), context, null))
-                                .then(Commands.argument("inviteKey", StringArgumentType.word())
-                                        .executes(context -> joinGuild(GuildArg.getGuild(context, "name"), context, StringArgumentType.getString(context, "inviteKey")))
-                                )
-                        )
-                ).then(Commands.literal("invite")
-                        .then(Commands.argument("toInvite", EntityArgument.player())
-                                .executes(context -> inviteToGuild(EntityArgument.getPlayer(context, "toInvite"), context))
-                        )
-                ).then(Commands.literal("kick")
-                        .then(Commands.argument("name", EntityArgument.player())
-                                .executes(context -> kickPlayer(EntityArgument.getPlayer(context, "name"), context))
-                        )
-                ).then(Commands.literal("leave")
-                        .executes(GuildCommand::leaveGuild)
-                ).then(Commands.literal("promote")
-                        .then(Commands.argument("name", EntityArgument.player())
-                            .executes(context -> promotePlayer(EntityArgument.getPlayer(context, "name"), context, null))
-                                .then(Commands.argument("rank", GuildRankArg.rank())
-                                        .executes(context -> promotePlayer(EntityArgument.getPlayer(context, "name"), context, GuildRankArg.getRank(context, "rank")))
-                                )
-                        )
-                ).then(Commands.literal("disband")
-                        .executes(GuildCommand::disbandGuild)
-                ).then(Commands.literal("war")
-                        .then(Commands.literal("declare")
-                                .then(Commands.argument("target", GuildArg.guild())
-                                        .executes(context -> declareWar(GuildArg.getGuild(context, "target"), context))
-                                )
-                        ).then(Commands.literal("surrender")
-                                .then(Commands.argument("target", GuildArg.guild())
-                                        .executes(context -> surrenderWar(GuildArg.getGuild(context, "target"), context))
-                                )
-                        )
-                )
+        LiteralCommandNode<CommandSourceStack> main = dispatcher.register(Commands.literal("guild")
+                .executes(context -> {
+                    GuildHandler handler = GuildHandler.getClientInstance();
+                    LocalPlayer player = Minecraft.getInstance().player;
+                    if (player != null) {
+                        Guild guild = handler.getGuildForPlayer(player);
+                        if (guild != null) {
+                            ClientHelper.postCommandScreen = new GuildScreen(guild);
+                            return 1;
+                        }
+                    }
+                    ClientHelper.postCommandScreen = new CreateGuildScreen();
+                    return 1;
+                })
         );
 
         dispatcher.register(Commands.literal("g").redirect(main));
@@ -84,24 +57,6 @@ public class GuildCommand {
                 return guildConsumer.apply(player, stack, guild);
             } else {
                 stack.sendFailure(Component.translatable("command.guild.fail.noGuild"));
-                return 0;
-            }
-        });
-    }
-
-    private static int addGuild(String name, CommandContext<CommandSourceStack> context) {
-        return ModCommands.checkNonConsoleCommand(context, (player, stack) -> {
-            Guild guild = getGuild(player);
-            if (guild != null) {
-                stack.sendFailure(Component.translatable("command.guild.add.alreadyMember", guild.getGuildName()));
-                return 0;
-            }
-            String guildAdd = GuildHandler.getInstance(player.level).addNewGuild(name, player);
-            if (Objects.equals(guildAdd, "success")) {
-                ModCommands.sendSuccess(stack, "command.guild.add.success", name);
-                return 1;
-            } else {
-                stack.sendFailure(Component.translatable("command.guild.add." + guildAdd, name));
                 return 0;
             }
         });
@@ -194,14 +149,14 @@ public class GuildCommand {
         });
     }
 
-    private static int promotePlayer(Player target, CommandContext<CommandSourceStack> context, @Nullable Guild.GuildRank rank) {
+    private static int promotePlayer(Player target, CommandContext<CommandSourceStack> context, @Nullable Guild.Rank rank) {
         return checkGuildCommand(context, (player, stack, guild) -> {
             if (guild.isOwner(target)) {
                 stack.sendFailure(Component.translatable("command.guild.promote.isOwner", target.getName()));
             }
             String result = guild.promote(target, rank);
             if (Objects.equals(result, "success")) {
-                Guild.GuildRank newRank = guild.getRank(target);
+                Guild.IRank newRank = guild.getRank(target);
                 ModMessages.sendToAllConnectedPlayers(value -> SyncGuildsPacket.changeRank(target, newRank), stack.getLevel());
                 ModCommands.sendSuccess(stack, "command.guild.promote.success", target.getName(), newRank);
                 return 1;
