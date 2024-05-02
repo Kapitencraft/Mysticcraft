@@ -1,15 +1,17 @@
 package net.kapitencraft.mysticcraft.enchantments.weapon.melee;
 
-import net.kapitencraft.mysticcraft.enchantments.abstracts.EffectApplicationEnchantment;
+import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.enchantments.abstracts.ExtendedCalculationEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.IWeaponEnchantment;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
-import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
 
-public class GlacialTouchEnchantment extends EffectApplicationEnchantment implements IWeaponEnchantment {
+public class GlacialTouchEnchantment extends ExtendedCalculationEnchantment implements IWeaponEnchantment {
     public GlacialTouchEnchantment() {
-        super(Rarity.RARE, EnchantmentCategory.WEAPON, MiscHelper.WEAPON_SLOT, CalculationType.ALL);
+        super(Rarity.RARE, EnchantmentCategory.WEAPON, MiscHelper.WEAPON_SLOT, CalculationType.ONLY_MELEE, ProcessPriority.LOWEST);
     }
 
 
@@ -19,17 +21,14 @@ public class GlacialTouchEnchantment extends EffectApplicationEnchantment implem
     }
 
     @Override
-    protected MobEffect getEffect() {
-        return MobEffects.MOVEMENT_SLOWDOWN;
+    protected double execute(int level, ItemStack enchanted, LivingEntity attacker, LivingEntity attacked, double damage, DamageSource source) {
+        int secondsRandom = MysticcraftMod.RANDOM_SOURCE.nextIntBetweenInclusive(1, level);
+        attacked.setTicksFrozen(attacked.getTicksFrozen() + secondsRandom * 20);
+        return damage;
     }
 
     @Override
-    protected int getChance(int level) {
-        return 100;
-    }
-
-    @Override
-    protected int getScale() {
-        return 5;
+    public String[] getDescriptionMods(int level) {
+        return new String[0];
     }
 }

@@ -5,6 +5,8 @@ import net.kapitencraft.mysticcraft.networking.packets.C2S.ReforgingPacket;
 import net.kapitencraft.mysticcraft.networking.packets.C2S.UpgradeItemPacket;
 import net.kapitencraft.mysticcraft.networking.packets.C2S.UseShortBowPacket;
 import net.kapitencraft.mysticcraft.networking.packets.ModPacket;
+import net.kapitencraft.mysticcraft.networking.packets.RequestDataPacket;
+import net.kapitencraft.mysticcraft.networking.packets.RequestPacket;
 import net.kapitencraft.mysticcraft.networking.packets.S2C.*;
 import net.kapitencraft.mysticcraft.networking.packets.SendCompoundTagPacket;
 import net.minecraft.client.Minecraft;
@@ -37,7 +39,7 @@ public class ModMessages {
     }
 
 
-    public static <MSG> void sendToServer(MSG message, ServerPlayer player) {
+    public static <MSG> void sendToClient(MSG message, ServerPlayer player) {
         PACKET_HANDLER.send(PacketDistributor.PLAYER.with(()-> player), message);
     }
 
@@ -64,8 +66,9 @@ public class ModMessages {
                 .consumerMainThread(ModMessages::handleExplosionPacket)
                 .add();
         addSimpleMessage(UseShortBowPacket.class, NetworkDirection.PLAY_TO_SERVER, UseShortBowPacket::new);
-        addMessage(ReforgingPacket.class, NetworkDirection.PLAY_TO_SERVER, ReforgingPacket::new);
+        addSimpleMessage(ResetCooldownsPacket.class, NetworkDirection.PLAY_TO_CLIENT, ResetCooldownsPacket::new);
         addSimpleMessage(UpgradeItemPacket.class, NetworkDirection.PLAY_TO_SERVER, UpgradeItemPacket::new);
+        addMessage(ReforgingPacket.class, NetworkDirection.PLAY_TO_SERVER, ReforgingPacket::new);
         addMessage(SendCompoundTagPacket.class, NetworkDirection.PLAY_TO_SERVER, SendCompoundTagPacket::new);
         addMessage(SendCompoundTagPacket.class, NetworkDirection.PLAY_TO_CLIENT, SendCompoundTagPacket::new);
         addMessage(SyncGuildsPacket.class, NetworkDirection.PLAY_TO_CLIENT, SyncGuildsPacket::new);
@@ -74,7 +77,8 @@ public class ModMessages {
         addMessage(SyncGemstoneDataToBlockPacket.class, NetworkDirection.PLAY_TO_CLIENT, SyncGemstoneDataToBlockPacket::new);
         addMessage(SyncGemstoneDataToPlayerPacket.class, NetworkDirection.PLAY_TO_CLIENT, SyncGemstoneDataToPlayerPacket::new);
         addMessage(SyncElytraDataToPlayerPacket.class, NetworkDirection.PLAY_TO_CLIENT, SyncElytraDataToPlayerPacket::new);
-        addSimpleMessage(ResetCooldownsPacket.class, NetworkDirection.PLAY_TO_CLIENT, ResetCooldownsPacket::new);
+        addMessage(RequestPacket.class, NetworkDirection.PLAY_TO_SERVER, RequestPacket::new);
+        addMessage(RequestDataPacket.class, NetworkDirection.PLAY_TO_CLIENT, RequestDataPacket::new);
     }
 
 

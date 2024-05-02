@@ -1,7 +1,6 @@
 package net.kapitencraft.mysticcraft.misc.attribute;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.config.ClientModConfig;
 import net.kapitencraft.mysticcraft.entity.FrozenBlazeEntity;
 import net.kapitencraft.mysticcraft.entity.WithermancerLordEntity;
 import net.kapitencraft.mysticcraft.entity.skeleton_master.SkeletonMaster;
@@ -18,9 +17,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 import java.util.function.Supplier;
 
@@ -75,13 +72,8 @@ public class AttributeAdder {
 
 
     private static void addAll(EntityAttributeModificationEvent event, Attribute attribute, isAInstance generator) {
-        List<String> addedList = new ArrayList<>();
         ForgeRegistries.ENTITY_TYPES.getValues().stream().map(AttributeAdder::toLiving).filter(Objects::nonNull).filter(generator::is)
-                .forEach(entityType -> {
-                    event.add(entityType, attribute);
-                    addedList.add(entityType.getDescriptionId());
-                });
-        if (ClientModConfig.extraDebug) MysticcraftMod.sendRegisterDisplay("Attribute: [" + attribute.getDescriptionId() + "] to: " + addedList);
+                .forEach(entityType -> event.add(entityType, attribute));
     }
 
     private static EntityType<? extends LivingEntity> toLiving(EntityType<?> in) {

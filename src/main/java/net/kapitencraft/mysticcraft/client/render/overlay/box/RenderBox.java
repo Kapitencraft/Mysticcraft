@@ -12,7 +12,6 @@ public class RenderBox {
     protected final PoseStack stack;
     private final int color;
     public final RenderHolder dedicatedHolder;
-
     public RenderBox(Vec2 start, Vec2 finish, int cursorType, PoseStack stack, int color, RenderHolder dedicatedHolder) {
         this.start = start;
         this.finish = finish;
@@ -44,6 +43,6 @@ public class RenderBox {
     }
 
     public void render(double mouseX, double mouseY) {
-        ClientHelper.fill(stack, start.x, start.y, finish.x, finish.y, color);
+        ClientHelper.fill(stack, start.x, start.y, finish.x, finish.y, color, -1);
     }
 }

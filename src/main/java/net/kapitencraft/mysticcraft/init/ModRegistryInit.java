@@ -46,6 +46,7 @@ public class ModRegistryInit {
         register("Requirements", ModRequirements.REGISTRY);
         register("Stat Types", ModStatTypes.REGISTRY);
         register("Recipes Types", ModRecipeTypes.REGISTRY);
+        register("Data Requesters", ModDataRequesters.REGISTRY);
         MysticcraftMod.LOGGER.info(Markers.REGISTRY, "loading {} registries took {} ms", registered, Timer.getPassedTime());
     }
 

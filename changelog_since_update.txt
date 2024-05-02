@@ -1,2 +1,5 @@
 fixed resize-move scaling 9x;
 fixed overlays not being saved;
+fixed overlays being rendered above menus;
+fixed Glacial Blade enchantment not freezing entities;
+[API] added Requestables;

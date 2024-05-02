@@ -6,6 +6,13 @@
   "advancements.mysticcraft.prot_5_wait_what": "Protection 4, Protection 4, Protection 4, Protection 5? wait what???",
   "advancements.mysticcraft.prot_5_wait_what.title": "Above and Beyond",
 
+  "alignment.x.top": "Left",
+  "alignment.x.middle": "Middle",
+  "alignment.x.bottom": "Right",
+  "alignment.y.top": "Top",
+  "alignment.y.middle": "Middle",
+  "alignment.y.bottom": "Bottom",
+
   "attribute.name.generic.ability_damage": "§cAbility Damage",
   "attribute.name.generic.armor_shredder": "Armor Shredding",
   "attribute.name.generic.arrow_speed": "Arrow Speed",
@@ -92,6 +99,7 @@
   "command.guild.kick.failed": "Could not kick %1$s from the guild",
   "command.guild.kick.isOwner": "Can not kick Owner",
   "command.guild.kick.success": "Successfully kicked %1$s from the guild",
+  "command.guild.leave.fail": "Unable to leave guild '%1$s': You are no member xD",
   "command.guild.leave.success": "Successfully left %1$s",
   "command.guild.promote.failed": "Failed to promote %1$s",
   "command.guild.promote.isOwner": "The target Player (%1$s) is the Guild Owner",
@@ -311,12 +319,17 @@
   "text.click_here": "Click here",
 
   "guild.banner.name": "%1$s's Banner",
+  "guild.create.duplicateName": "§cThat name's already existing :C",
+  "guild.create.duplicateBanner": "§cThat banner's already used",
+  "guild.create.success": "§aSuccessfully created new guild!",
   "guild.invite": "%1$s has invited you to join %2$s",
   "guild.invite.accept.append": " to join the guild",
   "guild.kick": "You've been kicked from your guild %1$s",
   "guild.member_count": "Members (%1$s):",
   "guild.owner": "Owner: %1$s",
   "guild.war.start": "The Guild has been challenged by %1$s",
+
+  "gui.alignment": "Alignment",
 
   "item.creative_only": "Only obtainable in creative mode",
   "item.gemstone": "Gemstone",
@@ -520,6 +533,17 @@
   "stat_req.goldor": "%1§s killed Goldors",
 
   "tooltip.can_hit_enderman": "Hits Enderman",
-  "command.guild.leave.fail": "Unable to leave guild '%1$s': You are no member xD",
-  "gui.alignment": "Alignment"
+  "gui.reset_overlay": "Reset Overlay",
+  "command.overlays.reset.success": "Successfully reset Overlays",
+  "gui.alignment.x": "Width Alignment",
+  "gui.alignment.y": "Height Alignment",
+  "gui.fetching": "Fetching Data",
+  "gui.guilds.members_title": "Members",
+  "gui.select_guild": "Select Guild",
+  "gui.nothing_to_show": "Nothing to show!",
+  "gui.create_guild": "Create Guild",
+  "gui.join_guild": "or Join a Guild",
+  "gui.guild_public": "Guild Public",
+  "gui.guild_public.desc": "wether the guild should be public (allow invites)",
+  "gui.set_guild_name": "Set Name"
 }

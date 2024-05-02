@@ -13,8 +13,8 @@ import java.util.function.Function;
 public class MultiHolder extends RenderHolder {
     private final float yChange;
     private final List<Function<LocalPlayer, Component>> list;
-    public MultiHolder(PositionHolder pos, float yChange, List<Function<LocalPlayer, Component>> allText) {
-        super(pos);
+    public MultiHolder(PositionHolder holder, float yChange, List<Function<LocalPlayer, Component>> allText) {
+        super(holder);
         this.yChange = yChange;
         this.list = allText;
     }

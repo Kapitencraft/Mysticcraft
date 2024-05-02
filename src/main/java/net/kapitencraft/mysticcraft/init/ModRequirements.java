@@ -10,11 +10,10 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.RegistryBuilder;
 import net.minecraftforge.registries.RegistryObject;
 
 public interface ModRequirements {
-    DeferredRegister<Requirement<?>> REGISTRY = MysticcraftMod.makeCustomRegistry(ModRegistryKeys.REQUIREMENTS, RegistryBuilder::new);
+    DeferredRegister<Requirement<?>> REGISTRY = MysticcraftMod.makeRegistry(ModRegistryKeys.REQUIREMENTS);
 
     RegistryObject<Requirement<Item>> ELYTRA_REQ = REGISTRY.register("elytra_req", ()-> new Requirement<>(new StatReqType(Stats.ENTITY_KILLED.get(EntityType.ENDER_DRAGON), 5), ()-> Items.ELYTRA));
     RegistryObject<Requirement<Item>> HYPERION_REQ = REGISTRY.register("hyperion_req", ()-> new Requirement<>(new CustomStatReqType(Stats.CUSTOM.get(ModStatTypes.STORMS_KILLED.get()), 10, "stat_req.storm"), ModItems.HYPERION));

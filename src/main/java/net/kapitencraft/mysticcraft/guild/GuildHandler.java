@@ -2,6 +2,7 @@ package net.kapitencraft.mysticcraft.guild;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.api.MapStream;
+import net.kapitencraft.mysticcraft.guild.requests.CreateGuildRequestable;
 import net.kapitencraft.mysticcraft.helpers.CollectorHelper;
 import net.kapitencraft.mysticcraft.helpers.IOHelper;
 import net.kapitencraft.mysticcraft.logging.Markers;
@@ -43,7 +44,7 @@ public class GuildHandler extends SavedData {
         } else {
             ServerLevel serverLevel = (ServerLevel) level;
             MinecraftServer server = serverLevel.getServer();
-            return serverLevel.getDataStorage().computeIfAbsent(tag -> GuildHandler.load(tag, server), GuildHandler::createDefault, "guilds");
+            return serverLevel.getDataStorage().computeIfAbsent(GuildHandler::load, GuildHandler::createDefault, "guilds");
         }
     }
 
@@ -77,29 +78,33 @@ public class GuildHandler extends SavedData {
         return tag;
     }
 
-    public static GuildHandler load(CompoundTag tag, MinecraftServer server) {
+    public static GuildHandler load(CompoundTag tag) {
         MysticcraftMod.LOGGER.info(Markers.GUILD, "loading Guilds...");
-        return loadAllGuilds(server.getLevel(Level.OVERWORLD), tag);
+        return loadAllGuilds(tag);
     }
 
-    public String addNewGuild(String newGuildName, Player owner) {
-        if (!guilds.containsKey(newGuildName)) {
-            ItemStack stack = owner.getMainHandItem();
-            if (stack.getItem() instanceof BannerItem) {
-                Guild bannerGuild = getGuildForBanner(stack);
-                if (bannerGuild != null) return "duplicateBanner";
-                this.setDirty();
-                Guild guild = new Guild(newGuildName, owner.getUUID(), stack, new GuildUpgradeInstance());
-                guilds.put(newGuildName, guild);
-                owner.getPersistentData().putString(Guild.MemberContainer.PLAYER_GUILD_NAME_TAG, newGuildName);
-                if (owner instanceof ServerPlayer player) {
-                    ModMessages.sendToAllConnectedPlayers(value -> SyncGuildsPacket.addGuild(owner, guilds.get(newGuildName)), player.getLevel());
-                }
-                return "success";
-            }
-            return "noBanner";
+    public String addNewGuild(CreateGuildRequestable.CreateGuildData newGuildData, Player owner) {
+        if (guilds.containsKey(newGuildData.name())) {
+            return "duplicateName";
+        } else if (isStackFromGuildBanner(newGuildData.banner())) {
+            return "duplicateBanner";
         }
-        return "failed";
+        ItemStack banner = newGuildData.banner();
+        this.setDirty();
+        Guild guild = new Guild(newGuildData.name(), owner, banner, newGuildData.isPublic());
+        guilds.put(newGuildData.name(), guild);
+        owner.getPersistentData().putString(Guild.MemberContainer.PLAYER_GUILD_NAME_TAG, newGuildData.name());
+        if (owner instanceof ServerPlayer player) {
+            ModMessages.sendToAllConnectedPlayers(value -> SyncGuildsPacket.addGuild(owner, guild), player.getLevel());
+        }
+        return "success";
+    }
+
+    /**
+     * only used for adding Guilds to the client instance, do not use!
+     */
+    public void addGuild(String name, Player owner, ItemStack banner, boolean isPublic) {
+        this.guilds.put(name, new Guild(name, owner, banner, isPublic));
     }
 
     public String removeGuild(String guildName) {
@@ -148,22 +153,22 @@ public class GuildHandler extends SavedData {
 
     public static void addGuildClient(Guild guild) {
         ensureInstanceNotNull();
-        clientInstance.addGuild(guild);
+        clientInstance.reviveGuild(guild);
     }
 
-    private void addGuild(Guild guild) {
+    private void reviveGuild(Guild guild) {
         if (guild == null) {
             this.setDirty();
             return;
         }
-        this.guilds.put(guild.getName(), guild);
+        this.guilds.put(guild.getGuildName(), guild);
     }
 
-    public static GuildHandler loadAllGuilds(Level level, CompoundTag tag) {
+    private static GuildHandler loadAllGuilds(CompoundTag tag) {
         GuildHandler guildHandler = new GuildHandler();
         long j = Util.getMillis();
         Stream<CompoundTag> tags = IOHelper.readCompoundList(tag, "Guilds");
-        long count = tags.map(Guild::loadFromTag).peek(guildHandler::addGuild).count();
+        long count = tags.map(Guild::loadFromTag).peek(guildHandler::reviveGuild).count();
         guildHandler.allGuilds().forEach(guild -> guild.reviveWarOpponents(guildHandler));
         MysticcraftMod.LOGGER.info(Markers.GUILD, "loading {} Guilds took {} ms", count, Util.getMillis() - j);
         return guildHandler;
@@ -184,8 +189,12 @@ public class GuildHandler extends SavedData {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public static GuildHandler getInstance() {
+    public static GuildHandler getClientInstance() {
         ensureInstanceNotNull();
         return clientInstance;
+    }
+
+    public void invalidate() {
+        this.guilds.clear();
     }
 }

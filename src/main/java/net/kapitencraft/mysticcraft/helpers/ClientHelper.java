@@ -6,6 +6,8 @@ import com.mojang.math.Axis;
 import net.kapitencraft.mysticcraft.requirements.Requirement;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.FireworkParticles;
@@ -102,6 +104,15 @@ public class ClientHelper {
         p_253637_.vertex(p_253920_, p_253994_, p_254492_, p_254474_).color(p_254080_, p_253655_, p_254133_, 255).uv(p_254233_, p_253939_).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(15728880).normal(p_253881_, 0.0F, 1.0F, 0.0F).endVertex();
     }
 
+    public static void drawCenteredString(PoseStack stack, int xStart, int yStart, int xEnd, int yEnd, Component toDraw, int color) {
+        Font font = Minecraft.getInstance().font;
+        int height = yEnd - yStart;
+        int width = xEnd - xStart;
+        int xDrawStart = xStart + width / 2;
+        int yDrawStart = yStart + height / 2 - 4;
+        GuiComponent.drawCenteredString(stack, font, toDraw, xDrawStart, yDrawStart, color);
+    }
+
 
     public static <T> void addReqContent(Consumer<Component> consumer, T t, Player player) {
         List<Requirement<T>> reqs = CollectionHelper.mutableList((List<Requirement<T>>) Requirement.getReqs(t));
@@ -138,11 +149,11 @@ public class ClientHelper {
         engine.add(particle);
     }
 
-    public static void fill(PoseStack p_93173_, float xStart, float yStart, float xEnd, float yEnd, int color) {
-        innerFill(p_93173_.last().pose(), xStart, yStart, xEnd, yEnd, color);
+    public static void fill(PoseStack p_93173_, float xStart, float yStart, float xEnd, float yEnd, int color, int blitOffset) {
+        innerFill(p_93173_.last().pose(), xStart, yStart, xEnd, yEnd, color, blitOffset);
     }
 
-    private static void innerFill(Matrix4f p_254518_, float xStart, float yStart, float xEnd, float yEnd, int color) {
+    private static void innerFill(Matrix4f p_254518_, float xStart, float yStart, float xEnd, float yEnd, int color, int blitOffset) {
         if (xStart < xEnd) {
             float i = xStart;
             xStart = xEnd;
@@ -165,25 +176,12 @@ public class ClientHelper {
         RenderSystem.defaultBlendFunc();
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
-        bufferbuilder.vertex(p_254518_, xStart, yEnd, 0.0F).color(f, f1, f2, f3).endVertex();
-        bufferbuilder.vertex(p_254518_, xEnd, yEnd, 0.0F).color(f, f1, f2, f3).endVertex();
-        bufferbuilder.vertex(p_254518_, xEnd, yStart, 0.0F).color(f, f1, f2, f3).endVertex();
-        bufferbuilder.vertex(p_254518_, xStart, yStart, 0.0F).color(f, f1, f2, f3).endVertex();
+        bufferbuilder.vertex(p_254518_, xStart, yEnd, blitOffset).color(f, f1, f2, f3).endVertex();
+        bufferbuilder.vertex(p_254518_, xEnd, yEnd, blitOffset).color(f, f1, f2, f3).endVertex();
+        bufferbuilder.vertex(p_254518_, xEnd, yStart, blitOffset).color(f, f1, f2, f3).endVertex();
+        bufferbuilder.vertex(p_254518_, xStart, yStart, blitOffset).color(f, f1, f2, f3).endVertex();
         BufferUploader.drawWithShader(bufferbuilder.end());
         RenderSystem.enableTexture();
         RenderSystem.disableBlend();
     }
-
-    public static void blit(PoseStack stack, float xStart, float xEnd, float yStart, float yEnd, float blitOffset, float u0, float u1, float v0, float v1) {
-        Matrix4f matrix4f = stack.last().pose();
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        BufferBuilder bufferbuilder = Tesselator.getInstance().getBuilder();
-        bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-        bufferbuilder.vertex(matrix4f, xStart, yEnd, blitOffset).uv(u0, v1).endVertex();
-        bufferbuilder.vertex(matrix4f, xEnd, yEnd, blitOffset).uv(u1, v1).endVertex();
-        bufferbuilder.vertex(matrix4f, xEnd, yStart, blitOffset).uv(u1, v0).endVertex();
-        bufferbuilder.vertex(matrix4f, xStart, yStart, blitOffset).uv(u0, v0).endVertex();
-        BufferUploader.drawWithShader(bufferbuilder.end());
-    }
-
 }

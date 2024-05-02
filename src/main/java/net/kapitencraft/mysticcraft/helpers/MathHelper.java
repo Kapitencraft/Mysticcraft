@@ -10,8 +10,10 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -49,9 +51,9 @@ public class MathHelper {
         return entity.position().add(entity.calculateViewVector(0.0F, entity.getYRot() + (float)(arm == HumanoidArm.RIGHT ? 80 : -80)).scale(0.5D));
     }
 
-    public static Vec3 rotateHorizontalVec(Vec3 source, Vec3 target, int angle) {
-        double x = (target.x - source.x) * Math.cos(angle) - (target.y - source.y) * Math.sin(angle) + source.x;
-        double z = (target.x - source.x) * Math.sin(angle) + (target.y - source.y) * Math.cos(angle) + source.y;
+    public static Vec3 rotateHorizontalVec(Vec3 source, Vec3 pivot, int angle) {
+        double x = (pivot.x - source.x) * Math.cos(angle) - (pivot.y - source.y) * Math.sin(angle) + source.x;
+        double z = (pivot.x - source.x) * Math.sin(angle) + (pivot.y - source.y) * Math.cos(angle) + source.y;
         return new Vec3(x, 0, z);
     }
 
@@ -120,7 +122,17 @@ public class MathHelper {
 
 
     public static ArrayList<Vec3> lineOfSight(Entity entity, double range, double scaling) {
-        return lineOfSight(entity.getRotationVector(), entity.getEyePosition(), range, scaling);
+        Vec3 viewVec = entity.calculateViewVector(entity.getXRot(), entity.getYRot());
+        Vec3 end = viewVec.scale(range).add(entity.getEyePosition());
+        BlockHitResult result = entity.level.clip(new ClipContext(viewVec.add(entity.getEyePosition()), end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entity));
+        Vec3 diff = result.getLocation().subtract(viewVec);
+        Vec3 iteration = null;
+        ArrayList<Vec3> list = new ArrayList<>();
+        for (int i = 0; i < diff.length() / scaling; i++) {
+            iteration = setLength(diff, scaling).add(iteration == null ? new Vec3(0, 0, 0) : iteration);
+            list.add(iteration.add(entity.getEyePosition()));
+        }
+        return list;
     }
 
     public static ArrayList<Vec3> lineOfSight(Vec2 vec, Vec3 pos, double range, double scaling) {
@@ -251,8 +263,7 @@ public class MathHelper {
     }
 
     public static <T extends Entity> List<T> getEntitiesAround(Class<T> tClass, Level level, Vec3 loc, double range) {
-        return level.getEntitiesOfClass(tClass, new AABB(loc.x - range, loc.y - range, loc.z - range, loc.x + range, loc.y + range, loc.z + range)).stream()
-                .filter(entity -> entity.position().distanceTo(loc) <= range).toList();
+        return level.getEntitiesOfClass(tClass, new AABB(loc.x - range, loc.y - range, loc.z - range, loc.x + range, loc.y + range, loc.z + range));
     }
 
     public static List<Entity> getAllEntitiesInsideCylinder(float radius, Vec3 sourcePos, Vec2 rot, double range, Level level) {

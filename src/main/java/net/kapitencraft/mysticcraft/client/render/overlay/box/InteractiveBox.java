@@ -20,7 +20,7 @@ public class InteractiveBox extends RenderBox implements GuiEventListener {
     }
 
     @Override
-    public boolean mouseDragged(double newX, double newY, int clickType, double changeX, double changeY) {
+    public final boolean mouseDragged(double newX, double newY, int clickType, double changeX, double changeY) {
         double oldX = -changeX + newX;
         double oldY = -changeY + newY;
         return this.mouseDrag(newX, newY, clickType, changeX, changeY, oldX, oldY);

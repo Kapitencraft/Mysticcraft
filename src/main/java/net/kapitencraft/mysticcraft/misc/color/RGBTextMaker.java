@@ -17,9 +17,10 @@ public class RGBTextMaker {
         int r = 255;
         int g = 0;
         int b = 0;
+        float rgbSpeed = ClientModConfig.getChromaSpeed();
         while (r > 0) {
-            r-= ClientModConfig.rgbSpeed;
-            g+= ClientModConfig.rgbSpeed;
+            r-= rgbSpeed;
+            g+= rgbSpeed;
             if (r < 0) {
                 r = 0;
             }
@@ -29,8 +30,8 @@ public class RGBTextMaker {
             colors.add(new RGB255Color(r, g, b));
         }
         while (g > 0) {
-            g-= ClientModConfig.rgbSpeed;
-            b+= ClientModConfig.rgbSpeed;
+            g-= rgbSpeed;
+            b+= rgbSpeed;
             if (g < 0) {
                 g = 0;
             }
@@ -40,8 +41,8 @@ public class RGBTextMaker {
             colors.add(new RGB255Color(r, g, b));
         }
         while (b > 0) {
-            b-= ClientModConfig.rgbSpeed;
-            r+= ClientModConfig.rgbSpeed;
+            b-= rgbSpeed;
+            r+= rgbSpeed;
             if (b < 0) {
                 b = 0;
             }

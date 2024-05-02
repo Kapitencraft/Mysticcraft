@@ -14,15 +14,15 @@ import org.joml.Vector3f;
 import org.joml.Vector3i;
 
 public class CircleParticle extends TextureSheetParticle {
-    private final double riseSize;
+    private final double expandSize;
     private final int startColor;
-    private final double riseSpeed;
-    public CircleParticle(ClientLevel level, double x, double y, double z, Vector3f startColor, double riseSize, double riseSpeed) {
+    private final double expandSpeed;
+    public CircleParticle(ClientLevel level, double x, double y, double z, Vector3f startColor, double expandSize, double expandSpeed) {
         super(level, x, y, z);
         this.startColor = MathHelper.RGBtoInt(startColor);
-        this.riseSize = riseSize;
+        this.expandSize = expandSize;
         this.lifetime = 100;
-        this.riseSpeed = riseSpeed;
+        this.expandSpeed = expandSpeed;
     }
 
     private CircleParticle withTexture(SpriteSet spriteSet) {
@@ -80,10 +80,11 @@ public class CircleParticle extends TextureSheetParticle {
         consumer.vertex(vector3f.x(), vector3f.y(), vector3f.z()).uv(u1, v1).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(getLightColor(time)).endVertex();
     }
 
+    //TODO fix expanding to slow
+
     @Override
-    public float getQuadSize(float p_107681_) {
-        return (float) (this.riseSize * (age / (age + riseSpeed * 10)));
-    }
+    public float getQuadSize(float pScaleFactor) {
+        return (float) (this.expandSize * (age / (age + expandSpeed * 10)));    }
 
     public static class Provider implements ParticleProvider<CircleParticleOptions> {
         private final SpriteSet spriteSet;

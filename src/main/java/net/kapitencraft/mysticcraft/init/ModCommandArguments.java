@@ -3,8 +3,6 @@ package net.kapitencraft.mysticcraft.init;
 import com.mojang.brigadier.arguments.ArgumentType;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.commands.args.EquipmentSlotArg;
-import net.kapitencraft.mysticcraft.commands.args.GuildArg;
-import net.kapitencraft.mysticcraft.commands.args.GuildRankArg;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.minecraftforge.registries.DeferredRegister;
@@ -20,6 +18,4 @@ public interface ModCommandArguments {
     }
 
     RegistryObject<EquipmentSlotArg.Info> EQUIPMENT_SLOT = register("equipment_slot", EquipmentSlotArg.class, new EquipmentSlotArg.Info());
-    RegistryObject<GuildArg.Info> GUILD = register("guild", GuildArg.class, new GuildArg.Info());
-    RegistryObject<GuildRankArg.Info> GUILD_RANK = register("guild_rank", GuildRankArg.class, new GuildRankArg.Info());
 }

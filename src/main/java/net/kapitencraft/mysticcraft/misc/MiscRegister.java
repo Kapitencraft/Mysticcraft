@@ -115,6 +115,7 @@ public class MiscRegister {
         }
     }
 
+    @SubscribeEvent
     public static void registerGemstones(AddGemstonesToItemEvent event) {
         event.registerArmor(ModItems.ENDER_KNIGHT_ARMOR, new GemstoneSlot.Builder(GemstoneSlot.Type.DEFENCE, GemstoneSlot.Type.OFFENCE, GemstoneSlot.Type.COMBAT, GemstoneSlot.Type.COMBAT, GemstoneSlot.Type.STRENGTH));
         event.register(ModItems.VALKYRIE, new GemstoneSlot.Builder(GemstoneSlot.Type.COMBAT, GemstoneSlot.Type.STRENGTH));

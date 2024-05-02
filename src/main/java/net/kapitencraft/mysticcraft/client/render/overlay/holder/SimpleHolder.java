@@ -10,8 +10,8 @@ import java.util.function.Function;
 
 public class SimpleHolder extends RenderHolder {
     private final Function<LocalPlayer, Component> mapper;
-    public SimpleHolder(PositionHolder pos, Function<LocalPlayer, Component> mapper) {
-        super(pos);
+    public SimpleHolder(PositionHolder holder, Function<LocalPlayer, Component> mapper) {
+        super(holder);
         this.mapper = mapper;
     }
 
