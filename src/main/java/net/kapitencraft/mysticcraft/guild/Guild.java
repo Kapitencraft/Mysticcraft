@@ -206,6 +206,10 @@ public class Guild implements Pingable, IBrowsable {
             this.onlineMembers.keySet().forEach(player -> player.sendSystemMessage(toSend));
         }
 
+        boolean contains(Player player) {
+            return this.rawMembers.containsKey(player.getUUID());
+        }
+
         public void addMember(Player player) {
             insertNewMember(player, Rank.DEFAULT);
         }
@@ -340,7 +344,7 @@ public class Guild implements Pingable, IBrowsable {
 
         public String startWar(Guild other) {
             if (checkStartPossible()) {
-                Guild.this.container.sendMSGtoAllMembers(Component.translatable("guild.war.start", other.display()));
+                Guild.this.container.sendMSGtoAllMembers(Component.translatable("guild.war.start", other.makeDisplay()));
                 return "success";
             }
             return "fail";
@@ -358,9 +362,14 @@ public class Guild implements Pingable, IBrowsable {
     }
 
 
-    private Component display() {
+    private Component makeDisplay() {
         return Component.literal(this.getGuildName()).withStyle(Style.EMPTY
                 .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextHelper.listToPlainText(description(false)))));
+    }
+
+    @Override
+    public String display() {
+        return this.getGuildName();
     }
 
     private List<Component> description(boolean suppressed) {
@@ -470,12 +479,7 @@ public class Guild implements Pingable, IBrowsable {
 
     @Override
     public boolean hasPinged(Player player) {
-        return this.members.contains(player.getUUID());
-    }
-
-    @Override
-    public String display() {
-        return this.name;
+        return this.container.contains(player);
     }
 
     public interface IRank {
