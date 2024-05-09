@@ -14,10 +14,13 @@ public enum SimplePings implements Pingable {
     SimplePings(Function<Player, Boolean> mapper, String display) {
         this.mapper = mapper;
         this.display = display;
+        Pingable.allPingables.add(this);
     }
 
+    public static void bootstrap() {}
+
     @Override
-    public boolean hasPinged(Player player) {
+    public boolean pinges(Player player) {
         return mapper.apply(player);
     }
 

@@ -27,6 +27,7 @@ public class OverlaysScreen extends MenuableScreen {
         LocalPlayer player = minecraft.player;
         boxes.clear();
         controller.fillRenderBoxes(boxes::add, player, font, width, height);
+        //boxes.add(new ScreenDebugBox());
         super.init();
     }
 

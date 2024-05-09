@@ -10,6 +10,7 @@ import net.kapitencraft.mysticcraft.gui.screen.menu.Menu;
 import net.kapitencraft.mysticcraft.gui.screen.menu.drop_down.DropDownMenu;
 import net.kapitencraft.mysticcraft.gui.screen.menu.drop_down.elements.ButtonElement;
 import net.kapitencraft.mysticcraft.gui.screen.menu.drop_down.elements.EnumElement;
+import net.kapitencraft.mysticcraft.helpers.ClientHelper;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.Vec2;
 import org.lwjgl.glfw.GLFW;
@@ -64,14 +65,26 @@ public class ResizeBox extends ResizeAccessBox implements IMenuBuilder {
     }
 
     public void move(Vec2 delta) {
-        super.move(delta);
         this.dedicatedHolder.move(delta);
+        moveWithoutHolder(delta);
+    }
+
+    private void moveWithoutHolder(Vec2 delta) {
+        super.move(delta);
         this.boxes.forEach(resizeAccessBox -> resizeAccessBox.move(delta));
     }
 
     @Override
     protected void reapplyPosition() {
         this.boxes.forEach(ResizeAccessBox::reapplyPosition);
+    }
+
+    private void synchronizePosition() {
+        float width = ClientHelper.getScreenWidth();
+        float height = ClientHelper.getScreenHeight();
+        Vec2 pos = this.dedicatedHolder.getLoc(width, height);
+        Vec2 move = pos.add(this.start.scale(-1));
+        this.moveWithoutHolder(move);
     }
 
     @Override
@@ -165,8 +178,8 @@ public class ResizeBox extends ResizeAccessBox implements IMenuBuilder {
     public Menu createMenu(int x, int y) {
         DropDownMenu menu = new DropDownMenu(x, y, this);
         PositionHolder holder = this.dedicatedHolder.getPos();
-        menu.addElement(listElement -> new EnumElement<>(listElement, menu, Component.translatable("gui.alignment.x"), PositionHolder.Alignment.values(), PositionHolder.Alignment::getWidthName, holder::setXAlignment).setValue(holder.getXAlignment()));
-        menu.addElement(listElement -> new EnumElement<>(listElement, menu, Component.translatable("gui.alignment.y"), PositionHolder.Alignment.values(), PositionHolder.Alignment::getHeightName, holder::setYAlignment).setValue(holder.getYAlignment()));
+        menu.addElement(listElement -> new EnumElement<>(listElement, menu, Component.translatable("gui.alignment.x"), PositionHolder.Alignment.values(), PositionHolder.Alignment::getWidthName, holder::setXAlignment).value(holder.getXAlignment()));
+        menu.addElement(listElement -> new EnumElement<>(listElement, menu, Component.translatable("gui.alignment.y"), PositionHolder.Alignment.values(), PositionHolder.Alignment::getHeightName, holder::setYAlignment).value(holder.getYAlignment()));
         menu.addElement(listElement -> new ButtonElement(listElement, menu, Component.translatable("gui.reset_overlay"), this::reset));
         return menu;
     }
@@ -174,6 +187,12 @@ public class ResizeBox extends ResizeAccessBox implements IMenuBuilder {
     private void reset() {
         OverlayController controller = MysticcraftClient.getInstance().overlayController;
         controller.reset(this.dedicatedHolder);
+        this.synchronizePosition();
+    }
+
+    @Override
+    public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
+        return pButton == 1 && this.isMouseOver(pMouseX, pMouseY);
     }
 
     public enum Type {

@@ -4,6 +4,7 @@ import net.kapitencraft.mysticcraft.helpers.BonusHelper;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.item.IEventListener;
 import net.kapitencraft.mysticcraft.item.item_bonus.MultiPieceBonus;
+import net.kapitencraft.mysticcraft.misc.visuals.Pingable;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -23,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class MysticcraftPlayerInstance {
+public class MysticcraftPlayerInstance implements Pingable {
 
     private final Map<EquipmentSlot, List<IEventListener>> listeners = new HashMap<>();
     private final List<IEventListener> multiPieceListeners = new ArrayList<>();
@@ -32,6 +33,7 @@ public class MysticcraftPlayerInstance {
     public MysticcraftPlayerInstance(Player player) {
         this.player = player;
         MinecraftForge.EVENT_BUS.register(this);
+        Pingable.allPingables.add(this);
     }
 
     @SubscribeEvent
@@ -92,9 +94,22 @@ public class MysticcraftPlayerInstance {
         }
     }
 
-
+    @Override
+    public String toString() {
+        return this.display() + "-" + (this.player.level.isClientSide() ? "Client" : "Server") + "-Mysticcraft Player Instance";
+    }
 
     public void remove() {
         MinecraftForge.EVENT_BUS.unregister(this);
+    }
+
+    @Override
+    public boolean pinges(Player player) {
+        return player == this.player;
+    }
+
+    @Override
+    public String display() {
+        return this.player.getGameProfile().getName();
     }
 }

@@ -2,6 +2,7 @@ package net.kapitencraft.mysticcraft.client.render.overlay;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.kapitencraft.mysticcraft.helpers.ClientHelper;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.phys.Vec2;
@@ -35,13 +36,6 @@ public class PositionHolder {
         return this;
     }
 
-    public void setXAlignment(Alignment alignment) {
-        this.x.alignment = alignment;
-    }
-
-    public void setYAlignment(Alignment alignment) {
-        this.y.alignment = alignment;
-    }
 
     public Alignment getXAlignment() {
         return this.x.getAlignment();
@@ -52,8 +46,8 @@ public class PositionHolder {
     }
 
     public void add(Vec2 loc) {
-        this.x.value += loc.x;
-        this.y.value += loc.y;
+        this.x.add(loc.x);
+        this.y.add(loc.y);
     }
 
     public void scale(float x, float y) {
@@ -70,10 +64,11 @@ public class PositionHolder {
     }
 
     public Vec2 getLoc(float width, float height) {
-        return new Vec2(this.x.getValue(width), this.y.getValue(height));
-    }
-    public Vec2 getVisualLoc(float width, float height) {
         return new Vec2(this.x.getVisualLoc(width), this.y.getVisualLoc(height));
+    }
+
+    public PositionHolder createCopy() {
+        return new PositionHolder(this.x.value, this.y.value, this.x.scale, this.y.scale, this.x.alignment, this.y.alignment);
     }
 
     public enum Alignment implements StringRepresentable {
@@ -87,29 +82,6 @@ public class PositionHolder {
 
         Alignment(String name) {
             this.name = name;
-        }
-
-        public float convert(Alignment other, float value, float axisWidth) {
-            return switch (this) {
-                case TOP_LEFT ->
-                    switch (other) {
-                        case BOTTOM_RIGHT -> axisWidth - value;
-                        case MIDDLE -> value - (axisWidth / 2);
-                        case TOP_LEFT -> value;
-                    };
-                case MIDDLE ->
-                    switch (other) {
-                        case BOTTOM_RIGHT -> (axisWidth / 2) - value;
-                        case MIDDLE -> value;
-                        case TOP_LEFT -> (axisWidth / 2) + value;
-                    };
-                case BOTTOM_RIGHT ->
-                    switch (other) {
-                        case BOTTOM_RIGHT -> value;
-                        case MIDDLE -> (axisWidth / 2) - value;
-                        case TOP_LEFT -> axisWidth - value;
-                    };
-            };
         }
 
         public Component getName(boolean x) {
@@ -128,6 +100,30 @@ public class PositionHolder {
         public @NotNull String getSerializedName() {
             return name;
         }
+
+        public float convert(Alignment other, float value, float axisMax) {
+            return switch (this) {
+                case TOP_LEFT ->
+                        switch (other) {
+                            case BOTTOM_RIGHT -> axisMax - value;
+                            case MIDDLE -> (axisMax / 2) + value;
+                            case TOP_LEFT -> value;
+                        };
+                case MIDDLE ->
+                        switch (other) {
+                            case BOTTOM_RIGHT -> (axisMax / 2) - value;
+                            case MIDDLE -> value;
+                            case TOP_LEFT -> value - (axisMax / 2);
+                        };
+                case BOTTOM_RIGHT ->
+                        switch (other) {
+                            case BOTTOM_RIGHT -> value;
+                            case MIDDLE -> (axisMax / 2) - value;
+                            case TOP_LEFT -> axisMax - value;
+                        };
+            };
+        }
+
     }
 
     private static class Axis {
@@ -158,15 +154,8 @@ public class PositionHolder {
         }
 
         /**
-         * @param axisMax the screen height/width
-         * @return the actual screen location for this axis
-         */
-        public float getValue(float axisMax) {
-            return getVisualLoc(axisMax) / scale;
-        }
-
-        /**
-         * @return the visual location of this axis
+         * @param axisMax width or height of the screen, depending on what axis this is
+         * @return the screen - location of this axis
          */
         public float getVisualLoc(float axisMax) {
             return switch (alignment) {
@@ -181,5 +170,26 @@ public class PositionHolder {
             this.scale = axis.scale;
             this.alignment = axis.alignment;
         }
+
+        public void add(float var) {
+            if (this.alignment == Alignment.BOTTOM_RIGHT) {
+                this.value -= var;
+            } else {
+                this.value += var;
+            }
+        }
+
+        public void changeAlignment(Alignment change, float axisLength) {
+            this.value = change.convert(this.alignment, this.value, axisLength);
+            this.alignment = change;
+        }
+    }
+
+    public void setXAlignment(Alignment alignment) {
+        this.x.changeAlignment(alignment, ClientHelper.getScreenWidth());
+    }
+
+    public void setYAlignment(Alignment alignment) {
+        this.y.changeAlignment(alignment, ClientHelper.getScreenHeight());
     }
 }

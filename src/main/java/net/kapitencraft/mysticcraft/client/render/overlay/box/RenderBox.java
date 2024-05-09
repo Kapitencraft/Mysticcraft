@@ -30,7 +30,7 @@ public class RenderBox {
     }
 
     public void scale(float x, float y) {
-        this.dedicatedHolder.scale(x, y);
+        this.dedicatedHolder.getPos().scale(x, y);
     }
 
     public int getCursorType(double mouseX, double mouseY) {

@@ -3,6 +3,9 @@ package net.kapitencraft.mysticcraft.item.capability.reforging;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.helpers.MiscHelper;
+import net.kapitencraft.mysticcraft.init.ModReforgingBonuses;
+import net.kapitencraft.mysticcraft.init.custom.ModRegistries;
 import net.kapitencraft.mysticcraft.item.item_bonus.ReforgingBonus;
 import net.kapitencraft.mysticcraft.logging.Markers;
 import net.kapitencraft.mysticcraft.misc.ModRarities;
@@ -61,8 +64,8 @@ public class Reforge {
             rarities.forEach(rarity -> array.add(entry.getValue().apply(rarity)));
             mods.add(String.valueOf(BuiltInRegistries.ATTRIBUTE.getKey(entry.getKey())), array);
         }
-        if (this.bonus != null) {
-            object.addProperty("bonus", ReforgeBonuses.byBonus(this.bonus).getSerializedName());
+        if (this.bonus != ModReforgingBonuses.EMPTY.get()) {
+            object.addProperty("bonus", MiscHelper.nonNullOr(ModRegistries.REFORGE_BONUSES_REGISTRY.getKey(this.bonus), ModReforgingBonuses.EMPTY.getId()).toString());
         }
         object.add("mods", mods);
         return object;
@@ -111,7 +114,7 @@ public class Reforge {
     public static class Builder {
 
         private @Nullable MutableComponent name = null;
-        private @Nullable ReforgingBonus bonus;
+        private ReforgingBonus bonus = ModReforgingBonuses.EMPTY.get();
         private final String registryName;
         private final HashMap<Attribute, ReforgeStat> stats = new HashMap<>();
         private boolean onlyFromStone = false;

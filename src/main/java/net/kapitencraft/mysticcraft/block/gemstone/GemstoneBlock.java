@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.block.gemstone;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.block.ModBlockProperties;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.init.ModBlocks;
 import net.kapitencraft.mysticcraft.init.ModItems;
@@ -20,7 +21,6 @@ import net.minecraft.world.level.block.HalfTransparentBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
@@ -33,7 +33,6 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class GemstoneBlock extends HalfTransparentBlock {
-    private static final EnumProperty<GemstoneType> TYPE = EnumProperty.create("gemstone", GemstoneType.class);
     public static final double VERY_LOW_STRENGHT = 4;
     public static final double LOW_STRENGHT = 5;
     public static final double LOW_MEDIUM_STRENGHT = 6;
@@ -44,7 +43,7 @@ public class GemstoneBlock extends HalfTransparentBlock {
 
     public GemstoneBlock() {
         super(Properties.of(Material.HEAVY_METAL).sound(SoundType.AMETHYST_CLUSTER).requiresCorrectToolForDrops().noOcclusion());
-        this.registerDefaultState(this.getStateDefinition().any().setValue(TYPE, GemstoneType.ALMANDINE));
+        this.registerDefaultState(this.getStateDefinition().any().setValue(ModBlockProperties.GEMSTONE_TYPE, GemstoneType.ALMANDINE));
     }
 
     @Override
@@ -54,7 +53,7 @@ public class GemstoneBlock extends HalfTransparentBlock {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(TYPE);
+        builder.add(ModBlockProperties.GEMSTONE_TYPE);
     }
 
     @Override
@@ -65,7 +64,7 @@ public class GemstoneBlock extends HalfTransparentBlock {
     }
 
     public static GemstoneType getType(BlockState state) {
-        return state.getValue(TYPE);
+        return state.getValue(ModBlockProperties.GEMSTONE_TYPE);
     }
 
     public static int getColor(BlockState state, BlockAndTintGetter ignored, BlockPos ignored1, int ignored2) {
@@ -83,17 +82,12 @@ public class GemstoneBlock extends HalfTransparentBlock {
         Player player = context.getPlayer();
         if (player == null) return state;
         ItemStack place = player.getItemInHand(context.getHand());
-        return state.setValue(TYPE, IGemstoneItem.getGemstone(place));
+        return state.setValue(ModBlockProperties.GEMSTONE_TYPE, IGemstoneItem.getGemstone(place));
     }
 
     @Override
     public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter level, BlockPos pos, Player player) {
         return getItem(state, ModBlocks.GEMSTONE_BLOCK::getItem);
-    }
-
-
-    public static BlockState setType(BlockState state, GemstoneType type) {
-        return state.setValue(TYPE, type);
     }
 
     public void addItem(LootContext context, Consumer<ItemStack> consumer) {

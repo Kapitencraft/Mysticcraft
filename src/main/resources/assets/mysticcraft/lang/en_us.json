@@ -545,5 +545,7 @@
   "gui.join_guild": "or Join a Guild",
   "gui.guild_public": "Guild Public",
   "gui.guild_public.desc": "wether the guild should be public (allow invites)",
-  "gui.set_guild_name": "Set Name"
+  "gui.set_guild_name": "Set Name",
+  "spell.cast": "Used %1$s: %2$s",
+  "spell.use": "Started Using %1$s: %2$s/s"
 }

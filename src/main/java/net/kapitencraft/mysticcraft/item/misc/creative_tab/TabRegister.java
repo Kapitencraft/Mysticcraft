@@ -91,6 +91,8 @@ public class TabRegister {
             TabGroup.registerAll(TabTypes.TOOLS_AND_UTILITIES, event::acceptAll);
         } else if (event.getTab() == CreativeModeTabs.OP_BLOCKS) {
             TabGroup.registerAll(TabTypes.OPERATOR, event::acceptAll);
+        } else if (event.getTab() == CreativeModeTabs.BUILDING_BLOCKS) {
+            TabGroup.registerAll(TabTypes.BUILDING_MATERIALS, event::acceptAll);
         }
     }
 
@@ -106,6 +108,6 @@ public class TabRegister {
         FOOD_AND_DRINK,
         TOOLS_AND_UTILITIES,
         DECO,
-        OPERATOR
+        BUILDING_MATERIALS, OPERATOR
     }
 }

@@ -112,10 +112,6 @@ public class Guild implements Pingable, IBrowsable {
         return this.container.cachedOwner == player;
     }
 
-    boolean isMember(Player player) {
-        return this.container.onlineMembers.containsKey(player);
-    }
-
     public void reviveWarOpponents(GuildHandler handler) {
         this.wars.load(handler);
     }
@@ -478,7 +474,7 @@ public class Guild implements Pingable, IBrowsable {
 
 
     @Override
-    public boolean hasPinged(Player player) {
+    public boolean pinges(Player player) {
         return this.container.contains(player);
     }
 

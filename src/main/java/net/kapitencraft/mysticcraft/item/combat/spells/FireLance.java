@@ -51,8 +51,6 @@ public class FireLance extends LanceItem implements ISpellItem {
 
     @Override
     public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-
-        if (true) return;
         //TODO fix
         consumer.accept(new IClientItemExtensions() {
             @Override

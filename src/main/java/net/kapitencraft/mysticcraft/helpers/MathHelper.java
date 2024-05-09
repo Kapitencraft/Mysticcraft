@@ -123,14 +123,13 @@ public class MathHelper {
 
     public static ArrayList<Vec3> lineOfSight(Entity entity, double range, double scaling) {
         Vec3 viewVec = entity.calculateViewVector(entity.getXRot(), entity.getYRot());
+        Vec3 viewVecWithLoc = viewVec.add(entity.getEyePosition());
         Vec3 end = viewVec.scale(range).add(entity.getEyePosition());
-        BlockHitResult result = entity.level.clip(new ClipContext(viewVec.add(entity.getEyePosition()), end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entity));
-        Vec3 diff = result.getLocation().subtract(viewVec);
-        Vec3 iteration = null;
+        BlockHitResult result = entity.level.clip(new ClipContext(viewVecWithLoc, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entity));
+        Vec3 diff = result.getLocation().subtract(viewVecWithLoc);
         ArrayList<Vec3> list = new ArrayList<>();
         for (int i = 0; i < diff.length() / scaling; i++) {
-            iteration = setLength(diff, scaling).add(iteration == null ? new Vec3(0, 0, 0) : iteration);
-            list.add(iteration.add(entity.getEyePosition()));
+            list.add(setLength(diff, i * scaling).add(entity.getEyePosition()));
         }
         return list;
     }
@@ -139,6 +138,7 @@ public class MathHelper {
         ArrayList<Vec3> line = new ArrayList<>();
         Vec3 vec3;
         for (double i = 0; i <= range; i+=scaling) {
+            vec3 = calculateViewVector(vec.x, vec.y).scale(i).add(pos.x, pos.y, pos.z);
             vec3 = calculateViewVector(vec.x, vec.y).scale(i).add(pos.x, pos.y, pos.z);
             line.add(vec3);
         }
@@ -179,10 +179,6 @@ public class MathHelper {
         return value * 1f / maxValue;
     }
 
-    public static double makePercentage(double value, double maxValue) {
-        return value / maxValue;
-    }
-
     public static void forCube(BlockPos cube, Consumer<BlockPos> consumer) {
         MiscHelper.repeat(cube.getX(), integer -> MiscHelper.repeat(cube.getY(), integer1 -> MiscHelper.repeat(cube.getZ(), integer2 -> {
             consumer.accept(new BlockPos(integer, integer1, integer2));
@@ -204,8 +200,13 @@ public class MathHelper {
         return percentage ? setLength(change, dist * range) : setLength(change, range);
     }
 
+    @Nullable
     public static <T> T pickRandom(List<T> list) {
-        return list.get(Mth.nextInt(MysticcraftMod.RANDOM_SOURCE, 0, list.size() - 1));
+        return pickRandom(list, MysticcraftMod.RANDOM_SOURCE);
+    }
+
+    public static <T> T pickRandom(List<T> list, RandomSource source) {
+        return list.isEmpty() ? null : list.get(Mth.nextInt(source, 0, list.size() - 1));
     }
 
     public static boolean chance(double chance, @Nullable Entity entity) {

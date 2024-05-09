@@ -15,7 +15,7 @@ import java.util.function.Function;
 
 /**
  * Event to add Gemstone Slots to custom Items <br>
- * see {@link net.kapitencraft.mysticcraft.misc.MiscRegister#registerGemstones(AddGemstonesToItemEvent)} for examples
+ * see {@link net.kapitencraft.mysticcraft.event.handler.ModEventBusEvents#registerGemstoneItems(AddGemstonesToItemEvent)} for examples
  */
 public class AddGemstonesToItemEvent extends Event implements IModBusEvent {
     private final GemstoneData helper;

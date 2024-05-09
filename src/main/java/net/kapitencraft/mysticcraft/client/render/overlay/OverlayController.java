@@ -10,7 +10,7 @@ import net.kapitencraft.mysticcraft.client.render.overlay.holder.MultiHolder;
 import net.kapitencraft.mysticcraft.client.render.overlay.holder.RenderHolder;
 import net.kapitencraft.mysticcraft.client.render.overlay.holder.SimpleHolder;
 import net.kapitencraft.mysticcraft.event.ModEventFactory;
-import net.kapitencraft.mysticcraft.event.custom.mod.RegisterOverlaysEvent;
+import net.kapitencraft.mysticcraft.event.custom.RegisterOverlaysEvent;
 import net.kapitencraft.mysticcraft.helpers.CollectionHelper;
 import net.kapitencraft.mysticcraft.helpers.IOHelper;
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
@@ -24,6 +24,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
@@ -124,16 +125,24 @@ public class OverlayController {
         this.map.values().stream().map(renderHolder -> renderHolder.newBox(width, height, player, font)).forEach(acceptor);
     }
 
-    private void render(ForgeGui forgeGui, PoseStack ignored, float partialTicks, int screenWidth, int screenHeight) {
+    private void render(ForgeGui forgeGui, PoseStack poseStack, float partialTicks, int screenWidth, int screenHeight) {
         LocalPlayer entity = Minecraft.getInstance().player;
         if (entity != null) {
-            map.forEach((uuid, renderHolder) -> renderHolder.render(screenWidth, screenHeight, entity));
+            map.forEach((uuid, renderHolder) -> {
+                poseStack.pushPose();
+                PositionHolder holder = renderHolder.getPos();
+                Vec2 renderLocation = renderHolder.getLoc(screenWidth, screenHeight);
+                poseStack.translate(renderLocation.x, renderLocation.y, 0);
+                poseStack.scale(holder.getXScale(), holder.getYScale(), 0);
+                renderHolder.render(poseStack, screenWidth, screenHeight, entity);
+                poseStack.popPose();
+            });
         }
     }
 
     private void construct() {
         this.constructors.forEach((location, constructor) -> {
-            PositionHolder holder = MiscHelper.nonNullOr(this.loadedPositions.get(location.getUUID()), location.getDefault());
+            PositionHolder holder = MiscHelper.nonNullOr(this.loadedPositions.get(location.getUUID()), location.getDefault().createCopy());
             this.map.put(location, constructor.apply(holder));
         });
     }

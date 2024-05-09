@@ -1,0 +1,10 @@
+{
+  "values": [
+    "#minecraft:is_overworld",
+    "#forge:is_mountain",
+    "minecraft:end_highlands",
+    "minecraft:basalt_deltas",
+    "minecraft:forest",
+    "minecraft:ocean"
+  ]
+}

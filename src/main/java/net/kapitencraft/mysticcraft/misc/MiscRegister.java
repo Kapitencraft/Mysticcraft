@@ -12,16 +12,13 @@ import net.kapitencraft.mysticcraft.enchantments.HealthMendingEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.ModBowEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.armor.BasaltWalkerEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.weapon.ranged.OverloadEnchantment;
-import net.kapitencraft.mysticcraft.event.custom.AddGemstonesToItemEvent;
 import net.kapitencraft.mysticcraft.helpers.*;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModEnchantments;
-import net.kapitencraft.mysticcraft.init.ModItems;
 import net.kapitencraft.mysticcraft.init.ModMobEffects;
 import net.kapitencraft.mysticcraft.inst.MysticcraftPlayerInstance;
 import net.kapitencraft.mysticcraft.item.capability.CapabilityHelper;
 import net.kapitencraft.mysticcraft.item.capability.ITieredItem;
-import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneSlot;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneType;
 import net.kapitencraft.mysticcraft.item.capability.item_stat.ItemStatCapability;
 import net.kapitencraft.mysticcraft.item.capability.reforging.ReforgeManager;
@@ -30,10 +27,6 @@ import net.kapitencraft.mysticcraft.item.combat.spells.SpellItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.bow.ModBowItem;
 import net.kapitencraft.mysticcraft.item.misc.SoulbindHelper;
 import net.kapitencraft.mysticcraft.misc.content.EssenceHolder;
-import net.kapitencraft.mysticcraft.cooldown.Cooldowns;
-import net.kapitencraft.mysticcraft.misc.particle_help.ParticleAnimator;
-import net.kapitencraft.mysticcraft.networking.ModMessages;
-import net.kapitencraft.mysticcraft.networking.packets.C2S.UseShortBowPacket;
 import net.kapitencraft.mysticcraft.requirements.Requirement;
 import net.kapitencraft.mysticcraft.tags.ModBlockTags;
 import net.kapitencraft.mysticcraft.tags.ModItemTags;
@@ -113,18 +106,6 @@ public class MiscRegister {
                     event.getOriginal().getCapability(CapabilityHelper.ESSENCE).ifPresent(newStore ->
                             newStore.copyFrom(oldStore)));
         }
-    }
-
-    @SubscribeEvent
-    public static void registerGemstones(AddGemstonesToItemEvent event) {
-        event.registerArmor(ModItems.ENDER_KNIGHT_ARMOR, new GemstoneSlot.Builder(GemstoneSlot.Type.DEFENCE, GemstoneSlot.Type.OFFENCE, GemstoneSlot.Type.COMBAT, GemstoneSlot.Type.COMBAT, GemstoneSlot.Type.STRENGTH));
-        event.register(ModItems.VALKYRIE, new GemstoneSlot.Builder(GemstoneSlot.Type.COMBAT, GemstoneSlot.Type.STRENGTH));
-        event.register(ModItems.HYPERION, new GemstoneSlot.Builder(GemstoneSlot.Type.COMBAT, GemstoneSlot.Type.INTELLIGENCE));
-        event.register(ModItems.SCYLLA, new GemstoneSlot.Builder(GemstoneSlot.Type.COMBAT, GemstoneSlot.Type.COMBAT));
-        event.register(ModItems.ASTREA, new GemstoneSlot.Builder(GemstoneSlot.Type.COMBAT, GemstoneSlot.Type.DEFENCE));
-        event.register(ModItems.NECRON_SWORD, new GemstoneSlot.Builder(GemstoneSlot.Type.COMBAT));
-        event.register(ModItems.LONGBOW, new GemstoneSlot.Builder(GemstoneSlot.Type.OFFENCE, GemstoneSlot.Type.DRAW_SPEED));
-        event.register(ModItems.MANA_STEEL_SWORD, new GemstoneSlot.Builder(GemstoneSlot.Type.COMBAT, GemstoneSlot.Type.COMBAT));
     }
 
     @SubscribeEvent

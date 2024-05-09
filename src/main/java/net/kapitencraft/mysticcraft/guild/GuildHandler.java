@@ -5,10 +5,10 @@ import net.kapitencraft.mysticcraft.api.MapStream;
 import net.kapitencraft.mysticcraft.guild.requests.CreateGuildRequestable;
 import net.kapitencraft.mysticcraft.helpers.CollectorHelper;
 import net.kapitencraft.mysticcraft.helpers.IOHelper;
+import net.kapitencraft.mysticcraft.helpers.Timer;
 import net.kapitencraft.mysticcraft.logging.Markers;
 import net.kapitencraft.mysticcraft.networking.ModMessages;
 import net.kapitencraft.mysticcraft.networking.packets.S2C.SyncGuildsPacket;
-import net.minecraft.Util;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -72,9 +72,9 @@ public class GuildHandler extends SavedData {
     @Override
     public @NotNull CompoundTag save(@NotNull CompoundTag tag) {
         MysticcraftMod.LOGGER.info("saving Guilds...");
-        long time = Util.getMillis();
+        Timer.start();
         tag.put("Guilds", saveAllGuilds());
-        MysticcraftMod.LOGGER.info("saving Guilds took {} ms", Util.getMillis() - time);
+        MysticcraftMod.LOGGER.info("saving Guilds took {} ms", Timer.getPassedTime());
         return tag;
     }
 
@@ -166,11 +166,11 @@ public class GuildHandler extends SavedData {
 
     private static GuildHandler loadAllGuilds(CompoundTag tag) {
         GuildHandler guildHandler = new GuildHandler();
-        long j = Util.getMillis();
+        Timer.start();
         Stream<CompoundTag> tags = IOHelper.readCompoundList(tag, "Guilds");
         long count = tags.map(Guild::loadFromTag).peek(guildHandler::reviveGuild).count();
         guildHandler.allGuilds().forEach(guild -> guild.reviveWarOpponents(guildHandler));
-        MysticcraftMod.LOGGER.info(Markers.GUILD, "loading {} Guilds took {} ms", count, Util.getMillis() - j);
+        MysticcraftMod.LOGGER.info(Markers.GUILD, "loading {} Guilds took {} ms", count, Timer.getPassedTime());
         return guildHandler;
     }
 

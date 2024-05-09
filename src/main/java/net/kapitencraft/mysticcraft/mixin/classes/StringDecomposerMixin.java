@@ -4,8 +4,10 @@ import net.kapitencraft.mysticcraft.client.font.effect.EffectsStyle;
 import net.kapitencraft.mysticcraft.client.font.effect.GlyphEffect;
 import net.kapitencraft.mysticcraft.config.ClientModConfig;
 import net.kapitencraft.mysticcraft.init.ModGlyphEffects;
+import net.kapitencraft.mysticcraft.misc.visuals.Pingable;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.util.FormattedCharSink;
 import net.minecraft.util.StringDecomposer;
 import org.spongepowered.asm.mixin.Mixin;
@@ -26,12 +28,27 @@ public class StringDecomposerMixin {
         Style formattedStyle = style;
         EffectsStyle effects = (EffectsStyle) formattedStyle;
 
+        TextColor nonPingColor = null;
+        boolean pinged = false;
         for(int j = length; j < i; ++j) {
 
             char c0 = s.charAt(j);
+            //Ping start
             if (c0 == '@') {
-                formattedStyle = formattedStyle.withColor(ClientModConfig.pingColor);
+                int k = j + 1;
+                while (s.length() > k && s.charAt(k) != ' ') k++;
+                String name = s.substring(j + 1, k);
+                if (Pingable.isPinged(name)) {
+                    nonPingColor = formattedStyle.getColor();
+                    formattedStyle = formattedStyle.withColor(ClientModConfig.getPingColor());
+                    pinged = true;
+                }
             }
+            if (c0 == ' ' && pinged) {
+                formattedStyle = formattedStyle.withColor(nonPingColor);
+                pinged = false;
+            }
+            //Ping end
             if (c0 == 167) {
                 if (j + 1 >= i) {
                     break;

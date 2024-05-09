@@ -5,6 +5,7 @@ import net.kapitencraft.mysticcraft.item.capability.elytra.ElytraCapability;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneCapability;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneData;
 import net.kapitencraft.mysticcraft.item.capability.item_stat.ItemStatCapability;
+import net.kapitencraft.mysticcraft.worldgen.gemstone.GemstoneDecorator;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.ElytraItem;
 import net.minecraft.world.item.Item;
@@ -38,6 +39,7 @@ public class MysticcraftServer {
     }
     private static final GemstoneData data = new GemstoneData();
     public final File serverFiles;
+    public final GemstoneDecorator decorator = new GemstoneDecorator();
 
     public static GemstoneData getData() {
         return data;

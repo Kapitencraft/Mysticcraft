@@ -1,11 +1,11 @@
 package net.kapitencraft.mysticcraft.client.render.overlay.holder;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.kapitencraft.mysticcraft.client.render.overlay.PositionHolder;
 import net.kapitencraft.mysticcraft.helpers.TextHelper;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.phys.Vec2;
 
 import java.util.List;
 import java.util.function.Function;
@@ -30,11 +30,10 @@ public class MultiHolder extends RenderHolder {
     }
 
     @Override
-    public void render(float width, float height, LocalPlayer player) {
-        Vec2 loc = getLoc(width, height);
+    public void render(PoseStack stack, float width, float height, LocalPlayer player) {
         for (int i = 0; i < list.size(); i++) {
             Function<LocalPlayer, Component> mapper = list.get(i);
-            renderString(mapper.apply(player), loc.x, loc.y - yChange * i);
+            renderString(stack, mapper.apply(player), -yChange * i);
         }
     }
 }

@@ -11,4 +11,5 @@ public interface Markers {
     Marker REGISTRY = new ModMarker("Registry");
     Marker REFORGE_MANAGER = new ModMarker("ReforgeManager");
     Marker GEMSTONE = new ModMarker("GemstoneHandler");
+    Marker GEMSTONE_BUILDER = new ModMarker("GemstoneBuilder");
 }

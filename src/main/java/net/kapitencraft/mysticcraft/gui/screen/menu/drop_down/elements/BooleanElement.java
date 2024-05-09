@@ -52,8 +52,7 @@ public class BooleanElement extends Element implements IValueModifierElement<Boo
     }
 
     @Override
-    public BooleanElement setValue(Boolean value) {
+    public void setValue(Boolean value) {
         this.selected = value;
-        return this;
     }
 }

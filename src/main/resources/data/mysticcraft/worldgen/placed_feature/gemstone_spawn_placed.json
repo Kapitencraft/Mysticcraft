@@ -1,0 +1,17 @@
+{
+  "feature": "mysticcraft:gemstone_spawn",
+  "placement": [
+    {
+      "type": "minecraft:height_range",
+      "height": {
+        "type": "minecraft:uniform",
+        "max_inclusive": {
+          "above_bottom": 80
+        },
+        "min_inclusive": {
+          "above_bottom": 20
+        }
+      }
+    }
+  ]
+}

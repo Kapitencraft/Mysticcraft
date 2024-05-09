@@ -21,7 +21,7 @@ public class Timer {
 
     /**
      * method to get the passing time
-     * @return the time passed since the last <i>start()</i> call
+     * @return the time passed since the last {@link Timer#start()} call
      */
     public static long getPassedTime() {
         if (!active) throw new IllegalStateException("tried accessing passing time without Timer being active!");

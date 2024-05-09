@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.item.capability.spell;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.cooldown.Cooldown;
 import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
@@ -10,7 +11,6 @@ import net.kapitencraft.mysticcraft.init.ModItems;
 import net.kapitencraft.mysticcraft.item.capability.ItemData;
 import net.kapitencraft.mysticcraft.item.misc.RNGHelper;
 import net.kapitencraft.mysticcraft.misc.content.mana.ManaMain;
-import net.kapitencraft.mysticcraft.misc.cooldown.Cooldown;
 import net.kapitencraft.mysticcraft.requirements.Requirement;
 import net.kapitencraft.mysticcraft.spell.Element;
 import net.kapitencraft.mysticcraft.spell.SpellExecutionFailedException;
@@ -23,11 +23,14 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec2;
+import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -165,9 +168,20 @@ public class SpellHelper implements ItemData<SpellSlot[], SpellHelper> {
     private static void sendUseDisplay(LivingEntity user, Spell spell) {
         if (user instanceof Player player) {
             double mana_cost = AttributeHelper.getAttributeValue(player.getAttribute(ModAttributes.MANA_COST.get()), spell.getDefaultManaCost());
-            if (spell.getType() == Spell.Type.RELEASE) TextHelper.setHotbarDisplay(player, Component.literal("Used " + spell.getName() + ": " + TextHelper.wrapInRed("-" + mana_cost + " Mana")).withStyle(ChatFormatting.AQUA));
-            else TextHelper.setHotbarDisplay(player, Component.literal("Using " + spell.getName() + ": " + TextHelper.wrapInRed("-" + (mana_cost * 20) + " Mana" + "/s")).withStyle(ChatFormatting.AQUA));
+            MutableComponent visible;
+            String wrappedManaUsage = TextHelper.wrapInRed("-" + mana_cost + " Mana");
+            if (spell.getType() == Spell.Type.RELEASE) visible = Component.translatable("spell.cast", spell.getName(), wrappedManaUsage);
+            else visible = Component.translatable("spell.use", spell.getName(), wrappedManaUsage);
+            TextHelper.setHotbarDisplay(player, visible.withStyle(ChatFormatting.AQUA));
         }
+    }
+
+    private static final double CAST_OFFSET_SCALE = 0.31;
+
+    public static Vec3 getCastOffset(Vec2 rotationVec, boolean left) {
+        Vec3 lookVec = MathHelper.calculateViewVector(rotationVec.x, rotationVec.y).scale(0.60);
+        Vec3 sideOffset = MathHelper.calculateViewVector(rotationVec.x, rotationVec.y + 90).scale(left ? -CAST_OFFSET_SCALE : CAST_OFFSET_SCALE);
+        return lookVec.add(sideOffset).add(0, -0.275, 0);
     }
 
     boolean hasSpell(Spell spell) {

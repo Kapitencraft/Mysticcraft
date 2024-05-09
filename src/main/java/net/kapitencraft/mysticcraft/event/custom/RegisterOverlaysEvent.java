@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.event.custom.mod;
+package net.kapitencraft.mysticcraft.event.custom;
 
 import net.kapitencraft.mysticcraft.client.render.overlay.OverlayLocation;
 import net.kapitencraft.mysticcraft.client.render.overlay.PositionHolder;

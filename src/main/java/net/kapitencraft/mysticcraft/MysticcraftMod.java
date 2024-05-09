@@ -6,6 +6,7 @@ import net.kapitencraft.mysticcraft.config.CommonModConfig;
 import net.kapitencraft.mysticcraft.config.ServerModConfig;
 import net.kapitencraft.mysticcraft.init.ModRegistryInit;
 import net.kapitencraft.mysticcraft.logging.Markers;
+import net.kapitencraft.mysticcraft.misc.visuals.SimplePings;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -59,7 +60,7 @@ public class MysticcraftMod {
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientModConfig.SPEC);
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, CommonModConfig.SPEC);
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ServerModConfig.SPEC);
-
+        SimplePings.bootstrap();
     }
 
     public static String doubleFormat(double d) {

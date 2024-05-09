@@ -104,7 +104,7 @@ public class BuildersWand extends Item implements IModItem {
                 if (posList.size() < type.getPosAmount()) {
                     posList.add(context.getClickedPos());
                     setMsg(Component.literal("added " + TextHelper.fromBlockPos(context.getClickedPos()) + " to the list"));
-                    if (posList.size() == type.getPosAmount() && CommonModConfig.useOnComplete) {
+                    if (posList.size() == type.getPosAmount() && CommonModConfig.shouldUseOnComplete()) {
                         use(context.getLevel());
                     }
                 }
@@ -158,7 +158,7 @@ public class BuildersWand extends Item implements IModItem {
             try {
                 type.consumer.accept(requiredBlock, useAbles, posList, level);
                 setMsg(Component.literal("used!"));
-                if (CommonModConfig.resetBuildersWand) posList.clear();
+                if (CommonModConfig.shouldResetBuilderWandPos()) posList.clear();
             } catch (Exception e) {
                 setMsg(Component.literal("Unable to use Builder's wand: " + e.getMessage()));
             }

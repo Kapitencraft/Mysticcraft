@@ -3,12 +3,15 @@ package net.kapitencraft.mysticcraft.spell.spells;
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.helpers.ParticleHelper;
 import net.kapitencraft.mysticcraft.init.ModMobEffects;
+import net.kapitencraft.mysticcraft.item.capability.spell.SpellHelper;
 import net.kapitencraft.mysticcraft.misc.damage_source.AbilityDamageSource;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
@@ -17,10 +20,12 @@ import java.util.List;
 import java.util.Objects;
 
 public class FireLanceSpell {
+
     public static boolean execute(LivingEntity user, ItemStack ignored) {
+        Vec3 offset = SpellHelper.getCastOffset(new Vec2(0, user.yBodyRot), user.getUsedItemHand() == InteractionHand.OFF_HAND);
         ArrayList<Vec3> lineOfSight = MathHelper.lineOfSight(user, 10, 0.05);
         lineOfSight.stream()
-                .map(vec3 -> FireLanceSpell.merge(vec3, user))
+                .map(vec3 -> FireLanceSpell.merge(vec3.add(offset), user))
                 .flatMap(Collection::stream)
                 .forEach(living -> {
                     if (living.getLastDamageSource() instanceof AbilityDamageSource abilitySource && Objects.equals(abilitySource.getSpellType(), "fire_lance")) {

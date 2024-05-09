@@ -25,7 +25,7 @@ public class CrimsonArmorFullSetBonus extends KillIncreasingStackFullSetBonus {
 
     @Override
     protected void killWhen10(LivingEntity killed, LivingEntity user, MiscHelper.DamageType type) {
-        CrimsonDeathRayHelper.add(user);
+        if (user.level.isClientSide()) CrimsonDeathRayHelper.add(user);
     }
 
     @Override

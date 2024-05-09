@@ -2,6 +2,8 @@ package net.kapitencraft.mysticcraft.item.capability.reforging;
 
 import net.kapitencraft.mysticcraft.event.ModEventFactory;
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import org.jetbrains.annotations.NotNull;
@@ -10,15 +12,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Reforges {
     public static final String REFORGE_NAME_ID = "ReforgeName";
     private static final HashMap<String, Reforge> reforges = new HashMap<>();
     private static final List<Rarity> list = new ArrayList<>();
-    public static void register() {
-        ModEventFactory.onReforgeRegister(reforges);
-    }
-
     public static void registerRarities() {
         list.addAll(List.of(Rarity.values()));
         ModEventFactory.onRarityRegister(list);
@@ -63,7 +62,14 @@ public class Reforges {
         return reforge;
     }
 
+    /**
+     * only used withing {@link ReforgeManager#apply(Map, ResourceManager, ProfilerFiller)} <br>
+     * do <i>not</i> call directly
+     */
     public static void registerReforge(Reforge reforge) {
         reforges.put(reforge.getRegistryName(), reforge);
+    }
+
+    public static void bootstrap() {
     }
 }

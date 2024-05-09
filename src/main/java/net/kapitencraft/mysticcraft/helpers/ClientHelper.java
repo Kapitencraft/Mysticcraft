@@ -184,4 +184,15 @@ public class ClientHelper {
         RenderSystem.enableTexture();
         RenderSystem.disableBlend();
     }
+
+    @SuppressWarnings("All")
+    public static float getScreenWidth() {
+        return Minecraft.getInstance().screen.width;
+    }
+
+    @SuppressWarnings("All")
+    public static float getScreenHeight() {
+        return Minecraft.getInstance().screen.height;
+    }
+
 }

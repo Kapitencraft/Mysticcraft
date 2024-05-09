@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#mysticcraft:gemstone_spawn",
+  "features": "mysticcraft:gemstone_spawn_placed",
+  "step": "underground_ores"
+}

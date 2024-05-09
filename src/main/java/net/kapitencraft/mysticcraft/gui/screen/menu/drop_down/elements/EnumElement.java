@@ -28,11 +28,15 @@ public class EnumElement<T extends Enum<T>> extends ListElement implements IValu
     public void addElement(Element element) {
     }
 
+    public EnumElement<T> value(T value) {
+        this.selected = value;
+        return this;
+    }
+
     @Override
-    public EnumElement<T> setValue(T value) {
+    public void setValue(T value) {
         this.selected = value;
         this.onChange.accept(this.selected);
-        return this;
     }
 
     private class ListItem extends BooleanElement {

@@ -4,6 +4,7 @@ import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.client.rainbow.ChromaOrigin;
 import net.kapitencraft.mysticcraft.client.rainbow.ChromaType;
 import net.kapitencraft.mysticcraft.gui.screen.menu.drop_down.elements.Element;
+import net.minecraft.ChatFormatting;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.common.Mod;
 
@@ -20,6 +21,10 @@ public class ClientModConfig {
         FOCUS_TYPE = BUILDER
                 .comment("what focus type should be used for highlighting")
                 .defineEnum("focus_type", Element.FocusTypes.OUTLINE);
+        PING_COLOR = BUILDER
+                .comment("determines the color which indicates pings")
+                .defineEnum("ping_color", ChatFormatting.YELLOW);
+
         BUILDER.comment("data to determine how chroma text should be rendered [WIP]").push("chroma");
         CHROMA_SPEED = BUILDER
                 .comment("the speed of chroma")
@@ -38,8 +43,13 @@ public class ClientModConfig {
     private static final ForgeConfigSpec.EnumValue<ChromaType> CHROMA_TYPE;
     private static final ForgeConfigSpec.DoubleValue CHROMA_SPACING;
     private static final ForgeConfigSpec.EnumValue<ChromaOrigin> CHROMA_ORIGIN;
+    private static final ForgeConfigSpec.EnumValue<ChatFormatting> PING_COLOR;
 
     public static final ForgeConfigSpec SPEC = BUILDER.build();
+
+    public static ChatFormatting getPingColor() {
+        return PING_COLOR.get();
+    }
 
     public static int getScrollScale() {
         return SCROLL_SCALE.get();

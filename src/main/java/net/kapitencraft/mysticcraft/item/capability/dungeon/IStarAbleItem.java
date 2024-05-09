@@ -41,7 +41,7 @@ public interface IStarAbleItem extends IReAnUpgradeable {
     }
 
     default ItemStack upgrade(ItemStack in) {
-        setStars(in, getStars(in) + 1);
+        setStars(in, Math.min(MAX_STARS, getStars(in) + 1));
         return in;
     }
 

@@ -1,11 +1,11 @@
 package net.kapitencraft.mysticcraft.mixin.classes;
 
 
+import net.kapitencraft.mysticcraft.cooldown.Cooldown;
 import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
-import net.kapitencraft.mysticcraft.misc.cooldown.Cooldown;
 import net.kapitencraft.mysticcraft.misc.cooldown.ICooldownable;
 import net.kapitencraft.mysticcraft.misc.damage_source.IAbilitySource;
 import net.minecraft.world.damagesource.DamageSource;

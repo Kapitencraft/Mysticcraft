@@ -27,8 +27,8 @@ public class DataGenerators {
         generator.addProvider(false, ModLootTableProvider.create(output));
         generator.addProvider(false, new ModItemModelProvider(output, helper));
         generator.addProvider(false, new ModBestiaryProvider(output, provider));
-        generator.addProvider(true, new ReforgeProvider(output));
+        generator.addProvider(false, new ReforgeProvider(output));
         generator.addProvider(false, provider);
-        generator.addProvider(false, new ModWorldGenProvider(output, lookupProvider));
+        generator.addProvider(true, new ModWorldGenProvider(output, lookupProvider));
     }
 }

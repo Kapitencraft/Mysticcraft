@@ -30,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Consumer;
 
 public class GemstoneCrystal extends GemstoneBlock {
-    private static final EnumProperty<Size> SIZE = EnumProperty.create("size", Size.class);
+    public static final EnumProperty<Size> SIZE = EnumProperty.create("size", Size.class);
 
 
     @Override
@@ -118,6 +118,14 @@ public class GemstoneCrystal extends GemstoneBlock {
         @Override
         public @NotNull String getSerializedName() {
             return name;
+        }
+
+        public Size next() {
+            return switch (this) {
+                case SMALL -> MEDIUM;
+                case MEDIUM -> LARGE;
+                default -> CLUSTER;
+            };
         }
     }
 }

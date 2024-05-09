@@ -1,5 +1,7 @@
 package net.kapitencraft.mysticcraft.misc.cooldown;
 
+import net.kapitencraft.mysticcraft.cooldown.CompoundPath;
+import net.kapitencraft.mysticcraft.cooldown.Cooldown;
 import net.kapitencraft.mysticcraft.helpers.IOHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
