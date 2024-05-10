@@ -1,10 +1,13 @@
 package net.kapitencraft.mysticcraft.worldgen.gemstone;
 
+import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.block.ModBlockProperties;
 import net.kapitencraft.mysticcraft.block.gemstone.GemstoneCrystal;
+import net.kapitencraft.mysticcraft.block.special.GemstoneSeedBlock;
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.init.ModBlocks;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneType;
+import net.kapitencraft.mysticcraft.logging.Markers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
@@ -24,10 +27,31 @@ public class GemstoneGrowth {
     private static final BlockState GEMSTONE_BLOCK = GEMSTONE.defaultBlockState();
     private static final BlockState GEMSTONE_CRYSTAL_STATE = GEMSTONE_CRYSTAL.defaultBlockState();
     public static final float DEFAULT_MAIN_CHANCE = 0.2f;
-    public static void growCrystal(LevelAccessor level, BlockPos pos, int amount, GemstoneType type, float baseMainChance, RandomSource source) {
+
+    public static void trySpawnAndGrowSeed(LevelAccessor level, BlockPos pos, int amount, GemstoneType type, GemstoneSeedBlock.MaterialType matType, float baseMainChance, RandomSource source) {
+        List<Direction> directions = scanPossibleDirections(pos, level, type, List.of());
+        Direction main;
+        if (directions.contains(Direction.UP)) main = Direction.UP;
+        else if (directions.contains(Direction.DOWN)) main = Direction.DOWN;
+        else main = MathHelper.pickRandom(directions);
+        if (main == null) return;
+        level.setBlock(pos, ModBlocks.GEMSTONE_SEED.getBlock().defaultBlockState()
+                .setValue(ModBlockProperties.STONE_TYPE, matType)
+                .setValue(ModBlockProperties.GEMSTONE_TYPE, type)
+                .setValue(BlockStateProperties.FACING, main), 3); //spawn gemstone seed
+        growCrystal(level, pos, amount, baseMainChance, source);
+    }
+
+    public static void growCrystal(LevelAccessor level, BlockPos pos, int amount, float baseMainChance, RandomSource source) {
         BlockPos origin = pos.immutable();
-        Direction main = random(level, pos, null, baseMainChance, type, source, List.of());
-        if (main == null) {
+        Direction main;
+        GemstoneType type;
+        try {
+            BlockState seedState = level.getBlockState(pos);
+            main = seedState.getValue(BlockStateProperties.FACING);
+            type = seedState.getValue(ModBlockProperties.GEMSTONE_TYPE);
+        } catch (Exception e) {
+            MysticcraftMod.LOGGER.warn(Markers.GEMSTONE_BUILDER, "unable to grow crystal at {}: {}", pos, e.getMessage());
             return;
         }
         for (int i = 0; i < amount; i++) {

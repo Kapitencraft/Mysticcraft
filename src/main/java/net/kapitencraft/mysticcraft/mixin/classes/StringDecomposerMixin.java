@@ -1,8 +1,8 @@
 package net.kapitencraft.mysticcraft.mixin.classes;
 
-import net.kapitencraft.mysticcraft.client.font.effect.EffectsStyle;
 import net.kapitencraft.mysticcraft.client.font.effect.GlyphEffect;
 import net.kapitencraft.mysticcraft.config.ClientModConfig;
+import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.init.ModGlyphEffects;
 import net.kapitencraft.mysticcraft.misc.visuals.Pingable;
 import net.minecraft.ChatFormatting;
@@ -17,7 +17,6 @@ import org.spongepowered.asm.mixin.Shadow;
 @Mixin(StringDecomposer.class)
 public class StringDecomposerMixin {
 
-
     /**
      * @author Kapitencraft
      * @reason custom display effect application
@@ -26,7 +25,6 @@ public class StringDecomposerMixin {
     public static boolean iterateFormatted(String s, int length, Style style, Style style2, FormattedCharSink sink) {
         int i = s.length();
         Style formattedStyle = style;
-        EffectsStyle effects = (EffectsStyle) formattedStyle;
 
         TextColor nonPingColor = null;
         boolean pinged = false;
@@ -50,21 +48,19 @@ public class StringDecomposerMixin {
             }
             //Ping end
             if (c0 == 167) {
-                if (j + 1 >= i) {
+                j++;
+                if (j >= i) {
                     break;
                 }
 
-                char c1 = s.charAt(j + 1);
+                char c1 = s.charAt(j);
                 ChatFormatting chatformatting = ChatFormatting.getByCode(c1);
                 if (chatformatting != null) {
                     formattedStyle = chatformatting == ChatFormatting.RESET ? style2 : formattedStyle.applyLegacyFormat(chatformatting);
                 } else if (ModGlyphEffects.effectsForKey().containsKey(c1)) {
-                    formattedStyle = formattedStyle.withClickEvent(formattedStyle.getClickEvent());
                     GlyphEffect effect = ModGlyphEffects.effectsForKey().get(c1);
-                    effects.addEffect(effect);
+                    formattedStyle = MiscHelper.withSpecial(formattedStyle, effect);
                 }
-
-                ++j;
             } else if (Character.isHighSurrogate(c0)) {
                 if (j + 1 >= i) {
                     if (!sink.accept(j, formattedStyle, 65533)) {

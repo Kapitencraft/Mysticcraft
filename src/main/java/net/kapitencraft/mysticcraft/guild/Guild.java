@@ -374,7 +374,12 @@ public class Guild implements Pingable, IBrowsable {
         list.add(Component.translatable("guild.owner", this.container.getOwnerName()));
         list.add(Component.translatable("guild.member_count", getMemberAmount()));
         if (suppressed || getMemberAmount() > 5) {
-            //TODO complete guild description
+            list.add(Component.literal(String.join(", ", this.container.memberNames.values())));
+        } else {
+            this.container.memberNames.forEach((uuid, s) -> {
+                IRank rank = this.container.rawMembers.get(uuid);
+                list.add(Component.literal(s).append(": ").append(rank.getName()));
+            });
         }
         return list;
     }

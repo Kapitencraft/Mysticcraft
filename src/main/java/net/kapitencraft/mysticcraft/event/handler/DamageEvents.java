@@ -63,7 +63,7 @@ import java.util.Objects;
 
 @Mod.EventBusSubscriber
 public class DamageEvents {
-    private DamageEvents() {}//dummy constructor
+    private DamageEvents() {}//dummy constructor (do not call)
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void miscDamageEvents(LivingHurtEvent event) {
         LivingEntity attacked = event.getEntity();

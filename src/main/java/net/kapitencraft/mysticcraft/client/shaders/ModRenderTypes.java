@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.client.ForgeRenderTypes;
 import org.lwjgl.opengl.GL11;
 
 import java.util.OptionalDouble;
@@ -17,7 +18,7 @@ public class ModRenderTypes extends RenderType {
     public static RenderType chromatic(ResourceLocation locationIn) {
         RenderType.CompositeState rendertype$state = RenderType.CompositeState.builder()
                 .setShaderState(ModShaderStateShards.CHROMATIC)
-                .setTextureState(new RenderStateShard.TextureStateShard(locationIn, false, false))
+                .setTextureState(new ForgeRenderTypes.CustomizableTextureState(locationIn, ()-> ForgeRenderTypes.enableTextTextureLinearFiltering, ()-> false))
                 .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
                 .setLightmapState(LIGHTMAP)
                 .createCompositeState(false);

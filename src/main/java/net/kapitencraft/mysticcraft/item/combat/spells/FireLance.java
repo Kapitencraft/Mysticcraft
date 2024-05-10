@@ -51,7 +51,6 @@ public class FireLance extends LanceItem implements ISpellItem {
 
     @Override
     public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-        //TODO fix
         consumer.accept(new IClientItemExtensions() {
             @Override
             public HumanoidModel.ArmPose getArmPose(LivingEntity entityLiving, InteractionHand hand, ItemStack itemStack) {

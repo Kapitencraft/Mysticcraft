@@ -1,18 +1,18 @@
 {
   "variants": {
     "facing=east": {
-      "model": "mysticcraft:block/reforging_anvil",
+      "model": "mysticcraft:block/reforge_anvil",
       "y": 270
     },
     "facing=north": {
-      "model": "mysticcraft:block/reforging_anvil",
+      "model": "mysticcraft:block/reforge_anvil",
       "y": 180
     },
     "facing=south": {
-      "model": "mysticcraft:block/reforging_anvil"
+      "model": "mysticcraft:block/reforge_anvil"
     },
     "facing=west": {
-      "model": "mysticcraft:block/reforging_anvil",
+      "model": "mysticcraft:block/reforge_anvil",
       "y": 90
     }
   }

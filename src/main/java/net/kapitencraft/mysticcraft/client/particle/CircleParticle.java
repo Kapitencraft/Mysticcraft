@@ -48,7 +48,7 @@ public class CircleParticle extends TextureSheetParticle {
     }
 
     @Override
-    public void render(VertexConsumer vertexConsumer, Camera camera, float time) {
+    public void render(@NotNull VertexConsumer vertexConsumer, Camera camera, float time) {
         Vec3 vec3 = camera.getPosition();
         float f = (float)(Mth.lerp(time, this.xo, this.x) - vec3.x);
         float f1 = (float)(Mth.lerp(time, this.yo, this.y) - vec3.y);
@@ -80,11 +80,10 @@ public class CircleParticle extends TextureSheetParticle {
         consumer.vertex(vector3f.x(), vector3f.y(), vector3f.z()).uv(u1, v1).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(getLightColor(time)).endVertex();
     }
 
-    //TODO fix expanding to slow
-
     @Override
     public float getQuadSize(float pScaleFactor) {
-        return (float) (this.expandSize * (age / (age + expandSpeed * 10)));    }
+        return (float) (this.expandSize * (age / (age + expandSpeed * 10)));
+    }
 
     public static class Provider implements ParticleProvider<CircleParticleOptions> {
         private final SpriteSet spriteSet;
@@ -92,10 +91,11 @@ public class CircleParticle extends TextureSheetParticle {
         public Provider(SpriteSet spriteSet) {
             this.spriteSet = spriteSet;
         }
+
         @Nullable
         @Override
-        public Particle createParticle(@NotNull CircleParticleOptions op, @NotNull ClientLevel level, double x, double y, double z, double a, double b, double c) {
-            return new CircleParticle(level, x, y, z, op.getColor(), op.getSize(), op.getSize()).withTexture(spriteSet);
+        public Particle createParticle(CircleParticleOptions pType, ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed) {
+            return new CircleParticle(pLevel, pX, pY, pZ, pType.getColor(), pType.getSize(), pType.getExpandSpeed()).withTexture(spriteSet);
         }
     }
 }

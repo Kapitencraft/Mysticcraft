@@ -23,6 +23,11 @@ public interface ISpellItem {
         return helper;
     }
 
+
+    default Spell getSpellForStack(ItemStack stack) {
+        return getSpells(stack).getActiveSpell();
+    }
+
     default void setSlot(int slotId, SpellSlot slot, ItemStack stack) {
         SpellHelper helper = getSpells(stack);
         helper.setSlot(slotId, slot);

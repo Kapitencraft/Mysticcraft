@@ -7,6 +7,7 @@ import net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword.ModSwordItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.QuiverItem;
 import net.kapitencraft.mysticcraft.item.material.containable.ContainableHolder;
 import net.kapitencraft.mysticcraft.misc.HealingHelper;
+import net.kapitencraft.mysticcraft.mixin.duck.IAttacker;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -34,13 +35,13 @@ import java.util.List;
 import java.util.function.Predicate;
 
 @Mixin(Player.class)
-public abstract class PlayerMixin extends LivingEntity {
+public abstract class PlayerMixin extends LivingEntity implements IAttacker {
 
     @Shadow @Final private Inventory inventory;
 
-    @Shadow public abstract boolean mayBuild();
-
     @Shadow public abstract void remove(RemovalReason p_150097_);
+
+    @Shadow public abstract boolean tryToStartFallFlying();
 
     protected PlayerMixin(EntityType<? extends LivingEntity> p_20966_, Level p_20967_) {
         super(p_20966_, p_20967_);
@@ -109,4 +110,25 @@ public abstract class PlayerMixin extends LivingEntity {
         }
         return level.sendParticles(ParticleTypes.SWEEP_ATTACK, d, d1, d2, i, d3, d4, d5, d6);
     }
+
+    //IAttacker start
+
+    private boolean offhandAttack;
+
+    @Override
+    public void setMainhandAttack() {
+        offhandAttack = false;
+    }
+
+    @Override
+    public void setOffhandAttack() {
+        offhandAttack = true;
+    }
+
+    @Override
+    public boolean isOffhandAttack() {
+        return offhandAttack;
+    }
+
+    //IAttacker end
 }

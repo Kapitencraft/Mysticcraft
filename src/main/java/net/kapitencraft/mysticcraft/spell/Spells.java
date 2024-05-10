@@ -1,5 +1,7 @@
 package net.kapitencraft.mysticcraft.spell;
 
+import net.kapitencraft.mysticcraft.cooldown.Cooldown;
+import net.kapitencraft.mysticcraft.cooldown.Cooldowns;
 import net.kapitencraft.mysticcraft.helpers.*;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModItems;
@@ -10,8 +12,6 @@ import net.kapitencraft.mysticcraft.item.combat.spells.IFireScytheItem;
 import net.kapitencraft.mysticcraft.item.combat.spells.SpellScrollItem;
 import net.kapitencraft.mysticcraft.item.combat.spells.necron_sword.NecronSword;
 import net.kapitencraft.mysticcraft.misc.ModRarities;
-import net.kapitencraft.mysticcraft.cooldown.Cooldown;
-import net.kapitencraft.mysticcraft.cooldown.Cooldowns;
 import net.kapitencraft.mysticcraft.spell.spells.*;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -203,7 +203,7 @@ public enum Spells implements Spell, StringRepresentable {
 
     public double getManaCostForPlayer(Player player) {
         AttributeInstance instance = player.getAttribute(ModAttributes.MANA_COST.get());
-        return MathHelper.round(AttributeHelper.getAttributeValue(instance, this.MANA_COST), 2);
+        return MathHelper.defRound(AttributeHelper.getAttributeValue(instance, this.MANA_COST));
     }
 
     public static Spells get(String pattern) {

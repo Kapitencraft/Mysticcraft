@@ -527,10 +527,10 @@
   "upgrade.no_more": "there's no more upgrades for this item",
 
   "req_type.stat": "%1$s %2$s",
-  "stat_req.storm": "%1§s killed Storms",
-  "stat_req.necron": "%1§s killed Necrons",
-  "stat_req.maxor": "%1§s killed Maxors",
-  "stat_req.goldor": "%1§s killed Goldors",
+  "stat_req.storm": "%1$s killed Storms",
+  "stat_req.necron": "%1$s killed Necrons",
+  "stat_req.maxor": "%1$s killed Maxors",
+  "stat_req.goldor": "%1$s killed Goldors",
 
   "tooltip.can_hit_enderman": "Hits Enderman",
   "gui.reset_overlay": "Reset Overlay",

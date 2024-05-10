@@ -6,7 +6,7 @@ import net.kapitencraft.mysticcraft.block.deco.*;
 import net.kapitencraft.mysticcraft.block.gemstone.GemstoneBlock;
 import net.kapitencraft.mysticcraft.block.gemstone.GemstoneCrystal;
 import net.kapitencraft.mysticcraft.block.gemstone.GemstoneGrinderBlock;
-import net.kapitencraft.mysticcraft.block.special.GemstoneSeed;
+import net.kapitencraft.mysticcraft.block.special.GemstoneSeedBlock;
 import net.kapitencraft.mysticcraft.dungeon.generation.GenerationBlock;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneItem;
@@ -60,7 +60,7 @@ public interface ModBlocks {
 
     BlockRegistryHolder<ReforgeAnvilBlock, BlockItem> REFORGING_ANVIL = registerBlock("reforge_anvil", ReforgeAnvilBlock::new, MiscHelper.rarity(Rarity.UNCOMMON), TabGroup.MATERIAL);
     RegistryObject<LiquidBlock> MANA_FLUID_BLOCK = REGISTRY.register("mana_fluid_block", ManaLiquidBlock::new);
-    BlockRegistryHolder<GemstoneSeed, BlockItem> GEMSTONE_BUD = registerBlock("gemstone_bud", GemstoneSeed::new, MiscHelper.rarity(Rarity.RARE), TabGroup.BUILDING_MATERIAL);
+    BlockRegistryHolder<GemstoneSeedBlock, BlockItem> GEMSTONE_SEED = registerBlock("gemstone_seed", GemstoneSeedBlock::new, MiscHelper.rarity(Rarity.RARE), TabGroup.BUILDING_MATERIAL);
     BlockRegistryHolder<Block, BlockItem> MANGATIC_STONE = registerBlock("mangatic_stone", ()-> new Block(BlockBehaviour.Properties.copy(Blocks.END_STONE)), MiscHelper.rarity(Rarity.RARE), TabGroup.MATERIAL);
     BlockRegistryHolder<MangaticSlimeBlock, BlockItem> MANGATIC_SLIME = registerBlock("mangatic_slime", MangaticSlimeBlock::new, new Item.Properties().rarity(Rarity.EPIC), TabGroup.MATERIAL);
     BlockRegistryHolder<ObsidianPressurePlate, BlockItem> OBSIDIAN_PRESSURE_PLATE = registerBlock("obsidian_pressure_plate", ObsidianPressurePlate::new, new Item.Properties().rarity(Rarity.UNCOMMON), TabGroup.DECO);

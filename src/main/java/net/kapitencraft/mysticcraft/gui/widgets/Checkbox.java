@@ -1,6 +1,5 @@
 package net.kapitencraft.mysticcraft.gui.widgets;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.kapitencraft.mysticcraft.client.UsefulTextures;
 import net.minecraft.client.Minecraft;
@@ -32,8 +31,7 @@ public class Checkbox extends Button {
         int checkBoxY = this.getY();
         GuiComponent.fill(pPoseStack, checkBoxX, checkBoxY, checkBoxX + 10, checkBoxY + 10, 0xFF000000);
         GuiComponent.fill(pPoseStack, checkBoxX + 1, checkBoxY + 1, checkBoxX + 9, checkBoxY + 9, -1);
-        RenderSystem.setShaderTexture(0, UsefulTextures.CHECK_MARK);
-        if (checked) GuiComponent.blit(pPoseStack, checkBoxX + 1, checkBoxY + 1, 0, 0, 0, 8, 8, 8, 8);
+        if (checked) UsefulTextures.renderCheckMark(pPoseStack, checkBoxX + 1, checkBoxY + 1);
         int textX = this.checkBoxLeft ? this.getX() + 11 : this.getX() + this.getWidth() - 11;
         Minecraft.getInstance().font.draw(pPoseStack, this.getMessage(), textX, this.getY() + 1, -1);
     }

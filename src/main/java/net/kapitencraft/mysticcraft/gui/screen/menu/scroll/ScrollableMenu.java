@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.gui.screen.menu.scroll;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.kapitencraft.mysticcraft.client.UsefulTextures;
 import net.kapitencraft.mysticcraft.gui.screen.menu.IMenuElement;
 import net.kapitencraft.mysticcraft.gui.screen.menu.Menu;
 import net.kapitencraft.mysticcraft.gui.screen.menu.scroll.elements.ScrollElement;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ScrollableMenu extends Menu implements IMenuElement {
+    private static final int SLIDER_WIDTH = 6;
     private final List<ScrollElement> elements = new ArrayList<>();
     private final int elementsPerPage;
     private final int stableWidth;
@@ -38,6 +40,11 @@ public class ScrollableMenu extends Menu implements IMenuElement {
     }
 
     @Override
+    protected int height() {
+        return this.elements.get(0).getHeight() * elementsPerPage;
+    }
+
+    @Override
     public boolean mouseScrolled(double pMouseX, double pMouseY, double pDelta) {
         if (pMouseX - this.x < this.width() && pMouseY - this.y < this.height()) {
             this.startIndex += (pDelta / 10);
@@ -55,9 +62,14 @@ public class ScrollableMenu extends Menu implements IMenuElement {
 
     @Override
     public void render(@NotNull PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
-        if (elements.size() > 1) {
+        if (elements.size() < 1) {
             ClientHelper.drawCenteredString(pPoseStack, this.x, this.y, this.width(), this.height(), Component.translatable("gui.nothing_to_show"), -1);
             return;
+        }
+        if (elements.size() > elementsPerPage) {
+            int sliderX = this.width() + this.x - SLIDER_WIDTH;
+            int relative = this.startIndex / this.elements.size();
+            UsefulTextures.renderSlider(pPoseStack, sliderX, relative * this.height(), true, .5f);
         }
         int curY = this.y;
         for (int i = startIndex; i < Math.min(elements.size(), startIndex + elementsPerPage); i++) {

@@ -27,15 +27,15 @@ public class ReforgeManager extends SimpleJsonResourceReloadListener {
     @Override
     protected void apply(@NotNull Map<ResourceLocation, JsonElement> map, @NotNull ResourceManager manager, @NotNull ProfilerFiller filler) {
         Timer.start();
-        for (Map.Entry<ResourceLocation, JsonElement> entry: map.entrySet()) {
+        for (Map.Entry<ResourceLocation, JsonElement> entry : map.entrySet()) {
             String[] data = entry.getKey().getPath().split("/");
-            if (data.length < 1) throw new IllegalStateException("found reforge without name; expected corrupted mod file! please re-download");
+            if (data.length < 1)
+                throw new IllegalStateException("found reforge without name; expected corrupted mod file! please re-download");
             if (data.length < 2) throw new IllegalStateException("found reforge without type declaration");
             String name = data[1];
             String type = data[0];
             try {
                 JsonObject object = entry.getValue().getAsJsonObject();
-                JsonObject mods = object.getAsJsonObject("mods");
                 ReforgingBonus bonus = ModReforgingBonuses.EMPTY.get();
                 if (object.has("bonus")) {
                     bonus = ModRegistries.REFORGE_BONUSES_REGISTRY.getValue(new ResourceLocation(object.getAsJsonPrimitive("bonus").getAsString()));
@@ -43,6 +43,7 @@ public class ReforgeManager extends SimpleJsonResourceReloadListener {
                 Reforge.Builder reforge = new Reforge.Builder(name);
                 reforge.reforgeType(Reforge.Type.byName(type));
                 if (bonus != ModReforgingBonuses.EMPTY.get() && bonus != null) reforge.withBonus(bonus);
+                JsonObject mods = object.getAsJsonObject("mods");
                 for (Map.Entry<String, JsonElement> modsEntry : mods.entrySet()) {
                     Attribute attribute = BuiltInRegistries.ATTRIBUTE.get(new ResourceLocation(modsEntry.getKey()));
                     JsonArray array = modsEntry.getValue().getAsJsonArray();
@@ -56,5 +57,4 @@ public class ReforgeManager extends SimpleJsonResourceReloadListener {
         }
         MysticcraftMod.LOGGER.info(Markers.REFORGE_MANAGER, "loading {} reforges took {} ms", Reforges.getReforgesSize(), Timer.getPassedTime());
     }
-
 }

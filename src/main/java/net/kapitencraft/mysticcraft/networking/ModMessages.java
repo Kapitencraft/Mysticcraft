@@ -79,6 +79,7 @@ public class ModMessages {
         addMessage(SyncElytraDataToPlayerPacket.class, NetworkDirection.PLAY_TO_CLIENT, SyncElytraDataToPlayerPacket::new);
         addMessage(RequestPacket.class, NetworkDirection.PLAY_TO_SERVER, RequestPacket::new);
         addMessage(RequestDataPacket.class, NetworkDirection.PLAY_TO_CLIENT, RequestDataPacket::new);
+        addMessage(SwingPacket.class, NetworkDirection.PLAY_TO_CLIENT, SwingPacket::new);
     }
 
 

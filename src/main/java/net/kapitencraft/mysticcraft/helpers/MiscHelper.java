@@ -13,7 +13,6 @@ import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneItem;
 import net.kapitencraft.mysticcraft.logging.Markers;
 import net.kapitencraft.mysticcraft.misc.ModRarities;
 import net.kapitencraft.mysticcraft.misc.VeinMinerHolder;
-import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.core.BlockPos;
@@ -31,6 +30,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.EntityDamageSource;
@@ -120,8 +120,17 @@ public class MiscHelper {
         return sourceSpeed.add(sourceLookAngle.x * d1 + (sourceLookAngle.x * d2 - sourceSpeed.x) * d3, sourceLookAngle.y * d1 + (sourceLookAngle.y * d2 - sourceSpeed.y) * d3, sourceLookAngle.z * d1 + (sourceLookAngle.z * d2 - sourceSpeed.z) * d3);
     }
 
+    /**
+     * need in order for the Mixin invoker on serverside not to cry
+     */
     public static void sendManaBoostParticles(Entity target, RandomSource random, Vec3 delta) {
         ClientHelper.sendManaBoostParticles(target, random, delta);
+    }
+
+    public static void swapHands(LivingEntity living) {
+        ItemStack mainHand = living.getMainHandItem();
+        living.setItemInHand(InteractionHand.MAIN_HAND, living.getOffhandItem());
+        living.setItemInHand(InteractionHand.OFF_HAND, mainHand);
     }
 
     /**
@@ -130,7 +139,7 @@ public class MiscHelper {
      * @return the new Style with applied effect
      */
     public static Style withSpecial(Style style, GlyphEffect effect) {
-        Style newStyle = style.withColor((ChatFormatting) null);
+        Style newStyle = style.withClickEvent(style.getClickEvent());
         EffectsStyle effectsStyle = (EffectsStyle) newStyle;
         effectsStyle.addEffect(effect);
         return newStyle;
@@ -333,7 +342,7 @@ public class MiscHelper {
      */
     public static boolean saveTeleport(Entity entity, double maxRange) {
         try {
-            Vec3 targetPos = entity.getLookAngle().scale(maxRange).add(entity.position());
+            Vec3 targetPos = entity.getLookAngle().scale(maxRange);
             entity.stopRiding();
             entity.move(MoverType.SELF, targetPos);
         } catch (Exception e) {
@@ -365,8 +374,6 @@ public class MiscHelper {
             consumer.accept(i);
         }
     }
-
-    public static final MutableComponent SPLIT = Component.literal(" ");
 
     /**
      * @param components all components to merge to getter

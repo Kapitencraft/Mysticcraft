@@ -245,7 +245,7 @@ public abstract class ItemStackClientMixin {
                                 HashMap<Attribute, AttributeModifier> mods = iGemstoneHandler.getAttributeModifiers(equipmentslot, self());
                                 if (mods.containsKey(entry.getKey())) {
                                     double value = mods.get(entry.getKey()).getAmount();
-                                    double rounded = MathHelper.round(value, 2);
+                                    double rounded = MathHelper.defRound(value);
                                     toAppend.append(Component.literal(" (+" + rounded + ")").withStyle(ChatFormatting.LIGHT_PURPLE));
                                 }
                             });

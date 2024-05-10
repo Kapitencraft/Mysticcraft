@@ -11,20 +11,22 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
-public class GemstoneSeed extends Block {
+public class GemstoneSeedBlock extends Block {
+    //TODO create Renderer
 
-    public GemstoneSeed() {
+    public GemstoneSeedBlock() {
         super(Properties.copy(Blocks.DIAMOND_BLOCK));
         this.registerDefaultState(this.getStateDefinition().any().setValue(ModBlockProperties.GEMSTONE_TYPE, GemstoneType.EMPTY));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
-        pBuilder.add(ModBlockProperties.GEMSTONE_TYPE, ModBlockProperties.STONE_TYPE);
+        pBuilder.add(ModBlockProperties.GEMSTONE_TYPE, ModBlockProperties.STONE_TYPE, BlockStateProperties.FACING);
     }
 
     @Override
@@ -34,7 +36,7 @@ public class GemstoneSeed extends Block {
 
     @Override
     public void randomTick(@NotNull BlockState pState, @NotNull ServerLevel pLevel, @NotNull BlockPos pPos, @NotNull RandomSource pRandom) {
-        GemstoneGrowth.growCrystal(pLevel, pPos, 1, pState.getValue(ModBlockProperties.GEMSTONE_TYPE), GemstoneGrowth.DEFAULT_MAIN_CHANCE, pRandom);
+        GemstoneGrowth.growCrystal(pLevel, pPos, 1, GemstoneGrowth.DEFAULT_MAIN_CHANCE, pRandom);
     }
 
     public enum MaterialType implements StringRepresentable {

@@ -58,7 +58,7 @@ public class AnvilUses {
                 (stack, stack1) -> {
                     NecronSword sword = (NecronSword) stack.getItem();
                     if (sword.hasAnySpell(stack)) sword.setSlot(0, new SpellSlot(Spells.WITHER_IMPACT), stack);
-                    else sword.setSlot(0, new SpellSlot(SpellScrollItem.getSpell(stack)), stack);
+                    else sword.setSlot(0, new SpellSlot(SpellScrollItem.getSpell(stack1)), stack);
                 },
                 20
         );

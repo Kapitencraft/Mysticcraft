@@ -1,21 +1,23 @@
 package net.kapitencraft.mysticcraft.bestiary;
 
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-
 public class Bestiary {
+    public static final Codec<Bestiary> CODEC = RecordCodecBuilder.create(bestiaryInstance ->
+            bestiaryInstance.group(
+                    Type.CODEC.fieldOf("type").forGetter(Bestiary::getType),
+                    Codec.DOUBLE.fieldOf("combat_xp").forGetter(Bestiary::getCombatXp)
+            ).apply(bestiaryInstance, Bestiary::new)
+    );
 
-    final List<MutableComponent> description;
     private final double combatXp;
 
     private final Type type;
 
-    public Bestiary(List<String> description, double combatXp, Type type) {
-        this.description = description.stream().map(Component::translatable).toList();
+    public Bestiary(Type type, double combatXp) {
         this.combatXp = combatXp;
         this.type = type;
     }
@@ -26,10 +28,6 @@ public class Bestiary {
 
     public Type getType() {
         return type;
-    }
-
-    public List<MutableComponent> getDescription() {
-        return description;
     }
 
     public enum Type implements StringRepresentable {

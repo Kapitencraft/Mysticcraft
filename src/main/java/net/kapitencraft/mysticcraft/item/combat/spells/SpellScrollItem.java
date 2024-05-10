@@ -27,12 +27,9 @@ public class SpellScrollItem extends Item implements IModItem, ISpellItem {
         return getSpells(stack).getActiveSpell().getRarity();
     }
 
-    public Spell getSpellForStack(ItemStack stack) {
-        return getSpells(stack).getActiveSpell();
-    }
 
     public static Spell getSpell(ItemStack stack) {
-        return ((SpellScrollItem) stack.getItem()).getSpellForStack(stack);
+        return ((ISpellItem) stack.getItem()).getSpellForStack(stack);
     }
 
     @Override

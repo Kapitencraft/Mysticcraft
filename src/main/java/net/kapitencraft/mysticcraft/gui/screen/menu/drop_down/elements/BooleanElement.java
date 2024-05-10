@@ -1,12 +1,9 @@
 package net.kapitencraft.mysticcraft.gui.screen.menu.drop_down.elements;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.kapitencraft.mysticcraft.client.UsefulTextures;
 import net.kapitencraft.mysticcraft.gui.screen.menu.IValueModifierElement;
 import net.kapitencraft.mysticcraft.gui.screen.menu.drop_down.DropDownMenu;
-import net.minecraft.client.gui.GuiComponent;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
@@ -45,9 +42,7 @@ public class BooleanElement extends Element implements IValueModifierElement<Boo
         if (selected()) {
             int checkBoxX = x + this.effectiveWidth() - 9;
             int checkBoxY = y + 1;
-            RenderSystem.setShader(GameRenderer::getPositionTexShader);
-            RenderSystem.setShaderTexture(0, UsefulTextures.CHECK_MARK);
-            GuiComponent.blit(pPoseStack, checkBoxX, checkBoxY, 0, 0, 0, 8, 8, 8, 8);
+            UsefulTextures.renderCheckMark(pPoseStack, checkBoxX, checkBoxY);
         }
     }
 

@@ -3,11 +3,9 @@ package net.kapitencraft.mysticcraft.worldgen.feature;
 
 import com.mojang.serialization.Codec;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.block.ModBlockProperties;
-import net.kapitencraft.mysticcraft.block.special.GemstoneSeed;
+import net.kapitencraft.mysticcraft.block.special.GemstoneSeedBlock;
 import net.kapitencraft.mysticcraft.config.CommonModConfig;
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
-import net.kapitencraft.mysticcraft.init.ModBlocks;
 import net.kapitencraft.mysticcraft.inst.MysticcraftServer;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneType;
 import net.kapitencraft.mysticcraft.logging.Markers;
@@ -60,11 +58,8 @@ public class GemstoneSpawnFeature extends Feature<GemstoneSpawnFeature.Config> {
             if (!pLevel.hasChunkAt(current)) continue;
             Block block = pLevel.getBlockState(current).getBlock(); //get block from hit result
             MysticcraftMod.LOGGER.debug(Markers.GEMSTONE_BUILDER, "spawning gemstone seed at {}", current);
-            Arrays.stream(GemstoneSeed.MaterialType.values()).filter(materialType -> materialType.getBlock() == block).findFirst().ifPresent(type -> {
-                pLevel.setBlock(current, ModBlocks.GEMSTONE_BUD.getBlock().defaultBlockState()
-                        .setValue(ModBlockProperties.STONE_TYPE, type)
-                        .setValue(ModBlockProperties.GEMSTONE_TYPE, gemstoneType), 3); //spawn gemstone seed
-                GemstoneGrowth.growCrystal(pLevel, current, Mth.nextInt(source, CommonModConfig.getMinGemstoneIterations(), CommonModConfig.getMaxGemstoneIterations()), gemstoneType, GemstoneGrowth.DEFAULT_MAIN_CHANCE, source); //let seed grow
+            Arrays.stream(GemstoneSeedBlock.MaterialType.values()).filter(materialType -> materialType.getBlock() == block).findFirst().ifPresent(type -> {
+                GemstoneGrowth.trySpawnAndGrowSeed(pLevel, current, Mth.nextInt(source, CommonModConfig.getMinGemstoneIterations(), CommonModConfig.getMaxGemstoneIterations()), gemstoneType, type, GemstoneGrowth.DEFAULT_MAIN_CHANCE, source); //let seed grow
             });
         }
     }

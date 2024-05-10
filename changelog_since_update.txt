@@ -2,4 +2,10 @@ fixed resize-move scaling 9x;
 fixed overlays not being saved;
 fixed overlays being rendered above menus;
 fixed Glacial Blade enchantment not freezing entities;
+fixed trying to apply spells to items crashing the game;
+fixed trying to apply spells not working;
+fixed teleport spells teleporting way to far;
+
 [API] added Requestables;
+
+gemstones now spawn inside the world;

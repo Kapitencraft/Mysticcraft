@@ -1,5 +1,7 @@
 package net.kapitencraft.mysticcraft.client.font.effect;
 
+import net.minecraft.network.chat.Style;
+
 import java.util.List;
 
 /**
@@ -9,4 +11,8 @@ public interface EffectsStyle {
 
     void addEffect(GlyphEffect effect);
     List<GlyphEffect> getEffects();
+
+    static EffectsStyle of(Style style) {
+        return (EffectsStyle) style;
+    }
 }

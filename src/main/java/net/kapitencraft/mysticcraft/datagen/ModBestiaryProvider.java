@@ -77,8 +77,4 @@ public class ModBestiaryProvider implements DataProvider {
 
     private void addBestiaries() {
     }
-
-    private static Bestiary makeBestiary(double combatXp, Bestiary.Type type) {
-        return new Bestiary(List.of(), combatXp, type);
-    }
 }
