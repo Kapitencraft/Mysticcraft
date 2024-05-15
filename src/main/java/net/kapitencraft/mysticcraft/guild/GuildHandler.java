@@ -12,9 +12,9 @@ import net.kapitencraft.mysticcraft.networking.packets.S2C.SyncGuildsPacket;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BannerItem;
 import net.minecraft.world.item.ItemStack;
@@ -43,7 +43,6 @@ public class GuildHandler extends SavedData {
             return clientInstance;
         } else {
             ServerLevel serverLevel = (ServerLevel) level;
-            MinecraftServer server = serverLevel.getServer();
             return serverLevel.getDataStorage().computeIfAbsent(GuildHandler::load, GuildHandler::createDefault, "guilds");
         }
     }
@@ -83,13 +82,17 @@ public class GuildHandler extends SavedData {
         return loadAllGuilds(tag);
     }
 
-    public String addNewGuild(CreateGuildRequestable.CreateGuildData newGuildData, Player owner) {
+    public CreateGuildRequestable.GuildCreatingResult addNewGuild(CreateGuildRequestable.CreateGuildData newGuildData, Player owner) {
         if (guilds.containsKey(newGuildData.name())) {
-            return "duplicateName";
+            return new CreateGuildRequestable.GuildCreatingResult("duplicateName", false);
         } else if (isStackFromGuildBanner(newGuildData.banner())) {
-            return "duplicateBanner";
+            return new CreateGuildRequestable.GuildCreatingResult("duplicateBanner", false);
         }
         ItemStack banner = newGuildData.banner();
+        if (!banner.is(ItemTags.BANNERS)) {
+            MysticcraftMod.LOGGER.warn(Markers.GUILD, "Player '{}' attempted to create guild with non-Banner item {}", owner.getGameProfile().getName(), banner);
+            return new CreateGuildRequestable.GuildCreatingResult("illegalBannerItem", false);
+        }
         this.setDirty();
         Guild guild = new Guild(newGuildData.name(), owner, banner, newGuildData.isPublic());
         guilds.put(newGuildData.name(), guild);
@@ -97,7 +100,7 @@ public class GuildHandler extends SavedData {
         if (owner instanceof ServerPlayer player) {
             ModMessages.sendToAllConnectedPlayers(value -> SyncGuildsPacket.addGuild(owner, guild), player.getLevel());
         }
-        return "success";
+        return new CreateGuildRequestable.GuildCreatingResult("success", true);
     }
 
     /**

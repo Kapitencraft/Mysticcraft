@@ -1,8 +1,8 @@
-package net.kapitencraft.mysticcraft.gui.screen.menu.drop_down.elements;
+package net.kapitencraft.mysticcraft.gui.widgets.menu.drop_down.elements;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.kapitencraft.mysticcraft.config.ClientModConfig;
-import net.kapitencraft.mysticcraft.gui.screen.menu.drop_down.DropDownMenu;
+import net.kapitencraft.mysticcraft.gui.widgets.menu.drop_down.DropDownMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiComponent;

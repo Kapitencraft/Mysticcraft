@@ -6,6 +6,8 @@
   "client": [
     "client.BakedGlyphMixin",
     "client.BannerItemMixin",
+    "client.BlockModelDeserializerMixin",
+    "client.BlockModelMixin",
     "client.ChatScreenMixin",
     "client.ClientTooltipPositionerMixin",
     "client.EntityClientMixin",

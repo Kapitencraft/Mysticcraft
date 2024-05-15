@@ -1,8 +1,8 @@
-package net.kapitencraft.mysticcraft.gui.screen.menu.scroll.elements;
+package net.kapitencraft.mysticcraft.gui.widgets.menu.scroll.elements;
 
-import net.kapitencraft.mysticcraft.gui.screen.menu.IMenuElement;
+import net.kapitencraft.mysticcraft.gui.widgets.Widget;
 
-public abstract class ScrollElement implements IMenuElement {
+public abstract class ScrollElement extends Widget {
     protected int x;
     protected int y;
 

@@ -20,7 +20,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.PlayerAdvancements;
 import net.minecraft.server.ServerAdvancementManager;
@@ -62,11 +61,11 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.items.ItemStackHandler;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -86,11 +85,13 @@ public class MiscHelper {
      * @param stack the {@link ItemStack} to get the slot from
      * @return the {@link EquipmentSlot} dedicated to this stack
      */
+    @Contract("null -> fail")
     public static EquipmentSlot getSlotForStack(ItemStack stack) {
         return LivingEntity.getEquipmentSlotForItem(stack);
     }
 
 
+    @Contract("null, _ -> param2; !null, _ -> param1")
     public static <T> T nonNullOr(@Nullable T value, @NotNull T or) {
         return value == null ? or : value;
     }
@@ -127,6 +128,7 @@ public class MiscHelper {
         ClientHelper.sendManaBoostParticles(target, random, delta);
     }
 
+    @Contract("null -> fail")
     public static void swapHands(LivingEntity living) {
         ItemStack mainHand = living.getMainHandItem();
         living.setItemInHand(InteractionHand.MAIN_HAND, living.getOffhandItem());
@@ -152,6 +154,7 @@ public class MiscHelper {
      * @param ench the enchantment this calculation is based on (see {@link net.kapitencraft.mysticcraft.enchantments.HealthMendingEnchantment} and {@link net.minecraft.world.item.enchantment.MendingEnchantment})
      * @return the amount of capacity that hasn't been used
      */
+    @Contract("null, _, _ -> fail; _, _, null -> fail")
     public static int repairPlayerItems(Player player, int value, Enchantment ench) {
         Map.Entry<EquipmentSlot, ItemStack> entry = EnchantmentHelper.getRandomItemWith(ench, player, ItemStack::isDamaged);
         if (entry != null) {
@@ -185,7 +188,7 @@ public class MiscHelper {
      * @param stack the stack to check the rarity on
      * @return the rarity after calculation enchantment mods
      */
-    @SuppressWarnings("ALL")
+    @Contract("null, _ -> fail; _, null -> fail")
     public static Rarity getFinalRarity(Rarity rarity, ItemStack stack) {
         if (!stack.isEnchanted()) {
             return rarity;
@@ -261,6 +264,7 @@ public class MiscHelper {
      * @param rarity to add to the {@link Item.Properties}
      * @return a {@link Item.Properties} with the rarity
      */
+    @Contract("_ -> new")
     public static Item.Properties rarity(Rarity rarity) {
         return new Item.Properties().rarity(rarity);
     }
@@ -393,7 +397,7 @@ public class MiscHelper {
      * @param source {@link DamageSource} to get attacker from
      * @return the {@link Nullable} {@link LivingEntity} to get from the damagesource
      */
-    public static @Nullable LivingEntity getAttacker(DamageSource source) {
+    public static @Nullable LivingEntity getAttacker(@NotNull DamageSource source) {
         if (source.getEntity() instanceof Projectile projectile && projectile.getOwner() instanceof LivingEntity living) {
             return living;
         } else if (source.getEntity() instanceof LivingEntity living) {
@@ -408,6 +412,7 @@ public class MiscHelper {
      * @param source source to get DamageType from
      * @return DamageType from the source
      */
+    @Contract("null -> fail")
     public static DamageType getDamageType(DamageSource source) {
         if (source.getMsgId().contains("ability") || source.getMsgId().contains("magic")) {
             return DamageType.MAGIC;
@@ -477,9 +482,6 @@ public class MiscHelper {
         return marker;
     }
 
-
-
-
     public static Rarity getItemRarity(Item item) {
         return item.getRarity(new ItemStack(item));
     }
@@ -524,47 +526,6 @@ public class MiscHelper {
         return copy;
     }
 
-    public static String stabiliseDouble(String doubleValue, int expectedLength) {
-        char[] values = doubleValue.toCharArray();
-        int start = 0;
-        int curPos = 0;
-        boolean reachedDot = false;
-        for (char c : values) {
-            if (c == '.') {
-                start = curPos + 1;
-                reachedDot = true;
-                curPos = values.length;
-                break;
-            }
-            curPos++;
-        }
-        if (!reachedDot) {
-            values = append(values, '.');
-            for (int i = 0; i<expectedLength; i++) {
-                values = append(values, '0');
-            }
-        } else if ((values.length) - start < expectedLength) {
-            int toAdd = expectedLength - (curPos - start);
-            while (toAdd > 0) {
-                toAdd--;
-                values = append(values, '0');
-            }
-        }
-        return new String(values);
-    }
-
-    public static String getDimension(Level level) {
-        return level.dimension().toString();
-    }
-
-    public static HashMap<ResourceKey<Level>, String> getDimensionRegistries() {
-        HashMap<ResourceKey<Level>, String> Registries = new HashMap<>();
-        Registries.put(Level.END, Level.END.toString());
-        Registries.put(Level.NETHER, Level.NETHER.toString());
-        Registries.put(Level.OVERWORLD, Level.OVERWORLD.toString());
-        return Registries;
-    }
-
     public static SimpleContainer containerOf(ItemStackHandler handler) {
         SimpleContainer inventory = new SimpleContainer(handler.getSlots());
         repeat(handler.getSlots(), integer -> {
@@ -575,6 +536,7 @@ public class MiscHelper {
         return inventory;
     }
 
+    @Contract("null, _, _ -> fail; _, _, _ -> param1")
     public static List<ItemStack> shrinkDrops(List<ItemStack> drops, Item item, final int amount) {
         repeat(drops.size(), i -> {
             int varAmount = amount;

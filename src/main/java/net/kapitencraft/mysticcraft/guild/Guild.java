@@ -21,6 +21,7 @@ import net.minecraft.network.chat.TextColor;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.players.GameProfileCache;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -62,6 +63,9 @@ public class Guild implements Pingable, IBrowsable {
     public Guild(CompoundTag in) {
         this.name = in.getString(NAME_ID);
         this.banner = ItemStack.of(in.getCompound(BANNER_ID));
+        if (!this.banner.is(ItemTags.BANNERS)) {
+            throw new IllegalStateException("Guild has no valid banner!");
+        }
         this.upgrades = GuildUpgradeInstance.load(in.getCompound(UPGRADES_ID));
         this.customRanksProvider = RankContainer.load(in.getCompound(RANKS_ID));
         this.container = loadMembers(in.getCompound(MEMBER_ID));

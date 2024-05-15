@@ -31,7 +31,7 @@ public class ExtendedEditBox extends EditBox {
                 fill(pPoseStack, this.getX(), this.getY(), this.getX() + this.width, this.getY() + this.height, -16777216);
             }
             int i2;
-            if (!this.textValid.test(this.value)) {
+            if (!this.value.isEmpty() && !this.textValid.test(this.value)) {
                 i2 = 0xFFFF0000;
             } else {
                 i2 = this.isEditable ? this.textColor : this.textColorUneditable;
@@ -63,7 +63,7 @@ public class ExtendedEditBox extends EditBox {
             }
 
             if (!s.isEmpty() && flag && j < s.length()) {
-                this.font.drawShadow(pPoseStack, this.formatter.apply(s.substring(j), this.cursorPos), (float)j1, (float)i1, i2);
+                this.font.drawShadow(pPoseStack, this.formatter.apply(s.substring(j), this.cursorPos), (float)j1, (float)i1, 0xFFD4D4D4);
             }
 
             if (this.hint != null && s.isEmpty() && !this.isFocused()) {

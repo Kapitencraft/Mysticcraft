@@ -16,6 +16,8 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 import org.joml.Vector3i;
@@ -25,18 +27,20 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public class MathHelper {
 
     public static double round(double no, int num) {
-        return  Math.floor(no * Math.pow(10, num)) / (Math.pow(10, num));
+        return Math.floor(no * Math.pow(10, num)) / (Math.pow(10, num));
     }
 
     public static double defRound(double no) {
         return round(no, 2);
     }
 
+    @Contract("_, _, _ -> !null")
     public static Vector3f color(int r, int g, int b) {
         return new Vector3f(r / 255f, g / 255f, b / 255f);
     }
@@ -47,17 +51,27 @@ public class MathHelper {
         return (float) (damage * (1f - defencePercentage));
     }
 
+    @Contract("_, null -> fail")
     public static Vec3 getHandHoldingItemAngle(HumanoidArm arm, Entity entity) {
         return entity.position().add(entity.calculateViewVector(0.0F, entity.getYRot() + (float)(arm == HumanoidArm.RIGHT ? 80 : -80)).scale(0.5D));
     }
 
+    @Contract("_, null, _ -> fail; null, _, _ -> fail")
     public static Vec3 rotateHorizontalVec(Vec3 source, Vec3 pivot, int angle) {
         double x = (pivot.x - source.x) * Math.cos(angle) - (pivot.y - source.y) * Math.sin(angle) + source.x;
         double z = (pivot.x - source.x) * Math.sin(angle) + (pivot.y - source.y) * Math.cos(angle) + source.y;
         return new Vec3(x, 0, z);
     }
 
-    public static int getLargest(Collection<Integer> floats) {
+    public static boolean isBetween(int start, int end, double val) {
+        return Mth.clamp(val, start, end) == val;
+    }
+
+    public static boolean is2dBetween(double xVal, double yVal, int xStart, int yStart, int xEnd, int yEnd) {
+        return isBetween(xStart, xEnd, xVal) && isBetween(yStart, yEnd, yVal);
+    }
+
+    public static int getLargest(@NotNull Collection<Integer> floats) {
         int largest = 0;
         for (int f : floats) {
             if (f > largest) largest = f;
@@ -65,7 +79,19 @@ public class MathHelper {
         return largest;
     }
 
-    //somewhere
+    @Contract("_, _ -> new")
+    public static Predicate<String> checkForInteger(int min, int max) {
+        return s -> {
+            try {
+                int num = Integer.parseInt(s);
+                return num >= min && num <= max;
+            } catch (Exception e) {
+                return false;
+            }
+        };
+    }
+
+    @Contract("null, _ -> fail")
     public static AABB getMineBox(LivingEntity entity, int size) {
         AABB aabb = new AABB(-size, -size, -size, size, size, size);//creating a normal box
         switch (entity.getDirection().getAxis()) { //set the length of the rotation's Axis to 0
@@ -94,12 +120,13 @@ public class MathHelper {
         });
     }
 
-
     public static <T extends Entity> List<T> getEntitiesAround(Class<T> tClass, Entity source, double range) {
         Level level = source.getLevel();
         return getEntitiesAround(tClass, level, source.getBoundingBox(), range);
     }
 
+
+    @Contract("_, null, _ -> fail; null, _, _ -> fail")
     public static void add(Supplier<Integer> getter, Consumer<Integer> setter, int change) {
         setter.accept(getter.get() + change);
     }
@@ -121,6 +148,7 @@ public class MathHelper {
     }
 
 
+    @Contract("null, _, _ -> fail; _, _, _ -> new")
     public static ArrayList<Vec3> lineOfSight(Entity entity, double range, double scaling) {
         Vec3 viewVec = entity.calculateViewVector(entity.getXRot(), entity.getYRot());
         Vec3 viewVecWithLoc = viewVec.add(entity.getEyePosition());
@@ -139,13 +167,12 @@ public class MathHelper {
         Vec3 vec3;
         for (double i = 0; i <= range; i+=scaling) {
             vec3 = calculateViewVector(vec.x, vec.y).scale(i).add(pos.x, pos.y, pos.z);
-            vec3 = calculateViewVector(vec.x, vec.y).scale(i).add(pos.x, pos.y, pos.z);
             line.add(vec3);
         }
         return line;
     }
 
-    public static int count(Collection<Integer> collection) {
+    public static int count(@NotNull Collection<Integer> collection) {
         int count = 0;
         for (Integer integer : collection) {
             count += integer;
@@ -153,7 +180,7 @@ public class MathHelper {
         return count;
     }
 
-    public static int getHighest(Collection<Integer> collection) {
+    public static int getHighest(@NotNull Collection<Integer> collection) {
         int value = 0;
         for (int t : collection) {
             if (t > value) {
@@ -205,6 +232,7 @@ public class MathHelper {
         return pickRandom(list, MysticcraftMod.RANDOM_SOURCE);
     }
 
+    @Contract("null, _ -> fail; _, null -> fail")
     public static <T> T pickRandom(List<T> list, RandomSource source) {
         return list.isEmpty() ? null : list.get(Mth.nextInt(source, 0, list.size() - 1));
     }
@@ -281,6 +309,7 @@ public class MathHelper {
         return createTargetRotationFromPos(source.position(), target.position());
     }
 
+    @Contract("null, _ -> fail; _, null -> fail")
     public static Vec2 createTargetRotationFromPos(Vec3 source, Vec3 target) {
         double d0 = target.x - source.x;
         double d1 = target.y - source.y;
@@ -300,6 +329,7 @@ public class MathHelper {
         return !(vec31.dot(target.getViewVector(1)) < 0.0D);
     }
 
+    @Contract("null, _ -> fail")
     public static Vec3 minimiseLength(Vec3 source, double minimum) {
         if (source.length() > minimum) {
             return source;
@@ -309,6 +339,7 @@ public class MathHelper {
         }
     }
 
+    @Contract("null, _ -> fail")
     public static Vec3 maximiseLength(Vec3 source, double maximum) {
         if (source.length() < maximum) {
             return source;
@@ -318,6 +349,7 @@ public class MathHelper {
         }
     }
 
+    @Contract("null, _ -> fail")
     public static Vec3 setLength(Vec3 source, double value) {
         if (source.length() > value) {
             return maximiseLength(source, value);
@@ -335,6 +367,7 @@ public class MathHelper {
         return targetPos.add(secPos).add(thirdPos);
     }
 
+    @Contract("null, _ -> fail")
     public static Vec3 removeByScale(Vec3 vec3, double scale) {
         double x = vec3.x;
         double y = vec3.y;
@@ -345,6 +378,7 @@ public class MathHelper {
         return new Vec3(halfX, halfY, halfZ);
     }
 
+    @Contract(value = "_ -> new", pure = true)
     public static Vector3i intToRGB(int in) {
         int r = in >> 16 & 255;
         int g = in >> 8 & 255;
@@ -356,17 +390,22 @@ public class MathHelper {
         int r = in.x;
         int g = in.y;
         int b = in.z;
-        return RGBtoInt(r, g, b, 1);
+        return RGBAtoInt(r, g, b, 1);
     }
 
     public static int RGBtoInt(Vector3f in) {
         return RGBtoInt(fromFloat(in, 255));
     }
 
-    public static int RGBtoInt(int r, int g, int b, int a) {
+    public static int RGBAtoInt(int r, int g, int b, int a) {
         int returnable = (a << 8) + r;
         returnable = (returnable << 8) + g;
         return (returnable << 8) + b;
+    }
+
+    public static int setAlpha(int alpha, int RGB) {
+        Vector3i internal = intToRGB(RGB);
+        return RGBAtoInt(internal.x, internal.y, internal.z, alpha);
     }
 
     public static int RGBtoInt(float r, float g, float b) {

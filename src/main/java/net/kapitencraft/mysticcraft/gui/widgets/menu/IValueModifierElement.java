@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.gui.screen.menu;
+package net.kapitencraft.mysticcraft.gui.widgets.menu;
 
 public interface IValueModifierElement<K extends IValueModifierElement<K , T>, T> {
 

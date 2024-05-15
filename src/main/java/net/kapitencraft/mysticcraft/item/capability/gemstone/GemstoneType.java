@@ -1,6 +1,5 @@
 package net.kapitencraft.mysticcraft.item.capability.gemstone;
 
-import com.mojang.serialization.Codec;
 import net.kapitencraft.mysticcraft.api.DoubleMap;
 import net.kapitencraft.mysticcraft.block.gemstone.GemstoneBlock;
 import net.kapitencraft.mysticcraft.block.gemstone.GemstoneCrystal;
@@ -26,7 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
-import java.util.stream.Collector;
 
 public enum GemstoneType implements StringRepresentable {
     EMPTY(colorFromCFormat(ChatFormatting.WHITE), ()-> null, 0, "empty", 0),
@@ -40,7 +38,7 @@ public enum GemstoneType implements StringRepresentable {
     MOONSTONE(MathHelper.RGBtoInt(10, 10, 10), ModAttributes.DRAW_SPEED, 0.5, "moonstone", GemstoneBlock.HIGH_STRENGHT),
     CELESTINE(colorFromCFormat(ChatFormatting.WHITE), ()-> Attributes.MOVEMENT_SPEED, 0.07, "celestine", GemstoneBlock.LOW_STRENGHT);
 
-    public static Codec<GemstoneType> CODEC = StringRepresentable.fromEnum(GemstoneType::values);
+    public static EnumCodec<GemstoneType> CODEC = StringRepresentable.fromEnum(GemstoneType::values);
     private final int COLOR;
     public final Supplier<Attribute>  modifiedAttribute;
     public final double BASE_VALUE;

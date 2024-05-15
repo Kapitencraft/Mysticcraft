@@ -173,7 +173,7 @@ public class MiscRegister {
             MobEffectInstance stunInstance = player.getEffect(ModMobEffects.STUN.get());
             if (stunInstance != null && player.level.isClientSide) {
                 int duration = stunInstance.getDuration();
-                TextHelper.setHotbarDisplay(player, Component.translatable("effect.stun.timer",  MiscHelper.stabiliseDouble(String.valueOf(duration / 20.), 2)).withStyle(ChatFormatting.RED));
+                TextHelper.setHotbarDisplay(player, Component.translatable("effect.stun.timer",  MathHelper.defRound(duration / 20.), 2).withStyle(ChatFormatting.RED));
             }
             if (tag.contains(SpellItem.SPELL_EXECUTION_DUR)) {
                 if (tag.getByte(SpellItem.SPELL_EXECUTION_DUR) < 1 || tag.getString(SpellItem.SPELL_EXE).length() >= 7) {

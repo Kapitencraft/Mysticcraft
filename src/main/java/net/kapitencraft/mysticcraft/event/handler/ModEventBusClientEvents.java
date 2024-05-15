@@ -14,6 +14,7 @@ import net.kapitencraft.mysticcraft.item.capability.gemstone.IGemstoneItem;
 import net.kapitencraft.mysticcraft.item.material.RainbowElementalShard;
 import net.kapitencraft.mysticcraft.logging.Markers;
 import net.kapitencraft.mysticcraft.misc.ModItemProperties;
+import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
@@ -90,7 +91,12 @@ public class ModEventBusClientEvents {
     @SubscribeEvent
     public static void registerBlockColors(RegisterColorHandlersEvent.Block event) {
         MysticcraftMod.sendRegisterDisplay("Custom Block Colors");
-        event.register(GemstoneBlock::getColor, ModBlocks.GEMSTONE_BLOCK.getBlock());
-        event.register(GemstoneBlock::getColor, ModBlocks.GEMSTONE_CRYSTAL.getBlock());
+        registerBlockColor(event, GemstoneBlock::getColor, ModBlocks.GEMSTONE_BLOCK, ModBlocks.GEMSTONE_CRYSTAL, ModBlocks.GEMSTONE_SEED);
+    }
+
+    private static void registerBlockColor(RegisterColorHandlersEvent.Block event, BlockColor color, BlockRegistryHolder<?, ?>... holders) {
+        for (BlockRegistryHolder<?, ?> holder : holders) {
+            event.register(color, holder.getBlock());
+        }
     }
 }

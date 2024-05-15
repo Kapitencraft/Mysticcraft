@@ -23,7 +23,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Objects;
 
 public class EnderKnightArmorItem extends ModArmorItem {
     public static final ArmorTabGroup ENDER_KNIGHT_GROUP = new ArmorTabGroup(TabRegister.TabTypes.WEAPONS_AND_TOOLS);
@@ -49,7 +48,7 @@ public class EnderKnightArmorItem extends ModArmorItem {
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
         Multimap<Attribute, AttributeModifier> modifierMultimap = super.getAttributeModifiers(slot, stack);
-        if (Objects.equals(this.dimension, MiscHelper.getDimensionRegistries().get(Level.END))) {
+        if (this.dimension == Level.END) {
             modifierMultimap = AttributeHelper.increaseByPercent(modifierMultimap, 1, new AttributeModifier.Operation[]{AttributeModifier.Operation.ADDITION, AttributeModifier.Operation.MULTIPLY_BASE, AttributeModifier.Operation.MULTIPLY_TOTAL}, null);
         }
         return modifierMultimap;

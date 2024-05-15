@@ -1,8 +1,8 @@
-package net.kapitencraft.mysticcraft.gui.screen.menu.drop_down.elements;
+package net.kapitencraft.mysticcraft.gui.widgets.menu.drop_down.elements;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.kapitencraft.mysticcraft.gui.screen.menu.drop_down.DropDownMenu;
-import net.kapitencraft.mysticcraft.gui.screen.menu.range.simple.NumberRange;
+import net.kapitencraft.mysticcraft.gui.widgets.menu.drop_down.DropDownMenu;
+import net.kapitencraft.mysticcraft.gui.widgets.menu.range.simple.NumberRange;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
 

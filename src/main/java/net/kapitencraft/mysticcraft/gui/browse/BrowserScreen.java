@@ -2,7 +2,7 @@ package net.kapitencraft.mysticcraft.gui.browse;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.kapitencraft.mysticcraft.gui.screen.DefaultBackgroundScreen;
-import net.kapitencraft.mysticcraft.gui.screen.menu.IMenuElement;
+import net.kapitencraft.mysticcraft.gui.widgets.Widget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiComponent;
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class BrowserScreen<T extends IBrowsable> extends DefaultBackgroundScreen {
-    private final List<IMenuElement> browseables = new ArrayList<>();
+    private final List<Widget> browseables = new ArrayList<>();
     protected final T browsable;
 
     public BrowserScreen(T browsable) {
@@ -33,7 +33,7 @@ public abstract class BrowserScreen<T extends IBrowsable> extends DefaultBackgro
     }
 
     @Override
-    public @NotNull List<IMenuElement> children() {
+    public @NotNull List<Widget> children() {
         return this.browseables;
     }
 

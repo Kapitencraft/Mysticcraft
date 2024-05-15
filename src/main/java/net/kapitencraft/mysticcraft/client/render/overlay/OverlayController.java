@@ -11,10 +11,7 @@ import net.kapitencraft.mysticcraft.client.render.overlay.holder.RenderHolder;
 import net.kapitencraft.mysticcraft.client.render.overlay.holder.SimpleHolder;
 import net.kapitencraft.mysticcraft.event.ModEventFactory;
 import net.kapitencraft.mysticcraft.event.custom.RegisterOverlaysEvent;
-import net.kapitencraft.mysticcraft.helpers.CollectionHelper;
-import net.kapitencraft.mysticcraft.helpers.IOHelper;
-import net.kapitencraft.mysticcraft.helpers.MathHelper;
-import net.kapitencraft.mysticcraft.helpers.MiscHelper;
+import net.kapitencraft.mysticcraft.helpers.*;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.misc.MiscRegister;
 import net.minecraft.ChatFormatting;
@@ -127,7 +124,7 @@ public class OverlayController {
 
     private void render(ForgeGui forgeGui, PoseStack poseStack, float partialTicks, int screenWidth, int screenHeight) {
         LocalPlayer entity = Minecraft.getInstance().player;
-        if (entity != null) {
+        if (entity != null && !ClientHelper.hideGui()) {
             map.forEach((uuid, renderHolder) -> {
                 poseStack.pushPose();
                 PositionHolder holder = renderHolder.getPos();

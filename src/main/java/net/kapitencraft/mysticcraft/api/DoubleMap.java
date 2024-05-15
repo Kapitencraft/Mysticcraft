@@ -1,5 +1,7 @@
 package net.kapitencraft.mysticcraft.api;
 
+import net.kapitencraft.mysticcraft.helpers.CollectionHelper;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,6 +32,10 @@ public class    DoubleMap<T, K, L> extends HashMap<T, Map<K, L>> {
             this.put(element, new HashMap<>());
         }
         return get(element);
+    }
+
+    public Collection<L> actualValues() {
+        return CollectionHelper.values(this);
     }
 
     @Override

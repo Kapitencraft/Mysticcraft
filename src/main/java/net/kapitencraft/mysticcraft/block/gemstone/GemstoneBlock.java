@@ -67,8 +67,8 @@ public class GemstoneBlock extends HalfTransparentBlock {
         return state.getValue(ModBlockProperties.GEMSTONE_TYPE);
     }
 
-    public static int getColor(BlockState state, BlockAndTintGetter ignored, BlockPos ignored1, int ignored2) {
-        return getType(state).getColour();
+    public static int getColor(BlockState state, BlockAndTintGetter ignored0, BlockPos ignored, int ignored2) {
+        return ignored2 == 0 ? getType(state).getColour() : -1;
     }
 
     public <T extends net.minecraft.world.item.Item & IGemstoneItem> ItemStack getItem(BlockState state, Supplier<T> supplier) {

@@ -7,15 +7,15 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 
-public class CreateGuildRequestable implements IRequestable<String, CreateGuildRequestable.CreateGuildData> {
+public class CreateGuildRequestable implements IRequestable<CreateGuildRequestable.GuildCreatingResult, CreateGuildRequestable.CreateGuildData> {
     @Override
-    public void writeToNetwork(String target, FriendlyByteBuf buf) {
-        buf.writeUtf(target);
+    public void writeToNetwork(GuildCreatingResult target, FriendlyByteBuf buf) {
+        target.save(buf);
     }
 
     @Override
-    public String getFromNetwork(FriendlyByteBuf buf) {
-        return buf.readUtf();
+    public GuildCreatingResult getFromNetwork(FriendlyByteBuf buf) {
+        return GuildCreatingResult.load(buf);
     }
 
     @Override
@@ -29,7 +29,7 @@ public class CreateGuildRequestable implements IRequestable<String, CreateGuildR
     }
 
     @Override
-    public String pack(CreateGuildData source, ServerPlayer player) {
+    public GuildCreatingResult pack(CreateGuildData source, ServerPlayer player) {
         ServerLevel level = player.getLevel();
         GuildHandler handler = GuildHandler.getInstance(level);
         return handler.addNewGuild(source, player);
@@ -44,6 +44,17 @@ public class CreateGuildRequestable implements IRequestable<String, CreateGuildR
 
         static CreateGuildData load(FriendlyByteBuf buf) {
             return new CreateGuildData(buf.readUtf(), buf.readBoolean(), buf.readItem());
+        }
+    }
+
+    public record GuildCreatingResult(String name, boolean success) {
+        void save(FriendlyByteBuf buf) {
+            buf.writeUtf(name);
+            buf.writeBoolean(success);
+        }
+
+        static GuildCreatingResult load(FriendlyByteBuf buf) {
+            return new GuildCreatingResult(buf.readUtf(), buf.readBoolean());
         }
     }
 }

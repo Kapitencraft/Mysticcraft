@@ -1,5 +1,8 @@
 package net.kapitencraft.mysticcraft.networking;
 
+import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.init.custom.ModRegistries;
+import net.kapitencraft.mysticcraft.logging.Markers;
 import net.kapitencraft.mysticcraft.networking.packets.RequestDataPacket;
 import net.kapitencraft.mysticcraft.networking.packets.RequestPacket;
 
@@ -18,10 +21,14 @@ public class RequestHandler {
     }
 
     public synchronized <T, K> void createRequest(IRequestable<T, K> requestable, K value, Consumer<T> consumer) {
-        RequestPacket<T, K> packet = new RequestPacket<T, K>(nextEmpty, requestable, value);
-        packetDistributor.accept(packet);
-        requests.put(nextEmpty, consumer);
-        nextEmpty = getNextEmpty(nextEmpty);
+        try {
+            RequestPacket<T, K> packet = new RequestPacket<T, K>(nextEmpty, requestable, value);
+            packetDistributor.accept(packet);
+            requests.put(nextEmpty, consumer);
+            nextEmpty = getNextEmpty(nextEmpty);
+        } catch (Exception e) {
+            MysticcraftMod.LOGGER.warn(Markers.REQUESTS, "unable to send request of type '{}': {}", ModRegistries.REQUESTABLES_REGISTRY.getKey(requestable), e.getMessage());
+        }
     }
 
     private short getNextEmpty(short in) {
@@ -32,10 +39,14 @@ public class RequestHandler {
     }
 
     public synchronized <T, K> void accordPackageReceive(RequestDataPacket<T, K> packet) {
-        short key = packet.getId();
-        Consumer<T> consumer = (Consumer<T>) requests.get(key);
-        consumer.accept(packet.getData());
-        requests.remove(key);
-        nextEmpty = key;
+        try {
+            short key = packet.getId();
+            Consumer<T> consumer = (Consumer<T>) requests.get(key);
+            consumer.accept(packet.getData());
+            requests.remove(key);
+            nextEmpty = key;
+        } catch (Exception e) {
+            MysticcraftMod.LOGGER.warn(Markers.REQUESTS, "error receiving packet: {}", e.getMessage());
+        }
     }
 }

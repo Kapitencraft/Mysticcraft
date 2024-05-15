@@ -2,7 +2,7 @@ package net.kapitencraft.mysticcraft.gui.screen;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.kapitencraft.mysticcraft.gui.IMenuBuilder;
-import net.kapitencraft.mysticcraft.gui.screen.menu.Menu;
+import net.kapitencraft.mysticcraft.gui.widgets.menu.Menu;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;

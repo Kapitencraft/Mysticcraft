@@ -52,8 +52,8 @@ public class ModBestiaryProvider implements DataProvider {
     private JsonObject makeValue(BestiaryStore bestiaryStore, String entityName) {
         Bestiary bestiary = bestiaryStore.bestiary();
         JsonObject object = new JsonObject();
-        object.addProperty("combat_xp", bestiary.getCombatXp());
-        object.addProperty("type", bestiary.getType().getSerializedName());
+        object.addProperty("combat_xp", bestiary.combatXp());
+        object.addProperty("type", bestiary.type().getSerializedName());
         JsonArray array = new JsonArray();
         List<String> translation = bestiaryStore.translations;
         int descLength = translation.size();

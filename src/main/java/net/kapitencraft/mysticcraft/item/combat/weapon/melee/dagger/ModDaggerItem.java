@@ -19,15 +19,15 @@ public abstract class ModDaggerItem extends ModSwordItem {
     }
 
     /**
-     * code to attack the target with the offhand if player was
+     * code to attack the target with the offhand if mainhand is same item
      */
     @Override
     public boolean hurtEnemy(@NotNull ItemStack pStack, @NotNull LivingEntity pTarget, @NotNull LivingEntity pAttacker) {
         super.hurtEnemy(pStack, pTarget, pAttacker);
         ItemStack offhand = pAttacker.getOffhandItem();
-        if (offhand.getItem() == this && pAttacker instanceof Player player && pTarget.isAlive()) {
+        if (offhand.getItem() == this && pAttacker instanceof Player player && pTarget.isAlive() && !IAttacker.of(player).isOffhandAttack()) {
             MiscHelper.delayed(10, ()-> {
-                if (player.canHit(pTarget, 0) && !IAttacker.of(player).isOffhandAttack()) {
+                if (player.canHit(pTarget, 0)) {
                     MiscHelper.swapHands(pAttacker);
                     IAttacker.of(player).setOffhandAttack();
                     player.attack(pTarget);

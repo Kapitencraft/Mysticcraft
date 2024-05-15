@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.gui.screen.menu.range.simple;
+package net.kapitencraft.mysticcraft.gui.widgets.menu.range.simple;
 
 public class DoubleNumberRange extends NumberRange<Double> {
     private final double min;

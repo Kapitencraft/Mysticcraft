@@ -5,16 +5,17 @@ import net.kapitencraft.mysticcraft.client.MysticcraftClient;
 import net.kapitencraft.mysticcraft.gui.browse.browsables.GuildScreen;
 import net.kapitencraft.mysticcraft.gui.screen.DefaultBackgroundScreen;
 import net.kapitencraft.mysticcraft.gui.widgets.Checkbox;
+import net.kapitencraft.mysticcraft.gui.widgets.CreateBannerWidget;
 import net.kapitencraft.mysticcraft.gui.widgets.ExtendedEditBox;
 import net.kapitencraft.mysticcraft.guild.GuildHandler;
 import net.kapitencraft.mysticcraft.guild.requests.CreateGuildRequestable;
 import net.kapitencraft.mysticcraft.init.ModDataRequesters;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.PlainTextButton;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 public class CreateGuildScreen extends DefaultBackgroundScreen {
@@ -28,8 +29,7 @@ public class CreateGuildScreen extends DefaultBackgroundScreen {
         super(TITLE_MSG);
     }
 
-    private Button joinGuildButton;
-    private Button createGuildButton;
+    private CreateBannerWidget widget;
     private ExtendedEditBox nameBox;
     private Checkbox shouldBePublic;
 
@@ -42,63 +42,59 @@ public class CreateGuildScreen extends DefaultBackgroundScreen {
         this.updatePublicSetting(halfWidth);
         this.updateNameBox();
         this.updateCreateButton(halfWidth);
-        this.addWidget(nameBox);
+        this.updateBannerEditor();
     }
 
     @SuppressWarnings("all")
     private void updateJoinButton(int halfWidth) {
         int width = this.font.width(JOIN_GUILD_MSG);
         int xStart = halfWidth - width / 2;
-        joinGuildButton = new PlainTextButton(xStart, this.topPos + this.getImageHeight() - 12, width, 10, JOIN_GUILD_MSG, pButton ->
-                this.minecraft.setScreen(new SelectGuildScreen()),
+        Button joinGuildButton = new PlainTextButton(xStart, this.topPos + this.getImageHeight() - 12, width, 10, JOIN_GUILD_MSG, pButton ->
+                this.minecraft.setScreen(new SelectGuildScreen(this)),
                 this.font
         );
-        this.addWidget(joinGuildButton);
+        this.addRenderableWidget(joinGuildButton);
     }
     private void updatePublicSetting(int halfWidth) {
         int publicBoxX = halfWidth - (12 + this.font.width(GUILD_PUBLIC_MSG)) / 2;
         boolean wasChecked = shouldBePublic != null && shouldBePublic.isChecked();
         shouldBePublic = new Checkbox(publicBoxX, this.topPos + this.getImageHeight() - 32, GUILD_PUBLIC_MSG, true, font, wasChecked);
-        this.addWidget(shouldBePublic);
+        this.addRenderableWidget(shouldBePublic);
     }
     private void updateNameBox() {
-        this.nameBox = new ExtendedEditBox(this.font, this.leftPos + 10, this.topPos + 25, this.getImageWidth() - 20, 10, this.nameBox, Component.translatable("gui.set_guild_name"), s ->
+        this.nameBox = new ExtendedEditBox(this.font, this.leftPos + 5, this.topPos + 15, this.getImageWidth() - 10, 10, this.nameBox, Component.empty(), s ->
                 GuildHandler.getClientInstance().getGuild(s) == null
         );
+        nameBox.setHint(Component.translatable("gui.set_guild_name"));
+        this.addRenderableWidget(nameBox);
+    }
+    private void updateBannerEditor() {
+        this.widget = new CreateBannerWidget(this.leftPos + 5, this.topPos + 26, this.getImageWidth() - 10, this.getImageHeight() - 61);
+        this.addRenderableWidget(this.widget);
     }
     private void updateCreateButton(int halfWidth) {
         int width = this.font.width(this.title);
         int xStart = halfWidth - width / 2;
-        createGuildButton = new PlainTextButton(xStart, this.topPos + this.getImageHeight() - 22, this.width, 10, this.title,
+        Button createGuildButton = new PlainTextButton(xStart, this.topPos + this.getImageHeight() - 22, this.width, 10, this.title,
                 pButton -> {
                     this.minecraft.setScreen(null);
-                    MysticcraftClient.getInstance().handler.createRequest(ModDataRequesters.CREATE_GUILD.get(), new CreateGuildRequestable.CreateGuildData(this.nameBox.getValue(), this.shouldBePublic.isChecked(), ItemStack.EMPTY), this::takeData);
-                    },
+                    MysticcraftClient.getInstance().handler.createRequest(ModDataRequesters.CREATE_GUILD.get(), new CreateGuildRequestable.CreateGuildData(this.nameBox.getValue(), this.shouldBePublic.isChecked(), this.widget.getBanner()), this::takeData);
+                },
                 this.font
         );
-        this.addWidget(createGuildButton);
+        this.addRenderableWidget(createGuildButton);
     }
 
     @SuppressWarnings("all")
-    private void takeData(String data) {
-        this.minecraft.player.sendSystemMessage(Component.translatable("guild.create." + data));
-        this.minecraft.setScreen(new GuildScreen(GuildHandler.getClientInstance().getGuildForPlayer(this.minecraft.player)));
+    private void takeData(CreateGuildRequestable.GuildCreatingResult data) {
+        this.minecraft.player.sendSystemMessage(Component.translatable("guild.create." + data.name()).withStyle(data.success() ? ChatFormatting.GREEN : ChatFormatting.RED));
+        if (data.success()) this.minecraft.setScreen(new GuildScreen(GuildHandler.getClientInstance().getGuildForPlayer(this.minecraft.player)));
     }
 
     @Override
     public void render(@NotNull PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
-        drawCenteredString(pPoseStack, this.font, this.title, this.leftPos + this.getImageWidth() / 2, this.topPos + 5, -1);
         super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
-        this.joinGuildButton.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
-        this.shouldBePublic.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
-        this.nameBox.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
-        this.createGuildButton.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
-    }
-
-
-    @Override
-    public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
-        return super.mouseClicked(pMouseX, pMouseY, pButton);
+        drawCenteredString(pPoseStack, this.font, this.title, this.leftPos + this.getImageWidth() / 2, this.topPos + 5, -1);
     }
 
     @Override

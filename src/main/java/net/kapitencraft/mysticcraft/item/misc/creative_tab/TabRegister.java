@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.item.misc.creative_tab;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.helpers.CollectionHelper;
+import net.kapitencraft.mysticcraft.block.special.GemstoneSeedBlock;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.init.ModBlocks;
 import net.kapitencraft.mysticcraft.init.ModItems;
@@ -42,9 +42,10 @@ public class TabRegister {
                 builder.title(Component.translatable("itemGroup.mysticcraft.gemstone"))
                         .icon(() -> IGemstoneItem.createData(GemstoneType.Rarity.PERFECT, GemstoneType.JASPER, ModItems.GEMSTONE))
                         .displayItems((featureFlagSet, output, flag) -> {
-                            output.acceptAll(CollectionHelper.values(GemstoneType.allItems()));
+                            output.acceptAll(GemstoneType.allItems().actualValues());
                             output.acceptAll(GemstoneType.allBlocks().values());
-                            output.acceptAll(CollectionHelper.values(GemstoneType.allCrystals()));
+                            output.acceptAll(GemstoneType.allCrystals().actualValues());
+                            output.acceptAll(GemstoneSeedBlock.Item.makeContent().actualValues());
                             TabGroup.registerAll(TabTypes.GEMSTONE, output::acceptAll);
                         })
         );
@@ -64,7 +65,6 @@ public class TabRegister {
                                 stack.addTagElement("Enchantments", tags);
                                 return stack;
                             }));
-                            output.acceptAll(GemstoneType.allBlocks().values());
                             TabGroup.registerAll(TabTypes.MOD_MATERIALS, output::acceptAll);
                         })
         );

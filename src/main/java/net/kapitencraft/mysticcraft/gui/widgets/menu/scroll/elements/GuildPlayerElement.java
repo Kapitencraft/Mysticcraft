@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.gui.screen.menu.scroll.elements;
+package net.kapitencraft.mysticcraft.gui.widgets.menu.scroll.elements;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;

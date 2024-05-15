@@ -1,9 +1,10 @@
-package net.kapitencraft.mysticcraft.gui.screen.menu;
+package net.kapitencraft.mysticcraft.gui.widgets.menu;
 
+import net.kapitencraft.mysticcraft.gui.widgets.Widget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 
-public abstract class Menu implements IMenuElement {
+public abstract class Menu extends Widget {
     protected final int x, y;
     private final GuiEventListener parent;
 

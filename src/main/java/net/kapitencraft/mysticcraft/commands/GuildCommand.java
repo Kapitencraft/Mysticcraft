@@ -3,6 +3,7 @@ package net.kapitencraft.mysticcraft.commands;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.LiteralCommandNode;
+import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.gui.browse.browsables.GuildScreen;
 import net.kapitencraft.mysticcraft.gui.screen.guild.CreateGuildScreen;
 import net.kapitencraft.mysticcraft.guild.Guild;
@@ -37,7 +38,13 @@ public class GuildCommand {
                     if (player != null) {
                         Guild guild = handler.getGuildForPlayer(player);
                         if (guild != null) {
-                            ClientHelper.postCommandScreen = new GuildScreen(guild);
+                            try {
+                                ClientHelper.postCommandScreen = new GuildScreen(guild);
+                            } catch (ClassCastException e) {
+                                MysticcraftMod.LOGGER.warn("Your guild's corrupted; removing from handler");
+                                handler.removeGuild(guild.getGuildName());
+                                return 0;
+                            }
                             return 1;
                         }
                     }
@@ -48,7 +55,6 @@ public class GuildCommand {
 
         dispatcher.register(Commands.literal("g").redirect(main));
     }
-
 
     private static int checkGuildCommand(CommandContext<CommandSourceStack> context, TriFunction<ServerPlayer, CommandSourceStack, @NotNull Guild, Integer> guildConsumer) {
         return ModCommands.checkNonConsoleCommand(context, (player, stack) -> {

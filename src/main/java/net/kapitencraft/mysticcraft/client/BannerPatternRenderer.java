@@ -20,18 +20,31 @@ import java.util.List;
 
 public class BannerPatternRenderer {
     private static final Minecraft MINECRAFT = Minecraft.getInstance();
-    private static final ModelPart FLAG = MINECRAFT.getEntityModels().bakeLayer(ModelLayers.BANNER).getChild("flag");
+    private static final ModelPart FLAG;
 
 
-    public static void renderBanner(PoseStack poseStack, int x, int y, List<Pair<Holder<BannerPattern>, DyeColor>> patterns, int height) {
-        MultiBufferSource.BufferSource source = MINECRAFT.renderBuffers().bufferSource();
-        poseStack.translate(x, y, 0.0F);
-        poseStack.scale(24.0F * (height / 40f), -24.0F * (height / 40f), 1.0F);
-        poseStack.translate(0.5F, 0.5F, 0.5F);
-        float f = 0.6666667F;
-        poseStack.scale(f, -f, -f);
+    static {
+        FLAG = MINECRAFT.getEntityModels().bakeLayer(ModelLayers.BANNER).getChild("flag");
         FLAG.xRot = 0.0F;
         FLAG.y = -32.0F;
+    }
+
+    /**
+     * @return the flag used by the renderer; do <i>not</i> modify
+     */
+    public static ModelPart getFlag() {
+        return FLAG;
+    }
+
+    public static void renderBanner(PoseStack poseStack, float x, float y, List<Pair<Holder<BannerPattern>, DyeColor>> patterns, int height) {
+        MultiBufferSource.BufferSource source = MINECRAFT.renderBuffers().bufferSource();
+        poseStack.pushPose();
+        poseStack.translate(x, y + height, 0.0F);
+        float scale = height / 40f;
+        poseStack.scale(24.0F * scale, -24.0F * scale, 1.0F);
+        poseStack.translate(0.5F, 0.5F, 0);
+        float f = 2 / 3f;
+        poseStack.scale(f, -f, -f);
         BannerRenderer.renderPatterns(poseStack, source, 15728880, OverlayTexture.NO_OVERLAY, FLAG, ModelBakery.BANNER_BASE, true, patterns);
         poseStack.popPose();
         source.endBatch();

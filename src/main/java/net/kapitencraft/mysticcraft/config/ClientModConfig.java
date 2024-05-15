@@ -3,7 +3,7 @@ package net.kapitencraft.mysticcraft.config;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.client.rainbow.ChromaOrigin;
 import net.kapitencraft.mysticcraft.client.rainbow.ChromaType;
-import net.kapitencraft.mysticcraft.gui.screen.menu.drop_down.elements.Element;
+import net.kapitencraft.mysticcraft.gui.widgets.menu.drop_down.elements.Element;
 import net.minecraft.ChatFormatting;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.common.Mod;

@@ -5,30 +5,13 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
-public class Bestiary {
+public record Bestiary(Type type, double combatXp) {
     public static final Codec<Bestiary> CODEC = RecordCodecBuilder.create(bestiaryInstance ->
             bestiaryInstance.group(
-                    Type.CODEC.fieldOf("type").forGetter(Bestiary::getType),
-                    Codec.DOUBLE.fieldOf("combat_xp").forGetter(Bestiary::getCombatXp)
+                    Type.CODEC.fieldOf("type").forGetter(Bestiary::type),
+                    Codec.DOUBLE.fieldOf("combat_xp").forGetter(Bestiary::combatXp)
             ).apply(bestiaryInstance, Bestiary::new)
     );
-
-    private final double combatXp;
-
-    private final Type type;
-
-    public Bestiary(Type type, double combatXp) {
-        this.combatXp = combatXp;
-        this.type = type;
-    }
-
-    public double getCombatXp() {
-        return combatXp;
-    }
-
-    public Type getType() {
-        return type;
-    }
 
     public enum Type implements StringRepresentable {
         NORMAL("normal"),

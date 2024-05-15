@@ -101,6 +101,7 @@ public class MysticcraftPlayerInstance implements Pingable {
 
     public void remove() {
         MinecraftForge.EVENT_BUS.unregister(this);
+        Pingable.allPingables.remove(this);
     }
 
     @Override

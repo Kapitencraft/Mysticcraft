@@ -1,9 +1,9 @@
-package net.kapitencraft.mysticcraft.gui.screen.menu.drop_down.elements;
+package net.kapitencraft.mysticcraft.gui.widgets.menu.drop_down.elements;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.kapitencraft.mysticcraft.client.UsefulTextures;
-import net.kapitencraft.mysticcraft.gui.screen.menu.IValueModifierElement;
-import net.kapitencraft.mysticcraft.gui.screen.menu.drop_down.DropDownMenu;
+import net.kapitencraft.mysticcraft.gui.widgets.menu.IValueModifierElement;
+import net.kapitencraft.mysticcraft.gui.widgets.menu.drop_down.DropDownMenu;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 

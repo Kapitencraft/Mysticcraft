@@ -1,6 +1,8 @@
 package net.kapitencraft.mysticcraft.networking.packets;
 
+import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.init.custom.ModRegistries;
+import net.kapitencraft.mysticcraft.logging.Markers;
 import net.kapitencraft.mysticcraft.networking.IRequestable;
 import net.kapitencraft.mysticcraft.networking.ModMessages;
 import net.minecraft.network.FriendlyByteBuf;
@@ -52,9 +54,13 @@ public class RequestPacket<T, K> implements ModPacket {
         NetworkEvent.Context context = sup.get();
         context.enqueueWork(() -> {
             ServerPlayer player = context.getSender();
-            if (player != null) {
-                ModMessages.sendToClientPlayer(new RequestDataPacket<>(this.requestId, this.provider, this.provider.pack(this.value, player)), player);
-            }
+                if (player != null) {
+                    try {
+                        ModMessages.sendToClientPlayer(new RequestDataPacket<>(this.requestId, this.provider, this.provider.pack(this.value, player)), player);
+                    } catch (Exception e) {
+                        MysticcraftMod.LOGGER.warn(Markers.REQUESTS, "unable to handle Request Packet of provider '{}': {}", ModRegistries.REQUESTABLES_REGISTRY.getKey(this.provider), e.getMessage());
+                    }
+                }
         });
         return true;
     }

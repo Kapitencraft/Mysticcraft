@@ -1,7 +1,7 @@
-package net.kapitencraft.mysticcraft.gui.screen.menu.drop_down.elements;
+package net.kapitencraft.mysticcraft.gui.widgets.menu.drop_down.elements;
 
-import net.kapitencraft.mysticcraft.gui.screen.menu.IValueModifierElement;
-import net.kapitencraft.mysticcraft.gui.screen.menu.drop_down.DropDownMenu;
+import net.kapitencraft.mysticcraft.gui.widgets.menu.IValueModifierElement;
+import net.kapitencraft.mysticcraft.gui.widgets.menu.drop_down.DropDownMenu;
 import net.minecraft.network.chat.Component;
 
 import java.util.Arrays;

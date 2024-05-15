@@ -1,12 +1,11 @@
-package net.kapitencraft.mysticcraft.gui.screen.menu.scroll;
+package net.kapitencraft.mysticcraft.gui.widgets.menu.scroll;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.kapitencraft.mysticcraft.client.UsefulTextures;
-import net.kapitencraft.mysticcraft.gui.screen.menu.IMenuElement;
-import net.kapitencraft.mysticcraft.gui.screen.menu.Menu;
-import net.kapitencraft.mysticcraft.gui.screen.menu.scroll.elements.ScrollElement;
-import net.kapitencraft.mysticcraft.helpers.ClientHelper;
+import net.kapitencraft.mysticcraft.gui.widgets.menu.Menu;
+import net.kapitencraft.mysticcraft.gui.widgets.menu.scroll.elements.ScrollElement;
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.network.chat.Component;
@@ -15,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ScrollableMenu extends Menu implements IMenuElement {
+public class ScrollableMenu extends Menu {
     private static final int SLIDER_WIDTH = 6;
     private final List<ScrollElement> elements = new ArrayList<>();
     private final int elementsPerPage;
@@ -41,7 +40,7 @@ public class ScrollableMenu extends Menu implements IMenuElement {
 
     @Override
     protected int height() {
-        return this.elements.get(0).getHeight() * elementsPerPage;
+        return this.elements.size() < 1 ? elementsPerPage * 10 : this.elements.get(0).getHeight() * elementsPerPage;
     }
 
     @Override
@@ -54,8 +53,6 @@ public class ScrollableMenu extends Menu implements IMenuElement {
         return false;
     }
 
-    //TODO add slider
-
     public void addScrollable(ScrollElement element) {
         elements.add(element);
     }
@@ -63,7 +60,7 @@ public class ScrollableMenu extends Menu implements IMenuElement {
     @Override
     public void render(@NotNull PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
         if (elements.size() < 1) {
-            ClientHelper.drawCenteredString(pPoseStack, this.x, this.y, this.width(), this.height(), Component.translatable("gui.nothing_to_show"), -1);
+            GuiComponent.drawCenteredString(pPoseStack, Minecraft.getInstance().font, Component.translatable("gui.nothing_to_show"), this.x + this.width() / 2, this.y + this.height() / 2, -1);
             return;
         }
         if (elements.size() > elementsPerPage) {

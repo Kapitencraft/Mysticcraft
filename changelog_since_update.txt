@@ -9,3 +9,6 @@ fixed teleport spells teleporting way to far;
 [API] added Requestables;
 
 gemstones now spawn inside the world;
+daggers now also attack from offhand when attacking;
+
+removed Gemstone Blocks from 'Mysticcraft Materials' creative Tab

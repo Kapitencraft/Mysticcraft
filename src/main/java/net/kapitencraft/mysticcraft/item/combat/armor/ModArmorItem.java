@@ -17,6 +17,7 @@ import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -37,7 +38,7 @@ import java.util.function.Function;
 
 public abstract class ModArmorItem extends ArmorItem implements IModItem {
     private static final String FULL_SET_ID = "hadFullSet";
-    protected String dimension;
+    protected ResourceKey<Level> dimension;
     private Entity user;
     protected int fullSetTick = 0;
 
@@ -188,7 +189,7 @@ public abstract class ModArmorItem extends ArmorItem implements IModItem {
     }
 
     protected void updateDimension(Level level) {
-        this.dimension = MiscHelper.getDimension(level);
+        this.dimension = level.dimension();
     }
 
     private void updateUser(Entity user) {

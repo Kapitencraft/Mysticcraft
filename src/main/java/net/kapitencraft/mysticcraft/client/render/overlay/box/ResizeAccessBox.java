@@ -64,8 +64,6 @@ public class ResizeAccessBox extends InteractiveBox {
         this.finish = new Vec2(horizontal ? finish.x + lineW : finish.x, horizontal ? finish.y : finish.y  + lineW);
     }
 
-    //TODO fix scaling not moving resize box
-
     public void applySquare(Vec2 center, float size) {
         this.start = center.add(new Vec2(-size, -size));
         this.finish = center.add(new Vec2(size, size));
