@@ -242,7 +242,9 @@ public class CreateBannerWidget extends PositionedWidget {
         @Override
         public void render(@NotNull PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
             super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
-            BannerPatternRenderer.renderBanner(pPoseStack, this.x, this.y + 1, bakePatterns(), this.height - 2);
+            ArrayList<Pair<Holder<BannerPattern>, DyeColor>> arrayList = new ArrayList<>(bakePatterns());
+            arrayList.add(0, Pair.of(BuiltInRegistries.BANNER_PATTERN.getHolderOrThrow(BannerPatterns.BASE), this.background));
+            BannerPatternRenderer.renderBanner(pPoseStack, this.x, this.y + 1, arrayList, this.height - 2);
         }
 
         private List<Pair<Holder<BannerPattern>, DyeColor>> bakePatterns() {
@@ -258,7 +260,7 @@ public class CreateBannerWidget extends PositionedWidget {
             BlockItem.setBlockEntityData(itemstack, BlockEntityType.BANNER, compoundtag);
             PoseStack posestack = new PoseStack();
             posestack.pushPose();
-            posestack.translate((float)pX + 0.5F, (float)(pY + 16), 0.0F);
+            posestack.translate(pX + 0.5F, pY + 16, 0.0F);
             posestack.scale(6.0F, -6.0F, 1.0F);
             posestack.translate(0.5F, 0.5F, 0.0F);
             posestack.translate(0.5F, 0.5F, 0F);
