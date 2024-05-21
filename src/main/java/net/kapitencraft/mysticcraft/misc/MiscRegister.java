@@ -47,6 +47,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Arrow;
@@ -70,6 +71,7 @@ import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
+import net.minecraftforge.event.entity.EntityLeaveLevelEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.ArrowLooseEvent;
@@ -254,7 +256,10 @@ public class MiscRegister {
                 }
                 for (Enchantment enchantment : bow.getAllEnchantments().keySet()) {
                     if (enchantment instanceof ModBowEnchantment bowEnchantment) {
-                        arrowTag.put(bowEnchantment.getTagName(), bowEnchantment.write(bow.getEnchantmentLevel(enchantment), bow, living, arrow));
+                        CompoundTag tag = new CompoundTag();
+                        int level = bow.getEnchantmentLevel(enchantment);
+                        tag.putInt("Level", level);
+                        arrowTag.put(bowEnchantment.getTagName(), bowEnchantment.write(tag, level, bow, living, arrow));
                         if (bowEnchantment.shouldTick()) helper.add(arrow.getUUID());
                     }
                     if (enchantment instanceof OverloadEnchantment) {
@@ -265,9 +270,25 @@ public class MiscRegister {
         }
         if (event.getEntity() instanceof Player player) {
             new MysticcraftPlayerInstance(player);
+            AttributeInstance instance = player.getAttribute(ModAttributes.MANA.get());
+            if (instance == null) throw new IllegalStateException();
+            else {
+                double mana;
+                if (player.getPersistentData().contains("Mana", 6)) {
+                    mana = player.getPersistentData().getDouble("Mana");
+                } else mana = 100;
+                instance.setBaseValue(mana);
+            }
             if (event.getEntity() instanceof ServerPlayer serverPlayer) {
                 NetworkingHelper.syncAll(serverPlayer);
             }
+        }
+    }
+
+    @SubscribeEvent
+    public static void leaveLevelEvent(EntityLeaveLevelEvent event) {
+        if (event.getEntity() instanceof Player player) {
+            player.getPersistentData().putDouble("Mana", player.getAttributeValue(ModAttributes.MANA.get()));
         }
     }
 

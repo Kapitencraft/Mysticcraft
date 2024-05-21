@@ -32,6 +32,7 @@ public class RequestDataPacket<T, K> implements ModPacket {
     public void toBytes(FriendlyByteBuf buf) {
         buf.writeShort(this.id);
         buf.writeUtf(RequestPacket.saveRequestable(this.provider));
+        this.provider.writeToNetwork(this.data, buf);
     }
 
     @Override

@@ -11,7 +11,7 @@ import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class ModCapability<T extends ModCapability<T, K>, K> implements INBTSerializable<Tag>, IModCapability<T, K>, ICapabilityProvider {
+public abstract class ModCapability<T extends ModCapability<T, K>, K extends ICapability<T>> implements INBTSerializable<Tag>, IModCapability<T, K>, ICapabilityProvider {
     private final NbtSerializer<T> serializer;
 
     protected ModCapability(Codec<T> serializer) {

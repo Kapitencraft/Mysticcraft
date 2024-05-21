@@ -40,7 +40,7 @@ public class SyncGuildsPacket implements ModPacket {
 
     public static SyncGuildsPacket loadAll(Collection<Guild> guilds) {
         ListTag savedGuilds = new ListTag();
-        savedGuilds.addAll(guilds.stream().map(Guild::saveWithPlayers).toList());
+        savedGuilds.addAll(guilds.stream().map(Guild::save).toList());
         return new SyncGuildsPacket(Type.LOAD_ALL, builder -> builder
                 .withArg("Guilds", savedGuilds, CompoundTag::put)
         );
@@ -125,7 +125,7 @@ public class SyncGuildsPacket implements ModPacket {
                     case LEAVE_GUILD -> {
                         Player player = getPlayer(tag.getUUID("Player"));
                         MysticcraftMod.LOGGER.info("received data to remove {} from their guild", player);
-                        handler.getGuildForPlayer(player).kickMember(player);
+                        handler.getGuildForPlayer(player).kickMember(player, Guild.KickStatus.LEAVE);
                     }
                 }
             }

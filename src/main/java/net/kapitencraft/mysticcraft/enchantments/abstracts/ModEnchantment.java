@@ -2,5 +2,7 @@ package net.kapitencraft.mysticcraft.enchantments.abstracts;
 
 public interface ModEnchantment {
 
-    String[] getDescriptionMods(int level);
+    default Object[] getDescriptionMods(int level) {
+        return new Object[]  {level};
+    }
 }

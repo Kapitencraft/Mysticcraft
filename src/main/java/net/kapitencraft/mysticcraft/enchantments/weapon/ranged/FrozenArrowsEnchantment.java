@@ -14,9 +14,7 @@ public class FrozenArrowsEnchantment extends ModBowEnchantment {
     }
 
     @Override
-    public CompoundTag write(int level, ItemStack bow, LivingEntity owner, AbstractArrow arrow) {
-        CompoundTag tag = new CompoundTag();
-        tag.putInt("Level", level);
+    public CompoundTag write(CompoundTag tag, int level, ItemStack bow, LivingEntity owner, AbstractArrow arrow) {
         return tag;
     }
 
@@ -27,7 +25,7 @@ public class FrozenArrowsEnchantment extends ModBowEnchantment {
 
     @Override
     public float execute(LivingEntity target, CompoundTag tag, ExecuteType type, float oldDamage, AbstractArrow arrow) {
-        if (type == ExecuteType.HIT) target.setTicksFrozen(tag.getInt("Level") * 40);
+        if (type == ExecuteType.HIT) target.setTicksFrozen(getLevel(tag) * 40);
         return oldDamage;
     }
 

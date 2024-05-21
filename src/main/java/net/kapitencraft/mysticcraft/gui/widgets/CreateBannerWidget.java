@@ -218,16 +218,6 @@ public class CreateBannerWidget extends PositionedWidget {
             this.buttons.get(elementId).move(-14);
         }
 
-        private void moveAllDown(int startId, int endId) {
-            for (int i = startId; i < endId; i++) {
-                moveDown(i);
-            }
-        }
-
-        private void moveDown(int elementId) {
-            this.buttons.get(elementId).move(14);
-        }
-
         private void reapplyYPos() {
             for (int i = 0; i < this.buttons.size(); i++) {
                 this.buttons.get(i).y = this.y + i * 14;
@@ -244,7 +234,7 @@ public class CreateBannerWidget extends PositionedWidget {
             super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
             ArrayList<Pair<Holder<BannerPattern>, DyeColor>> arrayList = new ArrayList<>(bakePatterns());
             arrayList.add(0, Pair.of(BuiltInRegistries.BANNER_PATTERN.getHolderOrThrow(BannerPatterns.BASE), this.background));
-            BannerPatternRenderer.renderBanner(pPoseStack, this.x, this.y + 1, arrayList, this.height - 2);
+            BannerPatternRenderer.renderBanner(pPoseStack, this.x + 10, this.y + 1, arrayList, this.height - 2);
         }
 
         private List<Pair<Holder<BannerPattern>, DyeColor>> bakePatterns() {
@@ -260,10 +250,10 @@ public class CreateBannerWidget extends PositionedWidget {
             BlockItem.setBlockEntityData(itemstack, BlockEntityType.BANNER, compoundtag);
             PoseStack posestack = new PoseStack();
             posestack.pushPose();
-            posestack.translate(pX + 0.5F, pY + 16, 0.0F);
+            posestack.translate(pX + .5F, pY + 16, 0.0F);
             posestack.scale(6.0F, -6.0F, 1.0F);
-            posestack.translate(0.5F, 0.5F, 0.0F);
-            posestack.translate(0.5F, 0.5F, 0F);
+            posestack.translate(.5F, .5F, 0.0F);
+            posestack.translate(.5F, .5F, 0F);
             float f = 0.6666667F;
             posestack.scale(f, -f, -f);
             MultiBufferSource.BufferSource source = Minecraft.getInstance().renderBuffers().bufferSource();

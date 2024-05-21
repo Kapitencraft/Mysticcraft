@@ -1,31 +1,38 @@
 package net.kapitencraft.mysticcraft.block.special;
 
-import net.kapitencraft.mysticcraft.api.DoubleMap;
 import net.kapitencraft.mysticcraft.block.ModBlockProperties;
+import net.kapitencraft.mysticcraft.block.gemstone.GemstoneBlock;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.init.ModBlocks;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneType;
+import net.kapitencraft.mysticcraft.item.capability.gemstone.IGemstoneItem;
 import net.kapitencraft.mysticcraft.worldgen.gemstone.GemstoneGrowth;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
 
 public class GemstoneSeedBlock extends Block {
-    //TODO create Renderer
+    //TODO fix renderer clipping threw blocks
 
     public GemstoneSeedBlock() {
         super(Properties.copy(Blocks.DIAMOND_BLOCK));
@@ -44,39 +51,42 @@ public class GemstoneSeedBlock extends Block {
 
     @Override
     public void randomTick(@NotNull BlockState pState, @NotNull ServerLevel pLevel, @NotNull BlockPos pPos, @NotNull RandomSource pRandom) {
-        GemstoneGrowth.growCrystal(pLevel, pPos, 1, GemstoneGrowth.DEFAULT_MAIN_CHANCE, pRandom);
+        if (Mth.nextInt(pRandom, 0, 1000) > 750) GemstoneGrowth.growCrystal(pLevel, pPos, 1, GemstoneGrowth.DEFAULT_MAIN_CHANCE, pRandom);
     }
 
-    public static final class Item extends BlockItem {
+    @Nullable
+    @Override
+    public BlockState getStateForPlacement(BlockPlaceContext pContext) {
+        ItemStack clickItem = pContext.getItemInHand();
+        CompoundTag tag = clickItem.getTagElement("GemstoneData");
+        if (!clickItem.is(ModBlocks.GEMSTONE_SEED.getItem()) || tag == null) throw new IllegalStateException("Do not overwrite Item");
+        MaterialType type = MaterialType.CODEC.byName(tag.getString("Material"), MaterialType.STONE);
+        GemstoneType gemType = GemstoneType.CODEC.byName(tag.getString("GemId"), GemstoneType.RUBY);
+        return defaultBlockState()
+                .setValue(BlockStateProperties.FACING, pContext.getClickedFace())
+                .setValue(ModBlockProperties.GEMSTONE_TYPE, gemType)
+                .setValue(ModBlockProperties.STONE_TYPE, type);
+    }
+
+    @Override
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter level, BlockPos pos, Player player) {
+        return GemstoneBlock.getItem(state, ModBlocks.GEMSTONE_SEED::getItem);
+    }
+
+    public static final class Item extends BlockItem implements IGemstoneItem {
         public Item() {
             super(ModBlocks.GEMSTONE_SEED.getBlock(), MiscHelper.rarity(Rarity.EPIC));
         }
 
-        public static DoubleMap<MaterialType, GemstoneType, ItemStack> makeContent() {
-            DoubleMap<MaterialType, GemstoneType, ItemStack> doubleMap = DoubleMap.create();
-            for (MaterialType type : MaterialType.values()) {
-                for (GemstoneType type1 : GemstoneType.values()) {
-                    ItemStack stack = new ItemStack(ModBlocks.GEMSTONE_SEED.getItem());
-                    CompoundTag tag = stack.getOrCreateTag();
-                    tag.putString("Material", type.getSerializedName());
-                    tag.putString("Gemstone", type1.getSerializedName());
-                    doubleMap.put(type, type1, stack);
-                }
-            }
-            return doubleMap;
+        @Override
+        public @NotNull Component getName(@NotNull ItemStack pStack) {
+            return Component.translatable("gemstone_seed.name", IGemstoneItem.getGemstone(pStack).getDispName());
         }
 
-        @Override
-        protected BlockState getPlacementState(BlockPlaceContext pContext) {
-            ItemStack clickItem = pContext.getItemInHand();
-            CompoundTag tag = clickItem.getTag();
-            if (!clickItem.is(ModBlocks.GEMSTONE_SEED.getItem()) || tag == null) throw new IllegalStateException("Do not overwrite Item");
-            MaterialType type = MaterialType.CODEC.byName(tag.getString("Material"), MaterialType.STONE);
-            GemstoneType gemType = GemstoneType.CODEC.byName(tag.getString("Gemstone"), GemstoneType.RUBY);
-            return this.getBlock().defaultBlockState()
-                    .setValue(BlockStateProperties.FACING, pContext.getNearestLookingDirection())
-                    .setValue(ModBlockProperties.GEMSTONE_TYPE, gemType)
-                    .setValue(ModBlockProperties.STONE_TYPE, type);
+        public static ItemStack createData(GemstoneType type, MaterialType materialType) {
+            ItemStack stack = IGemstoneItem.createData(GemstoneType.Rarity.EMPTY, type, ModBlocks.GEMSTONE_SEED::getItem);
+            stack.getOrCreateTag().getCompound("GemstoneData").putString("Material", materialType.getSerializedName());
+            return stack;
         }
     }
 
@@ -104,5 +114,9 @@ public class GemstoneSeedBlock extends Block {
         public Block getBlock() {
             return block.get();
         }
+    }
+
+    public static MaterialType getType(ItemStack stack) {
+        return MaterialType.CODEC.byName(stack.getOrCreateTagElement("GemstoneData").getString("Material"), MaterialType.STONE);
     }
 }

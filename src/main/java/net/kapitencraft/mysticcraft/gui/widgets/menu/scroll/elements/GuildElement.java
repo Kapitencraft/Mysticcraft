@@ -2,6 +2,7 @@ package net.kapitencraft.mysticcraft.gui.widgets.menu.scroll.elements;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.kapitencraft.mysticcraft.client.BannerPatternRenderer;
+import net.kapitencraft.mysticcraft.gui.widgets.menu.Menu;
 import net.kapitencraft.mysticcraft.guild.Guild;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
@@ -30,5 +31,10 @@ public class GuildElement extends ScrollElement {
     @Override
     public int getHeight() {
         return 20;
+    }
+
+    @Override
+    public Menu createMenu(int x, int y) {
+        return null;
     }
 }

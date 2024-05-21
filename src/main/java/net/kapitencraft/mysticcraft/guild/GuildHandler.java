@@ -8,6 +8,7 @@ import net.kapitencraft.mysticcraft.helpers.IOHelper;
 import net.kapitencraft.mysticcraft.helpers.Timer;
 import net.kapitencraft.mysticcraft.logging.Markers;
 import net.kapitencraft.mysticcraft.networking.ModMessages;
+import net.kapitencraft.mysticcraft.networking.SimpleSuccessResult;
 import net.kapitencraft.mysticcraft.networking.packets.S2C.SyncGuildsPacket;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.nbt.CompoundTag;
@@ -40,11 +41,17 @@ public class GuildHandler extends SavedData {
 
     public static GuildHandler getInstance(Level level) {
         if (level instanceof ClientLevel) {
-            return clientInstance;
+            return getClientInstance();
         } else {
             ServerLevel serverLevel = (ServerLevel) level;
             return serverLevel.getDataStorage().computeIfAbsent(GuildHandler::load, GuildHandler::createDefault, "guilds");
         }
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public static GuildHandler getClientInstance() {
+        ensureInstanceNotNull();
+        return clientInstance;
     }
 
     public static GuildHandler createDefault() {
@@ -64,10 +71,6 @@ public class GuildHandler extends SavedData {
         if (clientInstance == null) clientInstance = new GuildHandler();
     }
 
-    public static void setInstance(GuildHandler newInstance) {
-        clientInstance = newInstance;
-    }
-
     @Override
     public @NotNull CompoundTag save(@NotNull CompoundTag tag) {
         MysticcraftMod.LOGGER.info("saving Guilds...");
@@ -82,16 +85,16 @@ public class GuildHandler extends SavedData {
         return loadAllGuilds(tag);
     }
 
-    public CreateGuildRequestable.GuildCreatingResult addNewGuild(CreateGuildRequestable.CreateGuildData newGuildData, Player owner) {
+    public SimpleSuccessResult addNewGuild(CreateGuildRequestable.CreateGuildData newGuildData, Player owner) {
         if (guilds.containsKey(newGuildData.name())) {
-            return new CreateGuildRequestable.GuildCreatingResult("duplicateName", false);
+            return SimpleSuccessResult.fail("duplicateName");
         } else if (isStackFromGuildBanner(newGuildData.banner())) {
-            return new CreateGuildRequestable.GuildCreatingResult("duplicateBanner", false);
+            return SimpleSuccessResult.fail("duplicateBanner");
         }
         ItemStack banner = newGuildData.banner();
         if (!banner.is(ItemTags.BANNERS)) {
             MysticcraftMod.LOGGER.warn(Markers.GUILD, "Player '{}' attempted to create guild with non-Banner item {}", owner.getGameProfile().getName(), banner);
-            return new CreateGuildRequestable.GuildCreatingResult("illegalBannerItem", false);
+            return SimpleSuccessResult.fail("illegalBannerItem");
         }
         this.setDirty();
         Guild guild = new Guild(newGuildData.name(), owner, banner, newGuildData.isPublic());
@@ -100,13 +103,14 @@ public class GuildHandler extends SavedData {
         if (owner instanceof ServerPlayer player) {
             ModMessages.sendToAllConnectedPlayers(value -> SyncGuildsPacket.addGuild(owner, guild), player.getLevel());
         }
-        return new CreateGuildRequestable.GuildCreatingResult("success", true);
+        return SimpleSuccessResult.success("success");
     }
 
     /**
      * only used for adding Guilds to the client instance, do not use!
      */
     public void addGuild(String name, Player owner, ItemStack banner, boolean isPublic) {
+        owner.getPersistentData().putString(Guild.MemberContainer.PLAYER_GUILD_NAME_TAG, name);
         this.guilds.put(name, new Guild(name, owner, banner, isPublic));
     }
 
@@ -189,12 +193,6 @@ public class GuildHandler extends SavedData {
         listTag.addAll(allGuilds().stream().map(Guild::save).toList());
         this.guilds.clear();
         return listTag;
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public static GuildHandler getClientInstance() {
-        ensureInstanceNotNull();
-        return clientInstance;
     }
 
     public void invalidate() {

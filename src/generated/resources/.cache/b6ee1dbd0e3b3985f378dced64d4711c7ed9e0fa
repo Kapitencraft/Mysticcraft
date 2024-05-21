@@ -1,0 +1,15 @@
+// 1.19.3	2024-05-20T15:49:37.439549	ModTagsProvider
+139c369d5aa84326c785340637ffaa507becc2c7 data/forge/tags/blocks/needs_netherite_tool.json
+ca0495025ce74f993979a2664aed7bb712ad2f0a data/forge/tags/blocks/ores.json
+080a99248b755da770125f0cbec1a685859fffa5 data/forge/tags/items/armors.json
+b73e877f825a7c7a57721a44b45adcb4d7401a16 data/forge/tags/items/armors/boots.json
+c30fe22910f8b91d66651150287990d662133fb1 data/forge/tags/items/armors/chestplates.json
+b2e88c82e0f50493a1ef447370e7fcaa602c72b6 data/forge/tags/items/armors/helmets.json
+c9a0bd02d5b97b723ededf2ed83dd59be6be5a75 data/forge/tags/items/armors/leggings.json
+3f5c00135780eb5a58877f178a7920339d18b517 data/forge/tags/items/tools/bows.json
+1bbd472159723995e84d7833c90518e2960cc015 data/forge/tags/items/tools/fishing_rods.json
+1466919df07556a69b2f26e221f3d59778215055 data/forge/tags/items/tools/shields.json
+9b17cc57e2875fb082c76ff39bed7b3e6129b0ed data/forge/tags/items/tools/swords.json
+d06862026e332f6b213614dc74c567fc600b7235 data/minecraft/tags/items/fishes.json
+dce797829b97f466b4b12f7ea1f9832329d9ec72 data/mysticcraft/tags/items/weapon/dagger.json
+4d7735832ccbb7ae3c10969f112b8d848319b4a7 data/mysticcraft/tags/items/weapon/sword.json

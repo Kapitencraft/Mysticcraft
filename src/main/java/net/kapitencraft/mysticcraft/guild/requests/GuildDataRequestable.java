@@ -48,23 +48,26 @@ public class GuildDataRequestable implements IRequestable<GuildDataRequestable.G
     public static class GuildPlayerData {
         private final ResourceLocation skin;
         private final String name;
+        private final UUID uuid;
 
         public GuildPlayerData(PlayerInfo info) {
-            this(info.getSkinLocation(), info.getProfile().getName());
+            this(info.getSkinLocation(), info.getProfile().getName(), info.getProfile().getId());
         }
 
-        public GuildPlayerData(ResourceLocation skin, String name) {
+        public GuildPlayerData(ResourceLocation skin, String name, UUID uuid) {
             this.skin = skin;
             this.name = name;
+            this.uuid = uuid;
         }
 
         static GuildPlayerData read(FriendlyByteBuf buf) {
-            return new GuildPlayerData(new ResourceLocation(buf.readUtf()), buf.readUtf());
+            return new GuildPlayerData(new ResourceLocation(buf.readUtf()), buf.readUtf(), buf.readUUID());
         }
 
         static void save(FriendlyByteBuf buf, GuildPlayerData data) {
             buf.writeUtf(data.skin.toString());
             buf.writeUtf(data.name);
+            buf.writeUUID(data.uuid);
         }
 
         public String getName() {
@@ -73,6 +76,10 @@ public class GuildDataRequestable implements IRequestable<GuildDataRequestable.G
 
         public ResourceLocation getSkin() {
             return skin;
+        }
+
+        public UUID getUUID() {
+            return uuid;
         }
     }
 

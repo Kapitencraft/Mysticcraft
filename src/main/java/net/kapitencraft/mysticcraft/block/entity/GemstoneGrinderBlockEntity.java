@@ -118,7 +118,7 @@ public class GemstoneGrinderBlockEntity extends BlockEntity implements MenuProvi
     }
 
     public int getSlotForItem(int slotId) {
-        ItemStack applicable = this.itemHandler.getStackInSlot(0);
+        ItemStack applicable = this.itemHandler.getApplicable();
         return getSlotForItem(slotId, applicable);
     }
 
@@ -151,6 +151,10 @@ public class GemstoneGrinderBlockEntity extends BlockEntity implements MenuProvi
         @Override
         public boolean isItemValid(int slot, @NotNull ItemStack stack) {
             return (slot == 0 && GemstoneHelper.hasCapability(stack)) || (slot >= 1 && slot <= 5 && (stack.getItem() instanceof GemstoneItem || stack.getItem() == ModItems.MISSING_GEMSTONE_SLOT.get()));
+        }
+
+        public ItemStack getApplicable() {
+            return getStackInSlot(0);
         }
 
         @Override

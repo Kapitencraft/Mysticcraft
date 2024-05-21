@@ -1,10 +1,9 @@
 package net.kapitencraft.mysticcraft.item.combat.weapon.ranged;
 
-import net.kapitencraft.mysticcraft.helpers.MathHelper;
+import net.kapitencraft.mysticcraft.item.capability.containable.QuiverCapability;
 import net.kapitencraft.mysticcraft.item.material.containable.ContainableItem;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
@@ -20,8 +19,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class QuiverItem extends ContainableItem<ArrowItem> {
+    public static final ThreadLocal<ItemStack> operationQuiver = new ThreadLocal<>();
     public static TabGroup QUIVER_GROUP = new TabGroup(TabRegister.TabTypes.WEAPONS_AND_TOOLS);
-    private static final int BAR_COLOR = Mth.color(0, 1f, 0.088f);
 
     public QuiverItem(Properties p_41383_, int quiverSize) {
         super(p_41383_, quiverSize);
@@ -29,7 +28,8 @@ public class QuiverItem extends ContainableItem<ArrowItem> {
 
     @Override
     public int getBarColor(@NotNull ItemStack stack) {
-        return BAR_COLOR;
+        float f = Math.max(0.0F, (getRemainingCapacity(stack) * 1f / getCapacity(stack)));
+        return Mth.hsvToRgb(f / 3.0F, 1.0F, 1.0F);
     }
 
     @Override
@@ -41,16 +41,13 @@ public class QuiverItem extends ContainableItem<ArrowItem> {
     @Override
     public void appendHoverTextWithPlayer(@NotNull ItemStack itemStack, @Nullable Level level, @NotNull List<Component> list, @NotNull TooltipFlag flag, Player player) {
         super.appendHoverTextWithPlayer(itemStack, level, list, flag, player);
-        double percentage = getUsedCapacity(itemStack)  * 1. / getCapacity(itemStack);
-        TextColor color = TextColor.fromLegacyFormat(ChatFormatting.GREEN);
-        if (percentage > 0.9) {
-            color = TextColor.fromLegacyFormat(ChatFormatting.RED);
-        } else if (percentage > 0.75) {
-            color = TextColor.fromRgb(MathHelper.RGBtoInt(255, 127, 0));
-        } else if (percentage > 0.5) {
-            color = TextColor.fromLegacyFormat(ChatFormatting.YELLOW);
-        }
+        TextColor color = TextColor.fromRgb(getBarColor(itemStack));
         list.add(Component.literal(getUsedCapacity(itemStack) + " / " + getCapacity(itemStack)).withStyle(Style.EMPTY.withColor(color)));
+    }
+
+    @Override
+    public QuiverCapability makeCapability() {
+        return new QuiverCapability();
     }
 
     @Override

@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.item.material.containable;
 
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
+import net.kapitencraft.mysticcraft.item.capability.containable.WalletCapability;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -19,5 +20,10 @@ public class WalletItem extends ContainableItem<Item> {
     @Override
     public boolean canApply(Item item) {
         return item == Items.EMERALD;
+    }
+
+    @Override
+    public WalletCapability makeCapability() {
+        return new WalletCapability();
     }
 }

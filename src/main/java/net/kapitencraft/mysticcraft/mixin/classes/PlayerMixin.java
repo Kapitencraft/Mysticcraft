@@ -1,21 +1,21 @@
 package net.kapitencraft.mysticcraft.mixin.classes;
 
 
-import net.kapitencraft.mysticcraft.helpers.MathHelper;
-import net.kapitencraft.mysticcraft.init.ModEnchantments;
+import com.mojang.datafixers.util.Either;
 import net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword.ModSwordItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.QuiverItem;
-import net.kapitencraft.mysticcraft.item.material.containable.ContainableHolder;
 import net.kapitencraft.mysticcraft.misc.HealingHelper;
 import net.kapitencraft.mysticcraft.mixin.duck.IAttacker;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Unit;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ProjectileWeaponItem;
@@ -39,11 +39,11 @@ public abstract class PlayerMixin extends LivingEntity implements IAttacker {
 
     @Shadow @Final private Inventory inventory;
 
-    @Shadow public abstract void remove(RemovalReason p_150097_);
+    @Shadow public abstract boolean hurt(DamageSource pSource, float pAmount);
 
-    @Shadow public abstract boolean tryToStartFallFlying();
+    @Shadow public abstract Either<Player.BedSleepingProblem, Unit> startSleepInBed(BlockPos pBedPos);
 
-    protected PlayerMixin(EntityType<? extends LivingEntity> p_20966_, Level p_20967_) {
+    private PlayerMixin(EntityType<? extends LivingEntity> p_20966_, Level p_20967_) {
         super(p_20966_, p_20967_);
     }
 
@@ -78,22 +78,17 @@ public abstract class PlayerMixin extends LivingEntity implements IAttacker {
                 predicate = ((ProjectileWeaponItem)stack.getItem()).getAllSupportedProjectiles();
                 for(int i = 0; i < inventory.getContainerSize(); ++i) {
                     ItemStack stack1 = inventory.getItem(i);
-                    if (stack1.getItem() instanceof QuiverItem quiverItem) {
-                        List<ContainableHolder<ArrowItem>> quiverContents = quiverItem.getContents(stack1);
-                        for (ContainableHolder<ArrowItem> holder : quiverContents) {
-                            ArrowItem arrowItem = holder.getItem();
-                            if (predicate.test(new ItemStack(arrowItem)) && holder.getAmount() > 0) {
-                                int enchLevel = stack1.getEnchantmentLevel(ModEnchantments.INFINITE_QUIVER.get());
-                                if (!(MathHelper.chance(0.01 * enchLevel, own()))) {
-                                    holder.grow(-1);
-                                }
-                                quiverItem.saveContents(stack1, quiverContents);
-                                return ForgeHooks.getProjectile(own(), stack, new ItemStack(arrowItem));
+                    if (stack1.getItem() instanceof QuiverItem) {
+                        List<ItemStack> quiverContents = QuiverItem.getContents(stack1);
+                        if (quiverContents != null) for (ItemStack holder : quiverContents) {
+                            if (predicate.test(holder) && holder.getCount() > 0) {
+                                QuiverItem.operationQuiver.set(stack1);
+                                return ForgeHooks.getProjectile(own(), stack, holder);
                             }
                         }
                     }
                     if (predicate.test(stack1)) {
-                        return ForgeHooks.getProjectile(own(), stack, stack1);
+                            return ForgeHooks.getProjectile(own(), stack, stack1);
                     }
                 }
 

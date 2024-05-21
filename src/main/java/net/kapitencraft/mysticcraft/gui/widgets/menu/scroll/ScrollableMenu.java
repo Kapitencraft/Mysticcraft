@@ -17,6 +17,7 @@ import java.util.List;
 public class ScrollableMenu extends Menu {
     private static final int SLIDER_WIDTH = 6;
     private final List<ScrollElement> elements = new ArrayList<>();
+    private int yOffset = 0;
     private final int elementsPerPage;
     private final int stableWidth;
     private int startIndex;
@@ -54,6 +55,8 @@ public class ScrollableMenu extends Menu {
     }
 
     public void addScrollable(ScrollElement element) {
+        element.setLocation(this.x, this.y + this.yOffset);
+        this.yOffset += element.getHeight();
         elements.add(element);
     }
 
@@ -75,5 +78,10 @@ public class ScrollableMenu extends Menu {
             element.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
             curY += element.getHeight();
         }
+    }
+
+    @Override
+    public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
+        return this.elements.stream().anyMatch(scrollElement -> scrollElement.mouseClicked(pMouseX, pMouseY, pButton));
     }
 }

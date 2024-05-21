@@ -37,7 +37,6 @@ public abstract class MultiElementSelectorWidget<K> extends PositionedWidget {
             }
         }
         allElementsSize = elements.size() * elementSize;
-        buttons.forEach(ElementButton::checkHide);
     }
 
     protected abstract void createElement(Consumer<ElementButton> adder, int xStart, int yStart, int elementSize, K element);
@@ -112,6 +111,7 @@ public abstract class MultiElementSelectorWidget<K> extends PositionedWidget {
     private void renderSlider(PoseStack poseStack, int pMouseX, int pMouseY) {
         int movePercent = this.scrollOffset / this.allElementsSize;
         boolean flag = MathHelper.is2dBetween(pMouseX, pMouseY, this.getMaxX() - SLIDER_WIDTH, this.y, this.getMaxX(), this.getMaxY());
+        fill(poseStack, this.width - SLIDER_WIDTH, 0, this.width, this.height, 0x2DFFFFFF);
         UsefulTextures.renderSlider(poseStack, this.width - SLIDER_WIDTH, movePercent * this.width, flag, .5f);
     }
 
@@ -135,7 +135,6 @@ public abstract class MultiElementSelectorWidget<K> extends PositionedWidget {
     }
 
     protected class ElementButton extends Widget {
-        private boolean shown = true;
         protected final K own;
         private final int color;
         protected int y;
@@ -181,16 +180,11 @@ public abstract class MultiElementSelectorWidget<K> extends PositionedWidget {
          * @return whether the mouse hovers over this Widget
          */
         protected final boolean hovered(double pMouseX, double pMouseY) {
-            return MathHelper.is2dBetween(pMouseX, pMouseY, this.x, this.y, this.x + this.size, this.y + this.size);
+            return pMouseY < MultiElementSelectorWidget.this.getMaxY() && pMouseY > MultiElementSelectorWidget.this.y && MathHelper.is2dBetween(pMouseX, pMouseY, this.x, this.y, this.x + this.size, this.y + this.size);
         }
 
         public void move(int yRange) {
             y += yRange;
-            checkHide();
-        }
-
-        private void checkHide() {
-            this.shown = y <= MultiElementSelectorWidget.this.getMaxY() || y >= MultiElementSelectorWidget.this.y;
         }
 
         @Override
@@ -199,7 +193,8 @@ public abstract class MultiElementSelectorWidget<K> extends PositionedWidget {
         }
 
         public boolean isShown() {
-            return this.shown;
+            MultiElementSelectorWidget<K> selectorWidget = MultiElementSelectorWidget.this;
+            return this.y < selectorWidget.getMaxY() && this.y >= selectorWidget.y;
         }
     }
 }

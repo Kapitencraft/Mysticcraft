@@ -2,7 +2,6 @@ package net.kapitencraft.mysticcraft.enchantments.weapon.ranged;
 
 import net.kapitencraft.mysticcraft.enchantments.abstracts.IWeaponEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.ModBowEnchantment;
-import net.kapitencraft.mysticcraft.init.ModEnchantments;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -23,9 +22,7 @@ public class SnipeEnchantment extends ModBowEnchantment implements IWeaponEnchan
     }
 
     @Override
-    public CompoundTag write(int level, ItemStack bow, LivingEntity owner, AbstractArrow arrow) {
-        CompoundTag tag = new CompoundTag();
-        tag.putInt("SnipeEnchant", bow.getEnchantmentLevel(ModEnchantments.SNIPE.get()));
+    public CompoundTag write(CompoundTag tag, int level, ItemStack bow, LivingEntity owner, AbstractArrow arrow) {
         tag.putDouble("LaunchX", arrow.getX());
         tag.putDouble("LaunchY", arrow.getY());
         tag.putDouble("LaunchZ", arrow.getZ());
@@ -36,9 +33,9 @@ public class SnipeEnchantment extends ModBowEnchantment implements IWeaponEnchan
     public float execute(LivingEntity target, CompoundTag tag, ExecuteType type, float oldDamage, AbstractArrow arrow) {
         if (type == ExecuteType.HIT) {
             Vec3 start = new Vec3(tag.getDouble("LaunchX"), tag.getDouble("LaunchY"), tag.getDouble("LaunchZ"));
-            Vec3 targetPos = target.position();
+            Vec3 targetPos = arrow.position();
             double distance = start.distanceTo(targetPos);
-            return (float) (oldDamage * (1 + (distance / 10) * 0.01) * tag.getInt("Level"));
+            return (float) (oldDamage * (1 + (distance / 10) * 0.01 * getLevel(tag)));
         }
         return oldDamage;
     }

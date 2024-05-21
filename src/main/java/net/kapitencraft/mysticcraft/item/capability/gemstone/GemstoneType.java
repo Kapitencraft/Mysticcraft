@@ -3,6 +3,7 @@ package net.kapitencraft.mysticcraft.item.capability.gemstone;
 import net.kapitencraft.mysticcraft.api.DoubleMap;
 import net.kapitencraft.mysticcraft.block.gemstone.GemstoneBlock;
 import net.kapitencraft.mysticcraft.block.gemstone.GemstoneCrystal;
+import net.kapitencraft.mysticcraft.block.special.GemstoneSeedBlock;
 import net.kapitencraft.mysticcraft.helpers.CollectionHelper;
 import net.kapitencraft.mysticcraft.helpers.CollectorHelper;
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
@@ -59,12 +60,7 @@ public enum GemstoneType implements StringRepresentable {
     }
 
     public static GemstoneType getById(String id) {
-        for (int i = 0; i < values().length; i++) {
-            if (values()[i].id.equals(id)) {
-                return values()[i];
-            }
-        }
-        return EMPTY;
+        return CODEC.byName(id, EMPTY);
     }
 
     public Supplier<Attribute> getModifiedAttribute() {
@@ -74,6 +70,9 @@ public enum GemstoneType implements StringRepresentable {
     public float getBlockStrength() {
         return (float) (blockStrength * blockStrength * 2);
     }
+
+    //creative content
+
     private static final DoubleMap<GemstoneType, Rarity, ItemStack> ALL_ITEMS = new DoubleMap<>();
 
     public static DoubleMap<GemstoneType, Rarity, ItemStack> allItems() {
@@ -86,8 +85,16 @@ public enum GemstoneType implements StringRepresentable {
         return ALL_ITEMS;
     }
 
+    public static DoubleMap<GemstoneType, GemstoneSeedBlock.MaterialType, ItemStack> allSeeds() {
+        return DoubleMap.of(TYPES_TO_USE.stream().collect(CollectorHelper.createMap(GemstoneType::seeds)));
+    }
+
     public static Map<GemstoneType, ItemStack> allBlocks() {
-        return Arrays.stream(values()).collect(CollectorHelper.createMap(GemstoneType::registerBlock));
+        return TYPES_TO_USE.stream().collect(CollectorHelper.createMap(GemstoneType::registerBlock));
+    }
+
+    public static DoubleMap<GemstoneType, GemstoneCrystal.Size, ItemStack> allCrystals() {
+        return DoubleMap.of(TYPES_TO_USE.stream().collect(CollectorHelper.createMap(GemstoneType::crystals)));
     }
 
     public ItemStack registerBlock() {
@@ -98,10 +105,6 @@ public enum GemstoneType implements StringRepresentable {
         return IGemstoneItem.createData(Rarity.ROUGH, this, ModBlocks.GEMSTONE_CRYSTAL::getItem);
     }
 
-    public static DoubleMap<GemstoneType, GemstoneCrystal.Size, ItemStack> allCrystals() {
-        return DoubleMap.of(Arrays.stream(values()).collect(CollectorHelper.createMap(GemstoneType::crystals)));
-    }
-
 
     public Map<GemstoneCrystal.Size, ItemStack> crystals() {
         ItemStack stack = registerCrystal();
@@ -110,6 +113,15 @@ public enum GemstoneType implements StringRepresentable {
             copy.getOrCreateTag().putString("Size", size.getSerializedName());
             return copy;
         }));
+    }
+
+    private static Map<GemstoneSeedBlock.MaterialType, ItemStack> seeds(GemstoneType t) {
+        HashMap<GemstoneSeedBlock.MaterialType, ItemStack> map = new HashMap<>();
+        for (GemstoneSeedBlock.MaterialType type : GemstoneSeedBlock.MaterialType.values()) {
+            ItemStack stack = GemstoneSeedBlock.Item.createData(t, type);
+            map.put(type, stack);
+        }
+        return map;
     }
 
     public static final List<GemstoneType> TYPES_TO_USE = CollectionHelper.remove(GemstoneType.values(), GemstoneType.EMPTY);
@@ -129,7 +141,7 @@ public enum GemstoneType implements StringRepresentable {
         return toReturn;
     }
 
-
+    //creative content end
 
     public MutableComponent getDispName() {
         return Component.translatable("gem_type." + this.getSerializedName());

@@ -43,11 +43,11 @@ public class GemstoneBlock extends HalfTransparentBlock {
 
     public GemstoneBlock() {
         super(Properties.of(Material.HEAVY_METAL).sound(SoundType.AMETHYST_CLUSTER).requiresCorrectToolForDrops().noOcclusion());
-        this.registerDefaultState(this.getStateDefinition().any().setValue(ModBlockProperties.GEMSTONE_TYPE, GemstoneType.ALMANDINE));
+        this.registerDefaultState(this.getStateDefinition().any().setValue(ModBlockProperties.GEMSTONE_TYPE, GemstoneType.EMPTY));
     }
 
     @Override
-    public int getLightBlock(BlockState p_60585_, BlockGetter p_60586_, BlockPos p_60587_) {
+    public int getLightBlock(@NotNull BlockState pState, @NotNull BlockGetter pLevel, @NotNull BlockPos pPos) {
         return 1;
     }
 
@@ -67,11 +67,11 @@ public class GemstoneBlock extends HalfTransparentBlock {
         return state.getValue(ModBlockProperties.GEMSTONE_TYPE);
     }
 
-    public static int getColor(BlockState state, BlockAndTintGetter ignored0, BlockPos ignored, int ignored2) {
-        return ignored2 == 0 ? getType(state).getColour() : -1;
+    public static int getColor(BlockState state, BlockAndTintGetter ignored0, BlockPos ignored, int tintIndex) {
+        return tintIndex == 0 ? getType(state).getColour() : -1;
     }
 
-    public <T extends net.minecraft.world.item.Item & IGemstoneItem> ItemStack getItem(BlockState state, Supplier<T> supplier) {
+    public static <T extends net.minecraft.world.item.Item & IGemstoneItem> ItemStack getItem(BlockState state, Supplier<T> supplier) {
         return IGemstoneItem.createData(GemstoneType.Rarity.ROUGH, getType(state), supplier);
     }
 

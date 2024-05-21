@@ -37,9 +37,12 @@ public class MenuableScreen extends Screen {
         } else for (GuiEventListener eventListener : List.copyOf(this.children()))
             if (eventListener.mouseClicked(pMouseX, pMouseY, pButton)) {
                 if (eventListener instanceof IMenuBuilder builder && pButton == 1) {
-                    this.active = builder.createMenu((int) pMouseX, (int) pMouseY);
-                    this.active.show();
-                    listener = this.active;
+                    Menu menu = builder.createMenu((int) pMouseX, (int) pMouseY);
+                    if (menu != null) {
+                        this.active = menu;
+                        this.active.show();
+                        listener = this.active;
+                    }
                 } else {
                     listener = eventListener;
                 }

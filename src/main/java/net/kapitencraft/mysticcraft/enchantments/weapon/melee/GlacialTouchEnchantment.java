@@ -3,6 +3,7 @@ package net.kapitencraft.mysticcraft.enchantments.weapon.melee;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.ExtendedCalculationEnchantment;
 import net.kapitencraft.mysticcraft.enchantments.abstracts.IWeaponEnchantment;
+import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
@@ -23,7 +24,7 @@ public class GlacialTouchEnchantment extends ExtendedCalculationEnchantment impl
     @Override
     protected double execute(int level, ItemStack enchanted, LivingEntity attacker, LivingEntity attacked, double damage, DamageSource source) {
         int secondsRandom = MysticcraftMod.RANDOM_SOURCE.nextIntBetweenInclusive(1, level);
-        attacked.setTicksFrozen(attacked.getTicksFrozen() + secondsRandom * 20);
+        MathHelper.add(attacked::getTicksFrozen, attacked::setTicksFrozen, secondsRandom * 20);
         return damage;
     }
 

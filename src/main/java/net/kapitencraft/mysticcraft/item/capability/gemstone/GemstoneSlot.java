@@ -8,10 +8,14 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextColor;
+import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class GemstoneSlot {
@@ -107,6 +111,15 @@ public class GemstoneSlot {
     @Override
     public String toString() {
         return "GemstoneSlot{Rarity: " + this.getGemRarity().getId() + ", applied GemstoneType: " + this.appliedGemstoneType.getId() + "}";
+    }
+
+    public List<? extends FormattedCharSequence> createPossibleList() {
+        List<Component> components = new ArrayList<>();
+        components.add(Component.translatable("gemstone_applicable_title").withStyle(ChatFormatting.GREEN));
+        for (GemstoneType gemstoneType : this.type.applicable) {
+            components.add(Component.translatable("gem_type." + gemstoneType.getSerializedName()).withStyle(style -> style.withColor(TextColor.fromRgb(gemstoneType.getColour()))));
+        }
+        return components.stream().map(Component::getVisualOrderText).toList();
     }
 
     public enum Type implements StringRepresentable {

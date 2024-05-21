@@ -2,7 +2,6 @@ package net.kapitencraft.mysticcraft.item.combat.weapon.ranged;
 
 import net.kapitencraft.mysticcraft.helpers.InventoryHelper;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
-import net.kapitencraft.mysticcraft.item.material.containable.ContainableHolder;
 import net.kapitencraft.mysticcraft.item.material.containable.ContainableItem;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
@@ -16,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 public class ArrowSwapperItem extends Item {
     public ArrowSwapperItem() {
@@ -50,8 +50,8 @@ public class ArrowSwapperItem extends Item {
     private static List<ItemStack> findProjectiles(Player player) {
         return InventoryHelper.getByFilter(player, stack -> stack.getItem() instanceof QuiverItem)
                 .stream().map(ContainableItem::getContents)
+                .filter(Objects::nonNull)
                 .flatMap(Collection::stream)
-                .map(ContainableHolder::getDefaultStack)
                 .toList();
     }
 

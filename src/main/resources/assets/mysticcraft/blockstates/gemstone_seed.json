@@ -1,0 +1,96 @@
+{
+  "variants": {
+    "facing=down,stone_type=deepslate": {
+      "model": "mysticcraft:block/gemstone/seed/deepslate_seed",
+      "x": 90
+    },
+    "facing=down,stone_type=end_stone": {
+      "model": "mysticcraft:block/gemstone/seed/end_stone_seed",
+      "x": 90
+    },
+    "facing=down,stone_type=netherrack": {
+      "model": "mysticcraft:block/gemstone/seed/netherrack_seed",
+      "x": 90
+    },
+    "facing=down,stone_type=stone": {
+      "model": "mysticcraft:block/gemstone/seed/stone_seed",
+      "x": 90
+    },
+    "facing=east,stone_type=deepslate": {
+      "model": "mysticcraft:block/gemstone/seed/deepslate_seed",
+      "y": 90
+    },
+    "facing=east,stone_type=end_stone": {
+      "model": "mysticcraft:block/gemstone/seed/end_stone_seed",
+      "y": 90
+    },
+    "facing=east,stone_type=netherrack": {
+      "model": "mysticcraft:block/gemstone/seed/netherrack_seed",
+      "y": 90
+    },
+    "facing=east,stone_type=stone": {
+      "model": "mysticcraft:block/gemstone/seed/stone_seed",
+      "y": 90
+    },
+    "facing=north,stone_type=deepslate": {
+      "model": "mysticcraft:block/gemstone/seed/deepslate_seed"
+    },
+    "facing=north,stone_type=end_stone": {
+      "model": "mysticcraft:block/gemstone/seed/end_stone_seed"
+    },
+    "facing=north,stone_type=netherrack": {
+      "model": "mysticcraft:block/gemstone/seed/netherrack_seed"
+    },
+    "facing=north,stone_type=stone": {
+      "model": "mysticcraft:block/gemstone/seed/stone_seed"
+    },
+    "facing=south,stone_type=deepslate": {
+      "model": "mysticcraft:block/gemstone/seed/deepslate_seed",
+      "y": 180
+    },
+    "facing=south,stone_type=end_stone": {
+      "model": "mysticcraft:block/gemstone/seed/end_stone_seed",
+      "y": 180
+    },
+    "facing=south,stone_type=netherrack": {
+      "model": "mysticcraft:block/gemstone/seed/netherrack_seed",
+      "y": 180
+    },
+    "facing=south,stone_type=stone": {
+      "model": "mysticcraft:block/gemstone/seed/stone_seed",
+      "y": 180
+    },
+    "facing=up,stone_type=deepslate": {
+      "model": "mysticcraft:block/gemstone/seed/deepslate_seed",
+      "x": 270
+    },
+    "facing=up,stone_type=end_stone": {
+      "model": "mysticcraft:block/gemstone/seed/end_stone_seed",
+      "x": 270
+    },
+    "facing=up,stone_type=netherrack": {
+      "model": "mysticcraft:block/gemstone/seed/netherrack_seed",
+      "x": 270
+    },
+    "facing=up,stone_type=stone": {
+      "model": "mysticcraft:block/gemstone/seed/stone_seed",
+      "x": 270
+    },
+    "facing=west,stone_type=deepslate": {
+      "model": "mysticcraft:block/gemstone/seed/deepslate_seed",
+      "y": 270
+    },
+    "facing=west,stone_type=end_stone": {
+      "model": "mysticcraft:block/gemstone/seed/end_stone_seed",
+      "y": 270
+    },
+    "facing=west,stone_type=netherrack": {
+      "model": "mysticcraft:block/gemstone/seed/netherrack_seed",
+      "y": 270
+    },
+    "facing=west,stone_type=stone": {
+      "model": "mysticcraft:block/gemstone/seed/stone_seed",
+      "y": 270
+    }
+  }
+}

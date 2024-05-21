@@ -1,8 +1,9 @@
 package net.kapitencraft.mysticcraft.gui.widgets.menu.scroll.elements;
 
+import net.kapitencraft.mysticcraft.gui.IMenuBuilder;
 import net.kapitencraft.mysticcraft.gui.widgets.Widget;
 
-public abstract class ScrollElement extends Widget {
+public abstract class ScrollElement extends Widget implements IMenuBuilder {
     protected int x;
     protected int y;
 
@@ -15,7 +16,7 @@ public abstract class ScrollElement extends Widget {
     }
 
     public int getBackgroundColor() {
-        return -1;
+        return 0x00000000;
     }
 
     public void setVisible(boolean visible) {
@@ -24,5 +25,10 @@ public abstract class ScrollElement extends Widget {
 
     public boolean isVisible() {
         return visible;
+    }
+
+    public void setLocation(int x, int y) {
+        this.x = x;
+        this.y = y;
     }
 }

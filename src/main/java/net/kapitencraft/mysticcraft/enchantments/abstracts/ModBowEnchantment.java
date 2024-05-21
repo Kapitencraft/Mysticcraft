@@ -19,6 +19,10 @@ public abstract class ModBowEnchantment extends Enchantment implements ModEnchan
         executionMap.put(this.tagName, this::execute);
     }
 
+    protected static int getLevel(CompoundTag tag) {
+        return tag.getInt("Level");
+    }
+
     public interface Execution {
         float execute(LivingEntity target, CompoundTag tag, ExecuteType type, float oldDamage, AbstractArrow arrow);
     }
@@ -33,7 +37,11 @@ public abstract class ModBowEnchantment extends Enchantment implements ModEnchan
         return oldDamage;
     }
 
-    public abstract CompoundTag write(int level, ItemStack bow, LivingEntity owner, AbstractArrow arrow);
+    /**
+     * use to add more tags to Arrow
+     * @return the populated data
+     */
+    public abstract CompoundTag write(CompoundTag tag, int level, ItemStack bow, LivingEntity owner, AbstractArrow arrow);
     public abstract float execute(LivingEntity target, CompoundTag tag, ExecuteType type, float oldDamage, AbstractArrow arrow);
 
     public String getTagName() {

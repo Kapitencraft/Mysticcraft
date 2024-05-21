@@ -38,7 +38,7 @@ public class AddGemstonesToItemEvent extends Event implements IModBusEvent {
      * @param objectMap the data of the Armor created via {@link ModArmorItem#createRegistry(String, Function, TabGroup)}
      * @param builder the Gemstone Slots to add to each armor element
      */
-    public void registerArmor(Map<EquipmentSlot, RegistryObject<ModArmorItem>> objectMap, GemstoneSlot.Builder builder) {
+    public void registerArmor(Map<EquipmentSlot, ? extends RegistryObject<? extends ModArmorItem>> objectMap, GemstoneSlot.Builder builder) {
         objectMap.values().forEach(object -> register(object, builder));
     }
 }

@@ -26,5 +26,5 @@ public class ModBlockLootTables extends BlockLootSubProvider {
         return ModBlocks.REGISTRY.getEntries().stream().map(RegistryObject::get).collect(Collectors.toList());
     }
 
-    private static final List<Block> NOT_USABLE = List.of(ModBlocks.MANA_FLUID_BLOCK.get(), ModBlocks.FRAGILE_BASALT.get(), ModBlocks.GENERATION_BLOCK.get());
+    private static final List<Block> NOT_USABLE = List.of(ModBlocks.MANA_FLUID_BLOCK.get(), ModBlocks.FRAGILE_BASALT.get(), ModBlocks.DUNGEON_GENERATOR.get());
 }

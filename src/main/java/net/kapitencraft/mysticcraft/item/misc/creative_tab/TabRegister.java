@@ -1,7 +1,6 @@
 package net.kapitencraft.mysticcraft.item.misc.creative_tab;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.block.special.GemstoneSeedBlock;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.init.ModBlocks;
 import net.kapitencraft.mysticcraft.init.ModItems;
@@ -45,7 +44,7 @@ public class TabRegister {
                             output.acceptAll(GemstoneType.allItems().actualValues());
                             output.acceptAll(GemstoneType.allBlocks().values());
                             output.acceptAll(GemstoneType.allCrystals().actualValues());
-                            output.acceptAll(GemstoneSeedBlock.Item.makeContent().actualValues());
+                            output.acceptAll(GemstoneType.allSeeds().actualValues());
                             TabGroup.registerAll(TabTypes.GEMSTONE, output::acceptAll);
                         })
         );

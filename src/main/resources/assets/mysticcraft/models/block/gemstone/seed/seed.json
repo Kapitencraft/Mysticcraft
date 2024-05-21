@@ -1,0 +1,28 @@
+{
+  "parent": "mysticcraft:block/gemstone_block",
+  "textures": {
+    "gemstone": "mysticcraft:block/gemstone/seed"
+  },
+  "elements": [
+    {
+      "from": [ 0, 0, 0 ],
+      "to": [ 16, 16, 16 ],
+      "faces": {
+        "down":  { "texture": "#material", "cullface": "down" },
+        "up":    { "texture": "#material", "cullface": "up" },
+        "north": { "texture": "#material", "cullface": "north" },
+        "south": { "texture": "#material", "cullface": "south" },
+        "west":  { "texture": "#material", "cullface": "west" },
+        "east":  { "texture": "#material", "cullface": "east" }
+      }
+    },
+    {
+      "from": [ 0, 0, 0 ],
+      "to": [ 16, 16, 16 ],
+      "faces": {
+        "north": { "texture": "#gemstone", "cullface": "north", "tintindex": 0 }
+      }
+    }
+  ],
+  "rendertype": "cutout"
+}

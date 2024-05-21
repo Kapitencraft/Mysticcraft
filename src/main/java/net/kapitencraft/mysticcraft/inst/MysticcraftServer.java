@@ -1,10 +1,12 @@
 package net.kapitencraft.mysticcraft.inst;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.item.capability.containable.ContainableCapability;
 import net.kapitencraft.mysticcraft.item.capability.elytra.ElytraCapability;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneCapability;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneData;
 import net.kapitencraft.mysticcraft.item.capability.item_stat.ItemStatCapability;
+import net.kapitencraft.mysticcraft.item.material.containable.ContainableItem;
 import net.kapitencraft.mysticcraft.worldgen.gemstone.GemstoneDecorator;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.ElytraItem;
@@ -56,6 +58,10 @@ public class MysticcraftServer {
         }
         if (item instanceof ElytraItem) {
             event.addCapability(MysticcraftMod.res("elytra"), ElytraCapability.create());
+        }
+        if (item instanceof ContainableItem<?> containableItem) {
+            ContainableCapability capability = containableItem.makeCapability();
+            event.addCapability(MysticcraftMod.res("content"), capability);
         }
         ItemStatCapability capability = new ItemStatCapability();
         Arrays.stream(ItemStatCapability.Type.values()).filter(type -> type.test(item))

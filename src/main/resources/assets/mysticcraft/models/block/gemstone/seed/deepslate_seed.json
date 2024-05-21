@@ -1,0 +1,6 @@
+{
+  "parent": "mysticcraft:block/gemstone/seed/seed",
+  "textures": {
+    "material": "block/deepslate"
+  }
+}

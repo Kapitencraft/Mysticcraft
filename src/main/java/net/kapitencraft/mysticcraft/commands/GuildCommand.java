@@ -140,21 +140,6 @@ public class GuildCommand {
         });
     }
 
-    private static int kickPlayer(Player target, CommandContext<CommandSourceStack> context) {
-        return checkGuildCommand(context, (player, stack, guild) -> {
-            if (guild.isOwner(target)) {
-                stack.sendFailure(Component.translatable("command.guild.kick.isOwner"));
-            }
-            if (guild.kickMember(target)) {
-                ModMessages.sendToAllConnectedPlayers(value -> SyncGuildsPacket.leaveGuild(target), player.getLevel());
-                ModCommands.sendSuccess(stack, "command.guild.kick.success", target.getName());
-                return 1;
-            }
-            stack.sendFailure(Component.translatable("command.guild.kick.failed", target.getName()));
-            return 0;
-        });
-    }
-
     private static int promotePlayer(Player target, CommandContext<CommandSourceStack> context, @Nullable Guild.Rank rank) {
         return checkGuildCommand(context, (player, stack, guild) -> {
             if (guild.isOwner(target)) {

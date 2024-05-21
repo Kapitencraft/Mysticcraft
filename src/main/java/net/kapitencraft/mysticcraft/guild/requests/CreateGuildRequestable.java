@@ -2,20 +2,21 @@ package net.kapitencraft.mysticcraft.guild.requests;
 
 import net.kapitencraft.mysticcraft.guild.GuildHandler;
 import net.kapitencraft.mysticcraft.networking.IRequestable;
+import net.kapitencraft.mysticcraft.networking.SimpleSuccessResult;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 
-public class CreateGuildRequestable implements IRequestable<CreateGuildRequestable.GuildCreatingResult, CreateGuildRequestable.CreateGuildData> {
+public class CreateGuildRequestable implements IRequestable<SimpleSuccessResult, CreateGuildRequestable.CreateGuildData> {
     @Override
-    public void writeToNetwork(GuildCreatingResult target, FriendlyByteBuf buf) {
+    public void writeToNetwork(SimpleSuccessResult target, FriendlyByteBuf buf) {
         target.save(buf);
     }
 
     @Override
-    public GuildCreatingResult getFromNetwork(FriendlyByteBuf buf) {
-        return GuildCreatingResult.load(buf);
+    public SimpleSuccessResult getFromNetwork(FriendlyByteBuf buf) {
+        return SimpleSuccessResult.load(buf);
     }
 
     @Override
@@ -29,7 +30,7 @@ public class CreateGuildRequestable implements IRequestable<CreateGuildRequestab
     }
 
     @Override
-    public GuildCreatingResult pack(CreateGuildData source, ServerPlayer player) {
+    public SimpleSuccessResult pack(CreateGuildData source, ServerPlayer player) {
         ServerLevel level = player.getLevel();
         GuildHandler handler = GuildHandler.getInstance(level);
         return handler.addNewGuild(source, player);
@@ -44,17 +45,6 @@ public class CreateGuildRequestable implements IRequestable<CreateGuildRequestab
 
         static CreateGuildData load(FriendlyByteBuf buf) {
             return new CreateGuildData(buf.readUtf(), buf.readBoolean(), buf.readItem());
-        }
-    }
-
-    public record GuildCreatingResult(String name, boolean success) {
-        void save(FriendlyByteBuf buf) {
-            buf.writeUtf(name);
-            buf.writeBoolean(success);
-        }
-
-        static GuildCreatingResult load(FriendlyByteBuf buf) {
-            return new GuildCreatingResult(buf.readUtf(), buf.readBoolean());
         }
     }
 }

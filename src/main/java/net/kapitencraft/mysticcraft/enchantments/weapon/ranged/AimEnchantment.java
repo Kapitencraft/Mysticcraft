@@ -23,16 +23,14 @@ public class AimEnchantment extends ModBowEnchantment implements IWeaponEnchantm
     }
 
     @Override
-    public CompoundTag write(int level, ItemStack bow, LivingEntity owner, AbstractArrow arrow) {
-        CompoundTag tag = new CompoundTag();
-        tag.putInt("Level", level);
+    public CompoundTag write(CompoundTag tag, int level, ItemStack bow, LivingEntity owner, AbstractArrow arrow) {
         return tag;
     }
 
     @Override
     public float execute(LivingEntity target, CompoundTag tag, ExecuteType type, float oldDamage, AbstractArrow arrow) {
         if (type == ExecuteType.TICK) {
-            MathHelper.getLivingAround(arrow, tag.getInt("Level") * 2).stream()
+            MathHelper.getLivingAround(arrow, getLevel(tag) * 2).stream()
                     .filter(living -> arrow.getOwner() != living && !living.isDeadOrDying())
                     .sorted(Comparator.comparingDouble(value -> value.distanceTo(arrow)))
                     .findAny().ifPresent(living -> arrow.setDeltaMovement(MathHelper.setLength(living.position().subtract(arrow.position()), arrow.getDeltaMovement().length())));
@@ -47,7 +45,7 @@ public class AimEnchantment extends ModBowEnchantment implements IWeaponEnchantm
 
 
     @Override
-    public String[] getDescriptionMods(int level) {
-        return new String[] {"" + 2*level};
+    public Object[] getDescriptionMods(int level) {
+        return new Object[] {2*level};
     }
 }

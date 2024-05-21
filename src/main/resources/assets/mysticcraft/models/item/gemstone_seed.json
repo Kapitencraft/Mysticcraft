@@ -1,0 +1,24 @@
+{
+  "parent": "mysticcraft:block/gemstone/seed/stone_seed",
+  "overrides": [
+    {
+      "predicate": {
+        "mysticcraft:material": 0.2
+      },
+      "model": "mysticcraft:block/gemstone/seed/deepslate_seed"
+    },
+    {
+      "predicate": {
+        "mysticcraft:material": 0.3
+      },
+      "model": "mysticcraft:block/gemstone/seed/netherrack_seed"
+    },
+    {
+      "predicate": {
+        "mysticcraft:material": 0.4
+      },
+      "model": "mysticcraft:block/gemstone/seed/end_stone_seed"
+    }
+  ]
+
+}

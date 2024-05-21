@@ -7,7 +7,7 @@ import net.kapitencraft.mysticcraft.block.gemstone.GemstoneBlock;
 import net.kapitencraft.mysticcraft.block.gemstone.GemstoneCrystal;
 import net.kapitencraft.mysticcraft.block.gemstone.GemstoneGrinderBlock;
 import net.kapitencraft.mysticcraft.block.special.GemstoneSeedBlock;
-import net.kapitencraft.mysticcraft.dungeon.generation.GenerationBlock;
+import net.kapitencraft.mysticcraft.dungeon.generation.DungeonGenerator;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneItem;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
@@ -60,13 +60,12 @@ public interface ModBlocks {
 
     BlockRegistryHolder<ReforgeAnvilBlock, BlockItem> REFORGING_ANVIL = registerBlock("reforge_anvil", ReforgeAnvilBlock::new, MiscHelper.rarity(Rarity.UNCOMMON), TabGroup.MATERIAL);
     RegistryObject<LiquidBlock> MANA_FLUID_BLOCK = REGISTRY.register("mana_fluid_block", ManaLiquidBlock::new);
-    BlockRegistryHolder<GemstoneSeedBlock, BlockItem> GEMSTONE_SEED = registerBlock("gemstone_seed", GemstoneSeedBlock::new, MiscHelper.rarity(Rarity.RARE), TabGroup.BUILDING_MATERIAL);
     BlockRegistryHolder<Block, BlockItem> MANGATIC_STONE = registerBlock("mangatic_stone", ()-> new Block(BlockBehaviour.Properties.copy(Blocks.END_STONE)), MiscHelper.rarity(Rarity.RARE), TabGroup.MATERIAL);
     BlockRegistryHolder<MangaticSlimeBlock, BlockItem> MANGATIC_SLIME = registerBlock("mangatic_slime", MangaticSlimeBlock::new, new Item.Properties().rarity(Rarity.EPIC), TabGroup.MATERIAL);
     BlockRegistryHolder<ObsidianPressurePlate, BlockItem> OBSIDIAN_PRESSURE_PLATE = registerBlock("obsidian_pressure_plate", ObsidianPressurePlate::new, new Item.Properties().rarity(Rarity.UNCOMMON), TabGroup.DECO);
     BlockRegistryHolder<Block, BlockItem> CRIMSONIUM_ORE = registerBlock("crimsonium_ore", ()-> new Block(BlockBehaviour.Properties.copy(Blocks.STONE)), new Item.Properties().rarity(Rarity.UNCOMMON), TabGroup.MATERIAL);
     RegistryObject<Block> FRAGILE_BASALT = REGISTRY.register("fragile_basalt", FragileBasaltBlock::new);
-    RegistryObject<Block> GENERATION_BLOCK = REGISTRY.register("generation_block", GenerationBlock::new);
+    RegistryObject<Block> DUNGEON_GENERATOR = REGISTRY.register("dungeon_generator", DungeonGenerator::new);
     BlockRegistryHolder<GuildBoardBlock, BlockItem> GUILD_BOARD = registerBlock("guild_board", GuildBoardBlock::new, new Item.Properties().rarity(Rarity.EPIC), TabGroup.MATERIAL);
     BlockRegistryHolder<GoldenSlab, BlockItem> GOLDEN_SLAB = registerBlock("golden_slab", GoldenSlab::new, MiscHelper.rarity(Rarity.COMMON), TabGroup.GOLDEN_DECO);
     BlockRegistryHolder<GoldenStairs, BlockItem> GOLDEN_STAIRS = registerBlock("golden_stairs", GoldenStairs::new, MiscHelper.rarity(Rarity.COMMON), TabGroup.GOLDEN_DECO);
@@ -75,4 +74,5 @@ public interface ModBlocks {
     BlockRegistryHolder<SoulChain, BlockItem> SOUL_CHAIN = registerBlock("soul_chain", SoulChain::new, MiscHelper.rarity(Rarity.RARE), TabGroup.DECO);
     BlockRegistryHolder<GemstoneBlock, GemstoneBlock.Item> GEMSTONE_BLOCK = registerBlock("gemstone_block", GemstoneBlock::new, object -> new GemstoneBlock.Item(), null);
     BlockRegistryHolder<GemstoneCrystal, GemstoneBlock.Item> GEMSTONE_CRYSTAL = registerBlock("gemstone_crystal", GemstoneCrystal::new, object -> new GemstoneCrystal.Item(), null);
+    BlockRegistryHolder<GemstoneSeedBlock, GemstoneSeedBlock.Item> GEMSTONE_SEED = registerBlock("gemstone_seed", GemstoneSeedBlock::new, object -> new GemstoneSeedBlock.Item(), null);
 }

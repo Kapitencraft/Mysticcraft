@@ -35,15 +35,15 @@ public class GemstoneGrinderMenu extends ModMenu<GemstoneGrinderBlockEntity> {
         this.addPlayerInventories(inv, 0, 0);
 
         this.blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(handler -> {
+            this.addSlot(new CCSlotItemHandler(handler, 1, 25, 53));
             this.addSlot(new CCSlotItemHandler(handler, 2, 52, 53));
             this.addSlot(new CCSlotItemHandler(handler, 3, 79, 53));
             this.addSlot(new CCSlotItemHandler(handler, 4, 106, 53));
             this.addSlot(new CCSlotItemHandler(handler, 5, 133, 53));
-            this.addSlot(new CCSlotItemHandler(handler, 1, 25, 53));
             this.addSlot(new CCSlotItemHandler(handler, 0, 79, 17));
         });
         this.blockEntity.emptyItemHandler(true);
-        ItemStack applicable = this.blockEntity.itemHandler.getStackInSlot(0);
+        ItemStack applicable = this.blockEntity.itemHandler.getApplicable();
         if (!applicable.isEmpty() && this.player instanceof ServerPlayer serverPlayer) {
             applicable.getCapability(CapabilityHelper.GEMSTONE).ifPresent(handler -> sendGemstoneCapability(handler, serverPlayer)
             );

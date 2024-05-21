@@ -5,10 +5,14 @@ import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.api.MapStream;
 import net.kapitencraft.mysticcraft.gui.browse.IBrowsable;
 import net.kapitencraft.mysticcraft.gui.browse.browsables.GuildScreen;
-import net.kapitencraft.mysticcraft.helpers.*;
+import net.kapitencraft.mysticcraft.helpers.CollectorHelper;
+import net.kapitencraft.mysticcraft.helpers.IOHelper;
+import net.kapitencraft.mysticcraft.helpers.MiscHelper;
+import net.kapitencraft.mysticcraft.helpers.TextHelper;
 import net.kapitencraft.mysticcraft.logging.Markers;
 import net.kapitencraft.mysticcraft.misc.visuals.Pingable;
 import net.minecraft.ChatFormatting;
+import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -31,11 +35,10 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @ParametersAreNonnullByDefault
 public class Guild implements Pingable, IBrowsable {
-    private static final String NAME_ID = "Name", MEMBER_ID = "Members", BANNER_ID = "Banner", UPGRADES_ID = "Upgrades", WAR_INSTANCE_ID = "Wars", PLAYER_NAMES_ID = "PlayerNames", RANKS_ID = "Ranks";
+    private static final String NAME_ID = "Name", MEMBER_ID = "Members", BANNER_ID = "Banner", UPGRADES_ID = "Upgrades", WAR_INSTANCE_ID = "Wars", RANKS_ID = "Ranks";
 
     //TODO add guild marker next player name (chat & ig)
 
@@ -70,9 +73,6 @@ public class Guild implements Pingable, IBrowsable {
         this.customRanksProvider = RankContainer.load(in.getCompound(RANKS_ID));
         this.container = loadMembers(in.getCompound(MEMBER_ID));
         this.wars = loadWarOpponents(in.getCompound(WAR_INSTANCE_ID));
-        if (in.contains(PLAYER_NAMES_ID, 9)) {
-            this.container.memberNames.putAll(IOHelper.readMap(in, PLAYER_NAMES_ID, CompoundTag::getUUID, CompoundTag::getString).toMap());
-        }
     }
 
     public CompoundTag save() {
@@ -82,15 +82,11 @@ public class Guild implements Pingable, IBrowsable {
         tag.put(BANNER_ID, this.banner.save(new CompoundTag()));
         tag.put(UPGRADES_ID, upgrades.save());
         tag.put(WAR_INSTANCE_ID, wars.save());
+        CompoundTag tag1 = new CompoundTag();
+        customRanksProvider.save(tag1);
+        tag.put(RANKS_ID, tag1);
         return tag;
     }
-
-    public CompoundTag saveWithPlayers() {
-        CompoundTag tag = save();
-        tag.put(PLAYER_NAMES_ID, IOHelper.writeMap(this.container.memberNames, NbtUtils::createUUID, StringTag::valueOf));
-        return tag;
-    }
-
 
     public void setRank(Player player, String rankId) {
         this.container.addMember(player, this.customRanksProvider.getByName(rankId));
@@ -125,55 +121,67 @@ public class Guild implements Pingable, IBrowsable {
     }
 
     public Collection<UUID> getAllPlayerIds() {
-        return this.container.memberNames.keySet();
+        return this.container.members.keySet();
+    }
+
+    public boolean canDoAction(Player player, int permissionLevel) {
+        Map<UUID, MemberContainer.ContainerElement> elementMap = this.container.members;
+        return elementMap.containsKey(player.getUUID()) && elementMap.get(player.getUUID()).rank.getPermissionLevel() >= permissionLevel;
+    }
+
+    public void muteMember(UUID a, Long b) {
+        this.container.mute(a, b);
+    }
+
+    public void banPlayer(UUID first, Long second) {
+        this.container.ban(first, second);
     }
 
     public class MemberContainer {
         public static final String PLAYER_GUILD_NAME_TAG = "GuildName";
 
         private final Map<UUID, String> invites = new HashMap<>();
-        private final Map<UUID, String> memberNames = new HashMap<>();
-        private final Map<UUID, IRank> rawMembers = new HashMap<>();
+        private final Map<UUID, ContainerElement> members = new HashMap<>();
+        private final Map<UUID, Long> banned = new HashMap<>();
         private final UUID rawOwner;
         Player cachedOwner = null;
         private final Map<Player, IRank> onlineMembers = new HashMap<>();
 
         public MemberContainer(UUID rawOwner) {
             this.rawOwner = rawOwner;
-            this.rawMembers.put(rawOwner, Rank.OWNER);
+            this.members.put(rawOwner, new ContainerElement(Rank.OWNER));
         }
 
         int size() {
-            return rawMembers.size();
+            return members.size();
         }
 
         String getOwnerName() {
-            return memberNames.get(this.rawOwner);
+            return members.get(this.rawOwner).name;
         }
 
         public void load(ServerLevel level) {
             MinecraftServer server = level.getServer();
             GameProfileCache cache = server.getProfileCache();
-            MysticcraftMod.LOGGER.info("Guild {} is loading their members", Guild.this.getGuildName());
-            this.memberNames.putAll(MapStream.of(this.rawMembers.keySet().stream().collect(Collectors.toMap(uuid -> uuid, uuid -> uuid)))
-                    .mapValues(cache::get)
-                    .mapValues(CollectionHelper::getOptionalOrNull)
-                    .filterValues(Objects::nonNull, null)
-                    .mapValues(GameProfile::getName).toMap());
+            MysticcraftMod.LOGGER.debug("Guild {} is loading their members", Guild.this.getGuildName());
+            this.members.forEach((uuid, containerElement) -> {
+                Optional<GameProfile> optional = cache.get(uuid);
+                optional.ifPresent(gameProfile -> containerElement.name = gameProfile.getName());
+            });
         }
 
         void setOnline(Player player) {
-            if (this.rawMembers.containsKey(player.getUUID())) {
-                IRank rank = rawMembers.get(player.getUUID());
-                this.onlineMembers.put(player, rawMembers.get(player.getUUID()));
+            if (this.members.containsKey(player.getUUID())) {
+                IRank rank = members.get(player.getUUID()).rank;
+                this.onlineMembers.put(player, members.get(player.getUUID()).rank);
                 if (rank == Rank.OWNER) {
                     if (cachedOwner != null) {
                         throw new IllegalStateException("Found guild (" + Guild.this.getGuildName() + ") with multiple owners (" + cachedOwner.getGameProfile().getName() + " & " + player.getGameProfile().getName() + ")");
                     }
                     cachedOwner = player;
                 }
-                if (!Objects.equals(player.getGameProfile().getName(), this.memberNames.get(player.getUUID()))) {
-                    this.memberNames.put(player.getUUID(), player.getGameProfile().getName());
+                if (!Objects.equals(player.getGameProfile().getName(), this.members.get(player.getUUID()).name)) {
+                    this.members.get(player.getUUID()).name = player.getGameProfile().getName();
                 }
             }
         }
@@ -183,8 +191,43 @@ public class Guild implements Pingable, IBrowsable {
             if (player == cachedOwner) cachedOwner = null;
         }
 
+        public boolean isBanned(UUID uuid) {
+            if (banned.containsKey(uuid)) {
+                if (banned.get(uuid) >= Util.getMillis()) {
+                    banned.remove(uuid);
+                    return false;
+                }
+                return true;
+            }
+            return false;
+        }
+
+        public void ban(UUID uuid, long l) {
+            banned.put(uuid, l);
+        }
+
+        public boolean isMuted(UUID uuid) {
+            if (members.containsKey(uuid) && members.get(uuid).mutedUntil != -1) {
+                if (members.get(uuid).mutedUntil >= Util.getMillis()) {
+                    members.remove(uuid);
+                    return false;
+                }
+                return true;
+            }
+            return false;
+        }
+
+        public void mute(UUID uuid, long l) {
+            if (this.members.containsKey(uuid)) {
+                this.members.get(uuid).mutedUntil = l;
+            }
+        }
+
         public void disband() {
             this.onlineMembers.keySet().forEach(player -> player.getPersistentData().remove(PLAYER_GUILD_NAME_TAG));
+            this.onlineMembers.clear();
+            this.members.clear();
+            this.cachedOwner = null;
         }
 
         int getOnlineMembers() {
@@ -192,7 +235,7 @@ public class Guild implements Pingable, IBrowsable {
         }
 
         public String addInvitation(Player player) {
-            if (rawMembers.containsKey(player.getUUID())) {
+            if (members.containsKey(player.getUUID())) {
                 return "isMember";
             } else if (invites.containsKey(player.getUUID())) {
                 return "isInvited";
@@ -207,7 +250,7 @@ public class Guild implements Pingable, IBrowsable {
         }
 
         boolean contains(Player player) {
-            return this.rawMembers.containsKey(player.getUUID());
+            return this.members.containsKey(player.getUUID());
         }
 
         public void addMember(Player player) {
@@ -216,7 +259,7 @@ public class Guild implements Pingable, IBrowsable {
 
         private void insertNewMember(Player player, IRank rank) {
             this.onlineMembers.put(player, rank);
-            this.rawMembers.put(player.getUUID(), rank);
+            this.members.put(player.getUUID(), new ContainerElement(rank));
             player.getPersistentData().putString(PLAYER_GUILD_NAME_TAG, Guild.this.getGuildName());
         }
 
@@ -236,14 +279,14 @@ public class Guild implements Pingable, IBrowsable {
 
         public void removeMember(Player player) {
             this.onlineMembers.remove(player);
-            this.rawMembers.remove(player.getUUID());
+            this.members.remove(player.getUUID());
             player.getPersistentData().remove(PLAYER_GUILD_NAME_TAG);
         }
 
-        public String promotePlayer(Player player, @Nullable IRank rank) {
-            if (onlineMembers.containsKey(player) && !removed) {
+        public String promotePlayer(UUID player, @Nullable IRank rank) {
+            if (members.containsKey(player) && !removed) {
                 IRank nextRank;
-                IRank currentRank = onlineMembers.get(player);
+                IRank currentRank = members.get(player).rank;
                 if (rank != null) {
                     if (currentRank == rank) {
                         return "isSame";
@@ -261,20 +304,54 @@ public class Guild implements Pingable, IBrowsable {
                 } else {
                     return "noInfo";
                 }
-                onlineMembers.put(player, nextRank);
-                rawMembers.put(player.getUUID(), nextRank);
+                members.get(player).rank = nextRank;
                 return "success";
             }
-            return player == cachedOwner ? "isOwner" : "notMember";
+            return player == rawOwner ? "isOwner" : "notMember";
         }
 
         public CompoundTag save() {
             CompoundTag tag = new CompoundTag();
             tag.putUUID("Owner", rawOwner);
             tag.put("Invites", IOHelper.writeMap(this.invites, NbtUtils::createUUID, StringTag::valueOf));
-            tag.put(MEMBER_ID, IOHelper.writeMap(this.rawMembers, NbtUtils::createUUID, IRank::save));
+            tag.put(MEMBER_ID, IOHelper.writeMap(this.members, NbtUtils::createUUID, ContainerElement::save));
             return tag;
         }
+
+        private static class ContainerElement {
+            private IRank rank;
+            private long mutedUntil = -1;
+            private String name;
+
+            public ContainerElement(IRank rank) {
+                this.rank = rank;
+            }
+
+            public static Tag save(ContainerElement inst) {
+                CompoundTag tag = new CompoundTag();
+                tag.putString("Rank", inst.rank.getRegistryName());
+                if (inst.name != null) {
+                    tag.putString("Name", inst.name);
+                }
+                if (inst.mutedUntil != -1) {
+                    tag.putLong("MutedUntil", inst.mutedUntil);
+                }
+                return tag;
+            }
+        }
+    }
+
+    private MemberContainer.ContainerElement loadContainerElement(CompoundTag tag, String id) {
+        CompoundTag tag1 = tag.getCompound(id);
+        IRank rank = Guild.this.customRanksProvider.getByName(tag1.getString("Rank"));
+        MemberContainer.ContainerElement element = new MemberContainer.ContainerElement(rank);
+        if (tag1.contains("Name", 8)) {
+            element.name = tag1.getString("Name");
+        }
+        if (tag1.contains("MutedUntil", 4)) {
+            element.mutedUntil = tag1.getLong("MutedUntil");
+        }
+        return element;
     }
 
     public void setOnline(Player player) {
@@ -284,9 +361,9 @@ public class Guild implements Pingable, IBrowsable {
     MemberContainer loadMembers(CompoundTag tag) {
         UUID owner = tag.getUUID("Owner");
         Map<UUID, String> invites = IOHelper.readMap(tag, "Invites", CompoundTag::getUUID, CompoundTag::getString).toMap();
-        Map<UUID, IRank> members = IOHelper.readMap(tag, MEMBER_ID, CompoundTag::getUUID, this.customRanksProvider::readFromTag).toMap();
+        Map<UUID, MemberContainer.ContainerElement> members = IOHelper.readMap(tag, MEMBER_ID, CompoundTag::getUUID, this::loadContainerElement).toMap();
         MemberContainer container = new MemberContainer(owner);
-        container.rawMembers.putAll(members);
+        container.members.putAll(members);
         container.invites.putAll(invites);
         return container;
     }
@@ -304,7 +381,7 @@ public class Guild implements Pingable, IBrowsable {
     }
 
     public String promote(Player player, @Nullable Rank rank) {
-        return this.container.promotePlayer(player, rank);
+        return this.container.promotePlayer(player.getUUID(), rank);
     }
 
     @Override
@@ -378,11 +455,11 @@ public class Guild implements Pingable, IBrowsable {
         list.add(Component.translatable("guild.owner", this.container.getOwnerName()));
         list.add(Component.translatable("guild.member_count", getMemberAmount()));
         if (suppressed || getMemberAmount() > 5) {
-            list.add(Component.literal(String.join(", ", this.container.memberNames.values())));
+            list.add(Component.literal(String.join(", ", this.container.members.values().stream().map(containerElement -> containerElement.name).toList())));
         } else {
-            this.container.memberNames.forEach((uuid, s) -> {
-                IRank rank = this.container.rawMembers.get(uuid);
-                list.add(Component.literal(s).append(": ").append(rank.getName()));
+            this.container.members.forEach((uuid, s) -> {
+                IRank rank = this.container.members.get(uuid).rank;
+                list.add(Component.literal(s.name).append(": ").append(rank.getName()));
             });
         }
         return list;
@@ -413,13 +490,32 @@ public class Guild implements Pingable, IBrowsable {
         return false;
     }
 
-    public boolean kickMember(Player member) {
-        if (containsMember(member.getUUID()) && !removed) {
+    public boolean kickMember(@Nullable Player member, KickStatus status) {
+        if (member != null && containsMember(member.getUUID()) && !removed) {
             removeMember(member);
-            member.sendSystemMessage(Component.translatable("guild.kick", this.getGuildName()));
+            member.sendSystemMessage(Component.translatable("guild." + status.getSerializedName(), this.getGuildName()));
             return true;
         }
         return false;
+    }
+
+    public enum KickStatus implements StringRepresentable {
+        LEAVE("leave"),
+        KICK("kick"),
+        BAN("ban"),
+        DISBAND("disband");
+
+        private static final EnumCodec<KickStatus> CODEC = StringRepresentable.fromEnum(KickStatus::values);
+        private final String name;
+
+        KickStatus(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public @NotNull String getSerializedName() {
+            return name;
+        }
     }
 
     private void removeMember(Player player) {
@@ -435,7 +531,7 @@ public class Guild implements Pingable, IBrowsable {
     }
 
     public boolean containsMember(UUID member) {
-        return this.container.rawMembers.containsKey(member);
+        return this.container.members.containsKey(member);
     }
 
     public ItemStack getBanner() {
@@ -464,11 +560,6 @@ public class Guild implements Pingable, IBrowsable {
                             .mapToSimple(CustomRank::new).collect(CollectorHelper.toKeyMappedStream(CustomRank::getRegistryName)).toMap());
         }
 
-
-        private IRank readFromTag(CompoundTag tag, String id) {
-            return getByName(tag.getString(id));
-        }
-
         public static RankContainer load(CompoundTag tag) {
             RankContainer container = new RankContainer();
             container.loadData(tag);
@@ -489,8 +580,11 @@ public class Guild implements Pingable, IBrowsable {
 
     public interface IRank {
         int DEFAULT_PERMISSION = 0, ACCEPT_INVITES = 1, MUTE_MEMBERS = 2, KICK_MEMBERS = 3, BAN_MEMBERS = 4, CHANGE_SETTINGS = 5, DISBAND = 6;
+
         Component getName();
+
         int getPermissionLevel();
+
         TextColor color();
 
         Tag save();

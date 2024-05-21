@@ -3,6 +3,7 @@ package net.kapitencraft.mysticcraft.gui.screen.guild;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.kapitencraft.mysticcraft.client.MysticcraftClient;
 import net.kapitencraft.mysticcraft.gui.browse.browsables.GuildScreen;
+import net.kapitencraft.mysticcraft.gui.screen.AwaitScreen;
 import net.kapitencraft.mysticcraft.gui.screen.DefaultBackgroundScreen;
 import net.kapitencraft.mysticcraft.gui.widgets.Checkbox;
 import net.kapitencraft.mysticcraft.gui.widgets.CreateBannerWidget;
@@ -10,7 +11,9 @@ import net.kapitencraft.mysticcraft.gui.widgets.ExtendedEditBox;
 import net.kapitencraft.mysticcraft.guild.GuildHandler;
 import net.kapitencraft.mysticcraft.guild.requests.CreateGuildRequestable;
 import net.kapitencraft.mysticcraft.init.ModDataRequesters;
+import net.kapitencraft.mysticcraft.networking.SimpleSuccessResult;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.PlainTextButton;
 import net.minecraft.network.chat.Component;
@@ -72,13 +75,18 @@ public class CreateGuildScreen extends DefaultBackgroundScreen {
         this.widget = new CreateBannerWidget(this.leftPos + 5, this.topPos + 26, this.getImageWidth() - 10, this.getImageHeight() - 61);
         this.addRenderableWidget(this.widget);
     }
+
+    @SuppressWarnings("all")
     private void updateCreateButton(int halfWidth) {
         int width = this.font.width(this.title);
         int xStart = halfWidth - width / 2;
         Button createGuildButton = new PlainTextButton(xStart, this.topPos + this.getImageHeight() - 22, this.width, 10, this.title,
                 pButton -> {
-                    this.minecraft.setScreen(null);
-                    MysticcraftClient.getInstance().handler.createRequest(ModDataRequesters.CREATE_GUILD.get(), new CreateGuildRequestable.CreateGuildData(this.nameBox.getValue(), this.shouldBePublic.isChecked(), this.widget.getBanner()), this::takeData);
+            if (this.nameBox.getValue().isEmpty()) Minecraft.getInstance().player.sendSystemMessage(Component.translatable("gui.guild.missing_name").withStyle(ChatFormatting.RED));
+            else {
+                MysticcraftClient.getInstance().handler.createRequest(ModDataRequesters.CREATE_GUILD.get(), new CreateGuildRequestable.CreateGuildData(this.nameBox.getValue(), this.shouldBePublic.isChecked(), this.widget.getBanner()), this::takeData);
+                this.minecraft.setScreen(new AwaitScreen(Component.translatable("gui.guild.create_fetch")));
+            }
                 },
                 this.font
         );
@@ -86,9 +94,10 @@ public class CreateGuildScreen extends DefaultBackgroundScreen {
     }
 
     @SuppressWarnings("all")
-    private void takeData(CreateGuildRequestable.GuildCreatingResult data) {
-        this.minecraft.player.sendSystemMessage(Component.translatable("guild.create." + data.name()).withStyle(data.success() ? ChatFormatting.GREEN : ChatFormatting.RED));
+    private void takeData(SimpleSuccessResult data) {
+        this.minecraft.player.sendSystemMessage(Component.translatable("guild.create." + data.id()).withStyle(data.success() ? ChatFormatting.GREEN : ChatFormatting.RED));
         if (data.success()) this.minecraft.setScreen(new GuildScreen(GuildHandler.getClientInstance().getGuildForPlayer(this.minecraft.player)));
+        else this.minecraft.setScreen(null);
     }
 
     @Override

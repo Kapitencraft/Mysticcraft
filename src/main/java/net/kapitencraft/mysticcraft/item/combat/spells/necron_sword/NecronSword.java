@@ -18,13 +18,13 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.function.Consumer;
 
-public abstract class NecronSword extends SpellItem {
+public class NecronSword extends SpellItem {
     public static final TabGroup NECRON_GROUP = new TabGroup(TabRegister.TabTypes.WEAPONS_AND_TOOLS);
-    protected static final int BASE_DAMAGE = 12;
-    protected static final double BASE_STRENGHT = 150;
-    protected static final int REFINED_BASE_DAMAGE = 13;
-    protected static final double BASE_FEROCITY = 30;
-    protected static final int BASE_INTEL = 50;
+    public static final int BASE_DAMAGE = 12;
+    public static final double BASE_STRENGHT = 150;
+    public static final int REFINED_BASE_DAMAGE = 13;
+    public static final double BASE_FEROCITY = 30;
+    public static final int BASE_INTEL = 50;
     private final double FEROCITY;
     private final double STRENGHT;
 
@@ -56,7 +56,9 @@ public abstract class NecronSword extends SpellItem {
         return multimap;
     }
 
-    protected abstract @NotNull Consumer<Multimap<Attribute, AttributeModifier>> getAdditionalModifiers();
+    protected @NotNull Consumer<Multimap<Attribute, AttributeModifier>> getAdditionalModifiers() {
+        return multimap -> {};
+    }
 
     @Override
     public List<Component> getItemDescription() {

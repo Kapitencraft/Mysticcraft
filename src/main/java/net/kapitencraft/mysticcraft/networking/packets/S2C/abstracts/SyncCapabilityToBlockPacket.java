@@ -29,6 +29,12 @@ public abstract class SyncCapabilityToBlockPacket<T extends ModCapability<T, K>,
     }
 
     @Override
+    public void toBytes(FriendlyByteBuf buf) {
+        super.toBytes(buf);
+        buf.writeBlockPos(this.pos);
+    }
+
+    @Override
     public boolean handle(Supplier<NetworkEvent.Context> sup) {
         sup.get().enqueueWork(()-> {
             ClientLevel level = Minecraft.getInstance().level;

@@ -92,10 +92,14 @@ public class GemstoneGrowth {
 
     private static List<Direction> scanPossibleDirections(BlockPos pos, LevelAccessor level, GemstoneType type, List<BlockPos> visited) {
         List<Direction> list = new ArrayList<>();
+        BlockState active = level.getBlockState(pos);
+        if (active.is(ModBlocks.GEMSTONE_SEED.getBlock())) { //ensure always following gemstone seed direction & gemstone type = same
+            if (active.getValue(ModBlockProperties.GEMSTONE_TYPE) == type) return List.of(active.getValue(BlockStateProperties.FACING));
+        }
         for (Direction direction : Direction.values()) {
             BlockPos pos1 = pos.relative(direction);
             BlockState state = level.getBlockState(pos1);
-            if (!visited.contains(pos1) && level.hasChunkAt(pos) && (state.is(Blocks.AIR) || ((state.is(GEMSTONE) || state.is(GEMSTONE_CRYSTAL) && state.getValue(ModBlockProperties.GEMSTONE_TYPE) == type)))) {
+            if (!visited.contains(pos1) && level.hasChunkAt(pos) && (state.is(Blocks.AIR) || ((state.is(GEMSTONE) || state.is(GEMSTONE_CRYSTAL)) && state.getValue(ModBlockProperties.GEMSTONE_TYPE) == type))) {
                 list.add(direction);
             }
         }

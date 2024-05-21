@@ -56,8 +56,10 @@ public class GuildScreen extends BrowserScreen<Guild> {
 
     @Override
     protected void init() {
+        super.init();
         ScrollableMenu menu = new ScrollableMenu(this.leftPos + 8, this.topPos + 72, this, 5, 50);
         this.memberInfos.stream().map(GuildPlayerElement::new).forEach(menu::addScrollable);
+        this.addRenderableWidget(menu);
         this.players = menu;
     }
 

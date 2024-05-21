@@ -2,6 +2,7 @@ package net.kapitencraft.mysticcraft.misc;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.block.gemstone.GemstoneCrystal;
+import net.kapitencraft.mysticcraft.block.special.GemstoneSeedBlock;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.init.ModBlocks;
 import net.kapitencraft.mysticcraft.init.ModItems;
@@ -63,6 +64,15 @@ public class ModItemProperties {
                 case CLUSTER -> 0.4f;
             };
         });
+        ItemProperties.register(ModBlocks.GEMSTONE_SEED.getItem(), MysticcraftMod.res("material"), (pStack, pLevel, pEntity, pSeed) -> {
+            GemstoneSeedBlock.MaterialType type = GemstoneSeedBlock.getType(pStack);
+            return switch (type) {
+                case STONE -> 0.1f;
+                case DEEPSLATE -> 0.2f;
+                case NETHERRACK -> 0.3f;
+                case END_STONE -> 0.4f;
+            };
+        });
     }
 
     private static void makeBow(RegistryObject<? extends ModBowItem> bowItem) {
@@ -90,8 +100,8 @@ public class ModItemProperties {
          });
     }
 
-    private static void createArmor(HashMap<EquipmentSlot, RegistryObject<ModArmorItem>> armorHashMap) {
-        for (RegistryObject<ModArmorItem> registryObject : armorHashMap.values()) {
+    private static void createArmor(HashMap<EquipmentSlot, ? extends RegistryObject<? extends ModArmorItem>> armorHashMap) {
+        for (RegistryObject<? extends ModArmorItem> registryObject : armorHashMap.values()) {
             Item armorItem = registryObject.get();
             ItemProperties.register(armorItem, new ResourceLocation("dimension"), ((stack, level, living, i) -> {
                 if (living == null) return 0;

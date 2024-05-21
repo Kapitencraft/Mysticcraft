@@ -63,12 +63,10 @@
   "block.mysticcraft.lapis_button": "Lapis Button",
   "block.mysticcraft.mangatic_slime": "Mangatic Slime",
   "block.mysticcraft.mangatic_stone": "Mangatic Stone",
-  "block.mysticcraft.moon_stone_gemstone_block": "Moon Stone Crystal",
   "block.mysticcraft.obsidian_pressure_plate": "Obsidian Pressure Plate",
   "block.mysticcraft.reforge_anvil": "Reforge Anvil",
-  "block.mysticcraft.ruby_gemstone_block": "Ruby Crystal",
-  "block.mysticcraft.sapphire_gemstone_block": "Sapphire Crystal",
   "block.mysticcraft.soul_chain": "Soul Chain",
+
 
   "builders_wand.cone": "Cone",
   "builders_wand.cuboid": "Cube",
@@ -291,6 +289,7 @@
   "gemstone_crystal.large.name": "Large %1$s Crystal",
   "gemstone_crystal.cluster.name": "%1$s Cluster",
   "gemstone_item.translation": "Some say when harnessed properly, it can give it's owner extra %1$s",
+  "gemstone_seed.name": "%1$s Gemstone Seed",
 
   "generic.ability_damage": "§cAbility Damage",
   "generic.armor_shredder": "Armor Shredding",
@@ -548,5 +547,11 @@
   "gui.set_guild_name": "Set Name",
   "spell.cast": "Used %1$s: %2$s",
   "spell.use": "Started Using %1$s: %2$s/s",
-  "gui.search": "Search..."
+  "gui.search": "Search...",
+  "gui.guild.set_muted": "Mute",
+  "gui.guild.kick_member": "Kick",
+  "gui.guild.ban_member": "Ban",
+  "gemstone_applicable_title": "Possible Gemstones:",
+  "gui.guild.missing_name": "You're guild is missing a name!",
+  "gui.guild.create_fetch": "Creating Guild"
 }
