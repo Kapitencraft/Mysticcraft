@@ -30,26 +30,6 @@ public class ModFluidType extends FluidType {
         this.fogColor = fogColor;
     }
 
-    public int getTintColor() {
-        return tintColor;
-    }
-
-    public ResourceLocation getFlowTexture() {
-        return flowTexture;
-    }
-
-    public ResourceLocation getOverlayTexture() {
-        return overlayTexture;
-    }
-
-    public ResourceLocation getStillTexture() {
-        return stillTexture;
-    }
-
-    public Vector3f getFogColor() {
-        return fogColor;
-    }
-
     @Override
     public void initializeClient(Consumer<IClientFluidTypeExtensions> consumer) {
         consumer.accept(new IClientFluidTypeExtensions() {

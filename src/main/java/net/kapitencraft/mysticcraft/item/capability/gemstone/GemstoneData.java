@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class GemstoneData {
-    private final Map<RegistryObject<Item>, GemstoneSlot.Builder> data = new HashMap<>();
+    private final Map<RegistryObject<? extends Item>, GemstoneSlot.Builder> data = new HashMap<>();
 
     public GemstoneData() {
         ModEventFactory.onGemstoneDataCreated(this);
@@ -19,7 +19,7 @@ public class GemstoneData {
         return data.size();
     }
 
-    public void register(RegistryObject<Item> object, GemstoneSlot.Builder builder) {
+    public void register(RegistryObject<? extends Item> object, GemstoneSlot.Builder builder) {
         if (!data.containsKey(object)) {
             data.put(object, builder);
         } else {

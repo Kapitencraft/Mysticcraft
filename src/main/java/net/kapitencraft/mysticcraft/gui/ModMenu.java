@@ -19,9 +19,9 @@ public abstract class ModMenu<T extends ICapabilityProvider> extends AbstractCon
     public final Player player;
     protected final T blockEntity;
 
-    protected ModMenu(@Nullable MenuType<?> menuType, int containerId, int slotAMount, Inventory inventory, T provider) {
+    protected ModMenu(@Nullable MenuType<?> menuType, int containerId, int slotAmount, Inventory inventory, T provider) {
         super(menuType, containerId);
-        this.slotAmount = slotAMount;
+        this.slotAmount = slotAmount;
         this.player = inventory.player;
         this.level = player.level;
         this.blockEntity = provider;
@@ -47,8 +47,6 @@ public abstract class ModMenu<T extends ICapabilityProvider> extends AbstractCon
     public static final int VANILLA_SLOT_COUNT = HOTBAR_SLOT_COUNT + PLAYER_INVENTORY_SLOT_COUNT;
     public static final int VANILLA_FIRST_SLOT_INDEX = 0;
     public static final int TE_INVENTORY_FIRST_SLOT_INDEX = VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT;
-
-    // THIS YOU HAVE TO DEFINE!
 
     @Override
     public @NotNull ItemStack quickMoveStack(@NotNull Player playerIn, int index) {

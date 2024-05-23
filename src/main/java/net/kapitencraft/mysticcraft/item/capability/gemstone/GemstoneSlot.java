@@ -2,6 +2,7 @@ package net.kapitencraft.mysticcraft.item.capability.gemstone;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.kapitencraft.mysticcraft.gui.gemstone_grinder.GemstoneGrinderMenu;
 import net.kapitencraft.mysticcraft.init.ModItems;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.FriendlyByteBuf;
@@ -161,7 +162,6 @@ public class GemstoneSlot {
     }
 
     public static class Builder {
-        public static final int MAX_LENGTH = 5;
         private final Type[] types;
 
         public Builder(Type... types) {
@@ -169,7 +169,7 @@ public class GemstoneSlot {
         }
 
         public GemstoneSlot[] build() {
-            if (types.length > MAX_LENGTH) throw new IllegalStateException("attempting to build gemstone builder larger than 5");
+            if (types.length > GemstoneGrinderMenu.MAX_GEMSTONE_SLOTS) throw new IllegalStateException("detected Gemstone builder exceeding size limit (found: " + types.length + ", max: " + GemstoneGrinderMenu.MAX_GEMSTONE_SLOTS + ")");
             GemstoneSlot[] slots = new GemstoneSlot[types.length];
             for (int i = 0; i < slots.length; i++) {
                 slots[i] = new GemstoneSlot(types[i], GemstoneType.EMPTY, GemstoneType.Rarity.EMPTY);

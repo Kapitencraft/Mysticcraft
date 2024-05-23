@@ -2,6 +2,7 @@ package net.kapitencraft.mysticcraft.api;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class Queue<T> {
     private final List<T> active = new ArrayList<>();
@@ -37,8 +38,19 @@ public class Queue<T> {
         else active.remove(obj);
     }
 
+    public void queue(Consumer<T> consumer) {
+        ensureReady();
+        startQueuing();
+        this.active.forEach(consumer);
+        stopQueuing();
+    }
+
     public List<T> getAll() {
-        if (queuing) throw new IllegalStateException("can not get elements while queuing!");
+        ensureReady();
         return active;
+    }
+
+    private void ensureReady() {
+        if (queuing) throw new IllegalStateException("can not get elements while queuing!");
     }
 }

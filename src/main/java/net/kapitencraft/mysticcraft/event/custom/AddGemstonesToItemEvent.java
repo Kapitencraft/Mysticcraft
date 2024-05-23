@@ -30,7 +30,7 @@ public class AddGemstonesToItemEvent extends Event implements IModBusEvent {
      * @param builder the Gemstone Slots to add
      */
     public void register(RegistryObject<? extends Item> object, GemstoneSlot.Builder builder) {
-        helper.register((RegistryObject<Item>) object, builder);
+        helper.register(object, builder);
     }
 
     /**
