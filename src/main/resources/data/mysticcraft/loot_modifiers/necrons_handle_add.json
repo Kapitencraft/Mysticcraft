@@ -1,0 +1,15 @@
+{
+  "type": "mysticcraft:add_item",
+  "conditions": [
+    {
+      "condition": "entity_properties",
+      "entity": "this",
+      "predicate": {
+        "type": "minecraft:wither",
+        "nbt": "{WitherType:Necron}"
+      }
+    }
+  ],
+  "chance": 0.1,
+  "item": "mysticcraft:necrons_handle"
+}

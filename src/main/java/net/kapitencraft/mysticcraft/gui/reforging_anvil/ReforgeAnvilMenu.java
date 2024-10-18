@@ -143,6 +143,9 @@ public class ReforgeAnvilMenu extends NoBEMenu<ReforgeAnvilMenu.ReforgeAnvilCont
 
         public String reforge(Player player) {
             ItemStack stack = getStack(false);
+            if (stack == null || stack.isEmpty()) {
+                return null;
+            }
             if (InventoryHelper.isCreativeMode(player) || InventoryHelper.hasInInventory(List.of(new ItemStack(Items.EMERALD, 5)), player) && Reforges.canBeReforged(stack)) {
                 if (!InventoryHelper.isCreativeMode(player)) InventoryHelper.removeFromInventory(new ItemStack(Items.EMERALD, 5), player);
                 return Reforges.applyRandom(false, stack).getRegistryName();
