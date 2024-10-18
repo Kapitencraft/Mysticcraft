@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.mixin.classes;
 
-import net.kapitencraft.mysticcraft.block.ModBlockProperties;
+import net.kapitencraft.mysticcraft.block.ModBlockStateProperties;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -27,6 +27,6 @@ public class BlockMixin {
      */
     //@ModifyVariable(method = "registerDefaultState", at = @At("HEAD"), argsOnly = true)
     private BlockState modifyState(BlockState state) {
-        return state.setValue(ModBlockProperties.PLAYER_PLACED, false);
+        return state.setValue(ModBlockStateProperties.PLAYER_PLACED, false);
     }
 }

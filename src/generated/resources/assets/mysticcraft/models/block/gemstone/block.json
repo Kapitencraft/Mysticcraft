@@ -1,0 +1,7 @@
+{
+  "parent": "mysticcraft:block/colored_block",
+  "render_type": "minecraft:translucent",
+  "textures": {
+    "all": "mysticcraft:block/gemstone/block"
+  }
+}

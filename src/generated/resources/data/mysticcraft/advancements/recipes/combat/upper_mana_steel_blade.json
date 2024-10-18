@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "mysticcraft:upper_mana_steel_blade"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_upper_mana_steel_blade": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "mysticcraft:mana_steel_ingot"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_upper_mana_steel_blade",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "mysticcraft:upper_mana_steel_blade"
+    ]
+  }
+}

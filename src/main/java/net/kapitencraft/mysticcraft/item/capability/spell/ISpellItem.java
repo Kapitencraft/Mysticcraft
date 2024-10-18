@@ -62,6 +62,7 @@ public interface ISpellItem {
         return -1;
     }
 
+    //TODO ensure mana is required
     default void executeSpell(String s, ItemStack stack, LivingEntity living) {
         getSpells(stack).executeSpell(s, stack, living);
     }

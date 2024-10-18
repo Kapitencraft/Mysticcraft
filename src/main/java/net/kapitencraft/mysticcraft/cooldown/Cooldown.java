@@ -3,7 +3,6 @@ package net.kapitencraft.mysticcraft.cooldown;
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.helpers.TextHelper;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
-import net.kapitencraft.mysticcraft.misc.cooldown.ICooldownable;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -30,7 +29,7 @@ public class Cooldown {
         double mul = reduceWithTime ? living.getAttributeValue(ModAttributes.COOLDOWN_REDUCTION.get()) : 0;
         int value = (int) (defaultTime * (1 - mul / 100));
         if (value > 0) {
-            tag.putInt(path.getPath(), value);
+            tag.putInt(path.path(), value);
             cast(living).addCooldown(this);
         }
     }
@@ -41,7 +40,7 @@ public class Cooldown {
 
     public int getCooldownTime(Entity living) {
         CompoundTag tag = getTag(living);
-        return tag.getInt(path.getPath());
+        return tag.getInt(path.path());
     }
 
     public boolean isActive(Entity entity) {
@@ -53,15 +52,15 @@ public class Cooldown {
     }
 
     public CompoundPath getPath() {
-        return path.getParent();
+        return path.parent();
     }
 
     public String getId() {
-        return path.getPath();
+        return path.path();
     }
 
     public @NotNull CompoundTag getTag(Entity entity) {
-        return path.getParent().getOrCreateTag(entity);
+        return path.parent().getOrCreateTag(entity);
     }
 
     public Component createDisplay(Entity entity) {

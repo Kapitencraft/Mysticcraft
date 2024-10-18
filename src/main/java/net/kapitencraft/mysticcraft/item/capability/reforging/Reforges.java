@@ -6,13 +6,13 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 public class Reforges {
     public static final String REFORGE_NAME_ID = "ReforgeName";
@@ -23,7 +23,7 @@ public class Reforges {
         ModEventFactory.onRarityRegister(list);
     }
 
-    public static Reforge getByName(String name) {
+    public static Reforge byName(String name) {
         return reforges.get(name);
     }
 
@@ -46,7 +46,7 @@ public class Reforges {
         return reforges;
     }
 
-    public static @NotNull Reforge makeRandom(boolean withStones, ItemStack stack) {
+    public static Reforge makeRandom(boolean withStones, ItemStack stack) {
         List<Reforge> list = reforges.values().stream().filter(reforge -> reforge.getType().mayApply(stack)).toList();
         if (withStones) {
             return MathHelper.pickRandom(list);
@@ -71,5 +71,9 @@ public class Reforges {
     }
 
     public static void bootstrap() {
+    }
+
+    public static boolean canBeReforged(ItemStack pStack) {
+        return Stream.of(Reforge.Type.values()).anyMatch(type -> type.mayApply(pStack));
     }
 }

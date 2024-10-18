@@ -40,7 +40,7 @@ public abstract class StyleMixin implements EffectsStyle {
     @Redirect(method = "toString", at = @At(value = "INVOKE", target = "Ljava/lang/StringBuilder;append(Ljava/lang/String;)Ljava/lang/StringBuilder;"))
     public StringBuilder toString(StringBuilder instance, String str) {
         instance.append(str);
-        if (this.effects.size() > 0) instance.append("{special: ").append(this.effects.stream().map(ModRegistries.GLYPH_REGISTRY::getKey).filter(Objects::nonNull).map(ResourceLocation::toString).collect(Collectors.joining(", "))).append("}");
+        if (!this.effects.isEmpty()) instance.append("{special: ").append(this.effects.stream().map(ModRegistries.GLYPH_REGISTRY::getKey).filter(Objects::nonNull).map(ResourceLocation::toString).collect(Collectors.joining(", "))).append("}");
         return instance;
     }
 

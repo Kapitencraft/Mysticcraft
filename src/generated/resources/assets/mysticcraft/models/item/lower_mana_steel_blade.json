@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "mysticcraft:item/lower_mana_steel_blade"
+  }
+}

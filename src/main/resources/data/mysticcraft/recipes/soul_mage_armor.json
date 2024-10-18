@@ -1,8 +1,0 @@
-{
-  "type": "mysticcraft:armor",
-  "category": "equipment",
-  "material": {
-    "item": "mysticcraft:soul_chain"
-  },
-  "results": "mysticcraft:soul_mage"
-}

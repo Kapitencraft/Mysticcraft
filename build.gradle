@@ -71,6 +71,7 @@ minecraft {
         server {}
 
         data {
+            property 'forge.logging.console.level', 'info'
             // Specify the mod id for data generation, where to output the resulting resource, and where to look for existing resources.
             args '--mod', mod_id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
         }
@@ -115,8 +116,8 @@ dependencies {
 
 mixin {
     //MixinGradle Settings
-    add sourceSets.main, 'mysticcraft.mixin-refmap.json'
-    config 'mysticcraft.mixins.json'
+    add sourceSets.main, "${mod_id}.mixin-refmap.json"
+    config "${mod_id}.mixins.json"
 }
 
 // Example for how to get properties into the manifest for reading at runtime.

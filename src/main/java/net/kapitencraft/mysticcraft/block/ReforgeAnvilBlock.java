@@ -1,52 +1,45 @@
 package net.kapitencraft.mysticcraft.block;
 
-import net.kapitencraft.mysticcraft.block.entity.ReforgeAnvilBlockEntity;
+import net.kapitencraft.mysticcraft.gui.reforging_anvil.ReforgeAnvilMenu;
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.item.FallingBlockEntity;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.AnvilBlock;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class ReforgeAnvilBlock extends AnvilBlock implements EntityBlock {
+public class ReforgeAnvilBlock extends AnvilBlock {
+    private static final Component CONTAINER_NAME = Component.translatable("container.reforge_anvil");
+
     public ReforgeAnvilBlock() {
         super(Properties.copy(Blocks.ANVIL));
     }
 
-    @Nullable
-    @Override
-    public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
-        return new ReforgeAnvilBlockEntity(pos, state);
-    }
-
-    @Override
-    public void onLand(Level p_48793_, BlockPos p_48794_, BlockState p_48795_, BlockState p_48796_, FallingBlockEntity p_48797_) {
-    }
-    @Override
-    public void onBrokenAfterFall(Level p_152053_, BlockPos p_152054_, FallingBlockEntity p_152055_) {
-    }
-
     @Override
     public @NotNull InteractionResult use(@NotNull BlockState pState, Level pLevel, @NotNull BlockPos pPos, @NotNull Player pPlayer, @NotNull InteractionHand pHand, @NotNull BlockHitResult pHit) {
-        if (!pLevel.isClientSide()) {
-            BlockEntity entity = pLevel.getBlockEntity(pPos);
-            if(entity instanceof ReforgeAnvilBlockEntity blockEntity) {
-                NetworkHooks.openScreen(((ServerPlayer)pPlayer), blockEntity, pPos);
-            } else {
-                throw new IllegalStateException("The Container provider is missing!");
-            }
+        if (pLevel.isClientSide) {
+            return InteractionResult.SUCCESS;
+        } else {
+            pPlayer.openMenu(pState.getMenuProvider(pLevel, pPos));
+            return InteractionResult.CONSUME;
         }
+    }
 
-        return InteractionResult.sidedSuccess(pLevel.isClientSide());
+    @Nullable
+    @Override
+    public MenuProvider getMenuProvider(BlockState pState, Level pLevel, BlockPos pPos) {
+        return new SimpleMenuProvider(
+                (pContainerId, pPlayerInventory, pPlayer) -> new ReforgeAnvilMenu(pContainerId, pPlayer, ContainerLevelAccess.create(pLevel, pPos)),
+                CONTAINER_NAME
+        );
     }
 }

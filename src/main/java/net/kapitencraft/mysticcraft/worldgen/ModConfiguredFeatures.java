@@ -27,7 +27,7 @@ public class ModConfiguredFeatures {
 
         List<OreConfiguration.TargetBlockState> crimsoniumOres = List.of(OreConfiguration.target(netherrackReplaceAbles, ModBlocks.CRIMSONIUM_ORE.getBlock().defaultBlockState()));
 
-        //register(context, CRIMSONIUM_ORE, Feature.ORE, new OreConfiguration(crimsoniumOres, 4));
+        register(context, CRIMSONIUM_ORE, Feature.ORE, new OreConfiguration(crimsoniumOres, 4));
         register(context, GEMSTONE_SPAWN, ModFeatures.GEMSTONE_SPAWN.get(), new GemstoneSpawnFeature.Config());
     }
 

@@ -67,7 +67,7 @@ public class BuildersWand extends Item implements IModItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack p_41421_, @Nullable Level p_41422_, List<Component> list, TooltipFlag p_41424_) {
+    public void appendHoverTextWithPlayer(@NotNull ItemStack itemStack, @Nullable Level level, @NotNull List<Component> list, @NotNull TooltipFlag flag, Player player) {
         String s = TextHelper.makeList(posList, TextHelper::fromBlockPos);
         Component component = TextHelper.makeList(useAbles, Component::empty, Block::getName, MutableComponent::append);
         list.add(Component.literal("saved positions: " + s).withStyle(ChatFormatting.GREEN));
@@ -77,10 +77,10 @@ public class BuildersWand extends Item implements IModItem {
             list.add(Component.literal("click on block + SHIFT: add pos"));
             list.add(Component.literal("click on block + CTRL + SHIFT: reset pos"));
             list.add(Component.literal("click on block + ALT: reset blocks"));
+            list.add(Component.literal("click in air: use"));
         } else {
             list.add(Component.literal("press [CTRL] for controls"));
         }
-        super.appendHoverText(p_41421_, p_41422_, list, p_41424_);
     }
 
     private void setMsg(MutableComponent component) {
@@ -183,10 +183,10 @@ public class BuildersWand extends Item implements IModItem {
             BlockPos diff = pos2.subtract(pos1);
             MathHelper.forCube(diff, (pos) -> {
                 BlockPos pos3 = diff.offset(pos1.getX() + pos.getX(), pos1.getY() + pos.getY(), pos1.getZ() + pos.getZ());
-                level.setBlock(pos3, MathHelper.pickRandom(blocks).defaultBlockState(), 3);
+                checkAndPlaceBlock(level, block, pos3, blocks);
             });
         }, "builders_wand.cuboid"),
-        SPHERE(3, false, 2, (block, blocks, blockPos, level) -> {}, "builders_wand.sphere"),
+        SPHERE(3, false, 3, (block, blocks, blockPos, level) -> {}, "builders_wand.sphere"),
         CONE(4, false, 3, (block, blocks, blockPos, level) -> {}, "builders_wand.cone"),
         CYLINDER(5,false, 3, (block, blocks, blockPos, level) -> {}, "builders_wand.cylinder"),
         REPLACE(6, true, 2, (block, blocks, blockPos, level) -> {

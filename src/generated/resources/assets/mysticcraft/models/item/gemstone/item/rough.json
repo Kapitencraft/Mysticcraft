@@ -1,0 +1,6 @@
+{
+  "parent": "mysticcraft:item/gemstone",
+  "textures": {
+    "layer0": "mysticcraft:item/gemstone/item/rough"
+  }
+}

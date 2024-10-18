@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "*": {
+      "item": "mysticcraft:mana_steel_ingot"
+    },
+    "+": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "mysticcraft:gemstone",
+      "nbt": "{GemstoneData:{GemId:\"jasper\",GemRarity:\"perfect\"}}"
+    }
+  },
+  "pattern": [
+    " * ",
+    "*+*",
+    "*+*"
+  ],
+  "result": {
+    "item": "mysticcraft:lower_mana_steel_blade"
+  }
+}

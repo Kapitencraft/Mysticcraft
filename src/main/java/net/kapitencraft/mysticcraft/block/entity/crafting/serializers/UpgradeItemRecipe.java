@@ -23,6 +23,7 @@ public class UpgradeItemRecipe extends CustomRecipe {
     private final ItemStack result;
     private final String group;
     private final CraftType type;
+
     public UpgradeItemRecipe(ResourceLocation p_252125_, CraftingBookCategory p_249010_, Ingredient toUpgrade, Ingredient upgradeItem, ItemStack result, String group, CraftType type) {
         super(p_252125_, p_249010_);
         this.toUpgrade = toUpgrade;

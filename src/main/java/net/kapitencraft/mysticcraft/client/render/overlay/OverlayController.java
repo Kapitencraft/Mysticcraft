@@ -10,7 +10,7 @@ import net.kapitencraft.mysticcraft.client.render.overlay.holder.MultiHolder;
 import net.kapitencraft.mysticcraft.client.render.overlay.holder.RenderHolder;
 import net.kapitencraft.mysticcraft.client.render.overlay.holder.SimpleHolder;
 import net.kapitencraft.mysticcraft.event.ModEventFactory;
-import net.kapitencraft.mysticcraft.event.custom.RegisterOverlaysEvent;
+import net.kapitencraft.mysticcraft.event.custom.client.RegisterOverlaysEvent;
 import net.kapitencraft.mysticcraft.helpers.*;
 import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.misc.MiscRegister;

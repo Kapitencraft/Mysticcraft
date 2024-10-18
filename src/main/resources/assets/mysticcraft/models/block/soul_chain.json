@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/chain",
-  "textures": {
-    "particle": "mysticcraft:block/soul_chain",
-    "all": "mysticcraft:block/soul_chain"
-  },
-  "render_type": "cutout"
-}

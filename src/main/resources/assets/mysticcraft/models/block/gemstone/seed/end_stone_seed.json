@@ -1,6 +1,0 @@
-{
-  "parent": "mysticcraft:block/gemstone/seed/seed",
-  "textures": {
-    "material": "block/end_stone"
-  }
-}

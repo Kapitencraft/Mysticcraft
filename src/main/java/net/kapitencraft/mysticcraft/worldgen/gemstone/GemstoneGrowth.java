@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.worldgen.gemstone;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.block.ModBlockProperties;
+import net.kapitencraft.mysticcraft.block.ModBlockStateProperties;
 import net.kapitencraft.mysticcraft.block.gemstone.GemstoneCrystal;
 import net.kapitencraft.mysticcraft.block.special.GemstoneSeedBlock;
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
@@ -36,8 +36,8 @@ public class GemstoneGrowth {
         else main = MathHelper.pickRandom(directions);
         if (main == null) return;
         level.setBlock(pos, ModBlocks.GEMSTONE_SEED.getBlock().defaultBlockState()
-                .setValue(ModBlockProperties.STONE_TYPE, matType)
-                .setValue(ModBlockProperties.GEMSTONE_TYPE, type)
+                .setValue(ModBlockStateProperties.STONE_TYPE, matType)
+                .setValue(ModBlockStateProperties.GEMSTONE_TYPE, type)
                 .setValue(BlockStateProperties.FACING, main), 3); //spawn gemstone seed
         growCrystal(level, pos, amount, baseMainChance, source);
     }
@@ -49,7 +49,7 @@ public class GemstoneGrowth {
         try {
             BlockState seedState = level.getBlockState(pos);
             main = seedState.getValue(BlockStateProperties.FACING);
-            type = seedState.getValue(ModBlockProperties.GEMSTONE_TYPE);
+            type = seedState.getValue(ModBlockStateProperties.GEMSTONE_TYPE);
         } catch (Exception e) {
             MysticcraftMod.LOGGER.warn(Markers.GEMSTONE_BUILDER, "unable to grow crystal at {}: {}", pos, e.getMessage());
             return;
@@ -68,7 +68,7 @@ public class GemstoneGrowth {
                 visited.add(pos);
                 if (state.is(Blocks.AIR) && level.hasChunkAt(pos)) {
                     level.setBlock(pos, GEMSTONE_CRYSTAL_STATE
-                            .setValue(ModBlockProperties.GEMSTONE_TYPE, type)
+                            .setValue(ModBlockStateProperties.GEMSTONE_TYPE, type)
                             .setValue(GemstoneCrystal.SIZE, GemstoneCrystal.Size.SMALL)
                             .setValue(BlockStateProperties.FACING, direction), 3
                     );
@@ -79,7 +79,7 @@ public class GemstoneGrowth {
                         level.setBlock(pos, state.setValue(GemstoneCrystal.SIZE, size.next()), 3);
                     } else {
                         level.setBlock(pos, GEMSTONE_BLOCK
-                                .setValue(ModBlockProperties.GEMSTONE_TYPE, type), 3
+                                .setValue(ModBlockStateProperties.GEMSTONE_TYPE, type), 3
                         );
                     }
                     break;
@@ -94,12 +94,12 @@ public class GemstoneGrowth {
         List<Direction> list = new ArrayList<>();
         BlockState active = level.getBlockState(pos);
         if (active.is(ModBlocks.GEMSTONE_SEED.getBlock())) { //ensure always following gemstone seed direction & gemstone type = same
-            if (active.getValue(ModBlockProperties.GEMSTONE_TYPE) == type) return List.of(active.getValue(BlockStateProperties.FACING));
+            if (active.getValue(ModBlockStateProperties.GEMSTONE_TYPE) == type) return List.of(active.getValue(BlockStateProperties.FACING));
         }
         for (Direction direction : Direction.values()) {
             BlockPos pos1 = pos.relative(direction);
             BlockState state = level.getBlockState(pos1);
-            if (!visited.contains(pos1) && level.hasChunkAt(pos) && (state.is(Blocks.AIR) || ((state.is(GEMSTONE) || state.is(GEMSTONE_CRYSTAL)) && state.getValue(ModBlockProperties.GEMSTONE_TYPE) == type))) {
+            if (!visited.contains(pos1) && level.hasChunkAt(pos) && (state.is(Blocks.AIR) || ((state.is(GEMSTONE) || state.is(GEMSTONE_CRYSTAL)) && state.getValue(ModBlockStateProperties.GEMSTONE_TYPE) == type))) {
                 list.add(direction);
             }
         }

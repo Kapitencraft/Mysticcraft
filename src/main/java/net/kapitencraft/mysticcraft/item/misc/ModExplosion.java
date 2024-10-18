@@ -6,7 +6,6 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.helpers.TextHelper;
 import net.kapitencraft.mysticcraft.misc.DamageCounter;
-import net.kapitencraft.mysticcraft.networking.ModMessages;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
@@ -213,11 +212,18 @@ public class ModExplosion {
 
     private void sendToClient(String name) {
         if (this.level instanceof ServerLevel serverLevel) {
-            ModMessages.sendToAllConnectedPlayers(value -> new ClientboundExplodePacket(pos.x, pos.y, pos.z, this.radius, this.toBlow, this.hitPlayers.get(value)), serverLevel);
+            serverLevel.getPlayers(p -> true)
+                    .forEach(serverPlayer ->
+                            serverPlayer.connection.send(new ClientboundExplodePacket(pos.x, pos.y, pos.z,
+                                    this.radius,
+                                    this.toBlow,
+                                    this.hitPlayers.get(serverPlayer)
+                            ))
+                    );
         }
         if (shouldSendDamageValue() && this.source instanceof Player player) {
             DamageCounter.DamageHolder holder = DamageCounter.getDamage(true);
-            player.sendSystemMessage(Component.literal("Your " + name + " hit " + TextHelper.wrapInRed(holder.hit()) + " Enemies for §c" + MathHelper.defRound(holder.damage()) + " Damage"));
+            player.sendSystemMessage(Component.translatable("damage_notification", name, TextHelper.wrapInRed(holder.hit()), MathHelper.defRound(holder.damage())));
         }
     }
 

@@ -19,7 +19,11 @@ public class InventoryHelper {
     public static boolean hasPlayerStackInInventory(Player player, Item item) {
         Inventory inventory = player.getInventory();
         return allInventory(inventory).stream()
-                .anyMatch(stack -> !stack.isEmpty() && stack.sameItem(new ItemStack(item)));
+                .anyMatch(stack -> !stack.isEmpty() && stack.is(item));
+    }
+
+    public static boolean isCreativeMode(Player player) {
+        return player.getAbilities().instabuild;
     }
 
     public static void forInventory(Inventory inventory, Consumer<ItemStack> consumer) {
@@ -57,7 +61,7 @@ public class InventoryHelper {
     public static int getFirstInventoryIndex(Item item, Player player) {
         for(int i = 0; i < player.getInventory().getContainerSize(); i++) {
             ItemStack currentStack = player.getInventory().getItem(i);
-            if (!currentStack.isEmpty() && currentStack.sameItem(new ItemStack(item))) {
+            if (!currentStack.isEmpty() && currentStack.is(item)) {
                 return i;
             }
         }

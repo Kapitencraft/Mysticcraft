@@ -158,6 +158,7 @@ public abstract class MultiElementSelectorWidget<K> extends PositionedWidget {
             GuiComponent.fill(pPoseStack, flag ? xOffset + 1 : xOffset, flag ? yOffset + 1 : yOffset, xOffset + this.size - (flag ? 1 : 0),  yOffset + this.size - (flag ? 1 : 0), color);
         }
 
+        
         protected int getXOffset() {
             return this.x - MultiElementSelectorWidget.this.x;
         }

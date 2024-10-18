@@ -47,13 +47,13 @@ public class GemstoneCrystal extends GemstoneBlock {
     }
 
     @Override
-    public @NotNull BlockState rotate(BlockState p_152033_, Rotation p_152034_) {
-        return p_152033_.setValue(BlockStateProperties.FACING, p_152034_.rotate(p_152033_.getValue(BlockStateProperties.FACING)));
+    public @NotNull BlockState rotate(BlockState pState, Rotation pRotation) {
+        return pState.setValue(BlockStateProperties.FACING, pRotation.rotate(pState.getValue(BlockStateProperties.FACING)));
     }
 
     @Override
-    public @NotNull BlockState mirror(BlockState p_152030_, Mirror p_152031_) {
-        return p_152030_.rotate(p_152031_.getRotation(p_152030_.getValue(BlockStateProperties.FACING)));
+    public @NotNull BlockState mirror(BlockState pState, Mirror pMirror) {
+        return pState.rotate(pMirror.getRotation(pState.getValue(BlockStateProperties.FACING)));
     }
 
     public static Size getSize(ItemStack stack) {

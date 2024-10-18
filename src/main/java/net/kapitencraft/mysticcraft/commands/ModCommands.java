@@ -20,7 +20,6 @@ public class ModCommands {
     @SubscribeEvent
     public static void registerCommands(RegisterCommandsEvent event) {
         CommandDispatcher<CommandSourceStack> dispatcher = event.getDispatcher();
-        GuildCommand.register(dispatcher);
         MiscCommand.exeMaxEnchant(dispatcher);
         ShowItemCommand.register(dispatcher);
     }
@@ -62,6 +61,6 @@ public class ModCommands {
     }
 
     public static boolean isSocialEnabled(CommandSourceStack stack) {
-        return ServerModConfig.enableSocial;
+        return ServerModConfig.areSocialCommandsEnabled();
     }
 }

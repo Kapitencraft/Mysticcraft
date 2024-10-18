@@ -1,0 +1,14 @@
+{
+  "type": "mysticcraft:upgrade_item",
+  "category": "equipment",
+  "craft_type": "eight",
+  "material": {
+    "item": "mysticcraft:diamantes_handle"
+  },
+  "result": {
+    "item": "mysticcraft:valkyrie"
+  },
+  "source": {
+    "item": "mysticcraft:necron_sword"
+  }
+}

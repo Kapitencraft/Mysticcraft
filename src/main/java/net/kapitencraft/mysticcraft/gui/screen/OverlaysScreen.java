@@ -40,14 +40,14 @@ public class OverlaysScreen extends MenuableScreen {
     public boolean mouseDragged(double pMouseX, double pMouseY, int pButton, double pDragX, double pDragY) {
         List<InteractiveBox> list = getHovering(pMouseX, pMouseY);
         list.forEach(interactiveBox -> interactiveBox.mouseDragged(pMouseX, pMouseY, pButton, pDragX, pDragY));
-        return list.size() > 0;
+        return !list.isEmpty();
     }
 
     @Override
     public boolean mouseReleased(double x, double y, int z) {
         List<InteractiveBox> list = getHovering(x, y);
         list.forEach(interactiveBox -> interactiveBox.mouseRelease(x, y));
-        return list.size() > 0;
+        return !list.isEmpty();
     }
 
     private List<InteractiveBox> getHovering(double x, double y) {

@@ -1,0 +1,6 @@
+{
+  "parent": "mysticcraft:item/obsidian_pressure_plate",
+  "textures": {
+    "texture": "minecraft:block/obsidian"
+  }
+}

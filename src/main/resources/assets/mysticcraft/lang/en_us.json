@@ -117,6 +117,8 @@
   "command.show.mainhand": "%1$s is holding %2$s",
   "command.show.offhand": "%1$s has %2$s in there offhand",
 
+  "damage_notification": "Your %1$s hit %2$s enemies for %3$s damage",
+
   "death.attack.ability": "%1$s was killed by an magical ability from %1$s",
   "death.attack.ferocity": "%2$s was ferocious enough to kill %1$s",
   "death.attack.overflowMana": "%1$s was burst into pieces by an magical explosion",
@@ -329,6 +331,18 @@
   "guild.war.start": "The Guild has been challenged by %1$s",
 
   "gui.alignment": "Alignment",
+  "gui.alignment.x": "Width Alignment",
+  "gui.alignment.y": "Height Alignment",
+  "gui.create_guild": "Create Guild",
+  "gui.fetching": "Fetching Data",
+  "gui.guilds.members_title": "Members",
+  "gui.guild_public": "Guild Public",
+  "gui.guild_public.desc": "wether the guild should be public (allow invites)",
+  "gui.join_guild": "or Join a Guild",
+  "gui.nothing_to_show": "Nothing to show!",
+  "gui.reset_overlay": "Reset Overlay",
+  "gui.select_guild": "Select Guild",
+  "gui.set_guild_name": "Set Name",
 
   "item.creative_only": "Only obtainable in creative mode",
   "item.gemstone": "Gemstone",
@@ -532,19 +546,7 @@
   "stat_req.goldor": "%1$s killed Goldors",
 
   "tooltip.can_hit_enderman": "Hits Enderman",
-  "gui.reset_overlay": "Reset Overlay",
   "command.overlays.reset.success": "Successfully reset Overlays",
-  "gui.alignment.x": "Width Alignment",
-  "gui.alignment.y": "Height Alignment",
-  "gui.fetching": "Fetching Data",
-  "gui.guilds.members_title": "Members",
-  "gui.select_guild": "Select Guild",
-  "gui.nothing_to_show": "Nothing to show!",
-  "gui.create_guild": "Create Guild",
-  "gui.join_guild": "or Join a Guild",
-  "gui.guild_public": "Guild Public",
-  "gui.guild_public.desc": "wether the guild should be public (allow invites)",
-  "gui.set_guild_name": "Set Name",
   "spell.cast": "Used %1$s: %2$s",
   "spell.use": "Started Using %1$s: %2$s/s",
   "gui.search": "Search...",
@@ -553,5 +555,8 @@
   "gui.guild.ban_member": "Ban",
   "gemstone_applicable_title": "Possible Gemstones:",
   "gui.guild.missing_name": "You're guild is missing a name!",
-  "gui.guild.create_fetch": "Creating Guild"
+  "gui.guild.create_fetch": "Creating Guild...",
+
+  "void_totem.translation": "saves you from a very deep fall",
+  "disconnect.invalid_reforge": "Attempted to apply invalid reforge"
 }

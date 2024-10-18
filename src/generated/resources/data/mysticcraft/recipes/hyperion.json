@@ -1,0 +1,14 @@
+{
+  "type": "mysticcraft:upgrade_item",
+  "category": "equipment",
+  "craft_type": "eight",
+  "material": {
+    "item": "mysticcraft:lasrs_eye"
+  },
+  "result": {
+    "item": "mysticcraft:hyperion"
+  },
+  "source": {
+    "item": "mysticcraft:necron_sword"
+  }
+}

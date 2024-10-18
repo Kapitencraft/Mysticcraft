@@ -4,13 +4,22 @@ import net.kapitencraft.mysticcraft.entity.portal.TransferForcer;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class VoidTotemItem extends ModTotemItem {
     public VoidTotemItem() {
@@ -45,6 +54,11 @@ public class VoidTotemItem extends ModTotemItem {
         living.fallDistance = 0;
         living.setHealth(0.5f);
         living.teleportTo(targetLoc.x, targetLoc.y, targetLoc.z);
+    }
+
+    @Override
+    public void appendHoverTextWithPlayer(@NotNull ItemStack itemStack, @Nullable Level level, @NotNull List<Component> list, @NotNull TooltipFlag flag, Player player) {
+        list.add(Component.translatable("void_totem.translation"));
     }
 
     @Override

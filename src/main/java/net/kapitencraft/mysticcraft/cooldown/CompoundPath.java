@@ -7,24 +7,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
-public class CompoundPath {
+public record CompoundPath(String path, net.kapitencraft.mysticcraft.cooldown.CompoundPath parent) {
     public static final CompoundPath ROOT = new CompoundPath("", null);
     public static final CompoundPath COOLDOWN = new CompoundPath("Cooldowns", ROOT);
-    private final String path;
-    private final CompoundPath parent;
-
-    public CompoundPath(String path, CompoundPath parent) {
-        this.path = path;
-        this.parent = parent;
-    }
-
-    public CompoundPath getParent() {
-        return parent;
-    }
-
-    public String getPath() {
-        return path;
-    }
 
     public @NotNull CompoundTag getOrCreateTag(Entity entity) {
         if (this == ROOT) return entity.getPersistentData();

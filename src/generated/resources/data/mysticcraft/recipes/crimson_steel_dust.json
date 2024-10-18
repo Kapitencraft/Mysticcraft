@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "crimson",
+  "ingredients": [
+    {
+      "type": "forge:nbt",
+      "count": 2,
+      "item": "mysticcraft:crimsonium_dust"
+    },
+    {
+      "type": "forge:nbt",
+      "count": 2,
+      "item": "mysticcraft:crimsonite_dust"
+    }
+  ],
+  "result": {
+    "count": 4,
+    "item": "mysticcraft:crimson_steel_dust"
+  }
+}

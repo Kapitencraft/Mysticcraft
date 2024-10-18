@@ -28,16 +28,16 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 public enum GemstoneType implements StringRepresentable {
-    EMPTY(colorFromCFormat(ChatFormatting.WHITE), ()-> null, 0, "empty", 0),
-    ALMANDINE(colorFromCFormat(ChatFormatting.LIGHT_PURPLE), ModAttributes.ABILITY_DAMAGE, 0.3, "almandine", GemstoneBlock.HIGH_MEDIUM_STRENGHT),
-    JASPER(colorFromCFormat(ChatFormatting.DARK_RED), ModAttributes.STRENGTH, 2, "jasper", GemstoneBlock.VERY_HIGH_STRENGHT),
-    RUBY(colorFromCFormat(ChatFormatting.RED), () -> Attributes.MAX_HEALTH, 0.5, "ruby", GemstoneBlock.LOW_STRENGHT),
-    AMETHYST(colorFromCFormat(ChatFormatting.DARK_PURPLE), () -> Attributes.ARMOR, 2.3, "amethyst", GemstoneBlock.LOW_MEDIUM_STRENGHT),
-    SAPPHIRE(colorFromCFormat(ChatFormatting.BLUE), ModAttributes.INTELLIGENCE, 2.7, "sapphire", GemstoneBlock.MEDIUM_STRENGHT),
-    AQUAMARINE(colorFromCFormat(ChatFormatting.AQUA), ForgeMod.SWIM_SPEED, 0.1, "aquamarine", GemstoneBlock.VERY_LOW_STRENGHT),
-    TURQUOISE(colorFromCFormat(ChatFormatting.DARK_AQUA), ModAttributes.FISHING_SPEED, 2.9, "turquoise", GemstoneBlock.LOW_MEDIUM_STRENGHT),
+    EMPTY(ChatFormatting.WHITE, ()-> null, 0, "empty", 0),
+    ALMANDINE(ChatFormatting.LIGHT_PURPLE, ModAttributes.ABILITY_DAMAGE, 0.3, "almandine", GemstoneBlock.HIGH_MEDIUM_STRENGHT),
+    JASPER(ChatFormatting.DARK_RED, ModAttributes.STRENGTH, 2, "jasper", GemstoneBlock.VERY_HIGH_STRENGHT),
+    RUBY(ChatFormatting.RED, () -> Attributes.MAX_HEALTH, 0.5, "ruby", GemstoneBlock.LOW_STRENGHT),
+    AMETHYST(ChatFormatting.DARK_PURPLE, () -> Attributes.ARMOR, 2.3, "amethyst", GemstoneBlock.LOW_MEDIUM_STRENGHT),
+    SAPPHIRE((ChatFormatting.BLUE), ModAttributes.INTELLIGENCE, 2.7, "sapphire", GemstoneBlock.MEDIUM_STRENGHT),
+    AQUAMARINE(ChatFormatting.AQUA, ForgeMod.SWIM_SPEED, 0.1, "aquamarine", GemstoneBlock.VERY_LOW_STRENGHT),
+    TURQUOISE(ChatFormatting.DARK_AQUA, ModAttributes.FISHING_SPEED, 2.9, "turquoise", GemstoneBlock.LOW_MEDIUM_STRENGHT),
     MOONSTONE(MathHelper.RGBtoInt(10, 10, 10), ModAttributes.DRAW_SPEED, 0.5, "moonstone", GemstoneBlock.HIGH_STRENGHT),
-    CELESTINE(colorFromCFormat(ChatFormatting.WHITE), ()-> Attributes.MOVEMENT_SPEED, 0.07, "celestine", GemstoneBlock.LOW_STRENGHT);
+    CELESTINE(ChatFormatting.WHITE, ()-> Attributes.MOVEMENT_SPEED, 0.04, "celestine", GemstoneBlock.LOW_STRENGHT);
 
     public static EnumCodec<GemstoneType> CODEC = StringRepresentable.fromEnum(GemstoneType::values);
     private final int COLOR;
@@ -49,6 +49,10 @@ public enum GemstoneType implements StringRepresentable {
     public static int colorFromCFormat(ChatFormatting formatting) {
         if (formatting.getColor() == null) throw new IllegalStateException("formatting has no color");
         return formatting.getColor();
+    }
+
+    GemstoneType(ChatFormatting formatting, Supplier<Attribute> modifiedAttribute, double baseValue, String id, double blockStrength) {
+        this(colorFromCFormat(formatting), modifiedAttribute, baseValue, id, blockStrength);
     }
 
     GemstoneType(int color, Supplier<Attribute> modifiedAttribute, double baseValue, String id, double blockStrength) {
@@ -163,12 +167,12 @@ public enum GemstoneType implements StringRepresentable {
     }
 
     public enum Rarity implements StringRepresentable {
+        EMPTY(0, colorFromCFormat(ChatFormatting.DARK_GRAY), 0, "empty"),
         ROUGH(1, colorFromCFormat(ChatFormatting.WHITE), 1, "rough"),
         FLAWED(2, colorFromCFormat(ChatFormatting.GREEN), 1.75, "flawed"),
         FINE(3, colorFromCFormat(ChatFormatting.BLUE), 2.3, "fine"),
         FLAWLESS(4, colorFromCFormat(ChatFormatting.DARK_PURPLE), 3, "flawless"),
-        PERFECT(5, colorFromCFormat(ChatFormatting.GOLD), 4.8, "perfect"),
-        EMPTY(0, colorFromCFormat(ChatFormatting.DARK_GRAY), 0, "empty");
+        PERFECT(5, colorFromCFormat(ChatFormatting.GOLD), 4.8, "perfect");
         public static final EnumCodec<Rarity> CODEC = StringRepresentable.fromEnum(Rarity::values);
         public final int colour, level;
         public final double modMul;

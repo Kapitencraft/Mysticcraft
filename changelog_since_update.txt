@@ -5,11 +5,13 @@ fixed Glacial Blade enchantment not freezing entities;
 fixed trying to apply spells to items crashing the game;
 fixed trying to apply spells not working;
 fixed teleport spells teleporting way to far;
+fixed reforging and upgrading requiring items;
 
 [API] added Requestables;
 
 gemstones now spawn inside the world;
 daggers now also attack from offhand when attacking;
 made possible gemstones applicable visible inside GUI;
+nerved celestine gemstone because to overpowered;
 
 removed Gemstone Blocks from 'Mysticcraft Materials' creative Tab

@@ -34,7 +34,7 @@ Ritual Magic?
 Tutorial ideen:
 Custom-Model-Armor
 Debugger
-
+Rendering yipee
 
 
 generic.shield_size (attribute)

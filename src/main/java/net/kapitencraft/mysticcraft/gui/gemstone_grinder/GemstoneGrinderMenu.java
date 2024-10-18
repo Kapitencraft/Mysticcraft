@@ -1,76 +1,72 @@
 package net.kapitencraft.mysticcraft.gui.gemstone_grinder;
 
-import net.kapitencraft.mysticcraft.block.entity.GemstoneGrinderBlockEntity;
 import net.kapitencraft.mysticcraft.gui.GUISlotBlockItem;
-import net.kapitencraft.mysticcraft.gui.ModMenu;
+import net.kapitencraft.mysticcraft.gui.NoBEMenu;
 import net.kapitencraft.mysticcraft.init.ModBlocks;
 import net.kapitencraft.mysticcraft.init.ModItems;
 import net.kapitencraft.mysticcraft.init.ModMenuTypes;
 import net.kapitencraft.mysticcraft.item.capability.CapabilityHelper;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.*;
-import net.kapitencraft.mysticcraft.networking.ModMessages;
-import net.kapitencraft.mysticcraft.networking.packets.S2C.SyncGemstoneDataToBlockPacket;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.SlotItemHandler;
+import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Range;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+public class GemstoneGrinderMenu extends NoBEMenu<GemstoneGrinderMenu.ItemContainer> {
 
-public class GemstoneGrinderMenu extends ModMenu<GemstoneGrinderBlockEntity> {
     public static final int MAX_GEMSTONE_SLOTS = 5;
+    private static boolean[][] unlockedCache;
 
-    public GemstoneGrinderMenu(int id, Inventory inv, FriendlyByteBuf extraData) {
-        this(id, inv, (GemstoneGrinderBlockEntity) inv.player.level.getBlockEntity(extraData.readBlockPos()));
+    public GemstoneGrinderMenu(int id, Inventory inventory) {
+        this(id, inventory.player, ContainerLevelAccess.NULL);
     }
-    public GemstoneGrinderMenu(int id, Inventory inv, GemstoneGrinderBlockEntity entity) {
-        super(ModMenuTypes.GEM_GRINDER.get(), id, 6, inv, entity);
+
+    public GemstoneGrinderMenu(int id, Player player, ContainerLevelAccess access) {
+        super(ModMenuTypes.GEM_GRINDER.get(), id, new ItemContainer(), player.level, player, access);
+        Inventory inv = player.getInventory();
         checkContainerSize(inv, 3);
 
         this.addPlayerInventories(inv, 0, 0);
 
-        this.blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(handler -> {
-            this.addSlot(new CCSlotItemHandler(handler, 1, 25, 53));
-            this.addSlot(new CCSlotItemHandler(handler, 2, 52, 53));
-            this.addSlot(new CCSlotItemHandler(handler, 3, 79, 53));
-            this.addSlot(new CCSlotItemHandler(handler, 4, 106, 53));
-            this.addSlot(new CCSlotItemHandler(handler, 5, 133, 53));
-            this.addSlot(new CCSlotItemHandler(handler, 0, 79, 17));
-        });
-        this.blockEntity.emptyItemHandler(true);
-        ItemStack applicable = this.blockEntity.itemHandler.getApplicable();
-        if (!applicable.isEmpty() && this.player instanceof ServerPlayer serverPlayer) {
-            applicable.getCapability(CapabilityHelper.GEMSTONE).ifPresent(handler -> sendGemstoneCapability(handler, serverPlayer)
-            );
+
+        this.addSlot(new GemstoneItemSlot(0, 79, 17));
+
+        for (int i = 0; i < 5; i++) {
+            this.addSlot(new GemstoneItemSlot(i + 1, 25 + 27*i, 53));
         }
+
+        this.container.emptyItemHandler(false);
     }
 
-    private void sendGemstoneCapability(IGemstoneHandler capability, ServerPlayer player) {
-        ModMessages.sendToClientPlayer(new SyncGemstoneDataToBlockPacket(this.blockEntity.getBlockPos(), Map.of(0, (GemstoneCapability) capability)), player);
-    }
 
     @Override
-    public boolean stillValid(@NotNull Player player) {
-        return stillValid(ContainerLevelAccess.create(level, blockEntity.getBlockPos()),
-                player, ModBlocks.GEMSTONE_GRINDER.getBlock());
+    protected Block getBlock() {
+        return ModBlocks.GEMSTONE_GRINDER.getBlock();
+    }
+
+    public ItemStack getApplicable() {
+        return this.container.getApplicable();
+    }
+
+    public int getSlotForItem(int i) {
+        return this.container.getSlotForItem(i);
     }
 
 
-    private class CCSlotItemHandler extends SlotItemHandler {
-        public CCSlotItemHandler(IItemHandler itemHandler, int index, int xPosition, int yPosition) {
-            super(itemHandler, index, xPosition, yPosition);
+    private class GemstoneItemSlot extends Slot {
+        public GemstoneItemSlot(int index, int xPosition, int yPosition) {
+            super(GemstoneGrinderMenu.this.container, index, xPosition, yPosition);
         }
 
+
         @Override
-        public boolean mayPickup(Player playerIn) {
+        public boolean mayPickup(@NotNull Player pPlayer) {
             if (this.getSlotIndex() == 0) {
                 return true;
             }
@@ -78,16 +74,23 @@ public class GemstoneGrinderMenu extends ModMenu<GemstoneGrinderBlockEntity> {
         }
 
         @Override
-        public void onTake(Player pPlayer, ItemStack pStack) {
+        public void onTake(@NotNull Player pPlayer, @NotNull ItemStack pStack) {
             if (this.getSlotIndex() == 0) {
-                blockEntity.emptyItemHandler(false);
+                GemstoneGrinderMenu.this.container.emptyItemHandler(false);
             }
-            else GemstoneHelper.getCapability(getApplicable(), handler -> {
-                handler.putGemstone(GemstoneType.EMPTY, GemstoneType.Rarity.EMPTY, blockEntity.getSlotForItem(getSlotIndex()));
-
-                if (player instanceof ServerPlayer serverPlayer) sendGemstoneCapability(handler, serverPlayer);
-            });
+            else GemstoneHelper.getCapability(getApplicable(), handler ->
+                    handler.putGemstone(
+                            GemstoneType.EMPTY,
+                            GemstoneType.Rarity.EMPTY,
+                            GemstoneGrinderMenu.this.container.getSlotForItem(getSlotIndex())
+                    )
+            );
             super.onTake(pPlayer, pStack);
+        }
+
+        @Override
+        public int getMaxStackSize() {
+            return 1;
         }
 
         @Override
@@ -97,10 +100,8 @@ public class GemstoneGrinderMenu extends ModMenu<GemstoneGrinderBlockEntity> {
             } else {
                 ItemStack applicableStack = getApplicable();
                 return GemstoneHelper.exCapability(applicableStack, handler -> {
-                    int slotId = GemstoneGrinderBlockEntity.getSlotForItem(this.getSlotIndex(), applicableStack);
-                    boolean flag = handler.putGemstoneFromStack(stack, slotId);
-                    if (player instanceof ServerPlayer serverPlayer && flag) sendGemstoneCapability(handler, serverPlayer);
-                    return flag;
+                    int slotId = ItemContainer.getSlotForItem(this.getSlotIndex(), applicableStack);
+                    return handler.putGemstoneFromStack(stack, slotId);
                 });
             }
         }
@@ -109,20 +110,20 @@ public class GemstoneGrinderMenu extends ModMenu<GemstoneGrinderBlockEntity> {
         public void set(@NotNull ItemStack stack) {
             if (this.getSlotIndex() == 0) GemstoneHelper.getCapability(stack, iGemstoneHandler -> {
                 ItemStack[] stacks = getGemstoneForSlot(iGemstoneHandler);
-                for (int i = 1; i < 6; i++) {
-                    this.getHandler().setStackInSlot(i, stacks[i-1]);
+                for (int i = 0; i < MAX_GEMSTONE_SLOTS; i++) {
+                    this.container.setItem(i + 1, stacks[i]);
                 }
             });
             super.set(stack);
         }
 
         private static ItemStack[] getGemstoneForSlot(IGemstoneHandler applicable) {
-            ItemStack[] stacks = new ItemStack[5];
+            ItemStack[] stacks = new ItemStack[MAX_GEMSTONE_SLOTS];
             GemstoneSlot[] slots = applicable.getSlots();
             int slotAmount = applicable.getSlotAmount();
-            Boolean[] slotsUnlocked = getSlotUnlocked(slotAmount);
+            boolean[] slotsUnlocked = getOrCacheUnlockedSlots(slotAmount);
             int j = 0;
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < MAX_GEMSTONE_SLOTS; i++) {
                 if (slotsUnlocked[i]) {
                     stacks[i] = GemstoneItem.of(slots[j]);
                     j++;
@@ -133,30 +134,77 @@ public class GemstoneGrinderMenu extends ModMenu<GemstoneGrinderBlockEntity> {
             return stacks;
         }
 
-        private static Boolean[] getSlotUnlocked(int slotAmount) {
-            List<Boolean> list = new ArrayList<>();
-            for (int i = 0; i < slotAmount; i++) {
-                int offset = slotAmount / 2 - i;
-                list.add(calcSlot(offset, slotAmount));
-            }
-            return list.toArray(Boolean[]::new);
-        }
-
-        private static boolean calcSlot(int offset, int slotAmount) {
-            if (offset == 0) {
-                return slotAmount % 2 == 0;
-            }
-            return slotAmount >= offset * 2;
-        }
-
-        private GemstoneGrinderBlockEntity.GemstoneGrinderItemStackHandler getHandler() {
-            return (GemstoneGrinderBlockEntity.GemstoneGrinderItemStackHandler) this.getItemHandler();
-        }
-
-
         private ItemStack getApplicable() {
-            return this.getHandler().getStackInSlot(0);
+            return GemstoneGrinderMenu.this.container.getApplicable();
         }
     }
 
+    public static class ItemContainer extends SimpleContainer {
+        public ItemContainer() {
+            super(1 + MAX_GEMSTONE_SLOTS);
+        }
+
+        public ItemStack getApplicable() {
+            return this.getItem(0);
+        }
+
+        public void emptyItemHandler(boolean checkHasApplicable) {
+            if (checkHasApplicable && GemstoneHelper.hasCapability(getApplicable())) return;
+            for (int i = 1; i <= 5; i++) {
+                this.setItem(i, new ItemStack(ModItems.EMPTY_APPLICABLE_SLOT.get()));
+            }
+        }
+
+        public int getSlotForItem(int slotId) {
+            ItemStack applicable = this.getApplicable();
+            return getSlotForItem(slotId, applicable);
+        }
+
+        public static int getSlotForItem(@Range(from = 0, to = MAX_GEMSTONE_SLOTS - 1) int slotId, ItemStack applicable) {
+            return applicable.getCapability(CapabilityHelper.GEMSTONE).map(handler -> {
+                boolean[] unlockedSlots = getOrCacheUnlockedSlots(handler.getSlotAmount());
+                int j = 0;
+                for (int i = 0; i < slotId - 1; i++) {
+                    if (unlockedSlots[i]) {
+                        j++;
+                    }
+                }
+                return j;
+            }).orElse(-1);
+        }
+    }
+
+    private static void fillUnlockedCache() {
+        unlockedCache = new boolean[MAX_GEMSTONE_SLOTS][MAX_GEMSTONE_SLOTS];
+        for (int i = 1; i <= MAX_GEMSTONE_SLOTS; i++) {
+            unlockedCache[i - 1] = getSlotsUnlocked(i);
+        }
+    }
+
+    private static boolean[] getSlotsUnlocked(int slotAmount) {
+        boolean[] booleans = new boolean[MAX_GEMSTONE_SLOTS];
+        int middle = MAX_GEMSTONE_SLOTS / 2;
+        for (int i = 0; i < booleans.length; i++) {
+            if (i == middle) booleans[i] = slotAmount % 2 == 1;
+            else {
+                int index = Mth.abs(i - middle);
+                booleans[i] = index * 2 <= slotAmount;
+            }
+        }
+        return booleans;
+    }
+
+    @Override
+    public void removed(@NotNull Player pPlayer) {
+        SimpleContainer gemstoneItemToDrop = new SimpleContainer(1);
+        gemstoneItemToDrop.setItem(0, this.getApplicable());
+        this.access.execute((level, pos) -> clearContainer(pPlayer, gemstoneItemToDrop));
+    }
+
+    private static boolean[] getOrCacheUnlockedSlots(int slotAmount) {
+        if (unlockedCache == null) {
+            fillUnlockedCache();
+        }
+        return unlockedCache[slotAmount - 1];
+    }
 }

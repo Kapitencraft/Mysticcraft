@@ -24,6 +24,7 @@ public interface ModAttributes {
     RegistryObject<Attribute> DOUBLE_JUMP = register("double_jump", 0, 0, 20);
     RegistryObject<Attribute> VITALITY = register0Max("vitality", 0);
     RegistryObject<Attribute> HEALTH_REGEN = register0Max("health_regen", 0);
+    RegistryObject<Attribute> INVINCIBILITY_MUL = register0Max("invincibility_mul", 20);
 
     //Offensive Stats
     RegistryObject<Attribute> BONUS_ATTACK_SPEED = register("bonus_attack_speed", 0, 0, 100);

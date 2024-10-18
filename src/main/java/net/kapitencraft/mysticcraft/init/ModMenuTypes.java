@@ -14,10 +14,15 @@ import net.minecraftforge.registries.RegistryObject;
 public interface ModMenuTypes {
     DeferredRegister<MenuType<?>> REGISTRY = MysticcraftMod.makeRegistry(ForgeRegistries.MENU_TYPES);
 
-    RegistryObject<MenuType<GemstoneGrinderMenu>> GEM_GRINDER = registerMenuType(GemstoneGrinderMenu::new, "gem_grinder_menu");
-    RegistryObject<MenuType<ReforgeAnvilMenu>> REFORGING_ANVIL = registerMenuType(ReforgeAnvilMenu::new, "reforging_anvil");
+    RegistryObject<MenuType<GemstoneGrinderMenu>> GEM_GRINDER = registerContainerType("gem_grinder_menu", GemstoneGrinderMenu::new);
+    RegistryObject<MenuType<ReforgeAnvilMenu>> REFORGING_ANVIL = registerContainerType("reforging_anvil", ReforgeAnvilMenu::new);
 
-    private static <T extends AbstractContainerMenu> RegistryObject<MenuType<T>> registerMenuType(IContainerFactory<T> factory, String name) {
+
+    private static <T extends AbstractContainerMenu> RegistryObject<MenuType<T>> registerContainerType(String name, MenuType.MenuSupplier<T> supplier) {
+        return REGISTRY.register(name, () -> new MenuType<>(supplier));
+    }
+
+    private static <T extends AbstractContainerMenu> RegistryObject<MenuType<T>> registerMenuType(String name, IContainerFactory<T> factory) {
         return REGISTRY.register(name, ()-> IForgeMenuType.create(factory));
     }
 }

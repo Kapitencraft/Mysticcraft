@@ -1,7 +1,6 @@
 package net.kapitencraft.mysticcraft.block.special;
 
-import net.kapitencraft.mysticcraft.block.ModBlockProperties;
-import net.kapitencraft.mysticcraft.block.gemstone.GemstoneBlock;
+import net.kapitencraft.mysticcraft.block.ModBlockStateProperties;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.init.ModBlocks;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneType;
@@ -36,12 +35,12 @@ public class GemstoneSeedBlock extends Block {
 
     public GemstoneSeedBlock() {
         super(Properties.copy(Blocks.DIAMOND_BLOCK));
-        this.registerDefaultState(this.getStateDefinition().any().setValue(ModBlockProperties.GEMSTONE_TYPE, GemstoneType.EMPTY));
+        this.registerDefaultState(this.getStateDefinition().any().setValue(ModBlockStateProperties.GEMSTONE_TYPE, GemstoneType.EMPTY));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
-        pBuilder.add(ModBlockProperties.GEMSTONE_TYPE, ModBlockProperties.STONE_TYPE, BlockStateProperties.FACING);
+        pBuilder.add(ModBlockStateProperties.GEMSTONE_TYPE, ModBlockStateProperties.STONE_TYPE, BlockStateProperties.FACING);
     }
 
     @Override
@@ -64,13 +63,13 @@ public class GemstoneSeedBlock extends Block {
         GemstoneType gemType = GemstoneType.CODEC.byName(tag.getString("GemId"), GemstoneType.RUBY);
         return defaultBlockState()
                 .setValue(BlockStateProperties.FACING, pContext.getClickedFace())
-                .setValue(ModBlockProperties.GEMSTONE_TYPE, gemType)
-                .setValue(ModBlockProperties.STONE_TYPE, type);
+                .setValue(ModBlockStateProperties.GEMSTONE_TYPE, gemType)
+                .setValue(ModBlockStateProperties.STONE_TYPE, type);
     }
 
     @Override
     public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter level, BlockPos pos, Player player) {
-        return GemstoneBlock.getItem(state, ModBlocks.GEMSTONE_SEED::getItem);
+        return Item.createData(state.getValue(ModBlockStateProperties.GEMSTONE_TYPE), state.getValue(ModBlockStateProperties.STONE_TYPE));
     }
 
     public static final class Item extends BlockItem implements IGemstoneItem {

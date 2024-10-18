@@ -40,7 +40,7 @@ public class Reforge {
         if (builder.type == null) {
             throw new NullPointerException("Error loading Reforge '" + this.getRegistryName() + "': Reforge type may not be null!");
         }
-        this.name = builder.name == null ? Component.translatable("reforge." + registryName) : builder.name;
+        this.name = Component.translatable("reforge." + registryName);
         this.bonus = builder.bonus;
         this.onlyFromStone = builder.onlyFromStone;
         this.type = builder.type;
@@ -80,7 +80,7 @@ public class Reforge {
     }
 
     public void saveToStack(ItemStack stack) {
-        MysticcraftMod.LOGGER.info(Markers.REFORGE_MANAGER, "putting Reforge '{}' to the Stack", this.registryName);
+        MysticcraftMod.LOGGER.debug(Markers.REFORGE_MANAGER, "putting Reforge '{}' to the Stack", this.registryName);
         stack.getOrCreateTag().putString(Reforges.REFORGE_NAME_ID, this.registryName);
     }
 
@@ -113,7 +113,6 @@ public class Reforge {
 
     public static class Builder {
 
-        private @Nullable MutableComponent name = null;
         private ReforgingBonus bonus = ModReforgingBonuses.EMPTY.get();
         private final String registryName;
         private final HashMap<Attribute, ReforgeStat> stats = new HashMap<>();
@@ -134,11 +133,6 @@ public class Reforge {
             return this;
         }
 
-        public Builder withName(MutableComponent name) {
-            this.name = name;
-            return this;
-        }
-
         public Builder reforgeType(Type type) {
             this.type = type;
             return this;
@@ -155,17 +149,6 @@ public class Reforge {
             }
             return this;
         }
-    }
-
-
-    public static boolean reforgeAble(ItemStack stack) {
-        if (stack.isEmpty()) return false;
-        for (Type type : Type.values()) {
-            if (type.mayApply(stack)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     public enum Type implements StringRepresentable {

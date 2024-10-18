@@ -1,0 +1,14 @@
+{
+  "type": "mysticcraft:upgrade_item",
+  "category": "equipment",
+  "craft_type": "eight",
+  "material": {
+    "item": "mysticcraft:bigfoots_lasso"
+  },
+  "result": {
+    "item": "mysticcraft:scylla"
+  },
+  "source": {
+    "item": "mysticcraft:necron_sword"
+  }
+}

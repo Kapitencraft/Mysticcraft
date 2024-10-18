@@ -1,0 +1,29 @@
+{
+  "parent": "minecraft:item/generated",
+  "overrides": [
+    {
+      "model": "mysticcraft:gemstone/crystal/cluster",
+      "predicate": {
+        "mysticcraft:size": 0.1
+      }
+    },
+    {
+      "model": "mysticcraft:gemstone/crystal/large",
+      "predicate": {
+        "mysticcraft:size": 0.2
+      }
+    },
+    {
+      "model": "mysticcraft:gemstone/crystal/medium",
+      "predicate": {
+        "mysticcraft:size": 0.3
+      }
+    },
+    {
+      "model": "mysticcraft:gemstone/crystal/small",
+      "predicate": {
+        "mysticcraft:size": 0.4
+      }
+    }
+  ]
+}

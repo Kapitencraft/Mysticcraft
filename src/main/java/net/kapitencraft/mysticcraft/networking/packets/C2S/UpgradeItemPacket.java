@@ -11,9 +11,10 @@ import java.util.function.Supplier;
 public class UpgradeItemPacket implements ModPacket {
 
     public UpgradeItemPacket() {
+
     }
 
-    public void toBytes(FriendlyByteBuf ignored) {
+    public void toBytes(FriendlyByteBuf buf) {
     }
 
     public boolean handle(Supplier<NetworkEvent.Context> supplier) {

@@ -1,7 +1,0 @@
-{
-  "parent": "mysticcraft:block/tinted_cross",
-  "textures": {
-    "cross": "mysticcraft:block/gemstone/small_crystal"
-  },
-  "render_type": "cutout"
-}

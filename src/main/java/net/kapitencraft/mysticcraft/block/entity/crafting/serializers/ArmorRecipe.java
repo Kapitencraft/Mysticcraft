@@ -15,6 +15,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -33,6 +34,7 @@ public class ArmorRecipe extends CustomRecipe {
     private final Ingredient material;
     private final List<ShapedRecipe> all;
     private final String group;
+
     public ArmorRecipe(ResourceLocation location, CraftingBookCategory p_249010_, Ingredient material, Map<ArmorType, ItemStack> all, String group) {
         super(location, p_249010_);
         this.material = material;
@@ -85,16 +87,28 @@ public class ArmorRecipe extends CustomRecipe {
         return ModRecipeSerializers.ARMOR.get();
     }
 
-    private enum ArmorType implements StringRepresentable {
+    public enum ArmorType implements StringRepresentable {
         HELMET("helmet",
-                of(List.of(true, true, true, true, false, true), true), true),
+                of(List.of(true, true, true, true, false, true), true)),
         CHESTPLATE("chestplate",
-                of(List.of(true, false, true, true, true, true, true, true, true), false), false),
+                of(List.of(true, false, true, true, true, true, true, true, true), false)),
         LEGGINGS("leggings",
-                of(List.of(true, true, true, true, false, true, true, false, true), false), false),
+                of(List.of(true, true, true, true, false, true, true, false, true), false)),
         BOOTS("boots",
-                of(List.of(true, false, true, true, false, true), true), true);
+                of(List.of(true, false, true, true, false, true), true));
+
+        public static ArmorType fromEquipmentSlot(EquipmentSlot slot) {
+            return switch (slot) {
+                case FEET -> BOOTS;
+                case LEGS -> LEGGINGS;
+                case CHEST -> CHESTPLATE;
+                case HEAD -> HELMET;
+                default -> throw new IllegalArgumentException("equipment slot '" + slot.getName() + "' can not be converted to armor type");
+            };
+        }
+
         public static final EnumCodec<ArmorType> CODEC = StringRepresentable.fromEnum(ArmorType::values);
+
         public static ArmorType get(String name) {
             return CODEC.byName(name, HELMET);
         }
@@ -102,6 +116,7 @@ public class ArmorRecipe extends CustomRecipe {
         private final String name;
         private final boolean small;
         private final boolean[][] data;
+
         private static boolean[][] of(List<Boolean> list, boolean small) {
             int height = small ? 2 : 3;
             boolean[][] map = new boolean[3][height];
@@ -113,9 +128,9 @@ public class ArmorRecipe extends CustomRecipe {
             return map;
         }
 
-        ArmorType(String name, boolean[][] data, boolean small) {
+        ArmorType(String name, boolean[][] data) {
             this.name = name;
-            this.small = small;
+            this.small = data[0].length == 2;
             this.data = data;
         }
 

@@ -93,8 +93,8 @@ public abstract class ModBowItem extends BowItem implements IModItem {
     public static void createLegolasExtraArrows(@NotNull ItemStack bow, @NotNull LivingEntity archer, int kb) {
         int legolasLevel = bow.getEnchantmentLevel(ModEnchantments.LEGOLAS_EMULATION.get());
         for (int j = 0; j < legolasLevel; j++) {
-            float yChange = (float) (Math.random() * (5 - legolasLevel) - (5 - legolasLevel) / 2);
-            float xChange = (float) (Math.random() * (5 - legolasLevel) - (5 - legolasLevel) / 2);
+            float yChange = (float) (Math.random() * (5 - legolasLevel) - (5. - legolasLevel) / 2);
+            float xChange = (float) (Math.random() * (5 - legolasLevel) - (5. - legolasLevel) / 2);
             createArrowProperties(archer, true, bow, kb, archer.getXRot() + xChange, archer.getYRot() + yChange);
         }
     }
@@ -129,7 +129,7 @@ public abstract class ModBowItem extends BowItem implements IModItem {
             if (archer instanceof Player player && isInfinite(player, arrowStack, bow)) {
                 arrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
             }
-            bow.hurtAndBreak(1, archer, (p_40665_) -> p_40665_.broadcastBreakEvent(archer.getUsedItemHand()));
+            bow.hurtAndBreak(1, archer, (living) -> living.broadcastBreakEvent(archer.getUsedItemHand()));
             world.addFreshEntity(arrow);
             if ( !(archer instanceof Player player && player.getAbilities().instabuild) || bow.getEnchantmentLevel(Enchantments.INFINITY_ARROWS) > 0) {
                 arrowStack.shrink(1);

@@ -152,6 +152,7 @@ public abstract class ModArmorItem extends ArmorItem implements IModItem {
     }
 
     // display / model END
+
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
         HashMultimap<Attribute, AttributeModifier> builder = HashMultimap.create();

@@ -1,12 +1,10 @@
 package net.kapitencraft.mysticcraft.gui.reforging_anvil;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.block.entity.ReforgeAnvilBlockEntity;
-import net.kapitencraft.mysticcraft.gui.screen.ModScreen;
+import net.kapitencraft.mysticcraft.gui.screen.SimpleScreen;
 import net.kapitencraft.mysticcraft.gui.screen.tooltip.ReforgeItemTooltip;
 import net.kapitencraft.mysticcraft.gui.screen.tooltip.UpgradeItemTooltip;
 import net.kapitencraft.mysticcraft.networking.ModMessages;
-import net.kapitencraft.mysticcraft.networking.packets.C2S.ReforgingPacket;
 import net.kapitencraft.mysticcraft.networking.packets.C2S.UpgradeItemPacket;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
@@ -14,7 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.NotNull;
 
-public class ReforgeAnvilScreen extends ModScreen<ReforgeAnvilBlockEntity, ReforgeAnvilMenu> {
+public class ReforgeAnvilScreen extends SimpleScreen<ReforgeAnvilMenu> {
     public static final int BUTTON_Y_OFFSET = 53;
 
     private final UpgradeItemTooltip upgradeItemTooltip = new UpgradeItemTooltip(this.menu);
@@ -26,7 +24,6 @@ public class ReforgeAnvilScreen extends ModScreen<ReforgeAnvilBlockEntity, Refor
         super(p_97741_, p_97742_, p_97743_);
     }
 
-    @Override
     protected @NotNull String getTextureName() {
         return "reforging_anvil";
     }
@@ -38,10 +35,12 @@ public class ReforgeAnvilScreen extends ModScreen<ReforgeAnvilBlockEntity, Refor
         this.addHoverTooltipAndImgButton(upgradeItemTooltip, BUTTON_LOCATION, this::upgradeUse);
     }
 
+
+
     private void reforgeUse(Button ignored) {
-        String exeRet = this.menu.handleButtonPress();
+        String exeRet = this.menu.reforge();
         if (exeRet == null) return;
-        ModMessages.sendToServer(new ReforgingPacket(this.menu.getCapabilityProvider().getBlockPos(), exeRet));
+        this.menu.send(exeRet);
     }
     private void upgradeUse(Button ignored) {
         this.menu.upgrade();

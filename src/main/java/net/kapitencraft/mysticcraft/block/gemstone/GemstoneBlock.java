@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.block.gemstone;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.block.ModBlockProperties;
+import net.kapitencraft.mysticcraft.block.ModBlockStateProperties;
 import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.init.ModBlocks;
 import net.kapitencraft.mysticcraft.init.ModItems;
@@ -43,7 +43,7 @@ public class GemstoneBlock extends HalfTransparentBlock {
 
     public GemstoneBlock() {
         super(Properties.of(Material.HEAVY_METAL).sound(SoundType.AMETHYST_CLUSTER).requiresCorrectToolForDrops().noOcclusion());
-        this.registerDefaultState(this.getStateDefinition().any().setValue(ModBlockProperties.GEMSTONE_TYPE, GemstoneType.EMPTY));
+        this.registerDefaultState(this.getStateDefinition().any().setValue(ModBlockStateProperties.GEMSTONE_TYPE, GemstoneType.EMPTY));
     }
 
     @Override
@@ -53,7 +53,7 @@ public class GemstoneBlock extends HalfTransparentBlock {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(ModBlockProperties.GEMSTONE_TYPE);
+        builder.add(ModBlockStateProperties.GEMSTONE_TYPE);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class GemstoneBlock extends HalfTransparentBlock {
     }
 
     public static GemstoneType getType(BlockState state) {
-        return state.getValue(ModBlockProperties.GEMSTONE_TYPE);
+        return state.getValue(ModBlockStateProperties.GEMSTONE_TYPE);
     }
 
     public static int getColor(BlockState state, BlockAndTintGetter ignored0, BlockPos ignored, int tintIndex) {
@@ -82,7 +82,7 @@ public class GemstoneBlock extends HalfTransparentBlock {
         Player player = context.getPlayer();
         if (player == null) return state;
         ItemStack place = player.getItemInHand(context.getHand());
-        return state.setValue(ModBlockProperties.GEMSTONE_TYPE, IGemstoneItem.getGemstone(place));
+        return state.setValue(ModBlockStateProperties.GEMSTONE_TYPE, IGemstoneItem.getGemstone(place));
     }
 
     @Override

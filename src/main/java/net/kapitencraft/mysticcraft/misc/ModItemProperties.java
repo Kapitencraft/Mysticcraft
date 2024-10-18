@@ -57,21 +57,11 @@ public class ModItemProperties {
         });
         ItemProperties.register(ModBlocks.GEMSTONE_CRYSTAL.getItem(), MysticcraftMod.res("size"), (stack, level, living, timeLeft) -> {
             GemstoneCrystal.Size size = GemstoneCrystal.Size.CODEC.byName(stack.getOrCreateTag().getString("Size"), GemstoneCrystal.Size.SMALL);
-            return switch (size) {
-                case SMALL -> 0.1f;
-                case MEDIUM -> 0.2f;
-                case LARGE -> 0.3f;
-                case CLUSTER -> 0.4f;
-            };
+            return (size.ordinal() + 1) * .1f;
         });
         ItemProperties.register(ModBlocks.GEMSTONE_SEED.getItem(), MysticcraftMod.res("material"), (pStack, pLevel, pEntity, pSeed) -> {
             GemstoneSeedBlock.MaterialType type = GemstoneSeedBlock.getType(pStack);
-            return switch (type) {
-                case STONE -> 0.1f;
-                case DEEPSLATE -> 0.2f;
-                case NETHERRACK -> 0.3f;
-                case END_STONE -> 0.4f;
-            };
+            return (type.ordinal() + 1) * .1f;
         });
     }
 

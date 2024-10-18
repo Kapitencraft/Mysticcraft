@@ -118,7 +118,7 @@ public abstract class ItemStackClientMixin {
         }
         if (shouldShowInTooltip(j, ItemStack.TooltipPart.ENCHANTMENTS)) {
             ListTag enchantmentTags = self().getEnchantmentTags();
-            if (enchantmentTags.size() > 0 && !Screen.hasShiftDown() && !EnchantmentDescriptionManager.fromBook(item) && tooltipFlag.isAdvanced()) list.add(Component.translatable("mysticcraft.ench_desc.shift").withStyle(ChatFormatting.DARK_GRAY));
+            if (!enchantmentTags.isEmpty() && !Screen.hasShiftDown() && !EnchantmentDescriptionManager.fromBook(item) && tooltipFlag.isAdvanced()) list.add(Component.translatable("mysticcraft.ench_desc.shift").withStyle(ChatFormatting.DARK_GRAY));
             for(int i = 0; i < enchantmentTags.size(); ++i) {
                 CompoundTag compoundtag = enchantmentTags.getCompound(i);
                 Optional<Enchantment> enchantmentOptional = BuiltInRegistries.ENCHANTMENT.getOptional(EnchantmentHelper.getEnchantmentId(compoundtag));
@@ -297,7 +297,7 @@ public abstract class ItemStackClientMixin {
             if (self().hasTag()) {
                 list.add(Component.translatable("item.nbt_tags", tag.getAllKeys().size()).withStyle(ChatFormatting.DARK_GRAY));
                 if (Screen.hasAltDown() && self().getTag() != null) {
-                    list.add(NbtUtils.toPrettyComponent(self().getTag()));
+                    list.add(NbtUtils.toPrettyComponent(self().getOrCreateTag()));
                 }
             }
         }

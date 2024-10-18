@@ -14,6 +14,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 
 public class ShowItemCommand {
+    //TODO ensure gemstones are visible
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("show").requires(ModCommands::isSocialEnabled)
@@ -41,7 +42,7 @@ public class ShowItemCommand {
                     String command = TextHelper.createGiveFromStack(serverPlayer.getGameProfile().getName(), itemStack);
                     stackData.withStyle(stackData.getStyle().withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command)));
                 }
-                serverPlayer.sendSystemMessage(Component.translatable("command.show." + slot.getName(), player.getName(), stackData), false);
+                serverPlayer.sendSystemMessage(Component.translatable("command.show." + slot.getName(), player.getName(), stackData), true);
             }
             return list.getPlayers().size();
         }

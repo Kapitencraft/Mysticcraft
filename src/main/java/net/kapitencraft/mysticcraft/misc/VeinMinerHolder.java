@@ -68,7 +68,7 @@ public class VeinMinerHolder {
     }
 
     public static void tickAll() {
-        for (int i = 0; i < ServerModConfig.iterationMaxBroken; i++) {
+        for (int i = 0; i < ServerModConfig.getMaxBrokenBlocks(); i++) {
             ticking = true;
             ALL.removeIf(VeinMinerHolder::tick);
             ticking = false;

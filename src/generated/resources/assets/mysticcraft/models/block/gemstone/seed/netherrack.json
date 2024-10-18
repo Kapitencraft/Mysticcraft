@@ -1,0 +1,6 @@
+{
+  "parent": "mysticcraft:block/gemstone/seed/base",
+  "textures": {
+    "material": "minecraft:block/netherrack"
+  }
+}

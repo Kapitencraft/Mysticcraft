@@ -30,7 +30,7 @@ public class ModOrePlacements {
 
     public static void bootstrap(BootstapContext<PlacedFeature> context) {
         HolderGetter<ConfiguredFeature<?, ?>> configuredFeatures = context.lookup(Registries.CONFIGURED_FEATURE);
-        //register(context, CRIMSONIUM_PLACED, configuredFeatures.getOrThrow(ModConfiguredFeatures.CRIMSONIUM_ORE), ModOrePlacements.commonOrePlacement(2, HeightRangePlacement.uniform(VerticalAnchor.aboveBottom(4), VerticalAnchor.aboveBottom(10))));
+        register(context, CRIMSONIUM_PLACED, configuredFeatures.getOrThrow(ModConfiguredFeatures.CRIMSONIUM_ORE), ModOrePlacements.commonOrePlacement(2, HeightRangePlacement.uniform(VerticalAnchor.aboveBottom(4), VerticalAnchor.aboveBottom(10))));
         register(context, GEMSTONE_SPAWN_PLACED, configuredFeatures.getOrThrow(ModConfiguredFeatures.GEMSTONE_SPAWN), List.of(HeightRangePlacement.uniform(VerticalAnchor.aboveBottom(20), VerticalAnchor.aboveBottom(80))));
     }
 

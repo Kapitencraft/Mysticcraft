@@ -17,7 +17,6 @@ import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -36,7 +35,7 @@ public class DamageIndicatorParticle extends Particle {
         this.lifetime = 35;
 
         this.yd = rangeOffset;
-        this.xd = Mth.nextDouble(RandomSource.createNewThreadLocalInstance(), -MAX_MOVEMENT, MAX_MOVEMENT) * rangeOffset;
+        this.xd = Mth.nextDouble(MysticcraftMod.RANDOM_SOURCE, -MAX_MOVEMENT, MAX_MOVEMENT) * rangeOffset;
     }
 
     private static final char CRIT_CHAR = ' ';

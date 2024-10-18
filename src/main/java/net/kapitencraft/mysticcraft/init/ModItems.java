@@ -116,8 +116,8 @@ public interface ModItems {
     RegistryObject<SouldbindNucleus> SOULBOUND_CORE = register("soulbound_nucleus", SouldbindNucleus::new, TabGroup.MATERIAL);
     RegistryObject<UnbreakingCore> UNBREAKING_CORE = register("unbreaking_core", UnbreakingCore::new, TabGroup.MATERIAL);
     RegistryObject<MaterialModItem> MANA_STEEL_INGOT = registerMaterial("mana_steel_ingot", Rarity.RARE, TabGroup.MATERIAL);
-    RegistryObject<MaterialModItem> UPPER_BlADE_MS = registerNonStackableMaterial("upper_mana_steel_sword_part", Rarity.RARE, TabGroup.MATERIAL);
-    RegistryObject<MaterialModItem> DOWN_BlADE_MS = registerNonStackableMaterial("lower_mana_steel_sword_part", Rarity.RARE, TabGroup.MATERIAL);
+    RegistryObject<MaterialModItem> MS_UPPER_BlADE = registerNonStackableMaterial("upper_mana_steel_blade", Rarity.RARE, TabGroup.MATERIAL);
+    RegistryObject<MaterialModItem> MS_DOWN_BlADE = registerNonStackableMaterial("lower_mana_steel_blade", Rarity.RARE, TabGroup.MATERIAL);
     RegistryObject<MaterialModItem> MS_HANDLE = registerNonStackableMaterial("mana_steel_sword_handle", Rarity.RARE, TabGroup.MATERIAL);
     RegistryObject<MaterialModItem> HEART_OF_THE_NETHER = registerNonStackableMaterial("heart_of_the_nether", ModRarities.MYTHIC, TabGroup.MATERIAL);
     RegistryObject<MaterialModItem> CRIMSON_STEEL_INGOT = registerMaterial("crimson_steel_ingot", Rarity.EPIC, TabGroup.CRIMSON_MATERIAL);
@@ -131,8 +131,9 @@ public interface ModItems {
     RegistryObject<MaterialModItem> RAW_CRIMSONIUM_DUST = registerMaterial("raw_crimsonium_dust", Rarity.RARE, TabGroup.CRIMSON_MATERIAL);
     RegistryObject<MaterialModItem> HARDENED_TEAR = registerMaterial("hardened_tear", Rarity.UNCOMMON, TabGroup.MATERIAL);
     RegistryObject<HammerItem> STONE_HAMMER = register("stone_hammer", ()-> new HammerItem(MiscHelper.rarity(Rarity.COMMON), 354), HammerItem.HAMMER_GROUP);
-    RegistryObject<HammerItem> IRON_HAMMER = register("iron_hammer", ()-> new HammerItem(MiscHelper.rarity(Rarity.UNCOMMON), 530), HammerItem.HAMMER_GROUP);
-    RegistryObject<HammerItem> DIAMOND_HAMMER = register("diamond_hammer", ()-> new HammerItem(MiscHelper.rarity(Rarity.RARE), 846), HammerItem.HAMMER_GROUP);
+    RegistryObject<HammerItem> IRON_HAMMER = register("iron_hammer", ()-> new HammerItem(MiscHelper.rarity(Rarity.COMMON), 530), HammerItem.HAMMER_GROUP);
+    RegistryObject<HammerItem> DIAMOND_HAMMER = register("diamond_hammer", ()-> new HammerItem(MiscHelper.rarity(Rarity.UNCOMMON), 846), HammerItem.HAMMER_GROUP);
+    RegistryObject<HammerItem> NETHERITE_HAMMER = register("netherite_hammer", ()-> new HammerItem(MiscHelper.rarity(Rarity.UNCOMMON), 1454), HammerItem.HAMMER_GROUP);
     HashMap<Element, RegistryObject<ElementalShard>> ELEMENTAL_SHARDS = ElementalShard.registerElementShards();
     RegistryObject<RainbowElementalShard> RAINBOW_ELEMENTAL_SHARD = register("elemental_shard_of_rainbow", RainbowElementalShard::new, ElementalShard.ELEMENTS_GROUP);
     RegistryObject<MaterialModItem> FROZEN_BLAZE_ROD = registerMaterial("frozen_blaze_rod", Rarity.RARE, TabGroup.MATERIAL);

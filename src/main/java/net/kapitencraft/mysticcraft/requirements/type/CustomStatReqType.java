@@ -11,7 +11,7 @@ import java.util.function.Function;
  */
 public class CustomStatReqType extends StatReqType {
     private final Function<Integer, Component> display;
-    public CustomStatReqType(Stat<ResourceLocation> stat, int level, Function<Integer, Component> display) {
+    private CustomStatReqType(Stat<ResourceLocation> stat, int level, Function<Integer, Component> display) {
         super(stat, level);
         this.display = display;
     }

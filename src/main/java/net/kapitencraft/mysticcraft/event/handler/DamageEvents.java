@@ -86,9 +86,9 @@ public class DamageEvents {
         LivingEntity attacked = event.getEntity();
         DamageSource source = event.getSource();
         boolean dodge = false;
-        double Dodge = AttributeHelper.getSaveAttributeValue(ModAttributes.DODGE.get(), attacked);
-        if (Dodge > 0) {
-            if (MathHelper.chance(Dodge / 100, attacked) && ((!source.isBypassArmor() && !source.isFall() && !source.isFire()) || source == DamageSource.STALAGMITE)) {
+        double dodgePercentage = AttributeHelper.getSaveAttributeValue(ModAttributes.DODGE.get(), attacked);
+        if (dodgePercentage > 0) {
+            if (MathHelper.chance(dodgePercentage / 100, attacked) && ((!source.isBypassArmor() && !source.isFall() && !source.isFire()) || source == DamageSource.STALAGMITE)) {
                 dodge = true;
                 event.setAmount(0);
             }

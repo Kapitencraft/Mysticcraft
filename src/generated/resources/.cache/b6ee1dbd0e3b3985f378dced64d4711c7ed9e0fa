@@ -1,7 +1,7 @@
-// 1.19.3	2024-05-20T15:49:37.439549	ModTagsProvider
+// 1.19.3	2024-10-13T11:23:22.2482599	ModTagsProvider
 139c369d5aa84326c785340637ffaa507becc2c7 data/forge/tags/blocks/needs_netherite_tool.json
 ca0495025ce74f993979a2664aed7bb712ad2f0a data/forge/tags/blocks/ores.json
-080a99248b755da770125f0cbec1a685859fffa5 data/forge/tags/items/armors.json
+1b67a9fc19842d290ed0197f712a5d8e442eb574 data/forge/tags/items/armors.json
 b73e877f825a7c7a57721a44b45adcb4d7401a16 data/forge/tags/items/armors/boots.json
 c30fe22910f8b91d66651150287990d662133fb1 data/forge/tags/items/armors/chestplates.json
 b2e88c82e0f50493a1ef447370e7fcaa602c72b6 data/forge/tags/items/armors/helmets.json
@@ -11,5 +11,12 @@ c9a0bd02d5b97b723ededf2ed83dd59be6be5a75 data/forge/tags/items/armors/leggings.j
 1466919df07556a69b2f26e221f3d59778215055 data/forge/tags/items/tools/shields.json
 9b17cc57e2875fb082c76ff39bed7b3e6129b0ed data/forge/tags/items/tools/swords.json
 d06862026e332f6b213614dc74c567fc600b7235 data/minecraft/tags/items/fishes.json
+453ef4aa8cca1958f61d7b3df571255aea409300 data/mysticcraft/tags/blocks/farmable_blocks.json
+b147fcff5c0b4d72df1cb7809b063b2562180832 data/mysticcraft/tags/blocks/forageable_blocks.json
+cafea7a375ea7c056e04d68f3b9876b3b36fd815 data/mysticcraft/tags/blocks/mineable_blocks.json
+62ab21405e51c9d8f9442a53a48d015dc0ada823 data/mysticcraft/tags/items/default_hammer.json
+7a7e502c4c78087706af817bb59c937d8225f54a data/mysticcraft/tags/items/ender_hittable.json
+84897773f9cbc76e6eb9c35f32bb1dd1df453b56 data/mysticcraft/tags/items/tier_1_hammer.json
+f286e474e3dcd7788f915a9d64d77551a5c660a8 data/mysticcraft/tags/items/tier_2_hammer.json
 dce797829b97f466b4b12f7ea1f9832329d9ec72 data/mysticcraft/tags/items/weapon/dagger.json
 4d7735832ccbb7ae3c10969f112b8d848319b4a7 data/mysticcraft/tags/items/weapon/sword.json

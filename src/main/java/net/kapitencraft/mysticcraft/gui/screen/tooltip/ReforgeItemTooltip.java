@@ -1,15 +1,18 @@
 package net.kapitencraft.mysticcraft.gui.screen.tooltip;
 
+import com.google.common.collect.ImmutableList;
 import net.kapitencraft.mysticcraft.gui.reforging_anvil.ReforgeAnvilMenu;
 import net.kapitencraft.mysticcraft.gui.reforging_anvil.ReforgeAnvilScreen;
 import net.kapitencraft.mysticcraft.gui.screen.HoverScreenUpdatable;
 import net.kapitencraft.mysticcraft.helpers.InventoryHelper;
 import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ReforgeItemTooltip extends HoverScreenUpdatable<ReforgeAnvilMenu> {
@@ -18,17 +21,19 @@ public class ReforgeItemTooltip extends HoverScreenUpdatable<ReforgeAnvilMenu> {
         super(43, ReforgeAnvilScreen.BUTTON_Y_OFFSET, 16, 16, menu);
     }
 
+    @SuppressWarnings("DataFlowIssue")
     @Override
     public void tick() {
-        text = List.of(
-                Component.translatable("reforge.button"),
-                Component.translatable("reforge.cost", 5 - this.emeraldsRemaining).withStyle(this.emeraldsRemaining < 1 ? ChatFormatting.GREEN : ChatFormatting.RED)
-        );
+        ArrayList<Component> list = new ArrayList<>();
+        list.add(Component.translatable("reforge.button"));
+        if (!Minecraft.getInstance().player.getAbilities().instabuild)
+            list.add(Component.translatable("reforge.cost", 5 - this.emeraldsRemaining).withStyle(this.emeraldsRemaining < 1 ? ChatFormatting.GREEN : ChatFormatting.RED));
+        text = ImmutableList.copyOf(list);
     }
 
     @Override
     public boolean changed() {
-        int i = MathHelper.count(InventoryHelper.getRemaining(List.of(new ItemStack(Items.EMERALD, 5)), this.menu.player).stream().map(ItemStack::getCount).toList());
+        int i = MathHelper.count(InventoryHelper.getRemaining(List.of(new ItemStack(Items.EMERALD, 5)), this.menu.getPlayer()).stream().map(ItemStack::getCount).toList());
         boolean flag = emeraldsRemaining != i;
         emeraldsRemaining = i;
         return flag;
