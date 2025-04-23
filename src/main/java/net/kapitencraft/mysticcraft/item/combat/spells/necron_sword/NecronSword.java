@@ -2,13 +2,13 @@ package net.kapitencraft.mysticcraft.item.combat.spells.necron_sword;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
-import net.kapitencraft.mysticcraft.init.ModAttributes;
+import net.kapitencraft.kap_lib.helpers.AttributeHelper;
+import net.kapitencraft.kap_lib.registry.ExtraAttributes;
+import net.kapitencraft.kap_lib.util.ExtraRarities;
 import net.kapitencraft.mysticcraft.item.capability.spell.SpellHelper;
 import net.kapitencraft.mysticcraft.item.combat.spells.SpellItem;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
-import net.kapitencraft.mysticcraft.misc.ModRarities;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -29,7 +29,7 @@ public class NecronSword extends SpellItem {
     private final double STRENGHT;
 
     public NecronSword(int damage, int intelligence, double ferocity, double strenght) {
-        super(new Properties().rarity(ModRarities.LEGENDARY), damage, -2.4f, intelligence, 0);
+        super(new Properties().rarity(ExtraRarities.LEGENDARY), damage, -2.4f, intelligence, 0);
         this.FEROCITY = ferocity;
         this.STRENGHT = strenght;
     }
@@ -49,8 +49,8 @@ public class NecronSword extends SpellItem {
         HashMultimap<Attribute, AttributeModifier> multimap = HashMultimap.create();
         multimap.putAll(super.getDefaultAttributeModifiers(slot));
         if (slot == EquipmentSlot.MAINHAND) {
-            multimap.put(ModAttributes.FEROCITY.get(), AttributeHelper.createModifier("Necron Modifier", AttributeModifier.Operation.ADDITION, this.FEROCITY));
-            multimap.put(ModAttributes.STRENGTH.get(), AttributeHelper.createModifier("Necron Modifier", AttributeModifier.Operation.ADDITION, this.STRENGHT));
+            multimap.put(ExtraAttributes.FEROCITY.get(), AttributeHelper.createModifier("Necron Modifier", AttributeModifier.Operation.ADDITION, this.FEROCITY));
+            multimap.put(ExtraAttributes.STRENGTH.get(), AttributeHelper.createModifier("Necron Modifier", AttributeModifier.Operation.ADDITION, this.STRENGHT));
             this.getAdditionalModifiers().accept(multimap);
         }
         return multimap;

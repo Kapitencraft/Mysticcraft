@@ -2,10 +2,10 @@ package net.kapitencraft.mysticcraft.worldgen.feature;
 
 
 import com.mojang.serialization.Codec;
+import net.kapitencraft.kap_lib.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.block.special.GemstoneSeedBlock;
+import net.kapitencraft.mysticcraft.block.gemstone.GemstoneSeedBlock;
 import net.kapitencraft.mysticcraft.config.CommonModConfig;
-import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.inst.MysticcraftServer;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneType;
 import net.kapitencraft.mysticcraft.logging.Markers;

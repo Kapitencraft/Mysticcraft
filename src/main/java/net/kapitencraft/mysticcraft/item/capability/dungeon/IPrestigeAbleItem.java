@@ -1,8 +1,8 @@
 package net.kapitencraft.mysticcraft.item.capability.dungeon;
 
-import net.kapitencraft.mysticcraft.init.ModItems;
 import net.kapitencraft.mysticcraft.item.capability.essence.IEssenceData;
 import net.kapitencraft.mysticcraft.misc.content.EssenceType;
+import net.kapitencraft.mysticcraft.registry.ModItems;
 import net.minecraft.world.item.ItemStack;
 
 public interface IPrestigeAbleItem extends IReAnUpgradeable {

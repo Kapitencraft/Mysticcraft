@@ -1,7 +1,7 @@
-// 1.19.3	2024-10-13T11:23:22.2482599	ModTagsProvider
+// 1.19.3	2024-10-25T22:48:36.2419758	ModTagsProvider
 139c369d5aa84326c785340637ffaa507becc2c7 data/forge/tags/blocks/needs_netherite_tool.json
 ca0495025ce74f993979a2664aed7bb712ad2f0a data/forge/tags/blocks/ores.json
-1b67a9fc19842d290ed0197f712a5d8e442eb574 data/forge/tags/items/armors.json
+a53597cf164d117b1931d6637908861f1b2df1d3 data/forge/tags/items/armors.json
 b73e877f825a7c7a57721a44b45adcb4d7401a16 data/forge/tags/items/armors/boots.json
 c30fe22910f8b91d66651150287990d662133fb1 data/forge/tags/items/armors/chestplates.json
 b2e88c82e0f50493a1ef447370e7fcaa602c72b6 data/forge/tags/items/armors/helmets.json

@@ -2,8 +2,8 @@ package net.kapitencraft.mysticcraft.villagers;
 
 import com.google.common.collect.ImmutableSet;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.init.ModBlocks;
-import net.kapitencraft.mysticcraft.init.VillagerRegistryHolder;
+import net.kapitencraft.mysticcraft.registry.ModBlocks;
+import net.kapitencraft.mysticcraft.registry.VillagerRegistryHolder;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
@@ -16,8 +16,8 @@ import net.minecraftforge.registries.RegistryObject;
 import java.util.function.Supplier;
 
 public class ModVillagers {
-    public static final DeferredRegister<PoiType> POI_TYPE_REGISTRY = MysticcraftMod.makeRegistry(ForgeRegistries.POI_TYPES);
-    public static final DeferredRegister<VillagerProfession> PROFESSION_REGISTRY = MysticcraftMod.makeRegistry(ForgeRegistries.VILLAGER_PROFESSIONS);
+    public static final DeferredRegister<PoiType> POI_TYPE_REGISTRY = MysticcraftMod.registry(ForgeRegistries.POI_TYPES);
+    public static final DeferredRegister<VillagerProfession> PROFESSION_REGISTRY = MysticcraftMod.registry(ForgeRegistries.VILLAGER_PROFESSIONS);
 
     private static VillagerRegistryHolder register(String poiName, String professionName, Supplier<PoiType> target, SoundEvent event) {
         RegistryObject<PoiType> poiType = POI_TYPE_REGISTRY.register(poiName, target);
@@ -30,5 +30,4 @@ public class ModVillagers {
     }
 
     public static final VillagerRegistryHolder GEMSTONE_MAKER = register("gemstone_grinder_poi", "gemstone_maker", createPoi(ModBlocks.GEMSTONE_GRINDER.block()), SoundEvents.VILLAGER_WORK_WEAPONSMITH);
-    public static final VillagerRegistryHolder GUILD_MASTER = register("guild_banner_poi", "guild_master", createPoi(ModBlocks.GUILD_BOARD.block()), SoundEvents.VILLAGER_WORK_LIBRARIAN);
 }

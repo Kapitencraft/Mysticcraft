@@ -1,0 +1,8 @@
+{
+  "type": "mysticcraft:armor",
+  "category": "equipment",
+  "material": {
+    "item": "mysticcraft:crimson_steel_ingot"
+  },
+  "results": "mysticcraft:crimson"
+}

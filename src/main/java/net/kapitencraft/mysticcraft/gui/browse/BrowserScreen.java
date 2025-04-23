@@ -1,11 +1,10 @@
 package net.kapitencraft.mysticcraft.gui.browse;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.kapitencraft.mysticcraft.gui.screen.DefaultBackgroundScreen;
 import net.kapitencraft.mysticcraft.gui.widgets.Widget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import org.jetbrains.annotations.NotNull;
@@ -25,10 +24,10 @@ public abstract class BrowserScreen<T extends IBrowsable> extends DefaultBackgro
 
     private byte lastDotCount = 0;
 
-    protected void renderFetchingString(PoseStack poseStack) {
+    protected void renderFetchingString(GuiGraphics graphics) {
         Font font = Minecraft.getInstance().font;
         MutableComponent toShow = Component.translatable("gui.fetching");
-        GuiComponent.drawCenteredString(poseStack, font, toShow.append(" " + ".".repeat(Math.max(0, lastDotCount++))), (int) (this.leftPos + this.getImageWidth() / 2.), (int) (this.topPos + (this.getImageHeight() / 2.)), -1);
+        graphics.drawCenteredString(font, toShow.append(" " + ".".repeat(Math.max(0, lastDotCount++))), (int) (this.leftPos + this.getImageWidth() / 2.), (int) (this.topPos + (this.getImageHeight() / 2.)), -1);
         if (lastDotCount == 3) lastDotCount = 0;
     }
 

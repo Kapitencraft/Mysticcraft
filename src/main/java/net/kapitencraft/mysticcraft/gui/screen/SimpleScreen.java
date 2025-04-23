@@ -1,9 +1,9 @@
 package net.kapitencraft.mysticcraft.gui.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.gui.screen.tooltip.HoverTooltip;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
@@ -51,25 +51,24 @@ public abstract class SimpleScreen<T extends AbstractContainerMenu> extends Abst
     }
 
     @Override
-    protected void renderBg(@NotNull PoseStack pPoseStack, float pPartialTick, int pMouseX, int pMouseY) {
+    protected void renderBg(@NotNull GuiGraphics graphics, float pPartialTick, int pMouseX, int pMouseY) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
-        RenderSystem.setShaderTexture(0, MysticcraftMod.res("textures/gui/" + getTextureName() + ".png"));
-        blit(pPoseStack, this.leftPos, this.topPos, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
+        graphics.blit(MysticcraftMod.res("textures/gui/" + getTextureName() + ".png"), this.leftPos, this.topPos, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
         RenderSystem.disableBlend();
     }
 
     @Override
-    public void render(@NotNull PoseStack stack, int mouseX, int mouseY, float delta) {
-        renderBackground(stack);
-        super.render(stack, mouseX, mouseY, delta);
-        renderTooltip(stack, mouseX, mouseY);
+    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        renderBackground(graphics);
+        super.render(graphics, mouseX, mouseY, delta);
+        renderTooltip(graphics, mouseX, mouseY);
         if (this.menu.getCarried().isEmpty() && this.hoveredSlot == null) {
             hoverTooltips.forEach(tooltip -> {
                 if (tooltip.matches(this.leftPos, this.topPos, mouseX, mouseY)) {
-                    this.renderComponentTooltip(stack, tooltip.getText(), mouseX, mouseY);
+                    graphics.renderComponentTooltip(this.font, tooltip.getText(), mouseX, mouseY);
                 }
             });
         }

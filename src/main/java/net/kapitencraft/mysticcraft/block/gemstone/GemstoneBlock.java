@@ -1,12 +1,12 @@
 package net.kapitencraft.mysticcraft.block.gemstone;
 
+import net.kapitencraft.kap_lib.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.block.ModBlockStateProperties;
-import net.kapitencraft.mysticcraft.helpers.MiscHelper;
-import net.kapitencraft.mysticcraft.init.ModBlocks;
-import net.kapitencraft.mysticcraft.init.ModItems;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneType;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.IGemstoneItem;
+import net.kapitencraft.mysticcraft.registry.ModBlocks;
+import net.kapitencraft.mysticcraft.registry.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
@@ -17,12 +17,11 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.HalfTransparentBlock;
-import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.NotNull;
@@ -42,7 +41,7 @@ public class GemstoneBlock extends HalfTransparentBlock {
     public static final double VERY_HIGH_STRENGHT = 10;
 
     public GemstoneBlock() {
-        super(Properties.of(Material.HEAVY_METAL).sound(SoundType.AMETHYST_CLUSTER).requiresCorrectToolForDrops().noOcclusion());
+        super(Properties.copy(Blocks.AMETHYST_CLUSTER).requiresCorrectToolForDrops().noOcclusion());
         this.registerDefaultState(this.getStateDefinition().any().setValue(ModBlockStateProperties.GEMSTONE_TYPE, GemstoneType.EMPTY));
     }
 
@@ -57,10 +56,10 @@ public class GemstoneBlock extends HalfTransparentBlock {
     }
 
     @Override
-    public @NotNull List<ItemStack> getDrops(@NotNull BlockState p_60537_, LootContext.Builder builder) {
-        builder.withDynamicDrop(MysticcraftMod.res("gemstone_item"), this::addItem);
-        builder.withDynamicDrop(MysticcraftMod.res("gemstone_block"), this::addBlock);
-        return super.getDrops(p_60537_, builder);
+    public List<ItemStack> getDrops(BlockState pState, LootParams.Builder pParams) {
+        pParams.withDynamicDrop(MysticcraftMod.res("gemstone_item"), pOutput -> this.addItem(pParams.getParameter(LootContextParams.BLOCK_STATE), pOutput));
+        pParams.withDynamicDrop(MysticcraftMod.res("gemstone_block"), pOutput -> this.addBlock(pParams.getParameter(LootContextParams.BLOCK_STATE), pOutput));
+        return super.getDrops(pState, pParams);
     }
 
     public static GemstoneType getType(BlockState state) {
@@ -90,11 +89,11 @@ public class GemstoneBlock extends HalfTransparentBlock {
         return getItem(state, ModBlocks.GEMSTONE_BLOCK::getItem);
     }
 
-    public void addItem(LootContext context, Consumer<ItemStack> consumer) {
-        consumer.accept(getItem(context.getParam(LootContextParams.BLOCK_STATE), ModItems.GEMSTONE));
+    public void addItem(BlockState state, Consumer<ItemStack> consumer) {
+        consumer.accept(getItem(state, ModItems.GEMSTONE));
     }
-    public void addBlock(LootContext context, Consumer<ItemStack> consumer) {
-        consumer.accept(getItem(context.getParam(LootContextParams.BLOCK_STATE), ModBlocks.GEMSTONE_BLOCK::getItem));
+    public void addBlock(BlockState state, Consumer<ItemStack> consumer) {
+        consumer.accept(getItem(state, ModBlocks.GEMSTONE_BLOCK::getItem));
     }
 
     public static class Item extends BlockItem implements IGemstoneItem {

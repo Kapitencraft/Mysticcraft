@@ -1,13 +1,12 @@
 package net.kapitencraft.mysticcraft.enchantments;
 
 import com.google.common.collect.Multimap;
-import net.kapitencraft.mysticcraft.enchantments.abstracts.IUltimateEnchantment;
-import net.kapitencraft.mysticcraft.enchantments.abstracts.IWeaponEnchantment;
-import net.kapitencraft.mysticcraft.enchantments.abstracts.ModEnchantmentCategories;
-import net.kapitencraft.mysticcraft.enchantments.abstracts.StatBoostEnchantment;
-import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
-import net.kapitencraft.mysticcraft.helpers.MiscHelper;
-import net.kapitencraft.mysticcraft.init.ModAttributes;
+import net.kapitencraft.kap_lib.enchantments.abstracts.IUltimateEnchantment;
+import net.kapitencraft.kap_lib.enchantments.abstracts.IWeaponEnchantment;
+import net.kapitencraft.kap_lib.enchantments.abstracts.StatBoostEnchantment;
+import net.kapitencraft.kap_lib.helpers.AttributeHelper;
+import net.kapitencraft.kap_lib.helpers.MiscHelper;
+import net.kapitencraft.kap_lib.registry.ExtraAttributes;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -15,11 +14,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.function.Consumer;
 
-public class UltimateWiseEnchantment extends StatBoostEnchantment implements IWeaponEnchantment, IUltimateEnchantment {
+public class UltimateWiseEnchantment extends Enchantment implements StatBoostEnchantment, IWeaponEnchantment, IUltimateEnchantment {
     public UltimateWiseEnchantment() {
-        super(Rarity.RARE, ModEnchantmentCategories.SPELL_ITEM, EquipmentSlot.MAINHAND);
+        super(Rarity.RARE, ModEnchantmentCategories.SPELL_ITEM, new EquipmentSlot[] {EquipmentSlot.MAINHAND});
     }
 
 
@@ -28,8 +28,13 @@ public class UltimateWiseEnchantment extends StatBoostEnchantment implements IWe
     }
 
     @Override
+    public List<EquipmentSlot> slots() {
+        return List.of(EquipmentSlot.MAINHAND);
+    }
+
+    @Override
     public Consumer<Multimap<Attribute, AttributeModifier>> getModifiers(int level, ItemStack enchanted, EquipmentSlot slot) {
-        return multimap -> multimap.put(ModAttributes.MANA_COST.get(), AttributeHelper.createModifier("Ultimate Wise Enchantment", AttributeModifier.Operation.MULTIPLY_TOTAL, level * -0.1));
+        return multimap -> multimap.put(ExtraAttributes.MANA_COST.get(), AttributeHelper.createModifier("Ultimate Wise Enchantment", AttributeModifier.Operation.MULTIPLY_TOTAL, level * -0.1));
     }
 
     @Override

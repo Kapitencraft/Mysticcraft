@@ -523,6 +523,11 @@
   "rng_drop.rarity.rare": "RARE DROP",
   "rng_drop.rarity.rngesus_incarnate": "RNGESUS INCARNATE DROP",
 
+  "set_bonus.assassin": "deals 2x damage from behind the enemy",
+  "set_bonus.freezing_aura": "Deals 2 Damage per Second to all Entities within 3 Blocks.",
+  "set_bonus.mana_syphon": "Regenerate 10 Mana on kill",
+  "set_bonus.magic_conversion": "Grants §c+1 Ability Damage§r per §25Intelligence§r you have",
+
   "soulbound.toss": "You may not drop Soulbound items",
 
   "stat.mysticcraft.goldors_killed": "Goldors killed",

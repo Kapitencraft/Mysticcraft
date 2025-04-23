@@ -4,7 +4,7 @@ import net.minecraft.Util;
 
 /**
  * simple class to get passing time via code being run <br>
- * see {@link net.kapitencraft.mysticcraft.init.ModRegistryInit} for example
+ * see {@link net.kapitencraft.mysticcraft.registry.ModRegistryInit} for example
  */
 public class Timer {
     private static long millis;

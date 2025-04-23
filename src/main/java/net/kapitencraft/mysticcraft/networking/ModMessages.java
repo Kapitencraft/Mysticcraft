@@ -5,8 +5,6 @@ import net.kapitencraft.mysticcraft.networking.packets.C2S.ReforgeItemPacket;
 import net.kapitencraft.mysticcraft.networking.packets.C2S.UpgradeItemPacket;
 import net.kapitencraft.mysticcraft.networking.packets.C2S.UseShortBowPacket;
 import net.kapitencraft.mysticcraft.networking.packets.ModPacket;
-import net.kapitencraft.mysticcraft.networking.packets.RequestDataPacket;
-import net.kapitencraft.mysticcraft.networking.packets.RequestPacket;
 import net.kapitencraft.mysticcraft.networking.packets.S2C.*;
 import net.kapitencraft.mysticcraft.networking.packets.SendCompoundTagPacket;
 import net.minecraft.network.FriendlyByteBuf;
@@ -34,7 +32,7 @@ public class ModMessages {
     }
 
     public static <MSG> void sendToClientPlayer(MSG message, ServerPlayer player) {
-        PACKET_HANDLER.sendTo(message, player.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
+        PACKET_HANDLER.sendTo(message, player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
     }
 
     public static <MSG> void sendToAllConnectedPlayers(Function<ServerPlayer, MSG> provider, ServerLevel serverLevel) {
@@ -54,14 +52,11 @@ public class ModMessages {
         addSimpleMessage(UpgradeItemPacket.class, NetworkDirection.PLAY_TO_SERVER, UpgradeItemPacket::new);
         addMessage(SendCompoundTagPacket.class, NetworkDirection.PLAY_TO_SERVER, SendCompoundTagPacket::new);
         addMessage(SendCompoundTagPacket.class, NetworkDirection.PLAY_TO_CLIENT, SendCompoundTagPacket::new);
-        addMessage(SyncGuildsPacket.class, NetworkDirection.PLAY_TO_CLIENT, SyncGuildsPacket::new);
         addMessage(DisplayTotemActivationPacket.class, NetworkDirection.PLAY_TO_CLIENT, DisplayTotemActivationPacket::new);
         addMessage(SyncEssenceDataPacket.class, NetworkDirection.PLAY_TO_CLIENT, SyncEssenceDataPacket::new);
         addMessage(SyncGemstoneDataToPlayerPacket.class, NetworkDirection.PLAY_TO_CLIENT, SyncGemstoneDataToPlayerPacket::new);
         addMessage(SyncElytraDataToPlayerPacket.class, NetworkDirection.PLAY_TO_CLIENT, SyncElytraDataToPlayerPacket::new);
         addMessage(ReforgeItemPacket.class, NetworkDirection.PLAY_TO_SERVER, ReforgeItemPacket::new);
-        addMessage(RequestPacket.class, NetworkDirection.PLAY_TO_SERVER, RequestPacket::new);
-        addMessage(RequestDataPacket.class, NetworkDirection.PLAY_TO_CLIENT, RequestDataPacket::new);
         addMessage(SwingPacket.class, NetworkDirection.PLAY_TO_CLIENT, SwingPacket::new);
     }
 

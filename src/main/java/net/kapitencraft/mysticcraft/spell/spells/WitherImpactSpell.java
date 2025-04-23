@@ -1,13 +1,13 @@
 package net.kapitencraft.mysticcraft.spell.spells;
 
+import net.kapitencraft.kap_lib.helpers.MiscHelper;
+import net.kapitencraft.kap_lib.util.Color;
 import net.kapitencraft.mysticcraft.client.particle.options.CircleParticleOptions;
-import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.helpers.ParticleHelper;
 import net.kapitencraft.mysticcraft.misc.content.mana.ManaAOE;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import org.joml.Vector3f;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ public class WitherImpactSpell {
         WitherShieldSpell.execute(user, stack);
         MiscHelper.saveTeleport(user, 10);
         ManaAOE.execute(user, "wither_impact", 0.4f, 5, 5);
-        ParticleHelper.sendParticles(user.level, new CircleParticleOptions(new Vector3f(143f / 255, 0, 1), 5, 0.6), false, user.getX(), user.getY(), user.getZ(), 1, 0, 0, 0, 0);
+        ParticleHelper.sendParticles(user.level(), new CircleParticleOptions(new Color(143f / 255, 0, 1, 1), 5, 0.6), false, user.getX(), user.getY(), user.getZ(), 1, 0, 0, 0, 0);
         return true;
     }
 

@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.entity.skeleton_master;
 
-import net.kapitencraft.mysticcraft.helpers.MiscHelper;
+
+import net.kapitencraft.kap_lib.helpers.MiscHelper;
 
 public class KeeperHolder {
 

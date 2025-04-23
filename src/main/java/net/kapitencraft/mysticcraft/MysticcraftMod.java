@@ -4,9 +4,9 @@ import com.mojang.logging.LogUtils;
 import net.kapitencraft.mysticcraft.config.ClientModConfig;
 import net.kapitencraft.mysticcraft.config.CommonModConfig;
 import net.kapitencraft.mysticcraft.config.ServerModConfig;
-import net.kapitencraft.mysticcraft.init.ModRegistryInit;
 import net.kapitencraft.mysticcraft.logging.Markers;
 import net.kapitencraft.mysticcraft.misc.visuals.SimplePings;
+import net.kapitencraft.mysticcraft.registry.ModRegistryInit;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -34,14 +34,14 @@ public class MysticcraftMod {
         return new ResourceLocation(MOD_ID, name);
     }
 
-    public static <T> DeferredRegister<T> makeRegistry(IForgeRegistry<T> registry) {
+    public static <T> DeferredRegister<T> registry(IForgeRegistry<T> registry) {
         return DeferredRegister.create(registry, MOD_ID);
     }
 
     /**
      * use for custom registries on the Mysticcraft Namespace
      */
-    public static <T> DeferredRegister<T> makeRegistry(ResourceKey<Registry<T>> key) {
+    public static <T> DeferredRegister<T> registry(ResourceKey<Registry<T>> key) {
         return DeferredRegister.create(key, MOD_ID);
     }
 

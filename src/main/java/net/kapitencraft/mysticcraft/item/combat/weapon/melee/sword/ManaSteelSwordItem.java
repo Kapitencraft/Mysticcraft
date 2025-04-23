@@ -1,8 +1,8 @@
 package net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword;
 
+import net.kapitencraft.kap_lib.util.ExtraRarities;
 import net.kapitencraft.mysticcraft.item.misc.ModTiers;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
-import net.kapitencraft.mysticcraft.misc.ModRarities;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
@@ -16,7 +16,7 @@ import java.util.List;
 
 public class ManaSteelSwordItem extends LongSwordItem {
     public ManaSteelSwordItem() {
-        super(ModTiers.MANA_STEEL, 3, new Properties().durability(1800).rarity(ModRarities.MYTHIC));
+        super(ModTiers.MANA_STEEL, 3, new Properties().durability(1800).rarity(ExtraRarities.MYTHIC));
     }
 
     @Override

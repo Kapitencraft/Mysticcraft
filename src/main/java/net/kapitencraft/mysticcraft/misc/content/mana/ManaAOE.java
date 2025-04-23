@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.misc.content.mana;
 
-import net.kapitencraft.mysticcraft.helpers.MathHelper;
-import net.kapitencraft.mysticcraft.helpers.TextHelper;
+import net.kapitencraft.kap_lib.helpers.MathHelper;
+import net.kapitencraft.kap_lib.helpers.TextHelper;
 import net.kapitencraft.mysticcraft.misc.DamageCounter;
 import net.kapitencraft.mysticcraft.misc.damage_source.AbilityDamageSource;
 import net.minecraft.network.chat.Component;
@@ -17,15 +17,15 @@ public class ManaAOE {
 
     public static void execute(LivingEntity user, String name, float intScaling, float damage, double range) {
         final Vec3 center = new Vec3((user.getX()), (user.getY()), (user.getZ()));
-        List<LivingEntity> entFound = user.level.getEntitiesOfClass(LivingEntity.class, new AABB(center, center).inflate(range), e -> true).stream().sorted(Comparator.comparingDouble(entCnd -> entCnd.distanceToSqr(center))).toList();
+        List<LivingEntity> entFound = user.level().getEntitiesOfClass(LivingEntity.class, new AABB(center, center).inflate(range), e -> true).stream().sorted(Comparator.comparingDouble(entCnd -> entCnd.distanceToSqr(center))).toList();
         DamageCounter.activate();
         for (LivingEntity entityIterator : entFound) {
             if (!(entityIterator == user)) {
-                entityIterator.hurt(new AbilityDamageSource(user, intScaling, name), damage);
+                entityIterator.hurt(AbilityDamageSource.createDirect(user, intScaling, name), damage);
             }
         }
         DamageCounter.DamageHolder holder = DamageCounter.getDamage(true);
-        if (!user.level.isClientSide() && user instanceof Player player && holder.hasDamage()) {
+        if (!user.level().isClientSide() && user instanceof Player player && holder.hasDamage()) {
             player.sendSystemMessage(Component.literal("Your " + TextHelper.makeGrammar(name) + " hit " + TextHelper.wrapInRed(holder.hit()) + " Enemies for " + TextHelper.wrapInRed(MathHelper.defRound(holder.damage())) + " Damage"));
         }
     }

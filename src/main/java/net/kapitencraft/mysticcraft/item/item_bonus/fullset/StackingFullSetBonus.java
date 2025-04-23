@@ -1,6 +1,5 @@
 package net.kapitencraft.mysticcraft.item.item_bonus.fullset;
 
-import net.kapitencraft.mysticcraft.item.item_bonus.FullSetBonus;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;

@@ -1,8 +1,8 @@
 package net.kapitencraft.mysticcraft.item.capability;
 
 import com.mojang.serialization.Codec;
+import net.kapitencraft.kap_lib.io.serialization.NbtSerializer;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.misc.serialization.NbtSerializer;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.Tag;
 import net.minecraftforge.common.capabilities.Capability;

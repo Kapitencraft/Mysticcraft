@@ -3,6 +3,7 @@ package net.kapitencraft.mysticcraft.item.combat.armor.client.model;// Made with
 // Paste this class into your mod and generate all required imports
 
 
+import net.kapitencraft.kap_lib.item.combat.armor.client.model.ArmorModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;

@@ -1,6 +1,9 @@
 package net.kapitencraft.mysticcraft.enchantments;
 
-import net.kapitencraft.mysticcraft.enchantments.abstracts.*;
+import net.kapitencraft.kap_lib.enchantments.abstracts.IArmorEnchantment;
+import net.kapitencraft.kap_lib.enchantments.abstracts.IToolEnchantment;
+import net.kapitencraft.kap_lib.enchantments.abstracts.IWeaponEnchantment;
+import net.kapitencraft.kap_lib.enchantments.abstracts.ModEnchantment;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.enchantment.Enchantment;
 

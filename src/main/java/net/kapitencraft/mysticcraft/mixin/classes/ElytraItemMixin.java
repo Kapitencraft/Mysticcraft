@@ -1,16 +1,20 @@
 package net.kapitencraft.mysticcraft.mixin.classes;
 
-import net.kapitencraft.mysticcraft.helpers.MiscHelper;
+import net.kapitencraft.kap_lib.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.item.capability.CapabilityHelper;
 import net.kapitencraft.mysticcraft.item.capability.elytra.ElytraData;
 import net.kapitencraft.mysticcraft.misc.content.mana.ManaMain;
-import net.kapitencraft.mysticcraft.requirements.Requirement;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ElytraItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ElytraItem.class)
 public abstract class ElytraItemMixin extends Item {
@@ -25,34 +29,32 @@ public abstract class ElytraItemMixin extends Item {
      * @author Kapitencraft
      * @reason elytra data :pog:
      */
-    @Override
-    public boolean elytraFlightTick(ItemStack stack, net.minecraft.world.entity.LivingEntity entity, int flightTicks) {
-        if (entity instanceof Player player && Requirement.doesntMeetRequirements(player, stack.getItem())) return false;
-        if (!entity.level.isClientSide) {
-            int nextFlightTick = flightTicks + 1;
-            if (nextFlightTick % 10 == 0) {
-                if (nextFlightTick % 20 == 0) {
-                    if (!CapabilityHelper.exeCapability(stack, CapabilityHelper.ELYTRA, data -> {
-                        int unb = data.getLevelForData(ElytraData.UNBREAKING);
-                        if (unb == 0)
-                            stack.hurtAndBreak(1, entity, e -> e.broadcastBreakEvent(net.minecraft.world.entity.EquipmentSlot.CHEST));
-                    })) stack.hurtAndBreak(1, entity, e -> e.broadcastBreakEvent(net.minecraft.world.entity.EquipmentSlot.CHEST));
-                }
-                entity.gameEvent(net.minecraft.world.level.gameevent.GameEvent.ELYTRA_GLIDE);
-            }
 
-        }
+    @Inject(method = "elytraFlightTick", at = @At("RETURN"), remap = false)
+    private void elytraFlightTick(ItemStack stack, LivingEntity entity, int flightTicks, CallbackInfoReturnable<Boolean> cir) {
         CapabilityHelper.exeCapability(stack, CapabilityHelper.ELYTRA, data -> {
             int manaBoost = data.getLevelForData(ElytraData.MANA_BOOST);
             if (manaBoost > 0) {
                 if (ManaMain.consumeMana(entity, 1.5)) {
-                    entity.setDeltaMovement(MiscHelper.getFireworkSpeedBoost(entity, manaBoost));
-                    if (entity.level.isClientSide())
+                    entity.setDeltaMovement(getFireworkSpeedBoost(entity, manaBoost));
+                    if (entity.level().isClientSide())
                         MiscHelper.sendManaBoostParticles(entity, entity.getRandom(), entity.getDeltaMovement());
                 }
             }
         });
-        return true;
     }
 
+    @Unique
+    private static Vec3 getFireworkSpeedBoost(LivingEntity living, int scale) {
+        Vec3 sourceLookAngle = living.getLookAngle();
+        Vec3 sourceSpeed = living.getDeltaMovement();
+        double d1 = 0.1;
+        double d2 = 1.5;
+        double d3 = 0.5;
+        if (scale > 0) {
+            d1 *= scale;
+            d3 *= scale / 5.;
+        }
+        return sourceSpeed.add(sourceLookAngle.x * d1 + (sourceLookAngle.x * d2 - sourceSpeed.x) * d3, sourceLookAngle.y * d1 + (sourceLookAngle.y * d2 - sourceSpeed.y) * d3, sourceLookAngle.z * d1 + (sourceLookAngle.z * d2 - sourceSpeed.z) * d3);
+    }
 }

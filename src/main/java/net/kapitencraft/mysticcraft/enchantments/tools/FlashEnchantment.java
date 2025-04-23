@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.enchantments.tools;
 
-import net.kapitencraft.mysticcraft.enchantments.abstracts.ModEnchantment;
-import net.kapitencraft.mysticcraft.helpers.MiscHelper;
+import net.kapitencraft.kap_lib.enchantments.abstracts.ModEnchantment;
+import net.kapitencraft.kap_lib.helpers.MiscHelper;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
 

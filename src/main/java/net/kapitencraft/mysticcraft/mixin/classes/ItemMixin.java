@@ -1,11 +1,11 @@
 package net.kapitencraft.mysticcraft.mixin.classes;
 
 import com.google.common.collect.Multimap;
-import net.kapitencraft.mysticcraft.enchantments.abstracts.StatBoostEnchantment;
-import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
-import net.kapitencraft.mysticcraft.helpers.CollectionHelper;
-import net.kapitencraft.mysticcraft.helpers.MiscHelper;
-import net.kapitencraft.mysticcraft.helpers.TextHelper;
+import net.kapitencraft.kap_lib.enchantments.abstracts.StatBoostEnchantment;
+import net.kapitencraft.kap_lib.helpers.AttributeHelper;
+import net.kapitencraft.kap_lib.helpers.CollectionHelper;
+import net.kapitencraft.kap_lib.helpers.MiscHelper;
+import net.kapitencraft.kap_lib.helpers.TextHelper;
 import net.kapitencraft.mysticcraft.item.capability.CapabilityHelper;
 import net.kapitencraft.mysticcraft.item.capability.ITieredItem;
 import net.kapitencraft.mysticcraft.item.capability.dungeon.IStarAbleItem;
@@ -73,6 +73,7 @@ public abstract class ItemMixin implements IForgeItem {
         if (self() instanceof IStarAbleItem) {
             builder.update(value -> IStarAbleItem.modifyData(stack, value));
         }
+        //TODO hook onto KapLib
         builder.merge(StatBoostEnchantment.getAllModifiers(stack, slot));
         if (self() instanceof ITieredItem) {
             builder.mulAll(ITieredItem.getTier(stack).getValueMul() + 1);

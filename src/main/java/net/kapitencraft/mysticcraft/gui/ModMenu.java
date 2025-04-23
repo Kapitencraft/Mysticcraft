@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.gui;
 
+import net.kapitencraft.kap_lib.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -23,7 +23,7 @@ public abstract class ModMenu<T extends ICapabilityProvider> extends AbstractCon
         super(menuType, containerId);
         this.slotAmount = slotAmount;
         this.player = inventory.player;
-        this.level = player.level;
+        this.level = player.level();
         this.blockEntity = provider;
     }
 

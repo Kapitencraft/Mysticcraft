@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.entity;
 
-import net.kapitencraft.mysticcraft.init.ModAttributes;
+import net.kapitencraft.kap_lib.registry.ExtraAttributes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.RandomSource;
@@ -30,7 +30,10 @@ public class FrozenBlazeEntity extends Blaze {
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Monster.createMonsterAttributes().add(Attributes.ATTACK_DAMAGE, 6.0D).add(Attributes.MOVEMENT_SPEED, 0.23).add(Attributes.FOLLOW_RANGE, 48.0D).add(ModAttributes.FEROCITY.get(), 60);
+        return Monster.createMonsterAttributes().add(Attributes.ATTACK_DAMAGE, 6.0D)
+                .add(Attributes.MOVEMENT_SPEED, 0.23)
+                .add(Attributes.FOLLOW_RANGE, 48.0D)
+                .add(ExtraAttributes.FEROCITY.get(), 60);
     }
 
     @Nullable

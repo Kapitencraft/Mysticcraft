@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.item.capability.reforging.bonuses;
 
-import net.kapitencraft.mysticcraft.helpers.MiscHelper;
+import net.kapitencraft.kap_lib.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.item.item_bonus.ReforgingBonus;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;

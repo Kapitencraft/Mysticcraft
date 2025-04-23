@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.spell.spells;
 
-import net.kapitencraft.mysticcraft.init.ModAttributes;
+import net.kapitencraft.kap_lib.registry.ExtraAttributes;
 import net.kapitencraft.mysticcraft.cooldown.Cooldowns;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -19,7 +19,7 @@ public class WitherShieldSpell {
     public static boolean execute(@NotNull LivingEntity user, ItemStack ignored) {
         CompoundTag tag = user.getPersistentData();
         Cooldowns.WITHER_SHIELD.applyCooldown(user, true);
-        float absorption = (float) (user.getAttributeValue(ModAttributes.CRIT_DAMAGE.get()) * 0.3);
+        float absorption = (float) (user.getAttributeValue(ExtraAttributes.CRIT_DAMAGE.get()) * 0.3);
         if (tag.getFloat(ABSORPTION_AMOUNT_ID) <= 0 || !tag.contains(ABSORPTION_AMOUNT_ID)) {
             user.setAbsorptionAmount(user.getAbsorptionAmount() + absorption);
         }

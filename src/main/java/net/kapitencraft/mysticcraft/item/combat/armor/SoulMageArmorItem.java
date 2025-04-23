@@ -2,24 +2,20 @@ package net.kapitencraft.mysticcraft.item.combat.armor;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.helpers.MiscHelper;
-import net.kapitencraft.mysticcraft.init.ModAttributes;
+import net.kapitencraft.kap_lib.helpers.AttributeHelper;
+import net.kapitencraft.kap_lib.registry.ExtraAttributes;
+import net.kapitencraft.kap_lib.util.ExtraRarities;
 import net.kapitencraft.mysticcraft.item.combat.armor.client.NetherArmorItem;
-import net.kapitencraft.mysticcraft.item.item_bonus.*;
 import net.kapitencraft.mysticcraft.item.item_bonus.fullset.SoulMageArmorFullSetBonus;
 import net.kapitencraft.mysticcraft.item.item_bonus.piece.SoulMageChestplateBonus;
 import net.kapitencraft.mysticcraft.item.item_bonus.piece.SoulMageHelmetBonus;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.ArmorTabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
-import net.kapitencraft.mysticcraft.misc.ModRarities;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -36,23 +32,15 @@ public class SoulMageArmorItem extends NetherArmorItem implements IArmorBonusIte
         return false;
     }
 
-    public SoulMageArmorItem(EquipmentSlot p_40387_) {
-        super(ModArmorMaterials.SOUL_MAGE, p_40387_, new Properties().rarity(ModRarities.LEGENDARY));
-    }
-
-    @Override
-    protected void initFullSetTick(ItemStack stack, Level level, LivingEntity living) {
-    }
-
-    @Override
-    protected void postFullSetTick(ItemStack stack, Level level, LivingEntity living) {
+    public SoulMageArmorItem(Type type) {
+        super(ModArmorMaterials.SOUL_MAGE, type, new Properties().rarity(ExtraRarities.LEGENDARY));
     }
 
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeMods(EquipmentSlot slot) {
         HashMultimap<Attribute, AttributeModifier> builder = HashMultimap.create();
-        if (slot == this.getSlot()) {
-            builder.put(ModAttributes.INTELLIGENCE.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[MiscHelper.createCustomIndex(slot)], "Intelligence", 345, AttributeModifier.Operation.ADDITION));
+        if (slot == this.getEquipmentSlot()) {
+            builder.put(ExtraAttributes.INTELLIGENCE.get(), AttributeHelper.createModifier("SoulMageArmorIntelligence", AttributeModifier.Operation.ADDITION,345));
         }
         return builder;
     }

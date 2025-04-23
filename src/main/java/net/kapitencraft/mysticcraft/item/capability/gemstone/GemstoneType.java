@@ -1,16 +1,14 @@
 package net.kapitencraft.mysticcraft.item.capability.gemstone;
 
-import net.kapitencraft.mysticcraft.api.DoubleMap;
+import net.kapitencraft.kap_lib.collection.DoubleMap;
+import net.kapitencraft.kap_lib.helpers.CollectorHelper;
+import net.kapitencraft.kap_lib.helpers.MiscHelper;
+import net.kapitencraft.kap_lib.registry.ExtraAttributes;
 import net.kapitencraft.mysticcraft.block.gemstone.GemstoneBlock;
 import net.kapitencraft.mysticcraft.block.gemstone.GemstoneCrystal;
-import net.kapitencraft.mysticcraft.block.special.GemstoneSeedBlock;
-import net.kapitencraft.mysticcraft.helpers.CollectionHelper;
-import net.kapitencraft.mysticcraft.helpers.CollectorHelper;
-import net.kapitencraft.mysticcraft.helpers.MathHelper;
-import net.kapitencraft.mysticcraft.helpers.MiscHelper;
-import net.kapitencraft.mysticcraft.init.ModAttributes;
-import net.kapitencraft.mysticcraft.init.ModBlocks;
-import net.kapitencraft.mysticcraft.init.ModItems;
+import net.kapitencraft.mysticcraft.block.gemstone.GemstoneSeedBlock;
+import net.kapitencraft.mysticcraft.registry.ModBlocks;
+import net.kapitencraft.mysticcraft.registry.ModItems;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -29,14 +27,14 @@ import java.util.function.Supplier;
 
 public enum GemstoneType implements StringRepresentable {
     EMPTY(ChatFormatting.WHITE, ()-> null, 0, "empty", 0),
-    ALMANDINE(ChatFormatting.LIGHT_PURPLE, ModAttributes.ABILITY_DAMAGE, 0.3, "almandine", GemstoneBlock.HIGH_MEDIUM_STRENGHT),
-    JASPER(ChatFormatting.DARK_RED, ModAttributes.STRENGTH, 2, "jasper", GemstoneBlock.VERY_HIGH_STRENGHT),
+    ALMANDINE(ChatFormatting.LIGHT_PURPLE, ExtraAttributes.ABILITY_DAMAGE, 0.3, "almandine", GemstoneBlock.HIGH_MEDIUM_STRENGHT),
+    JASPER(ChatFormatting.DARK_RED, ExtraAttributes.STRENGTH, 2, "jasper", GemstoneBlock.VERY_HIGH_STRENGHT),
     RUBY(ChatFormatting.RED, () -> Attributes.MAX_HEALTH, 0.5, "ruby", GemstoneBlock.LOW_STRENGHT),
     AMETHYST(ChatFormatting.DARK_PURPLE, () -> Attributes.ARMOR, 2.3, "amethyst", GemstoneBlock.LOW_MEDIUM_STRENGHT),
-    SAPPHIRE((ChatFormatting.BLUE), ModAttributes.INTELLIGENCE, 2.7, "sapphire", GemstoneBlock.MEDIUM_STRENGHT),
+    SAPPHIRE((ChatFormatting.BLUE), ExtraAttributes.INTELLIGENCE, 2.7, "sapphire", GemstoneBlock.MEDIUM_STRENGHT),
     AQUAMARINE(ChatFormatting.AQUA, ForgeMod.SWIM_SPEED, 0.1, "aquamarine", GemstoneBlock.VERY_LOW_STRENGHT),
-    TURQUOISE(ChatFormatting.DARK_AQUA, ModAttributes.FISHING_SPEED, 2.9, "turquoise", GemstoneBlock.LOW_MEDIUM_STRENGHT),
-    MOONSTONE(MathHelper.RGBtoInt(10, 10, 10), ModAttributes.DRAW_SPEED, 0.5, "moonstone", GemstoneBlock.HIGH_STRENGHT),
+    TURQUOISE(ChatFormatting.DARK_AQUA, ExtraAttributes.FISHING_SPEED, 2.9, "turquoise", GemstoneBlock.LOW_MEDIUM_STRENGHT),
+    MOONSTONE(0x0A0A0A, ExtraAttributes.DRAW_SPEED, 0.5, "moonstone", GemstoneBlock.HIGH_STRENGHT),
     CELESTINE(ChatFormatting.WHITE, ()-> Attributes.MOVEMENT_SPEED, 0.04, "celestine", GemstoneBlock.LOW_STRENGHT);
 
     public static EnumCodec<GemstoneType> CODEC = StringRepresentable.fromEnum(GemstoneType::values);
@@ -90,15 +88,15 @@ public enum GemstoneType implements StringRepresentable {
     }
 
     public static DoubleMap<GemstoneType, GemstoneSeedBlock.MaterialType, ItemStack> allSeeds() {
-        return DoubleMap.of(TYPES_TO_USE.stream().collect(CollectorHelper.createMap(GemstoneType::seeds)));
+        return DoubleMap.of(Arrays.stream(TYPES_TO_USE).collect(CollectorHelper.createMap(GemstoneType::seeds)));
     }
 
     public static Map<GemstoneType, ItemStack> allBlocks() {
-        return TYPES_TO_USE.stream().collect(CollectorHelper.createMap(GemstoneType::registerBlock));
+        return Arrays.stream(TYPES_TO_USE).collect(CollectorHelper.createMap(GemstoneType::registerBlock));
     }
 
     public static DoubleMap<GemstoneType, GemstoneCrystal.Size, ItemStack> allCrystals() {
-        return DoubleMap.of(TYPES_TO_USE.stream().collect(CollectorHelper.createMap(GemstoneType::crystals)));
+        return DoubleMap.of(Arrays.stream(TYPES_TO_USE).collect(CollectorHelper.createMap(GemstoneType::crystals)));
     }
 
     public ItemStack registerBlock() {
@@ -128,8 +126,20 @@ public enum GemstoneType implements StringRepresentable {
         return map;
     }
 
-    public static final List<GemstoneType> TYPES_TO_USE = CollectionHelper.remove(GemstoneType.values(), GemstoneType.EMPTY);
-    public static final List<Rarity> RARITIES_TO_USE = CollectionHelper.remove(Rarity.values(), Rarity.EMPTY);
+    public static final GemstoneType[] TYPES_TO_USE =  createTypesToUse();
+    public static final Rarity[] RARITIES_TO_USE = createRaritiesToUse();
+
+    private static Rarity[] createRaritiesToUse() {
+        Rarity[] rarities = new Rarity[5];
+        System.arraycopy(Rarity.values(), 1, rarities, 0, 5);
+        return rarities;
+    }
+
+    private static GemstoneType[] createTypesToUse() {
+        GemstoneType[] types = new GemstoneType[9];
+        System.arraycopy(GemstoneType.values(), 1, types, 0, 9);
+        return types;
+    }
 
     public static List<ItemStack> allForRarity(Rarity rarity) {
         return allItems().values().stream().map(map -> map.get(rarity)).toList();

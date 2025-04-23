@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.content;
 
-import net.kapitencraft.mysticcraft.helpers.MathHelper;
+import net.kapitencraft.kap_lib.helpers.MathHelper;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
@@ -15,7 +15,7 @@ public class CrimsonDeathRay {
     private float baseRot = 1;
 
     public CrimsonDeathRay(LivingEntity target) {
-        this.level = (ClientLevel) target.level;
+        this.level = (ClientLevel) target.level();
         this.target = target;
     }
     
@@ -25,7 +25,7 @@ public class CrimsonDeathRay {
             Vec3 rotVec = MathHelper.calculateViewVector(0, rot);
 
         }
-        baseRot += 0.5 * baseRot * (1200 - baseRot);
+        baseRot += 0.5f * baseRot * (1200 - baseRot);
         return activeTime++ > 200;
     }
 }

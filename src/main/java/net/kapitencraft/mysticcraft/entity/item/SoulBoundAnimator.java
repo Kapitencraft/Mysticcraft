@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.entity.item;
 
-import net.kapitencraft.mysticcraft.helpers.MathHelper;
-import net.kapitencraft.mysticcraft.init.ModEntityTypes;
+import net.kapitencraft.kap_lib.helpers.MathHelper;
+import net.kapitencraft.mysticcraft.registry.ModEntityTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
@@ -31,7 +31,7 @@ public class SoulBoundAnimator extends ArmorStand {
     }
 
     public SoulBoundAnimator(Player player, ItemStack stack, int slotId) {
-        super(ModEntityTypes.SOUL_BOUND_ANIMATOR.get(), player.getLevel());
+        super(ModEntityTypes.SOUL_BOUND_ANIMATOR.get(), player.level());
         EquipmentSlot slot = LivingEntity.getEquipmentSlotForItem(stack);
         this.setItemSlot(slot, stack);
         this.setPos(player.position());
@@ -87,6 +87,6 @@ public class SoulBoundAnimator extends ArmorStand {
     }
 
     private Player getOwner() {
-        return this.level instanceof ServerLevel server ? server.getPlayerByUUID(this.owner) : null;
+        return this.level() instanceof ServerLevel server ? server.getPlayerByUUID(this.owner) : null;
     }
 }

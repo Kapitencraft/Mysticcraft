@@ -1,7 +1,6 @@
 package net.kapitencraft.mysticcraft.item.combat.weapon.ranged.firework;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.projectile.FireworkRocketEntity;
@@ -20,11 +19,11 @@ public class NapalmRocketEntity extends FireWorkRocketModEntity {
     @Override
     protected void rocketHitEntity(EntityHitResult result) {
         Vec3 pos = result.getLocation();
-        BlockPos blockPos = new BlockPos(pos);
+        BlockPos blockPos = new BlockPos((int) pos.x, (int) pos.y, (int) pos.z);
         Entity hit = result.getEntity();
-        Level level = hit.level;
+        Level level = hit.level();
         int rangePerDirection = EXPLOSION_SIZE / 2;
-        hit.hurt(DamageSource.IN_FIRE, 10);
+        hit.hurt(damageSources().onFire(), 10);
         hit.setSecondsOnFire(20);
         for (int x = blockPos.getX() - rangePerDirection; x < blockPos.getX() + rangePerDirection; x++) {
             for (int y = blockPos.getY() - rangePerDirection; y < blockPos.getY() + rangePerDirection; y++) {

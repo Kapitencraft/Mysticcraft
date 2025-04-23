@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.mob_effects;
 
-import net.kapitencraft.mysticcraft.init.ModMobEffects;
-import net.minecraft.world.damagesource.DamageSource;
+import net.kapitencraft.mysticcraft.data_gen.ModDamageTypes;
+import net.kapitencraft.mysticcraft.registry.ModMobEffects;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -24,7 +24,7 @@ public class NumbnessMobEffect extends MobEffect {
     public void removeAttributeModifiers(LivingEntity living, @NotNull AttributeMap attributeMap, int amplifier) {
         MobEffectInstance numbness = living.getEffect(ModMobEffects.NUMBNESS.get());
         if (numbness != null && numbness.getDuration() < 1) {
-            living.hurt(new DamageSource("numbness"), living.getPersistentData().getFloat(NUMBNESS_ID));
+            living.hurt(living.damageSources().source(ModDamageTypes.NUMBNESS), living.getPersistentData().getFloat(NUMBNESS_ID));
             living.getPersistentData().putFloat(NUMBNESS_ID, 0);
         }
         super.removeAttributeModifiers(living, attributeMap, amplifier);

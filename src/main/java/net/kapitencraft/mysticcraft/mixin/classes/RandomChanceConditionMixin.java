@@ -1,8 +1,8 @@
 package net.kapitencraft.mysticcraft.mixin.classes;
 
-import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
@@ -24,7 +24,7 @@ public abstract class RandomChanceConditionMixin implements LootItemCondition {
     public boolean test(LootContext lootContext) {
         int i = lootContext.getLootingModifier();
         Entity entity = lootContext.getParamOrNull(LootContextParams.KILLER_ENTITY);
-        float mul = entity instanceof LivingEntity living ? (float) (living.getAttributeValue(ModAttributes.MAGIC_FIND.get()) / 100) : 1;
+        float mul = entity instanceof LivingEntity living ? (float) (living.getAttributeValue(Attributes.LUCK) / 100) : 1;
         return lootContext.getRandom().nextFloat() < (this.percent + (float)i * this.lootingMultiplier) * (1 + mul);
     }
 }

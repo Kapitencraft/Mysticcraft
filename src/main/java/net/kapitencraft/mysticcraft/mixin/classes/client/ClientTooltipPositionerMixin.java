@@ -1,9 +1,7 @@
 package net.kapitencraft.mysticcraft.mixin.classes.client;
 
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
-import org.jetbrains.annotations.NotNull;
 import org.joml.Vector2i;
 import org.joml.Vector2ic;
 import org.spongepowered.asm.mixin.Mixin;
@@ -12,11 +10,11 @@ import org.spongepowered.asm.mixin.Mixin;
 public abstract class ClientTooltipPositionerMixin implements ClientTooltipPositioner {
 
     @Override
-    public @NotNull Vector2ic positionTooltip(@NotNull Screen screen, int x, int y, int toolTipWidth, int toolTipHeight) {
-        if (x + toolTipWidth > screen.width) {
-            x = Math.max(x - 24 - toolTipWidth, 4);
+    public Vector2ic positionTooltip(int pScreenWidth, int pScreenHeight, int pMouseX, int pMouseY, int pTooltipWidth, int pTooltipHeight) {
+        if (pMouseX + pTooltipWidth > pScreenWidth) {
+            pMouseX = Math.max(pMouseX - 24 - pTooltipWidth, 4);
         }
 
-        return new Vector2i(x, y);
+        return new Vector2i(pMouseX, pMouseY);
     }
 }

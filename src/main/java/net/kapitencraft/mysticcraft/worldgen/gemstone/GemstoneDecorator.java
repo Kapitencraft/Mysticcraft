@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.worldgen.gemstone;
 
+import net.kapitencraft.kap_lib.collection.MapStream;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.api.MapStream;
 import net.kapitencraft.mysticcraft.event.ModEventFactory;
 import net.kapitencraft.mysticcraft.event.custom.RegisterGemstoneTypePlacementsEvent;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneType;

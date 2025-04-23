@@ -1,8 +1,7 @@
 package net.kapitencraft.mysticcraft.gui.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -25,12 +24,12 @@ public class BackButton extends Button {
 
 
     @Override
-    public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
+    public void render(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
         float scale = 8f / this.height;
-        pPoseStack.pushPose();
-        pPoseStack.scale(scale, scale, 0);
-        GuiComponent.drawCenteredString(pPoseStack, Minecraft.getInstance().font, this.left ? "<" : ">", this.getX() + this.getWidth() / 2, this.getY() + this.getHeight() / 2, -1);
-        pPoseStack.popPose();
+        graphics.pose().pushPose();
+        graphics.pose().scale(scale, scale, 0);
+        graphics.drawCenteredString(Minecraft.getInstance().font, this.left ? "<" : ">", this.getX() + this.getWidth() / 2, this.getY() + this.getHeight() / 2, -1);
+        graphics.pose().popPose();
     }
 
     @Override

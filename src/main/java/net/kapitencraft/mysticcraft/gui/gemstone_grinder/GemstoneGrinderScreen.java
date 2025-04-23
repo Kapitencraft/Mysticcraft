@@ -1,11 +1,11 @@
 package net.kapitencraft.mysticcraft.gui.gemstone_grinder;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.kapitencraft.kap_lib.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.item.capability.CapabilityHelper;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneSlot;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
@@ -22,8 +22,8 @@ public class GemstoneGrinderScreen extends AbstractContainerScreen<GemstoneGrind
     }
 
     @Override
-    protected void renderTooltip(@NotNull PoseStack pPoseStack, int pX, int pY) {
-        super.renderTooltip(pPoseStack, pX, pY);
+    protected void renderTooltip(@NotNull GuiGraphics graphics, int pX, int pY) {
+        super.renderTooltip(graphics, pX, pY);
         if (this.hoveredSlot != null) {
             if (!this.hoveredSlot.hasItem()) {
                 if (MathHelper.isBetween(36, 40, this.hoveredSlot.index)) {
@@ -32,7 +32,7 @@ public class GemstoneGrinderScreen extends AbstractContainerScreen<GemstoneGrind
                     if (slotId < 0 || slotId > GemstoneGrinderMenu.MAX_GEMSTONE_SLOTS) return;
                     CapabilityHelper.exeCapability(target, CapabilityHelper.GEMSTONE, handler -> {
                         GemstoneSlot slot = handler.getSlots()[slotId];
-                        this.renderTooltip(pPoseStack, slot.createPossibleList(), pX, pY);
+                        graphics.renderTooltip(this.font, slot.createPossibleList(), pX, pY);
                     });
                 }
             }
@@ -40,19 +40,18 @@ public class GemstoneGrinderScreen extends AbstractContainerScreen<GemstoneGrind
     }
 
     @Override
-    public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
-        super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
-        renderTooltip(pPoseStack, pMouseX, pMouseY);
+    public void render(@NotNull GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
+        super.render(graphics, pMouseX, pMouseY, pPartialTick);
+        renderTooltip(graphics, pMouseX, pMouseY);
     }
 
     @Override
-    protected void renderBg(@NotNull PoseStack pPoseStack, float pPartialTick, int pMouseX, int pMouseY) {
+    protected void renderBg(@NotNull GuiGraphics graphics, float pPartialTick, int pMouseX, int pMouseY) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
-        RenderSystem.setShaderTexture(0, MysticcraftMod.res("textures/gui/gemstone_grinder_gui.png"));
-        blit(pPoseStack, this.leftPos, this.topPos, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
+        graphics.blit(MysticcraftMod.res("textures/gui/gemstone_grinder_gui.png"), this.leftPos, this.topPos, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
         RenderSystem.disableBlend();
     }
 

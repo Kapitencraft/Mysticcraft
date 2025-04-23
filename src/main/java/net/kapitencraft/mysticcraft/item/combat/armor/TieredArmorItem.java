@@ -1,18 +1,20 @@
 package net.kapitencraft.mysticcraft.item.combat.armor;
 
-import net.kapitencraft.mysticcraft.helpers.MiscHelper;
+import net.kapitencraft.kap_lib.helpers.MiscHelper;
+import net.kapitencraft.kap_lib.item.combat.armor.ModArmorItem;
+import net.kapitencraft.kap_lib.util.ExtraRarities;
 import net.kapitencraft.mysticcraft.item.capability.ITieredItem;
-import net.kapitencraft.mysticcraft.misc.ModRarities;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
 
 public abstract class TieredArmorItem extends ModArmorItem implements ITieredItem {
-    protected static final Properties NETHER_ARMOR_PROPERTIES = new Properties().rarity(ModRarities.LEGENDARY);
+    protected static final Properties NETHER_ARMOR_PROPERTIES = new Properties().rarity(ExtraRarities.LEGENDARY);
 
-    public TieredArmorItem(ArmorMaterial p_40386_, EquipmentSlot p_40387_, Properties p_40388_) {
-        super(p_40386_, p_40387_, p_40388_);
+    public TieredArmorItem(ArmorMaterial material, ArmorItem.Type type, Properties properties) {
+        super(material, type, properties);
     }
 
     public static boolean hasFullSetActive(ItemTier armorTier, ArmorMaterial material, LivingEntity living) {

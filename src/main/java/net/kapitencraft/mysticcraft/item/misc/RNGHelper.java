@@ -1,12 +1,11 @@
 package net.kapitencraft.mysticcraft.item.misc;
 
-import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
-import net.kapitencraft.mysticcraft.init.ModAttributes;
-import net.kapitencraft.mysticcraft.init.ModEnchantments;
+import net.kapitencraft.kap_lib.helpers.AttributeHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -22,13 +21,9 @@ public class RNGHelper {
         double magicFind = getMagicFind(source);
         if (Math.random() <= getFinalChance(chance, magicFind)) {
             trySendDropMessage(stack, magicFind, source, chance);
-            if (source instanceof Player player && player.getMainHandItem().getEnchantmentLevel(ModEnchantments.TELEKINESIS.get()) > 0){
-                player.getInventory().add(stack);
-            } else {
-                ItemEntity entity = new ItemEntity(source.level, spawnPos.x, spawnPos.y, spawnPos.z, stack);
-                source.level.addFreshEntity(entity);
-                return entity;
-            }
+            ItemEntity entity = new ItemEntity(source.level(), spawnPos.x, spawnPos.y, spawnPos.z, stack);
+            source.level().addFreshEntity(entity);
+            return entity;
         }
         return null;
     }
@@ -38,7 +33,7 @@ public class RNGHelper {
     }
 
     private static double getMagicFind(@Nullable LivingEntity source) {
-        return (source != null) ? AttributeHelper.getSaveAttributeValue(ModAttributes.MAGIC_FIND.get(), source) : 0;
+        return (source != null) ? AttributeHelper.getSaveAttributeValue(Attributes.LUCK, source) : 0;
     }
 
     public static int getCount(LivingEntity source, double value) {

@@ -2,11 +2,11 @@ package net.kapitencraft.mysticcraft.item.loot_table.conditions;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.kapitencraft.kap_lib.io.serialization.JsonSerializer;
 import net.kapitencraft.mysticcraft.api.Reference;
-import net.kapitencraft.mysticcraft.init.ModLootItemConditions;
 import net.kapitencraft.mysticcraft.item.loot_table.LootContextReader;
-import net.kapitencraft.mysticcraft.misc.serialization.JsonSerializer;
-import net.kapitencraft.mysticcraft.tags.Tags;
+import net.kapitencraft.mysticcraft.registry.ModLootItemConditions;
+import net.kapitencraft.mysticcraft.tags.ModTags;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.Entity;
@@ -78,12 +78,12 @@ public class TagKeyCondition extends BaseCondition {
         switch (this.type) {
             case ENTITY, ITEM -> {
                 LootContextReader.simple(context, Entity.class, (LootContextParam<Entity>) target.getParam()).ifPresent(entity -> {
-                    if (type == Type.ENTITY) reference.setValue(entity.getType().is(Tags.makeKey(Registries.ENTITY_TYPE, id)));
-                    else reference.setValue(entity instanceof LivingEntity living ? living.getMainHandItem().is(Tags.makeKey(Registries.ITEM, id)) : false);
+                    if (type == Type.ENTITY) reference.setValue(entity.getType().is(ModTags.makeKey(Registries.ENTITY_TYPE, id)));
+                    else reference.setValue(entity instanceof LivingEntity living ? living.getMainHandItem().is(ModTags.makeKey(Registries.ITEM, id)) : false);
                 });
             }
             case BLOCK -> {
-                LootContextReader.simple(context, BlockState.class, LootContextParams.BLOCK_STATE).ifPresent(state -> reference.setValue(state.is(Tags.makeKey(Registries.BLOCK, id))));
+                LootContextReader.simple(context, BlockState.class, LootContextParams.BLOCK_STATE).ifPresent(state -> reference.setValue(state.is(ModTags.makeKey(Registries.BLOCK, id))));
             }
         }
         return reference.getValue();

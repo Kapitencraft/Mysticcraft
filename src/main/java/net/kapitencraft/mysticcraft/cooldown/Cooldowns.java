@@ -1,12 +1,15 @@
 package net.kapitencraft.mysticcraft.cooldown;
 
-import net.kapitencraft.mysticcraft.helpers.IOHelper;
+import net.kapitencraft.kap_lib.cooldown.CompoundPath;
+import net.kapitencraft.kap_lib.cooldown.Cooldown;
+import net.kapitencraft.kap_lib.cooldown.MappedCooldown;
+import net.kapitencraft.kap_lib.cooldown.RepresentableMappedCooldown;
+import net.kapitencraft.kap_lib.helpers.IOHelper;
 import net.kapitencraft.mysticcraft.item.item_bonus.fullset.CrimsonArmorFullSetBonus;
 import net.kapitencraft.mysticcraft.misc.HealingHelper;
 import net.kapitencraft.mysticcraft.spell.Spells;
 import net.kapitencraft.mysticcraft.spell.spells.WitherShieldSpell;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.entity.EquipmentSlot;
 
 public interface Cooldowns {
     Cooldown WITHER_SHIELD = new Cooldown(CompoundPath.builder(WitherShieldSpell.DAMAGE_REDUCTION_TIME), 100, living -> {
@@ -22,5 +25,4 @@ public interface Cooldowns {
             Cooldowns.DOMINUS.applyCooldown(living, false);
     });
     MappedCooldown<Spells> SPELLS = new RepresentableMappedCooldown<>("Spells", null);
-    MappedCooldown<EquipmentSlot> BONK_ENCHANTMENT = new MappedCooldown<>("Bonk", EquipmentSlot::getName, null);
 }

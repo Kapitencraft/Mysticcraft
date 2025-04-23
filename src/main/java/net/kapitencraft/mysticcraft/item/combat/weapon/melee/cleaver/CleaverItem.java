@@ -2,8 +2,8 @@ package net.kapitencraft.mysticcraft.item.combat.weapon.melee.cleaver;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import net.kapitencraft.kap_lib.registry.ExtraAttributes;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword.ModSwordItem;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -24,7 +24,7 @@ public abstract class CleaverItem extends ModSwordItem {
         HashMultimap<Attribute, AttributeModifier> builder = HashMultimap.create();
         builder.putAll(super.getDefaultAttributeModifiers(slot));
         if (slot == EquipmentSlot.MAINHAND) {
-            builder.put(ModAttributes.ARMOR_SHREDDER.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[5], "Shredder Bonus for Cleaver", this.getArmorShredderBonus(), AttributeModifier.Operation.ADDITION));
+            builder.put(ExtraAttributes.ARMOR_SHREDDER.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[5], "Shredder Bonus for Cleaver", this.getArmorShredderBonus(), AttributeModifier.Operation.ADDITION));
         }
         return builder;
     }

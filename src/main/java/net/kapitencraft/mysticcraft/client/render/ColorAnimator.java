@@ -1,11 +1,9 @@
 package net.kapitencraft.mysticcraft.client.render;
 
-import net.kapitencraft.mysticcraft.helpers.MathHelper;
-import net.kapitencraft.mysticcraft.helpers.MiscHelper;
+import net.kapitencraft.kap_lib.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.helpers.NetworkingHelper;
 import net.minecraft.core.particles.DustParticleOptionsBase;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.TextColor;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
@@ -82,12 +80,8 @@ public class ColorAnimator {
         return getColor(curTime, oldColor, colors.get(0));
     }
 
-    public TextColor makeTextColor(int curTime)  {
-        return TextColor.fromRgb(MathHelper.RGBtoInt(getColor(curTime)));
-    }
-
     private Vector3f getColor(int curTime, Vector3f first, Vector3f second) {
-        float percentage = MathHelper.makePercentage(curTime, nextColorTime);
+        float percentage = (float) curTime / nextColorTime;
         float xOff = second.x - first.x;
         float yOff = second.y - first.y;
         float zOff = second.z - first.z;

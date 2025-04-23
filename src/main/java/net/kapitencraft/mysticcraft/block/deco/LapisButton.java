@@ -1,11 +1,11 @@
 package net.kapitencraft.mysticcraft.block.deco;
 
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ButtonBlock;
+import net.minecraft.world.level.block.state.properties.BlockSetType;
 
 public class LapisButton extends ButtonBlock {
-    public LapisButton() {
-        super(Properties.copy(Blocks.LAPIS_BLOCK), 2, false, SoundEvents.STONE_BUTTON_CLICK_ON, SoundEvents.STONE_BUTTON_CLICK_OFF);
+    public LapisButton() {//TODO add block set type?
+        super(Properties.copy(Blocks.LAPIS_BLOCK), BlockSetType.STONE, 2, false);
     }
 }

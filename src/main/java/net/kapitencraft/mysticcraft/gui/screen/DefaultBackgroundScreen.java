@@ -1,8 +1,6 @@
 package net.kapitencraft.mysticcraft.gui.screen;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -26,15 +24,14 @@ public class DefaultBackgroundScreen extends Screen implements IBackgroundScreen
     }
 
     @Override
-    public void render(@NotNull PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
-        this.renderBackground(pPoseStack);
-        super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
+    public void render(@NotNull GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
+        this.renderBackground(graphics);
+        super.render(graphics, pMouseX, pMouseY, pPartialTick);
     }
 
     @Override
-    public void renderBackground(@NotNull PoseStack pPoseStack) {
-        RenderSystem.setShaderTexture(0, BACKGROUND_TEXTURE);
-        GuiComponent.blit(pPoseStack, this.leftPos, this.topPos, 0, 0, 0, getImageWidth(),  getImageHeight(), getImageWidth(), getImageHeight());
+    public void renderBackground(@NotNull GuiGraphics graphics) {
+        graphics.blit(BACKGROUND_TEXTURE, this.leftPos, this.topPos, 0, 0, 0, getImageWidth(),  getImageHeight(), getImageWidth(), getImageHeight());
     }
 
     @Override

@@ -14,7 +14,7 @@ public class ArmorTabGroup extends TabGroup {
     public ArmorTabGroup(TabRegister.TabTypes... type) {
         super(type);
     }
-    private static final Comparator<ArmorItem> comparator = Comparator.comparingDouble(value -> 4 - value.getSlot().getIndex());
+    private static final Comparator<ArmorItem> comparator = Comparator.comparingDouble(value -> 4 - value.getEquipmentSlot().getIndex());
 
     @Override
     public void register(TabRegister.TabTypes type, Consumer<Collection<ItemStack>> consumer) {

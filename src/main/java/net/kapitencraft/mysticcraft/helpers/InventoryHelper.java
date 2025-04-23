@@ -1,5 +1,6 @@
 package net.kapitencraft.mysticcraft.helpers;
 
+import net.kapitencraft.kap_lib.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.item.capability.ITieredItem;
 import net.kapitencraft.mysticcraft.item.capability.essence.IEssenceData;
 import net.kapitencraft.mysticcraft.item.combat.armor.TieredArmorItem;
@@ -99,7 +100,7 @@ public class InventoryHelper {
         List<EquipmentSlot> slots = new ArrayList<>();
         allInventory(player.getInventory()).stream().map(ItemStack::getItem).filter(
                 item -> item instanceof ArmorItem armorItem && armorItem.getMaterial() == material
-        ).map(ArmorItem.class::cast).map(ArmorItem::getSlot).forEach(slots::add);
+        ).map(ArmorItem.class::cast).map(ArmorItem::getEquipmentSlot).forEach(slots::add);
         return !slots.isEmpty() && new HashSet<>(slots).containsAll(Arrays.stream(MiscHelper.ARMOR_EQUIPMENT).toList());
     }
 
@@ -107,7 +108,7 @@ public class InventoryHelper {
         List<EquipmentSlot> slots = new ArrayList<>();
         allInventory(player.getInventory()).stream().filter(
                 stack -> stack.getItem() instanceof TieredArmorItem && ITieredItem.getTier(stack) == armorTier
-        ).map(ItemStack::getItem).map(TieredArmorItem.class::cast).map(ArmorItem::getSlot).forEach(slots::add);
+        ).map(ItemStack::getItem).map(TieredArmorItem.class::cast).map(ArmorItem::getEquipmentSlot).forEach(slots::add);
         return !slots.isEmpty() && new HashSet<>(slots).containsAll(Arrays.stream(MiscHelper.ARMOR_EQUIPMENT).toList());
     }
 

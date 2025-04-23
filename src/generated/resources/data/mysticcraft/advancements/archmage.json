@@ -1,0 +1,34 @@
+{
+  "criteria": {
+    "arch_mage": {
+      "conditions": {
+        "amount": 10000.0,
+        "amount_type": "more"
+      },
+      "trigger": "mysticcraft:use_mana"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.mysticcraft.archmage"
+    },
+    "frame": "challenge",
+    "hidden": false,
+    "icon": {
+      "item": "mysticcraft:elemental_shard_of_fire"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.mysticcraft.archmage.title"
+    }
+  },
+  "requirements": [
+    [
+      "arch_mage"
+    ]
+  ],
+  "rewards": {
+    "experience": 100
+  }
+}

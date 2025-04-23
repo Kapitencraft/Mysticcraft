@@ -1,8 +1,8 @@
 package net.kapitencraft.mysticcraft.client.particle;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.kapitencraft.kap_lib.util.Color;
 import net.kapitencraft.mysticcraft.client.particle.options.CircleParticleOptions;
-import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
@@ -11,15 +11,14 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
-import org.joml.Vector3i;
 
 public class CircleParticle extends TextureSheetParticle {
     private final double expandSize;
     private final int startColor;
     private final double expandSpeed;
-    public CircleParticle(ClientLevel level, double x, double y, double z, Vector3f startColor, double expandSize, double expandSpeed) {
+    public CircleParticle(ClientLevel level, double x, double y, double z, Color startColor, double expandSize, double expandSpeed) {
         super(level, x, y, z);
-        this.startColor = MathHelper.RGBtoInt(startColor);
+        this.startColor = startColor.pack();
         this.expandSize = expandSize;
         this.lifetime = 100;
         this.expandSpeed = expandSpeed;
@@ -37,13 +36,10 @@ public class CircleParticle extends TextureSheetParticle {
 
     @Override
     public void tick() {
-        float lifePercentage = MathHelper.makePercentage(age, lifetime);
+        float lifePercentage = (float) age / lifetime;
         this.setAlpha(1f - lifePercentage);
-        Vector3i color = MathHelper.intToRGB(startColor);
-        float r = MathHelper.makePercentage(color.x, 255);
-        float g = MathHelper.makePercentage(color.y, 255);
-        float b = MathHelper.makePercentage(color.z, 255);
-        this.setColor(r, g, b);
+        Color color = new Color(startColor);
+        this.setColor(color.r, color.g, color.b);
         super.tick();
     }
 

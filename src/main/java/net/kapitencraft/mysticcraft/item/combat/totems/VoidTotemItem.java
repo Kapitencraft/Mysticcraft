@@ -1,7 +1,9 @@
 package net.kapitencraft.mysticcraft.item.combat.totems;
 
+import net.kapitencraft.kap_lib.helpers.MiscHelper;
+import net.kapitencraft.kap_lib.item.combat.totem.ModTotemItem;
 import net.kapitencraft.mysticcraft.entity.portal.TransferForcer;
-import net.kapitencraft.mysticcraft.helpers.MiscHelper;
+import net.kapitencraft.mysticcraft.item.misc.IModItem;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -9,6 +11,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -21,18 +24,18 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class VoidTotemItem extends ModTotemItem {
+public class VoidTotemItem extends ModTotemItem implements IModItem {
     public VoidTotemItem() {
         super(MiscHelper.rarity(Rarity.RARE));
     }
 
     @Override
     public boolean onUse(LivingEntity living, DamageSource source) {
-        if (source == DamageSource.OUT_OF_WORLD) {
+        if (source.is(DamageTypes.FELL_OUT_OF_WORLD)) {
             boolean handled = false;
             if (living instanceof ServerPlayer player) {
                 BlockPos respawnPoint = player.getRespawnPosition();
-                ServerLevel serverLevel = player.getLevel();
+                ServerLevel serverLevel = player.serverLevel();
                 MinecraftServer server = serverLevel.getServer();
                 ServerLevel respawnLevel = server.getLevel(player.getRespawnDimension());
                 if (respawnPoint != null && respawnLevel != null) {

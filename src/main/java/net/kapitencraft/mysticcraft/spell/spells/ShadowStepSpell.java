@@ -1,8 +1,8 @@
 package net.kapitencraft.mysticcraft.spell.spells;
 
-import net.kapitencraft.mysticcraft.helpers.MathHelper;
-import net.kapitencraft.mysticcraft.helpers.MiscHelper;
-import net.kapitencraft.mysticcraft.init.ModParticleTypes;
+import net.kapitencraft.kap_lib.helpers.MathHelper;
+import net.kapitencraft.kap_lib.helpers.MiscHelper;
+import net.kapitencraft.mysticcraft.registry.ModParticleTypes;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -18,11 +18,11 @@ import java.util.List;
 public class ShadowStepSpell {
 
     public static boolean execute(LivingEntity user, ItemStack ignored) {
-        List<LivingEntity> entities = MathHelper.getAllEntitiesInsideCone(LivingEntity.class, 15, 20, user.position(), user.getRotationVector(), user.level);
+        List<LivingEntity> entities = MathHelper.getAllEntitiesInsideCone(LivingEntity.class, 15, 20, user.position(), user.getRotationVector(), user.level());
         List<LivingEntity> hit = new ArrayList<>();
         entities.stream().filter(living -> living != user).forEach(hit::add);
-        if (next(hit, user)) MiscHelper.delayed(10, ()-> {
-                    if (next(hit, user)) MiscHelper.delayed(10, ()-> next(hit, user));
+        if (next(hit, user)) MiscHelper.schedule(10, ()-> {
+                    if (next(hit, user)) MiscHelper.schedule(10, ()-> next(hit, user));
                 }
         );
         return true;
@@ -51,7 +51,7 @@ public class ShadowStepSpell {
     private static void spawnParticles(LivingEntity entity) {
         double d0 = -Mth.sin(entity.getYRot() * ((float)Math.PI / 180F));
         double d1 = Mth.cos(entity.getYRot() * ((float)Math.PI / 180F));
-        if (entity.level instanceof ServerLevel level) {
+        if (entity.level() instanceof ServerLevel level) {
             level.sendParticles(ModParticleTypes.SHADOW_SWEEP.get(), entity.getX() + d0, entity.getY(0.5D), entity.getZ() + d1, 0, d0, 0.0D, d1, 0.0D);
         }
     }

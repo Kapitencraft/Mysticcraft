@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.raid;
 
 import com.google.common.collect.HashMultimap;
-import net.kapitencraft.mysticcraft.helpers.MathHelper;
+import net.kapitencraft.kap_lib.helpers.MathHelper;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerBossEvent;
 import net.minecraft.world.BossEvent;

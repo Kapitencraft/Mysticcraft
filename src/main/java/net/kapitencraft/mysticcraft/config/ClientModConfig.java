@@ -3,7 +3,6 @@ package net.kapitencraft.mysticcraft.config;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.client.rainbow.ChromaOrigin;
 import net.kapitencraft.mysticcraft.client.rainbow.ChromaType;
-import net.kapitencraft.mysticcraft.gui.widgets.menu.drop_down.elements.Element;
 import net.minecraft.ChatFormatting;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.common.Mod;
@@ -15,12 +14,6 @@ public class ClientModConfig {
 
 
     static {
-        SCROLL_SCALE = BUILDER
-                .comment("the scale of how quick tooltips are scrolled with")
-                .defineInRange("scroll_scale", 5, 1, 20);
-        FOCUS_TYPE = BUILDER
-                .comment("what focus type should be used for highlighting")
-                .defineEnum("focus_type", Element.FocusTypes.OUTLINE);
         PING_COLOR = BUILDER
                 .comment("determines the color which indicates pings")
                 .defineEnum("ping_color", ChatFormatting.YELLOW);
@@ -37,8 +30,6 @@ public class ClientModConfig {
                 .defineEnum("origin", ChromaOrigin.BOTTOM_RIGHT);
     }
 
-    private static final ForgeConfigSpec.IntValue SCROLL_SCALE;
-    private static final ForgeConfigSpec.EnumValue<Element.FocusTypes> FOCUS_TYPE;
     private static final ForgeConfigSpec.DoubleValue CHROMA_SPEED;
     private static final ForgeConfigSpec.EnumValue<ChromaType> CHROMA_TYPE;
     private static final ForgeConfigSpec.DoubleValue CHROMA_SPACING;
@@ -51,10 +42,6 @@ public class ClientModConfig {
         return PING_COLOR.get();
     }
 
-    public static int getScrollScale() {
-        return SCROLL_SCALE.get();
-    }
-
     public static ChromaType getChromaType() {
         return CHROMA_TYPE.get();
     }
@@ -65,10 +52,6 @@ public class ClientModConfig {
 
     public static float getChromaSpacing() {
         return (float) (double) CHROMA_SPACING.get();
-    }
-
-    public static Element.FocusTypes getFocusType() {
-        return FOCUS_TYPE.get();
     }
 
     public static ChromaOrigin getChromaOrigin() {
