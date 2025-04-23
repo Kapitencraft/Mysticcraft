@@ -2,8 +2,8 @@ package net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import net.kapitencraft.kap_lib.registry.ExtraAttributes;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.item.misc.IModItem;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
@@ -41,7 +41,7 @@ public abstract class ModSwordItem extends SwordItem implements IModItem {
 
     @Override
     public @NotNull AABB getSweepHitBox(@NotNull ItemStack stack, @NotNull Player player, @NotNull Entity target) {
-        return super.getSweepHitBox(stack, player, target).inflate((player.getAttributeValue(ForgeMod.ATTACK_RANGE.get()) - 3) * 1/3);
+        return super.getSweepHitBox(stack, player, target).inflate((player.getAttributeValue(ForgeMod.ENTITY_REACH.get()) - 3) * 1/3);
     }
 
     @Override
@@ -49,8 +49,8 @@ public abstract class ModSwordItem extends SwordItem implements IModItem {
         HashMultimap<Attribute, AttributeModifier> builder = HashMultimap.create();
         builder.putAll(super.getDefaultAttributeModifiers(slot));
         if (slot == EquipmentSlot.MAINHAND) {
-            builder.put(ModAttributes.STRENGTH.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[5], "Default Attribute modification", this.getStrenght(), AttributeModifier.Operation.ADDITION));
-            builder.put(ModAttributes.CRIT_DAMAGE.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[5], "Default Attribute modification", this.getCritDamage(), AttributeModifier.Operation.ADDITION));
+            builder.put(ExtraAttributes.STRENGTH.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[5], "Default Attribute modification", this.getStrenght(), AttributeModifier.Operation.ADDITION));
+            builder.put(ExtraAttributes.CRIT_DAMAGE.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[5], "Default Attribute modification", this.getCritDamage(), AttributeModifier.Operation.ADDITION));
         }
         return builder;
     }

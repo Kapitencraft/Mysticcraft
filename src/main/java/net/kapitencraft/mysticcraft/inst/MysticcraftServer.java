@@ -60,7 +60,7 @@ public class MysticcraftServer {
             event.addCapability(MysticcraftMod.res("elytra"), ElytraCapability.create());
         }
         if (item instanceof ContainableItem<?> containableItem) {
-            ContainableCapability capability = containableItem.makeCapability();
+            ContainableCapability<?> capability = containableItem.makeCapability();
             event.addCapability(MysticcraftMod.res("content"), capability);
         }
         ItemStatCapability capability = new ItemStatCapability();

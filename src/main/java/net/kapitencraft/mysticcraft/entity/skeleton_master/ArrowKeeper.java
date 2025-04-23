@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.entity.skeleton_master;
 
-import net.kapitencraft.mysticcraft.helpers.MathHelper;
-import net.kapitencraft.mysticcraft.helpers.MiscHelper;
+import net.kapitencraft.kap_lib.helpers.MathHelper;
+import net.kapitencraft.kap_lib.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.helpers.ParticleHelper;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.world.phys.Vec3;
@@ -49,7 +49,7 @@ public class ArrowKeeper {
                 ControlledArrow arrow = arrows[i];
                 if (arrow != null) {
                     arrow.hasBeenFired = true;
-                    arrow.level.addFreshEntity(arrow);
+                    arrow.level().addFreshEntity(arrow);
                     arrows[i] = null;
                     return;
                 }
@@ -68,7 +68,7 @@ public class ArrowKeeper {
                     if (arrow != null) {
                         arrow.setPos(pos);
                     }
-                    ParticleHelper.sendParticles(master.level, DustParticleOptions.REDSTONE, true, pos, 2, 0, 0, 0, 0);
+                    ParticleHelper.sendParticles(master.level(), DustParticleOptions.REDSTONE, true, pos, 2, 0, 0, 0, 0);
                 })
         );
     }

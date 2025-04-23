@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.entity.vampire;
 
-import net.kapitencraft.mysticcraft.init.ModAttributes;
-import net.kapitencraft.mysticcraft.init.ModEntityTypes;
+import net.kapitencraft.kap_lib.registry.ExtraAttributes;
+import net.kapitencraft.mysticcraft.registry.ModEntityTypes;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
@@ -62,7 +62,7 @@ public class VampireBat extends Monster implements IVampire {
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 15D)
-                .add(ModAttributes.BONUS_ATTACK_SPEED.get(), 100);
+                .add(ExtraAttributes.BONUS_ATTACK_SPEED.get(), 100);
     }
 
     protected float getStandingEyeHeight(@NotNull Pose pose, EntityDimensions p_27441_) {

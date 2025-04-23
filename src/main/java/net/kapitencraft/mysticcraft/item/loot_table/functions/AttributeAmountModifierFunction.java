@@ -2,10 +2,10 @@ package net.kapitencraft.mysticcraft.item.loot_table.functions;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.kapitencraft.mysticcraft.init.ModLootItemFunctions;
+import net.kapitencraft.kap_lib.io.serialization.JsonSerializer;
 import net.kapitencraft.mysticcraft.item.loot_table.IConditional;
 import net.kapitencraft.mysticcraft.item.loot_table.modifiers.ModLootModifier;
-import net.kapitencraft.mysticcraft.misc.serialization.JsonSerializer;
+import net.kapitencraft.mysticcraft.registry.ModLootItemFunctions;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;

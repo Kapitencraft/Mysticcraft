@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.gui.widgets;
 
-import net.kapitencraft.mysticcraft.helpers.MathHelper;
+
+import net.kapitencraft.kap_lib.helpers.MathHelper;
 
 public abstract class PositionedWidget extends Widget {
     protected final int x, y, width, height;

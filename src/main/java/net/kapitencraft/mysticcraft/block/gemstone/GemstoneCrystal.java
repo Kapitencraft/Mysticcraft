@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.block.gemstone;
 
-import net.kapitencraft.mysticcraft.init.ModBlocks;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.IGemstoneItem;
+import net.kapitencraft.mysticcraft.registry.ModBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -19,8 +19,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
-import net.minecraft.world.level.storage.loot.LootContext;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -86,8 +84,8 @@ public class GemstoneCrystal extends GemstoneBlock {
     }
 
     @Override
-    public void addBlock(LootContext context, Consumer<ItemStack> consumer) {
-        consumer.accept(getItem(context.getParam(LootContextParams.BLOCK_STATE), ModBlocks.GEMSTONE_CRYSTAL::getItem));
+    public void addBlock(BlockState state, Consumer<ItemStack> consumer) {
+        consumer.accept(getItem(state, ModBlocks.GEMSTONE_CRYSTAL::getItem));
     }
 
     public static class Item extends GemstoneBlock.Item {

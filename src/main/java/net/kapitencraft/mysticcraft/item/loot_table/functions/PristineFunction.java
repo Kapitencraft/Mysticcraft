@@ -1,17 +1,17 @@
 package net.kapitencraft.mysticcraft.item.loot_table.functions;
 
 import com.mojang.serialization.Codec;
-import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
+import net.kapitencraft.kap_lib.helpers.AttributeHelper;
+import net.kapitencraft.kap_lib.helpers.MathHelper;
+import net.kapitencraft.kap_lib.io.serialization.JsonSerializer;
+import net.kapitencraft.kap_lib.registry.ExtraAttributes;
 import net.kapitencraft.mysticcraft.helpers.LootTableHelper;
-import net.kapitencraft.mysticcraft.helpers.MathHelper;
-import net.kapitencraft.mysticcraft.init.ModAttributes;
-import net.kapitencraft.mysticcraft.init.ModItems;
-import net.kapitencraft.mysticcraft.init.ModLootItemFunctions;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneItem;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneType;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.IGemstoneItem;
 import net.kapitencraft.mysticcraft.item.loot_table.IConditional;
-import net.kapitencraft.mysticcraft.misc.serialization.JsonSerializer;
+import net.kapitencraft.mysticcraft.registry.ModItems;
+import net.kapitencraft.mysticcraft.registry.ModLootItemFunctions;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -39,7 +39,7 @@ public class PristineFunction extends LootItemConditionalFunction implements ICo
             } else {
                 Entity entity = context.getParamOrNull(LootContextParams.THIS_ENTITY);
                 if (entity instanceof LivingEntity living) {
-                    double pristine = AttributeHelper.getSaveAttributeValue(ModAttributes.PRISTINE.get(), living);
+                    double pristine = AttributeHelper.getSaveAttributeValue(ExtraAttributes.PRISTINE.get(), living);
                     while (gemstoneLevel < 5 && pristine > 0) {
                         if (MathHelper.chance(pristine / 100, living)) {
                             gemstoneLevel++;

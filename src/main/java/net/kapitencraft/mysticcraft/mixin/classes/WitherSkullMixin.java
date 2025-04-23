@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.mixin.classes;
 
-import net.kapitencraft.mysticcraft.helpers.MiscHelper;
+import net.kapitencraft.kap_lib.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.item.material.PrecursorRelicItem;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.boss.wither.WitherBoss;
@@ -17,7 +17,7 @@ public abstract class WitherSkullMixin {
 
     @ModifyConstant(method = "onHitEntity")
     private float damage(float value) {
-        Difficulty difficulty = self().level.getDifficulty();
+        Difficulty difficulty = self().level().getDifficulty();
         if (self().getOwner() instanceof WitherBoss boss) {
             PrecursorRelicItem.BossType bossType = PrecursorRelicItem.BossType.fromBoss(boss);
             if (bossType == PrecursorRelicItem.BossType.MAXOR && value == 8) {

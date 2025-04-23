@@ -2,7 +2,7 @@ package net.kapitencraft.mysticcraft.item.capability.elytra;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.kapitencraft.mysticcraft.helpers.MathHelper;
+import net.kapitencraft.kap_lib.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.item.capability.CapabilityHelper;
 import net.kapitencraft.mysticcraft.item.capability.ModCapability;
 import net.minecraft.network.FriendlyByteBuf;

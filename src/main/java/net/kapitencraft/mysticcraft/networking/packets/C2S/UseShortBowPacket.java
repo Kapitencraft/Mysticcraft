@@ -24,7 +24,7 @@ public class UseShortBowPacket implements ModPacket {
             ServerPlayer player = context.getSender();
             if (player == null) return;
             if (player.getMainHandItem().getItem() instanceof ShortBowItem shortBowItem) {
-                shortBowItem.releaseUsing(player.getMainHandItem(), player.level, player, -1);
+                shortBowItem.releaseUsing(player.getMainHandItem(), player.level(), player, -1);
             }
         });
         return true;

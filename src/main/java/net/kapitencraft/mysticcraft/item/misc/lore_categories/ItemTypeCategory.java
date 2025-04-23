@@ -6,7 +6,6 @@ import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.QuiverItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.bow.ShortBowItem;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.*;
 import org.jetbrains.annotations.Nullable;
 
@@ -43,15 +42,9 @@ public class ItemTypeCategory extends ItemLoreCategory {
         } else if (item instanceof EnchantedBookItem) {
             return indicator("enchanted_book");
         } else if (item instanceof ArmorItem armorItem) {
-            if (armorItem.getSlot() == EquipmentSlot.FEET) {
-                return indicator("boots");
-            } else if (armorItem.getSlot() == EquipmentSlot.LEGS) {
-                return indicator("legs");
-            } else if (armorItem.getSlot() == EquipmentSlot.CHEST) {
-                return indicator("chestplate");
-            } else if (armorItem.getSlot() == EquipmentSlot.HEAD) {
-                return indicator("helmet");
-            }
+            ArmorItem.Type type = armorItem.getType();
+            if (type == ArmorItem.Type.LEGGINGS) return indicator("legs");
+            return indicator(type.getName());
         } else if (item instanceof BlockItem) {
             return indicator("block");
         } else if (item instanceof BoatItem) {

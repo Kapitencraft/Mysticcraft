@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.spell.spells;
 
-import net.kapitencraft.mysticcraft.helpers.MathHelper;
-import net.kapitencraft.mysticcraft.helpers.TextHelper;
+import net.kapitencraft.kap_lib.helpers.MathHelper;
+import net.kapitencraft.kap_lib.helpers.TextHelper;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
@@ -48,7 +48,7 @@ public abstract class SpellProjectile extends AbstractArrow {
     }
 
     protected void addHitEntity(LivingEntity living) {
-        if (this.level instanceof ServerLevel serverLevel) {
+        if (this.level() instanceof ServerLevel serverLevel) {
             for (UUID uuid : this.attacked) {
                 if (living == serverLevel.getEntity(uuid)) {
                     return;
@@ -59,7 +59,7 @@ public abstract class SpellProjectile extends AbstractArrow {
     }
 
     protected void sendDamageMessage() {
-        if (!this.level.isClientSide() && this.getOwner() instanceof Player player && attacked.size() > 0 && damageInflicted > 0) {
+        if (!this.level().isClientSide() && this.getOwner() instanceof Player player && attacked.size() > 0 && damageInflicted > 0) {
             player.sendSystemMessage(Component.literal("Your " + this.name + " hit " + TextHelper.wrapInRed(attacked.size()) + " Enemies for " + TextHelper.wrapInRed(MathHelper.round(this.damageInflicted, 3) + " Damage")));
         }
     }

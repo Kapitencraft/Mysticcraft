@@ -3,8 +3,8 @@ package net.kapitencraft.mysticcraft.item.misc;
 import com.google.common.collect.Sets;
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.kapitencraft.mysticcraft.helpers.MathHelper;
-import net.kapitencraft.mysticcraft.helpers.TextHelper;
+import net.kapitencraft.kap_lib.helpers.MathHelper;
+import net.kapitencraft.kap_lib.helpers.TextHelper;
 import net.kapitencraft.mysticcraft.misc.DamageCounter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -107,7 +107,7 @@ public class ModExplosion {
                 for(float l = -radius; l < radius; ++l) {
                     Vec3 target = new Vec3(j, k, l).add(pos);
                     if (target.distanceTo(pos) <= radius) {//making explosion only take target's within sphere
-                        BlockPos targetPos = new BlockPos(target);
+                        BlockPos targetPos = new BlockPos((int) j, (int) k, (int) l);
                         BlockState state = this.level.getBlockState(targetPos);
                         FluidState fluidState = this.level.getFluidState(targetPos);
                         float f = this.radius * (0.7F + this.level.random.nextFloat() * 0.6F);
@@ -155,7 +155,7 @@ public class ModExplosion {
                         double d14 = Explosion.getSeenPercent(vec3, entity);
                         double d10 = (1.0D - d12) * d14;
 
-                        entity.hurt(this.damage != null ? this.damage : DamageSource.explosion(toExplosion()), (float) ((int) ((d10 * d10 + d10) / 2.0D * 7.0D * (double) f2 + 1.0D)));
+                        entity.hurt(this.damage != null ? this.damage : this.level.damageSources().explosion(toExplosion()), (float) ((int) ((d10 * d10 + d10) / 2.0D * 7.0D * (double) f2 + 1.0D)));
                         double d11 = d10;
                         if (entity instanceof LivingEntity) {
                             d11 = ProtectionEnchantment.getExplosionKnockbackAfterDampener((LivingEntity) entity, d10);

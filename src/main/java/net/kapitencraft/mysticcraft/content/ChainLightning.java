@@ -1,10 +1,7 @@
 package net.kapitencraft.mysticcraft.content;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.kapitencraft.mysticcraft.helpers.ClientHelper;
-import net.kapitencraft.mysticcraft.helpers.MathHelper;
-import net.minecraft.client.Minecraft;
-import net.minecraft.world.damagesource.EntityDamageSource;
+import net.kapitencraft.kap_lib.helpers.MathHelper;
+import net.kapitencraft.mysticcraft.data_gen.ModDamageTypes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -24,16 +21,17 @@ public class ChainLightning {
         this.owner = owner;
         this.damage = damage;
         this.beamSource = owner;
-        this.level = owner.getLevel();
+        this.level = owner.level();
     }
 
     public boolean tick() {
         if (this.tickCooldown-- <= 0) {
-            target.hurt(new EntityDamageSource("chain_lightning", owner), damage);
+            target.hurt(target.damageSources().source(ModDamageTypes.CHAIN_LIGHTNING, owner), damage);
             updateTarget();
         }
         if (this.level.isClientSide()) {
-            ClientHelper.renderBeam(beamSourceLocation(), this.target, (int) (255 * tickPercentage()), (int) (255 * tickPercentage()), 255, new PoseStack(), Minecraft.getInstance().renderBuffers().bufferSource());
+            //TODO move to render thread
+            //ClientHelper.renderBeam(beamSourceLocation(), this.target, (int) (255 * tickPercentage()), (int) (255 * tickPercentage()), 255, new PoseStack(), Minecraft.getInstance().renderBuffers().bufferSource());
         }
         return this.canceled;
     }

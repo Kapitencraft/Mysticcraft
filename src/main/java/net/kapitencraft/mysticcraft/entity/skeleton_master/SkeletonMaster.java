@@ -75,7 +75,7 @@ public class SkeletonMaster extends Monster {
     @Override
     public void tick() {
         super.tick();
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             holder.tick(this.getTarget() != null);
         }
     }

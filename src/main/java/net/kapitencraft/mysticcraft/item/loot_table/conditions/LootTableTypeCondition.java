@@ -2,8 +2,8 @@ package net.kapitencraft.mysticcraft.item.loot_table.conditions;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.kapitencraft.mysticcraft.init.ModLootItemConditions;
-import net.kapitencraft.mysticcraft.misc.serialization.JsonSerializer;
+import net.kapitencraft.kap_lib.io.serialization.JsonSerializer;
+import net.kapitencraft.mysticcraft.registry.ModLootItemConditions;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import org.jetbrains.annotations.NotNull;

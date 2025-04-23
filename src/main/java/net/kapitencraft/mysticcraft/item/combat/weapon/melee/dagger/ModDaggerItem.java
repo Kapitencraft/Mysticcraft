@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.item.combat.weapon.melee.dagger;
 
-import net.kapitencraft.mysticcraft.helpers.MiscHelper;
+import net.kapitencraft.kap_lib.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword.ModSwordItem;
 import net.kapitencraft.mysticcraft.mixin.duck.IAttacker;
 import net.kapitencraft.mysticcraft.networking.ModMessages;
@@ -26,12 +26,12 @@ public abstract class ModDaggerItem extends ModSwordItem {
         super.hurtEnemy(pStack, pTarget, pAttacker);
         ItemStack offhand = pAttacker.getOffhandItem();
         if (offhand.getItem() == this && pAttacker instanceof Player player && pTarget.isAlive() && !IAttacker.of(player).isOffhandAttack()) {
-            MiscHelper.delayed(10, ()-> {
-                if (player.canHit(pTarget, 0)) {
+            MiscHelper.schedule(10, ()-> {
+                if (player.canAttack(pTarget)) {
                     MiscHelper.swapHands(pAttacker);
                     IAttacker.of(player).setOffhandAttack();
                     player.attack(pTarget);
-                    ModMessages.sendToAllConnectedPlayers(player1 -> new SwingPacket(InteractionHand.OFF_HAND, player.getId()), (ServerLevel) player.level);
+                    ModMessages.sendToAllConnectedPlayers(player1 -> new SwingPacket(InteractionHand.OFF_HAND, player.getId()), (ServerLevel) player.level());
                     IAttacker.of(player).setMainhandAttack();
                     MiscHelper.swapHands(pAttacker);
                 }

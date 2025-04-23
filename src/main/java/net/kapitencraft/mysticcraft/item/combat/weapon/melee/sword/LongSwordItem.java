@@ -33,7 +33,7 @@ public abstract class LongSwordItem extends ModSwordItem {
         HashMultimap<Attribute, AttributeModifier> multimap = HashMultimap.create();
         multimap.putAll(super.getDefaultAttributeModifiers(slot));
         if (slot == EquipmentSlot.MAINHAND) {
-            multimap.put(ForgeMod.ATTACK_RANGE.get(), new AttributeModifier(ATTACK_RANGE_ID, "Long Sword Range Mod", this.getReachMod(), AttributeModifier.Operation.ADDITION));
+            multimap.put(ForgeMod.ENTITY_REACH.get(), new AttributeModifier(ATTACK_RANGE_ID, "Long Sword Range Mod", this.getReachMod(), AttributeModifier.Operation.ADDITION));
         }
         return multimap;
     }

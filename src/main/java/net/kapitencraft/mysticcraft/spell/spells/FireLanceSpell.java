@@ -1,10 +1,11 @@
 package net.kapitencraft.mysticcraft.spell.spells;
 
-import net.kapitencraft.mysticcraft.helpers.MathHelper;
+import net.kapitencraft.kap_lib.helpers.MathHelper;
+import net.kapitencraft.mysticcraft.data_gen.ModDamageTypes;
 import net.kapitencraft.mysticcraft.helpers.ParticleHelper;
-import net.kapitencraft.mysticcraft.init.ModMobEffects;
 import net.kapitencraft.mysticcraft.item.capability.spell.SpellHelper;
 import net.kapitencraft.mysticcraft.misc.damage_source.AbilityDamageSource;
+import net.kapitencraft.mysticcraft.registry.ModMobEffects;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -31,15 +32,15 @@ public class FireLanceSpell {
                     if (living.getLastDamageSource() instanceof AbilityDamageSource abilitySource && Objects.equals(abilitySource.getSpellType(), "fire_lance")) {
                         living.invulnerableTime = 0;
                     }
-                    living.hurt(new AbilityDamageSource(user, 0.2f, "fire_lance").setIsFire(), 4);
+                    living.hurt(AbilityDamageSource.create(ModDamageTypes.FIRE_LANCE, user, 0.2f, "fire_lance"), 4);
                     living.addEffect(new MobEffectInstance(ModMobEffects.BLAZING.get(), 40, 2));
                 });
         return true;
     }
 
     private static List<LivingEntity> merge(Vec3 source, LivingEntity user) {
-        ParticleHelper.sendParticles(user.level, ParticleTypes.SMALL_FLAME, false, source, 10, 0.1/8, 0.1/8, 0.1/8, 0);
-        return MathHelper.getEntitiesAround(LivingEntity.class, user.level, source, 0.1).stream()
+        ParticleHelper.sendParticles(user.level(), ParticleTypes.SMALL_FLAME, false, source, 10, 0.1/8, 0.1/8, 0.1/8, 0);
+        return MathHelper.getEntitiesAround(LivingEntity.class, user.level(), source, 0.1).stream()
                 .filter(living -> living != user).toList();
     }
 

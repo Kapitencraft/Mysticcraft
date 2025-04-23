@@ -2,8 +2,8 @@ package net.kapitencraft.mysticcraft.item.combat.weapon.melee.spear;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import net.kapitencraft.kap_lib.registry.ExtraAttributes;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.init.ModAttributes;
 import net.kapitencraft.mysticcraft.item.misc.IModItem;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -34,8 +34,8 @@ public abstract class SpearItem extends TieredItem implements IModItem {
         HashMultimap<Attribute, AttributeModifier> builder = HashMultimap.create();
         if (slot == EquipmentSlot.MAINHAND) {
             builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[5], "Attack Damage Change", this.getDamage(), AttributeModifier.Operation.ADDITION));
-            builder.put(ModAttributes.STRENGTH.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[5], "Attack Strenght Change", this.getStrenght(), AttributeModifier.Operation.ADDITION));
-            builder.put(ModAttributes.CRIT_DAMAGE.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[5], "Attack Crit Damage Change", this.getCritDamage(), AttributeModifier.Operation.ADDITION));
+            builder.put(ExtraAttributes.STRENGTH.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[5], "Attack Strenght Change", this.getStrenght(), AttributeModifier.Operation.ADDITION));
+            builder.put(ExtraAttributes.CRIT_DAMAGE.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[5], "Attack Crit Damage Change", this.getCritDamage(), AttributeModifier.Operation.ADDITION));
         }
         return builder;
     }

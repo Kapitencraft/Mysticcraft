@@ -2,15 +2,15 @@ package net.kapitencraft.mysticcraft.item.creative;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import net.kapitencraft.kap_lib.helpers.AttributeHelper;
+import net.kapitencraft.kap_lib.helpers.MathHelper;
+import net.kapitencraft.kap_lib.helpers.MiscHelper;
+import net.kapitencraft.kap_lib.helpers.TextHelper;
+import net.kapitencraft.kap_lib.util.ExtraRarities;
 import net.kapitencraft.mysticcraft.api.QuadConsumer;
 import net.kapitencraft.mysticcraft.config.CommonModConfig;
-import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
-import net.kapitencraft.mysticcraft.helpers.MathHelper;
-import net.kapitencraft.mysticcraft.helpers.MiscHelper;
-import net.kapitencraft.mysticcraft.helpers.TextHelper;
 import net.kapitencraft.mysticcraft.item.misc.IModItem;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
-import net.kapitencraft.mysticcraft.misc.ModRarities;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
@@ -51,7 +51,7 @@ public class BuildersWand extends Item implements IModItem {
     int test = 0;
 
     public BuildersWand() {
-        super(MiscHelper.rarity(ModRarities.LEGENDARY).stacksTo(1));
+        super(MiscHelper.rarity(ExtraRarities.LEGENDARY).stacksTo(1));
     }
 
     @Override
@@ -149,7 +149,7 @@ public class BuildersWand extends Item implements IModItem {
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
         HashMultimap<Attribute, AttributeModifier> multimap = HashMultimap.create();
-        multimap.put(ForgeMod.REACH_DISTANCE.get(), AttributeHelper.createModifier("Builder's Wand Modifier", AttributeModifier.Operation.ADDITION, 100));
+        multimap.put(ForgeMod.BLOCK_REACH.get(), AttributeHelper.createModifier("Builder's Wand Modifier", AttributeModifier.Operation.ADDITION, 100));
         return slot == EquipmentSlot.MAINHAND ? multimap : super.getAttributeModifiers(slot, stack);
     }
 

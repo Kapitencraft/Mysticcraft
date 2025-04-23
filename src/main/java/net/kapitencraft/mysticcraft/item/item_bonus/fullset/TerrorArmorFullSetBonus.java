@@ -1,9 +1,9 @@
 package net.kapitencraft.mysticcraft.item.item_bonus.fullset;
 
-import net.kapitencraft.mysticcraft.helpers.MiscHelper;
-import net.kapitencraft.mysticcraft.init.ModAttributes;
-import net.kapitencraft.mysticcraft.init.ModItems;
+import net.kapitencraft.kap_lib.helpers.MiscHelper;
+import net.kapitencraft.kap_lib.registry.ExtraAttributes;
 import net.kapitencraft.mysticcraft.misc.attribute.ChangingAttributeModifier;
+import net.kapitencraft.mysticcraft.registry.ModItems;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -24,12 +24,12 @@ public class TerrorArmorFullSetBonus extends KillIncreasingStackFullSetBonus {
     private static final String TWO_ARROWS = "SpawnExtraArrows";
 
     public TerrorArmorFullSetBonus() {
-        super("Hydra", damageType -> MiscHelper.DamageType.RANGED == damageType, ModAttributes.ARROW_SPEED, 1f, 120);
+        super("Hydra", damageType -> MiscHelper.DamageType.RANGED == damageType, ExtraAttributes.PROJECTILE_SPEED, 1f, 120);
     }
 
     @Override
     public void onApply(LivingEntity living) {
-        AttributeInstance instance = living.getAttribute(ModAttributes.ARROW_COUNT.get());
+        AttributeInstance instance = living.getAttribute(ExtraAttributes.ARROW_COUNT.get());
         if (instance != null) {
             instance.addTransientModifier(new ChangingAttributeModifier(MODIFIER_UUID, "TerrorArmorFullSetBonus", AttributeModifier.Operation.ADDITION, living, living1 -> living1.getPersistentData().getBoolean(TWO_ARROWS) ? 2. : 0));
         }
@@ -37,7 +37,7 @@ public class TerrorArmorFullSetBonus extends KillIncreasingStackFullSetBonus {
 
     @Override
     public void onRemove(LivingEntity living) {
-        AttributeInstance instance = living.getAttribute(ModAttributes.ARROW_COUNT.get());
+        AttributeInstance instance = living.getAttribute(ExtraAttributes.ARROW_COUNT.get());
         if (instance != null) {
             instance.removeModifier(MODIFIER_UUID);
         }

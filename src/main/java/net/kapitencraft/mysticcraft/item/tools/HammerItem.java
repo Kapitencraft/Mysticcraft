@@ -6,6 +6,7 @@ import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
+//TODO 3x3 break?
 public class HammerItem extends Item implements IModItem {
     public static final TabGroup HAMMER_GROUP = new TabGroup(TabRegister.TabTypes.MOD_MATERIALS);
     public HammerItem(Properties p_41383_, int durability) {

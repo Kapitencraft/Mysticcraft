@@ -1,5 +1,6 @@
 package net.kapitencraft.mysticcraft.client.particle.flame;
 
+import net.kapitencraft.kap_lib.util.Color;
 import net.kapitencraft.mysticcraft.client.particle.options.FlameParticleOptions;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
@@ -7,19 +8,18 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Vector3f;
 
 @OnlyIn(Dist.CLIENT)
 public class ModFlameParticle extends TextureSheetParticle {
-    protected ModFlameParticle(ClientLevel p_108323_, double p_108324_, double p_108325_, double p_108326_, SpriteSet spriteSet, Vector3f color) {
+    protected ModFlameParticle(ClientLevel p_108323_, double p_108324_, double p_108325_, double p_108326_, SpriteSet spriteSet, Color color) {
         super(p_108323_, p_108324_, p_108325_, p_108326_);
         this.gravity = -0.85f;
         this.friction = 0.5f;
         this.lifetime = 25;
         this.hasPhysics = false;
-        this.rCol = color.x;
-        this.gCol = color.y;
-        this.bCol = color.z;
+        this.rCol = color.r;
+        this.gCol = color.g;
+        this.bCol = color.b;
         this.pickSprite(spriteSet);
     }
 

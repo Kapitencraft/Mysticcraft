@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.networking.packets;
 
-import net.kapitencraft.mysticcraft.helpers.IOHelper;
+import net.kapitencraft.kap_lib.helpers.IOHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.nbt.CompoundTag;
@@ -41,7 +41,7 @@ public class SendCompoundTagPacket implements ModPacket {
             context.enqueueWork(()-> {
                 ServerPlayer serverPlayer = context.getSender();
                 if (serverPlayer != null) {
-                    ServerLevel level = serverPlayer.getLevel();
+                    ServerLevel level = serverPlayer.serverLevel();
                     Entity entity = level.getEntity(entityIdToReceive);
                     if (entity != null) IOHelper.injectCompoundTag(entity, toSend);
                 }

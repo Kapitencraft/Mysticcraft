@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.potion;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.init.ModItems;
+import net.kapitencraft.mysticcraft.registry.ModItems;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;

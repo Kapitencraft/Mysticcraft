@@ -2,22 +2,25 @@ package net.kapitencraft.mysticcraft.event.handler;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.block.gemstone.GemstoneBlock;
-import net.kapitencraft.mysticcraft.client.particle.*;
-import net.kapitencraft.mysticcraft.client.particle.animation.ParticleAnimationProvider;
+import net.kapitencraft.mysticcraft.client.particle.CircleParticle;
+import net.kapitencraft.mysticcraft.client.particle.FireNormalParticle;
+import net.kapitencraft.mysticcraft.client.particle.MagicCircleParticle;
+import net.kapitencraft.mysticcraft.client.particle.ShadowSweepParticle;
 import net.kapitencraft.mysticcraft.client.particle.flame.ModFlameParticle;
 import net.kapitencraft.mysticcraft.entity.client.renderer.*;
 import net.kapitencraft.mysticcraft.gui.gemstone_grinder.GemstoneGrinderScreen;
 import net.kapitencraft.mysticcraft.gui.reforging_anvil.ReforgeAnvilScreen;
-import net.kapitencraft.mysticcraft.init.*;
 import net.kapitencraft.mysticcraft.item.ColoredItem;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.IGemstoneItem;
 import net.kapitencraft.mysticcraft.item.material.RainbowElementalShard;
 import net.kapitencraft.mysticcraft.logging.Markers;
 import net.kapitencraft.mysticcraft.misc.ModItemProperties;
+import net.kapitencraft.mysticcraft.registry.*;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.FishingHookRenderer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
@@ -62,18 +65,16 @@ public class ModEventBusClientEvents {
 
         event.registerEntityRenderer(ModEntityTypes.FIRE_BOLD.get(), FireBoltRenderer::new);
         event.registerEntityRenderer(ModEntityTypes.CRIMSON_DEATH_RAY.get(), CrimsonDeathRayRenderer::new);
-        event.registerEntityRenderer(ModEntityTypes.LAVA_FISHING_HOOK.get(), ModFishingHookRenderer::new);
+        event.registerEntityRenderer(ModEntityTypes.LAVA_FISHING_HOOK.get(), FishingHookRenderer::new);
     }
 
     @SubscribeEvent
     public static void registerParticles(RegisterParticleProvidersEvent event) {
-        event.register(ModParticleTypes.FIRE_NORMAL.get(), FireNormalParticle.FireNormalParticleProvider::new);
-        event.register(ModParticleTypes.MAGIC_CIRCLE.get(), MagicCircleParticle.MagicCircleParticleProvider::new);
-        event.register(ModParticleTypes.DAMAGE_INDICATOR.get(), DamageIndicatorParticle.Provider::new);
-        event.register(ModParticleTypes.CIRCLE.get(), CircleParticle.Provider::new);
-        event.register(ModParticleTypes.ANIMATION.get(), ParticleAnimationProvider::new);
-        event.register(ModParticleTypes.FLAME.get(), ModFlameParticle.FlameParticleProvider::new);
-        event.register(ModParticleTypes.SHADOW_SWEEP.get(), ShadowSweepParticle.Provider::new);
+        event.registerSpriteSet(ModParticleTypes.FIRE_NORMAL.get(), FireNormalParticle.FireNormalParticleProvider::new);
+        event.registerSpriteSet(ModParticleTypes.MAGIC_CIRCLE.get(), MagicCircleParticle.MagicCircleParticleProvider::new);
+        event.registerSpriteSet(ModParticleTypes.CIRCLE.get(), CircleParticle.Provider::new);
+        event.registerSpriteSet(ModParticleTypes.FLAME.get(), ModFlameParticle.FlameParticleProvider::new);
+        event.registerSpriteSet(ModParticleTypes.SHADOW_SWEEP.get(), ShadowSweepParticle.Provider::new);
     }
 
     @SubscribeEvent

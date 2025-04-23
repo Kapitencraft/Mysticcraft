@@ -2,13 +2,13 @@ package net.kapitencraft.mysticcraft.item.capability.reforging;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import net.kapitencraft.kap_lib.helpers.MiscHelper;
+import net.kapitencraft.kap_lib.util.ExtraRarities;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.helpers.MiscHelper;
-import net.kapitencraft.mysticcraft.init.ModReforgingBonuses;
-import net.kapitencraft.mysticcraft.init.custom.ModRegistries;
 import net.kapitencraft.mysticcraft.item.item_bonus.ReforgingBonus;
 import net.kapitencraft.mysticcraft.logging.Markers;
-import net.kapitencraft.mysticcraft.misc.ModRarities;
+import net.kapitencraft.mysticcraft.registry.ModReforgingBonuses;
+import net.kapitencraft.mysticcraft.registry.custom.ModRegistries;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 public class Reforge {
     private final MutableComponent name;
@@ -58,7 +59,7 @@ public class Reforge {
     public JsonObject serialize() {
         JsonObject object = new JsonObject();
         JsonObject mods = new JsonObject();
-        final List<Rarity> rarities = List.of(Rarity.COMMON, Rarity.UNCOMMON, Rarity.RARE, Rarity.EPIC, ModRarities.LEGENDARY, ModRarities.MYTHIC, ModRarities.DIVINE);
+        final List<Rarity> rarities = List.of(Rarity.COMMON, Rarity.UNCOMMON, Rarity.RARE, Rarity.EPIC, ExtraRarities.LEGENDARY, ExtraRarities.MYTHIC, ExtraRarities.DIVINE);
         for (Map.Entry<Attribute, ReforgeStat> entry : statList.entrySet()) {
             JsonArray array = new JsonArray();
             rarities.forEach(rarity -> array.add(entry.getValue().apply(rarity)));
@@ -148,6 +149,10 @@ public class Reforge {
                 stats.put(attribute, stat);
             }
             return this;
+        }
+
+        public Builder addStat(Supplier<Attribute> attribute, ReforgeStat stat) {
+            return addStat(attribute.get(), stat);
         }
     }
 

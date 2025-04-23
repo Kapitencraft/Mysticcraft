@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.item.capability.gemstone;
 
-import net.kapitencraft.mysticcraft.api.MapStream;
+import net.kapitencraft.kap_lib.collection.MapStream;
 import net.kapitencraft.mysticcraft.event.ModEventFactory;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.registries.RegistryObject;

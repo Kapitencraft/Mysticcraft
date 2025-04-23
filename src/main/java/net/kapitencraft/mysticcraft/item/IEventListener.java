@@ -1,8 +1,8 @@
 package net.kapitencraft.mysticcraft.item;
 
 import com.google.common.collect.Multimap;
-import net.kapitencraft.mysticcraft.helpers.MiscHelper;
-import net.kapitencraft.mysticcraft.cooldown.Cooldown;
+import net.kapitencraft.kap_lib.cooldown.Cooldown;
+import net.kapitencraft.kap_lib.helpers.MiscHelper;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
+//TODO rework
 public interface IEventListener {
 
     void onEntityKilled(LivingEntity killed, LivingEntity user, MiscHelper.DamageType type);

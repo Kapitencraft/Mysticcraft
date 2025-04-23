@@ -3,8 +3,8 @@ package net.kapitencraft.mysticcraft.commands;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.LiteralCommandNode;
+import net.kapitencraft.kap_lib.helpers.CommandHelper;
 import net.kapitencraft.mysticcraft.helpers.InventoryHelper;
-import net.kapitencraft.mysticcraft.init.ModEnchantments;
 import net.kapitencraft.mysticcraft.item.capability.dungeon.IPrestigeAbleItem;
 import net.kapitencraft.mysticcraft.item.capability.dungeon.IStarAbleItem;
 import net.kapitencraft.mysticcraft.item.misc.SoulbindHelper;
@@ -26,7 +26,7 @@ import java.util.Map;
 public class MiscCommand {
     public static void exeMaxEnchant(CommandDispatcher<CommandSourceStack> dispatcher) {
         LiteralCommandNode<CommandSourceStack> main = dispatcher.register(Commands.literal("misc")
-                .requires(ModCommands::isModerator)
+                .requires(CommandHelper::isModerator)
                 .then(Commands.literal("max_ench")
                         .executes(MiscCommand::exeMaxEnchant)
                 ).then(Commands.literal("hyper_max_ench")
@@ -42,14 +42,14 @@ public class MiscCommand {
     }
 
     private static int soulbindAll(CommandContext<CommandSourceStack> context) {
-        return ModCommands.checkNonConsoleCommand(context, (player, stack) -> {
+        return CommandHelper.checkNonConsoleCommand(context, (player, stack) -> {
             InventoryHelper.allInventory(player.getInventory()).forEach(SoulbindHelper::setSoulbound);
             return 1;
         });
     }
 
     private static int exeMaxEnchant(CommandContext<CommandSourceStack> context) {
-        return ModCommands.checkNonConsoleCommand(context, (player, stack) -> {
+        return CommandHelper.checkNonConsoleCommand(context, (player, stack) -> {
             ItemStack stack1 = player.getMainHandItem();
             if (stack1.isEnchantable()) {
                 int i = 0;
@@ -58,7 +58,6 @@ public class MiscCommand {
                 if (Enchantments.BLOCK_FORTUNE.canEnchant(stack1)) enchantments.put(Enchantments.BLOCK_FORTUNE, 3);
                 if (Enchantments.ALL_DAMAGE_PROTECTION.canEnchant(stack1)) {
                     enchantments.put(Enchantments.ALL_DAMAGE_PROTECTION, 4);
-                    enchantments.put(ModEnchantments.BONK.get(), 1);
                 }
                 for (Enchantment enchantment : BuiltInRegistries.ENCHANTMENT) {
                     if (enchantment.canEnchant(stack1) && isCompatible(enchantments, enchantment) && !enchantment.isCurse()) {
@@ -67,7 +66,7 @@ public class MiscCommand {
                     }
                 }
                 enchantments.forEach(stack1::enchant);
-                ModCommands.sendSuccess(stack, "command.misc.max_enchant.success", stack1.getHoverName(), i);
+                CommandHelper.sendSuccess(stack, "command.misc.max_enchant.success", stack1.getHoverName(), i);
                 return 1;
             }
             stack.sendFailure(Component.translatable("command.misc.max_enchant.failed"));
@@ -108,17 +107,17 @@ public class MiscCommand {
     }
 
     private static int exeHyperMax(CommandContext<CommandSourceStack> context) {
-        return ModCommands.checkNonConsoleCommand(context, (serverPlayer, stack) -> {
+        return CommandHelper.checkNonConsoleCommand(context, (serverPlayer, stack) -> {
             exeMaxEnchant(context);
             exeEnchantmentUpgrades(context);
             exeExtraUpgrades(context);
-            stack.sendSuccess(Component.translatable("command.misc.hyper_max.success").withStyle(ChatFormatting.GREEN), true);
+            stack.sendSuccess(() -> Component.translatable("command.misc.hyper_max.success").withStyle(ChatFormatting.GREEN), true);
             return 1;
         });
     }
 
     private static int exeExtraUpgrades(CommandContext<CommandSourceStack> context) {
-        return ModCommands.checkNonConsoleCommand(context, (serverPlayer, stack) -> {
+        return CommandHelper.checkNonConsoleCommand(context, (serverPlayer, stack) -> {
             ItemStack mainHand = serverPlayer.getMainHandItem();
 
             int prestiges = 0;
@@ -135,13 +134,14 @@ public class MiscCommand {
                 stars = starAbleItem.getMaxStars(mainHand) - IStarAbleItem.getStars(mainHand);
                 IStarAbleItem.setStars(mainHand, starAbleItem.getMaxStars(mainHand));
             }
-            stack.sendSuccess(Component.translatable("command.misc.extra_upgrade.success", prestiges, stars), true);
+            Component component = Component.translatable("command.misc.extra_upgrade.success", prestiges, stars);
+            stack.sendSuccess(() -> component, true);
             return 1;
         });
     }
 
     private static int resetCooldowns(CommandContext<CommandSourceStack> context) {
-        return ModCommands.checkNonConsoleCommand(context, (player, stack) -> {
+        return CommandHelper.checkNonConsoleCommand(context, (player, stack) -> {
             ResetCooldownsPacket.resetCooldowns(player);
             ModMessages.sendToClientPlayer(new ResetCooldownsPacket(), player);
             return 1;

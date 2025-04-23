@@ -2,7 +2,6 @@ package net.kapitencraft.mysticcraft.item.material;
 
 import net.kapitencraft.mysticcraft.client.ClientData;
 import net.kapitencraft.mysticcraft.client.render.ColorAnimator;
-import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.spell.Element;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;

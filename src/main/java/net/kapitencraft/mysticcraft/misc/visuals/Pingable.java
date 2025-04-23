@@ -11,7 +11,6 @@ import java.util.Objects;
 public interface Pingable {
     boolean pinges(Player player);
 
-
     String display();
 
     static boolean isPinged(String name) {

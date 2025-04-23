@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.networking.packets.S2C.abstracts;
 
+import net.kapitencraft.kap_lib.collection.MapStream;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.api.MapStream;
 import net.kapitencraft.mysticcraft.helpers.InventoryHelper;
 import net.kapitencraft.mysticcraft.item.capability.CapabilityHelper;
 import net.kapitencraft.mysticcraft.item.capability.ICapability;

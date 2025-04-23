@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.item.capability.reforging;
 
+import net.kapitencraft.kap_lib.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.event.ModEventFactory;
-import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.ItemStack;

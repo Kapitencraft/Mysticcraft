@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.block;
 
-import net.kapitencraft.mysticcraft.init.ModBlocks;
+import net.kapitencraft.mysticcraft.registry.ModBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;

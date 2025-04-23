@@ -3,7 +3,7 @@ package net.kapitencraft.mysticcraft.item.capability.gemstone;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.kapitencraft.mysticcraft.gui.gemstone_grinder.GemstoneGrinderMenu;
-import net.kapitencraft.mysticcraft.init.ModItems;
+import net.kapitencraft.mysticcraft.registry.ModItems;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;

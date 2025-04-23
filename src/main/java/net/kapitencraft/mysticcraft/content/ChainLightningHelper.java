@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.content;
 
+import net.kapitencraft.kap_lib.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.api.Queue;
-import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.minecraft.world.entity.LivingEntity;
 
 import java.util.List;

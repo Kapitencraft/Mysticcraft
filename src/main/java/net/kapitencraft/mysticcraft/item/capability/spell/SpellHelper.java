@@ -1,17 +1,18 @@
 package net.kapitencraft.mysticcraft.item.capability.spell;
 
+import net.kapitencraft.kap_lib.cooldown.Cooldown;
+import net.kapitencraft.kap_lib.helpers.AttributeHelper;
+import net.kapitencraft.kap_lib.helpers.MathHelper;
+import net.kapitencraft.kap_lib.helpers.TextHelper;
+import net.kapitencraft.kap_lib.registry.ExtraAttributes;
+import net.kapitencraft.kap_lib.requirements.RequirementManager;
+import net.kapitencraft.kap_lib.requirements.RequirementType;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.cooldown.Cooldown;
-import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
-import net.kapitencraft.mysticcraft.helpers.MathHelper;
-import net.kapitencraft.mysticcraft.helpers.MiscHelper;
-import net.kapitencraft.mysticcraft.helpers.TextHelper;
-import net.kapitencraft.mysticcraft.init.ModAttributes;
-import net.kapitencraft.mysticcraft.init.ModItems;
+import net.kapitencraft.mysticcraft.event.advancement.ModCriteriaTriggers;
 import net.kapitencraft.mysticcraft.item.capability.ItemData;
 import net.kapitencraft.mysticcraft.item.misc.RNGHelper;
 import net.kapitencraft.mysticcraft.misc.content.mana.ManaMain;
-import net.kapitencraft.mysticcraft.requirements.Requirement;
+import net.kapitencraft.mysticcraft.registry.ModItems;
 import net.kapitencraft.mysticcraft.spell.Element;
 import net.kapitencraft.mysticcraft.spell.SpellExecutionFailedException;
 import net.kapitencraft.mysticcraft.spell.SpellSlot;
@@ -24,6 +25,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.player.Player;
@@ -122,14 +124,14 @@ public class SpellHelper implements ItemData<SpellSlot[], SpellHelper> {
     }
 
     public boolean handleManaAndExecute(LivingEntity user, Spell spell, ItemStack stack) {
-        if (user.getAttribute(ModAttributes.INTELLIGENCE.get()) == null || user instanceof Player player && Requirement.doesntMeetRequirements(player, stack.getItem())) {
+        if (user.getAttribute(ExtraAttributes.INTELLIGENCE.get()) == null || user instanceof Player player && RequirementManager.instance.meetsRequirements(RequirementType.ITEM, stack.getItem(), player)) {
             return false;
         }
-        double manaToUse = AttributeHelper.getAttributeValue(user.getAttribute(ModAttributes.MANA_COST.get()), spell.getDefaultManaCost());
-        if (manaToUse >= 10000 && user instanceof Player player) {
-            MiscHelper.awardAchievement(player, "mysticcraft:archmage");
+        double manaToUse = AttributeHelper.getAttributeValue(user.getAttribute(ExtraAttributes.MANA_COST.get()), spell.getDefaultManaCost());
+        if (user instanceof ServerPlayer player) {
+            ModCriteriaTriggers.USE_MANA.trigger(player, manaToUse);
         }
-        AttributeInstance manaInstance = user.getAttribute(ModAttributes.MANA.get());
+        AttributeInstance manaInstance = user.getAttribute(ExtraAttributes.MANA.get());
         Cooldown cooldown = spell.getCooldown();
         boolean hasCooldown = cooldown != null;
         if (!hasCooldown || !cooldown.isActive(user) && manaInstance != null && ManaMain.hasMana(user, manaToUse)) {
@@ -167,7 +169,7 @@ public class SpellHelper implements ItemData<SpellSlot[], SpellHelper> {
 
     private static void sendUseDisplay(LivingEntity user, Spell spell) {
         if (user instanceof Player player) {
-            double mana_cost = AttributeHelper.getAttributeValue(player.getAttribute(ModAttributes.MANA_COST.get()), spell.getDefaultManaCost());
+            double mana_cost = AttributeHelper.getAttributeValue(player.getAttribute(ExtraAttributes.MANA_COST.get()), spell.getDefaultManaCost());
             MutableComponent visible;
             String wrappedManaUsage = TextHelper.wrapInRed("-" + mana_cost + " Mana");
             if (spell.getType() == Spell.Type.RELEASE) visible = Component.translatable("spell.cast", spell.getName(), wrappedManaUsage);

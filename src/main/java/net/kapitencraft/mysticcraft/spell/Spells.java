@@ -1,16 +1,18 @@
 package net.kapitencraft.mysticcraft.spell;
 
-import net.kapitencraft.mysticcraft.cooldown.Cooldown;
+import net.kapitencraft.kap_lib.cooldown.Cooldown;
+import net.kapitencraft.kap_lib.helpers.AttributeHelper;
+import net.kapitencraft.kap_lib.helpers.MathHelper;
+import net.kapitencraft.kap_lib.helpers.TextHelper;
+import net.kapitencraft.kap_lib.registry.ExtraAttributes;
+import net.kapitencraft.kap_lib.util.ExtraRarities;
 import net.kapitencraft.mysticcraft.cooldown.Cooldowns;
-import net.kapitencraft.mysticcraft.helpers.*;
-import net.kapitencraft.mysticcraft.init.ModAttributes;
-import net.kapitencraft.mysticcraft.init.ModItems;
 import net.kapitencraft.mysticcraft.item.capability.spell.ISpellItem;
 import net.kapitencraft.mysticcraft.item.combat.spells.FireLance;
 import net.kapitencraft.mysticcraft.item.combat.spells.IFireScytheItem;
 import net.kapitencraft.mysticcraft.item.combat.spells.SpellScrollItem;
 import net.kapitencraft.mysticcraft.item.combat.spells.necron_sword.NecronSword;
-import net.kapitencraft.mysticcraft.misc.ModRarities;
+import net.kapitencraft.mysticcraft.registry.ModItems;
 import net.kapitencraft.mysticcraft.spell.spells.*;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -21,25 +23,22 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
-import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 @Deprecated //change to new System after 1.0
 public enum Spells implements Spell, StringRepresentable {
+    EMPTY_SPELL("Empty Spell", null, Type.RELEASE, 0, (living, itemStack)-> {}, item -> false, EmptySpell::getDescription, Rarity.UNCOMMON, false, 0),
     WITHER_IMPACT("Wither Impact", "1101110", Type.RELEASE, 300, WitherImpactSpell::execute, item -> item instanceof NecronSword, WitherImpactSpell::getDescription, Rarity.RARE, true, 0, Elements.SHADOW),
     WITHER_SHIELD("Wither Shield", "1101111", Type.RELEASE, 150, WitherShieldSpell::execute, item -> item instanceof NecronSword, WitherShieldSpell::getDescription, Rarity.RARE, true, 0, Elements.EARTH, Elements.SHADOW),
-    IMPLOSION("Implosion", "0000000", Type.RELEASE, 300, ImplosionSpell::execute, item -> item instanceof NecronSword, ImplosionSpell::getDescription, ModRarities.LEGENDARY, true, 0, Elements.FIRE, Elements.SHADOW),
+    IMPLOSION("Implosion", "0000000", Type.RELEASE, 300, ImplosionSpell::execute, item -> item instanceof NecronSword, ImplosionSpell::getDescription, ExtraRarities.LEGENDARY, true, 0, Elements.FIRE, Elements.SHADOW),
     INSTANT_TRANSMISSION("Instant Transmission", "1110111", Type.RELEASE, 50, InstantTransmissionSpell::execute, item -> true, InstantTransmissionSpell::getDescription, Rarity.COMMON, true, 0, Elements.VOID),
     ETHER_WARP("Ether Transmission", "1000111", Type.RELEASE, 50, EtherWarpSpell::execute, item -> item == ModItems.AOTV.get(), EtherWarpSpell::getDescription, Rarity.EPIC, true, 20, Elements.VOID, Elements.AIR),
     EXPLOSIVE_SIGHT("Explosive Sight", "1010110", Type.RELEASE, 150, ExplosiveSightSpell::execute, item -> true, ExplosiveSightSpell::getDescription, Rarity.UNCOMMON, true, 600, Elements.FIRE),
-    EMPTY_SPELL("Empty Spell", null, Type.RELEASE, 0, (living, itemStack)-> {}, item -> false, EmptySpell::getDescription, Rarity.UNCOMMON, false, 0),
     SHADOW_STEP("Shadow Step", "1110011", Type.RELEASE, 80, ShadowStepSpell::execute, item -> true, ShadowStepSpell::getDescription, Rarity.EPIC, true, 1200, Elements.SHADOW),
     HUGE_HEAL("Huge Heal", "0011011", Type.RELEASE, 70, HugeHealSpell::execute, item -> true, HugeHealSpell::getDescription, Rarity.UNCOMMON, true, 40, Elements.WATER),
     FIRE_BOLT_1("Fire Bolt 1", "0110011", Type.RELEASE, 50, createFireBold(1, false), item -> item instanceof IFireScytheItem, createFireBoldDesc(1f), Rarity.UNCOMMON, true, 0, Elements.FIRE),
@@ -48,24 +47,31 @@ public enum Spells implements Spell, StringRepresentable {
     FIRE_BOLT_4("Fire Bolt 4", "0110011", Type.RELEASE, 50, createFireBold(5.2, true), item -> item instanceof IFireScytheItem, createFireBoldDesc(5.2f), Rarity.UNCOMMON, true, 0, Elements.FIRE),
     FIRE_LANCE("Fire Lance", "1011100", Type.CYCLE, 5, FireLanceSpell::execute, item -> item instanceof FireLance, FireLanceSpell::getDescription, Rarity.UNCOMMON, true, 0, Elements.FIRE, Elements.AIR);
 
-    private static final List<Spells> WITHOUT_EMPTY = CollectionHelper.remove(values(), EMPTY_SPELL);
+    private static final Spells[] WITHOUT_EMPTY = createWithoutEmpty();
+
+    private static Spells[] createWithoutEmpty() {
+        Spells[] spells = new Spells[13];
+        System.arraycopy(Spells.values(), 1, spells, 0, 12);
+        return spells;
+    }
+
     public static HashMap<Spells, ItemStack> createAll() {
         HashMap<Spells, ItemStack> map = new HashMap<>();
-        Spells.WITHOUT_EMPTY.forEach(spells -> {
+        for (Spells spells : Spells.WITHOUT_EMPTY) {
             ItemStack stack = new ItemStack(ModItems.SPELL_SCROLL.get());
             SpellScrollItem scrollItem = ModItems.SPELL_SCROLL.get();
             scrollItem.setSlot(0, new SpellSlot(spells), stack);
             map.put(spells, stack);
-        });
+        }
         return map;
     }
 
     private static SpellExecutioner createFireBold(double baseDamage, boolean explosive) {
         return (user, stack) -> {
-            FireBoltProjectile projectile = FireBoltProjectile.createProjectile(user.level, user, explosive, baseDamage, "Fire Bolt");
+            FireBoltProjectile projectile = FireBoltProjectile.createProjectile(user.level(), user, explosive, baseDamage, "Fire Bolt");
             projectile.shootFromRotation(user, user.getXRot(), user.getYRot(), 0, 2, 1);
             projectile.setBaseDamage(baseDamage);
-            user.level.addFreshEntity(projectile);
+            user.level().addFreshEntity(projectile);
         };
     }
     private static Supplier<List<Component>> createFireBoldDesc(float damage) {
@@ -101,26 +107,6 @@ public enum Spells implements Spell, StringRepresentable {
     }
 
     @Override
-    public void onEntityKilled(LivingEntity killed, LivingEntity user, MiscHelper.DamageType type) {
-    }
-
-    @Override
-    public void onUse() {
-    }
-
-    @Override
-    public void onTick(Level level, @NotNull LivingEntity entity) {
-    }
-
-    @Override
-    public void onApply(LivingEntity living) {
-    }
-
-    @Override
-    public void onRemove(LivingEntity living) {
-    }
-
-    @Override
     public String getSerializedName() {
         return getRegistryName();
     }
@@ -136,16 +122,6 @@ public enum Spells implements Spell, StringRepresentable {
 
     public String getCastingType() {
         return castingType;
-    }
-
-    @Override
-    public Consumer<List<Component>> getDisplay() {
-        return list -> list.addAll(description.get());
-    }
-
-    @Override
-    public String getSuperName() {
-        return null;
     }
 
     public String getName() {
@@ -165,11 +141,6 @@ public enum Spells implements Spell, StringRepresentable {
     @Override
     public double getDefaultManaCost() {
         return this.MANA_COST;
-    }
-
-    @Override
-    public Cooldown getCooldown() {
-        return Cooldowns.SPELLS.get(this);
     }
 
     @Override
@@ -201,7 +172,7 @@ public enum Spells implements Spell, StringRepresentable {
     }
 
     public double getManaCostForPlayer(Player player) {
-        AttributeInstance instance = player.getAttribute(ModAttributes.MANA_COST.get());
+        AttributeInstance instance = player.getAttribute(ExtraAttributes.MANA_COST.get());
         return MathHelper.defRound(AttributeHelper.getAttributeValue(instance, this.MANA_COST));
     }
 

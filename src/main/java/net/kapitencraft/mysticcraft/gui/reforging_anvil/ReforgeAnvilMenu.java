@@ -4,8 +4,6 @@ import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.gui.IMenu;
 import net.kapitencraft.mysticcraft.gui.NoBEMenu;
 import net.kapitencraft.mysticcraft.helpers.InventoryHelper;
-import net.kapitencraft.mysticcraft.init.ModBlocks;
-import net.kapitencraft.mysticcraft.init.ModMenuTypes;
 import net.kapitencraft.mysticcraft.item.capability.CapabilityHelper;
 import net.kapitencraft.mysticcraft.item.capability.dungeon.IPrestigeAbleItem;
 import net.kapitencraft.mysticcraft.item.capability.dungeon.IReAnUpgradeable;
@@ -15,6 +13,8 @@ import net.kapitencraft.mysticcraft.item.capability.reforging.Reforges;
 import net.kapitencraft.mysticcraft.item.material.EssenceItem;
 import net.kapitencraft.mysticcraft.networking.ModMessages;
 import net.kapitencraft.mysticcraft.networking.packets.C2S.ReforgeItemPacket;
+import net.kapitencraft.mysticcraft.registry.ModBlocks;
+import net.kapitencraft.mysticcraft.registry.ModMenuTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
@@ -43,7 +43,7 @@ public class ReforgeAnvilMenu extends NoBEMenu<ReforgeAnvilMenu.ReforgeAnvilCont
     }
 
     public ReforgeAnvilMenu(int containerId, Player player, ReforgeAnvilContainer container, ContainerLevelAccess access) {
-        super(ModMenuTypes.REFORGING_ANVIL.get(), containerId, container, player.level, player, access);
+        super(ModMenuTypes.REFORGING_ANVIL.get(), containerId, container, player.level(), player, access);
 
         this.addPlayerInventories(player.getInventory(), 0, 0);
 

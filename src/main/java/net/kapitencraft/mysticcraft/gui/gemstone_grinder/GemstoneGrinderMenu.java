@@ -2,11 +2,11 @@ package net.kapitencraft.mysticcraft.gui.gemstone_grinder;
 
 import net.kapitencraft.mysticcraft.gui.GUISlotBlockItem;
 import net.kapitencraft.mysticcraft.gui.NoBEMenu;
-import net.kapitencraft.mysticcraft.init.ModBlocks;
-import net.kapitencraft.mysticcraft.init.ModItems;
-import net.kapitencraft.mysticcraft.init.ModMenuTypes;
 import net.kapitencraft.mysticcraft.item.capability.CapabilityHelper;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.*;
+import net.kapitencraft.mysticcraft.registry.ModBlocks;
+import net.kapitencraft.mysticcraft.registry.ModItems;
+import net.kapitencraft.mysticcraft.registry.ModMenuTypes;
 import net.minecraft.util.Mth;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -28,7 +28,7 @@ public class GemstoneGrinderMenu extends NoBEMenu<GemstoneGrinderMenu.ItemContai
     }
 
     public GemstoneGrinderMenu(int id, Player player, ContainerLevelAccess access) {
-        super(ModMenuTypes.GEM_GRINDER.get(), id, new ItemContainer(), player.level, player, access);
+        super(ModMenuTypes.GEM_GRINDER.get(), id, new ItemContainer(), player.level(), player, access);
         Inventory inv = player.getInventory();
         checkContainerSize(inv, 3);
 
@@ -192,6 +192,10 @@ public class GemstoneGrinderMenu extends NoBEMenu<GemstoneGrinderMenu.ItemContai
             }
         }
         return booleans;
+    }
+
+    private static short getSlotsUnlocked(@Range(from = 1, to = 16) byte slotAmount) {
+        return 0;
     }
 
     @Override

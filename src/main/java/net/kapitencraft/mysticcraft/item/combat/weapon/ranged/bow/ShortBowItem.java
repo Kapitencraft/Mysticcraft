@@ -1,8 +1,8 @@
 package net.kapitencraft.mysticcraft.item.combat.weapon.ranged.bow;
 
-import net.kapitencraft.mysticcraft.helpers.IOHelper;
-import net.kapitencraft.mysticcraft.helpers.MathHelper;
-import net.kapitencraft.mysticcraft.init.ModAttributes;
+import net.kapitencraft.kap_lib.helpers.IOHelper;
+import net.kapitencraft.kap_lib.helpers.MathHelper;
+import net.kapitencraft.kap_lib.registry.ExtraAttributes;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.CommonComponents;
@@ -42,7 +42,7 @@ public abstract class ShortBowItem extends ModBowItem {
 
     public float createCooldown(LivingEntity archer) {
         float base_cooldown = this.getShotCooldown();
-        if (archer != null) base_cooldown *= (1 / (archer.getAttributeValue(ModAttributes.DRAW_SPEED.get()) / 100));
+        if (archer != null) base_cooldown *= (1 / ((float) archer.getAttributeValue(ExtraAttributes.DRAW_SPEED.get()) / 100));
         return (float) MathHelper.defRound(base_cooldown);
     }
 
@@ -70,7 +70,6 @@ public abstract class ShortBowItem extends ModBowItem {
     }
 
     public void createArrows(@NotNull ItemStack bow, @NotNull Level world, @NotNull LivingEntity archer) {
-        ModBowItem.addAllExtraArrows(bow, archer, this.getKB());
         createArrowProperties(archer, true, bow, this.getKB(), archer.getXRot(), archer.getYRot());
     }
 }

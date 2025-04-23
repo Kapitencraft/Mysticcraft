@@ -1,11 +1,9 @@
 package net.kapitencraft.mysticcraft.event.handler;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.event.advancement.ModCriteriaTriggers;
 import net.kapitencraft.mysticcraft.event.custom.AddGemstonesToItemEvent;
 import net.kapitencraft.mysticcraft.event.custom.RegisterGemstoneTypePlacementsEvent;
-import net.kapitencraft.mysticcraft.init.ModEntityTypes;
-import net.kapitencraft.mysticcraft.init.ModItems;
-import net.kapitencraft.mysticcraft.init.custom.ModRegistryBuilders;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneSlot;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneType;
 import net.kapitencraft.mysticcraft.item.capability.reforging.Reforges;
@@ -13,6 +11,9 @@ import net.kapitencraft.mysticcraft.item.misc.AnvilUses;
 import net.kapitencraft.mysticcraft.logging.Markers;
 import net.kapitencraft.mysticcraft.networking.ModMessages;
 import net.kapitencraft.mysticcraft.potion.ModPotionRecipe;
+import net.kapitencraft.mysticcraft.registry.ModEntityTypes;
+import net.kapitencraft.mysticcraft.registry.ModItems;
+import net.kapitencraft.mysticcraft.registry.custom.ModRegistryBuilders;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.entity.monster.Monster;
@@ -44,6 +45,7 @@ public class ModEventBusEvents {
         AnvilUses.registerUses();
         sendRegisterDisplay("Packet Handling");
         ModMessages.register();
+        ModCriteriaTriggers.init();
     }
 
 
@@ -56,9 +58,6 @@ public class ModEventBusEvents {
 
     @SubscribeEvent
     public static void registerRegistries(NewRegistryEvent event) {
-        event.create(ModRegistryBuilders.GLYPH_EFFECT_REGISTRY_BUILDER);
-        event.create(ModRegistryBuilders.REQUESTABLE_REGISTRY_BUILDER);
-        event.create(ModRegistryBuilders.REQUIREMENT_REGISTRY_BUILDER);
         event.create(ModRegistryBuilders.REFORGE_BONUSES_REGISTRY_BUILDER);
         MysticcraftMod.LOGGER.info(Markers.REGISTRY, "Registered custom registries");
     }

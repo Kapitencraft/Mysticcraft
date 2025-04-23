@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.item.combat.weapon.ranged;
 
+import net.kapitencraft.kap_lib.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.helpers.InventoryHelper;
-import net.kapitencraft.mysticcraft.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.item.material.containable.ContainableItem;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;

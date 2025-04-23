@@ -1,11 +1,11 @@
 package net.kapitencraft.mysticcraft.item.combat.armor;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.init.ModItems;
+import net.kapitencraft.mysticcraft.registry.ModItems;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.LazyLoadedValue;
-import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -45,12 +45,12 @@ public enum ModArmorMaterials implements ArmorMaterial {
         this.repairIngredient = new LazyLoadedValue<>(repairIngredient);
     }
 
-    public int getDurabilityForSlot(EquipmentSlot p_40484_) {
-        return HEALTH_PER_SLOT[p_40484_.getIndex()] * this.durabilityMultiplier;
+    public int getDurabilityForType(ArmorItem.Type type) {
+        return HEALTH_PER_SLOT[type.ordinal()] * this.durabilityMultiplier;
     }
 
-    public int getDefenseForSlot(EquipmentSlot p_40487_) {
-        return this.slotProtections[p_40487_.getIndex()];
+    public int getDefenseForType(ArmorItem.Type type) {
+        return this.slotProtections[type.ordinal()];
     }
 
     public int getEnchantmentValue() {

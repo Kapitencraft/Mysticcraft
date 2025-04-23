@@ -6,7 +6,6 @@ public interface Markers {
 
     Marker MOD_MARKER = new ModMarker("Mysticcraft");
     Marker BESTIARY_MANAGER = new ModMarker("BestiaryManager");
-    Marker GUILD = new ModMarker("GuildHandler");
     Marker PARTICLE_ENGINE = new ModMarker("ParticleEngine");
     Marker REGISTRY = new ModMarker("Registry");
     Marker REFORGE_MANAGER = new ModMarker("ReforgeManager");

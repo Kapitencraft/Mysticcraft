@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.helpers;
 
-import net.kapitencraft.mysticcraft.api.MapStream;
-import net.kapitencraft.mysticcraft.enchantments.abstracts.ExtendedAbilityEnchantment;
+import net.kapitencraft.kap_lib.collection.MapStream;
+import net.kapitencraft.kap_lib.enchantments.abstracts.ExtendedAbilityEnchantment;
 import net.kapitencraft.mysticcraft.event.ModEventFactory;
 import net.kapitencraft.mysticcraft.item.IEventListener;
 import net.kapitencraft.mysticcraft.item.capability.reforging.Reforge;
@@ -45,7 +45,7 @@ public class BonusHelper {
 
     private static List<IEventListener> getArmorBonuses(ArmorItem armorItem, LivingEntity living, EquipmentSlot slot) {
         List<IEventListener> list = new ArrayList<>();
-        if (armorItem instanceof IArmorBonusItem armorBonusItem && armorItem.getSlot() == slot) {
+        if (armorItem instanceof IArmorBonusItem armorBonusItem && armorItem.getEquipmentSlot() == slot) {
             armorBonusItem.getPieceBonni().stream().filter(multiPieceBonus -> multiPieceBonus.isActive(living, slot)).forEach(list::add);
             list.add(armorBonusItem.getExtraBonus(slot));
             list.add(armorBonusItem.getPieceBonusForSlot(slot));

@@ -1,8 +1,8 @@
 package net.kapitencraft.mysticcraft.worldgen;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.init.ModBlocks;
-import net.kapitencraft.mysticcraft.init.ModFeatures;
+import net.kapitencraft.mysticcraft.registry.ModBlocks;
+import net.kapitencraft.mysticcraft.registry.ModFeatures;
 import net.kapitencraft.mysticcraft.worldgen.feature.GemstoneSpawnFeature;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstapContext;

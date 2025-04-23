@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.item.misc;
 
-import net.kapitencraft.mysticcraft.init.ModItems;
+import net.kapitencraft.mysticcraft.registry.ModItems;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Tier;

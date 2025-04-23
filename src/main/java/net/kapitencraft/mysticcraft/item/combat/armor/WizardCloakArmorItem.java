@@ -1,14 +1,14 @@
 package net.kapitencraft.mysticcraft.item.combat.armor;
 
-import net.kapitencraft.mysticcraft.helpers.MiscHelper;
+import net.kapitencraft.kap_lib.helpers.MiscHelper;
+import net.kapitencraft.kap_lib.item.combat.armor.ModArmorItem;
+import net.kapitencraft.kap_lib.item.combat.armor.client.provider.ArmorModelProvider;
+import net.kapitencraft.kap_lib.item.combat.armor.client.provider.SimpleModelProvider;
+import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.item.combat.armor.client.model.WizardCloakModel;
-import net.kapitencraft.mysticcraft.item.combat.armor.client.renderer.ArmorRenderer;
-import net.kapitencraft.mysticcraft.item.misc.creative_tab.ArmorTabGroup;
-import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
-import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import org.jetbrains.annotations.Nullable;
@@ -16,10 +16,9 @@ import org.jetbrains.annotations.Nullable;
 public class WizardCloakArmorItem extends ModArmorItem {
 
     //TODO add crafting recipe
-    public static final ArmorTabGroup WIZARD_CLOAK_GROUP = new ArmorTabGroup(TabRegister.TabTypes.WEAPONS_AND_TOOLS);
 
-    public WizardCloakArmorItem(EquipmentSlot p_40387_) {
-        super(ModArmorMaterials.WIZARD_CLOAK, p_40387_, MiscHelper.rarity(Rarity.RARE));
+    public WizardCloakArmorItem(ArmorItem.Type type) {
+        super(ModArmorMaterials.WIZARD_CLOAK, type, MiscHelper.rarity(Rarity.RARE));
     }
 
     @Override
@@ -29,16 +28,11 @@ public class WizardCloakArmorItem extends ModArmorItem {
 
     @Override
     public @Nullable String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
-        return makeCustomTextureLocation("wizard_cloak");
+        return makeCustomTextureLocation(MysticcraftMod.MOD_ID, "wizard_cloak");
     }
 
     @Override
-    protected ArmorRenderer<?> getRenderer(LivingEntity living, ItemStack stack, EquipmentSlot slot) {
-        return new ArmorRenderer<>(WizardCloakModel::createBodyLayer, WizardCloakModel::new);
-    }
-
-    @Override
-    public TabGroup getGroup() {
-        return WIZARD_CLOAK_GROUP;
+    protected ArmorModelProvider getModelProvider() {
+        return new SimpleModelProvider(WizardCloakModel::createBodyLayer, WizardCloakModel::new);
     }
 }

@@ -1,11 +1,11 @@
 package net.kapitencraft.mysticcraft.gui.screen.tooltip;
 
 import com.google.common.collect.ImmutableList;
+import net.kapitencraft.kap_lib.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.gui.reforging_anvil.ReforgeAnvilMenu;
 import net.kapitencraft.mysticcraft.gui.reforging_anvil.ReforgeAnvilScreen;
 import net.kapitencraft.mysticcraft.gui.screen.HoverScreenUpdatable;
 import net.kapitencraft.mysticcraft.helpers.InventoryHelper;
-import net.kapitencraft.mysticcraft.helpers.MathHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;

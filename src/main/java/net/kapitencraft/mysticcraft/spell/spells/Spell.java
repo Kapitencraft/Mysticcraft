@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.spell.spells;
 
+import net.kapitencraft.kap_lib.item.bonus.Bonus;
 import net.kapitencraft.mysticcraft.item.capability.spell.ISpellItem;
-import net.kapitencraft.mysticcraft.item.item_bonus.Bonus;
 import net.kapitencraft.mysticcraft.spell.Element;
 import net.kapitencraft.mysticcraft.spell.SpellExecutionFailedException;
 import net.minecraft.network.chat.Component;

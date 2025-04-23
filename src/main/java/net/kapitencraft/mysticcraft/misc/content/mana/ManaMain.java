@@ -1,13 +1,11 @@
 package net.kapitencraft.mysticcraft.misc.content.mana;
 
-import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
-import net.kapitencraft.mysticcraft.helpers.MathHelper;
-import net.kapitencraft.mysticcraft.init.ModAttributes;
-import net.kapitencraft.mysticcraft.init.ModBlocks;
-import net.minecraft.core.BlockPos;
+import net.kapitencraft.kap_lib.helpers.AttributeHelper;
+import net.kapitencraft.kap_lib.helpers.MathHelper;
+import net.kapitencraft.kap_lib.registry.ExtraAttributes;
+import net.kapitencraft.mysticcraft.data_gen.ModDamageTypes;
+import net.kapitencraft.mysticcraft.registry.ModBlocks;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.player.Player;
@@ -26,24 +24,24 @@ public class ManaMain {
     @SubscribeEvent
     public static void manaChange(TickEvent.PlayerTickEvent event) {
         Player player = event.player;
-        AttributeInstance maxManaInstance = player.getAttribute(ModAttributes.MAX_MANA.get());
+        AttributeInstance maxManaInstance = player.getAttribute(ExtraAttributes.MAX_MANA.get());
         if (!isMagical(player)) {
             throw new IllegalStateException("detected Player unable to use mana, expecting broken mod-state!");
         }
         double maxMana = maxManaInstance.getValue();
-        double intel = player.getAttributeValue(ModAttributes.INTELLIGENCE.get());
-        double curManaRegen = player.getAttributeValue(ModAttributes.MANA_REGEN.get());
+        double intel = player.getAttributeValue(ExtraAttributes.INTELLIGENCE.get());
+        double curManaRegen = player.getAttributeValue(ExtraAttributes.MANA_REGEN.get());
         double manaRegen = maxMana / 500 * (1 + curManaRegen / 100);
         CompoundTag tag = player.getPersistentData();
         tag.putDouble("manaRegen", manaRegen);
-        if (AttributeHelper.getSaveAttributeValue(ModAttributes.MANA.get(), player) != -1 && player.level.getBlockState(new BlockPos(player.getX(), player.getY(), player.getZ())).getBlock() == ModBlocks.MANA_FLUID_BLOCK.get()) {
+        if (AttributeHelper.getSaveAttributeValue(ExtraAttributes.MANA.get(), player) != -1 && player.level().getBlockState(player.getOnPos()).getBlock() == ModBlocks.MANA_FLUID_BLOCK.get()) {
             double overflowMana = getOverflow(player) + manaRegen;
             tag.putDouble(OVERFLOW_MANA_ID, overflowMana);
-            if (overflowMana >= AttributeHelper.getSaveAttributeValue(ModAttributes.MAX_MANA.get(), player)) {
-                player.hurt(new DamageSource(OVERFLOW_MANA_ID).bypassInvul().bypassMagic().bypassEnchantments().bypassArmor(), Float.MAX_VALUE);
+            if (overflowMana >= AttributeHelper.getSaveAttributeValue(ExtraAttributes.MAX_MANA.get(), player)) {
+                player.hurt(player.damageSources().source(ModDamageTypes.MANA_OVERFLOW_SELF), Float.MAX_VALUE);
                 List<LivingEntity> livings = MathHelper.getLivingAround(player, 5);
                 for (LivingEntity living1 : livings) {
-                    living1.hurt(new EntityDamageSource(OVERFLOW_MANA_ID, player).bypassArmor().bypassMagic().bypassEnchantments().bypassInvul(), (float) (Float.MAX_VALUE * (0.01 * Math.max(5 - living1.distanceTo(player), 0))));
+                    living1.hurt(player.damageSources().source(ModDamageTypes.MANA_OVERFLOW, player), (float) (Float.MAX_VALUE * (0.01 * Math.max(5 - living1.distanceTo(player), 0))));
                 }
             }
         }
@@ -85,13 +83,13 @@ public class ManaMain {
     }
 
     public static double getMana(LivingEntity living) {
-        return AttributeHelper.getSaveAttributeValue(ModAttributes.MANA.get(), living);
+        return AttributeHelper.getSaveAttributeValue(ExtraAttributes.MANA.get(), living);
     }
 
     public static void setMana(LivingEntity living, double mana) {
-        AttributeInstance instance = living.getAttribute(ModAttributes.MANA.get());
+        AttributeInstance instance = living.getAttribute(ExtraAttributes.MANA.get());
         if (instance != null) {
-            instance.setBaseValue(Math.min(mana, living.getAttributeValue(ModAttributes.MAX_MANA.get())));
+            instance.setBaseValue(Math.min(mana, living.getAttributeValue(ExtraAttributes.MAX_MANA.get())));
         }
     }
 
@@ -101,7 +99,7 @@ public class ManaMain {
     }
 
     public static boolean isMagical(LivingEntity living) {
-        return living.getAttribute(ModAttributes.MANA.get()) != null && living.getAttribute(ModAttributes.MAX_MANA.get()) != null;
+        return living.getAttribute(ExtraAttributes.MANA.get()) != null || living.getAttribute(ExtraAttributes.MAX_MANA.get()) != null;
     }
 
     public static void setOverflow(LivingEntity living, double overflow) {

@@ -2,12 +2,9 @@ package net.kapitencraft.mysticcraft.item.combat.weapon.ranged.bow;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import net.kapitencraft.kap_lib.registry.ExtraAttributes;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
-import net.kapitencraft.mysticcraft.init.ModAttributes;
-import net.kapitencraft.mysticcraft.init.ModEnchantments;
 import net.kapitencraft.mysticcraft.item.misc.IModItem;
-import net.kapitencraft.mysticcraft.item.misc.RNGHelper;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
 import net.minecraft.sounds.SoundEvents;
@@ -58,7 +55,7 @@ public abstract class ModBowItem extends BowItem implements IModItem {
                         ArrowItem arrowitem = (ArrowItem)(itemStack.getItem() instanceof ArrowItem ? itemStack.getItem() : Items.ARROW);
                         AbstractArrow abstractarrow = arrowitem.createArrow(world, itemStack, player);
                         double fbSpeedMul = LongBowItem.ARROW_SPEED_MUL / mul;
-                        abstractarrow.setBaseDamage(player.getAttributeValue(ModAttributes.RANGED_DAMAGE.get()));
+                        abstractarrow.setBaseDamage(player.getAttributeValue(ExtraAttributes.RANGED_DAMAGE.get()));
                         abstractarrow.setKnockback(2);
                         if (f == 1.0F) {
                             abstractarrow.setCritArrow(true);
@@ -68,7 +65,6 @@ public abstract class ModBowItem extends BowItem implements IModItem {
                         if (isInfinite(player, itemStack, bow)) {
                             abstractarrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
                         }
-                        addAllExtraArrows(bow, archer, this.getKB());
                         abstractarrow.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, (float) (f * mul * (1 + getSpeedMul(abstractarrow, fbSpeedMul))), 1.0F);
                         world.addFreshEntity(abstractarrow);
                     }
@@ -90,39 +86,15 @@ public abstract class ModBowItem extends BowItem implements IModItem {
         return flag1 || player.getAbilities().instabuild && (itemStack.is(Items.SPECTRAL_ARROW) || itemStack.is(Items.TIPPED_ARROW));
     }
 
-    public static void createLegolasExtraArrows(@NotNull ItemStack bow, @NotNull LivingEntity archer, int kb) {
-        int legolasLevel = bow.getEnchantmentLevel(ModEnchantments.LEGOLAS_EMULATION.get());
-        for (int j = 0; j < legolasLevel; j++) {
-            float yChange = (float) (Math.random() * (5 - legolasLevel) - (5. - legolasLevel) / 2);
-            float xChange = (float) (Math.random() * (5 - legolasLevel) - (5. - legolasLevel) / 2);
-            createArrowProperties(archer, true, bow, kb, archer.getXRot() + xChange, archer.getYRot() + yChange);
-        }
-    }
-
     private static final float OFFSET_DEGREES = 4f;
 
-    @SuppressWarnings("all")
-    public static void addAllExtraArrows(@NotNull ItemStack bow, @NotNull LivingEntity archer, int kb) {
-        createLegolasExtraArrows(bow, archer, kb);
-        double extraArrows = AttributeHelper.getSaveAttributeValue(ModAttributes.ARROW_COUNT.get(), archer);
-        int extraArrowCount = RNGHelper.getCount(archer, extraArrows);
-        archer.getPersistentData().putBoolean("SpawnExtraArrows", false);
-        for (int i = 0; i < extraArrowCount; i++) {
-            float degrees = OFFSET_DEGREES * (i / 2 + 1);
-            if (i % 2 == 0) {
-                degrees *= -1;
-            }
-            createArrowProperties(archer, true, bow, kb, archer.getXRot(), archer.getYRot() + degrees);
-        }
-    }
-
     public static AbstractArrow createArrowProperties(LivingEntity archer, boolean crit, ItemStack bow, int kb, float rotX, float rotY) {
-        Level world = archer.level;
+        Level world = archer.level();
         ItemStack arrowStack = archer.getProjectile(bow);
         if (!arrowStack.isEmpty() && arrowStack.getItem() instanceof ArrowItem arrowItem) {
             AbstractArrow arrow = arrowItem.createArrow(world, arrowStack, archer);
             arrow.shootFromRotation(archer, rotX, rotY, 0.0F, 5, 1.0F);
-            arrow.setBaseDamage(archer.getAttributeValue(ModAttributes.RANGED_DAMAGE.get()));
+            arrow.setBaseDamage(archer.getAttributeValue(ExtraAttributes.RANGED_DAMAGE.get()));
             arrow.setKnockback(kb);
             arrow.setCritArrow(crit);
             registerEnchant(bow, arrow);
@@ -168,7 +140,7 @@ public abstract class ModBowItem extends BowItem implements IModItem {
     public @NotNull Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(@NotNull EquipmentSlot slot) {
         HashMultimap<Attribute, AttributeModifier> builder = HashMultimap.create();
         if (slot == EquipmentSlot.MAINHAND) {
-            builder.put(ModAttributes.RANGED_DAMAGE.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[5], "Damage Modifier", this.getDamage(), AttributeModifier.Operation.ADDITION));
+            builder.put(ExtraAttributes.RANGED_DAMAGE.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[5], "Damage Modifier", this.getDamage(), AttributeModifier.Operation.ADDITION));
         }
         return builder;
     }

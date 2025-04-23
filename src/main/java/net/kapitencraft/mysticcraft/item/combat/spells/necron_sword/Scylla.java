@@ -1,8 +1,8 @@
 package net.kapitencraft.mysticcraft.item.combat.spells.necron_sword;
 
 import com.google.common.collect.Multimap;
-import net.kapitencraft.mysticcraft.helpers.AttributeHelper;
-import net.kapitencraft.mysticcraft.init.ModAttributes;
+import net.kapitencraft.kap_lib.helpers.AttributeHelper;
+import net.kapitencraft.kap_lib.registry.ExtraAttributes;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import org.jetbrains.annotations.NotNull;
@@ -16,6 +16,6 @@ public class Scylla extends NecronSword {
 
     @Override
     protected @NotNull Consumer<Multimap<Attribute, AttributeModifier>> getAdditionalModifiers() {
-        return multimap -> multimap.put(ModAttributes.CRIT_DAMAGE.get(), AttributeHelper.createModifier("Scylla Modifiers", AttributeModifier.Operation.ADDITION, 35));
+        return multimap -> multimap.put(ExtraAttributes.CRIT_DAMAGE.get(), AttributeHelper.createModifier("Scylla Modifiers", AttributeModifier.Operation.ADDITION, 35));
     }
 }

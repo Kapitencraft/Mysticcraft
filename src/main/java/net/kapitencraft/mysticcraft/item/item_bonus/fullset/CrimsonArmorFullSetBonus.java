@@ -1,8 +1,8 @@
 package net.kapitencraft.mysticcraft.item.item_bonus.fullset;
 
+import net.kapitencraft.kap_lib.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.content.CrimsonDeathRayHelper;
-import net.kapitencraft.mysticcraft.helpers.MiscHelper;
-import net.kapitencraft.mysticcraft.init.ModItems;
+import net.kapitencraft.mysticcraft.registry.ModItems;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -20,12 +20,12 @@ public class CrimsonArmorFullSetBonus extends KillIncreasingStackFullSetBonus {
     public static final String COOLDOWN_ID = "DominusCooldown";
     public static final String DOMINUS_ID = "Dominus";
     public CrimsonArmorFullSetBonus() {
-        super("Dominus", type -> type == MiscHelper.DamageType.MELEE, ForgeMod.ATTACK_RANGE, 0.1f, 120);
+        super("Dominus", type -> type == MiscHelper.DamageType.MELEE, ForgeMod.ENTITY_REACH, 0.1f, 120);
     }
 
     @Override
     protected void killWhen10(LivingEntity killed, LivingEntity user, MiscHelper.DamageType type) {
-        if (user.level.isClientSide()) CrimsonDeathRayHelper.add(user);
+        if (user.level().isClientSide()) CrimsonDeathRayHelper.add(user);
     }
 
     @Override

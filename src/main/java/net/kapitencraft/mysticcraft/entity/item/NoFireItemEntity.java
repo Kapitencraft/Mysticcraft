@@ -10,7 +10,7 @@ public class NoFireItemEntity extends ItemEntity {
     }
 
     public static NoFireItemEntity copy(ItemEntity main) {
-        NoFireItemEntity noFireItemEntity = new NoFireItemEntity(main.level, main.getX(), main.getY(), main.getZ(), main.getItem());
+        NoFireItemEntity noFireItemEntity = new NoFireItemEntity(main.level(), main.getX(), main.getY(), main.getZ(), main.getItem());
         noFireItemEntity.setDeltaMovement(main.getDeltaMovement());
         return noFireItemEntity;
     }
