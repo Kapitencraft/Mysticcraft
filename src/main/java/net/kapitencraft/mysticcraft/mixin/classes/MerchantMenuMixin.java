@@ -28,7 +28,7 @@ public abstract class MerchantMenuMixin {
                 ItemStack current = self().slots.get(i).getItem();
                 ItemStack newItem;
                 boolean flag = false;
-                if (current.getItem() instanceof ContainableItem<?> containableItem) {
+                if (current.getItem() instanceof ContainableItem<?, ?> containableItem) {
                     newItem = containableItem.remove(stack2, stack2.getMaxStackSize(), current);
                     flag = true;
                 } else {
@@ -42,7 +42,7 @@ public abstract class MerchantMenuMixin {
                     int l = j + k;
                     newItem.shrink(k);
                     if (flag) {
-                        ContainableItem<?> item = (ContainableItem<?>) current.getItem();
+                        ContainableItem<?, ?> item = (ContainableItem<?, ?>) current.getItem();
                         item.put(newItem, current);
                     }
                     stack1.setCount(l);

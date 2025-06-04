@@ -2,6 +2,7 @@ package net.kapitencraft.mysticcraft.spell.spells;
 
 import net.kapitencraft.kap_lib.helpers.MathHelper;
 import net.kapitencraft.kap_lib.helpers.TextHelper;
+import net.kapitencraft.mysticcraft.spell.Spell;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
@@ -20,18 +21,18 @@ import java.util.UUID;
 
 public abstract class SpellProjectile extends AbstractArrow {
     private final List<UUID> attacked = new ArrayList<>();
-    protected final String name;
     protected float damageInflicted = 0;
+    protected final Spell spell;
 
-    protected SpellProjectile(EntityType<? extends AbstractArrow> p_36721_, Level p_36722_, String name) {
+    protected SpellProjectile(EntityType<? extends AbstractArrow> p_36721_, Level p_36722_, Spell spell) {
         super(p_36721_, p_36722_);
-        this.name = name;
+        this.spell = spell;
     }
 
-    protected SpellProjectile(EntityType<? extends AbstractArrow> type, LivingEntity living, Level level, String name) {
+    protected SpellProjectile(EntityType<? extends AbstractArrow> type, LivingEntity living, Level level, Spell spell) {
         super(type, living, level);
+        this.spell = spell;
         this.setOwner(living);
-        this.name = name;
     }
 
 
@@ -59,8 +60,8 @@ public abstract class SpellProjectile extends AbstractArrow {
     }
 
     protected void sendDamageMessage() {
-        if (!this.level().isClientSide() && this.getOwner() instanceof Player player && attacked.size() > 0 && damageInflicted > 0) {
-            player.sendSystemMessage(Component.literal("Your " + this.name + " hit " + TextHelper.wrapInRed(attacked.size()) + " Enemies for " + TextHelper.wrapInRed(MathHelper.round(this.damageInflicted, 3) + " Damage")));
+        if (!this.level().isClientSide() && this.getOwner() instanceof Player player && !attacked.isEmpty() && damageInflicted > 0) {
+            sendDamageMessage(player, this.spell, this.attacked.size(), this.damageInflicted);
         }
     }
     @Override
@@ -68,4 +69,13 @@ public abstract class SpellProjectile extends AbstractArrow {
         return ItemStack.EMPTY;
     }
 
+    public static void sendDamageMessage(Player player, Spell spell, int attackedSize, float damageInflicted) {
+        player.sendSystemMessage(
+                Component.translatable("spell.projectile.damage",
+                        Component.translatable(spell.getDescriptionId()),
+                        TextHelper.wrapInRed(attackedSize),
+                        TextHelper.wrapInRed(MathHelper.round(damageInflicted, 3))
+                )
+        );
+    }
 }

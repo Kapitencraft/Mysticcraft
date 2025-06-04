@@ -35,8 +35,10 @@ public class ModItemModelProvider extends ItemModelProvider {
         makeGemstoneCrystalItems();
 
         makeElementShards();
+        makeRainbowElementShard();
 
         withExistingParent("blazing_salmon", "item/generated").texture("layer0", "item/blazing_salmon_1").texture("layer1", "item/salmon_head");
+        withExistingParent("soul_chain", "item/generated").texture("layer0", "block/soul_chain");
 
         handHeldItem(ModItems.BUILDERS_WAND, mcLoc("item/netherite_shovel"));
         handHeldItem(ModItems.MOD_DEBUG_STICK, mcLoc("item/stick"));
@@ -55,7 +57,6 @@ public class ModItemModelProvider extends ItemModelProvider {
         simpleItem(ModItems.EMPTY_APPLICABLE_SLOT, mcLoc("block/red_stained_glass"));
         simpleItem(ModItems.MISSING_GEMSTONE_SLOT, mcLoc("block/red_stained_glass"));
 
-
         List<RegistryObject<? extends Item>> handhelds = List.of(
                 ModItems.AOTE,
                 ModItems.AOTV,
@@ -68,7 +69,6 @@ public class ModItemModelProvider extends ItemModelProvider {
                 ModItems.FIERY_SCYTHE,
                 ModItems.HEATED_SCYTHE,
                 ModItems.GHOSTLY_SWORD,
-                ModItems.VOID_TOTEM_ITEM,
                 ModItems.NECRONS_HANDLE
         );
         handhelds.forEach(itemRegistryObject -> handHeldItem(itemRegistryObject, null));
@@ -93,7 +93,8 @@ public class ModItemModelProvider extends ItemModelProvider {
                 ModItems.MAGMA_COD,
                 ModItems.ORB_OF_CONSUMPTION,
                 ModItems.MANA_STEEL_INGOT,
-                ModItems.SHADOW_CRYSTAL
+                ModItems.SHADOW_CRYSTAL,
+                ModItems.VOID_TOTEM_ITEM
          );
         simples.forEach(itemRegistryObject -> simpleItem(itemRegistryObject, null));
 
@@ -140,6 +141,11 @@ public class ModItemModelProvider extends ItemModelProvider {
             withExistingParent("elemental_shard_of_" + element.getName(), "item/generated")
                     .texture("layer0", modLoc("item/elements/" + element.getName() + "_shard"));
         }
+    }
+
+    private void makeRainbowElementShard() {
+        withExistingParent("elemental_shard_of_rainbow", "item/generated")
+                .texture("layer0", modLoc("item/elements/rainbow_shard"));
     }
 
     private void makeGemstoneCrystalItems() {

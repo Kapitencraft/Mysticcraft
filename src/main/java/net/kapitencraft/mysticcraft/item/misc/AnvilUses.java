@@ -3,11 +3,11 @@ package net.kapitencraft.mysticcraft.item.misc;
 import net.kapitencraft.mysticcraft.api.Reference;
 import net.kapitencraft.mysticcraft.item.capability.CapabilityHelper;
 import net.kapitencraft.mysticcraft.item.capability.elytra.ElytraCapability;
+import net.kapitencraft.mysticcraft.item.capability.spell.SpellHelper;
 import net.kapitencraft.mysticcraft.item.combat.spells.SpellScrollItem;
 import net.kapitencraft.mysticcraft.item.combat.spells.necron_sword.NecronSword;
 import net.kapitencraft.mysticcraft.registry.ModItems;
-import net.kapitencraft.mysticcraft.spell.SpellSlot;
-import net.kapitencraft.mysticcraft.spell.Spells;
+import net.kapitencraft.mysticcraft.registry.Spells;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -52,13 +52,12 @@ public class AnvilUses {
         );
         registerAnvilUse(
                 both(
-                        stack -> stack.getItem() instanceof NecronSword sword && !sword.hasSpell(stack, Spells.WITHER_IMPACT),
+                        stack -> stack.getItem() instanceof NecronSword && !SpellHelper.hasSpell(stack, Spells.WITHER_IMPACT.get()),
                         stack -> stack.getItem() instanceof SpellScrollItem && SpellScrollItem.getSpell(stack).canApply(ModItems.NECRON_SWORD.get())
                 ),
                 (stack, stack1) -> {
-                    NecronSword sword = (NecronSword) stack.getItem();
-                    if (sword.hasAnySpell(stack)) sword.setSlot(0, new SpellSlot(Spells.WITHER_IMPACT), stack);
-                    else sword.setSlot(0, new SpellSlot(SpellScrollItem.getSpell(stack1)), stack);
+                    if (SpellHelper.hasAnySpell(stack)) SpellHelper.setSpell(stack, 0, Spells.WITHER_IMPACT.get());
+                    else SpellHelper.setSpell(stack, 0, SpellScrollItem.getSpell(stack1));
                 },
                 20
         );

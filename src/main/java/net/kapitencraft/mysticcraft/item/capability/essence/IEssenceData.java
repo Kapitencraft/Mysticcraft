@@ -26,6 +26,7 @@ public interface IEssenceData extends ItemData<EssenceType, IEssenceData> {
     static EssenceType loadData(ItemStack stack) {
         return ((IEssenceData) stack.getItem()).loadData(stack, data -> {});
     }
+
     static void apply(ItemStack stack, EssenceType type) {
         if (stack.getItem() instanceof IEssenceData data) {
             data.saveData(stack, type);

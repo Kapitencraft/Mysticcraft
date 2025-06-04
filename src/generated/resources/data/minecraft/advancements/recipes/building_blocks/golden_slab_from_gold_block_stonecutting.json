@@ -30,5 +30,6 @@
     "recipes": [
       "minecraft:golden_slab_from_gold_block_stonecutting"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

@@ -1,17 +1,15 @@
 package net.kapitencraft.mysticcraft.data_gen;
 
-import net.kapitencraft.kap_lib.item.combat.armor.ModArmorItem;
+import net.kapitencraft.kap_lib.item.combat.armor.AbstractArmorItem;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.registry.ModBlocks;
 import net.kapitencraft.mysticcraft.registry.ModItems;
 import net.kapitencraft.mysticcraft.tags.ModTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.tags.DamageTypeTagsProvider;
 import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.level.block.Blocks;
@@ -68,7 +66,7 @@ public class ModTagProvider {
         }
 
         @SafeVarargs
-        private void addArmors(Map<ArmorItem.Type, ? extends RegistryObject<? extends ModArmorItem>>... armorElements) {
+        private void addArmors(Map<ArmorItem.Type, ? extends RegistryObject<? extends AbstractArmorItem>>... armorElements) {
             collect(Arrays.stream(armorElements).map(Map::values).flatMap(Collection::stream), tag(Tags.Items.ARMORS));
             collect(Arrays.stream(armorElements).map(map -> map.get(ArmorItem.Type.BOOTS)), tag(Tags.Items.ARMORS_BOOTS));
             collect(Arrays.stream(armorElements).map(map -> map.get(ArmorItem.Type.LEGGINGS)), tag(Tags.Items.ARMORS_LEGGINGS));
@@ -76,7 +74,7 @@ public class ModTagProvider {
             collect(Arrays.stream(armorElements).map(map -> map.get(ArmorItem.Type.HELMET)), tag(Tags.Items.ARMORS_HELMETS));
         }
 
-        private void collect(Stream<? extends RegistryObject<? extends ModArmorItem>> stream, IntrinsicTagAppender<net.minecraft.world.item.Item> appender) {
+        private void collect(Stream<? extends RegistryObject<? extends AbstractArmorItem>> stream, IntrinsicTagAppender<net.minecraft.world.item.Item> appender) {
             stream.map(RegistryObject::get).forEach(appender::add);
         }
     }
@@ -100,20 +98,6 @@ public class ModTagProvider {
             tag(ModTags.Blocks.FORAGEABLE).addTag(BlockTags.LOGS);
 
             tag(ModTags.Blocks.MINEABLE).addTags(Tags.Blocks.SAND, BlockTags.SNOW, Tags.Blocks.ORES, Tags.Blocks.OBSIDIAN, Tags.Blocks.GRAVEL, Tags.Blocks.NETHERRACK, Tags.Blocks.STONE, Tags.Blocks.END_STONES, Tags.Blocks.COBBLESTONE);
-        }
-    }
-
-    public static class DamageTypes extends DamageTypeTagsProvider {
-
-        public DamageTypes(PackOutput pOutput, CompletableFuture<HolderLookup.Provider> pLookupProvider) {
-            super(pOutput, pLookupProvider);
-        }
-
-        @Override
-        protected void addTags(@NotNull HolderLookup.Provider pProvider) {
-            this.tag(DamageTypeTags.BYPASSES_ARMOR).add(ModDamageTypes.MANA_OVERFLOW);
-            this.tag(DamageTypeTags.BYPASSES_EFFECTS).add(ModDamageTypes.MANA_OVERFLOW, ModDamageTypes.MANA_OVERFLOW_SELF);
-            this.tag(DamageTypeTags.BYPASSES_ENCHANTMENTS).add(ModDamageTypes.MANA_OVERFLOW, ModDamageTypes.MANA_OVERFLOW_SELF);
         }
     }
 }

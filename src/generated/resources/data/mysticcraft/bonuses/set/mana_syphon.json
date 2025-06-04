@@ -1,0 +1,10 @@
+{
+  "type": "mysticcraft:soul_mage_armor",
+  "data": {},
+  "slots": [
+    "legs",
+    "feet",
+    "chest",
+    "head"
+  ]
+}

@@ -16,5 +16,6 @@
   ],
   "result": {
     "item": "mysticcraft:stone_hammer"
-  }
+  },
+  "show_notification": true
 }

@@ -1,18 +1,19 @@
 package net.kapitencraft.mysticcraft.item.capability.elytra;
 
-import net.kapitencraft.mysticcraft.item.capability.ICapability;
+import com.mojang.datafixers.util.Pair;
+import net.kapitencraft.kap_lib.item.capability.AbstractCapability;
 import net.minecraftforge.common.capabilities.AutoRegisterCapability;
 
 @AutoRegisterCapability
-public interface IElytraData extends ICapability<ElytraCapability> {
-
-    ElytraData getData();
+public interface IElytraData extends AbstractCapability<Pair<ElytraData, Integer>> {
 
     int getLevel();
 
     void setLevel(int level);
 
     default int getLevelForData(ElytraData data) {
-        return data == getData() ? getLevel() : 0;
+        return data == getDataType() ? getLevel() : 0;
     }
+
+    ElytraData getDataType();
 }

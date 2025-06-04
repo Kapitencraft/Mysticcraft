@@ -1,5 +1,7 @@
 package net.kapitencraft.mysticcraft.item.combat.weapon.ranged;
 
+import net.kapitencraft.mysticcraft.item.capability.CapabilityHelper;
+import net.kapitencraft.mysticcraft.item.capability.containable.ContainableCapabilityProvider;
 import net.kapitencraft.mysticcraft.item.capability.containable.QuiverCapability;
 import net.kapitencraft.mysticcraft.item.material.containable.ContainableItem;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
@@ -18,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class QuiverItem extends ContainableItem<ArrowItem> {
+public class QuiverItem extends ContainableItem<ArrowItem, QuiverCapability> {
     public static final ThreadLocal<ItemStack> operationQuiver = new ThreadLocal<>();
     public static TabGroup QUIVER_GROUP = new TabGroup(TabRegister.TabTypes.WEAPONS_AND_TOOLS);
 
@@ -46,8 +48,8 @@ public class QuiverItem extends ContainableItem<ArrowItem> {
     }
 
     @Override
-    public QuiverCapability makeCapability() {
-        return new QuiverCapability();
+    public ContainableCapabilityProvider<ArrowItem, QuiverCapability> makeCapabilityProvider() {
+        return new ContainableCapabilityProvider<>( new QuiverCapability(), CapabilityHelper.QUIVER);
     }
 
     @Override

@@ -19,5 +19,6 @@
   ],
   "result": {
     "item": "mysticcraft:mana_steel_sword"
-  }
+  },
+  "show_notification": true
 }

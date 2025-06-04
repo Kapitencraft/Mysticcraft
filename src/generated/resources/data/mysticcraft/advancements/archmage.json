@@ -11,6 +11,7 @@
   "display": {
     "announce_to_chat": true,
     "description": {
+      "type": "minecraft:translatable",
       "translate": "advancements.mysticcraft.archmage"
     },
     "frame": "challenge",
@@ -20,6 +21,7 @@
     },
     "show_toast": true,
     "title": {
+      "type": "minecraft:translatable",
       "translate": "advancements.mysticcraft.archmage.title"
     }
   },
@@ -30,5 +32,6 @@
   ],
   "rewards": {
     "experience": 100
-  }
+  },
+  "sends_telemetry_event": true
 }

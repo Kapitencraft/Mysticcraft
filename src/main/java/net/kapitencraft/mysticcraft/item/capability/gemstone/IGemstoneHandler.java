@@ -1,9 +1,11 @@
 package net.kapitencraft.mysticcraft.item.capability.gemstone;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import net.kapitencraft.kap_lib.helpers.AttributeHelper;
 import net.kapitencraft.kap_lib.helpers.MiscHelper;
+import net.kapitencraft.kap_lib.item.capability.AbstractCapability;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.item.capability.ICapability;
 import net.kapitencraft.mysticcraft.logging.Markers;
 import net.kapitencraft.mysticcraft.registry.ModEnchantments;
 import net.kapitencraft.mysticcraft.registry.ModItems;
@@ -20,7 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @AutoRegisterCapability
-public interface IGemstoneHandler extends ICapability<GemstoneCapability> {
+public interface IGemstoneHandler extends AbstractCapability<List<GemstoneSlot>> {
 
     boolean putGemstone(GemstoneType gemstoneType, GemstoneType.Rarity rarity, int slotIndex);
 
@@ -52,18 +54,15 @@ public interface IGemstoneHandler extends ICapability<GemstoneCapability> {
         }
     }
 
-
     int getSlotAmount();
 
     GemstoneSlot[] getSlots();
 
     void setDefault(GemstoneSlot[] slots);
 
-
-
-    default HashMap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot equipmentSlot, ItemStack stack) {
+    default Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot equipmentSlot, ItemStack stack) {
         HashMap<Attribute, Double> attributeModifier = new HashMap<>();
-        HashMap<Attribute, AttributeModifier> modifierHashMap = new HashMap<>();
+        Multimap<Attribute, AttributeModifier> modifiers = HashMultimap.create();
         if (MiscHelper.getSlotForStack(stack) == equipmentSlot) {
             double gemstoneModifier;
             @Nullable Attribute attribute;
@@ -75,11 +74,10 @@ public interface IGemstoneHandler extends ICapability<GemstoneCapability> {
                         if (gemstoneType != null) {
                             attribute = gemstoneType.modifiedAttribute.get();
                             gemstoneModifier = gemstoneType.BASE_VALUE * slot.getGemRarity().modMul * (1 + stack.getEnchantmentLevel(ModEnchantments.EFFICIENT_JEWELLING.get()) * 0.08);
-                            if (attributeModifier.containsKey(attribute)) {
+                            if (attributeModifier.containsKey(attribute))
                                 attributeModifier.put(attribute, attributeModifier.get(attribute) + gemstoneModifier);
-                            } else {
+                            else
                                 attributeModifier.put(attribute, gemstoneModifier);
-                            }
                         }
                     }
                 }
@@ -87,9 +85,21 @@ public interface IGemstoneHandler extends ICapability<GemstoneCapability> {
                 MysticcraftMod.LOGGER.warn(Markers.GEMSTONE, "unable to read Gemstone slots: {}", e.getMessage());
             }
             for (Attribute attribute1 : attributeModifier.keySet()) {
-                modifierHashMap.put(attribute1, AttributeHelper.createModifier("Gemstone Modifications", AttributeModifier.Operation.ADDITION, attributeModifier.get(attribute1)));
+                modifiers.put(attribute1, AttributeHelper.createModifier("Gemstone Modifications", AttributeModifier.Operation.ADDITION, attributeModifier.get(attribute1)));
             }
         }
-        return modifierHashMap;
+        return modifiers;
+    }
+
+    default void copyFrom(List<GemstoneSlot> data) {
+        GemstoneSlot[] slots = getSlots();
+        for (int i = 0; i < data.size(); i++) {
+            slots[i] = data.get(i);
+        }
+    }
+
+    @Override
+    default List<GemstoneSlot> getData() {
+        return List.of(getSlots());
     }
 }

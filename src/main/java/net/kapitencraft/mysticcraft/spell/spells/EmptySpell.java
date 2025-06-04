@@ -1,16 +1,32 @@
 package net.kapitencraft.mysticcraft.spell.spells;
 
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
+import net.kapitencraft.mysticcraft.spell.Spell;
+import net.kapitencraft.mysticcraft.spell.SpellExecutionFailedException;
+import net.kapitencraft.mysticcraft.spell.cast.SpellCastContext;
+import net.minecraft.world.item.Item;
 
-import java.util.List;
-
-public class EmptySpell {
-    private static final Component[] description = new Component[]{Component.literal("No Spell assigned to this Item"), Component.literal("Use the Spellment-Table to apply Spells"), Component.literal("to this Item")};
-    public void execute(LivingEntity user, ItemStack stack) {
+public class EmptySpell implements Spell {
+    @Override
+    public void cast(SpellCastContext context) throws SpellExecutionFailedException {
     }
-    public static List<Component> getDescription() {
-        return List.of(description);
+
+    @Override
+    public double manaCost() {
+        return 0;
+    }
+
+    @Override
+    public Type getType() {
+        return Type.RELEASE;
+    }
+
+    @Override
+    public int getCooldownTime() {
+        return 0;
+    }
+
+    @Override
+    public boolean canApply(Item item) {
+        return false;
     }
 }

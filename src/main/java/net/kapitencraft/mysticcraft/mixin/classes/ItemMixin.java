@@ -1,11 +1,8 @@
 package net.kapitencraft.mysticcraft.mixin.classes;
 
 import com.google.common.collect.Multimap;
-import net.kapitencraft.kap_lib.enchantments.abstracts.StatBoostEnchantment;
 import net.kapitencraft.kap_lib.helpers.AttributeHelper;
-import net.kapitencraft.kap_lib.helpers.CollectionHelper;
 import net.kapitencraft.kap_lib.helpers.MiscHelper;
-import net.kapitencraft.kap_lib.helpers.TextHelper;
 import net.kapitencraft.mysticcraft.item.capability.CapabilityHelper;
 import net.kapitencraft.mysticcraft.item.capability.ITieredItem;
 import net.kapitencraft.mysticcraft.item.capability.dungeon.IStarAbleItem;
@@ -13,10 +10,9 @@ import net.kapitencraft.mysticcraft.item.capability.elytra.ElytraData;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneHelper;
 import net.kapitencraft.mysticcraft.item.capability.reforging.Reforge;
 import net.kapitencraft.mysticcraft.item.capability.spell.ISpellItem;
-import net.kapitencraft.mysticcraft.spell.Spells;
-import net.kapitencraft.mysticcraft.spell.spells.Spell;
+import net.kapitencraft.mysticcraft.item.capability.spell.SpellHelper;
+import net.kapitencraft.mysticcraft.spell.Spell;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -40,9 +36,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import static net.kapitencraft.mysticcraft.item.combat.spells.SpellItem.SPELL_EXE;
-import static net.kapitencraft.mysticcraft.item.combat.spells.SpellItem.SPELL_EXECUTION_DUR;
-
 @Mixin(Item.class)
 @SuppressWarnings("ALL")
 public abstract class ItemMixin implements IForgeItem {
@@ -63,18 +56,16 @@ public abstract class ItemMixin implements IForgeItem {
             builder.merge(reforge.applyModifiers(self().getRarity(stack)), AttributeModifier.Operation.ADDITION);
         }
         GemstoneHelper.getCapability(stack, iGemstoneHandler ->
-                builder.merge(CollectionHelper.fromMap(iGemstoneHandler.getAttributeModifiers(slot, stack)))
+                builder.merge(iGemstoneHandler.getAttributeModifiers(slot, stack))
         );
         CapabilityHelper.exeCapability(stack, CapabilityHelper.ELYTRA, data1 -> {
-            ElytraData data = data1.getData();
+            ElytraData data = data1.getDataType();
             if (data == ElytraData.GRAVITY_BOOST && slot == EquipmentSlot.CHEST)
                 builder.add(ForgeMod.ENTITY_GRAVITY.get(), AttributeHelper.createModifier("ElytraGravityBoost", AttributeModifier.Operation.MULTIPLY_TOTAL, data1.getLevel() * -0.2));
         });
         if (self() instanceof IStarAbleItem) {
             builder.update(value -> IStarAbleItem.modifyData(stack, value));
         }
-        //TODO hook onto KapLib
-        builder.merge(StatBoostEnchantment.getAllModifiers(stack, slot));
         if (self() instanceof ITieredItem) {
             builder.mulAll(ITieredItem.getTier(stack).getValueMul() + 1);
         }
@@ -87,27 +78,11 @@ public abstract class ItemMixin implements IForgeItem {
      */
     @Inject(method = "use", at = @At("HEAD"), cancellable = true)
     public void use(@NotNull Level level, Player player, @NotNull InteractionHand hand, CallbackInfoReturnable<InteractionResultHolder<ItemStack>> cir) {
-
         CompoundTag tag = player.getPersistentData();
         ItemStack itemstack = player.getItemInHand(hand);
         if (itemstack.getItem() instanceof ISpellItem item) {
-            if (item.getSlotAmount() > 1) {
-                tag.putString(SPELL_EXE, tag.getString(SPELL_EXE) + "1");
-                TextHelper.sendTitle(player, Component.literal(Spells.getPattern(tag.getString(SPELL_EXE))));
-                if (item.getClosestSpell(tag.getString(SPELL_EXE)) != null) {
-                    TextHelper.sendSubTitle(player, Component.literal( "§6\u27A4 " + item.getClosestSpell(tag.getString(SPELL_EXE)).getName()));
-                }
-                tag.putByte(SPELL_EXECUTION_DUR, (byte) 20);
+            if (item.handleActiveMana(player, itemstack)) {
                 cir.setReturnValue(InteractionResultHolder.consume(itemstack));
-            } else {
-                if (item.getActiveSpell(itemstack).getType() == Spells.Type.RELEASE) {
-                    if (item.handleActiveMana(player, itemstack)) {
-                        cir.setReturnValue(InteractionResultHolder.consume(itemstack));
-                    }
-                } else {
-                    player.startUsingItem(hand);
-                    cir.setReturnValue(InteractionResultHolder.consume(itemstack));
-                }
             }
         }
     }
@@ -118,8 +93,8 @@ public abstract class ItemMixin implements IForgeItem {
      */
     @Inject(method = "getUseDuration", at = @At("HEAD"), cancellable = true)
     public void getUseDuration(ItemStack stack, CallbackInfoReturnable<Integer> cir) {
-        if (stack.getItem() instanceof ISpellItem spellItem) {
-            cir.setReturnValue(spellItem.getItemUseDuration(stack));
+        if (stack.getItem() instanceof ISpellItem) {
+            cir.setReturnValue(SpellHelper.getItemUseDuration(stack));
         }
     }
 
@@ -130,26 +105,11 @@ public abstract class ItemMixin implements IForgeItem {
     @Inject(method = "onUseTick", at = @At("HEAD"))
     public void onUseTick(@NotNull Level level, @NotNull LivingEntity user, @NotNull ItemStack stack, int count, CallbackInfo info) {
         if (self() instanceof ISpellItem spellItem) {
-            Spell spell = spellItem.getActiveSpell(stack);
-            if (spell.getType() == Spells.Type.CYCLE && (Integer.MAX_VALUE - count & 2) == 0) {
-                spellItem.handleMana(user, spell, stack);
+            Spell spell = SpellHelper.getActiveSpell(stack);
+            if (spell.getType() == Spell.Type.CYCLE && (Integer.MAX_VALUE - count & 2) == 0) {
+                SpellHelper.handleManaAndExecute(user, spell, stack);
             }
         }
-    }
-
-    @Override
-    public boolean onEntitySwing(ItemStack stack, LivingEntity living) {
-        if (self() instanceof ISpellItem spellItem && living instanceof Player player && spellItem.getSlotAmount() > 1) {
-            CompoundTag tag = living.getPersistentData();
-            tag.putString(SPELL_EXE, tag.getString(SPELL_EXE) + "0");
-            TextHelper.sendTitle(player, Component.literal(Spells.getPattern(tag.getString(SPELL_EXE))));
-            if (spellItem.getClosestSpell(tag.getString(SPELL_EXE)) != null) {
-                TextHelper.sendSubTitle(player, Component.literal("§6\u27A4 " + spellItem.getClosestSpell(tag.getString(SPELL_EXE)).getName()));
-            }
-            tag.putByte(SPELL_EXECUTION_DUR, (byte) 20);
-            return true;
-        }
-        return false;
     }
 
     /**

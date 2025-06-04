@@ -3,10 +3,10 @@ loaderVersion="${forge_version_range}"
 license="MIT License"
 [[mods]] #mandatory
 updateJSONURL = "https://raw.githubusercontent.com/Kapitencraft/Mysticcraft/master/mysticcraft-version.json"
-modId="mysticcraft" #mandatory
+modId="${mod_id}" #mandatory
 version="1.0-pre1" #mandatory
 issueTrackerURL="https://discord.gg/ByxUBgPB"
-displayName="Mysticcraft" #mandatory
+displayName="${mod_name}" #mandatory
 logoFile="examplemod.png" #optional
 credits='''
     Some Textures mad by the author(s) of Necron's Pack Hypixel Skyblock
@@ -18,15 +18,15 @@ authors="Kapitencraft: Dev; Beefrient, WarpBeat(, Lenori): Textures"
 description='''
 A very magical mod
 '''
-[[dependencies.mysticcraft]] #optional
+[[dependencies.${mod_id}]] #optional
     modId="forge" #mandatory
     mandatory=true #mandatory
-    versionRange="[42,)" #mandatory
+    versionRange="[47,)" #mandatory
     ordering="NONE"
     side="BOTH"
-[[dependencies.mysticcraft]]
+[[dependencies.${mod_id}]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.19.1,1.20)"
+    versionRange="[1.20.1,1.21)"
     ordering="NONE"
     side="BOTH"

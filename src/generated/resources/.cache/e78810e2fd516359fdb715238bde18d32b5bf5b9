@@ -1,4 +1,4 @@
-// 1.19.3	2024-10-12T18:21:02.7482169	Block States: mysticcraft
+// 1.20.1	2025-05-01T01:28:46.9391987	Block States: mysticcraft
 5637f5f443cb8049d9f40a1f2e13f5d8705df435 assets/mysticcraft/blockstates/crimsonium_ore.json
 892ef4535d80db73e54fbbfa2b0a9e4f316fd4fe assets/mysticcraft/blockstates/fragile_basalt.json
 f5ab741f65926f72e8efde5b1bec4468a6d01092 assets/mysticcraft/blockstates/gemstone_block.json
@@ -9,6 +9,7 @@ de8666c16bed871939f3679f48f2e9633bf90e6e assets/mysticcraft/blockstates/golden_s
 171a2ccc4865040624f40b34399a6b5e35f33dd3 assets/mysticcraft/blockstates/golden_stairs.json
 05cbe2052df3d30e9c7f8d7785c72ba8491f4aad assets/mysticcraft/blockstates/golden_wall.json
 2a8bb6d4edc23aa5600e596bfa1eb7062f478fe0 assets/mysticcraft/blockstates/lapis_button.json
+4943759ca1b11e720d8d3a4753d717f7329d065b assets/mysticcraft/blockstates/mangatic_stone.json
 7ce0acf5a703412c0174380c47a182fc5b063d40 assets/mysticcraft/blockstates/obsidian_pressure_plate.json
 b3fbf691c3bb71b3eac842682b13f490fe77e40d assets/mysticcraft/blockstates/reforge_anvil.json
 fdbb8cbfa966b20295a5649af04089f61ddd5535 assets/mysticcraft/blockstates/soul_chain.json
@@ -35,6 +36,7 @@ a70fcaadd79a1386676c38c7f49131742bbcbd3b assets/mysticcraft/models/block/golden_
 88d11fca8d09c175236bc20637d93601b5126063 assets/mysticcraft/models/block/golden_wall_side_tall.json
 24de40b29fdb2aef332cdfb8a2292916b871ab62 assets/mysticcraft/models/block/lapis_button.json
 74b36c88269cd01d923a62c5e8e8d48d38065cdd assets/mysticcraft/models/block/lapis_button_pressed.json
+468f98281046cdfb18060ac11c52aeae4352d42c assets/mysticcraft/models/block/mangatic_stone.json
 0986eedde81a67a7a70b964f477759457c38ea3f assets/mysticcraft/models/block/obsidian_pressure_plate.json
 296a821f041dc137e9cc9da48e0c6f821411df31 assets/mysticcraft/models/block/obsidian_pressure_plate_down.json
 47956dc10e45a5126feb5966bb9f80f1a55eec1c assets/mysticcraft/models/block/reforge_anvil.json
@@ -44,6 +46,6 @@ e90245b10c25643f592dbcc91f14e328ec72b27a assets/mysticcraft/models/block/tinted_
 8a580e75a9a4909277be804d3d7844ded80294c3 assets/mysticcraft/models/item/gemstone_block.json
 10a821bbc79bf1d028e694b49a37db3aef54dd79 assets/mysticcraft/models/item/gemstone_seed.json
 d453ef4071ebc587bb1d2508056851096b37e7ae assets/mysticcraft/models/item/lapis_button.json
-24de40b29fdb2aef332cdfb8a2292916b871ab62 assets/mysticcraft/models/item/lapis_button_inventory.json
-14f1fd4bf07632920cf26115b438d143ecd6add3 assets/mysticcraft/models/item/obsidian_pressure_plate.json
-74ab6d736985586c5f315a1fb389ae6054a8dae5 assets/mysticcraft/models/item/soul_chain.json
+e79d708594f6139583007914f72d541ddd9b041d assets/mysticcraft/models/item/lapis_button_inventory.json
+e6657166a06be5499c39540759c83f0f8cf13874 assets/mysticcraft/models/item/mangatic_stone.json
+0986eedde81a67a7a70b964f477759457c38ea3f assets/mysticcraft/models/item/obsidian_pressure_plate.json

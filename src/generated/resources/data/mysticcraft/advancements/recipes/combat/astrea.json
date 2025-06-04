@@ -17,5 +17,6 @@
     "recipes": [
       "mysticcraft:astrea"
     ]
-  }
+  },
+  "sends_telemetry_event": true
 }

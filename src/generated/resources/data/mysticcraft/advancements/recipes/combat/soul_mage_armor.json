@@ -30,5 +30,6 @@
     "recipes": [
       "mysticcraft:soul_mage_armor"
     ]
-  }
+  },
+  "sends_telemetry_event": true
 }

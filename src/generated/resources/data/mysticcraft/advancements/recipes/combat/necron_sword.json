@@ -30,5 +30,6 @@
     "recipes": [
       "mysticcraft:necron_sword"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

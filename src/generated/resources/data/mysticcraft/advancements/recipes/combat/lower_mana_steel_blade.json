@@ -30,5 +30,6 @@
     "recipes": [
       "mysticcraft:lower_mana_steel_blade"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

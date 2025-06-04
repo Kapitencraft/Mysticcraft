@@ -1,12 +1,13 @@
 package net.kapitencraft.mysticcraft.item.capability.reforging;
 
+import com.google.common.base.Stopwatch;
 import com.google.gson.*;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.JsonOps;
+import net.kapitencraft.kap_lib.item.bonus.Bonus;
+import net.kapitencraft.kap_lib.registry.custom.ExtraCodecs;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.helpers.Timer;
-import net.kapitencraft.mysticcraft.item.item_bonus.ReforgingBonus;
 import net.kapitencraft.mysticcraft.logging.Markers;
-import net.kapitencraft.mysticcraft.registry.ModReforgingBonuses;
-import net.kapitencraft.mysticcraft.registry.custom.ModRegistries;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -16,6 +17,7 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class ReforgeManager extends SimpleJsonResourceReloadListener {
     private static final Gson GSON = new GsonBuilder().create();
@@ -26,7 +28,7 @@ public class ReforgeManager extends SimpleJsonResourceReloadListener {
 
     @Override
     protected void apply(@NotNull Map<ResourceLocation, JsonElement> map, @NotNull ResourceManager manager, @NotNull ProfilerFiller filler) {
-        Timer.start();
+        Stopwatch stopwatch = Stopwatch.createStarted();
         for (Map.Entry<ResourceLocation, JsonElement> entry : map.entrySet()) {
             String[] data = entry.getKey().getPath().split("/");
             if (data.length < 1)
@@ -36,13 +38,15 @@ public class ReforgeManager extends SimpleJsonResourceReloadListener {
             String type = data[0];
             try {
                 JsonObject object = entry.getValue().getAsJsonObject();
-                ReforgingBonus bonus = ModReforgingBonuses.EMPTY.get();
-                if (object.has("bonus")) {
-                    bonus = ModRegistries.REFORGE_BONUSES_REGISTRY.getValue(new ResourceLocation(object.getAsJsonPrimitive("bonus").getAsString()));
-                }
                 Reforge.Builder reforge = new Reforge.Builder(name);
                 reforge.reforgeType(Reforge.Type.byName(type));
-                if (bonus != ModReforgingBonuses.EMPTY.get() && bonus != null) reforge.withBonus(bonus);
+
+                if (object.has("bonus")) {
+                    DataResult<Bonus<?>> result = ExtraCodecs.BONUS.parse(JsonOps.INSTANCE, object.get("bonus"));
+                    Bonus<?> bonus = result.getOrThrow(false, (s) -> {});
+                    reforge.withBonus(bonus);
+                }
+                //if (bonus != ModReforgingBonuses.EMPTY.get() && bonus != null) reforge.withBonus(bonus);
                 JsonObject mods = object.getAsJsonObject("mods");
                 for (Map.Entry<String, JsonElement> modsEntry : mods.entrySet()) {
                     Attribute attribute = BuiltInRegistries.ATTRIBUTE.get(new ResourceLocation(modsEntry.getKey()));
@@ -55,6 +59,7 @@ public class ReforgeManager extends SimpleJsonResourceReloadListener {
                 MysticcraftMod.LOGGER.warn(Markers.REFORGE_MANAGER, "Unable to load reforge '{}': {}", name, e.getMessage());
             }
         }
-        MysticcraftMod.LOGGER.info(Markers.REFORGE_MANAGER, "loading {} reforges took {} ms", Reforges.getReforgesSize(), Timer.getPassedTime());
+        stopwatch.stop();
+        MysticcraftMod.LOGGER.info(Markers.REFORGE_MANAGER, "loading {} reforges took {} ms", Reforges.getReforgesSize(), stopwatch.elapsed(TimeUnit.MILLISECONDS));
     }
 }

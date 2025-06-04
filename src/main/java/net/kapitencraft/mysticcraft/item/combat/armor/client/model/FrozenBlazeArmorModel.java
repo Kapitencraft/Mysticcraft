@@ -3,7 +3,7 @@ package net.kapitencraft.mysticcraft.item.combat.armor.client.model;// Made with
 // Paste this class into your mod and generate all required imports
 
 
-import net.kapitencraft.kap_lib.item.combat.armor.client.model.ArmorModel;
+import net.kapitencraft.kap_lib.client.armor.ArmorModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
@@ -18,7 +18,9 @@ public class FrozenBlazeArmorModel extends ArmorModel {
 		MeshDefinition meshdefinition = new MeshDefinition();
 		PartDefinition partdefinition = meshdefinition.getRoot();
 
-		PartDefinition armorBody = partdefinition.addOrReplaceChild("armorBody", CubeListBuilder.create().texOffs(66, 13).addBox(-4.0F, 0.0F, -3.0F, 8.0F, 12.0F, 1.0F, new CubeDeformation(0.0F))
+		partdefinition.addOrReplaceChild("hat", CubeListBuilder.create(), PartPose.ZERO);
+
+		PartDefinition armorBody = partdefinition.addOrReplaceChild("body", CubeListBuilder.create().texOffs(66, 13).addBox(-4.0F, 0.0F, -3.0F, 8.0F, 12.0F, 1.0F, new CubeDeformation(0.0F))
 		.texOffs(66, 0).addBox(-4.0F, -0.0F, 2.0F, 8.0F, 12.0F, 1.0F, new CubeDeformation(0.0F))
 		.texOffs(0, 32).addBox(-5.0F, -0.0F, -3.0F, 1.0F, 12.0F, 6.0F, new CubeDeformation(0.0F))
 		.texOffs(84, 0).addBox(4.0F, -0.0F, -3.0F, 1.0F, 12.0F, 6.0F, new CubeDeformation(0.0F))
@@ -30,7 +32,7 @@ public class FrozenBlazeArmorModel extends ArmorModel {
 		.texOffs(77, 11).addBox(-4.0F, 12.0F, -3.0F, 2.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 24.0F, 0.0F));
 
 
-		PartDefinition armorHead = partdefinition.addOrReplaceChild("armorHead", CubeListBuilder.create().texOffs(0, 0).addBox(-5.0F, -9.0F, -5.0F, 10.0F, 1.0F, 10.0F, new CubeDeformation(0.0F))
+		PartDefinition armorHead = partdefinition.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 0).addBox(-5.0F, -9.0F, -5.0F, 10.0F, 1.0F, 10.0F, new CubeDeformation(0.0F))
 		.texOffs(32, 3).addBox(-5.0F, -8.0F, -4.0F, 1.0F, 8.0F, 8.0F, new CubeDeformation(0.0F))
 		.texOffs(32, 3).mirror().addBox(4.0F, -8.0F, -4.0F, 1.0F, 8.0F, 8.0F, new CubeDeformation(0.0F)).mirror(false)
 		.texOffs(0, 11).addBox(-5.0F, -8.0F, 4.0F, 10.0F, 8.0F, 1.0F, new CubeDeformation(0.0F))
@@ -50,7 +52,7 @@ public class FrozenBlazeArmorModel extends ArmorModel {
 
 		PartDefinition helmet_crystal_r4 = helmet_crystal.addOrReplaceChild("helmet_crystal_r4", CubeListBuilder.create().texOffs(6, 5).addBox(-5.0F, -13.0F, 0.0F, 1.0F, 4.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.5672F, 0.0F, 0.0F));
 
-		PartDefinition armorRightArm = partdefinition.addOrReplaceChild("armorRightArm", CubeListBuilder.create().texOffs(0, 50).addBox(-3.0F, -3.0F, -2.0F, 1.0F, 7.0F, 4.0F, new CubeDeformation(0.0F))
+		PartDefinition armorRightArm = partdefinition.addOrReplaceChild("right_arm", CubeListBuilder.create().texOffs(0, 50).addBox(-3.0F, -3.0F, -2.0F, 1.0F, 7.0F, 4.0F, new CubeDeformation(0.0F))
 		.texOffs(10, 55).addBox(-3.0F, -3.0F, -3.0F, 5.0F, 6.0F, 1.0F, new CubeDeformation(0.0F))
 		.texOffs(48, 11).addBox(-2.0F, -3.0F, -2.0F, 4.0F, 1.0F, 4.0F, new CubeDeformation(0.0F))
 		.texOffs(54, 16).addBox(-3.0F, -3.0F, 2.0F, 5.0F, 6.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(-4.0F, 2.0F, 0.0F));
@@ -63,7 +65,7 @@ public class FrozenBlazeArmorModel extends ArmorModel {
 
 		PartDefinition crystalRight_r3 = crystalRight.addOrReplaceChild("crystalRight_r3", CubeListBuilder.create().texOffs(23, 12).addBox(-6.0F, -27.0F, -1.0F, 1.0F, 3.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, 0.3491F, 0.0F));
 
-		PartDefinition armorLeftArm = partdefinition.addOrReplaceChild("armorLeftArm", CubeListBuilder.create().texOffs(54, 23)
+		PartDefinition armorLeftArm = partdefinition.addOrReplaceChild("left_arm", CubeListBuilder.create().texOffs(54, 23)
 				.addBox(-2.0F, -3.0F, -3.0F, 5.0F, 6.0F, 1.0F, new CubeDeformation(0.0F))
 		.texOffs(10, 50)
 				.addBox(-2.0F, -3.0F, -2.0F, 4.0F, 1.0F, 4.0F, new CubeDeformation(0.0F))
@@ -80,21 +82,21 @@ public class FrozenBlazeArmorModel extends ArmorModel {
 		PartDefinition crystalLeft_r2 = crystalLeft.addOrReplaceChild("crystalLeft_r2", CubeListBuilder.create().texOffs(19, 4).addBox(7.0F, -26.0F, 3.0F, 1.0F, 2.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.3054F, -0.1309F, 0.0F));
 		PartDefinition crystalLeft_r3 = crystalLeft.addOrReplaceChild("crystalLeft_r3", CubeListBuilder.create().texOffs(15, 3).addBox(-3.0F, -28.0F, 1.0F, 1.0F, 3.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.1309F, 0.0873F, 0.4363F));
 
-		PartDefinition armorLeftLeg = partdefinition.addOrReplaceChild("armorLeftLeg", CubeListBuilder.create().texOffs(44, 19).addBox(-2.0F, 0.0F, -3.0F, 4.0F, 8.0F, 1.0F, new CubeDeformation(0.0F))
+		PartDefinition armorLeftLeg = partdefinition.addOrReplaceChild("left_leg", CubeListBuilder.create().texOffs(44, 19).addBox(-2.0F, 0.0F, -3.0F, 4.0F, 8.0F, 1.0F, new CubeDeformation(0.0F))
 		.texOffs(44, 19).mirror().addBox(-2.0F, 0.0F, 2.0F, 4.0F, 8.0F, 1.0F, new CubeDeformation(0.0F)).mirror(false)
 		.texOffs(8, 20).addBox(2.0F, 0.0F, -3.0F, 1.0F, 8.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offset(-2.0F, 12.0F, 0.0F));
 
-		PartDefinition armorLeftBoot = partdefinition.addOrReplaceChild("armorLeftBoot", CubeListBuilder.create().texOffs(16, 20).addBox(-2.0F, 8.0F, -3.0F, 4.0F, 4.0F, 1.0F, new CubeDeformation(0.0F))
+		PartDefinition armorLeftBoot = partdefinition.addOrReplaceChild("left_boot", CubeListBuilder.create().texOffs(16, 20).addBox(-2.0F, 8.0F, -3.0F, 4.0F, 4.0F, 1.0F, new CubeDeformation(0.0F))
 		.texOffs(16, 20).addBox(-2.0F, 8.0F, 2.0F, 4.0F, 4.0F, 1.0F, new CubeDeformation(0.0F))
 		.texOffs(22, 19).addBox(2.0F, 8.0F, -3.0F, 1.0F, 4.0F, 6.0F, new CubeDeformation(0.0F))
 		.texOffs(22, 29).addBox(-2.0F, 11.0F, -2.0F, 4.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(-2.0F, 12.0F, 0.0F));
 
-		PartDefinition armorRightLeg = partdefinition.addOrReplaceChild("armorRightLeg", CubeListBuilder.create().texOffs(8, 20).mirror().addBox(-3.0F, 0.0F, -3.0F, 1.0F, 8.0F, 6.0F, new CubeDeformation(0.0F)).mirror(false)
+		PartDefinition armorRightLeg = partdefinition.addOrReplaceChild("right_leg", CubeListBuilder.create().texOffs(8, 20).mirror().addBox(-3.0F, 0.0F, -3.0F, 1.0F, 8.0F, 6.0F, new CubeDeformation(0.0F)).mirror(false)
 		.texOffs(44, 19).addBox(-2.0F, 0.0F, 2.0F, 4.0F, 8.0F, 1.0F, new CubeDeformation(0.0F))
 		.texOffs(44, 19).addBox(-2.0F, 0.0F, -3.0F, 4.0F, 8.0F, 1.0F, new CubeDeformation(0.0F))
 		.texOffs(0, 0).addBox(-2.0F, 0.0F, -3.0F, 4.0F, 8.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(2.0F, 12.0F, 0.0F));
 
-		PartDefinition armorRightBoot = partdefinition.addOrReplaceChild("armorRightBoot", CubeListBuilder.create().texOffs(16, 20).addBox(-2.0F, 8.0F, 2.0F, 4.0F, 4.0F, 1.0F, new CubeDeformation(0.0F))
+		PartDefinition armorRightBoot = partdefinition.addOrReplaceChild("right_boot", CubeListBuilder.create().texOffs(16, 20).addBox(-2.0F, 8.0F, 2.0F, 4.0F, 4.0F, 1.0F, new CubeDeformation(0.0F))
 		.texOffs(22, 19).mirror().addBox(-3.0F, 8.0F, -3.0F, 1.0F, 4.0F, 6.0F, new CubeDeformation(0.0F)).mirror(false)
 		.texOffs(16, 20).addBox(-2.0F, 8.0F, -3.0F, 4.0F, 4.0F, 1.0F, new CubeDeformation(0.0F))
 		.texOffs(22, 29).addBox(-2.0F, 11.0F, -2.0F, 4.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(2.0F, 12.0F, 0.0F));

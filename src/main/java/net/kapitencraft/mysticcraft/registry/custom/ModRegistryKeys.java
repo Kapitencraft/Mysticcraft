@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.registry.custom;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.item.item_bonus.ReforgingBonus;
+import net.kapitencraft.mysticcraft.spell.Spell;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 
@@ -10,7 +10,7 @@ import net.minecraft.resources.ResourceKey;
  */
 public class ModRegistryKeys {
 
-    public static final ResourceKey<Registry<ReforgingBonus>> REFORGE_BONUSES = createRegistry("reforge_bonuses");
+    public static final ResourceKey<Registry<Spell>> SPELLS = createRegistry("spells");
 
     private static <T> ResourceKey<Registry<T>> createRegistry(String id) {
         return ResourceKey.createRegistryKey(MysticcraftMod.res(id));

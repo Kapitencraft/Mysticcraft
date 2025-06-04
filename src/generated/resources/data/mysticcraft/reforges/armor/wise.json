@@ -1,5 +1,14 @@
 {
   "mods": {
+    "kap_lib:generic.intelligence": [
+      30.0,
+      50.0,
+      80.0,
+      110.0,
+      145.0,
+      190.0,
+      250.0
+    ],
     "minecraft:generic.max_health": [
       0.6,
       0.8,
@@ -17,15 +26,6 @@
       2.0,
       3.0,
       5.0
-    ],
-    "mysticcraft:generic.intel": [
-      30.0,
-      50.0,
-      80.0,
-      110.0,
-      145.0,
-      190.0,
-      250.0
     ]
   }
 }

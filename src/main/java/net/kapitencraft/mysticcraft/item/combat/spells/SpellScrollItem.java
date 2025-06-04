@@ -1,42 +1,24 @@
 package net.kapitencraft.mysticcraft.item.combat.spells;
 
 import net.kapitencraft.mysticcraft.item.capability.spell.ISpellItem;
+import net.kapitencraft.mysticcraft.item.capability.spell.SpellCapability;
+import net.kapitencraft.mysticcraft.item.capability.spell.SpellCapabilityProvider;
 import net.kapitencraft.mysticcraft.item.capability.spell.SpellHelper;
 import net.kapitencraft.mysticcraft.item.misc.IModItem;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
-import net.kapitencraft.mysticcraft.spell.spells.Spell;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
+import net.kapitencraft.mysticcraft.spell.Spell;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 
 public class SpellScrollItem extends Item implements IModItem, ISpellItem {
     public SpellScrollItem() {
-        super(new Properties());
+        super(new Properties().rarity(Rarity.RARE));
     }
-
-    @Override
-    public @NotNull Rarity getRarity(@NotNull ItemStack stack) {
-        return getSpells(stack).getActiveSpell().getRarity();
-    }
-
 
     public static Spell getSpell(ItemStack stack) {
-        return ((ISpellItem) stack.getItem()).getSpellForStack(stack);
-    }
-
-    @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level level, @NotNull List<Component> list, @NotNull TooltipFlag tooltipFlag) {
-        Spell spell = this.getSpellForStack(stack);
-        list.add(Component.literal("Spell Ability: " + spell.getName()).withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.GOLD));
-        list.addAll(spell.getDescription());
+        SpellCapability capability = SpellHelper.getCapability(stack);
+        return capability.getFirstEmpty() != 0 ? capability.getSlot(0).getSpell() : null;
     }
 
     @Override
@@ -45,12 +27,7 @@ public class SpellScrollItem extends Item implements IModItem, ISpellItem {
     }
 
     @Override
-    public int getSlotAmount() {
-        return 1;
-    }
-
-    @Override
-    public void generateSlots(SpellHelper stack) {
-
+    public SpellCapabilityProvider createSpells() {
+        return new SpellCapabilityProvider(new SpellCapability());
     }
 }

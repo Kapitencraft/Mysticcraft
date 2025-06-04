@@ -5,7 +5,7 @@ import com.google.common.collect.Multimap;
 import net.kapitencraft.kap_lib.helpers.AttributeHelper;
 import net.kapitencraft.kap_lib.registry.ExtraAttributes;
 import net.kapitencraft.kap_lib.util.ExtraRarities;
-import net.kapitencraft.mysticcraft.item.capability.spell.SpellHelper;
+import net.kapitencraft.mysticcraft.item.capability.spell.SpellCapabilityProvider;
 import net.kapitencraft.mysticcraft.item.combat.spells.SpellItem;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
@@ -33,16 +33,6 @@ public class NecronSword extends SpellItem {
         this.FEROCITY = ferocity;
         this.STRENGHT = strenght;
     }
-
-    @Override
-    public int getSlotAmount() {
-        return 1;
-    }
-
-    @Override
-    public void generateSlots(SpellHelper stack) {
-    }
-
 
     @Override
     public @NotNull Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(@NotNull EquipmentSlot slot) {
@@ -73,5 +63,10 @@ public class NecronSword extends SpellItem {
     @Override
     public TabGroup getGroup() {
         return NECRON_GROUP;
+    }
+
+    @Override
+    public SpellCapabilityProvider createSpells() {
+        return SpellCapabilityProvider.empty();
     }
 }

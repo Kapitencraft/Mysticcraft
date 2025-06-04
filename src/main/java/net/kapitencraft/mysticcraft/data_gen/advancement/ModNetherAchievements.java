@@ -1,5 +1,6 @@
 package net.kapitencraft.mysticcraft.data_gen.advancement;
 
+import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.item.capability.ITieredItem;
 import net.kapitencraft.mysticcraft.item.combat.armor.CrimsonArmorItem;
 import net.minecraft.advancements.Advancement;
@@ -32,7 +33,7 @@ public class ModNetherAchievements implements ForgeAdvancementProvider.Advanceme
                 )
                 .rewards(AdvancementRewards.Builder.experience(100))
                 .addCriterion("infernal_looks", createInfernalLooksTrigger())
-                .save(saver, "mysticcraft:nether/infernal_looks");
+                .save(saver, MysticcraftMod.res("nether/infernal_looks"), existingFileHelper);
     }
 
     private static CriterionTriggerInstance createInfernalLooksTrigger() {

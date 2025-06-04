@@ -1,0 +1,55 @@
+{
+  "parent": "minecraft:nether/netherite_armor",
+  "criteria": {
+    "infernal_looks": {
+      "conditions": {
+        "items": [
+          {
+            "nbt": "{Tier:\"infernal\"}",
+            "tag": "forge:armors/helmets"
+          },
+          {
+            "nbt": "{Tier:\"infernal\"}",
+            "tag": "forge:armors/chestplates"
+          },
+          {
+            "nbt": "{Tier:\"infernal\"}",
+            "tag": "forge:armors/leggings"
+          },
+          {
+            "nbt": "{Tier:\"infernal\"}",
+            "tag": "forge:armors/boots"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "type": "minecraft:translatable",
+      "translate": "advancements.mysticcraft.infernal_armor"
+    },
+    "frame": "challenge",
+    "hidden": false,
+    "icon": {
+      "item": "mysticcraft:crimson_chestplate",
+      "nbt": "{Damage:0,Tier:\"infernal\"}"
+    },
+    "show_toast": true,
+    "title": {
+      "type": "minecraft:translatable",
+      "translate": "advancements.mysticcraft.infernal_armor.title"
+    }
+  },
+  "requirements": [
+    [
+      "infernal_looks"
+    ]
+  ],
+  "rewards": {
+    "experience": 100
+  },
+  "sends_telemetry_event": true
+}

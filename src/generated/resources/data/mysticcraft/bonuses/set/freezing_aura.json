@@ -1,0 +1,10 @@
+{
+  "type": "mysticcraft:frozen_blaze",
+  "data": {},
+  "slots": [
+    "legs",
+    "feet",
+    "chest",
+    "head"
+  ]
+}

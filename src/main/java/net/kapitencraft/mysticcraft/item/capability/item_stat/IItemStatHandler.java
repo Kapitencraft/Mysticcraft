@@ -1,10 +1,12 @@
 package net.kapitencraft.mysticcraft.item.capability.item_stat;
 
-import net.kapitencraft.mysticcraft.item.capability.ICapability;
+import net.kapitencraft.kap_lib.item.capability.AbstractCapability;
 import net.minecraftforge.common.capabilities.AutoRegisterCapability;
 
+import java.util.Map;
+
 @AutoRegisterCapability
-public interface IItemStatHandler extends ICapability<ItemStatCapability> {
+public interface IItemStatHandler extends AbstractCapability<Map<ItemStatCapability.Type, Long>> {
 
     long getCurrentValue(ItemStatCapability.Type type);
 

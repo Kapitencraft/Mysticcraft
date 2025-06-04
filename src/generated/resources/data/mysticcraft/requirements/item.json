@@ -1,0 +1,101 @@
+{
+  "minecraft:elytra": {
+    "type": "kap_lib:stat",
+    "data": {
+      "minCount": 5,
+      "stat": "minecraft.killed:minecraft.ender_dragon"
+    }
+  },
+  "mysticcraft:astrea": {
+    "type": "kap_lib:custom_stat",
+    "data": {
+      "amount": 10,
+      "display": {
+        "type": "minecraft:translatable",
+        "translate": "item.requires",
+        "with": [
+          {
+            "type": "minecraft:translatable",
+            "translate": "stat_req.goldor",
+            "with": [
+              {
+                "type": "minecraft:literal",
+                "text": "10"
+              }
+            ]
+          }
+        ]
+      },
+      "stat": "mysticcraft:goldors_killed"
+    }
+  },
+  "mysticcraft:hyperion": {
+    "type": "kap_lib:custom_stat",
+    "data": {
+      "amount": 10,
+      "display": {
+        "type": "minecraft:translatable",
+        "translate": "item.requires",
+        "with": [
+          {
+            "type": "minecraft:translatable",
+            "translate": "stat_req.storm",
+            "with": [
+              {
+                "type": "minecraft:literal",
+                "text": "10"
+              }
+            ]
+          }
+        ]
+      },
+      "stat": "mysticcraft:storms_killed"
+    }
+  },
+  "mysticcraft:scylla": {
+    "type": "kap_lib:custom_stat",
+    "data": {
+      "amount": 10,
+      "display": {
+        "type": "minecraft:translatable",
+        "translate": "item.requires",
+        "with": [
+          {
+            "type": "minecraft:translatable",
+            "translate": "stat_req.maxor",
+            "with": [
+              {
+                "type": "minecraft:literal",
+                "text": "10"
+              }
+            ]
+          }
+        ]
+      },
+      "stat": "mysticcraft:maxors_killed"
+    }
+  },
+  "mysticcraft:valkyrie": {
+    "type": "kap_lib:custom_stat",
+    "data": {
+      "amount": 10,
+      "display": {
+        "type": "minecraft:translatable",
+        "translate": "item.requires",
+        "with": [
+          {
+            "type": "minecraft:translatable",
+            "translate": "stat_req.necron",
+            "with": [
+              {
+                "type": "minecraft:literal",
+                "text": "10"
+              }
+            ]
+          }
+        ]
+      },
+      "stat": "mysticcraft:necrons_killed"
+    }
+  }
+}

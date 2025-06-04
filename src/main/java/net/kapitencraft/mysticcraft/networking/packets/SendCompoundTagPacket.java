@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.networking.packets;
 
 import net.kapitencraft.kap_lib.helpers.IOHelper;
+import net.kapitencraft.kap_lib.io.network.SimplePacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.nbt.CompoundTag;
@@ -12,7 +13,7 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class SendCompoundTagPacket implements ModPacket {
+public class SendCompoundTagPacket implements SimplePacket {
     private final CompoundTag toSend;
     private final int entityIdToReceive;
     private final boolean toServer;

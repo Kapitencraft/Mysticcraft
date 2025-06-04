@@ -19,7 +19,7 @@ public class ManaSyphonEnchantment extends Enchantment implements ExtendedCalcul
     }
 
     @Override
-    public double execute(int level, ItemStack enchanted, LivingEntity attacker, LivingEntity attacked, double damage, DamageSource source, float attackStrengthScale) {
+    public float execute(int level, ItemStack enchanted, LivingEntity attacker, LivingEntity attacked, float damage, DamageSource source, float attackStrengthScale) {
         AttributeInstance mana = attacker.getAttribute(ExtraAttributes.MANA.get());
         double maxMana = AttributeHelper.getSaveAttributeValue(ExtraAttributes.MAX_MANA.get(), attacker);
         if (mana != null) {

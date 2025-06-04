@@ -1,13 +1,15 @@
 package net.kapitencraft.mysticcraft.registry;
 
+import com.google.common.base.Stopwatch;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.helpers.Timer;
 import net.kapitencraft.mysticcraft.logging.Markers;
 import net.kapitencraft.mysticcraft.potion.ModPotions;
 import net.kapitencraft.mysticcraft.villagers.ModVillagers;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
+
+import java.util.concurrent.TimeUnit;
 
 @Mod.EventBusSubscriber
 public class ModRegistryInit {
@@ -21,12 +23,14 @@ public class ModRegistryInit {
     public static void register(IEventBus bus) {
         eventBus = bus;
         MysticcraftMod.LOGGER.info(Markers.REGISTRY, "starting registration");
-        Timer.start();
+        Stopwatch stopwatch = Stopwatch.createStarted();
+        register("Creative Mode Tabs", ModCreativeModTabs.REGISTRY);
         register("Enchantments", ModEnchantments.REGISTRY);
         register("Items", ModItems.REGISTRY);
         register("Effects", ModMobEffects.REGISTRY);
         register("Potions", ModPotions.REGISTRY);
         register("Block Entities", ModBlockEntities.REGISTRY);
+        register("Bonus Serializers", ModBonusSerializers.REGISTRY);
         register("Menus", ModMenuTypes.REGISTRY);
         register("Entity Types", ModEntityTypes.REGISTRY);
         register("Particle Types", ModParticleTypes.REGISTRY);
@@ -39,9 +43,10 @@ public class ModRegistryInit {
         register("Loot Functions", ModLootItemFunctions.REGISTRY);
         register("Loot Conditions", ModLootItemConditions.REGISTRY);
         register("Stat Types", ModStatTypes.REGISTRY);
-        register("Reforge Bonuses", ModReforgingBonuses.REGISTRY);
         register("Features", ModFeatures.REGISTRY);
-        MysticcraftMod.LOGGER.info(Markers.REGISTRY, "loading {} registries took {} ms", registered, Timer.getPassedTime());
+        register("Spells", Spells.REGISTRY);
+        stopwatch.stop();
+        MysticcraftMod.LOGGER.info(Markers.REGISTRY, "loading {} registries took {} ms", registered, stopwatch.elapsed(TimeUnit.MILLISECONDS));
     }
 
     private static void register(String registerName, DeferredRegister<?> register) {

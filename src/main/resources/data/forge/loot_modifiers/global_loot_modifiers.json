@@ -5,11 +5,6 @@
     "mysticcraft:maxor_add",
     "mysticcraft:necron_add",
     "mysticcraft:storm_add",
-    "mysticcraft:replenish_modifier",
-    "mysticcraft:ore_modifiers",
-    "mysticcraft:crimsonite_add",
-    "mysticcraft:smelt_modifier",
-    "mysticcraft:scavenger_drops",
-    "mysticcraft:telekinesis"
+    "mysticcraft:crimsonite_add"
   ]
 }

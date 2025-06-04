@@ -1,5 +1,6 @@
 package net.kapitencraft.mysticcraft.mixin.classes;
 
+import net.kapitencraft.kap_lib.mixin.duck.MixinSelfProvider;
 import net.kapitencraft.mysticcraft.event.ModEventFactory;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
@@ -10,16 +11,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ItemStack.class)
-public abstract class ItemStackMixin {
+public abstract class ItemStackMixin implements MixinSelfProvider<ItemStack> {
 
     @Override
     public boolean equals(Object obj) {
         return obj == this || obj instanceof ItemStack stack && ItemStack.isSameItemSameTags(self(), stack);
-    }
-
-
-    private ItemStack self() {
-        return (ItemStack) (Object) this;
     }
 
     @Inject(method = "<init>*", at = @At(value = "RETURN"))

@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.item.misc;
 
-import net.kapitencraft.mysticcraft.misc.damage_source.AbilityDamageSource;
+import net.kapitencraft.mysticcraft.misc.damage_source.SpellDamageSource;
+import net.kapitencraft.mysticcraft.spell.Spell;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
@@ -12,9 +13,9 @@ public class ManaExplosion extends ModExplosion {
         return Explosion.BlockInteraction.KEEP;
     }
 
-    public ManaExplosion(Level level, @NotNull Entity source, double x, double y, double z, float radius, float intScaling, String spellName) {
+    public ManaExplosion(Level level, @NotNull Entity source, double x, double y, double z, float radius, float intScaling, Spell spell) {
         super(level, source, x, y, z, radius);
-        this.setDamageSource(AbilityDamageSource.createExplosion(source, intScaling, spellName));
+        this.setDamageSource(SpellDamageSource.createExplosion(source, intScaling, spell));
     }
 
     @Override

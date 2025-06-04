@@ -3,7 +3,7 @@ package net.kapitencraft.mysticcraft.item.combat.armor;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.kap_lib.helpers.AttributeHelper;
-import net.kapitencraft.kap_lib.item.combat.armor.ModArmorItem;
+import net.kapitencraft.kap_lib.item.combat.armor.AbstractArmorItem;
 import net.kapitencraft.kap_lib.registry.ExtraAttributes;
 import net.kapitencraft.kap_lib.util.ExtraRarities;
 import net.minecraft.network.chat.Component;
@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class EnderKnightArmorItem extends ModArmorItem {
+public class EnderKnightArmorItem extends AbstractArmorItem {
 
     public EnderKnightArmorItem(ArmorItem.Type type) {
         super(ModArmorMaterials.ENDER_KNIGHT, type, new Properties().rarity(ExtraRarities.LEGENDARY).fireResistant());

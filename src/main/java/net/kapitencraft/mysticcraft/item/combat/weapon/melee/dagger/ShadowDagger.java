@@ -2,9 +2,8 @@ package net.kapitencraft.mysticcraft.item.combat.weapon.melee.dagger;
 
 import net.kapitencraft.kap_lib.util.ExtraRarities;
 import net.kapitencraft.mysticcraft.item.capability.spell.ISpellItem;
-import net.kapitencraft.mysticcraft.item.capability.spell.SpellHelper;
-import net.kapitencraft.mysticcraft.spell.SpellSlot;
-import net.kapitencraft.mysticcraft.spell.Spells;
+import net.kapitencraft.mysticcraft.item.capability.spell.SpellCapabilityProvider;
+import net.kapitencraft.mysticcraft.registry.Spells;
 
 public class ShadowDagger extends DarkDagger implements ISpellItem {
 
@@ -23,12 +22,7 @@ public class ShadowDagger extends DarkDagger implements ISpellItem {
     }
 
     @Override
-    public int getSlotAmount() {
-        return 1;
-    }
-
-    @Override
-    public void generateSlots(SpellHelper stack) {
-        stack.setSlot(0, new SpellSlot(Spells.SHADOW_STEP));
+    public SpellCapabilityProvider createSpells() {
+        return SpellCapabilityProvider.with(Spells.SHADOW_STEP);
     }
 }

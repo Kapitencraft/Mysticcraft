@@ -30,5 +30,6 @@
     "recipes": [
       "mysticcraft:golden_slab"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

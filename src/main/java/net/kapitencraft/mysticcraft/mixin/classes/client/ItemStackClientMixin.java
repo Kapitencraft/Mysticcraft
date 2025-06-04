@@ -2,6 +2,7 @@ package net.kapitencraft.mysticcraft.mixin.classes.client;
 
 import net.kapitencraft.kap_lib.helpers.MiscHelper;
 import net.kapitencraft.kap_lib.helpers.TextHelper;
+import net.kapitencraft.kap_lib.mixin.duck.MixinSelfProvider;
 import net.kapitencraft.mysticcraft.gui.IGuiHelper;
 import net.kapitencraft.mysticcraft.item.capability.CapabilityHelper;
 import net.kapitencraft.mysticcraft.item.capability.ITieredItem;
@@ -10,6 +11,7 @@ import net.kapitencraft.mysticcraft.item.capability.elytra.ElytraData;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneHelper;
 import net.kapitencraft.mysticcraft.item.capability.reforging.Reforge;
 import net.kapitencraft.mysticcraft.item.capability.spell.ISpellItem;
+import net.kapitencraft.mysticcraft.item.capability.spell.SpellHelper;
 import net.kapitencraft.mysticcraft.item.combat.spells.SpellScrollItem;
 import net.kapitencraft.mysticcraft.item.misc.SoulbindHelper;
 import net.minecraft.ChatFormatting;
@@ -36,7 +38,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 @Mixin(ItemStack.class)
-public abstract class ItemStackClientMixin {
+public abstract class ItemStackClientMixin implements MixinSelfProvider<ItemStack> {
 
     @Shadow public abstract String toString();
 
@@ -44,10 +46,7 @@ public abstract class ItemStackClientMixin {
 
     @Shadow @Nullable private CompoundTag tag;
 
-    @SuppressWarnings("ALL")
-    private ItemStack self() {
-        return (ItemStack) (Object) this;
-    }
+    @Shadow public abstract boolean isFramed();
 
     @SuppressWarnings("DataFlowIssue")
     @Inject(method = "getTooltipLines", at = @At(value = "INVOKE", target = "Lnet/minecraft/nbt/CompoundTag;getBoolean(Ljava/lang/String;)Z"), locals = LocalCapture.CAPTURE_FAILHARD)
@@ -59,7 +58,7 @@ public abstract class ItemStackClientMixin {
     private void addElytraInfo(Player pPlayer, TooltipFlag pIsAdvanced, CallbackInfoReturnable<List<Component>> cir, List<Component> list) {
         CapabilityHelper.exeCapability(self(), CapabilityHelper.ELYTRA, data1 -> {
             if (Screen.hasShiftDown()) {
-                ElytraData data = data1.getData();
+                ElytraData data = data1.getDataType();
                 String id = "elytra_data." + data.getSerializedName();
                 list.add(Component.translatable(id).withStyle(ChatFormatting.GREEN).append(" ").append(Component.translatable("enchantment.level." + data1.getLevel())));
                 list.addAll(TextHelper.getAllMatchingFilter(i -> i == 0 ? id + ".desc" : id + ".desc" + i, component -> component.withStyle(ChatFormatting.YELLOW)));
@@ -70,16 +69,14 @@ public abstract class ItemStackClientMixin {
         });
     }
 
-    @Inject(method = "getTooltipLines", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 0), locals = LocalCapture.CAPTURE_FAILHARD)
+    @Inject(method = "getTooltipLines", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 0, shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILHARD)
     private void addGemstoneInfo(Player pPlayer, TooltipFlag pIsAdvanced, CallbackInfoReturnable<List<Component>> cir, List<Component> list) {
         GemstoneHelper.getCapability(self(), iGemstoneHandler -> iGemstoneHandler.getDisplay(list));
     }
 
     @Inject(method = "getTooltipLines", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/Item;appendHoverText(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Ljava/util/List;Lnet/minecraft/world/item/TooltipFlag;)V"), locals = LocalCapture.CAPTURE_FAILHARD)
     private void addSpellAndBonusTooltip(Player pPlayer, TooltipFlag pIsAdvanced, CallbackInfoReturnable<List<Component>> cir, List<Component> list) {
-        if (item instanceof ISpellItem spellItem) {
-            spellItem.appendDisplay(list, self(), pPlayer);
-        }
+        if (item instanceof ISpellItem) SpellHelper.appendFullDisplay(list, self());
     }
 
     @Inject(method = "getTooltipLines", at = @At("TAIL"), locals = LocalCapture.CAPTURE_FAILHARD)

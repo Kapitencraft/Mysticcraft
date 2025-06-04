@@ -1,5 +1,6 @@
 package net.kapitencraft.mysticcraft.misc;
 
+import net.kapitencraft.kap_lib.item.combat.armor.AbstractArmorItem;
 import net.kapitencraft.kap_lib.registry.ExtraAttributes;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.block.gemstone.GemstoneCrystal;
@@ -7,7 +8,6 @@ import net.kapitencraft.mysticcraft.block.gemstone.GemstoneSeedBlock;
 import net.kapitencraft.mysticcraft.item.capability.ITieredItem;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneType;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.IGemstoneItem;
-import net.kapitencraft.mysticcraft.item.combat.armor.ModArmorItem;
 import net.kapitencraft.mysticcraft.item.combat.armor.TieredArmorItem;
 import net.kapitencraft.mysticcraft.item.combat.shield.ModShieldItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.QuiverItem;
@@ -24,8 +24,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.RegistryObject;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ModItemProperties {
     public static void addCustomItemProperties() {
@@ -64,7 +64,7 @@ public class ModItemProperties {
         ItemProperties.register(item, new ResourceLocation("loaded"), (itemStack, clientLevel, living, p_174679_) -> living != null ? (living.getProjectile(new ItemStack(item)) != ItemStack.EMPTY && living.getProjectile(itemStack).getItem() instanceof ArrowItem ? 1.0f : 0.0f) : 0);
     }
 
-    private static <T extends TieredArmorItem> void makeTieredArmor(HashMap<ArmorItem.Type, RegistryObject<T>> armorItem) {
+    private static <T extends TieredArmorItem> void makeTieredArmor(Map<ArmorItem.Type, RegistryObject<T>> armorItem) {
         for (TieredArmorItem tieredItem : armorItem.values().stream().map(RegistryObject::get).toList()) {
             ItemProperties.register(tieredItem, MysticcraftMod.res("tier"), (stack, clientLevel, living, tick) -> {
                 TieredArmorItem armorItem1 = (TieredArmorItem) stack.getItem();
@@ -82,8 +82,8 @@ public class ModItemProperties {
          });
     }
 
-    private static void createArmor(HashMap<ArmorItem.Type, ? extends RegistryObject<? extends ModArmorItem>> armorHashMap) {
-        for (RegistryObject<? extends ModArmorItem> registryObject : armorHashMap.values()) {
+    private static void createArmor(Map<ArmorItem.Type, ? extends RegistryObject<? extends AbstractArmorItem>> armor) {
+        for (RegistryObject<? extends AbstractArmorItem> registryObject : armor.values()) {
             Item armorItem = registryObject.get();
             ItemProperties.register(armorItem, new ResourceLocation("dimension"), ((stack, level, living, i) -> {
                 if (living == null) return 0;

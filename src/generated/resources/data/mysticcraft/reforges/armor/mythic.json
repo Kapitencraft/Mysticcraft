@@ -1,5 +1,32 @@
 {
   "mods": {
+    "kap_lib:generic.crit_chance": [
+      0.5,
+      0.8,
+      1.1,
+      1.5,
+      1.9,
+      2.4,
+      3.0
+    ],
+    "kap_lib:generic.intelligence": [
+      15.0,
+      22.0,
+      30.0,
+      40.0,
+      52.0,
+      67.0,
+      90.0
+    ],
+    "kap_lib:generic.strength": [
+      2.0,
+      4.0,
+      6.0,
+      8.0,
+      10.0,
+      12.0,
+      15.0
+    ],
     "minecraft:generic.armor": [
       2.0,
       3.0,
@@ -26,33 +53,6 @@
       2.0,
       2.0,
       2.0
-    ],
-    "mysticcraft:generic.crit_chance": [
-      0.5,
-      0.8,
-      1.1,
-      1.5,
-      1.9,
-      2.4,
-      3.0
-    ],
-    "mysticcraft:generic.intel": [
-      15.0,
-      22.0,
-      30.0,
-      40.0,
-      52.0,
-      67.0,
-      90.0
-    ],
-    "mysticcraft:generic.strenght": [
-      2.0,
-      4.0,
-      6.0,
-      8.0,
-      10.0,
-      12.0,
-      15.0
     ]
   }
 }

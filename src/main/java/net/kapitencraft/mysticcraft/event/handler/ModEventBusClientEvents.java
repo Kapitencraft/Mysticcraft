@@ -1,5 +1,6 @@
 package net.kapitencraft.mysticcraft.event.handler;
 
+import net.kapitencraft.kap_lib.event.custom.client.RegisterItemModifiersDisplayExtensionsEvent;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.block.gemstone.GemstoneBlock;
 import net.kapitencraft.mysticcraft.client.particle.CircleParticle;
@@ -11,9 +12,8 @@ import net.kapitencraft.mysticcraft.entity.client.renderer.*;
 import net.kapitencraft.mysticcraft.gui.gemstone_grinder.GemstoneGrinderScreen;
 import net.kapitencraft.mysticcraft.gui.reforging_anvil.ReforgeAnvilScreen;
 import net.kapitencraft.mysticcraft.item.ColoredItem;
+import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneHelper;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.IGemstoneItem;
-import net.kapitencraft.mysticcraft.item.material.RainbowElementalShard;
-import net.kapitencraft.mysticcraft.logging.Markers;
 import net.kapitencraft.mysticcraft.misc.ModItemProperties;
 import net.kapitencraft.mysticcraft.registry.*;
 import net.minecraft.client.color.block.BlockColor;
@@ -26,6 +26,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
+import net.minecraftforge.client.event.RegisterNamedRenderTypesEvent;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -42,11 +43,8 @@ public class ModEventBusClientEvents {
 
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
-        MysticcraftMod.sendRegisterDisplay("Item Properties");
         ModItemProperties.addCustomItemProperties();
-        MysticcraftMod.sendRegisterDisplay("Menu Screens");
         registerMenuScreens();
-        MysticcraftMod.LOGGER.info(Markers.REGISTRY, "adding Fluid Renderers...");
         ItemBlockRenderTypes.setRenderLayer(ModFluids.SOURCE_MANA_FLUID.get(), RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(ModFluids.FLOWING_MANA_FLUID.get(), RenderType.translucent());
     }
@@ -79,9 +77,8 @@ public class ModEventBusClientEvents {
 
     @SubscribeEvent
     public static void registerColors(RegisterColorHandlersEvent.Item event) {
-        MysticcraftMod.sendRegisterDisplay("Custom Item Colors");
         registerColor(event, ColoredItem::getColor, ModItems.DYED_LEATHER.get());
-        registerColor(event, RainbowElementalShard::getColor, ModItems.RAINBOW_ELEMENTAL_SHARD.get());
+        //registerColor(event, RainbowElementalShard::getColor, ModItems.RAINBOW_ELEMENTAL_SHARD.get()); TODO rainbow shader
         registerColor(event, IGemstoneItem::getColor, ModItems.GEMSTONE.get(), ModBlocks.GEMSTONE_BLOCK.getItem(), ModBlocks.GEMSTONE_CRYSTAL.getItem(), ModBlocks.GEMSTONE_SEED.getItem());
     }
 
@@ -91,7 +88,6 @@ public class ModEventBusClientEvents {
 
     @SubscribeEvent
     public static void registerBlockColors(RegisterColorHandlersEvent.Block event) {
-        MysticcraftMod.sendRegisterDisplay("Custom Block Colors");
         registerBlockColor(event, GemstoneBlock::getColor, ModBlocks.GEMSTONE_BLOCK, ModBlocks.GEMSTONE_CRYSTAL, ModBlocks.GEMSTONE_SEED);
     }
 
@@ -100,4 +96,15 @@ public class ModEventBusClientEvents {
             event.register(color, holder.getBlock());
         }
     }
+
+    @SubscribeEvent
+    public void onRegisterNamedRenderTypes(RegisterNamedRenderTypesEvent event) {
+        //event.register();
+    }
+
+    @SubscribeEvent
+    public void onRegisterItemModifiersDisplayExtensions(RegisterItemModifiersDisplayExtensionsEvent event) {
+        event.register((living, stack) -> GemstoneHelper.getCapability(stack));
+    }
+
 }

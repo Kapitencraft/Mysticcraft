@@ -1,11 +1,11 @@
 package net.kapitencraft.mysticcraft.misc;
 
 public class DamageCounter {
-    private static double damage = 0;
+    private static float damage = 0;
     private static int attacked = 0;
     private static boolean shouldCount = false;
 
-    public static void increaseDamage(double damageToAdd) {
+    public static void increaseDamage(float damageToAdd) {
         if (shouldCount) {
             damage += damageToAdd;
             attacked++;
@@ -26,7 +26,7 @@ public class DamageCounter {
         return holder;
     }
 
-    public record DamageHolder(int hit, double damage) {
+    public record DamageHolder(int hit, float damage) {
 
         public boolean hasDamage() {
             return hit > 0 && damage > 0;

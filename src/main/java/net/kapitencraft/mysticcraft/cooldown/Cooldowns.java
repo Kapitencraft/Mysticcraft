@@ -3,11 +3,8 @@ package net.kapitencraft.mysticcraft.cooldown;
 import net.kapitencraft.kap_lib.cooldown.CompoundPath;
 import net.kapitencraft.kap_lib.cooldown.Cooldown;
 import net.kapitencraft.kap_lib.cooldown.MappedCooldown;
-import net.kapitencraft.kap_lib.cooldown.RepresentableMappedCooldown;
-import net.kapitencraft.kap_lib.helpers.IOHelper;
-import net.kapitencraft.mysticcraft.item.item_bonus.fullset.CrimsonArmorFullSetBonus;
 import net.kapitencraft.mysticcraft.misc.HealingHelper;
-import net.kapitencraft.mysticcraft.spell.Spells;
+import net.kapitencraft.mysticcraft.spell.Spell;
 import net.kapitencraft.mysticcraft.spell.spells.WitherShieldSpell;
 import net.minecraft.nbt.CompoundTag;
 
@@ -20,9 +17,5 @@ public interface Cooldowns {
         living.setAbsorptionAmount(living.getAbsorptionAmount() - absorption);
         tag.remove(WitherShieldSpell.ABSORPTION_AMOUNT_ID);
     });
-    Cooldown DOMINUS = new Cooldown(CompoundPath.builder(CrimsonArmorFullSetBonus.COOLDOWN_ID), 120, living -> {
-        if (IOHelper.reduceBy1(living.getPersistentData(), CrimsonArmorFullSetBonus.DOMINUS_ID) > 0)
-            Cooldowns.DOMINUS.applyCooldown(living, false);
-    });
-    MappedCooldown<Spells> SPELLS = new RepresentableMappedCooldown<>("Spells", null);
+    MappedCooldown<Spell> SPELLS = new MappedCooldown<>("spells", Spell::getDescriptionId, null);
 }

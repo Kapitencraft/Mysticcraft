@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.item.capability.gemstone;
 
-import net.kapitencraft.mysticcraft.helpers.NetworkingHelper;
+import net.kapitencraft.kap_lib.helpers.NetworkHelper;
 import net.kapitencraft.mysticcraft.item.capability.CapabilityHelper;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
@@ -28,7 +28,7 @@ public class GemstoneHelper {
     }
 
     public static GemstoneCapability getCapability(ItemStack stack) {
-        return (GemstoneCapability) transformCapability(stack, iGemstoneHandler -> iGemstoneHandler).orElse(null);
+        return (GemstoneCapability) transformCapability(stack, h -> h).orElse(null);
     }
 
     public static boolean hasCapability(ItemStack stack) {
@@ -36,10 +36,6 @@ public class GemstoneHelper {
     }
 
     public static void writeCapability(FriendlyByteBuf buf, GemstoneCapability capability) {
-        NetworkingHelper.writeArray(buf, capability.getSlots(), GemstoneSlot::saveToBytes);
-    }
-
-    public static GemstoneCapability readCapability(FriendlyByteBuf buf) {
-        return GemstoneCapability.of(NetworkingHelper.readArray(buf, GemstoneSlot[]::new, GemstoneSlot::readFromBytes));
+        NetworkHelper.writeArray(buf, capability.getSlots(), GemstoneSlot::toNw);
     }
 }

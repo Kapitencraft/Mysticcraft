@@ -17,5 +17,6 @@
     "recipes": [
       "mysticcraft:shadow_dagger"
     ]
-  }
+  },
+  "sends_telemetry_event": true
 }

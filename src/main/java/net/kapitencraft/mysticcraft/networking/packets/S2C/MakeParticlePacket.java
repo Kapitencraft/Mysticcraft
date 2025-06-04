@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.networking.packets.S2C;
 
-import net.kapitencraft.mysticcraft.helpers.NetworkingHelper;
-import net.kapitencraft.mysticcraft.networking.packets.ModPacket;
+import net.kapitencraft.kap_lib.helpers.NetworkHelper;
+import net.kapitencraft.kap_lib.io.network.SimplePacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.particles.ParticleOptions;
@@ -14,7 +14,7 @@ import net.minecraftforge.network.NetworkEvent;
 import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
-public abstract class MakeParticlePacket implements ModPacket {
+public abstract class MakeParticlePacket implements SimplePacket {
     protected Vec3 pos;
     protected Vec3 delta;
     private final ParticleOptions options;
@@ -32,8 +32,8 @@ public abstract class MakeParticlePacket implements ModPacket {
 
     @Override
     public void toBytes(FriendlyByteBuf buf) {
-        NetworkingHelper.writeVec3(buf, pos);
-        NetworkingHelper.writeVec3(buf, delta);
+        NetworkHelper.writeVec3(buf, pos);
+        NetworkHelper.writeVec3(buf, delta);
         buf.writeId(BuiltInRegistries.PARTICLE_TYPE, this.options.getType());
         options.writeToNetwork(buf);
     }

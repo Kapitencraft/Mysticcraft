@@ -12,7 +12,7 @@ import net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword.ManaSteelSwor
 import net.kapitencraft.mysticcraft.item.material.PrecursorRelicItem;
 import net.kapitencraft.mysticcraft.item.misc.SoulbindHelper;
 import net.kapitencraft.mysticcraft.misc.HealingHelper;
-import net.kapitencraft.mysticcraft.misc.damage_source.IAbilitySource;
+import net.kapitencraft.mysticcraft.misc.damage_source.ISpellSource;
 import net.kapitencraft.mysticcraft.mob_effects.NumbnessMobEffect;
 import net.kapitencraft.mysticcraft.registry.ModMobEffects;
 import net.kapitencraft.mysticcraft.spell.spells.WitherShieldSpell;
@@ -106,7 +106,7 @@ public class DamageEvents {
     public static void damageAttributeRegister(LivingHurtEvent event) {
         @Nullable LivingEntity attacker = MiscHelper.getAttacker(event.getSource());
         if (attacker == null) { return; }
-        if (event.getSource() instanceof IAbilitySource abilitySource) {
+        if (event.getSource() instanceof ISpellSource abilitySource) {
             double intel = attacker.getAttributeValue(ExtraAttributes.INTELLIGENCE.get());
             double ability_damage = attacker.getAttributeValue(ExtraAttributes.ABILITY_DAMAGE.get());
             MathHelper.mul(event::getAmount, event::setAmount, (float) ((1 + (intel / 100) * abilitySource.getScaling()) * (1 + (ability_damage / 100))));

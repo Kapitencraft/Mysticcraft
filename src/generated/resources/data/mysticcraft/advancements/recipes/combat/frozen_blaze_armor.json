@@ -17,5 +17,6 @@
     "recipes": [
       "mysticcraft:frozen_blaze_armor"
     ]
-  }
+  },
+  "sends_telemetry_event": true
 }

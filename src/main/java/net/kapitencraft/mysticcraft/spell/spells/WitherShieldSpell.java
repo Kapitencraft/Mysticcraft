@@ -2,32 +2,46 @@ package net.kapitencraft.mysticcraft.spell.spells;
 
 import net.kapitencraft.kap_lib.registry.ExtraAttributes;
 import net.kapitencraft.mysticcraft.cooldown.Cooldowns;
+import net.kapitencraft.mysticcraft.item.combat.spells.necron_sword.NecronSword;
+import net.kapitencraft.mysticcraft.spell.Spell;
+import net.kapitencraft.mysticcraft.spell.cast.SpellCastContext;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.world.item.Item;
 
-import java.util.List;
-
-public class WitherShieldSpell {
-
-    private static final List<Component> description = List.of(Component.literal("Gain a Absorption Shield of 30% of your Crit Damage."), Component.literal("also, gain 50% of this shield as healing after 5 seconds"));
+public class WitherShieldSpell implements Spell {
     public static final String DAMAGE_REDUCTION_TIME = "WS-DamageReductionTime";
     public static final String ABSORPTION_AMOUNT_ID = "WS-AbsorptionAmount";
 
-    public static boolean execute(@NotNull LivingEntity user, ItemStack ignored) {
-        CompoundTag tag = user.getPersistentData();
-        Cooldowns.WITHER_SHIELD.applyCooldown(user, true);
-        float absorption = (float) (user.getAttributeValue(ExtraAttributes.CRIT_DAMAGE.get()) * 0.3);
+    @Override
+    public void cast(SpellCastContext context) {
+        LivingEntity caster = context.getCaster();
+        CompoundTag tag = caster.getPersistentData();
+        Cooldowns.WITHER_SHIELD.applyCooldown(caster, true);
+        float absorption = (float) (caster.getAttributeValue(ExtraAttributes.CRIT_DAMAGE.get()) * 0.3);
         if (tag.getFloat(ABSORPTION_AMOUNT_ID) <= 0 || !tag.contains(ABSORPTION_AMOUNT_ID)) {
-            user.setAbsorptionAmount(user.getAbsorptionAmount() + absorption);
+            caster.setAbsorptionAmount(caster.getAbsorptionAmount() + absorption);
         }
         tag.putFloat(ABSORPTION_AMOUNT_ID, absorption);
-        return true;
     }
 
-    public static List<Component> getDescription() {
-        return description;
+    @Override
+    public double manaCost() {
+        return 150;
+    }
+
+    @Override
+    public Type getType() {
+        return Type.RELEASE;
+    }
+
+    @Override
+    public int getCooldownTime() {
+        return 100;
+    }
+
+    @Override
+    public boolean canApply(Item item) {
+        return item instanceof NecronSword;
     }
 }

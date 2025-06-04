@@ -181,10 +181,14 @@ public class BuildersWand extends Item implements IModItem {
             BlockPos pos1 = blockPos.get(0);
             BlockPos pos2 = blockPos.get(1);
             BlockPos diff = pos2.subtract(pos1);
-            MathHelper.forCube(diff, (pos) -> {
-                BlockPos pos3 = diff.offset(pos1.getX() + pos.getX(), pos1.getY() + pos.getY(), pos1.getZ() + pos.getZ());
-                checkAndPlaceBlock(level, block, pos3, blocks);
-            });
+            for (int x = 0; x < diff.getX(); x++) {
+                for (int y = 0; y < diff.getY(); y++) {
+                    for (int z = 0; z < diff.getZ(); z++) {
+                        BlockPos pos3 = diff.offset(pos1.getX() + x, pos1.getY() + y, pos1.getZ() + z);
+                        checkAndPlaceBlock(level, block, pos3, blocks);
+                    }
+                }
+            }
         }, "builders_wand.cuboid"),
         SPHERE(3, false, 3, (block, blocks, blockPos, level) -> {}, "builders_wand.sphere"),
         CONE(4, false, 3, (block, blocks, blockPos, level) -> {}, "builders_wand.cone"),

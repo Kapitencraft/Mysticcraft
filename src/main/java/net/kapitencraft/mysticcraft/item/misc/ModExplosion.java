@@ -31,7 +31,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -251,15 +251,15 @@ public class ModExplosion {
                     if (blockstate.canDropFromExplosion(this.level, blockpos, toExplosion())) {
                         if (this.level instanceof ServerLevel serverlevel) {
                             BlockEntity blockentity = blockstate.hasBlockEntity() ? this.level.getBlockEntity(blockpos) : null;
-                            LootContext.Builder builder = (new LootContext.Builder(serverlevel)).withRandom(this.level.random).withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(blockpos)).withParameter(LootContextParams.TOOL, ItemStack.EMPTY).withOptionalParameter(LootContextParams.BLOCK_ENTITY, blockentity).withOptionalParameter(LootContextParams.THIS_ENTITY, this.source);
-                            if (blockInteraction() == Explosion.BlockInteraction.DESTROY_WITH_DECAY) {
-                                builder.withParameter(LootContextParams.EXPLOSION_RADIUS, this.radius);
-                            }
+                            LootParams.Builder lootparams$builder = (new LootParams.Builder(serverlevel)).withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(blockpos)).withParameter(LootContextParams.TOOL, ItemStack.EMPTY).withOptionalParameter(LootContextParams.BLOCK_ENTITY, blockentity).withOptionalParameter(LootContextParams.THIS_ENTITY, this.source);
+                            //if (this.blockInteraction == Explosion.BlockInteraction.DESTROY_WITH_DECAY) {
+                            //    lootparams$builder.withParameter(LootContextParams.EXPLOSION_RADIUS, this.radius);
+                            //}
 
                             blockstate.spawnAfterBreak(serverlevel, blockpos, ItemStack.EMPTY, flag1);
-                            blockstate.getDrops(builder).forEach(stack ->
-                                    Explosion.addBlockDrops(dropsForPos, stack, blockpos)
-                            );
+                            //blockstate.getDrops(lootparams$builder).forEach((p_46074_) -> {
+                            //    addBlockDrops(objectarraylist, p_46074_, blockpos1);
+                            //});
                         }
                     }
 

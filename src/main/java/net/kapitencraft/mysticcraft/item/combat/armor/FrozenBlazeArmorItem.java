@@ -1,8 +1,8 @@
 package net.kapitencraft.mysticcraft.item.combat.armor;
 
-import net.kapitencraft.kap_lib.item.combat.armor.ModArmorItem;
-import net.kapitencraft.kap_lib.item.combat.armor.client.provider.ArmorModelProvider;
-import net.kapitencraft.kap_lib.item.combat.armor.client.provider.SimpleModelProvider;
+import net.kapitencraft.kap_lib.client.armor.provider.ArmorModelProvider;
+import net.kapitencraft.kap_lib.client.armor.provider.SimpleModelProvider;
+import net.kapitencraft.kap_lib.item.combat.armor.AbstractArmorItem;
 import net.kapitencraft.kap_lib.util.ExtraRarities;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.item.combat.armor.client.model.FrozenBlazeArmorModel;
@@ -17,7 +17,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-public class FrozenBlazeArmorItem extends ModArmorItem implements IModItem {
+public class FrozenBlazeArmorItem extends AbstractArmorItem implements IModItem {
     public static final ArmorTabGroup FROZEN_BLAZE_ARMOR_GROUP = new ArmorTabGroup(TabRegister.TabTypes.WEAPONS_AND_TOOLS);
 
     @Override
@@ -35,7 +35,7 @@ public class FrozenBlazeArmorItem extends ModArmorItem implements IModItem {
     }
 
     @Override
-    protected ArmorModelProvider getModelProvider() {
+    protected ArmorModelProvider createModelProvider() {
         return new SimpleModelProvider(FrozenBlazeArmorModel::createBodyLayer, FrozenBlazeArmorModel::new);
     }
 

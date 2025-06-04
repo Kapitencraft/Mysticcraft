@@ -1,5 +1,5 @@
 {
-  "type": "mysticcraft:upgrade_item",
+  "type": "kap_lib:upgrade_item",
   "category": "equipment",
   "craft_type": "eight",
   "material": {

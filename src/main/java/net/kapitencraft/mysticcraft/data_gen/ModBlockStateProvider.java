@@ -9,6 +9,7 @@ import net.kapitencraft.mysticcraft.registry.ModBlocks;
 import net.minecraft.core.Direction;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.block.AnvilBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -86,7 +87,9 @@ public class ModBlockStateProvider extends BlockStateProvider {
                     .rotationX(axis == Direction.Axis.Y ? 0 : 90)
                     .build();
         });
-        simpleBlockItem(ModBlocks.SOUL_CHAIN.getBlock(), createSoulChainModel());
+
+        //simpleBlock(ModBlocks.MANGATIC_SLIME);
+        simpleBlock(ModBlocks.MANGATIC_STONE);
 
         ResourceLocation GOLD_BLOCK = new ResourceLocation("block/gold_block");
 
@@ -96,11 +99,16 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
         ResourceLocation LAPIS_BLOCK = new ResourceLocation("block/lapis_block");
         buttonBlock(ModBlocks.LAPIS_BUTTON.getBlock(), LAPIS_BLOCK);
-        simpleBlockItem(ModBlocks.LAPIS_BUTTON.getBlock(), itemModels().button("lapis_button_inventory", LAPIS_BLOCK));
+        simpleBlockItem(ModBlocks.LAPIS_BUTTON.getBlock(), itemModels().buttonInventory("lapis_button_inventory", LAPIS_BLOCK));
 
         ResourceLocation OBSIDIAN = new ResourceLocation("block/obsidian");
         pressurePlateBlock(ModBlocks.OBSIDIAN_PRESSURE_PLATE.getBlock(), OBSIDIAN);
-        simpleBlockItem(ModBlocks.OBSIDIAN_PRESSURE_PLATE.getBlock(), itemModels().pressurePlate("obsidian_pressure_plate", OBSIDIAN));
+        itemModels().pressurePlate("obsidian_pressure_plate", OBSIDIAN);
+    }
+
+    private void simpleBlock(BlockRegistryHolder<? extends Block, BlockItem> block) {
+        simpleBlock(block.getBlock());
+        simpleBlockItem(block.getBlock(), cubeAll(block.getBlock()));
     }
 
     private ModelFile createSoulChainModel() {

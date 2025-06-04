@@ -1,14 +1,14 @@
 package net.kapitencraft.mysticcraft.networking.packets.C2S;
 
+import net.kapitencraft.kap_lib.io.network.SimplePacket;
 import net.kapitencraft.mysticcraft.gui.reforging_anvil.ReforgeAnvilMenu;
-import net.kapitencraft.mysticcraft.networking.packets.ModPacket;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class ReforgeItemPacket implements ModPacket {
+public class ReforgeItemPacket implements SimplePacket {
     private final String reforgeId;
 
     public ReforgeItemPacket(String reforgeId) {

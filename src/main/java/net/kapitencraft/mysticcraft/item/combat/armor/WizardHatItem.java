@@ -2,12 +2,9 @@ package net.kapitencraft.mysticcraft.item.combat.armor;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import net.kapitencraft.kap_lib.item.combat.armor.ModArmorItem;
-import net.kapitencraft.kap_lib.item.combat.armor.client.provider.ArmorModelProvider;
-import net.kapitencraft.kap_lib.item.combat.armor.client.provider.SimpleModelProvider;
+import net.kapitencraft.kap_lib.item.combat.armor.AbstractArmorItem;
 import net.kapitencraft.kap_lib.registry.ExtraAttributes;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.item.combat.armor.client.model.WizardHatModel;
 import net.kapitencraft.mysticcraft.item.misc.IModItem;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.minecraft.world.entity.Entity;
@@ -20,7 +17,7 @@ import net.minecraft.world.item.Rarity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class WizardHatItem extends ModArmorItem implements IModItem {
+public class WizardHatItem extends AbstractArmorItem implements IModItem {
 
     public WizardHatItem() {
         super(ModArmorMaterials.WIZARD_HAT, Type.HELMET, new Item.Properties().rarity(Rarity.RARE));
@@ -38,19 +35,19 @@ public class WizardHatItem extends ModArmorItem implements IModItem {
         return builder;
     }
 
-    @Override
-    public boolean withCustomModel() {
-        return true;
-    }
+    //@Override
+    //public boolean withCustomModel() {
+    //    return true;
+    //}
 
-    @Override
-    protected ArmorModelProvider getModelProvider() {
-        return new SimpleModelProvider(WizardHatModel::createBodyLayer, WizardHatModel::new);
-    }
+    //@Override
+    //protected ArmorModelProvider createModelProvider() {
+    //    return new SimpleModelProvider(WizardHatModel::createBodyLayer, WizardHatModel::new);
+    //}
 
     @Override
     public @Nullable String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
-        return ModArmorItem.makeCustomTextureLocation(MysticcraftMod.MOD_ID, "wizard_hat_model");
+        return AbstractArmorItem.makeCustomTextureLocation(MysticcraftMod.MOD_ID, "wizard_hat_model");
     }
 
     @Override

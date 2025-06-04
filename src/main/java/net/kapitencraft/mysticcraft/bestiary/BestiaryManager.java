@@ -1,12 +1,12 @@
 package net.kapitencraft.mysticcraft.bestiary;
 
+import com.google.common.base.Stopwatch;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.helpers.Timer;
 import net.kapitencraft.mysticcraft.logging.Markers;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -18,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class BestiaryManager extends SimpleJsonResourceReloadListener {
     public Map<EntityType<?>, Bestiary> bestiariesForType = new HashMap<>();
@@ -29,7 +30,7 @@ public class BestiaryManager extends SimpleJsonResourceReloadListener {
 
     @Override
     protected void apply(@NotNull Map<ResourceLocation, JsonElement> map, @NotNull ResourceManager manager, @NotNull ProfilerFiller filler) {
-        Timer.start();
+        Stopwatch stopwatch = Stopwatch.createStarted();
         map.forEach((location, element) -> {
             EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(location);
             try {
@@ -39,7 +40,8 @@ public class BestiaryManager extends SimpleJsonResourceReloadListener {
                 MysticcraftMod.LOGGER.warn(Markers.BESTIARY_MANAGER, "Unable to load bestiary for '{}': {}", location.toString(), e.getMessage());
             }
         });
-        MysticcraftMod.LOGGER.info(Markers.BESTIARY_MANAGER, "Loading {} bestiaries took {} ms", bestiariesForType.size(), Timer.getPassedTime());
+        stopwatch.stop();
+        MysticcraftMod.LOGGER.info(Markers.BESTIARY_MANAGER, "Loading {} bestiaries took {} ms", bestiariesForType.size(), stopwatch.elapsed(TimeUnit.MILLISECONDS));
     }
 
 }

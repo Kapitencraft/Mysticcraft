@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 @Mixin(ChunkStatus.class)
 public class IncreaseFeatureGenRangeMixin {
 
-    @ModifyConstant(method = "lambda$static$12")
+    @ModifyConstant(method = "lambda$static$11", remap = false)
     private static int modifyChunkRange(int i) {
         if (i == 1) {
             return 3;

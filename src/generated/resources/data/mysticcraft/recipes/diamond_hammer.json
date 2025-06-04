@@ -16,5 +16,6 @@
   ],
   "result": {
     "item": "mysticcraft:diamond_hammer"
-  }
+  },
+  "show_notification": true
 }

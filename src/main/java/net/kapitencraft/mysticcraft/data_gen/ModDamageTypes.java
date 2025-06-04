@@ -21,8 +21,6 @@ public interface ModDamageTypes {
 
     static void bootstrap(BootstapContext<DamageType> context) {
         context.register(CHAIN_LIGHTNING, new DamageType("chain_lightning", .1f));
-        context.register(MANA_OVERFLOW, new DamageType("mana_overflow", 2f));
-        context.register(MANA_OVERFLOW_SELF, new DamageType("mana_overflow_self", 20f));
         context.register(ABILITY, new DamageType("ability", .1f));
         context.register(MAGIC_EXPLOSION, new DamageType("magic_explosion", .3f));
         context.register(NUMBNESS, new DamageType("numbness", .1f));

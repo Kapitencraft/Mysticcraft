@@ -30,5 +30,6 @@
     "recipes": [
       "mysticcraft:raw_crimsonium_dust"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

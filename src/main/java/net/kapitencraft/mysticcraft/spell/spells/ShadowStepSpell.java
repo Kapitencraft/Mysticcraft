@@ -2,31 +2,22 @@ package net.kapitencraft.mysticcraft.spell.spells;
 
 import net.kapitencraft.kap_lib.helpers.MathHelper;
 import net.kapitencraft.kap_lib.helpers.MiscHelper;
+import net.kapitencraft.mysticcraft.item.combat.weapon.melee.dagger.ShadowDagger;
 import net.kapitencraft.mysticcraft.registry.ModParticleTypes;
+import net.kapitencraft.mysticcraft.spell.Spell;
+import net.kapitencraft.mysticcraft.spell.cast.SpellCastContext;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ShadowStepSpell {
-
-    public static boolean execute(LivingEntity user, ItemStack ignored) {
-        List<LivingEntity> entities = MathHelper.getAllEntitiesInsideCone(LivingEntity.class, 15, 20, user.position(), user.getRotationVector(), user.level());
-        List<LivingEntity> hit = new ArrayList<>();
-        entities.stream().filter(living -> living != user).forEach(hit::add);
-        if (next(hit, user)) MiscHelper.schedule(10, ()-> {
-                    if (next(hit, user)) MiscHelper.schedule(10, ()-> next(hit, user));
-                }
-        );
-        return true;
-    }
+public class ShadowStepSpell implements Spell {
 
     private static boolean next(List<LivingEntity> list, LivingEntity user) {
         if (list.isEmpty()) return false;
@@ -56,9 +47,36 @@ public class ShadowStepSpell {
         }
     }
 
-    public static List<Component> getDescription() {
-        return List.of(
-                Component.literal("Teleports you behind an enemy withing 20 blocks range")
+    @Override
+    public void cast(SpellCastContext context) {
+        LivingEntity user = context.getCaster();
+        List<LivingEntity> entities = MathHelper.getAllEntitiesInsideCone(LivingEntity.class, 15, 20, user.position(), user.getRotationVector(), user.level());
+        List<LivingEntity> hit = new ArrayList<>();
+        entities.stream().filter(living -> living != user).forEach(hit::add);
+        if (next(hit, user)) MiscHelper.schedule(10, ()-> {
+                    if (next(hit, user)) MiscHelper.schedule(10, ()-> next(hit, user));
+                }
         );
+
+    }
+
+    @Override
+    public double manaCost() {
+        return 80;
+    }
+
+    @Override
+    public Type getType() {
+        return Type.RELEASE;
+    }
+
+    @Override
+    public int getCooldownTime() {
+        return 300;
+    }
+
+    @Override
+    public boolean canApply(Item item) {
+        return item instanceof ShadowDagger;
     }
 }

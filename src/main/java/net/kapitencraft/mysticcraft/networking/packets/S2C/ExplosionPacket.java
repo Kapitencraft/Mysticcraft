@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.networking.packets.S2C;
 
-import net.kapitencraft.mysticcraft.networking.packets.ModPacket;
+import net.kapitencraft.kap_lib.io.network.SimplePacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.game.ClientboundExplodePacket;
@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class ExplosionPacket extends ClientboundExplodePacket implements ModPacket {
+public class ExplosionPacket extends ClientboundExplodePacket implements SimplePacket {
     private final boolean breakBlocks;
     private final boolean hurtEntities;
     public ExplosionPacket(double p_132115_, double p_132116_, double p_132117_, float p_132118_, List<BlockPos> p_132119_, @Nullable Vec3 p_132120_, boolean breakBlocks, boolean hurtEntities) {

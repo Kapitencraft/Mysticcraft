@@ -19,5 +19,6 @@
   ],
   "result": {
     "item": "mysticcraft:mana_steel_sword_handle"
-  }
+  },
+  "show_notification": true
 }

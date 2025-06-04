@@ -26,24 +26,16 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.registries.NewRegistryEvent;
 
-import static net.kapitencraft.mysticcraft.MysticcraftMod.sendRegisterDisplay;
-
 @Mod.EventBusSubscriber(modid = MysticcraftMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModEventBusEvents {
 
     @SubscribeEvent
     public static void onCommonSetup(FMLCommonSetupEvent event) {
-        sendRegisterDisplay("custom Potion Recipes");
         BrewingRecipeRegistry.addRecipe(new ModPotionRecipe());
-        sendRegisterDisplay("Entity World Generation");
         registerSpawnPlacements();
-        sendRegisterDisplay("Rarities");
         Reforges.registerRarities();
-        sendRegisterDisplay("Reforges");
         Reforges.bootstrap();
-        sendRegisterDisplay("Anvil Uses");
         AnvilUses.registerUses();
-        sendRegisterDisplay("Packet Handling");
         ModMessages.register();
         ModCriteriaTriggers.init();
     }

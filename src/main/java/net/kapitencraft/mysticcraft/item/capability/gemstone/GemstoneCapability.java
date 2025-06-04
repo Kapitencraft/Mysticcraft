@@ -1,42 +1,29 @@
 package net.kapitencraft.mysticcraft.item.capability.gemstone;
 
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.kapitencraft.mysticcraft.item.capability.CapabilityHelper;
-import net.kapitencraft.mysticcraft.item.capability.ModCapability;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
+import com.google.common.collect.Multimap;
+import net.kapitencraft.kap_lib.item.modifier_display.ItemModifiersDisplayExtension;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Style;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
-public class GemstoneCapability extends ModCapability<GemstoneCapability, IGemstoneHandler> implements IGemstoneHandler {
-    private static final Codec<GemstoneCapability> CODEC = RecordCodecBuilder.create(
-            gemstoneCapabilityInstance -> gemstoneCapabilityInstance.group(
-                    GemstoneSlot.CODEC.listOf().fieldOf("Slots").forGetter(i -> List.of(i.slots))
-            ).apply(gemstoneCapabilityInstance, GemstoneCapability::create)
-    );
+public class GemstoneCapability implements IGemstoneHandler, ItemModifiersDisplayExtension {
     private GemstoneSlot[] slots;
     private GemstoneSlot[] defaultSlots;
+    private final ItemStack stack;
+    private final EquipmentSlot slot;
 
-    public GemstoneCapability() {
-        super(CODEC);
+    public GemstoneCapability(ItemStack stack) {
+        this.stack = stack;
+        this.slot = Mob.getEquipmentSlotForItem(stack);
     }
 
-    public static GemstoneCapability create(Collection<GemstoneSlot> slots) {
-        GemstoneCapability capability = new GemstoneCapability();
-        capability.slots = slots.toArray(GemstoneSlot[]::new);
-        return capability;
-    }
-
-    public static GemstoneCapability of(GemstoneSlot[] slots) {
-        GemstoneCapability capability = new GemstoneCapability();
-        capability.slots = slots;
-        return capability;
-    }
-
-    private final LazyOptional<GemstoneCapability> self = LazyOptional.of(() -> this);
     @Override
     public boolean putGemstone(GemstoneType gemstoneType, GemstoneType.Rarity rarity, int slotIndex) {
         GemstoneSlot slot = slots[slotIndex];
@@ -71,28 +58,25 @@ public class GemstoneCapability extends ModCapability<GemstoneCapability, IGemst
         }
     }
 
-    @Override
-    public GemstoneCapability asType() {
-        return this;
-    }
-
-    public void copy(GemstoneCapability capability) {
-        this.slots = capability.slots;
-
-        ensureFilledSlots();
-    }
-
-    @Override
-    public Capability<IGemstoneHandler> getCapability() {
-        return CapabilityHelper.GEMSTONE;
-    }
-
-    @Override
-    public LazyOptional<GemstoneCapability> get() {
-        return self;
-    }
-
     public List<GemstoneSlot> listSlots() {
         return Arrays.asList(slots);
+    }
+
+    @Override
+    public Multimap<Attribute, AttributeModifier> getModifiers(EquipmentSlot equipmentSlot) {
+        if (slot == equipmentSlot) {
+            return getAttributeModifiers(slot, stack);
+        }
+        return null;
+    }
+
+    @Override
+    public Style getStyle() {
+        return Style.EMPTY.withColor(ChatFormatting.LIGHT_PURPLE);
+    }
+
+    @Override
+    public Type getType() {
+        return Type.DEFAULT;
     }
 }

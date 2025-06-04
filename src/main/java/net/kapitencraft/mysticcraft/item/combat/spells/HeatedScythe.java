@@ -1,9 +1,8 @@
 package net.kapitencraft.mysticcraft.item.combat.spells;
 
-import net.kapitencraft.mysticcraft.item.capability.spell.SpellHelper;
+import net.kapitencraft.mysticcraft.item.capability.spell.SpellCapabilityProvider;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
-import net.kapitencraft.mysticcraft.spell.SpellSlot;
-import net.kapitencraft.mysticcraft.spell.Spells;
+import net.kapitencraft.mysticcraft.registry.Spells;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Rarity;
 
@@ -13,16 +12,6 @@ public class HeatedScythe extends NormalSpellItem implements IDamageSpellItem, I
 
     public HeatedScythe() {
         super(new Properties().rarity(Rarity.UNCOMMON), 50, 0);
-    }
-
-    @Override
-    public void generateSlots(SpellHelper stack) {
-        stack.setSlot(0, new SpellSlot(Spells.FIRE_BOLT_1));
-    }
-
-    @Override
-    public int getSlotAmount() {
-        return 1;
     }
 
     @Override
@@ -38,5 +27,10 @@ public class HeatedScythe extends NormalSpellItem implements IDamageSpellItem, I
     @Override
     public TabGroup getGroup() {
         return FIRE_SCYTHE_GROUP;
+    }
+
+    @Override
+    public SpellCapabilityProvider createSpells() {
+        return SpellCapabilityProvider.with(Spells.FIRE_BOLT_1);
     }
 }

@@ -1,9 +1,9 @@
 package net.kapitencraft.mysticcraft.mixin.classes;
 
 import net.kapitencraft.kap_lib.helpers.MiscHelper;
+import net.kapitencraft.kap_lib.util.ManaHandler;
 import net.kapitencraft.mysticcraft.item.capability.CapabilityHelper;
 import net.kapitencraft.mysticcraft.item.capability.elytra.ElytraData;
-import net.kapitencraft.mysticcraft.misc.content.mana.ManaMain;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ElytraItem;
 import net.minecraft.world.item.Item;
@@ -35,7 +35,7 @@ public abstract class ElytraItemMixin extends Item {
         CapabilityHelper.exeCapability(stack, CapabilityHelper.ELYTRA, data -> {
             int manaBoost = data.getLevelForData(ElytraData.MANA_BOOST);
             if (manaBoost > 0) {
-                if (ManaMain.consumeMana(entity, 1.5)) {
+                if (ManaHandler.consumeMana(entity, 1.5)) {
                     entity.setDeltaMovement(getFireworkSpeedBoost(entity, manaBoost));
                     if (entity.level().isClientSide())
                         MiscHelper.sendManaBoostParticles(entity, entity.getRandom(), entity.getDeltaMovement());

@@ -2,16 +2,15 @@ package net.kapitencraft.mysticcraft.item.capability.reforging;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import net.kapitencraft.kap_lib.helpers.MiscHelper;
+import net.kapitencraft.kap_lib.item.bonus.AbstractBonusElement;
+import net.kapitencraft.kap_lib.item.bonus.Bonus;
 import net.kapitencraft.kap_lib.util.ExtraRarities;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.item.item_bonus.ReforgingBonus;
 import net.kapitencraft.mysticcraft.logging.Markers;
-import net.kapitencraft.mysticcraft.registry.ModReforgingBonuses;
-import net.kapitencraft.mysticcraft.registry.custom.ModRegistries;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.item.*;
@@ -21,16 +20,15 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-public class Reforge {
+public class Reforge implements AbstractBonusElement {
     private final MutableComponent name;
     private final HashMap<Attribute, ReforgeStat> statList;
     private final String registryName;
     private final boolean onlyFromStone;
-    private final ReforgingBonus bonus;
+    private final Bonus<?> bonus;
     private final Type type;
 
     private Reforge(Builder builder) {
@@ -64,10 +62,10 @@ public class Reforge {
             JsonArray array = new JsonArray();
             rarities.forEach(rarity -> array.add(entry.getValue().apply(rarity)));
             mods.add(String.valueOf(BuiltInRegistries.ATTRIBUTE.getKey(entry.getKey())), array);
-        }
-        if (this.bonus != ModReforgingBonuses.EMPTY.get()) {
-            object.addProperty("bonus", MiscHelper.nonNullOr(ModRegistries.REFORGE_BONUSES_REGISTRY.getKey(this.bonus), ModReforgingBonuses.EMPTY.getId()).toString());
-        }
+        } //TODO readd bonuese
+        //if (this.bonus != ModReforgingBonuses.EMPTY.get()) {
+        //    object.addProperty("bonus", MiscHelper.nonNullOr(ModRegistries.REFORGE_BONUSES_REGISTRY.getKey(this.bonus), ModReforgingBonuses.EMPTY.getId()).toString());
+        //}
         object.add("mods", mods);
         return object;
     }
@@ -101,8 +99,18 @@ public class Reforge {
         return registryName;
     }
 
-    public ReforgingBonus getBonus() {
+    @Override
+    public boolean isHidden() {
+        return false;
+    }
+
+    public Bonus<?> getBonus() {
         return bonus;
+    }
+
+    @Override
+    public ResourceLocation getId() {
+        return null;
     }
 
 
@@ -114,7 +122,7 @@ public class Reforge {
 
     public static class Builder {
 
-        private ReforgingBonus bonus = ModReforgingBonuses.EMPTY.get();
+        private Bonus<?> bonus = null; //ModReforgingBonuses.EMPTY.get();
         private final String registryName;
         private final HashMap<Attribute, ReforgeStat> stats = new HashMap<>();
         private boolean onlyFromStone = false;
@@ -129,7 +137,7 @@ public class Reforge {
             return this;
         }
 
-        public Builder withBonus(ReforgingBonus bonus) {
+        public Builder withBonus(Bonus<?> bonus) {
             this.bonus = bonus;
             return this;
         }
@@ -179,39 +187,6 @@ public class Reforge {
 
         boolean mayApply(ItemStack stack) {
             return this.applicably.test(stack);
-        }
-
-        @Override
-        public @NotNull String getSerializedName() {
-            return name;
-        }
-    }
-
-    public enum Functions implements StringRepresentable {
-        EMPTY("empty", new ReforgingBonus("Empty") {
-            @Override
-            public Consumer<List<Component>> getDisplay() {
-                return list -> list.add(Component.literal("this bonus is empty"));
-            }
-        });
-
-        private static final EnumCodec<Functions> CODEC = StringRepresentable.fromEnum(Functions::values);
-
-
-        private final String name;
-        private final ReforgingBonus stat;
-
-        Functions(String name, ReforgingBonus stat) {
-            this.name = name;
-            this.stat = stat;
-        }
-
-        public ReforgingBonus getBonus() {
-            return stat;
-        }
-
-        public Functions byName(String name) {
-            return CODEC.byName(name, EMPTY);
         }
 
         @Override

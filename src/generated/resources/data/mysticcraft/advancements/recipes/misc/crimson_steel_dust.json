@@ -30,5 +30,6 @@
     "recipes": [
       "mysticcraft:crimson_steel_dust"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

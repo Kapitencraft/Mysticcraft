@@ -1,9 +1,9 @@
 package net.kapitencraft.mysticcraft.data_gen;
 
 import net.kapitencraft.kap_lib.data_gen.abst.RequirementProvider;
-import net.kapitencraft.kap_lib.requirements.RequirementType;
-import net.kapitencraft.kap_lib.requirements.type.CustomStatReqCondition;
-import net.kapitencraft.kap_lib.requirements.type.StatReqCondition;
+import net.kapitencraft.kap_lib.requirements.conditions.CustomStatReqCondition;
+import net.kapitencraft.kap_lib.requirements.conditions.StatReqCondition;
+import net.kapitencraft.kap_lib.requirements.type.RequirementType;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.registry.ModItems;
 import net.kapitencraft.mysticcraft.registry.ModStatTypes;

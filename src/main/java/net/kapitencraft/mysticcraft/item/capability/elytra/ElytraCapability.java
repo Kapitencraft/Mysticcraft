@@ -1,38 +1,21 @@
 package net.kapitencraft.mysticcraft.item.capability.elytra;
 
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.mojang.datafixers.util.Pair;
 import net.kapitencraft.kap_lib.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.item.capability.CapabilityHelper;
-import net.kapitencraft.mysticcraft.item.capability.ModCapability;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
 
 import java.util.Arrays;
 
 
-public class ElytraCapability extends ModCapability<ElytraCapability, IElytraData> implements IElytraData {
+public class ElytraCapability implements IElytraData {
     private ElytraData data;
     private int level;
 
-    private final LazyOptional<ElytraCapability> self = LazyOptional.of(()-> this);
-    private static final Codec<ElytraCapability> CODEC = RecordCodecBuilder.create(elytraCapabilityInstance ->
-            elytraCapabilityInstance.group(
-                    ElytraData.CODEC.fieldOf("data").forGetter(i -> i.data),
-                    Codec.INT.fieldOf("level").forGetter(i -> i.level)
-            ).apply(elytraCapabilityInstance, ElytraCapability::new)
-    );
-
-    public ElytraCapability() {
-        super(CODEC);
-    }
-
-    public ElytraCapability(ElytraData data, int i) {
-        this();
+    public ElytraCapability(ElytraData data, int level) {
         this.data = data;
-        this.level = i;
+        this.level = level;
     }
 
     public static void write(FriendlyByteBuf buf, ElytraCapability capability) {
@@ -48,44 +31,26 @@ public class ElytraCapability extends ModCapability<ElytraCapability, IElytraDat
         CapabilityHelper.exeCapability(stack, CapabilityHelper.ELYTRA, iElytraData ->
                 CapabilityHelper.exeCapability(stack1, CapabilityHelper.ELYTRA, iElytraData1 -> {
                     int level = iElytraData.getLevel();
-                    if (level == iElytraData1.getLevel() && level < iElytraData.getData().getMaxLevel()) {
+                    if (level == iElytraData1.getLevel() && level < iElytraData.getDataType().getMaxLevel()) {
                         iElytraData.setLevel(level+1);
                     }
                 })
         );
     }
 
-    public static ElytraCapability create() {
-        ElytraCapability capability = new ElytraCapability();
-        capability.data = MathHelper.pickRandom(Arrays.stream(ElytraData.values()).toList());
-        capability.level = 1;
-        return capability;
+    public static ElytraCapabilityProvider create() {
+        return new ElytraCapabilityProvider(new ElytraCapability(MathHelper.pickRandom(Arrays.stream(ElytraData.values()).toList()), 1));
     }
 
     @Override
-    public void copy(ElytraCapability capability) {
-        this.data = capability.data;
-        this.level = capability.level;
+    public void copyFrom(Pair<ElytraData, Integer> elytraData) {
+        this.data = elytraData.getFirst();
+        this.level = elytraData.getSecond();
     }
 
     @Override
-    public ElytraCapability asType() {
-        return this;
-    }
-
-    @Override
-    public Capability<IElytraData> getCapability() {
-        return CapabilityHelper.ELYTRA;
-    }
-
-    @Override
-    public LazyOptional<ElytraCapability> get() {
-        return self;
-    }
-
-    @Override
-    public ElytraData getData() {
-        return data;
+    public Pair<ElytraData, Integer> getData() {
+        return Pair.of(this.data, this.level);
     }
 
     @Override
@@ -98,4 +63,8 @@ public class ElytraCapability extends ModCapability<ElytraCapability, IElytraDat
         this.level = level;
     }
 
+    @Override
+    public ElytraData getDataType() {
+        return data;
+    }
 }

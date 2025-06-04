@@ -17,5 +17,6 @@
     "recipes": [
       "mysticcraft:hyperion"
     ]
-  }
+  },
+  "sends_telemetry_event": true
 }

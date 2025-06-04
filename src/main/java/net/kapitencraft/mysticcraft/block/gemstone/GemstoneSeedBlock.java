@@ -31,7 +31,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Supplier;
 
 public class GemstoneSeedBlock extends Block {
-    //TODO fix renderer clipping threw blocks
+    //TODO fix renderer clipping through blocks
 
     public GemstoneSeedBlock() {
         super(Properties.copy(Blocks.DIAMOND_BLOCK));

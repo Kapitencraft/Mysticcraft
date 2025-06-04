@@ -2,10 +2,11 @@ package net.kapitencraft.mysticcraft.spell.spells;
 
 import net.kapitencraft.kap_lib.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.helpers.ParticleHelper;
-import net.kapitencraft.mysticcraft.misc.damage_source.AbilityDamageSource;
+import net.kapitencraft.mysticcraft.misc.damage_source.SpellDamageSource;
 import net.kapitencraft.mysticcraft.registry.ModEntityTypes;
 import net.kapitencraft.mysticcraft.registry.ModParticleTypes;
-import net.kapitencraft.mysticcraft.spell.Spells;
+import net.kapitencraft.mysticcraft.registry.Spells;
+import net.kapitencraft.mysticcraft.spell.Spell;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
@@ -27,8 +28,8 @@ public class FireBoltProjectile extends SpellProjectile {
     private int inGroundTime = 0;
     private final boolean explosive;
     private final double damage;
-    private FireBoltProjectile(Level level, LivingEntity living, boolean explosive, double damage, String name) {
-        super(ModEntityTypes.FIRE_BOLD.get(), living, level, name);
+    private FireBoltProjectile(Level level, LivingEntity living, boolean explosive, double damage, Spell spell) {
+        super(ModEntityTypes.FIRE_BOLD.get(), living, level, spell);
         this.inGroundTime = 0;
         this.setInvisible(true);
         this.setNoGravity(true);
@@ -49,7 +50,7 @@ public class FireBoltProjectile extends SpellProjectile {
     }
 
     public FireBoltProjectile(EntityType<? extends AbstractArrow> type, Level level) {
-        super(type, level, Spells.FIRE_BOLT_1.getName());
+        super(type, level, Spells.FIRE_BOLT_1.get());
         this.explosive = false;
         this.damage = 1;
     }
@@ -94,12 +95,12 @@ public class FireBoltProjectile extends SpellProjectile {
     private void damage(LivingEntity living) {
         this.addHitEntity(living);
         float health = living.getHealth();
-        living.hurt(AbilityDamageSource.createIndirect(this, this.getOwner(), 0.6f, this.name.toLowerCase().replace(" ", "_")), (float) this.damage);
+        living.hurt(SpellDamageSource.createIndirect(this, this.getOwner(), 0.6f, this.spell), (float) this.damage);
         this.damageInflicted += (health - living.getHealth());
         living.setSecondsOnFire((int) Math.floor(this.damage));
     }
 
-    public static FireBoltProjectile createProjectile(Level level, LivingEntity owner, boolean explosive, double damage, String name) {
-        return new FireBoltProjectile(level, owner, explosive, damage, name);
+    public static FireBoltProjectile createProjectile(Level level, LivingEntity owner, boolean explosive, double damage, Spell spell) {
+        return new FireBoltProjectile(level, owner, explosive, damage, spell);
     }
 }

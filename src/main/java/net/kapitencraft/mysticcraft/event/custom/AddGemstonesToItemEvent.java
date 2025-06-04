@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.event.custom;
 
-import net.kapitencraft.kap_lib.item.combat.armor.ModArmorItem;
+import net.kapitencraft.kap_lib.item.combat.armor.AbstractArmorItem;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneData;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneSlot;
 import net.minecraft.world.item.ArmorItem;
@@ -35,10 +35,10 @@ public class AddGemstonesToItemEvent extends Event implements IModBusEvent {
 
     /**
      * helper method to quickly add Gemstone Slots to entire Armor Sets
-     * @param objectMap the data of the Armor created via {@link ModArmorItem#createRegistry(DeferredRegister, String, Function)}
+     * @param objectMap the data of the Armor created via {@link AbstractArmorItem#createRegistry(DeferredRegister, String, Function)}
      * @param builder the Gemstone Slots to add to each armor element
      */
-    public void registerArmor(Map<ArmorItem.Type, ? extends RegistryObject<? extends ModArmorItem>> objectMap, GemstoneSlot.Builder builder) {
+    public void registerArmor(Map<ArmorItem.Type, ? extends RegistryObject<? extends AbstractArmorItem>> objectMap, GemstoneSlot.Builder builder) {
         objectMap.values().forEach(object -> register(object, builder));
     }
 }

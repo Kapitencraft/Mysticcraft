@@ -1,7 +1,6 @@
 package net.kapitencraft.mysticcraft.mixin.classes;
 
 import net.kapitencraft.mysticcraft.item.capability.CapabilityHelper;
-import net.kapitencraft.mysticcraft.item.capability.elytra.ElytraCapability;
 import net.kapitencraft.mysticcraft.item.capability.elytra.ElytraData;
 import net.kapitencraft.mysticcraft.item.capability.elytra.IElytraData;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -32,7 +31,7 @@ public abstract class FireworkRocketEntityMixin {
         ItemStack chest = living.getItemBySlot(EquipmentSlot.CHEST);
         LazyOptional<IElytraData> dataOptional = chest.getCapability(CapabilityHelper.ELYTRA);
         if (dataOptional.isPresent()) {
-            IElytraData data = dataOptional.orElse(new ElytraCapability());
+            IElytraData data = dataOptional.resolve().get();
             int scale = data.getLevelForData(ElytraData.SPEED_BOOST);
             if (scale > 0) {
                 d1 *= scale;

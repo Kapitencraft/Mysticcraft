@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.networking.packets.S2C;
 
-import net.kapitencraft.mysticcraft.networking.packets.ModPacket;
+import net.kapitencraft.kap_lib.io.network.SimplePacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.InteractionHand;
@@ -10,7 +10,7 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class SwingPacket implements ModPacket {
+public class SwingPacket implements SimplePacket {
     private final InteractionHand hand;
     private final int entityId;
 

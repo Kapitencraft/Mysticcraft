@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.data_gen;
 
 import net.kapitencraft.kap_lib.crafting.serializers.UpgradeItemRecipe;
+import net.kapitencraft.kap_lib.data_gen.abst.recipe.ArmorRecipeBuilder;
 import net.kapitencraft.kap_lib.data_gen.abst.recipe.UpgradeRecipeBuilder;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneType;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.IGemstoneItem;
@@ -8,22 +9,23 @@ import net.kapitencraft.mysticcraft.item.material.PrecursorRelicItem;
 import net.kapitencraft.mysticcraft.registry.ModBlocks;
 import net.kapitencraft.mysticcraft.registry.ModItems;
 import net.kapitencraft.mysticcraft.tags.ModTags;
+import net.minecraft.Util;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
+import net.minecraftforge.common.crafting.PartialNBTIngredient;
 import net.minecraftforge.common.crafting.StrictNBTIngredient;
 import net.minecraftforge.common.crafting.conditions.IConditionBuilder;
 import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
 
 @SuppressWarnings("SameParameterValue")
@@ -34,10 +36,14 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
 
     @Override
     protected void buildRecipes(@NotNull Consumer<FinishedRecipe> consumer) {
-        //TODO re-add
-        //ArmorRecipeBuilder.create(ModItems.CRIMSON_ARMOR).material(ModItems.CRIMSON_STEEL_INGOT).save(consumer, "mysticcraft:crimson_armor");
-        //ArmorRecipeBuilder.create(ModItems.FROZEN_BLAZE_ARMOR).material(StrictNBTIngredient.of(new ItemStack(ModItems.FROZEN_BLAZE_ROD.get(), 12))).save(consumer, "mysticcraft:frozen_blaze_armor");
-        //ArmorRecipeBuilder.create(ModItems.SOUL_MAGE_ARMOR).material(ModBlocks.SOUL_CHAIN.item()).save(consumer, "mysticcraft:soul_mage_armor");
+        ArmorRecipeBuilder.create(ModItems.CRIMSON_ARMOR).material(ModItems.CRIMSON_STEEL_INGOT).save(consumer, "mysticcraft:crimson_armor");
+        ArmorRecipeBuilder.create(ModItems.FROZEN_BLAZE_ARMOR).material(StrictNBTIngredient.of(new ItemStack(ModItems.FROZEN_BLAZE_ROD.get(), 12))).save(consumer, "mysticcraft:frozen_blaze_armor");
+        ArmorRecipeBuilder.create(ModItems.SOUL_MAGE_ARMOR).material(ModBlocks.SOUL_CHAIN.item()).save(consumer, "mysticcraft:soul_mage_armor");
+        ArmorRecipeBuilder.create(ModItems.SHADOW_ASSASSIN_ARMOR).material(PartialNBTIngredient.of(ModItems.DYED_LEATHER.get(), Util.make(new CompoundTag(), c -> {
+            CompoundTag display = new CompoundTag();
+            display.putInt("color", 3355189);
+            c.put("display", display);
+        }))).save(consumer, "mysticcraft:shadow_assassin_armor");
 
         itemUpgrade(consumer, RecipeCategory.COMBAT, UpgradeItemRecipe.CraftType.EIGHT, ModItems.ASTREA, ModItems.NECRON_SWORD, ModItems.PRECURSOR_RELICTS.get(PrecursorRelicItem.BossType.GOLDOR));
         itemUpgrade(consumer, RecipeCategory.COMBAT, UpgradeItemRecipe.CraftType.EIGHT, ModItems.HYPERION, ModItems.NECRON_SWORD, ModItems.PRECURSOR_RELICTS.get(PrecursorRelicItem.BossType.STORM));
@@ -49,6 +55,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
         craftHammer(consumer, Items.STONE, ModItems.STONE_HAMMER);
         craftHammer(consumer, Items.IRON_INGOT, ModItems.IRON_HAMMER);
         craftHammer(consumer, Items.DIAMOND, ModItems.DIAMOND_HAMMER);
+
         netheriteSmithing(consumer, ModItems.DIAMOND_HAMMER.get(), RecipeCategory.TOOLS, ModItems.NETHERITE_HAMMER.get());
 
         hammerCrushing(consumer, ModTags.Items.TIER_1_HAMMER, ModItems.CRIMSONIUM_INGOT, ModItems.CRIMSONIUM_DUST, 1);
@@ -62,14 +69,13 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 ModItems.CRIMSONIUM_DUST.get()
         ).save(consumer);
 
-        oreSmelting(consumer, List.of(ModItems.RAW_CRIMSONIUM.get(), ModItems.RAW_CRIMSONIUM_DUST.get()), RecipeCategory.MISC, ModItems.CRIMSONIUM_INGOT.get(), 1.2f, 200, "crimson");
-        oreBlasting(consumer, List.of(ModItems.RAW_CRIMSONIUM.get(), ModItems.RAW_CRIMSONIUM_DUST.get()), RecipeCategory.MISC, ModItems.CRIMSONIUM_INGOT.get(), 1.2f, 100, "crimson");
+        smeltingAndBlasting(consumer, List.of(ModItems.RAW_CRIMSONIUM.get(), ModItems.RAW_CRIMSONIUM_DUST.get()), RecipeCategory.MISC, ModItems.CRIMSONIUM_INGOT.get(), 1.2f, 100, "crimson");
 
-        oreSmelting(consumer, List.of(ModItems.CRIMSON_STEEL_DUST.get()), RecipeCategory.MISC, ModItems.CRIMSON_STEEL_INGOT.get(), 1.3f, 400, "crimson");
-        oreBlasting(consumer, List.of(ModItems.CRIMSON_STEEL_DUST.get()), RecipeCategory.MISC, ModItems.CRIMSON_STEEL_INGOT.get(), 1.3f, 200, "crimson");
+        smeltingAndBlasting(consumer, List.of(ModItems.CRIMSON_STEEL_DUST.get()), RecipeCategory.MISC, ModItems.CRIMSON_STEEL_INGOT.get(), 1.3f, 200, "crimson");
 
         makeModel(SLAB_CONSUMER, ModBlocks.GOLDEN_SLAB.getItem(), Items.GOLD_BLOCK, consumer);
         makeModel(WALL_CONSUMER, ModBlocks.GOLDEN_WALL.getItem(), Items.GOLD_BLOCK, consumer);
+        makeModel(RecipeProvider::stairBuilder, ModBlocks.GOLDEN_STAIRS.getItem(), Items.GOLD_BLOCK, consumer);
 
         stonecutterResultFromBase(consumer, RecipeCategory.BUILDING_BLOCKS, ModBlocks.GOLDEN_SLAB.getItem(), Items.GOLD_BLOCK, 2);
         stonecutterResultFromBase(consumer, RecipeCategory.BUILDING_BLOCKS, ModBlocks.GOLDEN_WALL.getItem(), Items.GOLD_BLOCK);
@@ -141,12 +147,12 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
         return recipeBuilder.unlockedBy(getHasName(recipeBuilder.getResult()), has(material));
     }
 
-    private static void createArmor(Consumer<FinishedRecipe> recipe, Map<EquipmentSlot, RegistryObject<? extends Item>> armor, RegistryObject<? extends Item> material) {
-        createHelmet(recipe, material, armor.get(EquipmentSlot.HEAD));
-        createChestplate(recipe, material, armor.get(EquipmentSlot.CHEST));
-        createLeggings(recipe, material, armor.get(EquipmentSlot.LEGS));
-        createBoots(recipe, material, armor.get(EquipmentSlot.FEET));
+    private static void smeltingAndBlasting(Consumer<FinishedRecipe> consumer, List<ItemLike> ingredients, RecipeCategory category, ItemLike result, float xp, int blastTime, String group) {
+        oreSmelting(consumer, ingredients, category, result, xp, blastTime * 2, group);
+        oreBlasting(consumer, ingredients, category, result, xp, blastTime, group);
     }
+
+
     private static void createHelmet(Consumer<FinishedRecipe> recipe, RegistryObject<? extends Item> material, RegistryObject<? extends Item> result) {
         ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, result.get())
                 .pattern("***")

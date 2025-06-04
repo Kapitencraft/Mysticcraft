@@ -3,7 +3,7 @@ package net.kapitencraft.mysticcraft.item.combat.armor;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.kap_lib.helpers.AttributeHelper;
-import net.kapitencraft.kap_lib.item.combat.armor.ModArmorItem;
+import net.kapitencraft.kap_lib.item.combat.armor.AbstractArmorItem;
 import net.kapitencraft.kap_lib.registry.ExtraAttributes;
 import net.kapitencraft.kap_lib.util.ExtraRarities;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -11,7 +11,7 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ArmorItem;
 
-public class ManaSteelArmor extends ModArmorItem {
+public class ManaSteelArmor extends AbstractArmorItem {
     public ManaSteelArmor(ArmorItem.Type type) {
         super(ModArmorMaterials.MANA_STEEL, type, new Properties().rarity(ExtraRarities.MYTHIC));
     }

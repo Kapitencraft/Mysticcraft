@@ -6,14 +6,11 @@ import net.kapitencraft.kap_lib.helpers.AttributeHelper;
 import net.kapitencraft.kap_lib.io.serialization.DataPackSerializer;
 import net.kapitencraft.kap_lib.item.bonus.Bonus;
 import net.kapitencraft.kap_lib.registry.ExtraAttributes;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.UUID;
 
 public class MagicConversionBonus implements Bonus<MagicConversionBonus> {
@@ -23,15 +20,6 @@ public class MagicConversionBonus implements Bonus<MagicConversionBonus> {
     @Override
     public DataPackSerializer<MagicConversionBonus> getSerializer() {
         return SERIALIZER;
-    }
-
-    @Override
-    public void additionalToNetwork(FriendlyByteBuf friendlyByteBuf) {
-    }
-
-    @Override
-    public void addDisplay(List<Component> list) {
-
     }
 
     @Override

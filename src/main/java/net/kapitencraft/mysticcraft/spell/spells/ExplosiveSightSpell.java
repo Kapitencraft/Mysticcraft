@@ -5,36 +5,48 @@ import net.kapitencraft.kap_lib.util.Color;
 import net.kapitencraft.mysticcraft.client.particle.options.CircleParticleOptions;
 import net.kapitencraft.mysticcraft.helpers.ParticleHelper;
 import net.kapitencraft.mysticcraft.misc.content.mana.ManaAOE;
+import net.kapitencraft.mysticcraft.spell.Spell;
+import net.kapitencraft.mysticcraft.spell.cast.SpellCastContext;
+import net.kapitencraft.mysticcraft.spell.cast.SpellCastContextParams;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Explosion;
-import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.List;
+public class ExplosiveSightSpell implements Spell {
 
-public class ExplosiveSightSpell {
-
-    private static final Component[] description = new Component[] {Component.literal("Explodes in a range of 150")};
-    public static boolean execute(LivingEntity user, ItemStack ignoredStack) {
-        Vec3 viewVec = user.calculateViewVector(user.getXRot(), user.getYRot());
-        Vec3 end = viewVec.scale(150).add(user.getEyePosition());
-        BlockHitResult result = user.level().clip(new ClipContext(viewVec.add(user.getEyePosition()), end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, user));
-        BlockPos pos = result.getBlockPos();
-        Explosion explosion = new Explosion(user.level(), user, pos.getX(), pos.getY(), pos.getZ(), 10, false, Explosion.BlockInteraction.DESTROY_WITH_DECAY);
+    @Override
+    public void cast(SpellCastContext context) {
+        LivingEntity caster = context.getCaster();
+        BlockPos pos = context.getParamOrThrow(SpellCastContextParams.ORIGIN_BLOCK);
+        Explosion explosion = new Explosion(caster.level(), caster, pos.getX(), pos.getY(), pos.getZ(), 10, false, Explosion.BlockInteraction.DESTROY_WITH_DECAY);
         explosion.explode();
         explosion.finalizeExplosion(true);
-        Vec3 vec3 = result.getLocation();
-        MathHelper.moveTowards(vec3, user.getEyePosition(), 3, false);
-        ManaAOE.execute(user, "explosive_sight", 0.2f, 10, 5);
-        ParticleHelper.sendParticles(user.level(), new CircleParticleOptions(new Color(1, 0, 0, 1), 31, 6), true, vec3.x, vec3.y, vec3.z, 1, 0, 0, 0, 0);
-        return true;
+        Vec3 vec3 = context.getParamOrThrow(SpellCastContextParams.ORIGIN);
+        MathHelper.moveTowards(vec3, caster.getEyePosition(), 3, false);
+        ManaAOE.execute(caster, this, 0.2f, 10, 5);
+        ParticleHelper.sendParticles(caster.level(), new CircleParticleOptions(new Color(1, 0, 0, 1), 31, 6), true, vec3.x, vec3.y, vec3.z, 1, 0, 0, 0, 0);
+
     }
 
-    public static List<Component> getDescription() {
-        return List.of(description);
+    @Override
+    public double manaCost() {
+        return 150;
+    }
+
+    @Override
+    public Type getType() {
+        return Type.RELEASE;
+    }
+
+    @Override
+    public int getCooldownTime() {
+        return 600;
+    }
+
+    @Override
+    public boolean canApply(Item item) {
+        return true;
     }
 }

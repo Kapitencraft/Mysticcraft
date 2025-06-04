@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.client.render;
 
 import net.kapitencraft.kap_lib.helpers.MiscHelper;
-import net.kapitencraft.mysticcraft.helpers.NetworkingHelper;
+import net.kapitencraft.kap_lib.helpers.NetworkHelper;
 import net.minecraft.core.particles.DustParticleOptionsBase;
 import net.minecraft.network.FriendlyByteBuf;
 import org.joml.Vector3f;
@@ -98,7 +98,7 @@ public class ColorAnimator {
     public void writeToBytes(FriendlyByteBuf buf) {
         buf.writeInt(getLength());
         buf.writeInt(nextColorTime);
-        colors.forEach((vector3f) -> NetworkingHelper.writeVector3f(buf, vector3f));
+        colors.forEach((vector3f) -> NetworkHelper.writeVector3f(buf, vector3f));
     }
 
     public static ColorAnimator fromBuf(FriendlyByteBuf buf) {

@@ -4,16 +4,11 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.kapitencraft.kap_lib.helpers.MiscHelper;
-import net.kapitencraft.kap_lib.helpers.TextHelper;
 import net.kapitencraft.kap_lib.registry.ExtraAttributes;
 import net.kapitencraft.kap_lib.tags.ExtraTags;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.api.Queue;
 import net.kapitencraft.mysticcraft.bestiary.BestiaryManager;
-import net.kapitencraft.mysticcraft.content.ChainLightningHelper;
-import net.kapitencraft.mysticcraft.helpers.BonusHelper;
 import net.kapitencraft.mysticcraft.helpers.InventoryHelper;
-import net.kapitencraft.mysticcraft.helpers.NetworkingHelper;
 import net.kapitencraft.mysticcraft.inst.MysticcraftPlayerInstance;
 import net.kapitencraft.mysticcraft.item.capability.CapabilityHelper;
 import net.kapitencraft.mysticcraft.item.capability.ITieredItem;
@@ -21,9 +16,12 @@ import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneType;
 import net.kapitencraft.mysticcraft.item.capability.item_stat.ItemStatCapability;
 import net.kapitencraft.mysticcraft.item.capability.reforging.ReforgeManager;
 import net.kapitencraft.mysticcraft.item.combat.duel.DuelHandler;
-import net.kapitencraft.mysticcraft.item.combat.spells.SpellItem;
 import net.kapitencraft.mysticcraft.item.misc.SoulbindHelper;
 import net.kapitencraft.mysticcraft.misc.content.EssenceHolder;
+import net.kapitencraft.mysticcraft.networking.ModMessages;
+import net.kapitencraft.mysticcraft.networking.packets.S2C.SyncElytraDataToPlayerPacket;
+import net.kapitencraft.mysticcraft.networking.packets.S2C.SyncEssenceDataPacket;
+import net.kapitencraft.mysticcraft.networking.packets.S2C.SyncGemstoneDataToPlayerPacket;
 import net.kapitencraft.mysticcraft.tags.ModTags;
 import net.kapitencraft.mysticcraft.villagers.ModVillagers;
 import net.minecraft.nbt.CompoundTag;
@@ -47,7 +45,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.BasicItemListing;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.EntityLeaveLevelEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
@@ -64,7 +61,6 @@ import net.minecraftforge.fml.common.Mod;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.UUID;
 
 
 @Mod.EventBusSubscriber
@@ -111,30 +107,13 @@ public class MiscRegister {
         if (newTarget != null && newTarget.isInvisible()) event.setCanceled(true);
     }
 
-    private static final Queue<UUID> helper = Queue.create();
-    public static final String OVERFLOW_MANA_ID = "overflowMana";
-
 
     @SubscribeEvent
     public static void entityTick(LivingEvent.LivingTickEvent event) {
         LivingEntity living = event.getEntity();
-        BonusHelper.tickEnchantments(living);
-        CompoundTag tag = living.getPersistentData();
         if (living instanceof Player player) {
-            if (tag.contains(SpellItem.SPELL_EXECUTION_DUR)) {
-                if (tag.getByte(SpellItem.SPELL_EXECUTION_DUR) < 1 || tag.getString(SpellItem.SPELL_EXE).length() >= 7) {
-                    ItemStack mainHand = living.getMainHandItem();
-                    if (mainHand.getItem() instanceof SpellItem spellItem) {
-                        spellItem.executeSpell(tag.getString(SpellItem.SPELL_EXE), mainHand, living);
-                        tag.putString(SpellItem.SPELL_EXE, "");
-                    }
-                    TextHelper.clearTitle(player);
-                } else {
-                    tag.putByte(SpellItem.SPELL_EXECUTION_DUR, (byte) (tag.getByte(SpellItem.SPELL_EXECUTION_DUR) - 1));
-                }
-            }
-            if (InventoryHelper.hasSetInInventory(player, ITieredItem.ItemTier.INFERNAL)) {
-                MiscHelper.awardAchievement(player, "mysticcraft:infernal_armor");
+            if (InventoryHelper.hasSetInInventory(player, ITieredItem.ItemTier.INFERNAL) && player instanceof ServerPlayer serverPlayer) {
+                MiscHelper.awardAchievement(serverPlayer, MysticcraftMod.res("infernal_armor"));
             }
         }
         if (living instanceof Mob mob) {
@@ -142,11 +121,6 @@ public class MiscRegister {
                 mob.setTarget(null);
             }
         }
-    }
-
-    @SubscribeEvent
-    public static void serverTick(TickEvent.LevelTickEvent event) {
-        ChainLightningHelper.tick();
     }
 
     @SubscribeEvent
@@ -172,7 +146,10 @@ public class MiscRegister {
                 instance.setBaseValue(mana);
             }
             if (event.getEntity() instanceof ServerPlayer serverPlayer) {
-                NetworkingHelper.syncAll(serverPlayer);
+                ModMessages.sendToClientPlayer(new SyncEssenceDataPacket(serverPlayer.getCapability(CapabilityHelper.ESSENCE).orElseGet(EssenceHolder::new)), serverPlayer);
+                ModMessages.sendToClientPlayer(SyncGemstoneDataToPlayerPacket.fromPlayer(serverPlayer), serverPlayer);
+                ModMessages.sendToClientPlayer(SyncElytraDataToPlayerPacket.fromPlayer(serverPlayer), serverPlayer);
+                serverPlayer.getStats().sendStats(serverPlayer);
             }
         }
     }

@@ -92,7 +92,7 @@ public class ReforgeAnvilMenu extends NoBEMenu<ReforgeAnvilMenu.ReforgeAnvilCont
                         essenceHolder.remove(IEssenceData.read(stack), stack.getCount())
                 )
         );
-        toRemove.forEach(stack -> InventoryHelper.removeFromInventory(stack, player));
+        toRemove.forEach(stack -> net.kapitencraft.kap_lib.helpers.InventoryHelper.removeFromInventory(stack, player));
     }
 
     @Override

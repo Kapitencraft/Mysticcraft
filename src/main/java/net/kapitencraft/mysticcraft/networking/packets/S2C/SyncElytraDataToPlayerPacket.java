@@ -1,45 +1,52 @@
 package net.kapitencraft.mysticcraft.networking.packets.S2C;
 
+import com.mojang.datafixers.util.Pair;
+import net.kapitencraft.kap_lib.io.network.S2C.capability.SyncCapabilityToPlayerPacket;
 import net.kapitencraft.mysticcraft.item.capability.CapabilityHelper;
-import net.kapitencraft.mysticcraft.item.capability.elytra.ElytraCapability;
+import net.kapitencraft.mysticcraft.item.capability.elytra.ElytraData;
 import net.kapitencraft.mysticcraft.item.capability.elytra.IElytraData;
-import net.kapitencraft.mysticcraft.networking.packets.S2C.abstracts.SyncCapabilityToPlayerPacket;
+import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneSlot;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.common.capabilities.Capability;
 
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
-public class SyncElytraDataToPlayerPacket extends SyncCapabilityToPlayerPacket<ElytraCapability, IElytraData> {
-    public SyncElytraDataToPlayerPacket(Map<Integer, ElytraCapability> capForSlotId) {
-        super(capForSlotId);
+public class SyncElytraDataToPlayerPacket extends SyncCapabilityToPlayerPacket<Pair<ElytraData, Integer>, IElytraData> {
+    protected SyncElytraDataToPlayerPacket(List<Pair<ElytraData, Integer>> data) {
+        super(data);
     }
 
     public SyncElytraDataToPlayerPacket(FriendlyByteBuf buf) {
         super(buf);
     }
 
-    public static SyncElytraDataToPlayerPacket fromPlayer(ServerPlayer player) {
-        return SyncCapabilityToPlayerPacket.createFromCapability(SyncElytraDataToPlayerPacket::new, player, CapabilityHelper.ELYTRA);
+    public static SyncGemstoneDataToPlayerPacket fromPlayer(ServerPlayer player) {
+        Inventory inventory = player.getInventory();
+        List<List<GemstoneSlot>> slots = new ArrayList<>(inventory.getContainerSize());
+        for (int[] i = new int[] {0}; i[0] < inventory.getContainerSize(); i[0]++) {
+            inventory.getItem(i[0]).getCapability(CapabilityHelper.GEMSTONE).ifPresent(iGemstoneHandler -> slots.set(i[0], iGemstoneHandler.getData()));
+        }
+        return new SyncGemstoneDataToPlayerPacket(slots);
     }
 
     @Override
-    public FriendlyByteBuf.Writer<ElytraCapability> getWriter() {
-        return ElytraCapability::write;
-    }
-
-    @Override
-    public FriendlyByteBuf.Reader<ElytraCapability> getReader() {
-        return ElytraCapability::read;
-    }
-
-    @Override
-    public Capability<IElytraData> getCapability() {
+    protected Capability<IElytraData> getCapability() {
         return CapabilityHelper.ELYTRA;
     }
 
     @Override
-    public String getLogId() {
-        return "Elytra";
+    protected FriendlyByteBuf.Reader<Pair<ElytraData, Integer>> getReader() {
+        return buf -> new Pair<>(buf.readEnum(ElytraData.class), buf.readInt());
+    }
+
+    @Override
+    protected FriendlyByteBuf.Writer<Pair<ElytraData, Integer>> getWriter() {
+        return (buf, pair) -> {
+            buf.writeEnum(pair.getFirst());
+            buf.writeInt(pair.getSecond());
+        };
     }
 }

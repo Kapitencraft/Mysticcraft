@@ -1,10 +1,9 @@
 package net.kapitencraft.mysticcraft.misc.content.mana;
 
-import net.kapitencraft.kap_lib.helpers.MathHelper;
-import net.kapitencraft.kap_lib.helpers.TextHelper;
 import net.kapitencraft.mysticcraft.misc.DamageCounter;
-import net.kapitencraft.mysticcraft.misc.damage_source.AbilityDamageSource;
-import net.minecraft.network.chat.Component;
+import net.kapitencraft.mysticcraft.misc.damage_source.SpellDamageSource;
+import net.kapitencraft.mysticcraft.spell.Spell;
+import net.kapitencraft.mysticcraft.spell.spells.SpellProjectile;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
@@ -15,18 +14,18 @@ import java.util.List;
 
 public class ManaAOE {
 
-    public static void execute(LivingEntity user, String name, float intScaling, float damage, double range) {
+    public static void execute(LivingEntity user, Spell spell, float intScaling, float damage, double range) {
         final Vec3 center = new Vec3((user.getX()), (user.getY()), (user.getZ()));
         List<LivingEntity> entFound = user.level().getEntitiesOfClass(LivingEntity.class, new AABB(center, center).inflate(range), e -> true).stream().sorted(Comparator.comparingDouble(entCnd -> entCnd.distanceToSqr(center))).toList();
         DamageCounter.activate();
         for (LivingEntity entityIterator : entFound) {
             if (!(entityIterator == user)) {
-                entityIterator.hurt(AbilityDamageSource.createDirect(user, intScaling, name), damage);
+                entityIterator.hurt(SpellDamageSource.createDirect(user, intScaling, spell), damage);
             }
         }
         DamageCounter.DamageHolder holder = DamageCounter.getDamage(true);
         if (!user.level().isClientSide() && user instanceof Player player && holder.hasDamage()) {
-            player.sendSystemMessage(Component.literal("Your " + TextHelper.makeGrammar(name) + " hit " + TextHelper.wrapInRed(holder.hit()) + " Enemies for " + TextHelper.wrapInRed(MathHelper.defRound(holder.damage())) + " Damage"));
+            SpellProjectile.sendDamageMessage(player, spell, holder.hit(), holder.damage());
         }
     }
 }

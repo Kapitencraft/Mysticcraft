@@ -1,51 +1,40 @@
 package net.kapitencraft.mysticcraft.networking.packets.S2C;
 
+import net.kapitencraft.kap_lib.io.network.S2C.capability.SyncCapabilityToPlayerPacket;
 import net.kapitencraft.mysticcraft.item.capability.CapabilityHelper;
-import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneCapability;
-import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneHelper;
+import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneSlot;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.IGemstoneHandler;
-import net.kapitencraft.mysticcraft.networking.packets.S2C.abstracts.SyncCapabilityToPlayerPacket;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.common.capabilities.Capability;
 
-import java.util.Map;
+import java.util.List;
 
-public class SyncGemstoneDataToPlayerPacket extends SyncCapabilityToPlayerPacket<GemstoneCapability, IGemstoneHandler> {
-
-    public SyncGemstoneDataToPlayerPacket(Map<Integer, GemstoneCapability> capForSlotId) {
-        super(capForSlotId);
+public class SyncGemstoneDataToPlayerPacket extends SyncCapabilityToPlayerPacket<List<GemstoneSlot>, IGemstoneHandler> {
+    protected SyncGemstoneDataToPlayerPacket(List<List<GemstoneSlot>> data) {
+        super(data);
     }
 
     public SyncGemstoneDataToPlayerPacket(FriendlyByteBuf buf) {
         super(buf);
     }
 
-    @Override
-    public FriendlyByteBuf.Writer<GemstoneCapability> getWriter() {
-        return GemstoneHelper::writeCapability;
+    public static SyncGemstoneDataToPlayerPacket fromPlayer(ServerPlayer player) {
+        return SyncCapabilityToPlayerPacket.createPacket(player, CapabilityHelper.GEMSTONE, SyncGemstoneDataToPlayerPacket::new);
     }
 
     @Override
-    public FriendlyByteBuf.Reader<GemstoneCapability> getReader() {
-        return GemstoneHelper::readCapability;
-    }
-
-    @Override
-    public Capability<IGemstoneHandler> getCapability() {
+    protected Capability<IGemstoneHandler> getCapability() {
         return CapabilityHelper.GEMSTONE;
     }
 
-    public static SyncGemstoneDataToPlayerPacket fromPlayer(ServerPlayer serverPlayer) {
-        return SyncCapabilityToPlayerPacket.createFromCapability(SyncGemstoneDataToPlayerPacket::new, serverPlayer, CapabilityHelper.GEMSTONE);
-    }
-
-    public static SyncGemstoneDataToPlayerPacket simple(int id, GemstoneCapability capability) {
-        return new SyncGemstoneDataToPlayerPacket(Map.of(id, capability));
+    @Override
+    protected FriendlyByteBuf.Reader<List<GemstoneSlot>> getReader() {
+        return buf -> buf.readList(GemstoneSlot::fromNw);
     }
 
     @Override
-    public String getLogId() {
-        return "Gemstone";
+    protected FriendlyByteBuf.Writer<List<GemstoneSlot>> getWriter() {
+        return (buf, gemstoneSlots) -> buf.writeCollection(gemstoneSlots, GemstoneSlot::toNw);
     }
 }

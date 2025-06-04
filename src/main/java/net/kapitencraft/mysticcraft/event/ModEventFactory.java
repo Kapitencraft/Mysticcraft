@@ -2,14 +2,11 @@ package net.kapitencraft.mysticcraft.event;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.event.custom.AddGemstonesToItemEvent;
-import net.kapitencraft.mysticcraft.event.custom.FetchItemBonusesEvent;
 import net.kapitencraft.mysticcraft.event.custom.ItemStackEvent;
 import net.kapitencraft.mysticcraft.event.custom.RegisterRarityEvent;
-import net.kapitencraft.mysticcraft.item.IEventListener;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneData;
 import net.kapitencraft.mysticcraft.logging.Markers;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraftforge.common.MinecraftForge;
@@ -39,11 +36,6 @@ public class ModEventFactory {
 
     public static void onSavingItemStack(ItemStack stack, CompoundTag tag) {
         ItemStackEvent.Save event = new ItemStackEvent.Save(stack, tag);
-        MinecraftForge.EVENT_BUS.post(event);
-    }
-
-    public static void fetchItemBonuses(List<IEventListener> listeners, ItemStack stack, EquipmentSlot slot) {
-        FetchItemBonusesEvent event = new FetchItemBonusesEvent(listeners, stack, slot);
         MinecraftForge.EVENT_BUS.post(event);
     }
 

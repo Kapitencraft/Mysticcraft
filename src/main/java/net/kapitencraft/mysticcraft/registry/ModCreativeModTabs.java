@@ -7,7 +7,6 @@ import net.kapitencraft.mysticcraft.item.capability.gemstone.IGemstoneItem;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
 import net.kapitencraft.mysticcraft.spell.Elements;
-import net.kapitencraft.mysticcraft.spell.Spells;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.ListTag;
@@ -28,7 +27,7 @@ public interface ModCreativeModTabs {
     RegistryObject<CreativeModeTab> SPELLS = REGISTRY.register("spell", () -> CreativeModeTab.builder().title(Component.translatable("itemGroup.mysticcraft.spell"))
             .icon(() -> new ItemStack(ModItems.SCYLLA.get()))
             .displayItems((displayParameters, output) -> {
-                output.acceptAll(Spells.createAll().values());
+                output.acceptAll(Spells.createForCreativeModeTab());
                 TabGroup.registerAll(TabRegister.TabTypes.SPELL, output::acceptAll);
             }).build());
 

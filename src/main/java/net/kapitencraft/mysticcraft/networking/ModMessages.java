@@ -1,10 +1,10 @@
 package net.kapitencraft.mysticcraft.networking;
 
+import net.kapitencraft.kap_lib.io.network.SimplePacket;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.networking.packets.C2S.ReforgeItemPacket;
 import net.kapitencraft.mysticcraft.networking.packets.C2S.UpgradeItemPacket;
 import net.kapitencraft.mysticcraft.networking.packets.C2S.UseShortBowPacket;
-import net.kapitencraft.mysticcraft.networking.packets.ModPacket;
 import net.kapitencraft.mysticcraft.networking.packets.S2C.*;
 import net.kapitencraft.mysticcraft.networking.packets.SendCompoundTagPacket;
 import net.minecraft.network.FriendlyByteBuf;
@@ -52,7 +52,6 @@ public class ModMessages {
         addSimpleMessage(UpgradeItemPacket.class, NetworkDirection.PLAY_TO_SERVER, UpgradeItemPacket::new);
         addMessage(SendCompoundTagPacket.class, NetworkDirection.PLAY_TO_SERVER, SendCompoundTagPacket::new);
         addMessage(SendCompoundTagPacket.class, NetworkDirection.PLAY_TO_CLIENT, SendCompoundTagPacket::new);
-        addMessage(DisplayTotemActivationPacket.class, NetworkDirection.PLAY_TO_CLIENT, DisplayTotemActivationPacket::new);
         addMessage(SyncEssenceDataPacket.class, NetworkDirection.PLAY_TO_CLIENT, SyncEssenceDataPacket::new);
         addMessage(SyncGemstoneDataToPlayerPacket.class, NetworkDirection.PLAY_TO_CLIENT, SyncGemstoneDataToPlayerPacket::new);
         addMessage(SyncElytraDataToPlayerPacket.class, NetworkDirection.PLAY_TO_CLIENT, SyncElytraDataToPlayerPacket::new);
@@ -60,7 +59,7 @@ public class ModMessages {
         addMessage(SwingPacket.class, NetworkDirection.PLAY_TO_CLIENT, SwingPacket::new);
     }
 
-    private static <T extends ModPacket> void addMessage(Class<T> tClass, NetworkDirection direction, Function<FriendlyByteBuf, T> decoder) {
+    private static <T extends SimplePacket> void addMessage(Class<T> tClass, NetworkDirection direction, Function<FriendlyByteBuf, T> decoder) {
         PACKET_HANDLER.messageBuilder(tClass, id(), direction)
                 .decoder(decoder)
                 .encoder(T::toBytes)
@@ -68,7 +67,7 @@ public class ModMessages {
                 .add();
     }
 
-    private static <T extends ModPacket> void addSimpleMessage(Class<T> packetClass, NetworkDirection direction, Supplier<T> supplier) {
+    private static <T extends SimplePacket> void addSimpleMessage(Class<T> packetClass, NetworkDirection direction, Supplier<T> supplier) {
         addMessage(packetClass, direction, buf -> supplier.get());
     }
 }

@@ -1,11 +1,13 @@
 package net.kapitencraft.mysticcraft.inst;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.item.capability.containable.ContainableCapability;
 import net.kapitencraft.mysticcraft.item.capability.elytra.ElytraCapability;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneCapability;
+import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneCapabilityProvider;
 import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneData;
 import net.kapitencraft.mysticcraft.item.capability.item_stat.ItemStatCapability;
+import net.kapitencraft.mysticcraft.item.capability.item_stat.ItemStatCapabilityProvider;
+import net.kapitencraft.mysticcraft.item.capability.spell.ISpellItem;
 import net.kapitencraft.mysticcraft.item.material.containable.ContainableItem;
 import net.kapitencraft.mysticcraft.worldgen.gemstone.GemstoneDecorator;
 import net.minecraft.server.MinecraftServer;
@@ -52,21 +54,23 @@ public class MysticcraftServer {
         ItemStack obj = event.getObject();
         Item item = obj.getItem();
         if (data.has(item)) {
-            GemstoneCapability capability = new GemstoneCapability();
+            GemstoneCapability capability = new GemstoneCapability(obj);
             capability.setDefault(data.get(item));
-            event.addCapability(MysticcraftMod.res("gemstone"), capability);
+            event.addCapability(MysticcraftMod.res("gemstone"), new GemstoneCapabilityProvider(capability));
         }
         if (item instanceof ElytraItem) {
             event.addCapability(MysticcraftMod.res("elytra"), ElytraCapability.create());
         }
-        if (item instanceof ContainableItem<?> containableItem) {
-            ContainableCapability<?> capability = containableItem.makeCapability();
-            event.addCapability(MysticcraftMod.res("content"), capability);
+        if (item instanceof ContainableItem<?, ?> containableItem) {
+            event.addCapability(MysticcraftMod.res("content"), containableItem.makeCapabilityProvider());
+        }
+        if (item instanceof ISpellItem spellItem) {
+            event.addCapability(MysticcraftMod.res("spells"), spellItem.createSpells());
         }
         ItemStatCapability capability = new ItemStatCapability();
         Arrays.stream(ItemStatCapability.Type.values()).filter(type -> type.test(item))
                 .forEach(capability::add);
         if (capability.has())
-            event.addCapability(MysticcraftMod.res("stats"), capability);
+            event.addCapability(MysticcraftMod.res("stats"), new ItemStatCapabilityProvider(capability));
     }
 }

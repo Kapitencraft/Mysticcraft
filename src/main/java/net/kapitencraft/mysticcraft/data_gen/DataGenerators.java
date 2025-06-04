@@ -33,9 +33,8 @@ public class DataGenerators {
         generator.addProvider(event.includeServer(), new ModRegistryProvider(output, registries));
         ModTagProvider.Block blockTags = generator.addProvider(event.includeServer(), new ModTagProvider.Block(output, registries, helper));
         generator.addProvider(event.includeServer(), new ModTagProvider.Item(output, registries, blockTags.contentsGetter(), helper));
-        generator.addProvider(event.includeServer(), new ModTagProvider.DamageTypes(output, registries));
         generator.addProvider(event.includeServer(), new ModAchievementProvider(output, registries, helper));
         generator.addProvider(event.includeServer(), new ModItemRequirementsProvider(output));
-        generator.addProvider(event.includeServer(), new ModBonusProvider(output));
+        generator.addProvider(event.includeServer(), new ModBonusProvider(output, registries, helper));
     }
 }

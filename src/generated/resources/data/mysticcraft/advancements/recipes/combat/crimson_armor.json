@@ -30,5 +30,6 @@
     "recipes": [
       "mysticcraft:crimson_armor"
     ]
-  }
+  },
+  "sends_telemetry_event": true
 }

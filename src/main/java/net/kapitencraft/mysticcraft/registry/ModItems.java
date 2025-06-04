@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.registry;
 
 import net.kapitencraft.kap_lib.helpers.MiscHelper;
-import net.kapitencraft.kap_lib.item.combat.armor.ModArmorItem;
+import net.kapitencraft.kap_lib.item.combat.armor.AbstractArmorItem;
 import net.kapitencraft.kap_lib.util.ExtraRarities;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.gui.GUISlotBlockItem;
@@ -90,6 +90,8 @@ public interface ModItems {
     RegistryObject<VoidTotemItem> VOID_TOTEM_ITEM = register("void_totem", VoidTotemItem::new, TabGroup.COMBAT);
     RegistryObject<ModDebugStickItem> MOD_DEBUG_STICK = register("mod_debug_stick", ModDebugStickItem::new, TabGroup.UTILITIES);
     RegistryObject<BuildersWand> BUILDERS_WAND = register("builders_wand", BuildersWand::new, TabGroup.UTILITIES);
+
+    //region Weaponry
     RegistryObject<LongBowItem> LONGBOW = register("longbow", LongBowItem::new, ModBowItem.BOW_GROUP);
     RegistryObject<WizardHatItem> WIZARD_HAT = register("wizard_hat", WizardHatItem::new, ModBowItem.BOW_GROUP);
     RegistryObject<TheStaffOfDestruction> THE_STAFF_DESTRUCTION = register("staff_of_destruction", TheStaffOfDestruction::new, SpellItem.SPELL_GROUP);
@@ -107,6 +109,8 @@ public interface ModItems {
     RegistryObject<BurningScythe> BURNING_SCYTHE = register("burning_scythe", BurningScythe::new, IFireScytheItem.FIRE_SCYTHE_GROUP);
     RegistryObject<InfernalScythe> INFERNAL_SCYTHE = register("infernal_scythe", InfernalScythe::new, IFireScytheItem.FIRE_SCYTHE_GROUP);
     RegistryObject<FireLance> FIRE_LANCE = register("fire_lance", FireLance::new, SpellItem.SPELL_GROUP);
+    //endregion
+
     RegistryObject<LavaFishingRod> LAVA_FISHING_ROD_TEST = register("lava_fishing_rod", () -> new LavaFishingRod(Rarity.RARE), TabGroup.MATERIAL);
     RegistryObject<SpellScrollItem> SPELL_SCROLL = register("spell_scroll", SpellScrollItem::new, null);
     RegistryObject<MaterialModItem> ORB_OF_CONSUMPTION = registerNonStackableMaterial("orb_of_consumption", Rarity.EPIC, TabGroup.MATERIAL);
@@ -128,10 +132,14 @@ public interface ModItems {
     RegistryObject<MaterialModItem> RAW_CRIMSONIUM = registerMaterial("raw_crimsonium", Rarity.UNCOMMON, TabGroup.CRIMSON_MATERIAL);
     RegistryObject<MaterialModItem> RAW_CRIMSONIUM_DUST = registerMaterial("raw_crimsonium_dust", Rarity.RARE, TabGroup.CRIMSON_MATERIAL);
     RegistryObject<MaterialModItem> HARDENED_TEAR = registerMaterial("hardened_tear", Rarity.UNCOMMON, TabGroup.MATERIAL);
+
+    //region Hammer
     RegistryObject<HammerItem> STONE_HAMMER = register("stone_hammer", ()-> new HammerItem(MiscHelper.rarity(Rarity.COMMON), 354), HammerItem.HAMMER_GROUP);
     RegistryObject<HammerItem> IRON_HAMMER = register("iron_hammer", ()-> new HammerItem(MiscHelper.rarity(Rarity.COMMON), 530), HammerItem.HAMMER_GROUP);
     RegistryObject<HammerItem> DIAMOND_HAMMER = register("diamond_hammer", ()-> new HammerItem(MiscHelper.rarity(Rarity.UNCOMMON), 846), HammerItem.HAMMER_GROUP);
     RegistryObject<HammerItem> NETHERITE_HAMMER = register("netherite_hammer", ()-> new HammerItem(MiscHelper.rarity(Rarity.UNCOMMON), 1454), HammerItem.HAMMER_GROUP);
+    //endregion
+
     HashMap<Element, RegistryObject<ElementalShard>> ELEMENTAL_SHARDS = ElementalShard.registerElementShards();
     RegistryObject<RainbowElementalShard> RAINBOW_ELEMENTAL_SHARD = register("elemental_shard_of_rainbow", RainbowElementalShard::new, ElementalShard.ELEMENTS_GROUP);
     RegistryObject<MaterialModItem> FROZEN_BLAZE_ROD = registerMaterial("frozen_blaze_rod", Rarity.RARE, TabGroup.MATERIAL);
@@ -150,13 +158,13 @@ public interface ModItems {
     RegistryObject<MaterialModItem> SOUL_STEEL_NUGGET = registerMaterial("soul_steel_nugget", Rarity.UNCOMMON, TabGroup.MATERIAL);
     RegistryObject<MaterialModItem> SHADOW_CRYSTAL = registerMaterial("shadow_crystal", Rarity.UNCOMMON, TabGroup.MATERIAL);
     RegistryObject<DarkDagger> DARK_DAGGER = register("dark_dagger", DarkDagger::new, TabGroup.COMBAT);
-    Map<ArmorItem.Type, RegistryObject<EnderKnightArmorItem>> ENDER_KNIGHT_ARMOR = ModArmorItem.createRegistry(REGISTRY, "ender_knight", EnderKnightArmorItem::new);
-    Map<ArmorItem.Type, RegistryObject<FrozenBlazeArmorItem>> FROZEN_BLAZE_ARMOR = ModArmorItem.createRegistry(REGISTRY, "frozen_blaze", FrozenBlazeArmorItem::new);
-    Map<ArmorItem.Type, RegistryObject<ShadowAssassinArmorItem>> SHADOW_ASSASSIN_ARMOR = ModArmorItem.createRegistry(REGISTRY, "shadow_assassin", ShadowAssassinArmorItem::new);
-    Map<ArmorItem.Type, RegistryObject<CrimsonArmorItem>> CRIMSON_ARMOR = ModArmorItem.createRegistry(REGISTRY, "crimson", CrimsonArmorItem::new);
-    Map<ArmorItem.Type, RegistryObject<SoulMageArmorItem>> SOUL_MAGE_ARMOR = ModArmorItem.createRegistry(REGISTRY, "soul_mage", SoulMageArmorItem::new);
-    Map<ArmorItem.Type, RegistryObject<WizardCloakArmorItem>> WIZARD_CLOAK_ARMOR = ModArmorItem.createRegistry(REGISTRY, "wizard_cloak", WizardCloakArmorItem::new);
-    Map<ArmorItem.Type, RegistryObject<TerrorArmorItem>> TERROR_ARMOR = ModArmorItem.createRegistry(REGISTRY, "terror", TerrorArmorItem::new);
+    Map<ArmorItem.Type, RegistryObject<EnderKnightArmorItem>> ENDER_KNIGHT_ARMOR = AbstractArmorItem.createRegistry(REGISTRY, "ender_knight", EnderKnightArmorItem::new);
+    Map<ArmorItem.Type, RegistryObject<FrozenBlazeArmorItem>> FROZEN_BLAZE_ARMOR = AbstractArmorItem.createRegistry(REGISTRY, "frozen_blaze", FrozenBlazeArmorItem::new);
+    Map<ArmorItem.Type, RegistryObject<ShadowAssassinArmorItem>> SHADOW_ASSASSIN_ARMOR = AbstractArmorItem.createRegistry(REGISTRY, "shadow_assassin", ShadowAssassinArmorItem::new);
+    Map<ArmorItem.Type, RegistryObject<CrimsonArmorItem>> CRIMSON_ARMOR = AbstractArmorItem.createRegistry(REGISTRY, "crimson", CrimsonArmorItem::new);
+    Map<ArmorItem.Type, RegistryObject<SoulMageArmorItem>> SOUL_MAGE_ARMOR = AbstractArmorItem.createRegistry(REGISTRY, "soul_mage", SoulMageArmorItem::new);
+    Map<ArmorItem.Type, RegistryObject<WizardCloakArmorItem>> WIZARD_CLOAK_ARMOR = AbstractArmorItem.createRegistry(REGISTRY, "wizard_cloak", WizardCloakArmorItem::new);
+    Map<ArmorItem.Type, RegistryObject<TerrorArmorItem>> TERROR_ARMOR = AbstractArmorItem.createRegistry(REGISTRY, "terror", TerrorArmorItem::new);
 
     RegistryObject<Item> FROZEN_BLAZE_SPAWN_EGG = REGISTRY.register("frozen_blaze_spawn_egg", ()-> new ForgeSpawnEggItem(ModEntityTypes.FROZEN_BLAZE, -16711681, -16763956, new Item.Properties()));
 

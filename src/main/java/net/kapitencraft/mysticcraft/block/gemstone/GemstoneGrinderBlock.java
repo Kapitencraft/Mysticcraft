@@ -21,6 +21,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+//TODO figure out why model gone
 public class GemstoneGrinderBlock extends Block {
     private static final Component MENU_TITLE = Component.translatable("container.gemstone_grinder");
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;

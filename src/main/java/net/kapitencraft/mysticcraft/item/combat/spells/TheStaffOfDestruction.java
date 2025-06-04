@@ -1,8 +1,7 @@
 package net.kapitencraft.mysticcraft.item.combat.spells;
 
-import net.kapitencraft.mysticcraft.item.capability.spell.SpellHelper;
-import net.kapitencraft.mysticcraft.spell.SpellSlot;
-import net.kapitencraft.mysticcraft.spell.Spells;
+import net.kapitencraft.mysticcraft.item.capability.spell.SpellCapabilityProvider;
+import net.kapitencraft.mysticcraft.registry.Spells;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Rarity;
 
@@ -27,12 +26,7 @@ public class TheStaffOfDestruction extends NormalSpellItem {
     }
 
     @Override
-    public int getSlotAmount() {
-        return 1;
-    }
-
-    @Override
-    public void generateSlots(SpellHelper stack) {
-        stack.setSlot(0, new SpellSlot(Spells.EXPLOSIVE_SIGHT));
+    public SpellCapabilityProvider createSpells() {
+        return SpellCapabilityProvider.with(Spells.EXPLOSIVE_SIGHT);
     }
 }

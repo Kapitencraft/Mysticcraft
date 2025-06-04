@@ -1,12 +1,14 @@
 package net.kapitencraft.mysticcraft.misc.content;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.kapitencraft.kap_lib.helpers.IOHelper;
+import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.item.capability.CapabilityHelper;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.Tag;
 import net.minecraftforge.common.capabilities.AutoRegisterCapability;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -91,12 +93,14 @@ public class EssenceHolder implements ICapabilityProvider, INBTSerializable<Comp
 
     @Override
     public CompoundTag serializeNBT() {
-        return (CompoundTag) IOHelper.get(CODEC.encodeStart(NbtOps.INSTANCE, this), CompoundTag::new);
+        DataResult<Tag> result = CODEC.encodeStart(NbtOps.INSTANCE, this);
+        return (CompoundTag) result.getOrThrow(false, MysticcraftMod.LOGGER::error);
     }
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
-        copyFrom(IOHelper.get(CODEC.parse(NbtOps.INSTANCE, nbt), EssenceHolder::new));
+        DataResult<EssenceHolder> result = CODEC.parse(NbtOps.INSTANCE, nbt);
+        copyFrom(result.getOrThrow(false, MysticcraftMod.LOGGER::error));
     }
 
     public void copyFrom(EssenceHolder oldStore) {

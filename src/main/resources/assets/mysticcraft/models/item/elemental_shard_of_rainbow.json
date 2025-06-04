@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "mysticcraft:item/elemental_shard_of_rainbow",
-    "layer1": "mysticcraft:item/empty_dyed_overlay"
-  },
-  "rendertype": "chromatic"
-}

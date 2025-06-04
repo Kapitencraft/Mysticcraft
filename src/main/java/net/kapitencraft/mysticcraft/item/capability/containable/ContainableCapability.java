@@ -1,57 +1,31 @@
 package net.kapitencraft.mysticcraft.item.capability.containable;
 
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.kapitencraft.mysticcraft.item.capability.ModCapability;
+import com.google.common.collect.ImmutableList;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.util.LazyOptional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 
-public abstract class ContainableCapability<T extends Item> extends ModCapability<ContainableCapability<T>, IContainable<T>> implements IContainable<T> {
-    protected static <T extends Item> Codec<ContainableCapability<T>> createCodec(Function<List<ItemStack>, ContainableCapability<T>> constructor) {
-        return RecordCodecBuilder.create(containableCapabilityInstance ->
-                containableCapabilityInstance.group(
-                        ItemStack.CODEC.listOf().fieldOf("Content").forGetter(ContainableCapability::getContent)
-                ).apply(containableCapabilityInstance, constructor)
-        );
-    }
+public abstract class ContainableCapability<T extends Item> implements IContainable<T> {
 
     private int maxAmount;
-    private final LazyOptional<ContainableCapability<T>> self = LazyOptional.of(() -> this);
-    private final List<ItemStack> content;
-
-    protected ContainableCapability(Codec<ContainableCapability<T>> codec, List<ItemStack> content) {
-        super(codec);
-        this.content = new ArrayList<>(content); //necessary as Codecs return immutable lists
-    }
-
-    protected ContainableCapability(Codec<ContainableCapability<T>> codec) {
-        this(codec, new ArrayList<>());
-    }
+    private final List<ItemStack> content = new ArrayList<>();
 
     public List<ItemStack> getContent() {
         return content;
     }
 
     @Override
-    public void copy(ContainableCapability<T> capability) {
+    public void copyFrom(List<ItemStack> itemStacks) {
         this.content.clear();
-        this.content.addAll(capability.content);
+        this.content.addAll(itemStacks);
     }
 
     @Override
-    public ContainableCapability<T> asType() {
-        return this;
-    }
-
-    @Override
-    public LazyOptional<ContainableCapability<T>> get() {
-        return self;
+    public List<ItemStack> getData() {
+        return ImmutableList.copyOf(this.content);
     }
 
     @Override

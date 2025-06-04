@@ -1,5 +1,5 @@
 {
-  "type": "mysticcraft:armor",
+  "type": "kap_lib:armor",
   "category": "equipment",
   "material": {
     "item": "mysticcraft:soul_chain"

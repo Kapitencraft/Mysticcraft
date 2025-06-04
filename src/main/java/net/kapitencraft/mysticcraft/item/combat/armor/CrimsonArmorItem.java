@@ -2,9 +2,9 @@ package net.kapitencraft.mysticcraft.item.combat.armor;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import net.kapitencraft.kap_lib.client.armor.provider.ArmorModelProvider;
+import net.kapitencraft.kap_lib.client.armor.provider.SimpleModelProvider;
 import net.kapitencraft.kap_lib.helpers.AttributeHelper;
-import net.kapitencraft.kap_lib.item.combat.armor.client.provider.ArmorModelProvider;
-import net.kapitencraft.kap_lib.item.combat.armor.client.provider.SimpleModelProvider;
 import net.kapitencraft.kap_lib.registry.ExtraAttributes;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.item.capability.ITieredItem;
@@ -20,13 +20,11 @@ import net.kapitencraft.mysticcraft.misc.content.EssenceType;
 import net.kapitencraft.mysticcraft.registry.ModItems;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -36,7 +34,8 @@ public class CrimsonArmorItem extends NetherArmorItem implements IModItem {
 
 
     public static final ArmorTabGroup CRIMSON_ARMOR_GROUP = new ArmorTabGroup(TabRegister.TabTypes.WEAPONS_AND_TOOLS);
-    //private static final OrbitAnimationElement element = new OrbitAnimationElement("CrimsonArmorFullset", 2, 3, FlamesForColors.RED, -1, 0, 0);
+    //TODO add animation
+    // private static final OrbitAnimationElement element = new OrbitAnimationElement("CrimsonArmorFullset", 2, 3, FlamesForColors.RED, -1, 0, 0);
 
     public CrimsonArmorItem(ArmorItem.Type p_40387_) {
         super(ModArmorMaterials.CRIMSON, p_40387_, NETHER_ARMOR_PROPERTIES);
@@ -49,18 +48,12 @@ public class CrimsonArmorItem extends NetherArmorItem implements IModItem {
     }
 
     @Override
-    protected void initFullSetTick(ItemStack stack, Level level, LivingEntity living) {
-        //TODO add animation
-        //IAnimatable.get(living).addElement(element);
-    }
-
-    @Override
     public boolean withCustomModel() {
         return true;
     }
 
     @Override
-    protected ArmorModelProvider getModelProvider() {
+    protected ArmorModelProvider createModelProvider() {
         return new SimpleModelProvider(CrimsonArmorModel::createBodyLayer, CrimsonArmorModel::new);
     }
 

@@ -30,5 +30,6 @@
     "recipes": [
       "mysticcraft:mana_steel_sword"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

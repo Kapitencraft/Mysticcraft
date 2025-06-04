@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.item.combat.armor;
 
 import net.kapitencraft.kap_lib.helpers.MiscHelper;
-import net.kapitencraft.kap_lib.item.combat.armor.ModArmorItem;
+import net.kapitencraft.kap_lib.item.combat.armor.AbstractArmorItem;
 import net.kapitencraft.kap_lib.util.ExtraRarities;
 import net.kapitencraft.mysticcraft.item.capability.ITieredItem;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -10,7 +10,7 @@ import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
 
-public abstract class TieredArmorItem extends ModArmorItem implements ITieredItem {
+public abstract class TieredArmorItem extends AbstractArmorItem implements ITieredItem {
     protected static final Properties NETHER_ARMOR_PROPERTIES = new Properties().rarity(ExtraRarities.LEGENDARY);
 
     public TieredArmorItem(ArmorMaterial material, ArmorItem.Type type, Properties properties) {
@@ -25,7 +25,7 @@ public abstract class TieredArmorItem extends ModArmorItem implements ITieredIte
                 return false;
             }
         }
-        return ModArmorItem.isFullSetActive(living, material);
+        return AbstractArmorItem.isFullSetActive(living, material);
     }
 
 

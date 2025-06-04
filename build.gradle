@@ -128,6 +128,21 @@ dependencies {
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }
 
+tasks.named('processResources', ProcessResources).configure {
+    var metaProperties = [
+            minecraft_version: mc_version, minecraft_version_range: mc_version_range,
+            forge_version    : forge_version, forge_version_range: forge_version_range,
+            mod_id           : mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
+            mod_authors      : mod_authors, mod_description: mod_description,
+    ]
+    inputs.properties metaProperties
+
+    filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
+        expand metaProperties + [project: project]
+    }
+}
+
+
 mixin {
     //MixinGradle Settings
     add sourceSets.main, "${mod_id}.mixin-refmap.json"

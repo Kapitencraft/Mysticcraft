@@ -2,8 +2,8 @@ package net.kapitencraft.mysticcraft.item.combat.weapon.ranged.bow;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import net.kapitencraft.kap_lib.item.BaseAttributeUUIDs;
 import net.kapitencraft.kap_lib.registry.ExtraAttributes;
-import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.item.misc.IModItem;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
@@ -140,7 +140,7 @@ public abstract class ModBowItem extends BowItem implements IModItem {
     public @NotNull Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(@NotNull EquipmentSlot slot) {
         HashMultimap<Attribute, AttributeModifier> builder = HashMultimap.create();
         if (slot == EquipmentSlot.MAINHAND) {
-            builder.put(ExtraAttributes.RANGED_DAMAGE.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[5], "Damage Modifier", this.getDamage(), AttributeModifier.Operation.ADDITION));
+            builder.put(ExtraAttributes.RANGED_DAMAGE.get(), new AttributeModifier(BaseAttributeUUIDs.RANGED_DAMAGE, "Damage Modifier", this.getDamage(), AttributeModifier.Operation.ADDITION));
         }
         return builder;
     }

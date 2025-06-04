@@ -1,4 +1,4 @@
-// 1.19.3	2024-10-12T11:40:14.3132962	Item Models: mysticcraft
+// 1.20.1	2025-05-01T01:28:46.9348056	Item Models: mysticcraft
 6d5ec783f5da1d11f74f865a06a32aca08162116 assets/mysticcraft/models/gemstone/crystal/cluster.json
 41c8926a234481e0a6fd386f0b8bd7f9512070be assets/mysticcraft/models/gemstone/crystal/large.json
 3590331baa3cbd22bd7db093dacdffaa4b4e0b81 assets/mysticcraft/models/gemstone/crystal/medium.json
@@ -27,6 +27,7 @@ d815005d7f565b8fe5c8c058f318841614649001 assets/mysticcraft/models/item/crimson_
 3c403159a525fb05370a82776f44a5ae1f87973a assets/mysticcraft/models/item/elemental_shard_of_air.json
 aedd104a8095c91db3a49ee7c1a0d7bb631e8ac2 assets/mysticcraft/models/item/elemental_shard_of_earth.json
 086ced151e57b8f0d35cdc64bbe3cad15a11f76e assets/mysticcraft/models/item/elemental_shard_of_fire.json
+6abf8488706636bc15773a6e94728f740a5d24fb assets/mysticcraft/models/item/elemental_shard_of_rainbow.json
 2a3015829fc12d08a0ec37e937f9c0be3ad6cda1 assets/mysticcraft/models/item/elemental_shard_of_shadow.json
 e0cef4baa69a817487d55da46986e96406d862b0 assets/mysticcraft/models/item/elemental_shard_of_void.json
 d8ca02dcdfc4977418dd950f7e13539188df440f assets/mysticcraft/models/item/elemental_shard_of_water.json
@@ -70,6 +71,7 @@ f245f345e62587fc0e4e1c47717c819d412e69a1 assets/mysticcraft/models/item/shadow_a
 4ab674f0ae09ea8de27187f4539a494b080a4290 assets/mysticcraft/models/item/shadow_assassin_helmet.json
 9d970abbce597a3223ab6a0f96aab294c75a99fe assets/mysticcraft/models/item/shadow_assassin_leggings.json
 9e74d356053079d3b630888d7a388b049124697e assets/mysticcraft/models/item/shadow_crystal.json
+10c77ad0619fc86b17546bb816513229ba219bd6 assets/mysticcraft/models/item/soul_chain.json
 59c0af6f962f11b6efcb71af62d89cd24ca03a52 assets/mysticcraft/models/item/soul_mage_boots.json
 c8be91d2fc752f697236148d4a71c0e519a8d9c7 assets/mysticcraft/models/item/soul_mage_chestplate.json
 cb2cedf1a19d432cdb75b79309125276c3b8c171 assets/mysticcraft/models/item/soul_mage_helmet.json

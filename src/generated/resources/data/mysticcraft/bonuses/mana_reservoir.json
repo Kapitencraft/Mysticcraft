@@ -1,0 +1,15 @@
+{
+  "type": "kap_lib:attribute_modifiers",
+  "data": {
+    "kap_lib:generic.max_mana": [
+      {
+        "type": "minecraft:default",
+        "amount": 0.2,
+        "name": "ManaReservoir",
+        "operation": 2,
+        "uuid": "7abcd60a-b1e4-408b-ae53-93bf68b16b15"
+      }
+    ]
+  },
+  "item": "mysticcraft:soul_mage_chestplate"
+}

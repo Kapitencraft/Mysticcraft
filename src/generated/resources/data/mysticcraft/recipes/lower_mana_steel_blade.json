@@ -19,5 +19,6 @@
   ],
   "result": {
     "item": "mysticcraft:lower_mana_steel_blade"
-  }
+  },
+  "show_notification": true
 }

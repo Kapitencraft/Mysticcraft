@@ -1,142 +1,81 @@
 package net.kapitencraft.mysticcraft.item.capability.spell;
 
 import net.kapitencraft.kap_lib.cooldown.Cooldown;
-import net.kapitencraft.kap_lib.helpers.AttributeHelper;
 import net.kapitencraft.kap_lib.helpers.MathHelper;
 import net.kapitencraft.kap_lib.helpers.TextHelper;
 import net.kapitencraft.kap_lib.registry.ExtraAttributes;
 import net.kapitencraft.kap_lib.requirements.RequirementManager;
-import net.kapitencraft.kap_lib.requirements.RequirementType;
-import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.kap_lib.requirements.type.RequirementType;
+import net.kapitencraft.kap_lib.util.ManaHandler;
 import net.kapitencraft.mysticcraft.event.advancement.ModCriteriaTriggers;
-import net.kapitencraft.mysticcraft.item.capability.ItemData;
-import net.kapitencraft.mysticcraft.item.misc.RNGHelper;
-import net.kapitencraft.mysticcraft.misc.content.mana.ManaMain;
-import net.kapitencraft.mysticcraft.registry.ModItems;
-import net.kapitencraft.mysticcraft.spell.Element;
+import net.kapitencraft.mysticcraft.item.capability.CapabilityHelper;
+import net.kapitencraft.mysticcraft.item.combat.spells.SpellScrollItem;
+import net.kapitencraft.mysticcraft.spell.Spell;
 import net.kapitencraft.mysticcraft.spell.SpellExecutionFailedException;
 import net.kapitencraft.mysticcraft.spell.SpellSlot;
-import net.kapitencraft.mysticcraft.spell.Spells;
-import net.kapitencraft.mysticcraft.spell.spells.Spell;
+import net.kapitencraft.mysticcraft.spell.cast.SpellCastContext;
+import net.kapitencraft.mysticcraft.spell.cast.SpellCastContextParams;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.ApiStatus;
 
-import javax.annotation.Nullable;
 import java.util.List;
-import java.util.Objects;
-import java.util.function.Consumer;
 
-public class SpellHelper implements ItemData<SpellSlot[], SpellHelper> {
+public interface SpellHelper {
 
-    private final SpellSlot[] spellSlots;
-    private final Item item;
-
-    public SpellHelper(int spellSlotAmount, Item item) {
-        this.spellSlots = new SpellSlot[spellSlotAmount];
-        for (int i = 0; i < spellSlotAmount; i++) {
-            this.spellSlots[i] = new SpellSlot(Spells.EMPTY_SPELL);
-        }
-        this.item = item;
+    static int getItemUseDuration(ItemStack stack) {
+        SpellCapability capability = SpellHelper.getCapability(stack);
+        Spell spell = capability.getSlot(0).getSpell();
+        return spell == null ? -1 : spell.getType() == Spell.Type.RELEASE ? 2 : Integer.MAX_VALUE;
     }
 
-    public boolean addSlot(SpellSlot slot) {
-        if (this.getFirstEmptySpellSlot() > -1 && !this.containsSpell(slot.getSpell()) && slot.getSpell().canApply(item)) {
-            this.setSlot(this.getFirstEmptySpellSlot(), slot);
-            return true;
-        }
-        return false;
+    static SpellCapability getCapability(ItemStack stack) {
+        return CapabilityHelper.getCapability(stack, CapabilityHelper.SPELL);
     }
 
-    private void addMultiSpellDisplay(List<Component> list, ItemStack stack, Player player, ISpellItem spellItem) {
-        for (SpellSlot spellSlot : this.spellSlots) {
-            if (spellSlot != null) {
-                list.add(Component.literal(""));
-                spellSlot.getSpell().addDescription(list, spellItem, stack, player);
-            }
-        }
+
+    static Spell getActiveSpell(ItemStack stack) {
+        return SpellHelper.getCapability(stack).getSlot(0).getSpell();
     }
 
-    public void appendDisplay(List<Component> list, ItemStack stack, Player player, ISpellItem spellItem) {
-        @Nullable SpellSlot activeSpellSlot = this.getActiveSpellSlot();
-        Spell spell;
-        if (activeSpellSlot == null) {
-            spell = Spells.EMPTY_SPELL;
-        } else {
-            spell = activeSpellSlot.getSpell();
-        }
-        if (this.spellSlots.length == 1) {
-            spell.addDescription(list, spellItem, stack, player);
-        } else {
-            if (Screen.hasShiftDown()) {
-                list.add(Component.literal(""));
-                addMultiSpellDisplay(list, stack, player, spellItem);
-            } else {
-                list.add(Component.literal(""));
-                list.add(Component.literal("press [SHIFT] to show all Spells"));
-            }
-        }
+
+    static void setSpell(ItemStack stack, int i, Spell spell) {
+        CapabilityHelper.exeCapability(stack, CapabilityHelper.SPELL, spellCapability -> spellCapability.setSlot(i, new SpellSlot(spell)));
     }
 
-    public int getIndexForSlot(Spells spell) {
-        for (int i = 0; i < this.spellSlots.length; i++) {
-            if (this.spellSlots[i].getSpell() == spell) {
-                return i;
-            }
-        }
-        return -1;
+    static boolean hasSpell(ItemStack stack, Spell spell) {
+        return SpellHelper.getCapability(stack).hasSpell(spell);
     }
 
-    private boolean containsSpell(Spell spell) {
-        for (SpellSlot slot : this.spellSlots) {
-            if (slot != null && slot.getSpell() == spell) {
-                return true;
-            }
-        }
-        return false;
+    static boolean hasAnySpell(ItemStack stack) {
+        return SpellHelper.getCapability(stack).getFirstEmpty() != 0;
     }
 
-    public boolean removeSlot(int slotIndex) {
-        if (this.spellSlots.length == 1) {
-            this.spellSlots[0] = null;
-            return true;
-        }
-        try {
-            this.spellSlots[slotIndex] = null;
-            return true;
-        } catch (ArrayIndexOutOfBoundsException e) {
-            MysticcraftMod.LOGGER.warn("unable to change slot: {}", e.getMessage());
-        }
-
-        return false;
-    }
-
-    public boolean handleManaAndExecute(LivingEntity user, Spell spell, ItemStack stack) {
+    static boolean handleManaAndExecute(LivingEntity user, Spell spell, ItemStack stack) {
         if (user.getAttribute(ExtraAttributes.INTELLIGENCE.get()) == null || user instanceof Player player && RequirementManager.instance.meetsRequirements(RequirementType.ITEM, stack.getItem(), player)) {
             return false;
         }
-        double manaToUse = AttributeHelper.getAttributeValue(user.getAttribute(ExtraAttributes.MANA_COST.get()), spell.getDefaultManaCost());
+        double manaToUse = spell.getManaCostForUser(user);
         if (user instanceof ServerPlayer player) {
             ModCriteriaTriggers.USE_MANA.trigger(player, manaToUse);
         }
         AttributeInstance manaInstance = user.getAttribute(ExtraAttributes.MANA.get());
         Cooldown cooldown = spell.getCooldown();
         boolean hasCooldown = cooldown != null;
-        if (!hasCooldown || !cooldown.isActive(user) && manaInstance != null && ManaMain.hasMana(user, manaToUse)) {
+        if (!hasCooldown || !cooldown.isActive(user) && manaInstance != null && ManaHandler.hasMana(user, manaToUse)) {
+            SpellCastContext.Builder builder = new SpellCastContext.Builder();
+            builder.addParam(SpellCastContextParams.CASTER, user);
+            builder.addParam(SpellCastContextParams.WAND, stack);
             try {
-                spell.execute(user, stack);
+                spell.cast(builder.build());
             } catch (SpellExecutionFailedException e) {
                 if (user instanceof Player player) {
                     player.displayClientMessage(Component.translatable(e.getMsg()), true);
@@ -144,136 +83,48 @@ public class SpellHelper implements ItemData<SpellSlot[], SpellHelper> {
                 }
             }
 
-            if (ManaMain.consumeMana(user, manaToUse)) {
+            if (ManaHandler.consumeMana(user, manaToUse)) {
                 if (cooldown != null) cooldown.applyCooldown(user, true);
                 sendUseDisplay(user, spell);
-                List<Element> elements = spell.elements();
-                if (!elements.isEmpty()) {//spawn spell shards
-                    ItemStack spellShardRNG = new ItemStack(ModItems.ELEMENTAL_SHARDS.get(MathHelper.pickRandom(elements)).get());
-                    RNGHelper.calculateAndDrop(spellShardRNG, 0.00002f, user, user.position());
-                }
+
+                //List<Element> elements = spell.elements(); //TODO
+                //if (!elements.isEmpty()) {//spawn spell shards
+                //    ItemStack spellShardRNG = new ItemStack(ModItems.ELEMENTAL_SHARDS.get(MathHelper.pickRandom(elements)).get());
+                //    RNGHelper.calculateAndDrop(spellShardRNG, 0.00002f, user, user.position());
+                //}
                 return true;
             }
         }
         return false;
     }
 
-    public boolean executeSpell(String executionId, ItemStack stack, LivingEntity user) {
-        if (Spells.contains(executionId) && executionId.length() == 7) {
-            Spell spell = Spells.get(executionId);
-            return this.containsSpell(spell) && handleManaAndExecute(user, spell, stack);
-        }
-        return false;
-    }
-
-
     private static void sendUseDisplay(LivingEntity user, Spell spell) {
         if (user instanceof Player player) {
-            double mana_cost = AttributeHelper.getAttributeValue(player.getAttribute(ExtraAttributes.MANA_COST.get()), spell.getDefaultManaCost());
+            double manaCost = spell.getManaCostForUser(player);
             MutableComponent visible;
-            String wrappedManaUsage = TextHelper.wrapInRed("-" + mana_cost + " Mana");
-            if (spell.getType() == Spell.Type.RELEASE) visible = Component.translatable("spell.cast", spell.getName(), wrappedManaUsage);
-            else visible = Component.translatable("spell.use", spell.getName(), wrappedManaUsage);
+            String wrappedManaUsage = TextHelper.wrapInRed("-" + manaCost + " Mana");
+            if (spell.getType() == Spell.Type.RELEASE) visible = Component.translatable("spell.cast", Component.translatable(spell.getDescriptionId()), wrappedManaUsage);
+            else visible = Component.translatable("spell.use", Component.translatable(spell.getDescriptionId()), wrappedManaUsage);
             TextHelper.setHotbarDisplay(player, visible.withStyle(ChatFormatting.AQUA));
         }
     }
 
-    private static final double CAST_OFFSET_SCALE = 0.31;
+    static void appendFullDisplay(List<Component> list, ItemStack stack) {
+        Spell spell = SpellScrollItem.getSpell(stack);
+        if (spell == null) return;
+        list.add(Component.translatable("spell.title", Component.translatable(spell.getDescriptionId())).withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.GOLD));
+        list.addAll(TextHelper.getDescriptionList(spell.getDescriptionId(), null));
+    }
 
-    public static Vec3 getCastOffset(Vec2 rotationVec, boolean left) {
+    /**
+     * side vector scale
+     */
+    @ApiStatus.Internal
+    double CAST_OFFSET_SCALE = 0.31;
+
+    static Vec3 getCastOffset(Vec2 rotationVec, boolean left) {
         Vec3 lookVec = MathHelper.calculateViewVector(rotationVec.x, rotationVec.y).scale(0.60);
         Vec3 sideOffset = MathHelper.calculateViewVector(rotationVec.x, rotationVec.y + 90).scale(left ? -CAST_OFFSET_SCALE : CAST_OFFSET_SCALE);
         return lookVec.add(sideOffset).add(0, -0.275, 0);
-    }
-
-    boolean hasSpell(Spell spell) {
-        for (SpellSlot slot : this.spellSlots) {
-            if (slot.getSpell() == spell) return true;
-        }
-        return false;
-    }
-
-
-    public void setSlot(int index, SpellSlot slot) {
-        this.spellSlots[index] = slot;
-    }
-
-    public int getFirstEmptySpellSlot() {
-        for (int i = 0; i < this.getSpellSlotAmount(); i++) {
-            if (this.spellSlots[i] == null || this.spellSlots[i].getSpell() == Spells.EMPTY_SPELL) {
-                return i;
-            }
-        }
-        return -1;
-    }
-    public int getSpellSlotAmount() {
-        return this.spellSlots.length;
-    }
-    public SpellSlot getActiveSpellSlot() {
-        if (this.spellSlots.length == 1) {
-            SpellSlot activeSpellSlot = this.spellSlots[0];
-            return Objects.requireNonNullElseGet(activeSpellSlot, () -> new SpellSlot(Spells.EMPTY_SPELL));
-        }
-        return null;
-    }
-
-    public Spell getActiveSpell() {
-        if (this.getActiveSpellSlot() != null) {
-            return this.getActiveSpellSlot().getSpell();
-        }
-        return null;
-    }
-
-    public Spell.Type getType() {
-        return getActiveSpell().getType();
-    }
-
-
-    @Override
-    public SpellSlot[] loadData(ItemStack stack, Consumer<SpellHelper> stackConsumer) {
-        CompoundTag tag = stack.getTagElement(getTagId());
-        if (tag != null) {
-            ListTag listTag = tag.getList("Slots", Tag.TAG_COMPOUND);
-            int i = 0;
-            for (Tag tag1 : listTag) {
-                if (tag1 instanceof CompoundTag cTag) {
-                    SpellSlot slot = SpellSlot.fromNbt(cTag);
-                    setSlot(i, slot);
-                    i++;
-                }
-            }
-        } else {
-            stackConsumer.accept(this);
-            save(stack);
-        }
-        return this.spellSlots;
-    }
-
-    void save(ItemStack stack) {
-        this.saveData(stack, this.spellSlots);
-    }
-
-    @Override
-    public void getDisplay(ItemStack stack, List<Component> list) {
-
-    }
-
-    @Override
-    public String getTagId() {
-        return "SpellData";
-    }
-
-    @Override
-    public void saveData(ItemStack stack, SpellSlot[] slots) {
-        CompoundTag tag = new CompoundTag();
-        ListTag slotsTag = new ListTag();
-        for (int i = 0; i < slots.length; i++) {
-            SpellSlot slot = slots[i];
-            if (slot == null) slot = new SpellSlot(Spells.EMPTY_SPELL);
-            slotsTag.add(i, slot.toNbt());
-        }
-        tag.putShort("Size", (short) slots.length);
-        tag.put("Slots", slotsTag);
-        stack.addTagElement(getTagId(), tag);
     }
 }

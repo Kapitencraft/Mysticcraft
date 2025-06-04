@@ -35,19 +35,19 @@ public class GemstoneSlot {
     private final Type type;
     @NotNull
     private GemstoneType appliedGemstoneType;
-    GemstoneSlot(Type gem_type, GemstoneType appliedGemstoneType, GemstoneType.Rarity rarity) {
-        this.type = gem_type;
+    GemstoneSlot(Type gemType, GemstoneType appliedGemstoneType, GemstoneType.Rarity rarity) {
+        this.type = gemType;
         this.appliedGemstoneType = Objects.requireNonNull(appliedGemstoneType);
         this.gemRarity = rarity;
     }
 
-    public static void saveToBytes(FriendlyByteBuf buf, GemstoneSlot slot) {
+    public static void toNw(FriendlyByteBuf buf, GemstoneSlot slot) {
         buf.writeEnum(slot.type);
         buf.writeEnum(slot.appliedGemstoneType);
         buf.writeEnum(slot.gemRarity);
     }
 
-    public static GemstoneSlot readFromBytes(FriendlyByteBuf buf) {
+    public static GemstoneSlot fromNw(FriendlyByteBuf buf) {
         return new GemstoneSlot(buf.readEnum(Type.class), buf.readEnum(GemstoneType.class), buf.readEnum(GemstoneType.Rarity.class));
     }
 

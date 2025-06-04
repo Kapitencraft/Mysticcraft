@@ -1,17 +1,34 @@
 package net.kapitencraft.mysticcraft.spell.spells;
 
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
+import net.kapitencraft.mysticcraft.spell.Spell;
+import net.kapitencraft.mysticcraft.spell.cast.SpellCastContext;
+import net.kapitencraft.mysticcraft.spell.cast.SpellCastContextParams;
+import net.minecraft.world.item.Item;
 
-import java.util.List;
+public class HugeHealSpell implements Spell {
 
-public class HugeHealSpell {
-    public static boolean execute(LivingEntity user, ItemStack ignored) {
-        user.heal(5f);
-        return true;
+    @Override
+    public void cast(SpellCastContext context) {
+        context.getParamOrThrow(SpellCastContextParams.CASTER).heal(5f);
     }
-    public static List<Component> getDescription() {
-        return List.of(Component.literal("Heals for 5 health"));
+
+    @Override
+    public double manaCost() {
+        return 70;
+    }
+
+    @Override
+    public Type getType() {
+        return Type.RELEASE;
+    }
+
+    @Override
+    public int getCooldownTime() {
+        return 140;
+    }
+
+    @Override
+    public boolean canApply(Item item) {
+        return true;
     }
 }
