@@ -2,9 +2,9 @@
   "type": "mysticcraft:soul_mage_armor",
   "data": {},
   "slots": [
-    "head",
     "chest",
-    "legs",
-    "feet"
+    "feet",
+    "head",
+    "legs"
   ]
 }

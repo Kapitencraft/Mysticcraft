@@ -31,7 +31,7 @@ public interface Spell {
     }
 
     default List<Component> getDescription() {
-        return TextHelper.getDescriptionList(this.getDescriptionId(), null);
+        return TextHelper.getDescriptionOrEmpty(this.getDescriptionId(), null);
     }
 
     default double getManaCostForUser(LivingEntity user) {

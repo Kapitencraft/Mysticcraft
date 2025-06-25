@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.item.capability.gemstone;
 
 import com.google.common.collect.Multimap;
-import net.kapitencraft.kap_lib.item.modifier_display.ItemModifiersDisplayExtension;
+import net.kapitencraft.kap_lib.item.modifier_display.EquipmentDisplayExtension;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -13,7 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import java.util.Arrays;
 import java.util.List;
 
-public class GemstoneCapability implements IGemstoneHandler, ItemModifiersDisplayExtension {
+public class GemstoneCapability implements IGemstoneHandler, EquipmentDisplayExtension {
     private GemstoneSlot[] slots;
     private GemstoneSlot[] defaultSlots;
     private final ItemStack stack;

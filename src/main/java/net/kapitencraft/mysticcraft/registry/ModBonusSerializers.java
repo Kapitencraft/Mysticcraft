@@ -4,10 +4,7 @@ import net.kapitencraft.kap_lib.io.serialization.DataPackSerializer;
 import net.kapitencraft.kap_lib.item.bonus.Bonus;
 import net.kapitencraft.kap_lib.registry.custom.core.ExtraRegistries;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.item.bonus.AssassinBonus;
-import net.kapitencraft.mysticcraft.item.bonus.FreezingAuraBonus;
-import net.kapitencraft.mysticcraft.item.bonus.MagicConversionBonus;
-import net.kapitencraft.mysticcraft.item.bonus.SoulMageArmorBonus;
+import net.kapitencraft.mysticcraft.item.bonus.*;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 
@@ -19,4 +16,7 @@ public interface ModBonusSerializers {
     RegistryObject<DataPackSerializer<SoulMageArmorBonus>> SOUL_MAGE_ARMOR = REGISTRY.register("soul_mage_armor", () -> SoulMageArmorBonus.SERIALIZER);
     RegistryObject<DataPackSerializer<MagicConversionBonus>> MAGIC_CONVERSION = REGISTRY.register("soul_mage_armor_helmet", () -> MagicConversionBonus.SERIALIZER);
     RegistryObject<DataPackSerializer<AssassinBonus>> ASSASSIN = REGISTRY.register("assassin", () -> AssassinBonus.SERIALIZER);
+    RegistryObject<DataPackSerializer<SacredBonus>> SACRED = REGISTRY.register("sacred", () -> SacredBonus.SERIALIZER);
+    RegistryObject<DataPackSerializer<DominusBonus>> DOMINUS = REGISTRY.register("dominus", () -> DominusBonus.SERIALIZER);
+    RegistryObject<DataPackSerializer<HydraBonus>> HYDRA = REGISTRY.register("hydra", () -> HydraBonus.SERIALIZER);
 }

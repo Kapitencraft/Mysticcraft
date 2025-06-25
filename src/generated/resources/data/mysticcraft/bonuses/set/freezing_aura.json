@@ -2,9 +2,9 @@
   "type": "mysticcraft:frozen_blaze",
   "data": {},
   "slots": [
-    "head",
     "chest",
-    "legs",
-    "feet"
+    "feet",
+    "head",
+    "legs"
   ]
 }

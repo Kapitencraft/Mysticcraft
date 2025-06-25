@@ -1,6 +1,29 @@
-// 1.20.1	2025-04-26T21:21:53.3968245	Reforge Provider
+// 1.20.1	2025-06-16T00:27:55.7522551	Reforge Provider
+cf32e56a6c748b671fd9c1bd200929c30b1ce129 data/mysticcraft/reforges/armor/clean.json
+69bb948017349dea1bb3677b11257c492b4a9ddb data/mysticcraft/reforges/armor/fierce.json
+dac5225582d9364cf8ed6d964f8d616f3bfdcd65 data/mysticcraft/reforges/armor/heavy.json
+71a46adbb408f751ab21ddad12fea481fc0b388f data/mysticcraft/reforges/armor/light.json
 f45f8aa923d07b3c7669d3c4b7ff8a07e6f8d6bc data/mysticcraft/reforges/armor/mythic.json
 fb0016789a73d73fcebd9c29abb6a0855a0a401f data/mysticcraft/reforges/armor/pure.json
 6b730b74b1cc3c67bd891b3ab91d0d13b9a38189 data/mysticcraft/reforges/armor/smart.json
 7c182f42743f8a40daca559fa04c6b3490e8d95e data/mysticcraft/reforges/armor/titanic.json
 2dfdf1f90f15f61fc445be5111de8cec72ec6f54 data/mysticcraft/reforges/armor/wise.json
+dc44a3a58f83c58a0b79b002dbff176d927a26c8 data/mysticcraft/reforges/melee/epic.json
+bae9d8f06ddbb04e39218c0da58cb0a92fdab143 data/mysticcraft/reforges/melee/fair.json
+0121cb4dd50c8a2977aa8cb189f87b4eaedf84fa data/mysticcraft/reforges/melee/fast.json
+6fd0094a5a37bb0b2684d88ca76a299899717b42 data/mysticcraft/reforges/melee/gentle.json
+ea7699a8d9966ddab351f384f932d632481bd0f8 data/mysticcraft/reforges/melee/heroic.json
+c8f60e825cf33e9fb7488ade0bd91e3a17c9bceb data/mysticcraft/reforges/melee/legendary.json
+71ac99f8edde189e1146b871806db0a10aae990b data/mysticcraft/reforges/melee/odd.json
+d9667e46ac9d5745fc0bf99f4bf0fb12e1b90195 data/mysticcraft/reforges/melee/sacred.json
+949248cb7b270857e972721eebec3b863de80ca4 data/mysticcraft/reforges/melee/sharp.json
+ff254df4c0ad57cd71274f140ac6f6d87d946de0 data/mysticcraft/reforges/melee/spicy.json
+4779bc2e1548fb1d4aef397554d527044a5e4683 data/mysticcraft/reforges/ranged/awkward.json
+418062eb33900116ff73e73fc1196ed48f26e95a data/mysticcraft/reforges/ranged/deadly.json
+29f2c4341f7a93baec64dc551bdb0cdba16d7091 data/mysticcraft/reforges/ranged/fine.json
+c75ad1a7263e34cea4d6b68a7e693f8111a31de1 data/mysticcraft/reforges/ranged/grand.json
+9b11be57b08a42209dfa5a83330de5be0c6c11d8 data/mysticcraft/reforges/ranged/hasty.json
+1fbed1f481821111c6ef0eadaa29001d5a5cc9dc data/mysticcraft/reforges/ranged/neat.json
+d440feae088528f7b6b8d3987983cb39912dd986 data/mysticcraft/reforges/ranged/rapid.json
+0b5d931b7af129cd996ea4d68f4fabbb55f68b92 data/mysticcraft/reforges/ranged/rich.json
+45e6e8fb29c32005125adbe23fd590321c893805 data/mysticcraft/reforges/ranged/unreal.json

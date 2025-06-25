@@ -19,9 +19,7 @@ import net.kapitencraft.mysticcraft.item.combat.duel.DuelHandler;
 import net.kapitencraft.mysticcraft.item.misc.SoulbindHelper;
 import net.kapitencraft.mysticcraft.misc.content.EssenceHolder;
 import net.kapitencraft.mysticcraft.networking.ModMessages;
-import net.kapitencraft.mysticcraft.networking.packets.S2C.SyncElytraDataToPlayerPacket;
 import net.kapitencraft.mysticcraft.networking.packets.S2C.SyncEssenceDataPacket;
-import net.kapitencraft.mysticcraft.networking.packets.S2C.SyncGemstoneDataToPlayerPacket;
 import net.kapitencraft.mysticcraft.tags.ModTags;
 import net.kapitencraft.mysticcraft.villagers.ModVillagers;
 import net.minecraft.nbt.CompoundTag;
@@ -147,8 +145,8 @@ public class MiscRegister {
             }
             if (event.getEntity() instanceof ServerPlayer serverPlayer) {
                 ModMessages.sendToClientPlayer(new SyncEssenceDataPacket(serverPlayer.getCapability(CapabilityHelper.ESSENCE).orElseGet(EssenceHolder::new)), serverPlayer);
-                ModMessages.sendToClientPlayer(SyncGemstoneDataToPlayerPacket.fromPlayer(serverPlayer), serverPlayer);
-                ModMessages.sendToClientPlayer(SyncElytraDataToPlayerPacket.fromPlayer(serverPlayer), serverPlayer);
+                //ModMessages.sendToClientPlayer(SyncGemstoneDataToPlayerPacket.fromPlayer(serverPlayer), serverPlayer);
+                //ModMessages.sendToClientPlayer(SyncElytraDataToPlayerPacket.fromPlayer(serverPlayer), serverPlayer);
                 serverPlayer.getStats().sendStats(serverPlayer);
             }
         }

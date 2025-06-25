@@ -4,10 +4,7 @@ import net.kapitencraft.kap_lib.data_gen.abst.BonusProvider;
 import net.kapitencraft.kap_lib.item.bonus.type.AttributeModifiersBonus;
 import net.kapitencraft.kap_lib.registry.ExtraAttributes;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.item.bonus.AssassinBonus;
-import net.kapitencraft.mysticcraft.item.bonus.FreezingAuraBonus;
-import net.kapitencraft.mysticcraft.item.bonus.MagicConversionBonus;
-import net.kapitencraft.mysticcraft.item.bonus.SoulMageArmorBonus;
+import net.kapitencraft.mysticcraft.item.bonus.*;
 import net.kapitencraft.mysticcraft.registry.ModItems;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
@@ -27,7 +24,8 @@ public class ModBonusProvider extends BonusProvider {
     @Override
     public void register() {
         createSetBonus("freezing_aura").armor(ModItems.FROZEN_BLAZE_ARMOR).setBonus(new FreezingAuraBonus());
-        //createSetBonus("dominus").armor(ModItems.CRIMSON_ARMOR);
+        createSetBonus("dominus").armor(ModItems.CRIMSON_ARMOR).setBonus(new DominusBonus());
+        createSetBonus("hydra").armor(ModItems.TERROR_ARMOR).setBonus(new HydraBonus());
         createSetBonus("mana_syphon").armor(ModItems.SOUL_MAGE_ARMOR).setBonus(new SoulMageArmorBonus());
         createItemBonus(ModItems.SHADOW_DAGGER, "assassin").setBonus(new AssassinBonus());
         createItemBonus(ModItems.SOUL_MAGE_ARMOR.get(ArmorItem.Type.HELMET), "magic_conversion").setBonus(new MagicConversionBonus());

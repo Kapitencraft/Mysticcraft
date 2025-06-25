@@ -12,9 +12,7 @@ import net.kapitencraft.mysticcraft.item.capability.dungeon.IPrestigeAbleItem;
 import net.kapitencraft.mysticcraft.item.capability.dungeon.IStarAbleItem;
 import net.kapitencraft.mysticcraft.item.combat.armor.client.NetherArmorItem;
 import net.kapitencraft.mysticcraft.item.combat.armor.client.model.CrimsonArmorModel;
-import net.kapitencraft.mysticcraft.item.misc.IModItem;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.ArmorTabGroup;
-import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
 import net.kapitencraft.mysticcraft.misc.content.EssenceType;
 import net.kapitencraft.mysticcraft.registry.ModItems;
@@ -30,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class CrimsonArmorItem extends NetherArmorItem implements IModItem {
+public class CrimsonArmorItem extends NetherArmorItem {
 
 
     public static final ArmorTabGroup CRIMSON_ARMOR_GROUP = new ArmorTabGroup(TabRegister.TabTypes.WEAPONS_AND_TOOLS);
@@ -60,11 +58,6 @@ public class CrimsonArmorItem extends NetherArmorItem implements IModItem {
     @Override
     public @Nullable String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
         return makeCustomTextureLocation(MysticcraftMod.MOD_ID, "crimson_armor");
-    }
-
-    @Override
-    public TabGroup getGroup() {
-        return CRIMSON_ARMOR_GROUP;
     }
 
     @Override

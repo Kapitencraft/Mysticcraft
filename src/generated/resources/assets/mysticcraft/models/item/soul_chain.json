@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "mysticcraft:block/soul_chain"
+    "layer0": "mysticcraft:item/soul_chain"
   }
 }

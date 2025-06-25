@@ -5,8 +5,6 @@ import com.google.common.collect.Multimap;
 import net.kapitencraft.kap_lib.item.combat.armor.AbstractArmorItem;
 import net.kapitencraft.kap_lib.registry.ExtraAttributes;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.item.misc.IModItem;
-import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -17,7 +15,7 @@ import net.minecraft.world.item.Rarity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class WizardHatItem extends AbstractArmorItem implements IModItem {
+public class WizardHatItem extends AbstractArmorItem {
 
     public WizardHatItem() {
         super(ModArmorMaterials.WIZARD_HAT, Type.HELMET, new Item.Properties().rarity(Rarity.RARE));
@@ -48,10 +46,5 @@ public class WizardHatItem extends AbstractArmorItem implements IModItem {
     @Override
     public @Nullable String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
         return AbstractArmorItem.makeCustomTextureLocation(MysticcraftMod.MOD_ID, "wizard_hat_model");
-    }
-
-    @Override
-    public TabGroup getGroup() {
-        return TabGroup.COMBAT;
     }
 }

@@ -2,11 +2,11 @@ package net.kapitencraft.mysticcraft.item.material.containable;
 
 import net.kapitencraft.kap_lib.helpers.MathHelper;
 import net.kapitencraft.kap_lib.helpers.MiscHelper;
+import net.kapitencraft.kap_lib.item.ExtendedItem;
 import net.kapitencraft.mysticcraft.item.capability.CapabilityHelper;
 import net.kapitencraft.mysticcraft.item.capability.containable.ContainableCapability;
 import net.kapitencraft.mysticcraft.item.capability.containable.ContainableCapabilityProvider;
 import net.kapitencraft.mysticcraft.item.capability.containable.IContainable;
-import net.kapitencraft.mysticcraft.item.misc.IModItem;
 import net.kapitencraft.mysticcraft.registry.ModEnchantments;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public abstract class ContainableItem<T extends Item, C extends IContainable<T>> extends Item implements IModItem {
+public abstract class ContainableItem<T extends Item, C extends IContainable<T>> extends Item implements ExtendedItem {
 
     private final int stackSize;
 

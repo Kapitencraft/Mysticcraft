@@ -4,7 +4,6 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.kap_lib.registry.ExtraAttributes;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.item.misc.IModItem;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
 import net.minecraft.core.particles.ParticleOptions;
@@ -21,7 +20,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.ForgeMod;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class ModSwordItem extends SwordItem implements IModItem {
+public abstract class ModSwordItem extends SwordItem {
     public static final float DEFAULT_ATTACK_SPEED = -2.4f;
     public static final TabGroup SWORD_GROUP = new TabGroup(TabRegister.TabTypes.WEAPONS_AND_TOOLS);
     public ModSwordItem(Tier p_43269_, int attackDamage, float attackSpeed, Properties p_43272_) {
@@ -33,10 +32,6 @@ public abstract class ModSwordItem extends SwordItem implements IModItem {
 
     public ParticleOptions getSweepParticle(ItemStack stack) {
         return ParticleTypes.SWEEP_ATTACK;
-    }
-    @Override
-    public TabGroup getGroup() {
-        return SWORD_GROUP;
     }
 
     @Override

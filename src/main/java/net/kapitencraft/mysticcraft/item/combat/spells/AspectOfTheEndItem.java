@@ -1,7 +1,6 @@
 package net.kapitencraft.mysticcraft.item.combat.spells;
 
 import net.kapitencraft.mysticcraft.item.capability.spell.SpellCapabilityProvider;
-import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.registry.Spells;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Rarity;
@@ -20,11 +19,6 @@ public class AspectOfTheEndItem extends NormalSpellItem {
 
     @Override
     public List<Component> getPostDescription() {
-        return null;
-    }
-
-    @Override
-    public TabGroup getGroup() {
         return null;
     }
 

@@ -25,5 +25,7 @@ public class ModLanguageProvider extends EnglishLanguageProvider {
         addDeathMessage("magic_explosion", "%1$s got exploded into a million pieces by %2$s's magic explosion");
         addDeathMessage("numbness", ""); //TODO add msg
         addDeathMessage("fire_lance", "%1$s was burned to ash by %1$s's fire lance");
+
+        Reforges.all().forEach((s, reforge) -> add("reforge." + s, TextHelper.makeGrammar(s)));
     }
 }

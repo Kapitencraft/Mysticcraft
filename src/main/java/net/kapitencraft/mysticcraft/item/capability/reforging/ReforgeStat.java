@@ -1,5 +1,6 @@
 package net.kapitencraft.mysticcraft.item.capability.reforging;
 
+import com.google.common.collect.ImmutableList;
 import net.minecraft.world.item.Rarity;
 
 import java.util.HashMap;
@@ -17,15 +18,19 @@ public class ReforgeStat {
         throw new RuntimeException("Unable to find Rarity " + rarity.name());
     }
 
-    public static ReforgeStat build(Double... values) {
+    public static ReforgeStat build(double... values) {
         return new Builder(values).build();
     }
 
     public static class Builder {
         private final List<Double> values;
 
-        public Builder(Double... values) {
-            this.values = List.of(values);
+        public Builder(double... values) {
+            ImmutableList.Builder<Double> builder = new ImmutableList.Builder<>();
+            for (double value : values) {
+                builder.add(value);
+            }
+            this.values = builder.build();
         }
 
         public Builder(List<Double> list) {

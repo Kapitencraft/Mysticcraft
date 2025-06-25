@@ -2,7 +2,6 @@ package net.kapitencraft.mysticcraft.item.material;
 
 import net.kapitencraft.kap_lib.helpers.MathHelper;
 import net.kapitencraft.kap_lib.helpers.MiscHelper;
-import net.kapitencraft.mysticcraft.item.misc.IModItem;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
 import net.kapitencraft.mysticcraft.registry.ModItems;
@@ -30,7 +29,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 @Mod.EventBusSubscriber
-public class PrecursorRelicItem extends Item implements IModItem {
+public class PrecursorRelicItem extends Item {
     public static final TabGroup PRECURSOR_GROUP = new TabGroup(TabRegister.TabTypes.MOD_MATERIALS);
     private static final UUID DAMAGE_BOOST = UUID.fromString("2e00584a-53e6-4ddf-926f-e13a4c229bdb");
     private static final UUID HP_BOOST = UUID.fromString("e8132f3b-d111-41ae-962c-ebd3385aafdf");
@@ -64,11 +63,6 @@ public class PrecursorRelicItem extends Item implements IModItem {
                 type.write(boss);
             }
         }
-    }
-
-    @Override
-    public TabGroup getGroup() {
-        return PRECURSOR_GROUP;
     }
 
     public enum BossType implements StringRepresentable {

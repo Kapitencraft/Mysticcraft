@@ -6,9 +6,7 @@ import net.kapitencraft.kap_lib.helpers.AttributeHelper;
 import net.kapitencraft.kap_lib.registry.ExtraAttributes;
 import net.kapitencraft.kap_lib.util.ExtraRarities;
 import net.kapitencraft.mysticcraft.item.combat.armor.client.NetherArmorItem;
-import net.kapitencraft.mysticcraft.item.misc.IModItem;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.ArmorTabGroup;
-import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -18,7 +16,7 @@ import net.minecraft.world.item.ItemStack;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class SoulMageArmorItem extends NetherArmorItem implements IModItem {
+public class SoulMageArmorItem extends NetherArmorItem {
     public static final ArmorTabGroup SOUL_MAGE_ARMOR_GROUP = new ArmorTabGroup(TabRegister.TabTypes.WEAPONS_AND_TOOLS);
 
     @Override
@@ -37,11 +35,6 @@ public class SoulMageArmorItem extends NetherArmorItem implements IModItem {
             builder.put(ExtraAttributes.INTELLIGENCE.get(), AttributeHelper.createModifier("SoulMageArmorIntelligence", AttributeModifier.Operation.ADDITION,345));
         }
         return builder;
-    }
-
-    @Override
-    public TabGroup getGroup() {
-        return SOUL_MAGE_ARMOR_GROUP;
     }
 
     @Override

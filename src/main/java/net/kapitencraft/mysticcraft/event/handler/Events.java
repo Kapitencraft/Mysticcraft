@@ -10,8 +10,7 @@ import net.minecraftforge.fml.common.Mod;
 public class Events {
 
     @SubscribeEvent
-    public void onRegisterBonusProviders(RegisterBonusProvidersEvent event) {
-        event.register(MysticcraftMod.res("reforge"), Reforges::getReforge);
+    public static void onRegisterBonusProviders(RegisterBonusProvidersEvent event) {
+        event.register(MysticcraftMod.res("reforge"), Reforges::getReforgeBonus);
     }
-
 }

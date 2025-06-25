@@ -3,9 +3,9 @@ package net.kapitencraft.mysticcraft.item.combat.spells;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.kap_lib.helpers.AttributeHelper;
+import net.kapitencraft.kap_lib.item.ExtendedItem;
 import net.kapitencraft.kap_lib.registry.ExtraAttributes;
 import net.kapitencraft.mysticcraft.item.capability.spell.ISpellItem;
-import net.kapitencraft.mysticcraft.item.misc.IModItem;
 import net.kapitencraft.mysticcraft.item.misc.ModTiers;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
 
-public abstract class SpellItem extends SwordItem implements IModItem, ISpellItem {
+public abstract class SpellItem extends SwordItem implements ExtendedItem, ISpellItem {
     public static final TabGroup SPELL_GROUP = new TabGroup(TabRegister.TabTypes.SPELL, TabRegister.TabTypes.WEAPONS_AND_TOOLS);
     public static final UUID ATTACK_SPEED_UUID = BASE_ATTACK_SPEED_UUID;
     public static final UUID ATTACK_DAMAGE_UUID = BASE_ATTACK_DAMAGE_UUID;
@@ -34,11 +34,6 @@ public abstract class SpellItem extends SwordItem implements IModItem, ISpellIte
     public static final String SPELL_EXE = "ExeSpell";
     private final int intelligence;
     private final int ability_damage;
-
-    @Override
-    public TabGroup getGroup() {
-        return SPELL_GROUP;
-    }
 
     //Display settings
     public abstract List<Component> getItemDescription();

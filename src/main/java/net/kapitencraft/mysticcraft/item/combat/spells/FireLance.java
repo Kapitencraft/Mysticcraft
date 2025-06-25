@@ -6,7 +6,6 @@ import net.kapitencraft.mysticcraft.item.capability.spell.ISpellItem;
 import net.kapitencraft.mysticcraft.item.capability.spell.SpellCapabilityProvider;
 import net.kapitencraft.mysticcraft.item.combat.weapon.melee.lance.LanceItem;
 import net.kapitencraft.mysticcraft.item.misc.ModTiers;
-import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.registry.Spells;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.world.InteractionHand;
@@ -31,11 +30,6 @@ public class FireLance extends LanceItem implements ISpellItem {
     @Override
     public double getCritDamage() {
         return 20;
-    }
-
-    @Override
-    public TabGroup getGroup() {
-        return null;
     }
 
     @Override

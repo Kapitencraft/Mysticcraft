@@ -4,7 +4,6 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.kap_lib.item.BaseAttributeUUIDs;
 import net.kapitencraft.kap_lib.registry.ExtraAttributes;
-import net.kapitencraft.mysticcraft.item.misc.IModItem;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
 import net.minecraft.sounds.SoundEvents;
@@ -21,13 +20,8 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class ModBowItem extends BowItem implements IModItem {
+public abstract class ModBowItem extends BowItem {
     public static final TabGroup BOW_GROUP = new TabGroup(TabRegister.TabTypes.WEAPONS_AND_TOOLS);
-
-    @Override
-    public TabGroup getGroup() {
-        return BOW_GROUP;
-    }
 
     public abstract double getDivider();
 

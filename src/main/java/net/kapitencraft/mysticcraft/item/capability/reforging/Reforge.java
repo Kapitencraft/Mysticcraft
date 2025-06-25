@@ -1,19 +1,23 @@
 package net.kapitencraft.mysticcraft.item.capability.reforging;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.JsonOps;
 import net.kapitencraft.kap_lib.item.bonus.AbstractBonusElement;
 import net.kapitencraft.kap_lib.item.bonus.Bonus;
+import net.kapitencraft.kap_lib.registry.ExtraCodecs;
 import net.kapitencraft.kap_lib.util.ExtraRarities;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.logging.Markers;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.item.*;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -61,12 +65,14 @@ public class Reforge implements AbstractBonusElement {
         for (Map.Entry<Attribute, ReforgeStat> entry : statList.entrySet()) {
             JsonArray array = new JsonArray();
             rarities.forEach(rarity -> array.add(entry.getValue().apply(rarity)));
-            mods.add(String.valueOf(BuiltInRegistries.ATTRIBUTE.getKey(entry.getKey())), array);
-        } //TODO readd bonuese
-        //if (this.bonus != ModReforgingBonuses.EMPTY.get()) {
-        //    object.addProperty("bonus", MiscHelper.nonNullOr(ModRegistries.REFORGE_BONUSES_REGISTRY.getKey(this.bonus), ModReforgingBonuses.EMPTY.getId()).toString());
-        //}
+            mods.add(String.valueOf(ForgeRegistries.ATTRIBUTES.getKey(entry.getKey())), array);
+        }
         object.add("mods", mods);
+        if (this.bonus != null) {
+            DataResult<JsonElement> result = ExtraCodecs.BONUS.encodeStart(JsonOps.INSTANCE, this.bonus);
+            result.get().ifLeft(e -> object.add("bonus", e))
+                    .ifRight(jsonElementPartialResult -> ReforgeManager.LOGGER.warn(Markers.REFORGE_MANAGER, "unable to save bonus: {}", jsonElementPartialResult.message()));
+        }
         return object;
     }
 
@@ -79,7 +85,7 @@ public class Reforge implements AbstractBonusElement {
     }
 
     public void saveToStack(ItemStack stack) {
-        MysticcraftMod.LOGGER.debug(Markers.REFORGE_MANAGER, "putting Reforge '{}' to the Stack", this.registryName);
+        ReforgeManager.LOGGER.debug(Markers.REFORGE_MANAGER, "putting Reforge '{}' to the Stack", this.registryName);
         stack.getOrCreateTag().putString(Reforges.REFORGE_NAME_ID, this.registryName);
     }
 
@@ -91,7 +97,7 @@ public class Reforge implements AbstractBonusElement {
         return name;
     }
 
-    public Type getType() {
+    public Type type() {
         return type;
     }
 
@@ -110,19 +116,29 @@ public class Reforge implements AbstractBonusElement {
 
     @Override
     public ResourceLocation getId() {
-        return null;
+        return MysticcraftMod.res(registryName);
+    }
+
+    @Override
+    public MutableComponent getTitle() {
+        return Component.translatable("reforge_bonus.name");
+    }
+
+    @Override
+    public String getNameId() {
+        //TODO add RL
+        return "reforge_bonus.mysticcraft." + this.registryName;
     }
 
 
     public static @Nullable Reforge getFromStack(ItemStack stack) {
-
         return Reforges.getReforge(stack);
     }
 
 
     public static class Builder {
 
-        private Bonus<?> bonus = null; //ModReforgingBonuses.EMPTY.get();
+        private Bonus<?> bonus = null;
         private final String registryName;
         private final HashMap<Attribute, ReforgeStat> stats = new HashMap<>();
         private boolean onlyFromStone = false;
@@ -152,6 +168,10 @@ public class Reforge implements AbstractBonusElement {
         }
 
 
+        public Builder addStat(Attribute attribute, double... stat) {
+            return this.addStat(attribute, ReforgeStat.build(stat));
+        }
+
         public Builder addStat(Attribute attribute, ReforgeStat stat) {
             if (!stats.containsKey(attribute)) {
                 stats.put(attribute, stat);
@@ -159,11 +179,13 @@ public class Reforge implements AbstractBonusElement {
             return this;
         }
 
-        public Builder addStat(Supplier<Attribute> attribute, ReforgeStat stat) {
+
+        public Builder addStat(Supplier<Attribute> attribute, double... stat) {
             return addStat(attribute.get(), stat);
         }
     }
 
+    @SuppressWarnings("deprecation")
     public enum Type implements StringRepresentable {
         MELEE_WEAPON("melee", stack -> stack.getItem() instanceof SwordItem),
         RANGED_WEAPON("ranged", stack -> stack.getItem() instanceof BowItem),
@@ -193,5 +215,10 @@ public class Reforge implements AbstractBonusElement {
         public @NotNull String getSerializedName() {
             return name;
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Reforge[" + registryName + "]";
     }
 }

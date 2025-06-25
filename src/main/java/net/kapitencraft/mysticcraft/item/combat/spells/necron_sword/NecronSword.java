@@ -61,11 +61,6 @@ public class NecronSword extends SpellItem {
     }
 
     @Override
-    public TabGroup getGroup() {
-        return NECRON_GROUP;
-    }
-
-    @Override
     public SpellCapabilityProvider createSpells() {
         return SpellCapabilityProvider.empty();
     }

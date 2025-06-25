@@ -56,9 +56,4 @@ public class QuiverItem extends ContainableItem<ArrowItem, QuiverCapability> {
     public boolean isBarVisible(@NotNull ItemStack stack) {
         return getUsedCapacity(stack) > 0;
     }
-
-    @Override
-    public TabGroup getGroup() {
-        return QUIVER_GROUP;
-    }
 }

@@ -29,7 +29,6 @@ import net.kapitencraft.mysticcraft.item.creative.BuildersWand;
 import net.kapitencraft.mysticcraft.item.creative.ModDebugStickItem;
 import net.kapitencraft.mysticcraft.item.material.*;
 import net.kapitencraft.mysticcraft.item.material.containable.WalletItem;
-import net.kapitencraft.mysticcraft.item.misc.IModItem;
 import net.kapitencraft.mysticcraft.item.misc.MaterialModItem;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.tools.HammerItem;
@@ -54,21 +53,21 @@ import java.util.function.Supplier;
 @SuppressWarnings("unused")
 public interface ModItems {
 
-    static <T extends Item & IModItem> RegistryObject<T> register(String name, final Supplier<T> supplier, TabGroup group) {
+    static <T extends Item> RegistryObject<T> register(String name, final Supplier<T> supplier, TabGroup group) {
         RegistryObject<T> registryObject = REGISTRY.register(name, supplier);
         if (group != null) group.add(registryObject);
         return registryObject;
     }
 
     static RegistryObject<MaterialModItem> registerMaterial(String name, Rarity rarity, TabGroup group) {
-        return register(name, ()-> new MaterialModItem(rarity, true, group), group);
+        return register(name, ()-> new MaterialModItem(rarity, true), group);
     }
 
-    static <T extends Item & IModItem> RegistryObject<MaterialModItem> registerNonStackableMaterial(String name, Rarity rarity, TabGroup group) {
-        return register(name, ()-> new MaterialModItem(rarity, false, group), group);
+    static <T extends Item> RegistryObject<MaterialModItem> registerNonStackableMaterial(String name, Rarity rarity, TabGroup group) {
+        return register(name, ()-> new MaterialModItem(rarity, false), group);
     }
 
-    static <T, V extends Item & IModItem> HashMap<T, RegistryObject<V>> createRegistry(Function<T, V> provider, Function<T, String> nameProvider, List<T> values, TabGroup group) {
+    static <T, V extends Item> HashMap<T, RegistryObject<V>> createRegistry(Function<T, V> provider, Function<T, String> nameProvider, List<T> values, TabGroup group) {
         HashMap<T, RegistryObject<V>> map = new HashMap<>();
         for (T t : values) {
             map.put(t, register(nameProvider.apply(t), ()-> provider.apply(t), group));

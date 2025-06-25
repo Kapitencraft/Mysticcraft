@@ -1,4 +1,9 @@
-// 1.19.3	2024-10-12T11:40:14.3132962	Registries
+// 1.20.1	2025-04-26T21:21:53.4037172	Registries
+ceac723b3239e37705eac152fb1e58a693f51964 data/mysticcraft/damage_type/ability.json
+3fc7f6e350b074892c8344083340a54faf8c1866 data/mysticcraft/damage_type/chain_lightning.json
+967ef9d9b37964e024e749a2bb4acdcea37c7934 data/mysticcraft/damage_type/fire_lance.json
+7d759840f1bd6ba77e1c8c1750e739824f77a2a5 data/mysticcraft/damage_type/magic_explosion.json
+ba9255da8a1c4032f5c276ce7357952300c6c6c8 data/mysticcraft/damage_type/numbness.json
 bc1069bac4cc6f161272f8230636bc45912ce59e data/mysticcraft/worldgen/configured_feature/crimsonium_ore.json
 a001ed24e18a15acadf6b31d0cd37b5d733c78d0 data/mysticcraft/worldgen/configured_feature/gemstone_spawn.json
 ee05e75585edc394d8a9129cd3799f3ad435e69e data/mysticcraft/worldgen/placed_feature/crimsonium_placed.json

@@ -6,11 +6,10 @@ import net.kapitencraft.kap_lib.helpers.AttributeHelper;
 import net.kapitencraft.kap_lib.helpers.MathHelper;
 import net.kapitencraft.kap_lib.helpers.MiscHelper;
 import net.kapitencraft.kap_lib.helpers.TextHelper;
+import net.kapitencraft.kap_lib.item.ExtendedItem;
 import net.kapitencraft.kap_lib.util.ExtraRarities;
 import net.kapitencraft.mysticcraft.api.QuadConsumer;
 import net.kapitencraft.mysticcraft.config.CommonModConfig;
-import net.kapitencraft.mysticcraft.item.misc.IModItem;
-import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
@@ -38,7 +37,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BuildersWand extends Item implements IModItem {
+public class BuildersWand extends Item implements ExtendedItem {
     private BuildType type = BuildType.LINE;
     private Block requiredBlock = Blocks.AIR;
 
@@ -163,11 +162,6 @@ public class BuildersWand extends Item implements IModItem {
                 setMsg(Component.literal("Unable to use Builder's wand: " + e.getMessage()));
             }
         }
-    }
-
-    @Override
-    public TabGroup getGroup() {
-        return null;
     }
 
     public enum BuildType {

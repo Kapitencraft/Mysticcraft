@@ -60,7 +60,7 @@ public interface SpellHelper {
     }
 
     static boolean handleManaAndExecute(LivingEntity user, Spell spell, ItemStack stack) {
-        if (user.getAttribute(ExtraAttributes.INTELLIGENCE.get()) == null || user instanceof Player player && RequirementManager.instance.meetsRequirements(RequirementType.ITEM, stack.getItem(), player)) {
+        if (user.getAttribute(ExtraAttributes.INTELLIGENCE.get()) == null || user instanceof Player player && !RequirementManager.instance.meetsRequirements(RequirementType.ITEM, stack.getItem(), player)) {
             return false;
         }
         double manaToUse = spell.getManaCostForUser(user);
@@ -113,7 +113,7 @@ public interface SpellHelper {
         Spell spell = SpellScrollItem.getSpell(stack);
         if (spell == null) return;
         list.add(Component.translatable("spell.title", Component.translatable(spell.getDescriptionId())).withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.GOLD));
-        list.addAll(TextHelper.getDescriptionList(spell.getDescriptionId(), null));
+        list.addAll(spell.getDescription());
     }
 
     /**

@@ -1,0 +1,14 @@
+// 1.20.1	2025-05-01T01:28:46.9382164	Bonuses of 'mysticcraft'
+e69a8c3d22357adb56d2f6b4c7b08c06a9b8a395 data/kap_lib/tags/items/set/freezing_aura/chest.json
+04f10d2934993e55ff3ac9558c764b750333a036 data/kap_lib/tags/items/set/freezing_aura/feet.json
+3c78f8355eb92a74499a175e293a7b7c2d68d6f0 data/kap_lib/tags/items/set/freezing_aura/head.json
+7925f0812988fd4fd49dd7e7f7a3a40d73ffc0cf data/kap_lib/tags/items/set/freezing_aura/legs.json
+c9d6e86463eadf3f66e2d45aaeef1554b3e6149a data/kap_lib/tags/items/set/mana_syphon/chest.json
+31e116cb82de517d14ece93853d39e17c48653d4 data/kap_lib/tags/items/set/mana_syphon/feet.json
+b09a4be3549d81ccb7fd2a6ac757aaffe452b1f5 data/kap_lib/tags/items/set/mana_syphon/head.json
+5c557eaab07271a1dfe119294545417f3cff8461 data/kap_lib/tags/items/set/mana_syphon/legs.json
+0c6ba89975cc48eea1e42fbb1c6c3b4b6c9ab155 data/mysticcraft/bonuses/assassin.json
+995b3ab22b186f745873efdeee8669c65c045d82 data/mysticcraft/bonuses/magic_conversion.json
+6fc96a23561c2655fce9b8c0c6d307496e8f209f data/mysticcraft/bonuses/mana_reservoir.json
+e5fe4151235ecae77473c3df6f75bb504730caa6 data/mysticcraft/bonuses/set/freezing_aura.json
+f9f0c0ba8f874a2d470ab1770e3f2d34f5fa9fe4 data/mysticcraft/bonuses/set/mana_syphon.json

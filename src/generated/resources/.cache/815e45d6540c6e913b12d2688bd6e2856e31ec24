@@ -1,0 +1,6 @@
+// 1.20.1	2025-04-26T21:21:53.3984199	Tags for minecraft:block mod id mysticcraft
+139c369d5aa84326c785340637ffaa507becc2c7 data/forge/tags/blocks/needs_netherite_tool.json
+ca0495025ce74f993979a2664aed7bb712ad2f0a data/forge/tags/blocks/ores.json
+453ef4aa8cca1958f61d7b3df571255aea409300 data/mysticcraft/tags/blocks/farmable_blocks.json
+b147fcff5c0b4d72df1cb7809b063b2562180832 data/mysticcraft/tags/blocks/forageable_blocks.json
+cafea7a375ea7c056e04d68f3b9876b3b36fd815 data/mysticcraft/tags/blocks/mineable_blocks.json

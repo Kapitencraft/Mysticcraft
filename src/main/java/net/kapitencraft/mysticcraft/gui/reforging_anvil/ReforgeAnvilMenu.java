@@ -101,7 +101,7 @@ public class ReforgeAnvilMenu extends NoBEMenu<ReforgeAnvilMenu.ReforgeAnvilCont
     }
 
     public void send(String exeRet) {
-        this.access.execute((level1, pos) -> ModMessages.sendToServer(new ReforgeItemPacket(exeRet)));
+        ModMessages.sendToServer(new ReforgeItemPacket(exeRet));
     }
 
     public void reforgeForId(String reforgeId, ServerPlayer player) {
@@ -110,14 +110,13 @@ public class ReforgeAnvilMenu extends NoBEMenu<ReforgeAnvilMenu.ReforgeAnvilCont
             MysticcraftMod.LOGGER.error("{} tried to apply reforge-stone reforge on an reforge table! disconnecting", player.getGameProfile().getName());
             player.connection.disconnect(Component.translatable("disconnect.invalid_reforge"));
         }
+        reforge.saveToStack(this.container.getStack(false));
     }
 
     @Override
     public Player getPlayer() {
         return player;
     }
-
-    //TODO fix reforge not being updated
 
     private static class AnvilSlot extends Slot {
 
@@ -127,7 +126,7 @@ public class ReforgeAnvilMenu extends NoBEMenu<ReforgeAnvilMenu.ReforgeAnvilCont
 
         @Override
         public boolean mayPlace(@NotNull ItemStack pStack) {
-            return this.getSlotIndex() == 0 && Reforges.getReforge(pStack) == null && Reforges.canBeReforged(pStack) ||
+            return this.getSlotIndex() == 0 && Reforges.canBeReforged(pStack) ||
                     this.getSlotIndex() == 1 && pStack.getItem() instanceof IReAnUpgradeable upgradeable && upgradeable.mayUpgrade(pStack);
         }
     }

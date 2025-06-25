@@ -1,6 +1,5 @@
 package net.kapitencraft.mysticcraft.item.material;
 
-import net.kapitencraft.mysticcraft.item.misc.IModItem;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
 import net.kapitencraft.mysticcraft.registry.ModItems;
@@ -16,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.List;
 
-public class ElementalShard extends Item implements IModItem {
+public class ElementalShard extends Item {
     public static final TabGroup ELEMENTS_GROUP = new TabGroup(TabRegister.TabTypes.SPELL, TabRegister.TabTypes.MOD_MATERIALS);
     private final Element element;
 
@@ -32,10 +31,5 @@ public class ElementalShard extends Item implements IModItem {
 
     public static HashMap<Element, RegistryObject<ElementalShard>> registerElementShards() {
         return ModItems.createRegistry(ElementalShard::new, value -> "elemental_shard_of_" + value.getName(), List.of(Elements.values()), ELEMENTS_GROUP);
-    }
-
-    @Override
-    public TabGroup getGroup() {
-        return ELEMENTS_GROUP;
     }
 }

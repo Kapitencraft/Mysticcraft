@@ -1,4 +1,4 @@
-// 1.20.1	2025-05-01T01:28:46.9348056	Item Models: mysticcraft
+// 1.20.1	2025-06-16T00:25:48.5787788	Item Models: mysticcraft
 6d5ec783f5da1d11f74f865a06a32aca08162116 assets/mysticcraft/models/gemstone/crystal/cluster.json
 41c8926a234481e0a6fd386f0b8bd7f9512070be assets/mysticcraft/models/gemstone/crystal/large.json
 3590331baa3cbd22bd7db093dacdffaa4b4e0b81 assets/mysticcraft/models/gemstone/crystal/medium.json
@@ -71,7 +71,7 @@ f245f345e62587fc0e4e1c47717c819d412e69a1 assets/mysticcraft/models/item/shadow_a
 4ab674f0ae09ea8de27187f4539a494b080a4290 assets/mysticcraft/models/item/shadow_assassin_helmet.json
 9d970abbce597a3223ab6a0f96aab294c75a99fe assets/mysticcraft/models/item/shadow_assassin_leggings.json
 9e74d356053079d3b630888d7a388b049124697e assets/mysticcraft/models/item/shadow_crystal.json
-10c77ad0619fc86b17546bb816513229ba219bd6 assets/mysticcraft/models/item/soul_chain.json
+7a14ff4f6af67f976055a49f319ae567f11210e1 assets/mysticcraft/models/item/soul_chain.json
 59c0af6f962f11b6efcb71af62d89cd24ca03a52 assets/mysticcraft/models/item/soul_mage_boots.json
 c8be91d2fc752f697236148d4a71c0e519a8d9c7 assets/mysticcraft/models/item/soul_mage_chestplate.json
 cb2cedf1a19d432cdb75b79309125276c3b8c171 assets/mysticcraft/models/item/soul_mage_helmet.json
@@ -80,5 +80,5 @@ cb2cedf1a19d432cdb75b79309125276c3b8c171 assets/mysticcraft/models/item/soul_mag
 b6d87446f62ae1f862e06accc251dc9179b88f63 assets/mysticcraft/models/item/unbreaking_core.json
 394a85696b3cdebd20970f18436d0d4d68094657 assets/mysticcraft/models/item/upper_mana_steel_blade.json
 439600809e9f4ff8e4361b1ad81e932624568b3f assets/mysticcraft/models/item/valkyrie.json
-292316f04b20b3f69e7218981790bd752cffb81d assets/mysticcraft/models/item/void_totem.json
+6a06d9d6377fd1ece7c384cebe0d45d214b22f83 assets/mysticcraft/models/item/void_totem.json
 cb10b263320d157657028caa7c0bb128e75479af assets/mysticcraft/models/item/wizard_hat.json

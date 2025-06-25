@@ -2,6 +2,7 @@ package net.kapitencraft.mysticcraft.item.combat.weapon.ranged.bow;
 
 import net.kapitencraft.kap_lib.helpers.IOHelper;
 import net.kapitencraft.kap_lib.helpers.MathHelper;
+import net.kapitencraft.kap_lib.item.ExtendedItem;
 import net.kapitencraft.kap_lib.registry.ExtraAttributes;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
@@ -18,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public abstract class ShortBowItem extends ModBowItem {
+public abstract class ShortBowItem extends ModBowItem implements ExtendedItem {
     public static final String COOLDOWN_ID = "Cooldown";
 
     @Override

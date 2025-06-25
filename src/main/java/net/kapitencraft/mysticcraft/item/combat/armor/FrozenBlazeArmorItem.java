@@ -6,9 +6,7 @@ import net.kapitencraft.kap_lib.item.combat.armor.AbstractArmorItem;
 import net.kapitencraft.kap_lib.util.ExtraRarities;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.item.combat.armor.client.model.FrozenBlazeArmorModel;
-import net.kapitencraft.mysticcraft.item.misc.IModItem;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.ArmorTabGroup;
-import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -17,13 +15,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-public class FrozenBlazeArmorItem extends AbstractArmorItem implements IModItem {
+public class FrozenBlazeArmorItem extends AbstractArmorItem {
     public static final ArmorTabGroup FROZEN_BLAZE_ARMOR_GROUP = new ArmorTabGroup(TabRegister.TabTypes.WEAPONS_AND_TOOLS);
-
-    @Override
-    public TabGroup getGroup() {
-        return FROZEN_BLAZE_ARMOR_GROUP;
-    }
 
     public FrozenBlazeArmorItem(ArmorItem.Type type) {
         super(ModArmorMaterials.FROZEN_BLAZE, type, new Item.Properties().rarity(ExtraRarities.LEGENDARY).fireResistant());

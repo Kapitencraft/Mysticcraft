@@ -38,7 +38,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         makeRainbowElementShard();
 
         withExistingParent("blazing_salmon", "item/generated").texture("layer0", "item/blazing_salmon_1").texture("layer1", "item/salmon_head");
-        withExistingParent("soul_chain", "item/generated").texture("layer0", "block/soul_chain");
+        withExistingParent("soul_chain", "item/generated").texture("layer0", "item/soul_chain");
 
         handHeldItem(ModItems.BUILDERS_WAND, mcLoc("item/netherite_shovel"));
         handHeldItem(ModItems.MOD_DEBUG_STICK, mcLoc("item/stick"));
