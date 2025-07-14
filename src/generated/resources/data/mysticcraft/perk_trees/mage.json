@@ -1,0 +1,8 @@
+{
+  "background": "minecraft:textures/block/amethyst_block.png",
+  "icon": {
+    "item": "mysticcraft:aspect_of_the_end",
+    "nbt": "{Damage:0}"
+  },
+  "root": "mysticcraft:mana_pool"
+}

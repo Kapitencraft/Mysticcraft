@@ -1,18 +1,18 @@
 package net.kapitencraft.mysticcraft.gui.reforging_anvil;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.capability.CapabilityHelper;
+import net.kapitencraft.mysticcraft.capability.dungeon.IPrestigeAbleItem;
+import net.kapitencraft.mysticcraft.capability.dungeon.IReAnUpgradeable;
+import net.kapitencraft.mysticcraft.capability.essence.IEssenceData;
+import net.kapitencraft.mysticcraft.capability.reforging.Reforge;
+import net.kapitencraft.mysticcraft.capability.reforging.Reforges;
 import net.kapitencraft.mysticcraft.gui.IMenu;
 import net.kapitencraft.mysticcraft.gui.NoBEMenu;
 import net.kapitencraft.mysticcraft.helpers.InventoryHelper;
-import net.kapitencraft.mysticcraft.item.capability.CapabilityHelper;
-import net.kapitencraft.mysticcraft.item.capability.dungeon.IPrestigeAbleItem;
-import net.kapitencraft.mysticcraft.item.capability.dungeon.IReAnUpgradeable;
-import net.kapitencraft.mysticcraft.item.capability.essence.IEssenceData;
-import net.kapitencraft.mysticcraft.item.capability.reforging.Reforge;
-import net.kapitencraft.mysticcraft.item.capability.reforging.Reforges;
 import net.kapitencraft.mysticcraft.item.material.EssenceItem;
-import net.kapitencraft.mysticcraft.networking.ModMessages;
-import net.kapitencraft.mysticcraft.networking.packets.C2S.ReforgeItemPacket;
+import net.kapitencraft.mysticcraft.network.ModMessages;
+import net.kapitencraft.mysticcraft.network.packets.C2S.ReforgeItemPacket;
 import net.kapitencraft.mysticcraft.registry.ModBlocks;
 import net.kapitencraft.mysticcraft.registry.ModMenuTypes;
 import net.minecraft.network.chat.Component;
@@ -97,7 +97,7 @@ public class ReforgeAnvilMenu extends NoBEMenu<ReforgeAnvilMenu.ReforgeAnvilCont
 
     @Override
     protected Block getBlock() {
-        return ModBlocks.REFORGING_ANVIL.getBlock();
+        return ModBlocks.REFORGING_ANVIL.get();
     }
 
     public void send(String exeRet) {

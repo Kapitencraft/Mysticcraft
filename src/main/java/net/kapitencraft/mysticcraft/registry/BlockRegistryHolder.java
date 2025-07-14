@@ -6,7 +6,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 import java.util.function.Supplier;
 
-public class BlockRegistryHolder<T extends Block, K extends BlockItem> {
+public class BlockRegistryHolder<T extends Block, K extends BlockItem> implements Supplier<T> {
     private final RegistryObject<T> block;
     private final RegistryObject<K> item;
 
@@ -19,15 +19,12 @@ public class BlockRegistryHolder<T extends Block, K extends BlockItem> {
         return item.get();
     }
 
-    public T getBlock() {
-        return block.get();
-    }
-
-    public Supplier<Block> block() {
-        return (Supplier<Block>) block;
-    }
-
     public RegistryObject<K> item() {
         return item;
+    }
+
+    @Override
+    public T get() {
+        return block.get();
     }
 }

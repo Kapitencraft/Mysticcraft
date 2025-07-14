@@ -4,8 +4,8 @@ import net.kapitencraft.kap_lib.helpers.MiscHelper;
 import net.kapitencraft.kap_lib.item.combat.armor.AbstractArmorItem;
 import net.kapitencraft.kap_lib.util.ExtraRarities;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneItem;
 import net.kapitencraft.mysticcraft.gui.GUISlotBlockItem;
-import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneItem;
 import net.kapitencraft.mysticcraft.item.combat.armor.*;
 import net.kapitencraft.mysticcraft.item.combat.shield.GoldenShield;
 import net.kapitencraft.mysticcraft.item.combat.shield.IronShield;
@@ -34,6 +34,7 @@ import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.tools.HammerItem;
 import net.kapitencraft.mysticcraft.item.tools.fishing_rods.LavaFishingRod;
 import net.kapitencraft.mysticcraft.spell.Element;
+import net.kapitencraft.mysticcraft.tech.item.TechWandItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -174,4 +175,10 @@ public interface ModItems {
 
     //HashMap<GuildUpgrades, RegistryObject<GuildUpgradeItem>> GUILD_UPGRADES = GuildUpgrades.createRegistry();
     HashMap<PrecursorRelicItem.BossType, RegistryObject<PrecursorRelicItem>> PRECURSOR_RELICTS = PrecursorRelicItem.makeRegistry();
+
+    //region tech
+
+    RegistryObject<TechWandItem> TECH_WAND = register("tech_wand", TechWandItem::new, TabGroup.TECHNOLOGY);
+
+    //endregion
 }

@@ -1,13 +1,13 @@
 package net.kapitencraft.mysticcraft.inst;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.item.capability.elytra.ElytraCapability;
-import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneCapability;
-import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneCapabilityProvider;
-import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneData;
-import net.kapitencraft.mysticcraft.item.capability.item_stat.ItemStatCapability;
-import net.kapitencraft.mysticcraft.item.capability.item_stat.ItemStatCapabilityProvider;
-import net.kapitencraft.mysticcraft.item.capability.spell.ISpellItem;
+import net.kapitencraft.mysticcraft.capability.elytra.ElytraCapability;
+import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneCapability;
+import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneCapabilityProvider;
+import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneData;
+import net.kapitencraft.mysticcraft.capability.item_stat.ItemStatCapability;
+import net.kapitencraft.mysticcraft.capability.item_stat.ItemStatCapabilityProvider;
+import net.kapitencraft.mysticcraft.capability.spell.ISpellItem;
 import net.kapitencraft.mysticcraft.item.material.containable.ContainableItem;
 import net.kapitencraft.mysticcraft.worldgen.gemstone.GemstoneDecorator;
 import net.minecraft.server.MinecraftServer;

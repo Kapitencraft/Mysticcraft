@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.block;
 
 import net.kapitencraft.mysticcraft.block.gemstone.GemstoneSeedBlock;
-import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneType;
+import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneType;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 

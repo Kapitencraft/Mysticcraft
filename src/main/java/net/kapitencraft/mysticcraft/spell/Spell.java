@@ -5,14 +5,15 @@ import net.kapitencraft.kap_lib.helpers.AttributeHelper;
 import net.kapitencraft.kap_lib.helpers.MathHelper;
 import net.kapitencraft.kap_lib.helpers.TextHelper;
 import net.kapitencraft.kap_lib.registry.ExtraAttributes;
-import net.kapitencraft.mysticcraft.cooldown.Cooldowns;
 import net.kapitencraft.mysticcraft.registry.custom.ModRegistries;
 import net.kapitencraft.mysticcraft.spell.cast.SpellCastContext;
+import net.minecraft.Util;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.item.Item;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -22,12 +23,14 @@ public interface Spell {
 
     double manaCost();
 
-    Type getType();
+    int castDuration();
 
-    int getCooldownTime();
+    @NotNull Type getType();
 
-    default Cooldown getCooldown() {
-        return Cooldowns.SPELLS.getOrCreate(this, getCooldownTime());
+    @NotNull SpellTarget getTarget();
+
+    default @Nullable Cooldown getCooldown() {
+        return null;
     }
 
     default List<Component> getDescription() {
@@ -40,9 +43,7 @@ public interface Spell {
     }
 
     default String getDescriptionId() {
-        ResourceLocation location = ModRegistries.SPELLS.getKey(this);
-        if (location == null) throw new IllegalArgumentException("unknown spell: " + this);
-        return "spell." + location.getNamespace() + "." + location.getPath();
+        return Util.makeDescriptionId("spell", ModRegistries.SPELLS.getKey(this));
     }
 
     enum Type {

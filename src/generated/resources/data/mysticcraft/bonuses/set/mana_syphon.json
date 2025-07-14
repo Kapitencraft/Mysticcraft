@@ -1,10 +1,11 @@
 {
   "type": "mysticcraft:soul_mage_armor",
   "data": {},
-  "slots": [
+  "equipment_slots": [
     "chest",
+    "legs",
     "feet",
-    "head",
-    "legs"
-  ]
+    "head"
+  ],
+  "wearable_slots": []
 }

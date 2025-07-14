@@ -3,7 +3,7 @@ package net.kapitencraft.mysticcraft.item.combat.armor;
 import net.kapitencraft.kap_lib.helpers.MiscHelper;
 import net.kapitencraft.kap_lib.item.combat.armor.AbstractArmorItem;
 import net.kapitencraft.kap_lib.util.ExtraRarities;
-import net.kapitencraft.mysticcraft.item.capability.ITieredItem;
+import net.kapitencraft.mysticcraft.capability.ITieredItem;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ArmorItem;

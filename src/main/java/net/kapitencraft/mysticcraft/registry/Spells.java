@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.registry;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.item.capability.spell.SpellHelper;
+import net.kapitencraft.mysticcraft.capability.spell.SpellHelper;
 import net.kapitencraft.mysticcraft.registry.custom.ModRegistries;
 import net.kapitencraft.mysticcraft.registry.custom.ModRegistryKeys;
 import net.kapitencraft.mysticcraft.spell.Spell;
@@ -29,6 +29,7 @@ public interface Spells {
     RegistryObject<FireBoltSpell> FIRE_BOLT_3 = REGISTRY.register("fire_bolt_3", () -> new FireBoltSpell(true, 2.8f));
     RegistryObject<FireBoltSpell> FIRE_BOLT_4 = REGISTRY.register("fire_bolt_4", () -> new FireBoltSpell(true, 5.2f));
     RegistryObject<FireLanceSpell> FIRE_LANCE = REGISTRY.register("fire_lance", FireLanceSpell::new);
+    RegistryObject<CureVillagerSpell> CURE_VILLAGER = REGISTRY.register("cure_villager", CureVillagerSpell::new);
 
     static Collection<ItemStack> createForCreativeModeTab() {
         return ModRegistries.SPELLS.getValues().stream().map(spell -> {

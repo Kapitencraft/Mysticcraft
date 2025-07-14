@@ -1,14 +1,15 @@
 package net.kapitencraft.mysticcraft.spell.spells;
 
 import net.kapitencraft.kap_lib.helpers.MathHelper;
+import net.kapitencraft.mysticcraft.capability.spell.SpellHelper;
 import net.kapitencraft.mysticcraft.data_gen.ModDamageTypes;
 import net.kapitencraft.mysticcraft.helpers.ParticleHelper;
-import net.kapitencraft.mysticcraft.item.capability.spell.SpellHelper;
 import net.kapitencraft.mysticcraft.item.combat.spells.FireLance;
 import net.kapitencraft.mysticcraft.misc.damage_source.SpellDamageSource;
 import net.kapitencraft.mysticcraft.registry.ModMobEffects;
 import net.kapitencraft.mysticcraft.spell.Spell;
 import net.kapitencraft.mysticcraft.spell.SpellExecutionFailedException;
+import net.kapitencraft.mysticcraft.spell.SpellTarget;
 import net.kapitencraft.mysticcraft.spell.cast.SpellCastContext;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.InteractionHand;
@@ -17,6 +18,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -59,13 +61,18 @@ public class FireLanceSpell implements Spell {
     }
 
     @Override
-    public Type getType() {
+    public int castDuration() {
+        return 40;
+    }
+
+    @Override
+    public @NotNull Type getType() {
         return Type.CYCLE;
     }
 
     @Override
-    public int getCooldownTime() {
-        return 0;
+    public @NotNull SpellTarget getTarget() {
+        return SpellTarget.SELF;
     }
 
     @Override

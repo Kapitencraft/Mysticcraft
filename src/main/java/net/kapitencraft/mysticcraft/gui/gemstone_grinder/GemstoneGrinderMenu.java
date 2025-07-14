@@ -1,9 +1,9 @@
 package net.kapitencraft.mysticcraft.gui.gemstone_grinder;
 
+import net.kapitencraft.mysticcraft.capability.CapabilityHelper;
+import net.kapitencraft.mysticcraft.capability.gemstone.*;
 import net.kapitencraft.mysticcraft.gui.GUISlotBlockItem;
 import net.kapitencraft.mysticcraft.gui.NoBEMenu;
-import net.kapitencraft.mysticcraft.item.capability.CapabilityHelper;
-import net.kapitencraft.mysticcraft.item.capability.gemstone.*;
 import net.kapitencraft.mysticcraft.registry.ModBlocks;
 import net.kapitencraft.mysticcraft.registry.ModItems;
 import net.kapitencraft.mysticcraft.registry.ModMenuTypes;
@@ -47,7 +47,7 @@ public class GemstoneGrinderMenu extends NoBEMenu<GemstoneGrinderMenu.ItemContai
 
     @Override
     protected Block getBlock() {
-        return ModBlocks.GEMSTONE_GRINDER.getBlock();
+        return ModBlocks.GEMSTONE_GRINDER.get();
     }
 
     public ItemStack getApplicable() {

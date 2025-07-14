@@ -2,8 +2,8 @@ package net.kapitencraft.mysticcraft.mixin.classes;
 
 import net.kapitencraft.kap_lib.helpers.MiscHelper;
 import net.kapitencraft.kap_lib.util.ManaHandler;
-import net.kapitencraft.mysticcraft.item.capability.CapabilityHelper;
-import net.kapitencraft.mysticcraft.item.capability.elytra.ElytraData;
+import net.kapitencraft.mysticcraft.capability.CapabilityHelper;
+import net.kapitencraft.mysticcraft.capability.elytra.ElytraData;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ElytraItem;
 import net.minecraft.world.item.Item;

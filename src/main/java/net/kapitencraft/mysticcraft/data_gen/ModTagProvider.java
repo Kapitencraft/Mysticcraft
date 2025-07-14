@@ -87,11 +87,11 @@ public class ModTagProvider {
 
         @Override
         protected void addTags(HolderLookup.@NotNull Provider pProvider) {
-            tag(Tags.Blocks.NEEDS_NETHERITE_TOOL).add(ModBlocks.CRIMSONIUM_ORE.getBlock(),
-                    ModBlocks.GEMSTONE_CRYSTAL.getBlock(), ModBlocks.GEMSTONE_BLOCK.getBlock()
+            tag(Tags.Blocks.NEEDS_NETHERITE_TOOL).add(ModBlocks.CRIMSONIUM_ORE.get(),
+                    ModBlocks.GEMSTONE_CRYSTAL.get(), ModBlocks.GEMSTONE_BLOCK.get()
             );
 
-            tag(Tags.Blocks.ORES).add(ModBlocks.CRIMSONIUM_ORE.getBlock(), ModBlocks.GEMSTONE_SEED.getBlock());
+            tag(Tags.Blocks.ORES).add(ModBlocks.CRIMSONIUM_ORE.get(), ModBlocks.GEMSTONE_SEED.get());
 
             tag(ModTags.Blocks.FARMABLE).addTag(BlockTags.CROPS).add(Blocks.SUGAR_CANE, Blocks.MELON, Blocks.PUMPKIN, Blocks.CHORUS_FLOWER);
 

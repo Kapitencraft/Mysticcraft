@@ -2,7 +2,7 @@ package net.kapitencraft.mysticcraft.data_gen;
 
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.data_gen.advancement.ModAchievementProvider;
+import net.kapitencraft.mysticcraft.data_gen.advancement.ModAdvancementProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
@@ -27,14 +27,15 @@ public class DataGenerators {
         generator.addProvider(false, new ModRecipeProvider(output));
         generator.addProvider(false, ModLootTableProvider.create(output));
         generator.addProvider(true, new ModItemModelProvider(output, helper));
-        generator.addProvider(false, new ModBestiaryProvider(output, provider));
+        generator.addProvider(false, new BestiaryProvider(output, provider));
         generator.addProvider(true, new ReforgeProvider(output));
         //generator.addProvider(event.includeClient(), provider);
         generator.addProvider(true, new ModRegistryProvider(output, registries));
         ModTagProvider.Block blockTags = generator.addProvider(true, new ModTagProvider.Block(output, registries, helper));
         generator.addProvider(true, new ModTagProvider.Item(output, registries, blockTags.contentsGetter(), helper));
-        generator.addProvider(true, new ModAchievementProvider(output, registries, helper));
+        generator.addProvider(true, new ModAdvancementProvider(output, registries, helper));
         generator.addProvider(true, new ModItemRequirementsProvider(output));
-        generator.addProvider(false, new ModBonusProvider(output, registries, helper));
+        generator.addProvider(true, new ModBonusProvider(output, registries, helper));
+        generator.addProvider(true, new PerkProvider(output, registries));
     }
 }

@@ -1,8 +1,8 @@
 package net.kapitencraft.mysticcraft.item.combat.weapon.ranged;
 
-import net.kapitencraft.mysticcraft.item.capability.CapabilityHelper;
-import net.kapitencraft.mysticcraft.item.capability.containable.ContainableCapabilityProvider;
-import net.kapitencraft.mysticcraft.item.capability.containable.QuiverCapability;
+import net.kapitencraft.mysticcraft.capability.CapabilityHelper;
+import net.kapitencraft.mysticcraft.capability.containable.ContainableCapabilityProvider;
+import net.kapitencraft.mysticcraft.capability.containable.QuiverCapability;
 import net.kapitencraft.mysticcraft.item.material.containable.ContainableItem;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;

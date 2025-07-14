@@ -1,0 +1,25 @@
+{
+  "parent": "mysticcraft:mana_pool_2",
+  "childrenVisibleMin": 1,
+  "cost": 2,
+  "display": {
+    "frame": "task",
+    "icon": {
+      "item": "mysticcraft:gemstone",
+      "nbt": "{GemstoneData:{GemId:\"sapphire\",GemRarity:\"perfect\"}}"
+    }
+  },
+  "maxLevel": 5,
+  "reward": {
+    "type": "mysticcraft:stat",
+    "entries": {
+      "kap_lib:generic.mana_regen": [
+        {
+          "id": "77574c63-63cd-4af9-8598-2e638c75543d",
+          "operation": 0,
+          "perLevel": 1.0
+        }
+      ]
+    }
+  }
+}

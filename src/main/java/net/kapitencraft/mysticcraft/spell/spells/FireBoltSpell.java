@@ -1,10 +1,15 @@
 package net.kapitencraft.mysticcraft.spell.spells;
 
+import net.kapitencraft.kap_lib.cooldown.Cooldown;
+import net.kapitencraft.mysticcraft.registry.ModCooldowns;
 import net.kapitencraft.mysticcraft.spell.Spell;
 import net.kapitencraft.mysticcraft.spell.SpellExecutionFailedException;
+import net.kapitencraft.mysticcraft.spell.SpellTarget;
 import net.kapitencraft.mysticcraft.spell.cast.SpellCastContext;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class FireBoltSpell implements Spell {
     private final boolean explosive;
@@ -30,13 +35,23 @@ public class FireBoltSpell implements Spell {
     }
 
     @Override
-    public Type getType() {
+    public int castDuration() {
+        return 20;
+    }
+
+    @Override
+    public @NotNull Type getType() {
         return Type.RELEASE;
     }
 
     @Override
-    public int getCooldownTime() {
-        return 20;
+    public @Nullable Cooldown getCooldown() {
+        return ModCooldowns.FIRE_BOLT.get();
+    }
+
+    @Override
+    public @NotNull SpellTarget getTarget() {
+        return SpellTarget.SELF;
     }
 
     @Override

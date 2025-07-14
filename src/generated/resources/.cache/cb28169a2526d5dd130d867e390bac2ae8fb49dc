@@ -1,14 +1,24 @@
-// 1.20.1	2025-05-01T01:28:46.9382164	Bonuses of 'mysticcraft'
-e69a8c3d22357adb56d2f6b4c7b08c06a9b8a395 data/kap_lib/tags/items/set/freezing_aura/chest.json
-04f10d2934993e55ff3ac9558c764b750333a036 data/kap_lib/tags/items/set/freezing_aura/feet.json
-3c78f8355eb92a74499a175e293a7b7c2d68d6f0 data/kap_lib/tags/items/set/freezing_aura/head.json
-7925f0812988fd4fd49dd7e7f7a3a40d73ffc0cf data/kap_lib/tags/items/set/freezing_aura/legs.json
-c9d6e86463eadf3f66e2d45aaeef1554b3e6149a data/kap_lib/tags/items/set/mana_syphon/chest.json
-31e116cb82de517d14ece93853d39e17c48653d4 data/kap_lib/tags/items/set/mana_syphon/feet.json
-b09a4be3549d81ccb7fd2a6ac757aaffe452b1f5 data/kap_lib/tags/items/set/mana_syphon/head.json
-5c557eaab07271a1dfe119294545417f3cff8461 data/kap_lib/tags/items/set/mana_syphon/legs.json
+// 1.20.1	2025-07-13T15:28:42.9793295	Bonuses of 'mysticcraft'
 0c6ba89975cc48eea1e42fbb1c6c3b4b6c9ab155 data/mysticcraft/bonuses/assassin.json
 995b3ab22b186f745873efdeee8669c65c045d82 data/mysticcraft/bonuses/magic_conversion.json
-6fc96a23561c2655fce9b8c0c6d307496e8f209f data/mysticcraft/bonuses/mana_reservoir.json
-e5fe4151235ecae77473c3df6f75bb504730caa6 data/mysticcraft/bonuses/set/freezing_aura.json
-f9f0c0ba8f874a2d470ab1770e3f2d34f5fa9fe4 data/mysticcraft/bonuses/set/mana_syphon.json
+1fdd81ade141bba9d399512afb9bf048d18a018e data/mysticcraft/bonuses/mana_reservoir.json
+bcc93fb14a46a200cd65437ae8154588a1c42195 data/mysticcraft/bonuses/set/dominus.json
+f8bb8128821633ade56675a347d0e60fa10887c3 data/mysticcraft/bonuses/set/freezing_aura.json
+d750a3cfe31a8919c91ea69c29ff845e7f035121 data/mysticcraft/bonuses/set/hydra.json
+7c9c597589b352fea0e6b785f981ce0cbcf38b83 data/mysticcraft/bonuses/set/mana_syphon.json
+b0586a9f18bff4050c8106ea6540f83d6261a77a data/mysticcraft/tags/items/set/dominus/chest.json
+5739c12b6ac9f4b7946641bbafd9d9e9c3e6ae7e data/mysticcraft/tags/items/set/dominus/feet.json
+b59d92ecc8a45a8e4036962c80657b9a5ee57e1d data/mysticcraft/tags/items/set/dominus/head.json
+faa384e66af85119bbcb1c04b7df478463db9f4d data/mysticcraft/tags/items/set/dominus/legs.json
+e69a8c3d22357adb56d2f6b4c7b08c06a9b8a395 data/mysticcraft/tags/items/set/freezing_aura/chest.json
+04f10d2934993e55ff3ac9558c764b750333a036 data/mysticcraft/tags/items/set/freezing_aura/feet.json
+3c78f8355eb92a74499a175e293a7b7c2d68d6f0 data/mysticcraft/tags/items/set/freezing_aura/head.json
+7925f0812988fd4fd49dd7e7f7a3a40d73ffc0cf data/mysticcraft/tags/items/set/freezing_aura/legs.json
+7526ed55494d23425d290c8c74262a66321f4b8a data/mysticcraft/tags/items/set/hydra/chest.json
+1f3afe726009f6fc022b53ffd6d63e96e5a1660a data/mysticcraft/tags/items/set/hydra/feet.json
+3e93da799a27bd590150e8298d251ce813ffdb27 data/mysticcraft/tags/items/set/hydra/head.json
+f675bc1ac872ce852151f0b6bb75ac3325b49010 data/mysticcraft/tags/items/set/hydra/legs.json
+c9d6e86463eadf3f66e2d45aaeef1554b3e6149a data/mysticcraft/tags/items/set/mana_syphon/chest.json
+31e116cb82de517d14ece93853d39e17c48653d4 data/mysticcraft/tags/items/set/mana_syphon/feet.json
+b09a4be3549d81ccb7fd2a6ac757aaffe452b1f5 data/mysticcraft/tags/items/set/mana_syphon/head.json
+5c557eaab07271a1dfe119294545417f3cff8461 data/mysticcraft/tags/items/set/mana_syphon/legs.json

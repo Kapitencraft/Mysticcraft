@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.misc.content.mana;
 
-import net.kapitencraft.mysticcraft.misc.DamageCounter;
+import net.kapitencraft.kap_lib.util.DamageCounter;
 import net.kapitencraft.mysticcraft.misc.damage_source.SpellDamageSource;
 import net.kapitencraft.mysticcraft.spell.Spell;
 import net.kapitencraft.mysticcraft.spell.spells.SpellProjectile;
@@ -25,7 +25,7 @@ public class ManaAOE {
         }
         DamageCounter.DamageHolder holder = DamageCounter.getDamage(true);
         if (!user.level().isClientSide() && user instanceof Player player && holder.hasDamage()) {
-            SpellProjectile.sendDamageMessage(player, spell, holder.hit(), holder.damage());
+            SpellProjectile.sendDamageMessage(player, spell, holder.hit(), (float) holder.damage());
         }
     }
 }

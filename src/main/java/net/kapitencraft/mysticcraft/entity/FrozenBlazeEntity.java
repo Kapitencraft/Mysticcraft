@@ -16,6 +16,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.ServerLevelAccessor;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class FrozenBlazeEntity extends Blaze {
@@ -29,7 +30,7 @@ public class FrozenBlazeEntity extends Blaze {
         return accessor.getDifficulty() != Difficulty.PEACEFUL && checkMobSpawnRules(type, accessor, type1, pos, source);
     }
 
-    public static AttributeSupplier.Builder createAttributes() {
+    public static AttributeSupplier.@NotNull Builder createAttributes() {
         return Monster.createMonsterAttributes().add(Attributes.ATTACK_DAMAGE, 6.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.23)
                 .add(Attributes.FOLLOW_RANGE, 48.0D)

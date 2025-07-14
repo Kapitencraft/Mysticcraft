@@ -1,8 +1,8 @@
 package net.kapitencraft.mysticcraft.event.handler;
 
 import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.bow.ShortBowItem;
-import net.kapitencraft.mysticcraft.networking.ModMessages;
-import net.kapitencraft.mysticcraft.networking.packets.C2S.UseShortBowPacket;
+import net.kapitencraft.mysticcraft.network.ModMessages;
+import net.kapitencraft.mysticcraft.network.packets.C2S.UseShortBowPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.InteractionHand;

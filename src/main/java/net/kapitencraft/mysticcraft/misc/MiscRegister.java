@@ -8,28 +8,32 @@ import net.kapitencraft.kap_lib.registry.ExtraAttributes;
 import net.kapitencraft.kap_lib.tags.ExtraTags;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.bestiary.BestiaryManager;
+import net.kapitencraft.mysticcraft.capability.CapabilityHelper;
+import net.kapitencraft.mysticcraft.capability.ITieredItem;
+import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneType;
+import net.kapitencraft.mysticcraft.capability.item_stat.ItemStatCapability;
+import net.kapitencraft.mysticcraft.capability.reforging.ReforgeManager;
 import net.kapitencraft.mysticcraft.helpers.InventoryHelper;
-import net.kapitencraft.mysticcraft.inst.MysticcraftPlayerInstance;
-import net.kapitencraft.mysticcraft.item.capability.CapabilityHelper;
-import net.kapitencraft.mysticcraft.item.capability.ITieredItem;
-import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneType;
-import net.kapitencraft.mysticcraft.item.capability.item_stat.ItemStatCapability;
-import net.kapitencraft.mysticcraft.item.capability.reforging.ReforgeManager;
-import net.kapitencraft.mysticcraft.item.combat.duel.DuelHandler;
 import net.kapitencraft.mysticcraft.item.misc.SoulbindHelper;
 import net.kapitencraft.mysticcraft.misc.content.EssenceHolder;
-import net.kapitencraft.mysticcraft.networking.ModMessages;
-import net.kapitencraft.mysticcraft.networking.packets.S2C.SyncEssenceDataPacket;
+import net.kapitencraft.mysticcraft.network.ModMessages;
+import net.kapitencraft.mysticcraft.network.packets.S2C.SyncEssenceDataPacket;
+import net.kapitencraft.mysticcraft.network.packets.S2C.SyncManaDistributionNetworksPacket;
+import net.kapitencraft.mysticcraft.registry.ModAttributes;
+import net.kapitencraft.mysticcraft.registry.ModBlocks;
+import net.kapitencraft.mysticcraft.rpg.perks.ServerPerksManager;
 import net.kapitencraft.mysticcraft.tags.ModTags;
+import net.kapitencraft.mysticcraft.tech.DistributionNetworkManager;
 import net.kapitencraft.mysticcraft.villagers.ModVillagers;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -38,11 +42,13 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.BasicItemListing;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.OnDatapackSyncEvent;
+import net.minecraftforge.event.entity.EntityAttributeModificationEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.EntityLeaveLevelEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
@@ -51,7 +57,6 @@ import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHealEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.level.BlockEvent;
-import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.event.village.VillagerTradesEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -59,19 +64,11 @@ import net.minecraftforge.fml.common.Mod;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Consumer;
 
 
 @Mod.EventBusSubscriber
 public class MiscRegister {
-    public static final String DOUBLE_JUMP_ID = "currentDoubleJump";
-
-    @SubscribeEvent
-    public static void loadingLevel(LevelEvent.Load event) {
-        if (event.getLevel() instanceof ServerLevel serverLevel && serverLevel.dimension() == Level.OVERWORLD) {
-            MinecraftServer server = serverLevel.getServer();
-            DuelHandler.setInstance(serverLevel.getDataStorage().computeIfAbsent(tag -> DuelHandler.load(tag, server), DuelHandler::new, "duels"));
-        }
-    }
 
 
     @SubscribeEvent
@@ -97,6 +94,7 @@ public class MiscRegister {
         MysticcraftMod.sendRegisterDisplay("Reloadables");
         event.addListener(new BestiaryManager());
         event.addListener(new ReforgeManager());
+        event.addListener(ServerPerksManager.getOrCreateInstance());
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -112,6 +110,9 @@ public class MiscRegister {
         if (living instanceof Player player) {
             if (InventoryHelper.hasSetInInventory(player, ITieredItem.ItemTier.INFERNAL) && player instanceof ServerPlayer serverPlayer) {
                 MiscHelper.awardAchievement(serverPlayer, MysticcraftMod.res("infernal_armor"));
+            }
+            if (player instanceof ServerPlayer serverPlayer) {
+                ServerPerksManager.getOrCreateInstance().getPerks(serverPlayer).flushDirty(serverPlayer);
             }
         }
         if (living instanceof Mob mob) {
@@ -133,8 +134,7 @@ public class MiscRegister {
             }
         }
         if (event.getEntity() instanceof Player player) {
-            new MysticcraftPlayerInstance(player);
-            AttributeInstance instance = player.getAttribute(ExtraAttributes.MANA.get());
+                    AttributeInstance instance = player.getAttribute(ExtraAttributes.MANA.get());
             if (instance == null) throw new IllegalStateException();
             else {
                 double mana;
@@ -142,12 +142,6 @@ public class MiscRegister {
                     mana = player.getPersistentData().getDouble("Mana");
                 } else mana = 100;
                 instance.setBaseValue(mana);
-            }
-            if (event.getEntity() instanceof ServerPlayer serverPlayer) {
-                ModMessages.sendToClientPlayer(new SyncEssenceDataPacket(serverPlayer.getCapability(CapabilityHelper.ESSENCE).orElseGet(EssenceHolder::new)), serverPlayer);
-                //ModMessages.sendToClientPlayer(SyncGemstoneDataToPlayerPacket.fromPlayer(serverPlayer), serverPlayer);
-                //ModMessages.sendToClientPlayer(SyncElytraDataToPlayerPacket.fromPlayer(serverPlayer), serverPlayer);
-                serverPlayer.getStats().sendStats(serverPlayer);
             }
         }
     }
@@ -164,6 +158,20 @@ public class MiscRegister {
         LivingEntity living = event.getEntity();
         if (event.getAmount() > 0) MiscHelper.createDamageIndicator(living, event.getAmount(), "heal");
     }
+
+    @SubscribeEvent
+    public void onBlockEntityPlace(BlockEvent.EntityPlaceEvent event) {
+        LevelAccessor level = event.getLevel();
+        BlockPos pos = event.getPos();
+        for (Direction direction : Direction.values()) {
+            BlockPos neighbourPos = pos.relative(direction);
+            BlockState neighbourState = level.getBlockState(neighbourPos);
+            if (neighbourState.is(ModBlocks.MANA_PORT.get())) {
+                neighbourState.getBlock().onNeighborChange(neighbourState, level, neighbourPos, pos);
+            }
+        }
+    }
+
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void blockBreakRegister(BlockEvent.BreakEvent event) {
@@ -224,4 +232,35 @@ public class MiscRegister {
             return new ItemStack(Items.EMERALD_BLOCK).copyWithCount(emeraldBlocks);
         }
     }
+
+    @SubscribeEvent
+    public static void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
+        ServerPlayer player = (ServerPlayer) event.getEntity();
+        ServerPerksManager.getOrCreateInstance().getPerks(player).save();
+    }
+
+    @SubscribeEvent
+    public static void onOnDatapackSync(OnDatapackSyncEvent event) {
+        Consumer<ServerPlayer> syncData = player -> {
+            ModMessages.sendToClientPlayer(new SyncEssenceDataPacket(player.getCapability(CapabilityHelper.ESSENCE).orElseGet(EssenceHolder::new)), player);
+            //ModMessages.sendToClientPlayer(SyncGemstoneDataToPlayerPacket.fromPlayer(serverPlayer), serverPlayer);
+            //ModMessages.sendToClientPlayer(SyncElytraDataToPlayerPacket.fromPlayer(serverPlayer), serverPlayer);
+            ModMessages.sendToClientPlayer(new SyncManaDistributionNetworksPacket(DistributionNetworkManager.get(player.level())), player);
+            ServerPerksManager.getOrCreateInstance().getPerks(player).reload();
+            player.getStats().sendStats(player);
+        };
+        ServerPlayer player = event.getPlayer();
+
+        if (player != null) {
+            syncData.accept(player);
+        } else {
+            event.getPlayers().forEach(syncData);
+        }
+    }
+
+    @SubscribeEvent
+    public void onEntityAttributeModification(EntityAttributeModificationEvent event) {
+        event.add(EntityType.PLAYER, ModAttributes.CAST_DURATION.get());
+    }
+
 }

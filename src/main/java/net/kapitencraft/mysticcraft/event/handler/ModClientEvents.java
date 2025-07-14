@@ -1,22 +1,28 @@
 package net.kapitencraft.mysticcraft.event.handler;
 
+import net.kapitencraft.kap_lib.event.custom.client.RegisterConfigurableOverlaysEvent;
+import net.kapitencraft.kap_lib.event.custom.client.RegisterInventoryPageRenderersEvent;
 import net.kapitencraft.kap_lib.event.custom.client.RegisterItemModifiersDisplayExtensionsEvent;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.block.gemstone.GemstoneBlock;
+import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneHelper;
+import net.kapitencraft.mysticcraft.capability.gemstone.IGemstoneItem;
+import net.kapitencraft.mysticcraft.capability.reforging.Reforges;
+import net.kapitencraft.mysticcraft.client.SpellCastChargeOverlay;
 import net.kapitencraft.mysticcraft.client.particle.CircleParticle;
 import net.kapitencraft.mysticcraft.client.particle.FireNormalParticle;
 import net.kapitencraft.mysticcraft.client.particle.MagicCircleParticle;
 import net.kapitencraft.mysticcraft.client.particle.ShadowSweepParticle;
 import net.kapitencraft.mysticcraft.client.particle.flame.ModFlameParticle;
+import net.kapitencraft.mysticcraft.client.rpg.perks.PerkInventoryPageRenderer;
 import net.kapitencraft.mysticcraft.entity.client.renderer.*;
 import net.kapitencraft.mysticcraft.gui.gemstone_grinder.GemstoneGrinderScreen;
 import net.kapitencraft.mysticcraft.gui.reforging_anvil.ReforgeAnvilScreen;
 import net.kapitencraft.mysticcraft.item.ColoredItem;
-import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneHelper;
-import net.kapitencraft.mysticcraft.item.capability.gemstone.IGemstoneItem;
-import net.kapitencraft.mysticcraft.item.capability.reforging.Reforges;
 import net.kapitencraft.mysticcraft.misc.ModItemProperties;
 import net.kapitencraft.mysticcraft.registry.*;
+import net.kapitencraft.mysticcraft.tech.gui.screen.MagicFurnaceScreen;
+import net.kapitencraft.mysticcraft.tech.gui.screen.PrismaticGeneratorScreen;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
@@ -53,6 +59,8 @@ public class ModClientEvents {
     private static void registerMenuScreens() {
         MenuScreens.register(ModMenuTypes.GEM_GRINDER.get(), GemstoneGrinderScreen::new);
         MenuScreens.register(ModMenuTypes.REFORGING_ANVIL.get(), ReforgeAnvilScreen::new);
+        MenuScreens.register(ModMenuTypes.PRISMATIC_GENERATOR.get(), PrismaticGeneratorScreen::new);
+        MenuScreens.register(ModMenuTypes.MAGIC_FURNACE.get(), MagicFurnaceScreen::new);
     }
 
 
@@ -94,7 +102,7 @@ public class ModClientEvents {
 
     private static void registerBlockColor(RegisterColorHandlersEvent.Block event, BlockColor color, BlockRegistryHolder<?, ?>... holders) {
         for (BlockRegistryHolder<?, ?> holder : holders) {
-            event.register(color, holder.getBlock());
+            event.register(color, holder.get());
         }
     }
 
@@ -108,4 +116,15 @@ public class ModClientEvents {
         event.registerEquipment(GemstoneHelper::getCapability);
         event.registerEquipment(Reforges::getReforgeDisplayExtension);
     }
+
+    @SubscribeEvent
+    public static void onRegisterInventoryPageRenderers(RegisterInventoryPageRenderersEvent event) {
+        event.register(ModInventoryPages.PERKS, PerkInventoryPageRenderer::new);
+    }
+
+    @SubscribeEvent
+    public static void onRegisterConfigurableOverlays(RegisterConfigurableOverlaysEvent event) {
+        event.addOverlay(ModOverlays.CAST_CHARGE, SpellCastChargeOverlay::new);
+    }
+
 }

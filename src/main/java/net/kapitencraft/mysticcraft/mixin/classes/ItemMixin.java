@@ -3,27 +3,18 @@ package net.kapitencraft.mysticcraft.mixin.classes;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.kap_lib.helpers.AttributeHelper;
 import net.kapitencraft.kap_lib.helpers.MiscHelper;
-import net.kapitencraft.mysticcraft.item.capability.CapabilityHelper;
-import net.kapitencraft.mysticcraft.item.capability.ITieredItem;
-import net.kapitencraft.mysticcraft.item.capability.dungeon.IStarAbleItem;
-import net.kapitencraft.mysticcraft.item.capability.elytra.ElytraData;
-import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneHelper;
-import net.kapitencraft.mysticcraft.item.capability.reforging.Reforge;
-import net.kapitencraft.mysticcraft.item.capability.spell.ISpellItem;
-import net.kapitencraft.mysticcraft.item.capability.spell.SpellHelper;
-import net.kapitencraft.mysticcraft.spell.Spell;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.kapitencraft.mysticcraft.capability.CapabilityHelper;
+import net.kapitencraft.mysticcraft.capability.ITieredItem;
+import net.kapitencraft.mysticcraft.capability.dungeon.IStarAbleItem;
+import net.kapitencraft.mysticcraft.capability.elytra.ElytraData;
+import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneHelper;
+import net.kapitencraft.mysticcraft.capability.reforging.Reforge;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.extensions.IForgeItem;
 import org.jetbrains.annotations.NotNull;
@@ -31,10 +22,6 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Item.class)
 @SuppressWarnings("ALL")
@@ -70,46 +57,6 @@ public abstract class ItemMixin implements IForgeItem {
             builder.mulAll(ITieredItem.getTier(stack).getValueMul() + 1);
         }
         return builder.build();
-    }
-
-    /**
-     * @author Kapitencraft
-     * @reason spell item
-     */
-    @Inject(method = "use", at = @At("HEAD"), cancellable = true)
-    public void use(@NotNull Level level, Player player, @NotNull InteractionHand hand, CallbackInfoReturnable<InteractionResultHolder<ItemStack>> cir) {
-        CompoundTag tag = player.getPersistentData();
-        ItemStack itemstack = player.getItemInHand(hand);
-        if (itemstack.getItem() instanceof ISpellItem item) {
-            if (item.handleActiveMana(player, itemstack)) {
-                cir.setReturnValue(InteractionResultHolder.consume(itemstack));
-            }
-        }
-    }
-
-    /**
-     * @author Kapitencraft
-     * @reason spell items
-     */
-    @Inject(method = "getUseDuration", at = @At("HEAD"), cancellable = true)
-    public void getUseDuration(ItemStack stack, CallbackInfoReturnable<Integer> cir) {
-        if (stack.getItem() instanceof ISpellItem) {
-            cir.setReturnValue(SpellHelper.getItemUseDuration(stack));
-        }
-    }
-
-    /**
-     * @author Kapitencraft
-     * @reason spell usage
-     */
-    @Inject(method = "onUseTick", at = @At("HEAD"))
-    public void onUseTick(@NotNull Level level, @NotNull LivingEntity user, @NotNull ItemStack stack, int count, CallbackInfo info) {
-        if (self() instanceof ISpellItem spellItem) {
-            Spell spell = SpellHelper.getActiveSpell(stack);
-            if (spell.getType() == Spell.Type.CYCLE && (Integer.MAX_VALUE - count & 2) == 0) {
-                SpellHelper.handleManaAndExecute(user, spell, stack);
-            }
-        }
     }
 
     /**

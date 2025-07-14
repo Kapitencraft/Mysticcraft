@@ -1,12 +1,15 @@
 package net.kapitencraft.mysticcraft.registry.custom;
 
+import com.mojang.serialization.Codec;
+import net.kapitencraft.mysticcraft.rpg.perks.rewards.PerkReward;
 import net.kapitencraft.mysticcraft.spell.Spell;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraftforge.registries.RegistryBuilder;
 
 public interface ModRegistryBuilders {
-    RegistryBuilder<Spell> REFORGE_BONUSES_REGISTRY_BUILDER = makeBuilder(ModRegistryKeys.SPELLS);
+    RegistryBuilder<Spell> SPELLS = makeBuilder(ModRegistryKeys.SPELLS);
+    RegistryBuilder<Codec<? extends PerkReward>> PERK_AWARDS = makeBuilder(ModRegistryKeys.PERK_AWARDS);
 
     private static <T> RegistryBuilder<T> makeBuilder(ResourceKey<Registry<T>> location) {
         return new RegistryBuilder<T>().setName(location.location());

@@ -1,9 +1,8 @@
 package net.kapitencraft.mysticcraft.item.misc;
 
-import net.kapitencraft.mysticcraft.api.Reference;
-import net.kapitencraft.mysticcraft.item.capability.CapabilityHelper;
-import net.kapitencraft.mysticcraft.item.capability.elytra.ElytraCapability;
-import net.kapitencraft.mysticcraft.item.capability.spell.SpellHelper;
+import net.kapitencraft.mysticcraft.capability.CapabilityHelper;
+import net.kapitencraft.mysticcraft.capability.elytra.ElytraCapability;
+import net.kapitencraft.mysticcraft.capability.spell.SpellHelper;
 import net.kapitencraft.mysticcraft.item.combat.spells.SpellScrollItem;
 import net.kapitencraft.mysticcraft.item.combat.spells.necron_sword.NecronSword;
 import net.kapitencraft.mysticcraft.registry.ModItems;
@@ -71,12 +70,9 @@ public class AnvilUses {
         );
         registerAnvilUse(
                 simple(CapabilityHelper::hasElytraCapability).and((stack, stack2) ->
-                        CapabilityHelper.testCapability(stack, CapabilityHelper.ELYTRA, iElytraData -> {
-                                Reference<Boolean> reference = Reference.of(false);
-                                CapabilityHelper.exeCapability(stack2, CapabilityHelper.ELYTRA, iElytraData1 ->
-                                        reference.setValue(iElytraData.getData() == iElytraData1.getData()));
-                                return reference.getValue();
-                            }
+                        CapabilityHelper.testCapability(stack, CapabilityHelper.ELYTRA, iElytraData ->
+                                CapabilityHelper.testCapability(stack2, CapabilityHelper.ELYTRA, iElytraData1 -> iElytraData.getData() == iElytraData1.getData()
+                                )
                         )),
                 ElytraCapability::merge,
                 1

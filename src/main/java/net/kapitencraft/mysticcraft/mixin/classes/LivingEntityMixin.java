@@ -1,7 +1,5 @@
 package net.kapitencraft.mysticcraft.mixin.classes;
 
-import net.kapitencraft.kap_lib.cooldown.Cooldown;
-import net.kapitencraft.kap_lib.cooldown.ICooldownable;
 import net.kapitencraft.kap_lib.helpers.MiscHelper;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -14,17 +12,10 @@ import net.minecraftforge.common.extensions.IForgeLivingEntity;
 import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Mixin(LivingEntity.class)
-public abstract class LivingEntityMixin extends Entity implements ICooldownable, IForgeLivingEntity {
-    private final List<Cooldown> cooldowns = new ArrayList<>();
+public abstract class LivingEntityMixin extends Entity implements IForgeLivingEntity {
 
 
     public LivingEntityMixin(EntityType<?> p_19870_, Level p_19871_) {
@@ -49,11 +40,6 @@ public abstract class LivingEntityMixin extends Entity implements ICooldownable,
         Vec3 vec3 = this.getDeltaMovement();
         Vec3 vec31 = (new Vec3(xSpeed, 0.0D, ySpeed)).normalize().scale(strenght);
         this.setDeltaMovement(vec3.x / 2.0D - vec31.x, this.onGround() ? Math.min(0.4D, vec3.y / 2.0D + strenght) : vec3.y, vec3.z / 2.0D - vec31.z);
-    }
-
-    @Inject(method = "tick", at = @At("HEAD"))
-    public void tick(CallbackInfo ci) {
-        tickCooldowns();
     }
 
     @ModifyConstant(method = "tryAddFrost")

@@ -25,7 +25,7 @@ public class ModConfiguredFeatures {
     public static void bootstrap(BootstapContext<ConfiguredFeature<?, ?>> context) {
         RuleTest netherrackReplaceAbles = new BlockMatchTest(Blocks.NETHERRACK);
 
-        List<OreConfiguration.TargetBlockState> crimsoniumOres = List.of(OreConfiguration.target(netherrackReplaceAbles, ModBlocks.CRIMSONIUM_ORE.getBlock().defaultBlockState()));
+        List<OreConfiguration.TargetBlockState> crimsoniumOres = List.of(OreConfiguration.target(netherrackReplaceAbles, ModBlocks.CRIMSONIUM_ORE.get().defaultBlockState()));
 
         register(context, CRIMSONIUM_ORE, Feature.ORE, new OreConfiguration(crimsoniumOres, 4));
         register(context, GEMSTONE_SPAWN, ModFeatures.GEMSTONE_SPAWN.get(), new GemstoneSpawnFeature.Config());

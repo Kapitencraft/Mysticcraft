@@ -1,8 +1,8 @@
 package net.kapitencraft.mysticcraft.event.custom;
 
 import net.kapitencraft.kap_lib.item.combat.armor.AbstractArmorItem;
-import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneData;
-import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneSlot;
+import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneData;
+import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneSlot;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.eventbus.api.Event;

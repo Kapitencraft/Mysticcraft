@@ -3,15 +3,15 @@ package net.kapitencraft.mysticcraft.mixin.classes.client;
 import net.kapitencraft.kap_lib.helpers.MiscHelper;
 import net.kapitencraft.kap_lib.helpers.TextHelper;
 import net.kapitencraft.kap_lib.mixin.duck.MixinSelfProvider;
+import net.kapitencraft.mysticcraft.capability.CapabilityHelper;
+import net.kapitencraft.mysticcraft.capability.ITieredItem;
+import net.kapitencraft.mysticcraft.capability.dungeon.IStarAbleItem;
+import net.kapitencraft.mysticcraft.capability.elytra.ElytraData;
+import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneHelper;
+import net.kapitencraft.mysticcraft.capability.reforging.Reforge;
+import net.kapitencraft.mysticcraft.capability.spell.ISpellItem;
+import net.kapitencraft.mysticcraft.capability.spell.SpellHelper;
 import net.kapitencraft.mysticcraft.gui.IGuiHelper;
-import net.kapitencraft.mysticcraft.item.capability.CapabilityHelper;
-import net.kapitencraft.mysticcraft.item.capability.ITieredItem;
-import net.kapitencraft.mysticcraft.item.capability.dungeon.IStarAbleItem;
-import net.kapitencraft.mysticcraft.item.capability.elytra.ElytraData;
-import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneHelper;
-import net.kapitencraft.mysticcraft.item.capability.reforging.Reforge;
-import net.kapitencraft.mysticcraft.item.capability.spell.ISpellItem;
-import net.kapitencraft.mysticcraft.item.capability.spell.SpellHelper;
 import net.kapitencraft.mysticcraft.item.combat.spells.SpellScrollItem;
 import net.kapitencraft.mysticcraft.item.misc.SoulbindHelper;
 import net.minecraft.ChatFormatting;
@@ -76,7 +76,7 @@ public abstract class ItemStackClientMixin implements MixinSelfProvider<ItemStac
 
     @Inject(method = "getTooltipLines", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/Item;appendHoverText(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Ljava/util/List;Lnet/minecraft/world/item/TooltipFlag;)V"), locals = LocalCapture.CAPTURE_FAILHARD)
     private void addSpellAndBonusTooltip(Player pPlayer, TooltipFlag pIsAdvanced, CallbackInfoReturnable<List<Component>> cir, List<Component> list) {
-        if (item instanceof ISpellItem) SpellHelper.appendFullDisplay(list, self());
+        if (item instanceof ISpellItem) SpellHelper.appendFullDisplay(list, self(), pPlayer);
     }
 
     @Inject(method = "getTooltipLines", at = @At("TAIL"), locals = LocalCapture.CAPTURE_FAILHARD)

@@ -37,6 +37,8 @@ public class TabRegister {
         FOOD_AND_DRINK,
         TOOLS_AND_UTILITIES,
         DECO,
-        BUILDING_MATERIALS, OPERATOR
+        BUILDING_MATERIALS,
+        TECHNOLOGY,
+        OPERATOR
     }
 }

@@ -67,8 +67,12 @@ minecraft {
             }
         }
 
-        client {}
-        server {}
+        client {
+            args '--username', 'Kapitencraft', '--uuid', '00c930fd-9d29-44ca-b614-e5ce6e8bd457'
+        }
+        server {
+            args '--nogui'
+        }
 
         data {
             // Specify the mod id for data generation, where to output the resulting resource, and where to look for existing resources.

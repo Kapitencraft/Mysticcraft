@@ -8,9 +8,11 @@ import net.kapitencraft.mysticcraft.item.combat.spells.necron_sword.NecronSword;
 import net.kapitencraft.mysticcraft.misc.content.mana.ManaAOE;
 import net.kapitencraft.mysticcraft.registry.Spells;
 import net.kapitencraft.mysticcraft.spell.Spell;
+import net.kapitencraft.mysticcraft.spell.SpellTarget;
 import net.kapitencraft.mysticcraft.spell.cast.SpellCastContext;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
+import org.jetbrains.annotations.NotNull;
 
 public class WitherImpactSpell implements Spell {
 
@@ -29,13 +31,18 @@ public class WitherImpactSpell implements Spell {
     }
 
     @Override
-    public Type getType() {
+    public int castDuration() {
+        return 70;
+    }
+
+    @Override
+    public @NotNull Type getType() {
         return Type.RELEASE;
     }
 
     @Override
-    public int getCooldownTime() {
-        return 0;
+    public @NotNull SpellTarget getTarget() {
+        return SpellTarget.SELF;
     }
 
     @Override

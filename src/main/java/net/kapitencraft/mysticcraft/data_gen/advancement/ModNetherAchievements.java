@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.data_gen.advancement;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.item.capability.ITieredItem;
+import net.kapitencraft.mysticcraft.capability.ITieredItem;
 import net.kapitencraft.mysticcraft.item.combat.armor.CrimsonArmorItem;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRewards;

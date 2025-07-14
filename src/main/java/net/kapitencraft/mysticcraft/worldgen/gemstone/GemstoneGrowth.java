@@ -5,7 +5,7 @@ import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.block.ModBlockStateProperties;
 import net.kapitencraft.mysticcraft.block.gemstone.GemstoneCrystal;
 import net.kapitencraft.mysticcraft.block.gemstone.GemstoneSeedBlock;
-import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneType;
+import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneType;
 import net.kapitencraft.mysticcraft.logging.Markers;
 import net.kapitencraft.mysticcraft.registry.ModBlocks;
 import net.minecraft.core.BlockPos;
@@ -22,8 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GemstoneGrowth {
-    private static final Block GEMSTONE = ModBlocks.GEMSTONE_BLOCK.getBlock();
-    private static final Block GEMSTONE_CRYSTAL = ModBlocks.GEMSTONE_CRYSTAL.getBlock();
+    private static final Block GEMSTONE = ModBlocks.GEMSTONE_BLOCK.get();
+    private static final Block GEMSTONE_CRYSTAL = ModBlocks.GEMSTONE_CRYSTAL.get();
     private static final BlockState GEMSTONE_BLOCK = GEMSTONE.defaultBlockState();
     private static final BlockState GEMSTONE_CRYSTAL_STATE = GEMSTONE_CRYSTAL.defaultBlockState();
     public static final float DEFAULT_MAIN_CHANCE = 0.2f;
@@ -35,7 +35,7 @@ public class GemstoneGrowth {
         else if (directions.contains(Direction.DOWN)) main = Direction.DOWN;
         else main = MathHelper.pickRandom(directions);
         if (main == null) return;
-        level.setBlock(pos, ModBlocks.GEMSTONE_SEED.getBlock().defaultBlockState()
+        level.setBlock(pos, ModBlocks.GEMSTONE_SEED.get().defaultBlockState()
                 .setValue(ModBlockStateProperties.STONE_TYPE, matType)
                 .setValue(ModBlockStateProperties.GEMSTONE_TYPE, type)
                 .setValue(BlockStateProperties.FACING, main), 3); //spawn gemstone seed
@@ -93,7 +93,7 @@ public class GemstoneGrowth {
     private static List<Direction> scanPossibleDirections(BlockPos pos, LevelAccessor level, GemstoneType type, List<BlockPos> visited) {
         List<Direction> list = new ArrayList<>();
         BlockState active = level.getBlockState(pos);
-        if (active.is(ModBlocks.GEMSTONE_SEED.getBlock())) { //ensure always following gemstone seed direction & gemstone type = same
+        if (active.is(ModBlocks.GEMSTONE_SEED.get())) { //ensure always following gemstone seed direction & gemstone type = same
             if (active.getValue(ModBlockStateProperties.GEMSTONE_TYPE) == type) return List.of(active.getValue(BlockStateProperties.FACING));
         }
         for (Direction direction : Direction.values()) {

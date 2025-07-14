@@ -2,7 +2,7 @@ package net.kapitencraft.mysticcraft.data_gen;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.block.gemstone.GemstoneCrystal;
-import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneType;
+import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneType;
 import net.kapitencraft.mysticcraft.registry.ModItems;
 import net.kapitencraft.mysticcraft.spell.Element;
 import net.kapitencraft.mysticcraft.spell.Elements;

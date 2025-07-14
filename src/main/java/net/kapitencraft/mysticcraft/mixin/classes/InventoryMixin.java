@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.mixin.classes;
 
-import net.kapitencraft.mysticcraft.item.capability.essence.IEssenceData;
+import net.kapitencraft.mysticcraft.capability.essence.IEssenceData;
 import net.kapitencraft.mysticcraft.item.material.EssenceItem;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.entity.player.Inventory;

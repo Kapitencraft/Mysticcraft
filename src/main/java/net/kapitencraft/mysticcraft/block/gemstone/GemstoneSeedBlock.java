@@ -2,8 +2,8 @@ package net.kapitencraft.mysticcraft.block.gemstone;
 
 import net.kapitencraft.kap_lib.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.block.ModBlockStateProperties;
-import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneType;
-import net.kapitencraft.mysticcraft.item.capability.gemstone.IGemstoneItem;
+import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneType;
+import net.kapitencraft.mysticcraft.capability.gemstone.IGemstoneItem;
 import net.kapitencraft.mysticcraft.registry.ModBlocks;
 import net.kapitencraft.mysticcraft.worldgen.gemstone.GemstoneGrowth;
 import net.minecraft.core.BlockPos;
@@ -74,7 +74,7 @@ public class GemstoneSeedBlock extends Block {
 
     public static final class Item extends BlockItem implements IGemstoneItem {
         public Item() {
-            super(ModBlocks.GEMSTONE_SEED.getBlock(), MiscHelper.rarity(Rarity.EPIC));
+            super(ModBlocks.GEMSTONE_SEED.get(), MiscHelper.rarity(Rarity.EPIC));
         }
 
         @Override

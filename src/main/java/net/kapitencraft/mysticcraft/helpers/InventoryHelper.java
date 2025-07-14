@@ -1,8 +1,8 @@
 package net.kapitencraft.mysticcraft.helpers;
 
 import net.kapitencraft.kap_lib.helpers.MiscHelper;
-import net.kapitencraft.mysticcraft.item.capability.ITieredItem;
-import net.kapitencraft.mysticcraft.item.capability.essence.IEssenceData;
+import net.kapitencraft.mysticcraft.capability.ITieredItem;
+import net.kapitencraft.mysticcraft.capability.essence.IEssenceData;
 import net.kapitencraft.mysticcraft.item.combat.armor.TieredArmorItem;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Inventory;

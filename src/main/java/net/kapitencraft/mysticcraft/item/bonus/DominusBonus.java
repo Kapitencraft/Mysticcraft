@@ -5,10 +5,14 @@ import com.google.common.collect.Multimap;
 import net.kapitencraft.kap_lib.client.particle.animation.core.ParticleAnimation;
 import net.kapitencraft.kap_lib.client.particle.animation.finalizers.EmptyFinalizer;
 import net.kapitencraft.kap_lib.client.particle.animation.spawners.RingSpawner;
+import net.kapitencraft.kap_lib.client.particle.animation.terminators.BonusRemovedTerminator;
+import net.kapitencraft.kap_lib.client.util.pos_target.PositionTarget;
 import net.kapitencraft.kap_lib.helpers.MiscHelper;
 import net.kapitencraft.kap_lib.io.serialization.DataPackSerializer;
 import net.kapitencraft.kap_lib.registry.ExtraAttributes;
+import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.client.particle.flame.FlamesForColors;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -31,10 +35,15 @@ public class DominusBonus extends StackingBonus<DominusBonus> {
     public void onApply(LivingEntity living) {
         if (living.level() instanceof ServerLevel sL) {
             ParticleAnimation.builder()
+                    .spawnTime(ParticleAnimation.SpawnTime.absolute(2))
                     .spawn(RingSpawner.fullCircle(2)
+                            .rotPerTick(5)
+                            .radius(living.getBbWidth())
+                            .axis(Direction.Axis.Y)
+                            .setTarget(PositionTarget.entity(living))
                             .setParticle(FlamesForColors.RED)
                     ).finalizes(EmptyFinalizer.builder())
-                    //.terminatedWhen()
+                    .terminatedWhen(new BonusRemovedTerminator.Instance(living.getId(), MysticcraftMod.res("dominus")))
                     .sendToAllPlayers(sL);
         }
     }

@@ -1,15 +1,17 @@
 package net.kapitencraft.mysticcraft.event.handler;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneSlot;
+import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneType;
+import net.kapitencraft.mysticcraft.capability.reforging.Reforges;
+import net.kapitencraft.mysticcraft.entity.FrozenBlazeEntity;
+import net.kapitencraft.mysticcraft.entity.vampire.VampireBat;
 import net.kapitencraft.mysticcraft.event.advancement.ModCriteriaTriggers;
 import net.kapitencraft.mysticcraft.event.custom.AddGemstonesToItemEvent;
 import net.kapitencraft.mysticcraft.event.custom.RegisterGemstoneTypePlacementsEvent;
-import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneSlot;
-import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneType;
-import net.kapitencraft.mysticcraft.item.capability.reforging.Reforges;
 import net.kapitencraft.mysticcraft.item.misc.AnvilUses;
 import net.kapitencraft.mysticcraft.logging.Markers;
-import net.kapitencraft.mysticcraft.networking.ModMessages;
+import net.kapitencraft.mysticcraft.network.ModMessages;
 import net.kapitencraft.mysticcraft.potion.ModPotionRecipe;
 import net.kapitencraft.mysticcraft.registry.ModEntityTypes;
 import net.kapitencraft.mysticcraft.registry.ModItems;
@@ -21,6 +23,8 @@ import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
+import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
+import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -32,7 +36,6 @@ public class ModEventBusEvents {
     @SubscribeEvent
     public static void onCommonSetup(FMLCommonSetupEvent event) {
         BrewingRecipeRegistry.addRecipe(new ModPotionRecipe());
-        registerSpawnPlacements();
         Reforges.registerRarities();
         Reforges.bootstrap();
         AnvilUses.registerUses();
@@ -40,17 +43,19 @@ public class ModEventBusEvents {
         ModCriteriaTriggers.init();
     }
 
-
-    private static void registerSpawnPlacements() {
-        SpawnPlacements.register(ModEntityTypes.FROZEN_BLAZE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                Monster::checkAnyLightMonsterSpawnRules);
-        SpawnPlacements.register(ModEntityTypes.VAMPIRE_BAT.get(), SpawnPlacements.Type.NO_RESTRICTIONS, Heightmap.Types.MOTION_BLOCKING,
-                    Monster::checkMonsterSpawnRules);
+    @SubscribeEvent
+    public void onSpawnPlacementRegister(SpawnPlacementRegisterEvent event) {
+        event.register(ModEntityTypes.FROZEN_BLAZE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                Monster::checkAnyLightMonsterSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
+        event.register(ModEntityTypes.VAMPIRE_BAT.get(), SpawnPlacements.Type.NO_RESTRICTIONS, Heightmap.Types.MOTION_BLOCKING,
+                Monster::checkMonsterSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
     }
+
 
     @SubscribeEvent
     public static void registerRegistries(NewRegistryEvent event) {
-        event.create(ModRegistryBuilders.REFORGE_BONUSES_REGISTRY_BUILDER);
+        event.create(ModRegistryBuilders.SPELLS);
+        event.create(ModRegistryBuilders.PERK_AWARDS);
         MysticcraftMod.LOGGER.info(Markers.REGISTRY, "Registered custom registries");
     }
 
@@ -76,4 +81,9 @@ public class ModEventBusEvents {
         event.register(ModItems.MANA_STEEL_SWORD, new GemstoneSlot.Builder(GemstoneSlot.Type.COMBAT, GemstoneSlot.Type.COMBAT));
     }
 
+    @SubscribeEvent
+    public void onEntityAttributeCreation(EntityAttributeCreationEvent event) {
+        event.put(ModEntityTypes.VAMPIRE_BAT.get(), VampireBat.createAttributes().build());
+        event.put(ModEntityTypes.FROZEN_BLAZE.get(), FrozenBlazeEntity.createAttributes().build());
+    }
 }

@@ -8,4 +8,9 @@ public class SpellCastContextParam<T> {
     public SpellCastContextParam(ResourceLocation name) {
         this.name = name;
     }
+
+    @Override
+    public String toString() {
+        return "SpellCastContextParam{" + name + "}";
+    }
 }

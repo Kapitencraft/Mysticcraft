@@ -23,7 +23,7 @@ public class MangaticSlimeBlock extends SlimeBlock {
     @Override
     public void randomTick(@NotNull BlockState state, ServerLevel level, BlockPos pos, @NotNull RandomSource source) {
         if (level.getBlockState(pos.relative(Direction.DOWN)).getBlock() == Blocks.END_STONE) {
-            level.setBlock(pos.relative(Direction.DOWN), ModBlocks.MANGATIC_STONE.getBlock().defaultBlockState(), 3);
+            level.setBlock(pos.relative(Direction.DOWN), ModBlocks.MANGATIC_STONE.get().defaultBlockState(), 3);
         }
     }
 }

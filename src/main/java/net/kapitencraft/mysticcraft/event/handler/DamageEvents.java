@@ -4,14 +4,13 @@ import net.kapitencraft.kap_lib.helpers.IOHelper;
 import net.kapitencraft.kap_lib.helpers.MathHelper;
 import net.kapitencraft.kap_lib.helpers.MiscHelper;
 import net.kapitencraft.kap_lib.registry.ExtraAttributes;
+import net.kapitencraft.mysticcraft.capability.CapabilityHelper;
+import net.kapitencraft.mysticcraft.capability.item_stat.ItemStatCapability;
 import net.kapitencraft.mysticcraft.entity.FrozenBlazeEntity;
 import net.kapitencraft.mysticcraft.helpers.InventoryHelper;
-import net.kapitencraft.mysticcraft.item.capability.CapabilityHelper;
-import net.kapitencraft.mysticcraft.item.capability.item_stat.ItemStatCapability;
 import net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword.ManaSteelSwordItem;
 import net.kapitencraft.mysticcraft.item.material.PrecursorRelicItem;
 import net.kapitencraft.mysticcraft.item.misc.SoulbindHelper;
-import net.kapitencraft.mysticcraft.misc.HealingHelper;
 import net.kapitencraft.mysticcraft.misc.damage_source.ISpellSource;
 import net.kapitencraft.mysticcraft.mob_effects.NumbnessMobEffect;
 import net.kapitencraft.mysticcraft.registry.ModMobEffects;
@@ -53,7 +52,6 @@ public class DamageEvents {
         if (attacker != null) {
             ItemStack mainHand = attacker.getMainHandItem();
             if (mainHand.getItem() instanceof ManaSteelSwordItem) {
-                HealingHelper.setEffectReason(attacker);
                 attacker.heal(2f);
             }
         }

@@ -1,8 +1,8 @@
 package net.kapitencraft.mysticcraft.item.combat.weapon.melee.dagger;
 
 import net.kapitencraft.kap_lib.util.ExtraRarities;
-import net.kapitencraft.mysticcraft.item.capability.spell.ISpellItem;
-import net.kapitencraft.mysticcraft.item.capability.spell.SpellCapabilityProvider;
+import net.kapitencraft.mysticcraft.capability.spell.ISpellItem;
+import net.kapitencraft.mysticcraft.capability.spell.SpellCapabilityProvider;
 import net.kapitencraft.mysticcraft.registry.Spells;
 
 public class ShadowDagger extends DarkDagger implements ISpellItem {

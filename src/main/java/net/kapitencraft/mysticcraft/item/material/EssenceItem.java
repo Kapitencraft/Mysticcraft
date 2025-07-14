@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.item.material;
 
 import net.kapitencraft.kap_lib.helpers.MiscHelper;
-import net.kapitencraft.mysticcraft.item.capability.essence.IEssenceData;
+import net.kapitencraft.mysticcraft.capability.essence.IEssenceData;
 import net.kapitencraft.mysticcraft.misc.content.EssenceType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;

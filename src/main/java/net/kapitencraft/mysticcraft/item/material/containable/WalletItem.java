@@ -1,9 +1,9 @@
 package net.kapitencraft.mysticcraft.item.material.containable;
 
 import net.kapitencraft.kap_lib.helpers.MiscHelper;
-import net.kapitencraft.mysticcraft.item.capability.CapabilityHelper;
-import net.kapitencraft.mysticcraft.item.capability.containable.ContainableCapabilityProvider;
-import net.kapitencraft.mysticcraft.item.capability.containable.WalletCapability;
+import net.kapitencraft.mysticcraft.capability.CapabilityHelper;
+import net.kapitencraft.mysticcraft.capability.containable.ContainableCapabilityProvider;
+import net.kapitencraft.mysticcraft.capability.containable.WalletCapability;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Rarity;

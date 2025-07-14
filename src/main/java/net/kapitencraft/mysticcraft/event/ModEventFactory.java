@@ -1,10 +1,10 @@
 package net.kapitencraft.mysticcraft.event;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneData;
 import net.kapitencraft.mysticcraft.event.custom.AddGemstonesToItemEvent;
 import net.kapitencraft.mysticcraft.event.custom.ItemStackEvent;
 import net.kapitencraft.mysticcraft.event.custom.RegisterRarityEvent;
-import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneData;
 import net.kapitencraft.mysticcraft.logging.Markers;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;

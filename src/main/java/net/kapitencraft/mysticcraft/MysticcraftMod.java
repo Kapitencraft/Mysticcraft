@@ -1,11 +1,8 @@
 package net.kapitencraft.mysticcraft;
 
 import com.mojang.logging.LogUtils;
-import net.kapitencraft.mysticcraft.config.ClientModConfig;
 import net.kapitencraft.mysticcraft.config.CommonModConfig;
-import net.kapitencraft.mysticcraft.config.ServerModConfig;
 import net.kapitencraft.mysticcraft.logging.Markers;
-import net.kapitencraft.mysticcraft.misc.visuals.SimplePings;
 import net.kapitencraft.mysticcraft.registry.ModRegistryInit;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
@@ -21,7 +18,6 @@ import net.minecraftforge.registries.IForgeRegistry;
 import org.slf4j.Logger;
 import org.slf4j.Marker;
 
-import java.text.DecimalFormat;
 import java.util.UUID;
 
 // The value here should match an entry in the META-INF/mods.toml file
@@ -45,8 +41,6 @@ public class MysticcraftMod {
         return DeferredRegister.create(key, MOD_ID);
     }
 
-    public static final double DAMAGE_CALCULATION_VALUE = 50;
-
     public static final RandomSource RANDOM_SOURCE = RandomSource.create();
     public static final Logger LOGGER = LogUtils.getLogger();
 
@@ -57,14 +51,9 @@ public class MysticcraftMod {
     public MysticcraftMod() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         ModRegistryInit.register(modEventBus);
-        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientModConfig.SPEC);
+        //ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientModConfig.SPEC);
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, CommonModConfig.SPEC);
-        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ServerModConfig.SPEC);
-        SimplePings.bootstrap();
-    }
-
-    public static String doubleFormat(double d) {
-        return new DecimalFormat("#.##").format(d);
+        //ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ServerModConfig.SPEC);
     }
 
     public static void sendRegisterDisplay(String nameOfRegistered, Marker marker) {

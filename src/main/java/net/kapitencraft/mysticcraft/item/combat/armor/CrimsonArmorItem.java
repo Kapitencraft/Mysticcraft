@@ -7,9 +7,9 @@ import net.kapitencraft.kap_lib.client.armor.provider.SimpleModelProvider;
 import net.kapitencraft.kap_lib.helpers.AttributeHelper;
 import net.kapitencraft.kap_lib.registry.ExtraAttributes;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.item.capability.ITieredItem;
-import net.kapitencraft.mysticcraft.item.capability.dungeon.IPrestigeAbleItem;
-import net.kapitencraft.mysticcraft.item.capability.dungeon.IStarAbleItem;
+import net.kapitencraft.mysticcraft.capability.ITieredItem;
+import net.kapitencraft.mysticcraft.capability.dungeon.IPrestigeAbleItem;
+import net.kapitencraft.mysticcraft.capability.dungeon.IStarAbleItem;
 import net.kapitencraft.mysticcraft.item.combat.armor.client.NetherArmorItem;
 import net.kapitencraft.mysticcraft.item.combat.armor.client.model.CrimsonArmorModel;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.ArmorTabGroup;
@@ -32,8 +32,6 @@ public class CrimsonArmorItem extends NetherArmorItem {
 
 
     public static final ArmorTabGroup CRIMSON_ARMOR_GROUP = new ArmorTabGroup(TabRegister.TabTypes.WEAPONS_AND_TOOLS);
-    //TODO add animation
-    // private static final OrbitAnimationElement element = new OrbitAnimationElement("CrimsonArmorFullset", 2, 3, FlamesForColors.RED, -1, 0, 0);
 
     public CrimsonArmorItem(ArmorItem.Type p_40387_) {
         super(ModArmorMaterials.CRIMSON, p_40387_, NETHER_ARMOR_PROPERTIES);

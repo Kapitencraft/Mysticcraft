@@ -4,7 +4,6 @@ package net.kapitencraft.mysticcraft.mixin.classes;
 import com.mojang.datafixers.util.Either;
 import net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword.ModSwordItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.QuiverItem;
-import net.kapitencraft.mysticcraft.misc.HealingHelper;
 import net.kapitencraft.mysticcraft.mixin.duck.IAttacker;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
@@ -27,9 +26,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -54,11 +51,6 @@ public abstract class PlayerMixin extends LivingEntity implements IAttacker {
 
     public Player own() {
         return (Player) (Object) this;
-    }
-
-    @Inject(method = "aiStep", at = @At("HEAD"))
-    public void aiStep(CallbackInfo info) {
-        HealingHelper.setReason(own(), HealingHelper.HealReason.NATURAL);
     }
 
     /**

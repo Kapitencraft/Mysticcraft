@@ -1,0 +1,23 @@
+{
+  "childrenVisibleMin": 1,
+  "cost": 1,
+  "display": {
+    "frame": "task",
+    "icon": {
+      "item": "mysticcraft:bucket_of_mana"
+    }
+  },
+  "maxLevel": 10,
+  "reward": {
+    "type": "mysticcraft:stat",
+    "entries": {
+      "kap_lib:generic.max_mana": [
+        {
+          "id": "b6b9b645-19d9-4917-a766-782a9f5199e4",
+          "operation": 0,
+          "perLevel": 5.0
+        }
+      ]
+    }
+  }
+}

@@ -23,6 +23,7 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class ModBlockStateProvider extends BlockStateProvider {
+
     public ModBlockStateProvider(PackOutput output, ExistingFileHelper exFileHelper) {
         super(output, MysticcraftMod.MOD_ID, exFileHelper);
     }
@@ -33,7 +34,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
 
     private void blockWithItem(BlockRegistryHolder<?, ?> holder) {
-        simpleBlockWithItem(holder.getBlock(), cubeAll(holder.getBlock()));
+        simpleBlockWithItem(holder.get(), cubeAll(holder.get()));
     }
 
     @Override
@@ -46,12 +47,12 @@ public class ModBlockStateProvider extends BlockStateProvider {
                 .texture("all", MysticcraftMod.res("block/gemstone/block"))
                 .parent(coloredBlock())
                 .renderType("translucent");
-        getVariantBuilder(ModBlocks.GEMSTONE_BLOCK.getBlock())
+        getVariantBuilder(ModBlocks.GEMSTONE_BLOCK.get())
                 .partialState()
                         .setModels(
                                 new ConfiguredModel(gemstoneBlock)
                         );
-        simpleBlockItem(ModBlocks.GEMSTONE_BLOCK.getBlock(), gemstoneBlock);
+        simpleBlockItem(ModBlocks.GEMSTONE_BLOCK.get(), gemstoneBlock);
 
         makeGemstoneCrystals();
 
@@ -66,7 +67,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
         ResourceLocation WEST_EAST_TEXTURE = MysticcraftMod.res("block/gemstone_grinder_west_east");
         ResourceLocation NORTH_SOUTH_TEXTURE = MysticcraftMod.res("block/gemstone_grinder_north_south");
-        getVariantBuilder(ModBlocks.GEMSTONE_GRINDER.getBlock())
+        getVariantBuilder(ModBlocks.GEMSTONE_GRINDER.get())
                 .partialState()
                 .setModels(
                         new ConfiguredModel(models().getBuilder("gemstone_grinder")
@@ -80,7 +81,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
                         )
                 );
 
-        getVariantBuilder(ModBlocks.SOUL_CHAIN.getBlock()).forAllStates(state -> {
+        getVariantBuilder(ModBlocks.SOUL_CHAIN.get()).forAllStates(state -> {
             Direction.Axis axis = state.getValue(RotatedPillarBlock.AXIS);
             return ConfiguredModel.builder().modelFile(createSoulChainModel())
                     .rotationY(axis == Direction.Axis.X ? 90 : 0)
@@ -93,22 +94,22 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
         ResourceLocation GOLD_BLOCK = new ResourceLocation("block/gold_block");
 
-        slabBlock(ModBlocks.GOLDEN_SLAB.getBlock(), GOLD_BLOCK, GOLD_BLOCK);
-        stairsBlock(ModBlocks.GOLDEN_STAIRS.getBlock(), GOLD_BLOCK);
-        wallBlock(ModBlocks.GOLDEN_WALL.getBlock(), GOLD_BLOCK);
+        slabBlock(ModBlocks.GOLDEN_SLAB.get(), GOLD_BLOCK, GOLD_BLOCK);
+        stairsBlock(ModBlocks.GOLDEN_STAIRS.get(), GOLD_BLOCK);
+        wallBlock(ModBlocks.GOLDEN_WALL.get(), GOLD_BLOCK);
 
         ResourceLocation LAPIS_BLOCK = new ResourceLocation("block/lapis_block");
-        buttonBlock(ModBlocks.LAPIS_BUTTON.getBlock(), LAPIS_BLOCK);
-        simpleBlockItem(ModBlocks.LAPIS_BUTTON.getBlock(), itemModels().buttonInventory("lapis_button_inventory", LAPIS_BLOCK));
+        buttonBlock(ModBlocks.LAPIS_BUTTON.get(), LAPIS_BLOCK);
+        simpleBlockItem(ModBlocks.LAPIS_BUTTON.get(), itemModels().buttonInventory("lapis_button_inventory", LAPIS_BLOCK));
 
         ResourceLocation OBSIDIAN = new ResourceLocation("block/obsidian");
-        pressurePlateBlock(ModBlocks.OBSIDIAN_PRESSURE_PLATE.getBlock(), OBSIDIAN);
+        pressurePlateBlock(ModBlocks.OBSIDIAN_PRESSURE_PLATE.get(), OBSIDIAN);
         itemModels().pressurePlate("obsidian_pressure_plate", OBSIDIAN);
     }
 
     private void simpleBlock(BlockRegistryHolder<? extends Block, BlockItem> block) {
-        simpleBlock(block.getBlock());
-        simpleBlockItem(block.getBlock(), cubeAll(block.getBlock()));
+        simpleBlock(block.get());
+        simpleBlockItem(block.get(), cubeAll(block.get()));
     }
 
     private ModelFile createSoulChainModel() {
@@ -119,7 +120,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
     }
 
     private void makeReforgeAnvil() {
-        getVariantBuilder(ModBlocks.REFORGING_ANVIL.getBlock())
+        getVariantBuilder(ModBlocks.REFORGING_ANVIL.get())
                 .forAllStates(state -> {
                     Direction direction = state.getValue(AnvilBlock.FACING);
                     int rot = switch (direction) {
@@ -140,7 +141,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
     }
 
     private void makeGemstoneCrystals() {
-        getVariantBuilder(ModBlocks.GEMSTONE_CRYSTAL.getBlock()).forAllStatesExcept(state -> {
+        getVariantBuilder(ModBlocks.GEMSTONE_CRYSTAL.get()).forAllStatesExcept(state -> {
             Direction direction = state.getValue(BlockStateProperties.FACING);
             int xRot = switch (direction) {
                 case DOWN -> 180;
@@ -197,15 +198,13 @@ public class ModBlockStateProvider extends BlockStateProvider {
     }
 
     private void makeGemstoneSeeds() {
-        getVariantBuilder(ModBlocks.GEMSTONE_SEED.getBlock()).forAllStatesExcept(state -> {
+        getVariantBuilder(ModBlocks.GEMSTONE_SEED.get()).forAllStatesExcept(state -> {
             Direction direction = state.getValue(BlockStateProperties.FACING);
             GemstoneSeedBlock.MaterialType type = state.getValue(ModBlockStateProperties.STONE_TYPE);
             int yRot = switch (direction) {
-                case DOWN:
-                case EAST:
+                case DOWN, EAST:
                     yield 90;
-                case UP:
-                case WEST:
+                case WEST, UP:
                     yield 270;
                 case SOUTH:
                     yield 180;
@@ -215,6 +214,12 @@ public class ModBlockStateProvider extends BlockStateProvider {
             return ConfiguredModel.builder()
                     .modelFile(variantGemstoneSeed(type))
                     .rotationY(yRot)
+                    .rotationX(switch (direction) {
+                        case DOWN -> 90;
+                        case UP -> -90;
+
+                        case NORTH, SOUTH, WEST, EAST -> 0;
+                    })
                     .build();
         }, ModBlockStateProperties.GEMSTONE_TYPE);
     }

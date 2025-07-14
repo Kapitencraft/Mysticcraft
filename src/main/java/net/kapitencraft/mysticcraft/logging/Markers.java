@@ -1,15 +1,20 @@
 package net.kapitencraft.mysticcraft.logging;
 
 import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
 
 public interface Markers {
 
-    Marker MOD_MARKER = new ModMarker("Mysticcraft");
-    Marker BESTIARY_MANAGER = new ModMarker("BestiaryManager");
-    Marker PARTICLE_ENGINE = new ModMarker("ParticleEngine");
-    Marker REGISTRY = new ModMarker("Registry");
-    Marker REFORGE_MANAGER = new ModMarker("ReforgeManager");
-    Marker GEMSTONE = new ModMarker("GemstoneHandler");
-    Marker GEMSTONE_BUILDER = new ModMarker("GemstoneBuilder");
-    Marker REQUESTS = new ModMarker("RequestHandler");
+    Marker MOD_MARKER = getMarker("Mysticcraft");
+    Marker BESTIARY_MANAGER = getMarker("BestiaryManager");
+    Marker PARTICLE_ENGINE = getMarker("ParticleEngine");
+    Marker REGISTRY = getMarker("Registry");
+    Marker REFORGE_MANAGER = getMarker("ReforgeManager");
+    Marker GEMSTONE = getMarker("GemstoneHandler");
+    Marker GEMSTONE_BUILDER = getMarker("GemstoneBuilder");
+    Marker REQUESTS = getMarker("RequestHandler");
+
+    static Marker getMarker(String name) {
+        return MarkerFactory.getMarker(name);
+    }
 }

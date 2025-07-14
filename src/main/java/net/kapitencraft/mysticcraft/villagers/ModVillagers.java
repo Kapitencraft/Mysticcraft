@@ -25,9 +25,9 @@ public class ModVillagers {
         return new VillagerRegistryHolder(poiType, profession);
     }
 
-    private static Supplier<PoiType> createPoi(Supplier<Block> blockSupplier) {
+    private static Supplier<PoiType> createPoi(Supplier<? extends Block> blockSupplier) {
         return ()-> new PoiType(ImmutableSet.copyOf(blockSupplier.get().getStateDefinition().getPossibleStates()), 2, 1);
     }
 
-    public static final VillagerRegistryHolder GEMSTONE_MAKER = register("gemstone_grinder_poi", "gemstone_maker", createPoi(ModBlocks.GEMSTONE_GRINDER.block()), SoundEvents.VILLAGER_WORK_WEAPONSMITH);
+    public static final VillagerRegistryHolder GEMSTONE_MAKER = register("gemstone_grinder_poi", "gemstone_maker", createPoi(ModBlocks.GEMSTONE_GRINDER), SoundEvents.VILLAGER_WORK_WEAPONSMITH);
 }

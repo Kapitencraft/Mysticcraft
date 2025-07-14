@@ -2,12 +2,11 @@ package net.kapitencraft.mysticcraft.registry;
 
 import net.kapitencraft.kap_lib.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneType;
-import net.kapitencraft.mysticcraft.item.capability.gemstone.IGemstoneItem;
+import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneType;
+import net.kapitencraft.mysticcraft.capability.gemstone.IGemstoneItem;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
 import net.kapitencraft.mysticcraft.spell.Elements;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
@@ -19,6 +18,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 public interface ModCreativeModTabs {
@@ -48,7 +48,7 @@ public interface ModCreativeModTabs {
                     ItemStack stack = new ItemStack(Items.PRISMARINE_SHARD);
                     ListTag tags = EnchantedBookItem.getEnchantments(stack);
                     stack.setHoverName(Component.literal("Enchantments"));
-                    for (Enchantment enchantment : BuiltInRegistries.ENCHANTMENT) {
+                    for (Enchantment enchantment : ForgeRegistries.ENCHANTMENTS) {
                         ResourceLocation location = EnchantmentHelper.getEnchantmentId(enchantment);
                         tags.add(EnchantmentHelper.storeEnchantment(location, enchantment.getMaxLevel()));
                     }
@@ -66,4 +66,8 @@ public interface ModCreativeModTabs {
     RegistryObject<CreativeModeTab> DECORATION = REGISTRY.register("deco", () -> CreativeModeTab.builder().title(Component.translatable("itemGroup.mysticcraft.deco"))
             .icon(()-> new ItemStack(ModBlocks.GOLDEN_WALL.getItem()))
             .displayItems((displayParameters, output) -> TabGroup.registerAll(TabRegister.TabTypes.DECO, output::acceptAll)).build());
+    RegistryObject<CreativeModeTab> TECHNOLOGY = REGISTRY.register("technology", () -> CreativeModeTab.builder()
+            .title(Component.translatable("itemGroup.mysticcraft.tech"))
+            .icon(() -> new ItemStack(ModBlocks.MANA_RELAY.getItem()))
+            .displayItems((pParameters, pOutput) -> TabGroup.registerAll(TabRegister.TabTypes.TECHNOLOGY, pOutput::acceptAll)).build());
 }

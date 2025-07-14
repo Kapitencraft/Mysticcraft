@@ -15,6 +15,7 @@ import java.util.function.Consumer;
  */
 public class TabGroup {
     private static final List<TabGroup> groups = new ArrayList<>();
+    public static final TabGroup TECHNOLOGY = new TabGroup(TabRegister.TabTypes.TECHNOLOGY);
     public static final TabGroup BUILDING_MATERIAL = new TabGroup(TabRegister.TabTypes.BUILDING_MATERIALS);
     public static final TabGroup MATERIAL = new TabGroup(TabRegister.TabTypes.MOD_MATERIALS);
     public static final TabGroup COMBAT = new TabGroup(TabRegister.TabTypes.WEAPONS_AND_TOOLS);

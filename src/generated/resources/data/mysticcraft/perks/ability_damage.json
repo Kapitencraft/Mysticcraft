@@ -1,0 +1,25 @@
+{
+  "parent": "mysticcraft:mana_pool_2",
+  "childrenVisibleMin": 1,
+  "cost": 3,
+  "display": {
+    "frame": "task",
+    "icon": {
+      "item": "mysticcraft:gemstone",
+      "nbt": "{GemstoneData:{GemId:\"almandine\",GemRarity:\"perfect\"}}"
+    }
+  },
+  "maxLevel": 5,
+  "reward": {
+    "type": "mysticcraft:stat",
+    "entries": {
+      "kap_lib:generic.ability_damage": [
+        {
+          "id": "5b5544fd-1738-401e-98aa-45b001b6e157",
+          "operation": 0,
+          "perLevel": 2.0
+        }
+      ]
+    }
+  }
+}

@@ -5,7 +5,7 @@ import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.kapitencraft.kap_lib.helpers.MathHelper;
 import net.kapitencraft.kap_lib.helpers.TextHelper;
-import net.kapitencraft.mysticcraft.misc.DamageCounter;
+import net.kapitencraft.kap_lib.util.DamageCounter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;

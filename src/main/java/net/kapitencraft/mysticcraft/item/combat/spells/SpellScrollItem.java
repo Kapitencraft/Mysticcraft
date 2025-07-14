@@ -1,9 +1,9 @@
 package net.kapitencraft.mysticcraft.item.combat.spells;
 
-import net.kapitencraft.mysticcraft.item.capability.spell.ISpellItem;
-import net.kapitencraft.mysticcraft.item.capability.spell.SpellCapability;
-import net.kapitencraft.mysticcraft.item.capability.spell.SpellCapabilityProvider;
-import net.kapitencraft.mysticcraft.item.capability.spell.SpellHelper;
+import net.kapitencraft.mysticcraft.capability.spell.ISpellItem;
+import net.kapitencraft.mysticcraft.capability.spell.SpellCapability;
+import net.kapitencraft.mysticcraft.capability.spell.SpellCapabilityProvider;
+import net.kapitencraft.mysticcraft.capability.spell.SpellHelper;
 import net.kapitencraft.mysticcraft.spell.Spell;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;

@@ -3,8 +3,8 @@ package net.kapitencraft.mysticcraft.block.gemstone;
 import net.kapitencraft.kap_lib.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.block.ModBlockStateProperties;
-import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneType;
-import net.kapitencraft.mysticcraft.item.capability.gemstone.IGemstoneItem;
+import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneType;
+import net.kapitencraft.mysticcraft.capability.gemstone.IGemstoneItem;
 import net.kapitencraft.mysticcraft.registry.ModBlocks;
 import net.kapitencraft.mysticcraft.registry.ModItems;
 import net.minecraft.core.BlockPos;
@@ -32,13 +32,13 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class GemstoneBlock extends HalfTransparentBlock {
-    public static final double VERY_LOW_STRENGHT = 4;
-    public static final double LOW_STRENGHT = 5;
-    public static final double LOW_MEDIUM_STRENGHT = 6;
-    public static final double MEDIUM_STRENGHT = 7;
-    public static final double HIGH_MEDIUM_STRENGHT = 8;
-    public static final double HIGH_STRENGHT = 9;
-    public static final double VERY_HIGH_STRENGHT = 10;
+    public static final float VERY_LOW_STRENGHT = 4;
+    public static final float LOW_STRENGHT = 5;
+    public static final float LOW_MEDIUM_STRENGHT = 6;
+    public static final float MEDIUM_STRENGHT = 7;
+    public static final float HIGH_MEDIUM_STRENGHT = 8;
+    public static final float HIGH_STRENGHT = 9;
+    public static final float VERY_HIGH_STRENGHT = 10;
 
     public GemstoneBlock() {
         super(Properties.copy(Blocks.AMETHYST_CLUSTER).requiresCorrectToolForDrops().noOcclusion());
@@ -98,7 +98,7 @@ public class GemstoneBlock extends HalfTransparentBlock {
 
     public static class Item extends BlockItem implements IGemstoneItem {
         public Item() {
-            this(ModBlocks.GEMSTONE_BLOCK.getBlock());
+            this(ModBlocks.GEMSTONE_BLOCK.get());
         }
         protected Item(Block block) {
             super(block, MiscHelper.rarity(Rarity.RARE));

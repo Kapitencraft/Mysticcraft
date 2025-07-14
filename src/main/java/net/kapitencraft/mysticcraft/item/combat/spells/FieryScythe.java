@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.item.combat.spells;
 
-import net.kapitencraft.mysticcraft.item.capability.spell.SpellCapabilityProvider;
+import net.kapitencraft.mysticcraft.capability.spell.SpellCapabilityProvider;
 import net.kapitencraft.mysticcraft.registry.Spells;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Rarity;

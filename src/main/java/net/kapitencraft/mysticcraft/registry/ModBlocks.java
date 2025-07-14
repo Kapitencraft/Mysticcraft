@@ -11,9 +11,13 @@ import net.kapitencraft.mysticcraft.block.gemstone.GemstoneBlock;
 import net.kapitencraft.mysticcraft.block.gemstone.GemstoneCrystal;
 import net.kapitencraft.mysticcraft.block.gemstone.GemstoneGrinderBlock;
 import net.kapitencraft.mysticcraft.block.gemstone.GemstoneSeedBlock;
+import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneItem;
 import net.kapitencraft.mysticcraft.dungeon.generation.DungeonGenerator;
-import net.kapitencraft.mysticcraft.item.capability.gemstone.GemstoneItem;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
+import net.kapitencraft.mysticcraft.tech.block.MagicFurnaceBlock;
+import net.kapitencraft.mysticcraft.tech.block.ManaPortBlock;
+import net.kapitencraft.mysticcraft.tech.block.ManaRelayBlock;
+import net.kapitencraft.mysticcraft.tech.block.PrismaticGeneratorBlock;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
@@ -77,4 +81,9 @@ public interface ModBlocks {
     BlockRegistryHolder<GemstoneBlock, GemstoneBlock.Item> GEMSTONE_BLOCK = registerBlock("gemstone_block", GemstoneBlock::new, object -> new GemstoneBlock.Item(), null);
     BlockRegistryHolder<GemstoneCrystal, GemstoneBlock.Item> GEMSTONE_CRYSTAL = registerBlock("gemstone_crystal", GemstoneCrystal::new, object -> new GemstoneCrystal.Item(), null);
     BlockRegistryHolder<GemstoneSeedBlock, GemstoneSeedBlock.Item> GEMSTONE_SEED = registerBlock("gemstone_seed", GemstoneSeedBlock::new, object -> new GemstoneSeedBlock.Item(), null);
+
+    BlockRegistryHolder<ManaRelayBlock, BlockItem> MANA_RELAY = registerBlock("mana_relay", ManaRelayBlock::new, MiscHelper.rarity(Rarity.UNCOMMON), TabGroup.TECHNOLOGY);
+    BlockRegistryHolder<ManaPortBlock, BlockItem> MANA_PORT = registerBlock("mana_port", ManaPortBlock::new, MiscHelper.rarity(Rarity.UNCOMMON), TabGroup.TECHNOLOGY);
+    BlockRegistryHolder<PrismaticGeneratorBlock, BlockItem> PRISMATIC_GENERATOR = registerBlock("prismatic_generator", PrismaticGeneratorBlock::new, MiscHelper.rarity(Rarity.RARE), TabGroup.TECHNOLOGY);
+    BlockRegistryHolder<MagicFurnaceBlock, BlockItem> MAGIC_FURNACE = registerBlock("magic_furnace", MagicFurnaceBlock::new, MiscHelper.rarity(Rarity.UNCOMMON), TabGroup.TECHNOLOGY);
 }

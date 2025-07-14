@@ -10,6 +10,7 @@
   },
   "display": {
     "announce_to_chat": true,
+    "background": "minecraft:textures/block/amethyst_block.png",
     "description": {
       "type": "minecraft:translatable",
       "translate": "advancements.mysticcraft.archmage"

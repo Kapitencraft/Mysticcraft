@@ -83,7 +83,8 @@ public class TagKeyCondition extends BaseCondition {
                 });
             }
             case BLOCK -> {
-                LootContextReader.simple(context, BlockState.class, LootContextParams.BLOCK_STATE).ifPresent(state -> reference.setValue(state.is(ModTags.makeKey(Registries.BLOCK, id))));
+                LootContextReader.simple(context, BlockState.class, LootContextParams.BLOCK_STATE)
+                        .ifPresent(state -> reference.setValue(state.is(ModTags.makeKey(Registries.BLOCK, id))));
             }
         }
         return reference.getValue();

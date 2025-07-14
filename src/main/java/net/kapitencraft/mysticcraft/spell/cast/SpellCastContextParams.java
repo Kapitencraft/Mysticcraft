@@ -4,15 +4,13 @@ import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 
 public interface SpellCastContextParams {
     SpellCastContextParam<Vec3> ORIGIN = register("origin");
-    SpellCastContextParam<BlockPos> ORIGIN_BLOCK = register("origin_block");
+    SpellCastContextParam<BlockPos> TARGET_BLOCK = register("origin_block");
     SpellCastContextParam<LivingEntity> CASTER = register("caster");
     SpellCastContextParam<Entity> TARGET = register("target");
-    SpellCastContextParam<ItemStack> WAND = register("wand");
 
     private static <T> SpellCastContextParam<T> register(String name) {
         return new SpellCastContextParam<>(MysticcraftMod.res(name));

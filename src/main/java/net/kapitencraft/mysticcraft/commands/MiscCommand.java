@@ -4,12 +4,12 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.kapitencraft.kap_lib.helpers.CommandHelper;
+import net.kapitencraft.mysticcraft.capability.dungeon.IPrestigeAbleItem;
+import net.kapitencraft.mysticcraft.capability.dungeon.IStarAbleItem;
 import net.kapitencraft.mysticcraft.helpers.InventoryHelper;
-import net.kapitencraft.mysticcraft.item.capability.dungeon.IPrestigeAbleItem;
-import net.kapitencraft.mysticcraft.item.capability.dungeon.IStarAbleItem;
 import net.kapitencraft.mysticcraft.item.misc.SoulbindHelper;
-import net.kapitencraft.mysticcraft.networking.ModMessages;
-import net.kapitencraft.mysticcraft.networking.packets.S2C.ResetCooldownsPacket;
+import net.kapitencraft.mysticcraft.network.ModMessages;
+import net.kapitencraft.mysticcraft.network.packets.S2C.ResetCooldownsPacket;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -24,11 +24,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MiscCommand {
-    public static void exeMaxEnchant(CommandDispatcher<CommandSourceStack> dispatcher) {
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         LiteralCommandNode<CommandSourceStack> main = dispatcher.register(Commands.literal("misc")
                 .requires(CommandHelper::isModerator)
                 .then(Commands.literal("max_ench")
-                        .executes(MiscCommand::exeMaxEnchant)
+                        .executes(MiscCommand::register)
                 ).then(Commands.literal("hyper_max_ench")
                         .executes(MiscCommand::exeEnchantmentUpgrades)
                 ).then(Commands.literal("hyper_max")
@@ -48,7 +48,7 @@ public class MiscCommand {
         });
     }
 
-    private static int exeMaxEnchant(CommandContext<CommandSourceStack> context) {
+    private static int register(CommandContext<CommandSourceStack> context) {
         return CommandHelper.checkNonConsoleCommand(context, (player, stack) -> {
             ItemStack stack1 = player.getMainHandItem();
             if (stack1.isEnchantable()) {
@@ -108,7 +108,7 @@ public class MiscCommand {
 
     private static int exeHyperMax(CommandContext<CommandSourceStack> context) {
         return CommandHelper.checkNonConsoleCommand(context, (serverPlayer, stack) -> {
-            exeMaxEnchant(context);
+            register(context);
             exeEnchantmentUpgrades(context);
             exeExtraUpgrades(context);
             stack.sendSuccess(() -> Component.translatable("command.misc.hyper_max.success").withStyle(ChatFormatting.GREEN), true);

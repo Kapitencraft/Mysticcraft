@@ -3,7 +3,7 @@ package net.kapitencraft.mysticcraft.item.loot_table.functions;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.kapitencraft.kap_lib.io.serialization.JsonSerializer;
-import net.kapitencraft.mysticcraft.item.capability.essence.IEssenceData;
+import net.kapitencraft.mysticcraft.capability.essence.IEssenceData;
 import net.kapitencraft.mysticcraft.item.loot_table.IConditional;
 import net.kapitencraft.mysticcraft.item.loot_table.modifiers.ModLootModifier;
 import net.kapitencraft.mysticcraft.misc.content.EssenceType;

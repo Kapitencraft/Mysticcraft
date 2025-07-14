@@ -11,6 +11,7 @@ public class ModCommands {
     @SubscribeEvent
     public static void registerCommands(RegisterCommandsEvent event) {
         CommandDispatcher<CommandSourceStack> dispatcher = event.getDispatcher();
-        MiscCommand.exeMaxEnchant(dispatcher);
+        MiscCommand.register(dispatcher);
+        PerksCommand.register(dispatcher);
     }
 }

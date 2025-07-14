@@ -7,8 +7,8 @@ import net.kapitencraft.kap_lib.helpers.MathHelper;
 import net.kapitencraft.kap_lib.helpers.MiscHelper;
 import net.kapitencraft.kap_lib.helpers.TextHelper;
 import net.kapitencraft.kap_lib.item.ExtendedItem;
+import net.kapitencraft.kap_lib.stream.Consumers;
 import net.kapitencraft.kap_lib.util.ExtraRarities;
-import net.kapitencraft.mysticcraft.api.QuadConsumer;
 import net.kapitencraft.mysticcraft.config.CommonModConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
@@ -155,7 +155,7 @@ public class BuildersWand extends Item implements ExtendedItem {
     private void use(Level level) {
         if (posList.size() == type.getPosAmount() && !level.isClientSide()) {
             try {
-                type.consumer.accept(requiredBlock, useAbles, posList, level);
+                type.consumer.apply(requiredBlock, useAbles, posList, level);
                 setMsg(Component.literal("used!"));
                 if (CommonModConfig.shouldResetBuilderWandPos()) posList.clear();
             } catch (Exception e) {
@@ -210,8 +210,9 @@ public class BuildersWand extends Item implements ExtendedItem {
         private final int posAmount;
         private final int pos;
         private final String translateKey;
-        private final QuadConsumer<Block, List<Block>, List<BlockPos>, Level> consumer;
-        BuildType(int pos, boolean hasRequiredBlock, int posAmount, QuadConsumer<Block, List<Block>, List<BlockPos>, Level> consumer, String s) {
+        private final Consumers.C4<Block, List<Block>, List<BlockPos>, Level> consumer;
+
+        BuildType(int pos, boolean hasRequiredBlock, int posAmount, Consumers.C4<Block, List<Block>, List<BlockPos>, Level> consumer, String s) {
             this.pos = pos;
             this.hasRequiredBlock = hasRequiredBlock;
             this.posAmount = posAmount;

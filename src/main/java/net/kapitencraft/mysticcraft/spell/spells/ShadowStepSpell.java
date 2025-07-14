@@ -1,10 +1,13 @@
 package net.kapitencraft.mysticcraft.spell.spells;
 
+import net.kapitencraft.kap_lib.cooldown.Cooldown;
 import net.kapitencraft.kap_lib.helpers.MathHelper;
 import net.kapitencraft.kap_lib.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.item.combat.weapon.melee.dagger.ShadowDagger;
+import net.kapitencraft.mysticcraft.registry.ModCooldowns;
 import net.kapitencraft.mysticcraft.registry.ModParticleTypes;
 import net.kapitencraft.mysticcraft.spell.Spell;
+import net.kapitencraft.mysticcraft.spell.SpellTarget;
 import net.kapitencraft.mysticcraft.spell.cast.SpellCastContext;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.server.level.ServerLevel;
@@ -13,6 +16,8 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +62,11 @@ public class ShadowStepSpell implements Spell {
                     if (next(hit, user)) MiscHelper.schedule(10, ()-> next(hit, user));
                 }
         );
+    }
 
+    @Override
+    public int castDuration() {
+        return 100;
     }
 
     @Override
@@ -66,13 +75,18 @@ public class ShadowStepSpell implements Spell {
     }
 
     @Override
-    public Type getType() {
+    public @NotNull Type getType() {
         return Type.RELEASE;
     }
 
     @Override
-    public int getCooldownTime() {
-        return 300;
+    public @Nullable Cooldown getCooldown() {
+        return ModCooldowns.SHADOW_STEP.get();
+    }
+
+    @Override
+    public @NotNull SpellTarget getTarget() {
+        return SpellTarget.SELF;
     }
 
     @Override

@@ -2,10 +2,12 @@ package net.kapitencraft.mysticcraft.spell.spells;
 
 import net.kapitencraft.kap_lib.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.spell.Spell;
+import net.kapitencraft.mysticcraft.spell.SpellTarget;
 import net.kapitencraft.mysticcraft.spell.cast.SpellCastContext;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 public class EtherWarpSpell implements Spell {
     public static boolean execute(LivingEntity living, ItemStack ignoredStack) {
@@ -24,13 +26,18 @@ public class EtherWarpSpell implements Spell {
     }
 
     @Override
-    public Type getType() {
+    public int castDuration() {
+        return 0;
+    }
+
+    @Override
+    public @NotNull Type getType() {
         return Type.RELEASE;
     }
 
     @Override
-    public int getCooldownTime() {
-        return 0;
+    public @NotNull SpellTarget getTarget() {
+        return SpellTarget.SELF;
     }
 
     @Override

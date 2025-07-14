@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.item.misc.lore_categories;
 
-import net.kapitencraft.mysticcraft.item.capability.spell.ISpellItem;
+import net.kapitencraft.mysticcraft.capability.spell.ISpellItem;
 import net.minecraft.network.chat.Component;
 
 public class SpellCategory extends SimpleItemCategory<ISpellItem> {

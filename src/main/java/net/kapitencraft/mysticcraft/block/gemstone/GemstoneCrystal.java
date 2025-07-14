@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.block.gemstone;
 
-import net.kapitencraft.mysticcraft.item.capability.gemstone.IGemstoneItem;
+import net.kapitencraft.mysticcraft.capability.gemstone.IGemstoneItem;
 import net.kapitencraft.mysticcraft.registry.ModBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -90,7 +90,7 @@ public class GemstoneCrystal extends GemstoneBlock {
 
     public static class Item extends GemstoneBlock.Item {
         public Item() {
-            super(ModBlocks.GEMSTONE_CRYSTAL.getBlock());
+            super(ModBlocks.GEMSTONE_CRYSTAL.get());
         }
 
         @Override
