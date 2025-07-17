@@ -3,23 +3,10 @@ package net.kapitencraft.mysticcraft.item.combat.spells;
 import net.kapitencraft.kap_lib.util.ExtraRarities;
 import net.kapitencraft.mysticcraft.capability.spell.SpellCapabilityProvider;
 import net.kapitencraft.mysticcraft.registry.Spells;
-import net.minecraft.network.chat.Component;
-
-import java.util.List;
 
 public class InfernalScythe extends NormalSpellItem implements IDamageSpellItem, IFireScytheItem {
     public InfernalScythe() {
         super(new Properties().rarity(ExtraRarities.LEGENDARY), 350, 69);
-    }
-
-    @Override
-    public List<Component> getItemDescription() {
-        return null;
-    }
-
-    @Override
-    public List<Component> getPostDescription() {
-        return null;
     }
 
     @Override

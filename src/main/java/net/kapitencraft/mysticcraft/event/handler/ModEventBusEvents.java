@@ -82,7 +82,7 @@ public class ModEventBusEvents {
     }
 
     @SubscribeEvent
-    public void onEntityAttributeCreation(EntityAttributeCreationEvent event) {
+    public static void onEntityAttributeCreation(EntityAttributeCreationEvent event) {
         event.put(ModEntityTypes.VAMPIRE_BAT.get(), VampireBat.createAttributes().build());
         event.put(ModEntityTypes.FROZEN_BLAZE.get(), FrozenBlazeEntity.createAttributes().build());
     }

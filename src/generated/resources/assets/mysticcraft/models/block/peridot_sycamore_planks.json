@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "mysticcraft:block/peridot_sycamore_planks"
+  }
+}

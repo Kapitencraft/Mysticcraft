@@ -2,7 +2,6 @@ modLoader="javafml" #mandatory
 loaderVersion="${forge_version_range}"
 license="MIT License"
 [[mods]] #mandatory
-updateJSONURL = "https://raw.githubusercontent.com/Kapitencraft/Mysticcraft/master/mysticcraft-version.json"
 modId="${mod_id}" #mandatory
 version="1.0-pre1" #mandatory
 issueTrackerURL="https://discord.gg/ByxUBgPB"

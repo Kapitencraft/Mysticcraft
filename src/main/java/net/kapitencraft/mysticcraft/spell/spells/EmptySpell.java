@@ -28,8 +28,8 @@ public class EmptySpell implements Spell {
     }
 
     @Override
-    public @NotNull SpellTarget getTarget() {
-        return SpellTarget.SELF;
+    public @NotNull SpellTarget<?> getTarget() {
+        return SpellTarget.Type.SELF.always();
     }
 
     @Override

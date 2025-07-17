@@ -9,6 +9,9 @@ import net.kapitencraft.mysticcraft.capability.dungeon.IStarAbleItem;
 import net.kapitencraft.mysticcraft.capability.elytra.ElytraData;
 import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneHelper;
 import net.kapitencraft.mysticcraft.capability.reforging.Reforge;
+import net.kapitencraft.mysticcraft.capability.spell.SpellHelper;
+import net.kapitencraft.mysticcraft.spell.Spell;
+import net.kapitencraft.mysticcraft.tags.ModTags;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -22,6 +25,8 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.Constant;
+import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
 @Mixin(Item.class)
 @SuppressWarnings("ALL")
@@ -66,5 +71,14 @@ public abstract class ItemMixin implements IForgeItem {
     @Overwrite
     public @NotNull Rarity getRarity(@NotNull ItemStack stack) {
         return MiscHelper.getFinalRarity(rarity, stack);
+    }
+
+    @ModifyConstant(method = "getUseDuration", constant = @Constant(intValue = 0))
+    private int checkSpellItemUseDuration(int i, ItemStack obj) {
+        if (obj.is(ModTags.Items.CATALYST)) {
+            Spell spell = SpellHelper.getActiveSpell(obj);
+            return spell.getType() == Spell.Type.CYCLE ? Integer.MAX_VALUE : spell.castDuration() + 1;
+        }
+        return 0;
     }
 }

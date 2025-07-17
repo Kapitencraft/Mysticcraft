@@ -27,7 +27,7 @@ public interface Spell {
 
     @NotNull Type getType();
 
-    @NotNull SpellTarget getTarget();
+    @NotNull SpellTarget<?> getTarget();
 
     default @Nullable Cooldown getCooldown() {
         return null;

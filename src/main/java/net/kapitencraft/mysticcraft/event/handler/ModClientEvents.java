@@ -8,6 +8,7 @@ import net.kapitencraft.mysticcraft.block.gemstone.GemstoneBlock;
 import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneHelper;
 import net.kapitencraft.mysticcraft.capability.gemstone.IGemstoneItem;
 import net.kapitencraft.mysticcraft.capability.reforging.Reforges;
+import net.kapitencraft.mysticcraft.client.ItemCategory;
 import net.kapitencraft.mysticcraft.client.SpellCastChargeOverlay;
 import net.kapitencraft.mysticcraft.client.particle.CircleParticle;
 import net.kapitencraft.mysticcraft.client.particle.FireNormalParticle;
@@ -23,6 +24,7 @@ import net.kapitencraft.mysticcraft.misc.ModItemProperties;
 import net.kapitencraft.mysticcraft.registry.*;
 import net.kapitencraft.mysticcraft.tech.gui.screen.MagicFurnaceScreen;
 import net.kapitencraft.mysticcraft.tech.gui.screen.PrismaticGeneratorScreen;
+import net.kapitencraft.mysticcraft.tech.gui.screen.SpellCasterTurretScreen;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
@@ -54,6 +56,7 @@ public class ModClientEvents {
         registerMenuScreens();
         ItemBlockRenderTypes.setRenderLayer(ModFluids.SOURCE_MANA_FLUID.get(), RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(ModFluids.FLOWING_MANA_FLUID.get(), RenderType.translucent());
+        ItemCategory.Registry.register();
     }
 
     private static void registerMenuScreens() {
@@ -61,8 +64,8 @@ public class ModClientEvents {
         MenuScreens.register(ModMenuTypes.REFORGING_ANVIL.get(), ReforgeAnvilScreen::new);
         MenuScreens.register(ModMenuTypes.PRISMATIC_GENERATOR.get(), PrismaticGeneratorScreen::new);
         MenuScreens.register(ModMenuTypes.MAGIC_FURNACE.get(), MagicFurnaceScreen::new);
+        MenuScreens.register(ModMenuTypes.SPELL_CASTER_TURRET.get(), SpellCasterTurretScreen::new);
     }
-
 
     @SubscribeEvent
     public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {

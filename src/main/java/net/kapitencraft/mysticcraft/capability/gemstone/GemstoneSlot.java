@@ -124,19 +124,20 @@ public class GemstoneSlot {
     }
 
     public enum Type implements StringRepresentable {
-        INTELLIGENCE("\uF000", "intel", GemstoneType.SAPPHIRE),
-        STRENGTH("\u2741", "strength", GemstoneType.JASPER),
-        HEALTH("\u2764", "health", GemstoneType.RUBY),
-        ABILITY_DAMAGE("\uF001", "ability_damage", GemstoneType.ALMANDINE),
+        INTELLIGENCE("✎", "intel", GemstoneType.SAPPHIRE),
+        STRENGTH("❁", "strength", GemstoneType.JASPER),
+        HEALTH("❤", "health", GemstoneType.RUBY),
+        ABILITY_DAMAGE("☄", "ability_damage", GemstoneType.ALMANDINE),
         EMPTY("", "empty", (GemstoneType) null),
-        FISHING_SPEED("\uF006", "fishing_speed", GemstoneType.AQUAMARINE),
-        DRAW_SPEED("\uF004", "draw_speed", GemstoneType.MOONSTONE),
-        MOVE_SPEED("\uF000", "move_speed", GemstoneType.CELESTINE),
-        ARMOR("\uF000", "armor", GemstoneType.AMETHYST),
-        OFFENCE("\uF005", "offence", GemstoneType.JASPER, GemstoneType.SAPPHIRE, GemstoneType.ALMANDINE, GemstoneType.MOONSTONE, GemstoneType.CELESTINE),
-        DEFENCE("\uF002", "defence", GemstoneType.RUBY, GemstoneType.AMETHYST, GemstoneType.CELESTINE),
-        MAGIC("\uF003", "magic", GemstoneType.SAPPHIRE, GemstoneType.ALMANDINE),
-        COMBAT("\u2694", "combat", GemstoneType.JASPER, GemstoneType.SAPPHIRE, GemstoneType.ALMANDINE, GemstoneType.MOONSTONE, GemstoneType.RUBY, GemstoneType.AMETHYST, GemstoneType.CELESTINE);
+        FISHING_SPEED("\uD83C\uDFA3", "fishing_speed", GemstoneType.AQUAMARINE),
+        DRAW_SPEED("\uD83C\uDFF9", "draw_speed", GemstoneType.MOONSTONE),
+        MOVE_SPEED("⇒", "move_speed", GemstoneType.CELESTINE),
+        ENTITY_REACH("\uD83D\uDDE1", "entity_reach", GemstoneType.PERIDOT),
+        ARMOR("⛉", "armor", GemstoneType.AMETHYST),
+        OFFENCE("☠", "offence", GemstoneType.JASPER, GemstoneType.SAPPHIRE, GemstoneType.ALMANDINE, GemstoneType.MOONSTONE, GemstoneType.CELESTINE, GemstoneType.PERIDOT),
+        DEFENCE("\ud83d\udee1", "defence", GemstoneType.RUBY, GemstoneType.AMETHYST, GemstoneType.CELESTINE),
+        MAGIC("⚡", "magic", GemstoneType.SAPPHIRE, GemstoneType.ALMANDINE),
+        COMBAT("⚔", "combat", GemstoneType.JASPER, GemstoneType.SAPPHIRE, GemstoneType.ALMANDINE, GemstoneType.MOONSTONE, GemstoneType.RUBY, GemstoneType.AMETHYST, GemstoneType.CELESTINE, GemstoneType.PERIDOT);
 
         public static final Codec<Type> CODEC = StringRepresentable.fromEnum(Type::values);
 

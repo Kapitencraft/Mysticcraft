@@ -37,7 +37,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
     @Override
     protected void buildRecipes(@NotNull Consumer<FinishedRecipe> consumer) {
         ArmorRecipeBuilder.create(ModItems.CRIMSON_ARMOR).material(ModItems.CRIMSON_STEEL_INGOT).save(consumer, "mysticcraft:crimson_armor");
-        ArmorRecipeBuilder.create(ModItems.FROZEN_BLAZE_ARMOR).material(StrictNBTIngredient.of(new ItemStack(ModItems.FROZEN_BLAZE_ROD.get(), 12))).save(consumer, "mysticcraft:frozen_blaze_armor");
+        ArmorRecipeBuilder.create(ModItems.FROZEN_BLAZE_ARMOR).material(StrictNBTIngredient.of(new ItemStack(ModItems.FROZEN_BLAZE_ROD.get(), 12))).save(consumer, "mysticcraft:frozen_blaze_armor"); //TODO fix
         ArmorRecipeBuilder.create(ModItems.SOUL_MAGE_ARMOR).material(ModBlocks.SOUL_CHAIN.item()).save(consumer, "mysticcraft:soul_mage_armor");
         ArmorRecipeBuilder.create(ModItems.SHADOW_ASSASSIN_ARMOR).material(PartialNBTIngredient.of(ModItems.DYED_LEATHER.get(), Util.make(new CompoundTag(), c -> {
             CompoundTag display = new CompoundTag();
@@ -81,42 +81,41 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
         stonecutterResultFromBase(consumer, RecipeCategory.BUILDING_BLOCKS, ModBlocks.GOLDEN_WALL.getItem(), Items.GOLD_BLOCK);
         stonecutterResultFromBase(consumer, RecipeCategory.BUILDING_BLOCKS, ModBlocks.GOLDEN_STAIRS.getItem(), Items.GOLD_BLOCK);
 
-        //mana steel sword
-        {
-            unlock(ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, ModItems.MS_HANDLE.get())
-                            .pattern("  *")
-                            .pattern("** ")
-                            .pattern("+* ")
-                            .define('*', ModItems.MANA_STEEL_INGOT.get())
-                            .define('+', StrictNBTIngredient.of(IGemstoneItem.createData(GemstoneType.Rarity.PERFECT, GemstoneType.RUBY, ModItems.GEMSTONE))),
-                    ModItems.MANA_STEEL_INGOT.get()
-            ).save(consumer);
-            unlock(ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, ModItems.MS_UPPER_BlADE.get())
-                            .pattern(" * ")
-                            .pattern(" * ")
-                            .pattern("*+*")
-                            .define('*', ModItems.MANA_STEEL_INGOT.get())
-                            .define('+', StrictNBTIngredient.of(IGemstoneItem.createData(GemstoneType.Rarity.PERFECT, GemstoneType.RUBY, ModItems.GEMSTONE))),
-                    ModItems.MANA_STEEL_INGOT.get()
-            ).save(consumer);
-            unlock(ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, ModItems.MS_DOWN_BlADE.get())
-                            .pattern(" * ")
-                            .pattern("*+*")
-                            .pattern("*+*")
-                            .define('*', ModItems.MANA_STEEL_INGOT.get())
-                            .define('+', StrictNBTIngredient.of(IGemstoneItem.createData(GemstoneType.Rarity.PERFECT, GemstoneType.JASPER, ModItems.GEMSTONE))),
-                    ModItems.MANA_STEEL_INGOT.get()
-            ).save(consumer);
-            unlock(ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, ModItems.MANA_STEEL_SWORD.get())
-                            .pattern("  +")
-                            .pattern(" * ")
-                            .pattern("#  ")
-                            .define('+', ModItems.MS_UPPER_BlADE.get())
-                            .define('*', ModItems.MS_DOWN_BlADE.get())
-                            .define('#', ModItems.MS_HANDLE.get()),
-                    ModItems.MANA_STEEL_INGOT.get()
-            ).save(consumer);
-        }
+        //region mana steel sword
+        unlock(ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, ModItems.MS_HANDLE.get())
+                        .pattern("  *")
+                        .pattern("** ")
+                        .pattern("+* ")
+                        .define('*', ModItems.MANA_STEEL_INGOT.get())
+                        .define('+', StrictNBTIngredient.of(IGemstoneItem.createData(GemstoneType.Rarity.PERFECT, GemstoneType.RUBY, ModItems.GEMSTONE))),
+                ModItems.MANA_STEEL_INGOT.get()
+        ).save(consumer);
+        unlock(ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, ModItems.MS_UPPER_BlADE.get())
+                        .pattern(" * ")
+                        .pattern(" * ")
+                        .pattern("*+*")
+                        .define('*', ModItems.MANA_STEEL_INGOT.get())
+                        .define('+', StrictNBTIngredient.of(IGemstoneItem.createData(GemstoneType.Rarity.PERFECT, GemstoneType.RUBY, ModItems.GEMSTONE))),
+                ModItems.MANA_STEEL_INGOT.get()
+        ).save(consumer);
+        unlock(ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, ModItems.MS_DOWN_BlADE.get())
+                        .pattern(" * ")
+                        .pattern("*+*")
+                        .pattern("*+*")
+                        .define('*', ModItems.MANA_STEEL_INGOT.get())
+                        .define('+', StrictNBTIngredient.of(IGemstoneItem.createData(GemstoneType.Rarity.PERFECT, GemstoneType.JASPER, ModItems.GEMSTONE))),
+                ModItems.MANA_STEEL_INGOT.get()
+        ).save(consumer);
+        unlock(ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, ModItems.MANA_STEEL_SWORD.get())
+                        .pattern("  +")
+                        .pattern(" * ")
+                        .pattern("#  ")
+                        .define('+', ModItems.MS_UPPER_BlADE.get())
+                        .define('*', ModItems.MS_DOWN_BlADE.get())
+                        .define('#', ModItems.MS_HANDLE.get()),
+                ModItems.MANA_STEEL_INGOT.get()
+        ).save(consumer);
+        //endregion
 
         unlock(ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, ModItems.NECRON_SWORD.get())
                         .pattern("*")
@@ -125,6 +124,11 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                         .define('*', StrictNBTIngredient.of(new ItemStack(Items.WITHER_SKELETON_SKULL, 12)))
                         .define('+', Items.STICK),
                 Items.WITHER_SKELETON_SKULL
+        ).save(consumer);
+
+        unlock(ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, ModBlocks.PERIDOT_SYCAMORE_PLANKS.getItem(), 4)
+                .requires(ModBlocks.PERIDOT_SYCAMORE_LOG.getItem()).group("planks"),
+                ModBlocks.PERIDOT_SYCAMORE_LOG.getItem()
         ).save(consumer);
     }
 

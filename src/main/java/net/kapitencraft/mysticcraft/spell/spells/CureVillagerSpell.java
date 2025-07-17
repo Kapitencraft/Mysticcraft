@@ -6,11 +6,14 @@ import net.kapitencraft.mysticcraft.spell.SpellTarget;
 import net.kapitencraft.mysticcraft.spell.cast.SpellCastContext;
 import net.kapitencraft.mysticcraft.spell.cast.SpellCastContextParams;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.monster.ZombieVillager;
 import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.NotNull;
 
 public class CureVillagerSpell implements Spell {
+    private final SpellTarget<Entity> TARGET = SpellTarget.Type.ENTITY.create(ZombieVillager.class::isInstance);
+
     @Override
     public void cast(SpellCastContext context) throws SpellExecutionFailedException {
         if (context.getParamOrNull(SpellCastContextParams.TARGET) instanceof ZombieVillager villager && villager.level() instanceof ServerLevel serverLevel) {
@@ -34,8 +37,8 @@ public class CureVillagerSpell implements Spell {
     }
 
     @Override
-    public @NotNull SpellTarget getTarget() {
-        return SpellTarget.ENTITY;
+    public @NotNull SpellTarget<?> getTarget() {
+        return TARGET;
     }
 
     @Override

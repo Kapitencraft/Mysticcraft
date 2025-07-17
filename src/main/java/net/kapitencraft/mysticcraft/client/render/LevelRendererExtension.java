@@ -73,7 +73,7 @@ public class LevelRendererExtension {
                 ItemStack item = player.getUseItem();
                 if (item.getItem() instanceof SpellItem) {
                     Spell spell = SpellHelper.getActiveSpell(item);
-                    if (spell.getTarget() == SpellTarget.BLOCK) {
+                    if (spell.getTarget().getType() == SpellTarget.Type.BLOCK) {
                         BlockPos pos = BlockPos.of(item.getTag().getLong("target"));
                         stack.pushPose();
                         stack.translate(pos.getX(), pos.getY(), pos.getZ());

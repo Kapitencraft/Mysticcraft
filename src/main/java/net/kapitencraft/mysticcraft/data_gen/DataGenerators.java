@@ -24,7 +24,7 @@ public class DataGenerators {
         CompletableFuture<HolderLookup.Provider> registries = event.getLookupProvider();
         ModLanguageProvider provider = new ModLanguageProvider(output);
         generator.addProvider(true, new ModBlockStateProvider(output, helper));
-        generator.addProvider(false, new ModRecipeProvider(output));
+        generator.addProvider(true, new ModRecipeProvider(output));
         generator.addProvider(false, ModLootTableProvider.create(output));
         generator.addProvider(true, new ModItemModelProvider(output, helper));
         generator.addProvider(false, new BestiaryProvider(output, provider));

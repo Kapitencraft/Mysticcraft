@@ -102,6 +102,9 @@ public interface ModItems {
     RegistryObject<Astraea> ASTREA = register("astrea", Astraea::new, NecronSword.NECRON_GROUP);
     RegistryObject<NecronSword> VALKYRIE = register("valkyrie", () -> new NecronSword(NecronSword.REFINED_BASE_DAMAGE, 60, 60, 145), NecronSword.NECRON_GROUP);
     RegistryObject<ShadowDagger> SHADOW_DAGGER = register("shadow_dagger", ShadowDagger::new, TabGroup.COMBAT);
+    //endregion
+
+    //region wands
     RegistryObject<AspectOfTheEndItem> AOTE = register("aspect_of_the_end", ()-> new AspectOfTheEndItem(50), SpellItem.SPELL_GROUP);
     RegistryObject<AspectOfTheEndItem> AOTV = register("aspect_of_the_void", () -> new AspectOfTheEndItem(80), SpellItem.SPELL_GROUP);
     RegistryObject<HeatedScythe> HEATED_SCYTHE = register("heated_scythe", HeatedScythe::new, IFireScytheItem.FIRE_SCYTHE_GROUP);
@@ -109,6 +112,7 @@ public interface ModItems {
     RegistryObject<BurningScythe> BURNING_SCYTHE = register("burning_scythe", BurningScythe::new, IFireScytheItem.FIRE_SCYTHE_GROUP);
     RegistryObject<InfernalScythe> INFERNAL_SCYTHE = register("infernal_scythe", InfernalScythe::new, IFireScytheItem.FIRE_SCYTHE_GROUP);
     RegistryObject<FireLance> FIRE_LANCE = register("fire_lance", FireLance::new, SpellItem.SPELL_GROUP);
+    RegistryObject<VoidStaffItem> VOID_STAFF = register("void_staff", VoidStaffItem::new, SpellItem.SPELL_GROUP);
     //endregion
 
     RegistryObject<LavaFishingRod> LAVA_FISHING_ROD_TEST = register("lava_fishing_rod", () -> new LavaFishingRod(Rarity.RARE), TabGroup.MATERIAL);

@@ -13,6 +13,7 @@ import net.kapitencraft.mysticcraft.item.combat.spells.SpellScrollItem;
 import net.kapitencraft.mysticcraft.spell.Spell;
 import net.kapitencraft.mysticcraft.spell.SpellExecutionFailedException;
 import net.kapitencraft.mysticcraft.spell.SpellSlot;
+import net.kapitencraft.mysticcraft.spell.SpellTarget;
 import net.kapitencraft.mysticcraft.spell.cast.SpellCastContext;
 import net.kapitencraft.mysticcraft.spell.cast.SpellCastContextParams;
 import net.minecraft.ChatFormatting;
@@ -64,14 +65,14 @@ public interface SpellHelper {
         return cooldown == null || !cooldown.isActive(user) && manaInstance != null && ManaHandler.hasMana(user, manaToUse);
     }
 
+    @SuppressWarnings("DataFlowIssue")
     static boolean handleManaAndExecute(LivingEntity user, Spell spell, ItemStack stack) {
         if (canExecuteSpell(user, spell, stack)) {
             SpellCastContext.Builder builder = new SpellCastContext.Builder();
             builder.addParam(SpellCastContextParams.CASTER, user);
-            switch (spell.getTarget()) {
-                case BLOCK -> builder.addParam(SpellCastContextParams.TARGET_BLOCK, BlockPos.of(stack.getTag().getLong("target")));
-                case ENTITY -> builder.addParam(SpellCastContextParams.TARGET, user.level().getEntity(stack.getTag().getInt("target")));
-            }
+            SpellTarget.Type<?> type = spell.getTarget().getType();
+            if (type == SpellTarget.Type.BLOCK) builder.addParam(SpellCastContextParams.TARGET_BLOCK, BlockPos.of(stack.getTag().getLong("target")));
+            else if (type == SpellTarget.Type.ENTITY) builder.addParam(SpellCastContextParams.TARGET, user.level().getEntity(stack.getTag().getInt("target")));
             try {
                 spell.cast(builder.build());
             } catch (SpellExecutionFailedException e) {

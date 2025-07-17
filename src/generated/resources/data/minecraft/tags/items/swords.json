@@ -1,6 +1,8 @@
 {
   "values": [
-    "#mysticcraft:weapon/sword",
-    "#mysticcraft:weapon/dagger"
+    "#mysticcraft:weapon/dagger",
+    "mysticcraft:mana_steel_sword",
+    "mysticcraft:aspect_of_the_end",
+    "mysticcraft:aspect_of_the_void"
   ]
 }

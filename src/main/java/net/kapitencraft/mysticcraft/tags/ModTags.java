@@ -24,7 +24,7 @@ public class ModTags {
         TagKey<Item> HALBERD = createWeapon("halberd");
         TagKey<Item> LANCE = createWeapon("lance");
         TagKey<Item> SPEAR = createWeapon("spear");
-        TagKey<Item> SWORD = createWeapon("sword");
+        TagKey<Item> CATALYST = create("magic_catalyst");
 
 
         private static TagKey<Item> create(String s) {

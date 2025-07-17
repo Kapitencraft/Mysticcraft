@@ -36,7 +36,7 @@ public class EtherWarpSpell implements Spell {
     }
 
     @Override
-    public @NotNull SpellTarget getTarget() {
+    public @NotNull SpellTarget<?> getTarget() {
         return SpellTarget.SELF;
     }
 

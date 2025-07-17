@@ -41,3 +41,5 @@ generic.shield_size (attribute)
 https://www.youtube.com/shorts/LDJCMHqISfw
 
 dexterity: skill for reflecting projectiles
+
+37 fishing rod

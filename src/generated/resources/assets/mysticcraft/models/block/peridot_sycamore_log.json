@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "mysticcraft:block/peridot_sycamore_log_top",
+    "side": "mysticcraft:block/peridot_sycamore_log"
+  }
+}

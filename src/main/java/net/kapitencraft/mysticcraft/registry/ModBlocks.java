@@ -14,20 +14,24 @@ import net.kapitencraft.mysticcraft.block.gemstone.GemstoneSeedBlock;
 import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneItem;
 import net.kapitencraft.mysticcraft.dungeon.generation.DungeonGenerator;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
-import net.kapitencraft.mysticcraft.tech.block.MagicFurnaceBlock;
-import net.kapitencraft.mysticcraft.tech.block.ManaPortBlock;
-import net.kapitencraft.mysticcraft.tech.block.ManaRelayBlock;
-import net.kapitencraft.mysticcraft.tech.block.PrismaticGeneratorBlock;
+import net.kapitencraft.mysticcraft.tech.block.*;
+import net.kapitencraft.mysticcraft.worldgen.ModConfiguredFeatures;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.grower.AbstractTreeGrower;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -82,8 +86,25 @@ public interface ModBlocks {
     BlockRegistryHolder<GemstoneCrystal, GemstoneBlock.Item> GEMSTONE_CRYSTAL = registerBlock("gemstone_crystal", GemstoneCrystal::new, object -> new GemstoneCrystal.Item(), null);
     BlockRegistryHolder<GemstoneSeedBlock, GemstoneSeedBlock.Item> GEMSTONE_SEED = registerBlock("gemstone_seed", GemstoneSeedBlock::new, object -> new GemstoneSeedBlock.Item(), null);
 
+    BlockRegistryHolder<RotatedPillarBlock, BlockItem> PERIDOT_SYCAMORE_LOG = registerBlock("peridot_sycamore_log", () -> log(MapColor.COLOR_LIGHT_GREEN, MapColor.COLOR_GREEN), MiscHelper.rarity(Rarity.COMMON), TabGroup.PERIDOT_SYCAMORE);
+    BlockRegistryHolder<Block, BlockItem> PERIDOT_SYCAMORE_PLANKS = registerBlock("peridot_sycamore_planks", () -> new Block(BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).instrument(NoteBlockInstrument.BASS).strength(2.0F, 3.0F).sound(SoundType.WOOD).ignitedByLava()), MiscHelper.rarity(Rarity.COMMON), TabGroup.PERIDOT_SYCAMORE);
+
+    private static RotatedPillarBlock log(MapColor pTopMapColor, MapColor pSideMapColor) {
+        return new RotatedPillarBlock(BlockBehaviour.Properties.of().mapColor((p_152624_) -> p_152624_.getValue(RotatedPillarBlock.AXIS) == Direction.Axis.Y ? pTopMapColor : pSideMapColor).instrument(NoteBlockInstrument.BASS).strength(2.0F).sound(SoundType.WOOD).ignitedByLava());
+    }
+
+    BlockRegistryHolder<SaplingBlock, BlockItem> PERIDOT_SYCAMORE_SAPLING = registerBlock("peridot_sycamore_sapling", ()-> new SaplingBlock(new AbstractTreeGrower() {
+        @Override
+        protected @Nullable ResourceKey<ConfiguredFeature<?, ?>> getConfiguredFeature(RandomSource pRandom, boolean pHasFlowers) {
+            return ModConfiguredFeatures.PERIDOT_SYCAMORE_TREE;
+        }
+    }, BlockBehaviour.Properties.copy(Blocks.OAK_SAPLING)), MiscHelper.rarity(Rarity.COMMON), TabGroup.PERIDOT_SYCAMORE);
+
+
     BlockRegistryHolder<ManaRelayBlock, BlockItem> MANA_RELAY = registerBlock("mana_relay", ManaRelayBlock::new, MiscHelper.rarity(Rarity.UNCOMMON), TabGroup.TECHNOLOGY);
     BlockRegistryHolder<ManaPortBlock, BlockItem> MANA_PORT = registerBlock("mana_port", ManaPortBlock::new, MiscHelper.rarity(Rarity.UNCOMMON), TabGroup.TECHNOLOGY);
     BlockRegistryHolder<PrismaticGeneratorBlock, BlockItem> PRISMATIC_GENERATOR = registerBlock("prismatic_generator", PrismaticGeneratorBlock::new, MiscHelper.rarity(Rarity.RARE), TabGroup.TECHNOLOGY);
     BlockRegistryHolder<MagicFurnaceBlock, BlockItem> MAGIC_FURNACE = registerBlock("magic_furnace", MagicFurnaceBlock::new, MiscHelper.rarity(Rarity.UNCOMMON), TabGroup.TECHNOLOGY);
+
+    BlockRegistryHolder<SpellCasterTurretBlock, BlockItem> SPELL_CASTER_TURRET = registerBlock("turret/spell_caster", SpellCasterTurretBlock::new, MiscHelper.rarity(Rarity.RARE), TabGroup.TECHNOLOGY);
 }
