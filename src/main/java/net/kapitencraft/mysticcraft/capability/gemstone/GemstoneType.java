@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
+@SuppressWarnings("deprecation")
 public enum GemstoneType implements StringRepresentable {
     EMPTY(ChatFormatting.WHITE, ()-> null, 0, "empty", 0),
     ALMANDINE(ChatFormatting.LIGHT_PURPLE, ExtraAttributes.ABILITY_DAMAGE, 0.3, "almandine", GemstoneBlock.HIGH_MEDIUM_STRENGHT),
@@ -35,7 +36,8 @@ public enum GemstoneType implements StringRepresentable {
     AQUAMARINE(ChatFormatting.AQUA, ForgeMod.SWIM_SPEED, 0.1, "aquamarine", GemstoneBlock.VERY_LOW_STRENGHT),
     TURQUOISE(ChatFormatting.DARK_AQUA, ExtraAttributes.FISHING_SPEED, 2.9, "turquoise", GemstoneBlock.LOW_MEDIUM_STRENGHT),
     MOONSTONE(0x0A0A0A, ExtraAttributes.DRAW_SPEED, 0.5, "moonstone", GemstoneBlock.HIGH_STRENGHT),
-    CELESTINE(ChatFormatting.WHITE, ()-> Attributes.MOVEMENT_SPEED, 0.04, "celestine", GemstoneBlock.LOW_STRENGHT);
+    CELESTINE(ChatFormatting.WHITE, ()-> Attributes.MOVEMENT_SPEED, 0.04, "celestine", GemstoneBlock.LOW_STRENGHT),
+    PERIDOT(ChatFormatting.DARK_GREEN, ForgeMod.ENTITY_REACH, .1, "peridot", 11);
 
     public static EnumCodec<GemstoneType> CODEC = StringRepresentable.fromEnum(GemstoneType::values);
     private final int COLOR;
@@ -77,7 +79,7 @@ public enum GemstoneType implements StringRepresentable {
         return blockStrength;
     }
 
-    //creative content
+    //region creative content
 
     private static final DoubleMap<GemstoneType, Rarity, ItemStack> ALL_ITEMS = new DoubleMap<>();
 
@@ -140,8 +142,8 @@ public enum GemstoneType implements StringRepresentable {
     }
 
     private static GemstoneType[] createTypesToUse() {
-        GemstoneType[] types = new GemstoneType[9];
-        System.arraycopy(GemstoneType.values(), 1, types, 0, 9);
+        GemstoneType[] types = new GemstoneType[10];
+        System.arraycopy(GemstoneType.values(), 1, types, 0, 10);
         return types;
     }
 
@@ -159,13 +161,11 @@ public enum GemstoneType implements StringRepresentable {
         return toReturn;
     }
 
-    //creative content end
+    //endregion
 
     public MutableComponent getDispName() {
         return Component.translatable("gem_type." + this.getSerializedName());
     }
-
-
 
     public int getColour() {
         return this.COLOR;

@@ -43,18 +43,16 @@ public class ModTagProvider {
                     ModItems.TERROR_ARMOR,
                     ModItems.ENDER_KNIGHT_ARMOR
             );
-            tag(ModTags.Items.SWORD).add(ModItems.MANA_STEEL_SWORD.get());
             tag(ModTags.Items.DAGGER).add(ModItems.SHADOW_DAGGER.get(), ModItems.DARK_DAGGER.get());
             tag(Tags.Items.TOOLS_BOWS).add(ModItems.LONGBOW.get(), ModItems.TALLIN_BOW.get());
             tag(Tags.Items.TOOLS_FISHING_RODS).add(ModItems.LAVA_FISHING_ROD_TEST.get());
             tag(ItemTags.SWORDS).addTags(
                     //ModTags.Items.CLEAVER,
-                    ModTags.Items.SWORD,
                     ModTags.Items.DAGGER
                     //ModTags.Items.HALBERD,
                     //ModTags.Items.LANCE,
                     //ModTags.Items.SPEAR
-            );
+            ).add(ModItems.MANA_STEEL_SWORD.get(), ModItems.AOTE.get(), ModItems.AOTV.get());
             tag(Tags.Items.TOOLS_SHIELDS).add(ModItems.GOLDEN_SHIELD.get(), ModItems.IRON_SHIELD.get());
             tag(ItemTags.FISHES).add(ModItems.MAGMA_COD.get(), ModItems.BLAZING_SALMON.get());
 
@@ -63,6 +61,16 @@ public class ModTagProvider {
             tag(ModTags.Items.TIER_2_HAMMER).add(ModItems.DIAMOND_HAMMER.get());
             tag(ModTags.Items.TIER_1_HAMMER).addTag(ModTags.Items.TIER_2_HAMMER).add(ModItems.IRON_HAMMER.get());
             tag(ModTags.Items.DEFAULT_HAMMER).addTag(ModTags.Items.TIER_1_HAMMER).add(ModItems.STONE_HAMMER.get());
+
+            tag(ModTags.Items.CATALYST).add(
+                    ModItems.SPELL_SCROLL.get(),
+                    ModItems.AOTE.get(), ModItems.AOTV.get(),
+                    ModItems.ASTREA.get(), ModItems.VALKYRIE.get(), ModItems.HYPERION.get(), ModItems.SCYLLA.get(), ModItems.NECRON_SWORD.get(),
+                    ModItems.HEATED_SCYTHE.get(), ModItems.FIERY_SCYTHE.get(), ModItems.BURNING_SCYTHE.get(), ModItems.INFERNAL_SCYTHE.get(),
+                    ModItems.SHADOW_DAGGER.get(),
+                    ModItems.FIRE_LANCE.get(),
+                    ModItems.VOID_STAFF.get(), ModItems.THE_STAFF_DESTRUCTION.get()
+            );
         }
 
         @SafeVarargs

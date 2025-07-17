@@ -4,8 +4,8 @@
   "equipment_slots": [
     "chest",
     "legs",
-    "feet",
-    "head"
+    "head",
+    "feet"
   ],
   "wearable_slots": []
 }

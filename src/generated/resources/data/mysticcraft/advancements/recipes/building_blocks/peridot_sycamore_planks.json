@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_peridot_sycamore_planks": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "mysticcraft:peridot_sycamore_log"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "mysticcraft:peridot_sycamore_planks"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_peridot_sycamore_planks",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "mysticcraft:peridot_sycamore_planks"
+    ]
+  },
+  "sends_telemetry_event": false
+}

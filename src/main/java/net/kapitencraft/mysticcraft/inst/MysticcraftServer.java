@@ -8,7 +8,9 @@ import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneData;
 import net.kapitencraft.mysticcraft.capability.item_stat.ItemStatCapability;
 import net.kapitencraft.mysticcraft.capability.item_stat.ItemStatCapabilityProvider;
 import net.kapitencraft.mysticcraft.capability.spell.ISpellItem;
+import net.kapitencraft.mysticcraft.capability.spell.SpellCapabilityProvider;
 import net.kapitencraft.mysticcraft.item.material.containable.ContainableItem;
+import net.kapitencraft.mysticcraft.tags.ModTags;
 import net.kapitencraft.mysticcraft.worldgen.gemstone.GemstoneDecorator;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.ElytraItem;
@@ -64,8 +66,12 @@ public class MysticcraftServer {
         if (item instanceof ContainableItem<?, ?> containableItem) {
             event.addCapability(MysticcraftMod.res("content"), containableItem.makeCapabilityProvider());
         }
-        if (item instanceof ISpellItem spellItem) {
-            event.addCapability(MysticcraftMod.res("spells"), spellItem.createSpells());
+        if (obj.is(ModTags.Items.CATALYST)) {
+            event.addCapability(MysticcraftMod.res("spells"),
+                    item instanceof ISpellItem spellItem ?
+                            spellItem.createSpells() :
+                            SpellCapabilityProvider.empty()
+            );
         }
         ItemStatCapability capability = new ItemStatCapability();
         Arrays.stream(ItemStatCapability.Type.values()).filter(type -> type.test(item))

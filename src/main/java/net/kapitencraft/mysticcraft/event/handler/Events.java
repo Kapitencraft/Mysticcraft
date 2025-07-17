@@ -3,7 +3,29 @@ package net.kapitencraft.mysticcraft.event.handler;
 import net.kapitencraft.kap_lib.event.custom.RegisterBonusProvidersEvent;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.capability.reforging.Reforges;
+import net.kapitencraft.mysticcraft.capability.spell.SpellHelper;
+import net.kapitencraft.mysticcraft.registry.Spells;
 import net.kapitencraft.mysticcraft.rpg.perks.ServerPerksManager;
+import net.kapitencraft.mysticcraft.spell.Spell;
+import net.kapitencraft.mysticcraft.spell.SpellTarget;
+import net.kapitencraft.mysticcraft.tags.ModTags;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.*;
+import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.server.ServerStoppedEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -19,5 +41,91 @@ public class Events {
     @SubscribeEvent
     public static void onServerStopped(ServerStoppedEvent event) {
         ServerPerksManager.clearCache();
+    }
+
+
+    //region spell item
+
+    @SubscribeEvent
+    public void onLivingEntityUseItemStart(PlayerInteractEvent.RightClickItem event) {
+        InteractionHand hand = event.getHand();
+        LivingEntity entity = event.getEntity();
+        ItemStack stack = entity.getItemInHand(hand);
+        if (stack.is(ModTags.Items.CATALYST)) {
+            Spell spell = SpellHelper.getActiveSpell(stack);
+            if (spell != Spells.EMPTY.get()) {
+                Level level = event.getLevel();
+                if (stack.hasTag()) stack.getTag().remove("target");
+                if (SpellHelper.canExecuteSpell(entity, spell, stack)) {
+                    if (spell.castDuration() == 0) SpellHelper.handleManaAndExecute(entity, spell, stack);
+                    else entity.startUsingItem(hand);
+                    event.setCancellationResult(InteractionResult.sidedSuccess(level.isClientSide));
+                }
+            }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    @SubscribeEvent
+    public void onLivingEntityUseItemTick(LivingEntityUseItemEvent.Tick event) {
+        LivingEntity living = event.getEntity();
+        Level level = living.level();
+        ItemStack stack = event.getItem();
+        int duration = stack.getUseDuration() - event.getDuration();
+        Spell spell = SpellHelper.getActiveSpell(stack);
+        if (duration >= spell.castDuration()) {
+            if (!SpellHelper.handleManaAndExecute(living, spell, stack) || spell.getType() == Spell.Type.RELEASE) living.stopUsingItem();
+        } else {
+            SpellTarget<?> target = spell.getTarget();
+            SpellTarget.Type<?> type = target.getType();
+            if (type == SpellTarget.Type.SELF) {
+                if (!((SpellTarget<LivingEntity>) target).test(living)) {
+                    living.stopUsingItem();
+                }
+            } else if (type == SpellTarget.Type.BLOCK) {
+                BlockHitResult result = level.clip(new ClipContext(
+                        living.getEyePosition(),
+                        living.getLookAngle().scale(100).add(living.getEyePosition()),
+                        ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, living
+                ));
+                if (result.getType() != HitResult.Type.MISS && ((SpellTarget<BlockState>) target).test(level.getBlockState(result.getBlockPos()))) {
+                    CompoundTag tag = stack.getTag();
+                    if (tag != null && tag.contains("target", Tag.TAG_LONG)) {
+                        if (!BlockPos.of(tag.getLong("target")).equals(result.getBlockPos())) {
+                            if (living instanceof Player player && level.isClientSide)
+                                player.sendSystemMessage(Component.translatable("spell.cast.failed"));
+                            living.stopUsingItem();
+                        }
+                    } else stack.getOrCreateTag().putLong("target", result.getBlockPos().asLong());
+                } else {
+                    if (living instanceof Player player && level.isClientSide)
+                        player.sendSystemMessage(Component.translatable("spell.cast.failed"));
+                    living.stopUsingItem();
+                }
+            } else if (type == SpellTarget.Type.ENTITY) {
+                Vec3 start = living.getEyePosition();
+                Vec3 end = living.getLookAngle().scale(100).add(living.getEyePosition());
+                EntityHitResult result = ProjectileUtil.getEntityHitResult(level, living,
+                        start,
+                        end,
+                        new AABB(start, end),
+                        entity -> entity != living,
+                        0
+                );
+                if (result != null && ((SpellTarget<Entity>) target).test(result.getEntity())) {
+                    CompoundTag tag = stack.getTag();
+                    if (tag != null && tag.contains("target", Tag.TAG_LONG)) {
+                        if (tag.getInt("target") != result.getEntity().getId()) {
+                            if (living instanceof Player player && level.isClientSide) player.sendSystemMessage(Component.translatable("spell.cast.failed"));
+                            living.stopUsingItem();
+                        }
+                    } else stack.getOrCreateTag().putLong("target", result.getEntity().getId());
+                } else {
+                    if (living instanceof Player player && level.isClientSide)
+                        player.sendSystemMessage(Component.translatable("spell.cast.failed"));
+                    living.stopUsingItem();
+                }
+            }
+        }
     }
 }

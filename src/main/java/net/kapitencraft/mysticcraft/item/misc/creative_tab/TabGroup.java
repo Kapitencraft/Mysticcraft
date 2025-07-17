@@ -25,6 +25,9 @@ public class TabGroup {
     public static final TabGroup DECO = new TabGroup(TabRegister.TabTypes.DECO);
     public static final TabGroup GOLDEN_DECO = new TabGroup(TabRegister.TabTypes.DECO);
     public static final TabGroup OPERATOR = new TabGroup(TabRegister.TabTypes.OPERATOR);
+
+    public static final TabGroup PERIDOT_SYCAMORE = new TabGroup(TabRegister.TabTypes.MOD_MATERIALS);
+
     protected final List<TabRegister.TabTypes> types;
     protected final List<RegistryObject<? extends Item>> items = new ArrayList<>();
 

@@ -9,13 +9,11 @@ import net.kapitencraft.mysticcraft.capability.spell.SpellCapabilityProvider;
 import net.kapitencraft.mysticcraft.item.combat.spells.SpellItem;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
 import java.util.function.Consumer;
 
 public class NecronSword extends SpellItem {
@@ -48,16 +46,6 @@ public class NecronSword extends SpellItem {
 
     protected @NotNull Consumer<Multimap<Attribute, AttributeModifier>> getAdditionalModifiers() {
         return multimap -> {};
-    }
-
-    @Override
-    public List<Component> getItemDescription() {
-        return null;
-    }
-
-    @Override
-    public List<Component> getPostDescription() {
-        return null;
     }
 
     @Override

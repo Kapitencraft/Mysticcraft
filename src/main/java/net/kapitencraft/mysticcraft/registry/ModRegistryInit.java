@@ -50,6 +50,7 @@ public class ModRegistryInit {
         register("Attributes", ModAttributes.REGISTRY);
         register("Overlay Types", ModOverlays.REGISTRY);
         register("Cooldowns", ModCooldowns.REGISTRY);
+        register("Trunk Placers", ModTrunkPlacers.REGISTRY);
         stopwatch.stop();
         MysticcraftMod.LOGGER.info(Markers.REGISTRY, "loading {} registries took {} ms", registered, stopwatch.elapsed(TimeUnit.MILLISECONDS));
     }

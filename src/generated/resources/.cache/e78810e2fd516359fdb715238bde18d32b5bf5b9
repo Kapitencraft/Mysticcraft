@@ -1,4 +1,4 @@
-// 1.20.1	2025-07-13T15:28:42.9851047	Block States: mysticcraft
+// 1.20.1	2025-07-15T01:27:46.3886217	Block States: mysticcraft
 5637f5f443cb8049d9f40a1f2e13f5d8705df435 assets/mysticcraft/blockstates/crimsonium_ore.json
 892ef4535d80db73e54fbbfa2b0a9e4f316fd4fe assets/mysticcraft/blockstates/fragile_basalt.json
 f5ab741f65926f72e8efde5b1bec4468a6d01092 assets/mysticcraft/blockstates/gemstone_block.json
@@ -11,6 +11,8 @@ de8666c16bed871939f3679f48f2e9633bf90e6e assets/mysticcraft/blockstates/golden_s
 2a8bb6d4edc23aa5600e596bfa1eb7062f478fe0 assets/mysticcraft/blockstates/lapis_button.json
 4943759ca1b11e720d8d3a4753d717f7329d065b assets/mysticcraft/blockstates/mangatic_stone.json
 7ce0acf5a703412c0174380c47a182fc5b063d40 assets/mysticcraft/blockstates/obsidian_pressure_plate.json
+5c25a5219afb8f6f997185a26dfb9c8d7b009f81 assets/mysticcraft/blockstates/peridot_sycamore_log.json
+e63f4a4958adf47815ca8b228e69fcdc6af8ae3b assets/mysticcraft/blockstates/peridot_sycamore_planks.json
 b3fbf691c3bb71b3eac842682b13f490fe77e40d assets/mysticcraft/blockstates/reforge_anvil.json
 fdbb8cbfa966b20295a5649af04089f61ddd5535 assets/mysticcraft/blockstates/soul_chain.json
 d7f3e722c5a7940eb312b7657df80cfba78ced59 assets/mysticcraft/models/block/colored_block.json
@@ -39,6 +41,9 @@ a70fcaadd79a1386676c38c7f49131742bbcbd3b assets/mysticcraft/models/block/golden_
 468f98281046cdfb18060ac11c52aeae4352d42c assets/mysticcraft/models/block/mangatic_stone.json
 0986eedde81a67a7a70b964f477759457c38ea3f assets/mysticcraft/models/block/obsidian_pressure_plate.json
 296a821f041dc137e9cc9da48e0c6f821411df31 assets/mysticcraft/models/block/obsidian_pressure_plate_down.json
+7ad5da6b2a4efcc06de989832b4acc82f1a96200 assets/mysticcraft/models/block/peridot_sycamore_log.json
+dac30d3380dda2fc21ea6000bc84c0ff29bd2b6c assets/mysticcraft/models/block/peridot_sycamore_log_horizontal.json
+2ee0641f8c71cc97f421f541e3499a0f699226fd assets/mysticcraft/models/block/peridot_sycamore_planks.json
 47956dc10e45a5126feb5966bb9f80f1a55eec1c assets/mysticcraft/models/block/reforge_anvil.json
 9ad18a238ebb1fd23917a44e1270369a1029c110 assets/mysticcraft/models/block/soul_chain.json
 e90245b10c25643f592dbcc91f14e328ec72b27a assets/mysticcraft/models/block/tinted_cross.json
@@ -49,3 +54,5 @@ d453ef4071ebc587bb1d2508056851096b37e7ae assets/mysticcraft/models/item/lapis_bu
 e79d708594f6139583007914f72d541ddd9b041d assets/mysticcraft/models/item/lapis_button_inventory.json
 e6657166a06be5499c39540759c83f0f8cf13874 assets/mysticcraft/models/item/mangatic_stone.json
 0986eedde81a67a7a70b964f477759457c38ea3f assets/mysticcraft/models/item/obsidian_pressure_plate.json
+5dda2dd2017ade5f512c1d6805d04cc05b9d46ef assets/mysticcraft/models/item/peridot_sycamore_log.json
+e006488f5004ea152de48d2ae8d9b11c49f93aa1 assets/mysticcraft/models/item/peridot_sycamore_planks.json

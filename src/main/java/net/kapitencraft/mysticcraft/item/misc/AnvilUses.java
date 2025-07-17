@@ -3,6 +3,7 @@ package net.kapitencraft.mysticcraft.item.misc;
 import net.kapitencraft.mysticcraft.capability.CapabilityHelper;
 import net.kapitencraft.mysticcraft.capability.elytra.ElytraCapability;
 import net.kapitencraft.mysticcraft.capability.spell.SpellHelper;
+import net.kapitencraft.mysticcraft.item.combat.spells.SpellItem;
 import net.kapitencraft.mysticcraft.item.combat.spells.SpellScrollItem;
 import net.kapitencraft.mysticcraft.item.combat.spells.necron_sword.NecronSword;
 import net.kapitencraft.mysticcraft.registry.ModItems;
@@ -59,6 +60,16 @@ public class AnvilUses {
                     else SpellHelper.setSpell(stack, 0, SpellScrollItem.getSpell(stack1));
                 },
                 20
+        );
+        registerAnvilUse(
+                both(
+                        stack -> stack.getItem() instanceof SpellItem,
+                        stack -> stack.getItem() instanceof SpellScrollItem
+                ),
+                (stack, stack2) -> {
+                    SpellHelper.setSpell(stack, 0, SpellScrollItem.getSpell(stack2));
+                },
+                10
         );
         registerAnvilUse(
                 both(

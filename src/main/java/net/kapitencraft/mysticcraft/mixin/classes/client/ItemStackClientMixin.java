@@ -11,6 +11,7 @@ import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneHelper;
 import net.kapitencraft.mysticcraft.capability.reforging.Reforge;
 import net.kapitencraft.mysticcraft.capability.spell.ISpellItem;
 import net.kapitencraft.mysticcraft.capability.spell.SpellHelper;
+import net.kapitencraft.mysticcraft.client.ItemCategory;
 import net.kapitencraft.mysticcraft.gui.IGuiHelper;
 import net.kapitencraft.mysticcraft.item.combat.spells.SpellScrollItem;
 import net.kapitencraft.mysticcraft.item.misc.SoulbindHelper;
@@ -45,8 +46,6 @@ public abstract class ItemStackClientMixin implements MixinSelfProvider<ItemStac
     @Shadow @Final private Item item;
 
     @Shadow @Nullable private CompoundTag tag;
-
-    @Shadow public abstract boolean isFramed();
 
     @SuppressWarnings("DataFlowIssue")
     @Inject(method = "getTooltipLines", at = @At(value = "INVOKE", target = "Lnet/minecraft/nbt/CompoundTag;getBoolean(Ljava/lang/String;)Z"), locals = LocalCapture.CAPTURE_FAILHARD)
@@ -95,13 +94,8 @@ public abstract class ItemStackClientMixin implements MixinSelfProvider<ItemStac
     private static MutableComponent createNameMod(ItemStack stack) {
         MutableComponent component = Component.empty();
         Rarity rarity = stack.getItem().getRarity(stack);
-
-        component.append(Component.literal(rarity + " "));
-        //component.append(ModRegistries.LORE_CATEGORY_REGISTRY.getValues().stream()
-        //        .sorted(Comparator.comparingInt(ItemLoreCategory::getPriority))
-        //        .map(CollectionHelper.biMap(stack, ItemLoreCategory::apply))
-        //        .filter(Objects::nonNull)
-        //        .collect(CollectorHelper.joinComponent(Component.literal(" "))));
+        component.append(Component.translatable("item.indicator." + rarity.name().toLowerCase()));
+        ItemCategory.Registry.appendDisplay(component, stack);
         return component;
     }
 

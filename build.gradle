@@ -144,6 +144,18 @@ tasks.named('processResources', ProcessResources).configure {
     filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
         expand metaProperties + [project: project]
     }
+
+    var publishProperties = [
+            mod_id: mod_id, mod_name: mod_name,
+            mod_version: mod_version, minecraft_version: mc_version,
+            forge_version: forge_version, kap_lib_version: kap_lib_version
+    ]
+
+    inputs.properties publishProperties
+    filesMatching(['publish_config.json']) {
+        filteringCharset = 'UTF-8'
+        expand publishProperties
+    }
 }
 
 

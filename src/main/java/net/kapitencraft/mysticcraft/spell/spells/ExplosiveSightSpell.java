@@ -16,11 +16,13 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class ExplosiveSightSpell implements Spell {
+    private static final SpellTarget<BlockState> TARGET = SpellTarget.Type.BLOCK.always();
 
     @Override
     public void cast(SpellCastContext context) {
@@ -53,8 +55,8 @@ public class ExplosiveSightSpell implements Spell {
     }
 
     @Override
-    public @NotNull SpellTarget getTarget() {
-        return SpellTarget.BLOCK;
+    public @NotNull SpellTarget<?> getTarget() {
+        return TARGET;
     }
 
     @Override
