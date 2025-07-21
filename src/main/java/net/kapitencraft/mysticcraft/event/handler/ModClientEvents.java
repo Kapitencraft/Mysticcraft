@@ -22,9 +22,7 @@ import net.kapitencraft.mysticcraft.gui.reforging_anvil.ReforgeAnvilScreen;
 import net.kapitencraft.mysticcraft.item.ColoredItem;
 import net.kapitencraft.mysticcraft.misc.ModItemProperties;
 import net.kapitencraft.mysticcraft.registry.*;
-import net.kapitencraft.mysticcraft.tech.gui.screen.MagicFurnaceScreen;
-import net.kapitencraft.mysticcraft.tech.gui.screen.PrismaticGeneratorScreen;
-import net.kapitencraft.mysticcraft.tech.gui.screen.SpellCasterTurretScreen;
+import net.kapitencraft.mysticcraft.tech.gui.screen.*;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
@@ -63,7 +61,10 @@ public class ModClientEvents {
         MenuScreens.register(ModMenuTypes.GEM_GRINDER.get(), GemstoneGrinderScreen::new);
         MenuScreens.register(ModMenuTypes.REFORGING_ANVIL.get(), ReforgeAnvilScreen::new);
         MenuScreens.register(ModMenuTypes.PRISMATIC_GENERATOR.get(), PrismaticGeneratorScreen::new);
+        MenuScreens.register(ModMenuTypes.VULCANIC_GENERATOR.get(), VulcanicGeneratorScreen::new);
         MenuScreens.register(ModMenuTypes.MAGIC_FURNACE.get(), MagicFurnaceScreen::new);
+        MenuScreens.register(ModMenuTypes.MANA_BATTERY.get(), ManaBatteryScreen::new);
+
         MenuScreens.register(ModMenuTypes.SPELL_CASTER_TURRET.get(), SpellCasterTurretScreen::new);
     }
 

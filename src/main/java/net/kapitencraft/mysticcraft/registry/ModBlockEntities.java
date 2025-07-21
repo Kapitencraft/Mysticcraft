@@ -1,10 +1,7 @@
 package net.kapitencraft.mysticcraft.registry;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.tech.block.entity.MagicFurnaceBlockEntity;
-import net.kapitencraft.mysticcraft.tech.block.entity.ManaPortBlockEntity;
-import net.kapitencraft.mysticcraft.tech.block.entity.PrismaticGeneratorBlockEntity;
-import net.kapitencraft.mysticcraft.tech.block.entity.SpellCasterTurretEntity;
+import net.kapitencraft.mysticcraft.tech.block.entity.*;
 import net.minecraft.Util;
 import net.minecraft.util.datafix.fixes.References;
 import net.minecraft.world.level.block.Block;
@@ -22,7 +19,10 @@ public interface ModBlockEntities {
 
     RegistryObject<BlockEntityType<ManaPortBlockEntity>> MANA_PORT = register("mana_port", ManaPortBlockEntity::new, ModBlocks.MANA_PORT);
     RegistryObject<BlockEntityType<PrismaticGeneratorBlockEntity>> PRISMATIC_GENERATOR = register("prismatic_generator", PrismaticGeneratorBlockEntity::new, ModBlocks.PRISMATIC_GENERATOR);
+    RegistryObject<BlockEntityType<VulcanicGeneratorBlockEntity>> VULCANIC_GENERATOR = register("vulcanic_generator", VulcanicGeneratorBlockEntity::new, ModBlocks.VULCANIC_GENERATOR);
     RegistryObject<BlockEntityType<MagicFurnaceBlockEntity>> MAGIC_FURNACE = register("magic_furnace", MagicFurnaceBlockEntity::new, ModBlocks.MAGIC_FURNACE);
+    RegistryObject<BlockEntityType<ManaBatteryBlockEntity>> MANA_BATTERY = register("mana_accumulator", ManaBatteryBlockEntity::new, ModBlocks.MANA_BATTERY);
+
     RegistryObject<BlockEntityType<SpellCasterTurretEntity>> SPELL_CASTER_TURRET = register("turret/spell_caster", SpellCasterTurretEntity::new, ModBlocks.SPELL_CASTER_TURRET);
 
     @SafeVarargs

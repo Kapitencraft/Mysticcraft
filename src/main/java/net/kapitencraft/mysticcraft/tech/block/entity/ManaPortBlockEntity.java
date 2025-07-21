@@ -1,10 +1,13 @@
 package net.kapitencraft.mysticcraft.tech.block.entity;
 
 import net.kapitencraft.mysticcraft.capability.mana.IManaStorage;
+import net.kapitencraft.mysticcraft.network.ModMessages;
+import net.kapitencraft.mysticcraft.network.packets.S2C.RemoveManaDistributionNetworkElementPacket;
 import net.kapitencraft.mysticcraft.registry.ModBlockEntities;
 import net.kapitencraft.mysticcraft.tech.DistributionNetworkManager;
 import net.kapitencraft.mysticcraft.tech.ManaDistributionNetwork;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -116,6 +119,7 @@ public class ManaPortBlockEntity extends BlockEntity implements IManaStorage {
     public void notifyRemoved() {
         if (this.level != null) {
             DistributionNetworkManager.get(this.level).remove(this.worldPosition, this.network);
+            ModMessages.sendToAllConnectedPlayers(p -> new RemoveManaDistributionNetworkElementPacket(this.worldPosition), (ServerLevel) this.level);
         }
     }
 }

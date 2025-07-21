@@ -47,7 +47,7 @@ public class Events {
     //region spell item
 
     @SubscribeEvent
-    public void onLivingEntityUseItemStart(PlayerInteractEvent.RightClickItem event) {
+    public static void onLivingEntityUseItemStart(PlayerInteractEvent.RightClickItem event) {
         InteractionHand hand = event.getHand();
         LivingEntity entity = event.getEntity();
         ItemStack stack = entity.getItemInHand(hand);
@@ -67,7 +67,7 @@ public class Events {
 
     @SuppressWarnings("unchecked")
     @SubscribeEvent
-    public void onLivingEntityUseItemTick(LivingEntityUseItemEvent.Tick event) {
+    public static void onLivingEntityUseItemTick(LivingEntityUseItemEvent.Tick event) {
         LivingEntity living = event.getEntity();
         Level level = living.level();
         ItemStack stack = event.getItem();

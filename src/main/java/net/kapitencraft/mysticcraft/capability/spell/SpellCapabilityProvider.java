@@ -9,7 +9,7 @@ import net.kapitencraft.mysticcraft.spell.SpellSlot;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class SpellCapabilityProvider extends CapabilityProvider<List<SpellSlot>, SpellCapability> {
+public class    SpellCapabilityProvider extends CapabilityProvider<List<SpellSlot>, SpellCapability> {
     private static final Codec<List<SpellSlot>> DATA_CODEC = SpellSlot.CODEC.listOf();
 
     public SpellCapabilityProvider(SpellCapability object) {

@@ -104,7 +104,9 @@ public interface ModBlocks {
     BlockRegistryHolder<ManaRelayBlock, BlockItem> MANA_RELAY = registerBlock("mana_relay", ManaRelayBlock::new, MiscHelper.rarity(Rarity.UNCOMMON), TabGroup.TECHNOLOGY);
     BlockRegistryHolder<ManaPortBlock, BlockItem> MANA_PORT = registerBlock("mana_port", ManaPortBlock::new, MiscHelper.rarity(Rarity.UNCOMMON), TabGroup.TECHNOLOGY);
     BlockRegistryHolder<PrismaticGeneratorBlock, BlockItem> PRISMATIC_GENERATOR = registerBlock("prismatic_generator", PrismaticGeneratorBlock::new, MiscHelper.rarity(Rarity.RARE), TabGroup.TECHNOLOGY);
+    BlockRegistryHolder<VulcanicGeneratorBlock, BlockItem> VULCANIC_GENERATOR = registerBlock("vulcanic_generator", VulcanicGeneratorBlock::new, MiscHelper.rarity(Rarity.COMMON), TabGroup.TECHNOLOGY);
     BlockRegistryHolder<MagicFurnaceBlock, BlockItem> MAGIC_FURNACE = registerBlock("magic_furnace", MagicFurnaceBlock::new, MiscHelper.rarity(Rarity.UNCOMMON), TabGroup.TECHNOLOGY);
+    BlockRegistryHolder<ManaBatteryBlock, BlockItem> MANA_BATTERY = registerBlock("mana_battery", ManaBatteryBlock::new, MiscHelper.rarity(Rarity.UNCOMMON), TabGroup.TECHNOLOGY);
 
     BlockRegistryHolder<SpellCasterTurretBlock, BlockItem> SPELL_CASTER_TURRET = registerBlock("turret/spell_caster", SpellCasterTurretBlock::new, MiscHelper.rarity(Rarity.RARE), TabGroup.TECHNOLOGY);
 }

@@ -8,6 +8,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -101,7 +102,8 @@ public class DistributionNetworkManager extends SavedData {
         return networks;
     }
 
-    public void remove(BlockPos pos, ManaDistributionNetwork network) {
+    public void remove(BlockPos pos, @Nullable ManaDistributionNetwork network) {
+        if (network == null) network = this.getNetwork(pos);
         network.remove(pos);
         if (network.empty()) this.networks.remove(network);
         this.setDirty();

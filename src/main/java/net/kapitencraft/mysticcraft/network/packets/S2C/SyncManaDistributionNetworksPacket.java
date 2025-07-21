@@ -27,9 +27,7 @@ public class SyncManaDistributionNetworksPacket implements SimplePacket {
 
     @Override
     public boolean handle(Supplier<NetworkEvent.Context> sup) {
-        sup.get().enqueueWork(() -> {
-            DistributionNetworkManager.applyClient(this.manager);
-        });
+        sup.get().enqueueWork(() -> DistributionNetworkManager.applyClient(this.manager));
         return true;
     }
 }

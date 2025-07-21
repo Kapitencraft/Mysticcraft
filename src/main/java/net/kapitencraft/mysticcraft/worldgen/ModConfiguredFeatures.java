@@ -4,7 +4,7 @@ import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.registry.ModBlocks;
 import net.kapitencraft.mysticcraft.registry.ModFeatures;
 import net.kapitencraft.mysticcraft.worldgen.feature.GemstoneSpawnFeature;
-import net.kapitencraft.mysticcraft.worldgen.tree.GiganticTrunkPlacer;
+import net.kapitencraft.mysticcraft.worldgen.tree.CollosalTrunkPlacer;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.resources.ResourceKey;
@@ -42,7 +42,7 @@ public interface ModConfiguredFeatures {
     private static TreeConfiguration.TreeConfigurationBuilder peridotSycamoreTree() {
         return new TreeConfiguration.TreeConfigurationBuilder(
                 BlockStateProvider.simple(ModBlocks.PERIDOT_SYCAMORE_LOG.get()),
-                new GiganticTrunkPlacer(10, 2, 19),
+                new CollosalTrunkPlacer(25, 5, 13),
                 BlockStateProvider.simple(Blocks.ACACIA_LEAVES),
                 new AcaciaFoliagePlacer(ConstantInt.of(2), ConstantInt.of(0)),
                 new TwoLayersFeatureSize(1, 0, 2)

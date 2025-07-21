@@ -416,5 +416,6 @@
   "overlay.cast_charge": "Spell Cast Charge Overlay",
   "cast_duration.display": "Cast Duration: §b%1$ss§r",
   "tech_wand.selected": "Origin: %1$s",
-  "container.spell_caster_turret": "Spell Caster Turret"
+  "container.spell_caster_turret": "Spell Caster Turret",
+  "container.vulcanic_generator": "Vulcanic Generator"
 }
