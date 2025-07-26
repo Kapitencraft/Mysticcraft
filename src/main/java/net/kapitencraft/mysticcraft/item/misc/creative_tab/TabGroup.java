@@ -13,6 +13,7 @@ import java.util.function.Consumer;
 /**
  * used to group items into {@link net.minecraft.world.item.CreativeModeTab}s
  */
+//TODO rework
 public class TabGroup {
     private static final List<TabGroup> groups = new ArrayList<>();
     public static final TabGroup TECHNOLOGY = new TabGroup(TabRegister.TabTypes.TECHNOLOGY);

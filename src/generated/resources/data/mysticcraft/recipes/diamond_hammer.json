@@ -5,13 +5,16 @@
     "!": {
       "item": "minecraft:stick"
     },
+    "#": {
+      "item": "minecraft:diamond_block"
+    },
     "*": {
       "item": "minecraft:diamond"
     }
   },
   "pattern": [
-    "***",
-    "***",
+    "#*#",
+    " ! ",
     " ! "
   ],
   "result": {

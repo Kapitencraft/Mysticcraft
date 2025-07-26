@@ -5,13 +5,16 @@
     "!": {
       "item": "minecraft:stick"
     },
-    "*": {
+    "#": {
       "item": "minecraft:stone"
+    },
+    "*": {
+      "item": "minecraft:cobblestone"
     }
   },
   "pattern": [
-    "***",
-    "***",
+    "#*#",
+    " ! ",
     " ! "
   ],
   "result": {

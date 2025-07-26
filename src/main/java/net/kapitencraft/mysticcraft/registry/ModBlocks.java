@@ -2,10 +2,7 @@ package net.kapitencraft.mysticcraft.registry;
 
 import net.kapitencraft.kap_lib.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.block.FragileBasaltBlock;
-import net.kapitencraft.mysticcraft.block.ManaLiquidBlock;
-import net.kapitencraft.mysticcraft.block.MangaticSlimeBlock;
-import net.kapitencraft.mysticcraft.block.ReforgeAnvilBlock;
+import net.kapitencraft.mysticcraft.block.*;
 import net.kapitencraft.mysticcraft.block.deco.*;
 import net.kapitencraft.mysticcraft.block.gemstone.GemstoneBlock;
 import net.kapitencraft.mysticcraft.block.gemstone.GemstoneCrystal;
@@ -16,7 +13,6 @@ import net.kapitencraft.mysticcraft.dungeon.generation.DungeonGenerator;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.tech.block.*;
 import net.kapitencraft.mysticcraft.worldgen.ModConfiguredFeatures;
-import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.BlockItem;
@@ -86,12 +82,9 @@ public interface ModBlocks {
     BlockRegistryHolder<GemstoneCrystal, GemstoneBlock.Item> GEMSTONE_CRYSTAL = registerBlock("gemstone_crystal", GemstoneCrystal::new, object -> new GemstoneCrystal.Item(), null);
     BlockRegistryHolder<GemstoneSeedBlock, GemstoneSeedBlock.Item> GEMSTONE_SEED = registerBlock("gemstone_seed", GemstoneSeedBlock::new, object -> new GemstoneSeedBlock.Item(), null);
 
-    BlockRegistryHolder<RotatedPillarBlock, BlockItem> PERIDOT_SYCAMORE_LOG = registerBlock("peridot_sycamore_log", () -> log(MapColor.COLOR_LIGHT_GREEN, MapColor.COLOR_GREEN), MiscHelper.rarity(Rarity.COMMON), TabGroup.PERIDOT_SYCAMORE);
+    BlockRegistryHolder<RotatedPillarBlock, BlockItem> STRIPPED_PERIDOT_SYCAMORE_LOG = registerBlock("stripped_peridot_sycamore_log", () -> new AbstractLogBlock(MapColor.COLOR_GREEN, MapColor.COLOR_GREEN, null), MiscHelper.rarity(Rarity.COMMON), TabGroup.PERIDOT_SYCAMORE);
+    BlockRegistryHolder<RotatedPillarBlock, BlockItem> PERIDOT_SYCAMORE_LOG = registerBlock("peridot_sycamore_log", () -> new AbstractLogBlock(MapColor.COLOR_LIGHT_GREEN, MapColor.COLOR_GREEN, STRIPPED_PERIDOT_SYCAMORE_LOG.get()), MiscHelper.rarity(Rarity.COMMON), TabGroup.PERIDOT_SYCAMORE);
     BlockRegistryHolder<Block, BlockItem> PERIDOT_SYCAMORE_PLANKS = registerBlock("peridot_sycamore_planks", () -> new Block(BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).instrument(NoteBlockInstrument.BASS).strength(2.0F, 3.0F).sound(SoundType.WOOD).ignitedByLava()), MiscHelper.rarity(Rarity.COMMON), TabGroup.PERIDOT_SYCAMORE);
-
-    private static RotatedPillarBlock log(MapColor pTopMapColor, MapColor pSideMapColor) {
-        return new RotatedPillarBlock(BlockBehaviour.Properties.of().mapColor((p_152624_) -> p_152624_.getValue(RotatedPillarBlock.AXIS) == Direction.Axis.Y ? pTopMapColor : pSideMapColor).instrument(NoteBlockInstrument.BASS).strength(2.0F).sound(SoundType.WOOD).ignitedByLava());
-    }
 
     BlockRegistryHolder<SaplingBlock, BlockItem> PERIDOT_SYCAMORE_SAPLING = registerBlock("peridot_sycamore_sapling", ()-> new SaplingBlock(new AbstractTreeGrower() {
         @Override

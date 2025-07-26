@@ -107,6 +107,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
         itemModels().pressurePlate("obsidian_pressure_plate", OBSIDIAN);
 
         logBlock(ModBlocks.PERIDOT_SYCAMORE_LOG.get());
+        logBlock(ModBlocks.STRIPPED_PERIDOT_SYCAMORE_LOG.get());
         simpleBlockItem(ModBlocks.PERIDOT_SYCAMORE_LOG.get(), this.models().getExistingFile(MysticcraftMod.res("block/peridot_sycamore_log")));
 
         simpleBlock(ModBlocks.PERIDOT_SYCAMORE_PLANKS);

@@ -6,3 +6,4 @@ changed void totem to use vanilla respawn method
 added magic technology
 fixed many recipes being under the minecraft namespace
 fixed Item entities merging, but not updating count
+added peridot sycamore trees

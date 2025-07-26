@@ -13,6 +13,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ToolAction;
 import net.minecraftforge.common.ToolActions;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 import java.util.function.Consumer;
@@ -38,7 +39,7 @@ public class HammerItem extends PickaxeItem {
     }
 
     @Override
-    public boolean canPerformAction(ItemStack stack, ToolAction toolAction) {
+    public boolean canPerformAction(@NotNull ItemStack stack, @NotNull ToolAction toolAction) {
         return DEFAULT_HAMMER_ACTIONS.contains(toolAction);
     }
 
@@ -48,43 +49,21 @@ public class HammerItem extends PickaxeItem {
         return Stream.of(actions).collect(Collectors.toCollection(Sets::newIdentityHashSet));
     }
 
-
-    //TODO fix hardcoding
     public static void gatherBlocks(Level level, BlockPos origin, Direction clickedFace, Consumer<BlockPos> posSink) {
         BlockState state = level.getBlockState(origin);
-        switch (clickedFace.getAxis()) {
-            case X -> {
-                for (int y = -1; y <= 1; y++) {
-                    for (int z = -1; z <= 1; z++) {
-                        if (!(y == 0 && z == 0)) {
-                            BlockPos pos = origin.offset(0, y, z);
-                            if (state.is(level.getBlockState(pos).getBlock())) posSink.accept(pos);
-                        }
-                    }
-                }
-            }
-            case Y -> {
-                for (int x = -1; x <= 1; x++) {
-                    for (int z = -1; z <= 1; z++) {
-                        if (!(x == 0 && z == 0)) {
-                            BlockPos pos = origin.offset(x, 0, z);
-                            if (state.is(level.getBlockState(pos).getBlock())) posSink.accept(pos);
-                        }
-                    }
-                }
-            }
-            case Z -> {
-                for (int x = -1; x <= 1; x++) {
-                    for (int y = -1; y <= 1; y++) {
-                        if (!(y == 0 && x == 0)) {
-                            BlockPos pos = origin.offset(x, y, 0);
-                            if (state.is(level.getBlockState(pos).getBlock())) posSink.accept(pos);
-                        }
-                    }
+        Direction.Axis[] axes = new Direction.Axis[2];
+        int i = 0;
+        for (Direction.Axis value : Direction.Axis.values()) {
+            if (value != clickedFace.getAxis()) axes[i++] = value;
+        }
+        for (int a = -1; a <= 1; a++) {
+            for (int b = -1; b <= 1; b++) {
+                if (!(a == 0 && b == 0)) {
+                    BlockPos pos = origin.relative(axes[0], a).relative(axes[1], b);
+                    if (state.is(level.getBlockState(pos).getBlock())) posSink.accept(pos);
                 }
             }
         }
-
     }
 
     public static int getPositionId(BlockPos pos) {

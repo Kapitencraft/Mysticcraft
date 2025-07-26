@@ -5,13 +5,16 @@
     "!": {
       "item": "minecraft:stick"
     },
+    "#": {
+      "item": "minecraft:iron_block"
+    },
     "*": {
       "item": "minecraft:iron_ingot"
     }
   },
   "pattern": [
-    "***",
-    "***",
+    "#*#",
+    " ! ",
     " ! "
   ],
   "result": {
