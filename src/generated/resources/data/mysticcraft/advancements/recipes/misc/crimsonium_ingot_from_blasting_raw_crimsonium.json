@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_crimson_steel_dust": {
+    "has_raw_crimsonium": {
       "conditions": {
         "items": [
           {
             "items": [
-              "mysticcraft:crimson_steel_dust"
+              "mysticcraft:raw_crimsonium"
             ]
           }
         ]
@@ -15,20 +15,20 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:crimson_steel_ingot_from_smelting_crimson_steel_dust"
+        "recipe": "mysticcraft:crimsonium_ingot_from_blasting_raw_crimsonium"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
   },
   "requirements": [
     [
-      "has_crimson_steel_dust",
+      "has_raw_crimsonium",
       "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
-      "minecraft:crimson_steel_ingot_from_smelting_crimson_steel_dust"
+      "mysticcraft:crimsonium_ingot_from_blasting_raw_crimsonium"
     ]
   },
   "sends_telemetry_event": false

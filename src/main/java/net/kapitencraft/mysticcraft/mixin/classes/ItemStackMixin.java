@@ -13,11 +13,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(ItemStack.class)
 public abstract class ItemStackMixin implements MixinSelfProvider<ItemStack> {
 
-    @Override
-    public boolean equals(Object obj) {
-        return obj == this || obj instanceof ItemStack stack && ItemStack.isSameItemSameTags(self(), stack);
-    }
-
     @Inject(method = "<init>*", at = @At(value = "RETURN"))
     private void load(CallbackInfo ci) {
         ModEventFactory.onLoadingItemStack(self());

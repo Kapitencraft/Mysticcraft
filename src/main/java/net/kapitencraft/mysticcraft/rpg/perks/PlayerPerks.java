@@ -223,6 +223,10 @@ public class PlayerPerks {
             }
          }
 
+         for (PerkTree tree : this.treesAdded) {
+            this.updateTreeVisibility(tree.root(), set, set1);
+         }
+
          this.progressChanged.clear();
          if (!progress.isEmpty() || !set.isEmpty() || !set1.isEmpty() || !treeProgress.isEmpty() || !this.treesAdded.isEmpty()) {
             ModMessages.sendToClientPlayer(new UpdatePerksPacket(isFirstPacket, set, List.copyOf(this.treesAdded), set1, progress, treeProgress), pServerPlayer);

@@ -12,6 +12,6 @@ import net.minecraftforge.registries.RegistryManager;
 @SuppressWarnings("UnstableApiUsage")
 public interface ModRegistries {
     IForgeRegistry<Spell> SPELLS = RegistryManager.ACTIVE.getRegistry(ModRegistryKeys.SPELLS);
-    IForgeRegistry<Codec<? extends PerkReward>> PERK_REWARDS = RegistryManager.ACTIVE.getRegistry(ModRegistryKeys.PERK_AWARDS);
+    IForgeRegistry<Codec<? extends PerkReward>> PERK_REWARDS = RegistryManager.ACTIVE.getRegistry(ModRegistryKeys.PERK_REWARDS);
 
 }

@@ -1,7 +1,6 @@
 package net.kapitencraft.mysticcraft.tech.gui.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.kapitencraft.kap_lib.client.gui.screen.BlockEntityScreen;
 import net.kapitencraft.kap_lib.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.tech.block.entity.GenericFueledGeneratorBlockEntity;
@@ -13,7 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.NotNull;
 
-public class GenericFueledGeneratorScreen extends BlockEntityScreen<GenericFueledGeneratorBlockEntity, GenericFueledGeneratorMenu> {
+public class GenericFueledGeneratorScreen extends UpgradableBEScreen<GenericFueledGeneratorBlockEntity, GenericFueledGeneratorMenu> {
 
     public GenericFueledGeneratorScreen(GenericFueledGeneratorMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);

@@ -1,11 +1,11 @@
 {
-  "type": "mysticcraft:soul_mage_armor",
+  "type": "mysticcraft:mana_syphon",
   "data": {},
   "equipment_slots": [
-    "chest",
-    "feet",
+    "legs",
     "head",
-    "legs"
+    "feet",
+    "chest"
   ],
   "wearable_slots": []
 }

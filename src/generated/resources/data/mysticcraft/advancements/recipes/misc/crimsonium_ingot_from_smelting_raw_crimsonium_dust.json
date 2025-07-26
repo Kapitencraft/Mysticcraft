@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_netherite_ingot": {
+    "has_raw_crimsonium_dust": {
       "conditions": {
         "items": [
           {
             "items": [
-              "minecraft:netherite_ingot"
+              "mysticcraft:raw_crimsonium_dust"
             ]
           }
         ]
@@ -15,20 +15,20 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:netherite_hammer_smithing"
+        "recipe": "mysticcraft:crimsonium_ingot_from_smelting_raw_crimsonium_dust"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
   },
   "requirements": [
     [
-      "has_netherite_ingot",
+      "has_raw_crimsonium_dust",
       "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
-      "minecraft:netherite_hammer_smithing"
+      "mysticcraft:crimsonium_ingot_from_smelting_raw_crimsonium_dust"
     ]
   },
   "sends_telemetry_event": false

@@ -2,13 +2,17 @@ package net.kapitencraft.mysticcraft.tech.block.entity;
 
 import net.kapitencraft.mysticcraft.capability.mana.IManaStorage;
 import net.kapitencraft.mysticcraft.registry.ModBlockEntities;
+import net.kapitencraft.mysticcraft.registry.ModItems;
+import net.kapitencraft.mysticcraft.tech.block.UpgradableBlockEntity;
 import net.kapitencraft.mysticcraft.tech.gui.menu.MagicFurnaceMenu;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -18,16 +22,15 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class MagicFurnaceBlockEntity extends BlockEntity implements IManaStorage, MenuProvider {
+public class MagicFurnaceBlockEntity extends UpgradableBlockEntity implements IManaStorage, MenuProvider {
     private static final int MAX_MANA = 1000;
 
-    private final ItemStackHandler items = new ItemHandler();
+    private final ItemHandler items = new ItemHandler();
 
     private int mana, cookTime;
     private AbstractCookingRecipe recipe;
@@ -95,7 +98,7 @@ public class MagicFurnaceBlockEntity extends BlockEntity implements IManaStorage
     }
 
     @Override
-    public Component getDisplayName() {
+    public @NotNull Component getDisplayName() {
         return Component.translatable("container.magic_furnace");
     }
 
@@ -107,9 +110,10 @@ public class MagicFurnaceBlockEntity extends BlockEntity implements IManaStorage
     public static void tick(Level level, BlockPos pos, BlockState blockState, MagicFurnaceBlockEntity blockEntity) {
         if (blockEntity.canInsertIntoOutput(level) && blockEntity.mana > 10) {
             blockEntity.mana-=10;
-            if (blockEntity.cookTime++ > blockEntity.recipe.getCookingTime()) {
-                blockEntity.items.insertItem(1, blockEntity.recipe.getResultItem(level.registryAccess()).copy(), false);
-                blockEntity.items.extractItem(0, 1, false);
+            if ((blockEntity.cookTime += (1 + blockEntity.speed)) > blockEntity.recipe.getCookingTime()) {
+                ItemStack stack = blockEntity.recipe.getResultItem(level.registryAccess());
+                blockEntity.items.insertItem(1, stack.copyWithCount(stack.getCount() * (1 + blockEntity.parallel)), false);
+                blockEntity.items.extractItem(0, 1 + blockEntity.parallel, false);
                 blockEntity.cookTime = 0;
             }
         } else if (blockEntity.cookTime > 0) blockEntity.cookTime--;
@@ -121,7 +125,7 @@ public class MagicFurnaceBlockEntity extends BlockEntity implements IManaStorage
         if (this.recipe != null) {
             ItemStack result = this.recipe.getResultItem(level.registryAccess());
             ItemStack output = this.items.getStackInSlot(1);
-            return output.isEmpty() || (output.is(result.getItem()) && output.getCount() + result.getCount() < this.items.getSlotLimit(1));
+            return output.isEmpty() || (output.is(result.getItem()) && output.getCount() + result.getCount() <= this.items.getSlotLimit(1));
         }
         return false;
     }
@@ -133,6 +137,32 @@ public class MagicFurnaceBlockEntity extends BlockEntity implements IManaStorage
     public int getBurnProgress() {
         return this.recipe == null ? 0 : 24 * cookTime / recipe.getCookingTime();
     }
+
+    public void drops() {
+        Containers.dropContents(this.level, this.worldPosition, this.items.getItems());
+        super.drops();
+    }
+
+    //region upgrade
+    private int parallel, speed;
+
+    @Override
+    public boolean canUpgrade(ItemStack upgradeModule) {
+        return true;
+    }
+
+    @Override
+    public void upgrade(ItemStack stack) {
+        if (stack.is(ModItems.PARALLEL_PROCESSING_UPGRADE.get())) parallel++;
+        if (stack.is(ModItems.SPEED_UPGRADE.get())) speed++;
+    }
+
+    @Override
+    public int upgradeSlots() {
+        return 4;
+    }
+
+    //endregion
 
     private class ItemHandler extends ItemStackHandler {
         public ItemHandler() {
@@ -146,6 +176,10 @@ public class MagicFurnaceBlockEntity extends BlockEntity implements IManaStorage
             }
             super.onContentsChanged(slot);
             MagicFurnaceBlockEntity.this.setChanged();
+        }
+
+        public NonNullList<ItemStack> getItems() {
+            return this.stacks;
         }
     }
 

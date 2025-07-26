@@ -62,6 +62,7 @@ public class ModMessages {
         addMessage(UpdatePerksPacket.class, NetworkDirection.PLAY_TO_CLIENT, UpdatePerksPacket::new);
         addMessage(UpgradePerkPacket.class, NetworkDirection.PLAY_TO_SERVER, UpgradePerkPacket::new);
         addMessage(RemoveManaDistributionNetworkElementPacket.class, NetworkDirection.PLAY_TO_CLIENT, RemoveManaDistributionNetworkElementPacket::new);
+        addMessage(HammerAbortBreakPacket.class, NetworkDirection.PLAY_TO_CLIENT, HammerAbortBreakPacket::new);
     }
 
     private static <T extends SimplePacket> void addMessage(Class<T> tClass, NetworkDirection direction, Function<FriendlyByteBuf, T> decoder) {

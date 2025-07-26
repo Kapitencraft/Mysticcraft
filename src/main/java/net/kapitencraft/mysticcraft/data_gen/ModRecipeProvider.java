@@ -3,6 +3,7 @@ package net.kapitencraft.mysticcraft.data_gen;
 import net.kapitencraft.kap_lib.crafting.serializers.UpgradeItemRecipe;
 import net.kapitencraft.kap_lib.data_gen.abst.recipe.ArmorRecipeBuilder;
 import net.kapitencraft.kap_lib.data_gen.abst.recipe.UpgradeRecipeBuilder;
+import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneType;
 import net.kapitencraft.mysticcraft.capability.gemstone.IGemstoneItem;
 import net.kapitencraft.mysticcraft.item.material.PrecursorRelicItem;
@@ -17,7 +18,9 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.common.crafting.PartialNBTIngredient;
 import net.minecraftforge.common.crafting.StrictNBTIngredient;
@@ -52,15 +55,15 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
 
         itemUpgrade(consumer, RecipeCategory.COMBAT, UpgradeItemRecipe.CraftType.EIGHT, ModItems.SHADOW_DAGGER, ModItems.DARK_DAGGER, ModItems.SHADOW_CRYSTAL);
 
-        craftHammer(consumer, Items.STONE, ModItems.STONE_HAMMER);
-        craftHammer(consumer, Items.IRON_INGOT, ModItems.IRON_HAMMER);
-        craftHammer(consumer, Items.DIAMOND, ModItems.DIAMOND_HAMMER);
+        craftHammer(consumer, Items.COBBLESTONE, Items.STONE, ModItems.STONE_HAMMER);
+        craftHammer(consumer, Items.IRON_INGOT, Items.IRON_BLOCK, ModItems.IRON_HAMMER);
+        craftHammer(consumer, Items.DIAMOND, Items.DIAMOND_BLOCK, ModItems.DIAMOND_HAMMER);
 
-        netheriteSmithing(consumer, ModItems.DIAMOND_HAMMER.get(), RecipeCategory.TOOLS, ModItems.NETHERITE_HAMMER.get());
+        modNetheriteSmithing(consumer, ModItems.DIAMOND_HAMMER.get(), RecipeCategory.TOOLS, ModItems.NETHERITE_HAMMER.get());
 
         hammerCrushing(consumer, ModTags.Items.TIER_1_HAMMER, ModItems.CRIMSONIUM_INGOT, ModItems.CRIMSONIUM_DUST, 1);
-        hammerCrushing(consumer, ModTags.Items.DEFAULT_HAMMER, ModItems.CRIMSONITE_CLUSTER, ModItems.CRIMSONITE_DUST, 2);
-        hammerCrushing(consumer, ModTags.Items.DEFAULT_HAMMER, ModItems.RAW_CRIMSONIUM, ModItems.RAW_CRIMSONIUM_DUST, 2);
+        hammerCrushing(consumer, ModTags.Items.HAMMER, ModItems.CRIMSONITE_CLUSTER, ModItems.CRIMSONITE_DUST, 2);
+        hammerCrushing(consumer, ModTags.Items.HAMMER, ModItems.RAW_CRIMSONIUM, ModItems.RAW_CRIMSONIUM_DUST, 2);
 
         unlock(ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.CRIMSON_STEEL_DUST.get(), 4)
                         .group("crimson")
@@ -77,9 +80,9 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
         makeModel(WALL_CONSUMER, ModBlocks.GOLDEN_WALL.getItem(), Items.GOLD_BLOCK, consumer);
         makeModel(RecipeProvider::stairBuilder, ModBlocks.GOLDEN_STAIRS.getItem(), Items.GOLD_BLOCK, consumer);
 
-        stonecutterResultFromBase(consumer, RecipeCategory.BUILDING_BLOCKS, ModBlocks.GOLDEN_SLAB.getItem(), Items.GOLD_BLOCK, 2);
-        stonecutterResultFromBase(consumer, RecipeCategory.BUILDING_BLOCKS, ModBlocks.GOLDEN_WALL.getItem(), Items.GOLD_BLOCK);
-        stonecutterResultFromBase(consumer, RecipeCategory.BUILDING_BLOCKS, ModBlocks.GOLDEN_STAIRS.getItem(), Items.GOLD_BLOCK);
+        modStonecutterResultFromBase(consumer, RecipeCategory.BUILDING_BLOCKS, ModBlocks.GOLDEN_SLAB.getItem(), Items.GOLD_BLOCK, 2);
+        modStonecutterResultFromBase(consumer, RecipeCategory.BUILDING_BLOCKS, ModBlocks.GOLDEN_WALL.getItem(), Items.GOLD_BLOCK);
+        modStonecutterResultFromBase(consumer, RecipeCategory.BUILDING_BLOCKS, ModBlocks.GOLDEN_STAIRS.getItem(), Items.GOLD_BLOCK);
 
         //region mana steel sword
         unlock(ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, ModItems.MS_HANDLE.get())
@@ -152,47 +155,53 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
     }
 
     private static void smeltingAndBlasting(Consumer<FinishedRecipe> consumer, List<ItemLike> ingredients, RecipeCategory category, ItemLike result, float xp, int blastTime, String group) {
-        oreSmelting(consumer, ingredients, category, result, xp, blastTime * 2, group);
-        oreBlasting(consumer, ingredients, category, result, xp, blastTime, group);
-    }
-
-
-    private static void createHelmet(Consumer<FinishedRecipe> recipe, RegistryObject<? extends Item> material, RegistryObject<? extends Item> result) {
-        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, result.get())
-                .pattern("***")
-                .pattern("* *")
-                .define('*', material.get()).unlockedBy(getHasName(result.get()), has(material.get())).save(recipe);
-    }
-    private static void createChestplate(Consumer<FinishedRecipe> recipe, RegistryObject<? extends Item> material, RegistryObject<? extends Item> result) {
-        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, result.get())
-                .pattern("* *")
-                .pattern("***")
-                .pattern("***")
-                .define('*', material.get()).unlockedBy(getHasName(result.get()), has(material.get())).save(recipe);
-    }
-    private static void createLeggings(Consumer<FinishedRecipe> recipe, RegistryObject<? extends Item> material, RegistryObject<? extends Item> result) {
-        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, result.get())
-                .pattern("***")
-                .pattern("* *")
-                .pattern("* *")
-                .define('*', material.get()).unlockedBy(getHasName(result.get()), has(material.get())).save(recipe);
-    }
-    private static void createBoots(Consumer<FinishedRecipe> recipe, RegistryObject<? extends Item> material, RegistryObject<? extends Item> result) {
-        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, result.get())
-                .pattern("* *")
-                .pattern("* *")
-                .define('*', material.get()).unlockedBy(getHasName(result.get()), has(material.get())).save(recipe);
+        modOreSmelting(consumer, ingredients, category, result, xp, blastTime * 2, group);
+        modOreBlasting(consumer, ingredients, category, result, xp, blastTime, group);
     }
 
     private static void hammerCrushing(Consumer<FinishedRecipe> consumer, TagKey<Item> hammerTier, RegistryObject<? extends Item> material, RegistryObject<? extends Item> result, int amount) {
         unlock(ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, result.get(), amount).requires(hammerTier).requires(material.get()), material.get()).save(consumer);
     }
 
-    private static void craftHammer(Consumer<FinishedRecipe> consumer, Item material, RegistryObject<? extends Item> result) {
-        unlock(ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, result.get()).pattern("***").pattern("***").pattern(" ! ").define('*', material).define('!', Items.STICK), material).save(consumer);
+    private static void craftHammer(Consumer<FinishedRecipe> consumer, Item material, Item materialBlock, RegistryObject<? extends Item> result) {
+        unlock(ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, result.get())
+                .pattern("#*#")
+                .pattern(" ! ")
+                .pattern(" ! ")
+                .define('*', material)
+                .define('#', materialBlock)
+                .define('!', Items.STICK), material).save(consumer);
     }
 
     private static void craftBow(Consumer<FinishedRecipe> consumer, Item string, Item handle, RegistryObject<? extends Item> result) {
         unlock(ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, result.get()).pattern(" *#").pattern("* #").pattern(" *#").define('*', string).define('#', handle), handle).save(consumer);
+    }
+
+
+
+    private static void modOreSmelting(Consumer<FinishedRecipe> pFinishedRecipeConsumer, List<ItemLike> pIngredients, RecipeCategory pCategory, ItemLike pResult, float pExperience, int pCookingTIme, String pGroup) {
+        modOreCooking(pFinishedRecipeConsumer, RecipeSerializer.SMELTING_RECIPE, pIngredients, pCategory, pResult, pExperience, pCookingTIme, pGroup, "_from_smelting");
+    }
+
+    private static void modOreBlasting(Consumer<FinishedRecipe> pFinishedRecipeConsumer, List<ItemLike> pIngredients, RecipeCategory pCategory, ItemLike pResult, float pExperience, int pCookingTime, String pGroup) {
+        modOreCooking(pFinishedRecipeConsumer, RecipeSerializer.BLASTING_RECIPE, pIngredients, pCategory, pResult, pExperience, pCookingTime, pGroup, "_from_blasting");
+    }
+
+    private static void modOreCooking(Consumer<FinishedRecipe> pFinishedRecipeConsumer, RecipeSerializer<? extends AbstractCookingRecipe> pCookingSerializer, List<ItemLike> pIngredients, RecipeCategory pCategory, ItemLike pResult, float pExperience, int pCookingTime, String pGroup, String pRecipeName) {
+        for(ItemLike itemlike : pIngredients) {
+            SimpleCookingRecipeBuilder.generic(Ingredient.of(itemlike), pCategory, pResult, pExperience, pCookingTime, pCookingSerializer).group(pGroup).unlockedBy(getHasName(itemlike), has(itemlike)).save(pFinishedRecipeConsumer, MysticcraftMod.res(getItemName(pResult) + pRecipeName + "_" + getItemName(itemlike)));
+        }
+    }
+
+    private static void modNetheriteSmithing(Consumer<FinishedRecipe> pFinishedRecipeConsumer, Item pIngredientItem, RecipeCategory pCategory, Item pResultItem) {
+        SmithingTransformRecipeBuilder.smithing(Ingredient.of(Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE), Ingredient.of(pIngredientItem), Ingredient.of(Items.NETHERITE_INGOT), pCategory, pResultItem).unlocks("has_netherite_ingot", has(Items.NETHERITE_INGOT)).save(pFinishedRecipeConsumer, MysticcraftMod.res(getItemName(pResultItem) + "_smithing"));
+    }
+
+    private static void modStonecutterResultFromBase(Consumer<FinishedRecipe> pFinishedRecipeConsumer, RecipeCategory pCategory, ItemLike pResult, ItemLike pMaterial) {
+        modStonecutterResultFromBase(pFinishedRecipeConsumer, pCategory, pResult, pMaterial, 1);
+    }
+
+    private static void modStonecutterResultFromBase(Consumer<FinishedRecipe> pFinishedRecipeConsumer, RecipeCategory pCategory, ItemLike pResult, ItemLike pMaterial, int pResultCount) {
+        SingleItemRecipeBuilder.stonecutting(Ingredient.of(pMaterial), pCategory, pResult, pResultCount).unlockedBy(getHasName(pMaterial), has(pMaterial)).save(pFinishedRecipeConsumer, MysticcraftMod.res(getConversionRecipeName(pResult, pMaterial) + "_stonecutting"));
     }
 }

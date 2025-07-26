@@ -189,15 +189,15 @@ public class MiscRegister {
         Int2ObjectMap<List<VillagerTrades.ItemListing>> trades = event.getTrades();
         if (event.getType() == ModVillagers.GEMSTONE_MAKER.getProfession().get()) {
             Multimap<Integer, VillagerTrades.ItemListing> multimap = HashMultimap.create();
-            for (GemstoneType type : GemstoneType.TYPES_TO_USE) {
+            for (GemstoneType type : GemstoneType.WITHOUT_EMPTY) {
                 ItemStack sell = GemstoneType.allItems().get(type, GemstoneType.Rarity.ROUGH);
                 multimap.put(1,
                         new BasicItemListing(getEmeraldCost(4), sell, 8, 5, 1.2f));
             }
             int i = 2;
-            for (GemstoneType.Rarity rarity : GemstoneType.RARITIES_TO_USE) {
+            for (GemstoneType.Rarity rarity : GemstoneType.Rarity.WITHOUT_EMPTY) {
                 if (rarity != GemstoneType.Rarity.PERFECT) {
-                    for (GemstoneType type : GemstoneType.TYPES_TO_USE) {
+                    for (GemstoneType type : GemstoneType.WITHOUT_EMPTY) {
                         ItemStack defRarity = GemstoneType.allItems().get(type).get(rarity);
                         ItemStack newRarity = GemstoneType.allItems().get(type).get(rarity.next());
                         int c = Mth.nextInt(RandomSource.create(), 1, 5);

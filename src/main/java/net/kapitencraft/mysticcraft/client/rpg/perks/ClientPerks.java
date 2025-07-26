@@ -18,19 +18,15 @@ import java.util.Set;
 public class ClientPerks {
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    private final Minecraft minecraft;
     private final Map<Perk, Integer> progress = Maps.newHashMap();
     private final Map<PerkTree, Integer> availableTokens = Maps.newHashMap();
     private final Map<ResourceLocation, PerkTree> trees = new HashMap<>();
     private final Map<ResourceLocation, Perk> perks = new HashMap<>();
     private final Set<Perk> leaves = Sets.newLinkedHashSet();
     private final Set<Perk> roots = Sets.newLinkedHashSet();
-    private static final ClientPerks instance = new ClientPerks(Minecraft.getInstance());
+    private static final ClientPerks instance = new ClientPerks();
     private Listener listener;
 
-    public ClientPerks(Minecraft minecraft) {
-        this.minecraft = minecraft;
-    }
 
     public static ClientPerks getInstance() {
         return instance;

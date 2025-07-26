@@ -4,15 +4,22 @@ import net.kapitencraft.kap_lib.event.custom.RegisterBonusProvidersEvent;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.capability.reforging.Reforges;
 import net.kapitencraft.mysticcraft.capability.spell.SpellHelper;
+import net.kapitencraft.mysticcraft.item.tools.HammerItem;
+import net.kapitencraft.mysticcraft.network.ModMessages;
+import net.kapitencraft.mysticcraft.network.packets.S2C.HammerAbortBreakPacket;
 import net.kapitencraft.mysticcraft.registry.Spells;
 import net.kapitencraft.mysticcraft.rpg.perks.ServerPerksManager;
 import net.kapitencraft.mysticcraft.spell.Spell;
 import net.kapitencraft.mysticcraft.spell.SpellTarget;
 import net.kapitencraft.mysticcraft.tags.ModTags;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -68,9 +75,10 @@ public class Events {
     @SuppressWarnings("unchecked")
     @SubscribeEvent
     public static void onLivingEntityUseItemTick(LivingEntityUseItemEvent.Tick event) {
+        ItemStack stack = event.getItem();
+        if (!stack.is(ModTags.Items.CATALYST)) return;
         LivingEntity living = event.getEntity();
         Level level = living.level();
-        ItemStack stack = event.getItem();
         int duration = stack.getUseDuration() - event.getDuration();
         Spell spell = SpellHelper.getActiveSpell(stack);
         if (duration >= spell.castDuration()) {
@@ -125,6 +133,32 @@ public class Events {
                         player.sendSystemMessage(Component.translatable("spell.cast.failed"));
                     living.stopUsingItem();
                 }
+            }
+        }
+    }
+
+    //endregion
+
+    @SuppressWarnings("DataFlowIssue")
+    @SubscribeEvent
+    public static void onPlayerInteractLeftClickBlock(PlayerInteractEvent.LeftClickBlock event) {
+        BlockPos pos = event.getPos();
+        Direction face = event.getFace();
+        Entity entity = event.getEntity();
+        Level level = entity.level();
+        if (event.getItemStack().is(ModTags.Items.HAMMER)) {
+            switch (event.getAction()) {
+                case CLIENT_HOLD -> {
+                    Minecraft minecraft = Minecraft.getInstance();
+                    int destroyStage = minecraft.gameMode.getDestroyStage();
+                    HammerItem.gatherBlocks(level, pos, face, p -> level.destroyBlockProgress(HammerItem.getPositionId(p), p, destroyStage));
+                }
+                case STOP -> {
+                    if (event.getEntity() instanceof ServerPlayer serverPlayer) {
+                        HammerItem.gatherBlocks(level, pos, face, serverPlayer.gameMode::destroyBlock);
+                    }
+                }
+                case ABORT -> ModMessages.sendToAllConnectedPlayers(p -> new HammerAbortBreakPacket(pos, face), (ServerLevel) event.getEntity().level());
             }
         }
     }

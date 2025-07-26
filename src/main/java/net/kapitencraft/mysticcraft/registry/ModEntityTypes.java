@@ -33,4 +33,5 @@ public interface ModEntityTypes {
     RegistryObject<EntityType<SkeletonMaster>> SKELETON_MASTER = register("skeleton_master", SkeletonMaster::new, MobCategory.MONSTER, (builder) -> builder.sized(0.6F, 1.99F));
     RegistryObject<EntityType<RifleProjectile>> RIFLE_PROJECTILE = register("rifle_projectile", RifleProjectile::new, MobCategory.MISC, value -> value.sized(0.5f, 0.5f));
     RegistryObject<EntityType<SoulBoundAnimator>> SOUL_BOUND_ANIMATOR = register("soul_bound_animator", SoulBoundAnimator::new, MobCategory.MISC, builder -> builder.sized(0.5f, 1.975f).clientTrackingRange(10));
+    RegistryObject<EntityType<ThrownCursedPearl>> CURSED_PEARL = register("cursed_pearl", ThrownCursedPearl::new, MobCategory.MISC, builder -> builder.sized(0.25F, 0.25F).clientTrackingRange(4).updateInterval(10));
 }

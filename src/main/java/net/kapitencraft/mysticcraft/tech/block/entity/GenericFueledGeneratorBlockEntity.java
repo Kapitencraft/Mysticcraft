@@ -1,12 +1,16 @@
 package net.kapitencraft.mysticcraft.tech.block.entity;
 
 import net.kapitencraft.mysticcraft.capability.mana.IManaStorage;
+import net.kapitencraft.mysticcraft.registry.ModItems;
+import net.kapitencraft.mysticcraft.tech.block.UpgradableBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -18,15 +22,12 @@ import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class GenericFueledGeneratorBlockEntity extends BlockEntity implements IManaStorage, MenuProvider {
-    private static final int MAX_MANA = 10000;
+public abstract class GenericFueledGeneratorBlockEntity extends UpgradableBlockEntity implements IManaStorage, MenuProvider {
 
     private final int maxMana;
-    private int mana;
-    private int burnTime;
-    private int rate;
+    private int mana, burnTime, maxBurnTime, rate, speed;
 
-    private final ItemStackHandler items = new ItemHandler();
+    private final ItemHandler items = new ItemHandler();
 
     public GenericFueledGeneratorBlockEntity(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState, int maxMana) {
         super(pType, pPos, pBlockState);
@@ -41,6 +42,7 @@ public abstract class GenericFueledGeneratorBlockEntity extends BlockEntity impl
         pTag.putInt("mana", this.mana);
         pTag.putInt("burnTime", this.burnTime);
         pTag.putInt("rate", this.rate);
+        pTag.putInt("speed", this.speed);
         pTag.put("inventory", this.items.serializeNBT());
     }
 
@@ -51,6 +53,8 @@ public abstract class GenericFueledGeneratorBlockEntity extends BlockEntity impl
         this.burnTime = pTag.getInt("burnTime");
         this.rate = pTag.getInt("rate");
         this.items.deserializeNBT(pTag.getCompound("inventory"));
+        this.speed = pTag.getInt("speed");
+        this.setChanged();
     }
 
     //endregion
@@ -69,15 +73,17 @@ public abstract class GenericFueledGeneratorBlockEntity extends BlockEntity impl
         }
         if (pBlockEntity.mana < pBlockEntity.maxMana) {
             if (pBlockEntity.burnTime > 0) {
-                pBlockEntity.burnTime--;
+                pBlockEntity.burnTime-= (pBlockEntity.speed) + 1;
                 pBlockEntity.mana = Math.min(pBlockEntity.maxMana, pBlockEntity.mana + pBlockEntity.rate);
                 pBlockEntity.setChanged();
             } else {
                 ItemStack stack = pBlockEntity.items.extractItem(0, 1, false);
                 if (!stack.isEmpty()) {
-                    pBlockEntity.rate = pBlockEntity.getRate(stack);
+                    pBlockEntity.rate = pBlockEntity.getRate(stack) / (pBlockEntity.speed + 1);
                     pBlockEntity.burnTime = pBlockEntity.getBurnTime(stack);
+                    pBlockEntity.maxBurnTime = pBlockEntity.burnTime;
                     pBlockEntity.setChanged();
+                    if (stack.hasCraftingRemainingItem()) pBlockEntity.items.setStackInSlot(0, stack.getCraftingRemainingItem().copy());
                 }
             }
         }
@@ -135,7 +141,7 @@ public abstract class GenericFueledGeneratorBlockEntity extends BlockEntity impl
     }
 
     public int getLitProgress() {
-        return 13 * this.burnTime / 200;
+        return maxBurnTime == 0 ? 0 : 13 * this.burnTime / this.maxBurnTime;
     }
 
     private class ItemHandler extends ItemStackHandler {
@@ -153,9 +159,17 @@ public abstract class GenericFueledGeneratorBlockEntity extends BlockEntity impl
         public boolean isItemValid(int slot, @NotNull ItemStack stack) {
             return GenericFueledGeneratorBlockEntity.this.isValidFuel(stack);
         }
+
+        public NonNullList<ItemStack> getItems() {
+            return stacks;
+        }
     }
 
-    protected abstract boolean isValidFuel(@NotNull ItemStack stack);
+    public void drops() {
+        Containers.dropContents(this.level, this.worldPosition, this.items.getItems());
+    }
+
+    public abstract boolean isValidFuel(@NotNull ItemStack stack);
 
     @Override
     public @Nullable Packet<ClientGamePacketListener> getUpdatePacket() {
@@ -168,6 +182,17 @@ public abstract class GenericFueledGeneratorBlockEntity extends BlockEntity impl
         tag.putInt("mana", this.mana);
         tag.putInt("burnTime", this.burnTime);
         tag.putInt("rate", this.rate);
+        tag.putInt("speed", this.speed);
         return tag;
+    }
+
+    @Override
+    public void upgrade(ItemStack stack) {
+        if (stack.is(ModItems.SPEED_UPGRADE.get())) speed++;
+    }
+
+    @Override
+    public boolean canUpgrade(ItemStack upgradeModule) {
+        return upgradeModule.is(ModItems.SPEED_UPGRADE.get());
     }
 }

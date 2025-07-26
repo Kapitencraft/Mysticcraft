@@ -38,14 +38,7 @@ public class ModItemProperties {
         makeTieredArmor(ModItems.SOUL_MAGE_ARMOR);
         ItemProperties.register(ModItems.GEMSTONE.get(), MysticcraftMod.res("rarity"), (stack, level, living, timeLeft) -> {
             GemstoneType.Rarity rarity = IGemstoneItem.getGemRarity(stack);
-            return switch (rarity) {
-                case ROUGH -> 0.1f;
-                case FLAWED -> 0.2f;
-                case FINE -> 0.3f;
-                case FLAWLESS -> 0.4f;
-                case PERFECT -> 0.5f;
-                default -> 0;
-            };
+            return rarity.ordinal() * .1f;
         });
         ItemProperties.register(ModBlocks.GEMSTONE_CRYSTAL.getItem(), MysticcraftMod.res("size"), (stack, level, living, timeLeft) -> {
             GemstoneCrystal.Size size = GemstoneCrystal.Size.CODEC.byName(stack.getOrCreateTag().getString("Size"), GemstoneCrystal.Size.SMALL);

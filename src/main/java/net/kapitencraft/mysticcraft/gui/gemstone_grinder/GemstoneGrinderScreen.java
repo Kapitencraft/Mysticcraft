@@ -26,7 +26,7 @@ public class GemstoneGrinderScreen extends AbstractContainerScreen<GemstoneGrind
         super.renderTooltip(graphics, pX, pY);
         if (this.hoveredSlot != null) {
             if (!this.hoveredSlot.hasItem()) {
-                if (MathHelper.isBetween(36, 40, this.hoveredSlot.index)) {
+                if (MathHelper.isBetween(this.hoveredSlot.index, 36, 40)) {
                     ItemStack target = this.menu.getApplicable();
                     int slotId = menu.getSlotForItem(this.hoveredSlot.index - 36);
                     if (slotId < 0 || slotId > GemstoneGrinderMenu.MAX_GEMSTONE_SLOTS) return;

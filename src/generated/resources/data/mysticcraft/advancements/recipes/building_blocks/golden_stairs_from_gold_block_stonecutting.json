@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_raw_crimsonium": {
+    "has_gold_block": {
       "conditions": {
         "items": [
           {
             "items": [
-              "mysticcraft:raw_crimsonium"
+              "minecraft:gold_block"
             ]
           }
         ]
@@ -15,20 +15,20 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:crimsonium_ingot_from_smelting_raw_crimsonium"
+        "recipe": "mysticcraft:golden_stairs_from_gold_block_stonecutting"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
   },
   "requirements": [
     [
-      "has_raw_crimsonium",
+      "has_gold_block",
       "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
-      "minecraft:crimsonium_ingot_from_smelting_raw_crimsonium"
+      "mysticcraft:golden_stairs_from_gold_block_stonecutting"
     ]
   },
   "sends_telemetry_event": false

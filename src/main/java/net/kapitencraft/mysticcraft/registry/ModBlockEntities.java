@@ -24,6 +24,7 @@ public interface ModBlockEntities {
     RegistryObject<BlockEntityType<ManaBatteryBlockEntity>> MANA_BATTERY = register("mana_accumulator", ManaBatteryBlockEntity::new, ModBlocks.MANA_BATTERY);
 
     RegistryObject<BlockEntityType<SpellCasterTurretEntity>> SPELL_CASTER_TURRET = register("turret/spell_caster", SpellCasterTurretEntity::new, ModBlocks.SPELL_CASTER_TURRET);
+    RegistryObject<BlockEntityType<ObeliskTurretBlockEntity>> OBELISK_TURRET = register("turret/obelisk", ObeliskTurretBlockEntity::new, ModBlocks.OBELISK_TURRET);
 
     @SafeVarargs
     @SuppressWarnings("DataFlowIssue")

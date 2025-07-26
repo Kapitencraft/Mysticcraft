@@ -1,6 +1,8 @@
-moved to 1.20.1 and implemented KapLib
+moved to 1.20.1 and implemented KapLib 1.26.2
 reworked spell system
 fixed gemstone grinder model not working due to missing parent model
 moved many enchantments to Enchantments+
 changed void totem to use vanilla respawn method
 added magic technology
+fixed many recipes being under the minecraft namespace
+fixed Item entities merging, but not updating count

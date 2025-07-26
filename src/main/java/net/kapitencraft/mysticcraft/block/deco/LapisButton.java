@@ -5,7 +5,7 @@ import net.minecraft.world.level.block.ButtonBlock;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
 
 public class LapisButton extends ButtonBlock {
-    public LapisButton() {//TODO add block set type?
+    public LapisButton() {
         super(Properties.copy(Blocks.LAPIS_BLOCK), BlockSetType.STONE, 2, false);
     }
 }

@@ -32,7 +32,7 @@ public interface Spells {
     RegistryObject<CureVillagerSpell> CURE_VILLAGER = REGISTRY.register("cure_villager", CureVillagerSpell::new);
 
     static Collection<ItemStack> createForCreativeModeTab() {
-        return ModRegistries.SPELLS.getValues().stream().map(spell -> {
+        return ModRegistries.SPELLS.getValues().stream().filter(s -> s != EMPTY.get()).map(spell -> {
             ItemStack stack = new ItemStack(ModItems.SPELL_SCROLL.get());
             SpellHelper.setSpell(stack, 0, spell);
             return stack;

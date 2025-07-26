@@ -3,7 +3,7 @@
   "category": "misc",
   "ingredients": [
     {
-      "tag": "mysticcraft:default_hammer"
+      "tag": "mysticcraft:hammer"
     },
     {
       "item": "mysticcraft:crimsonite_cluster"

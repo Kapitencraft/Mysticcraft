@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_gold_block": {
+    "has_crimson_steel_dust": {
       "conditions": {
         "items": [
           {
             "items": [
-              "minecraft:gold_block"
+              "mysticcraft:crimson_steel_dust"
             ]
           }
         ]
@@ -15,20 +15,20 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:golden_slab_from_gold_block_stonecutting"
+        "recipe": "mysticcraft:crimson_steel_ingot_from_blasting_crimson_steel_dust"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
   },
   "requirements": [
     [
-      "has_gold_block",
+      "has_crimson_steel_dust",
       "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
-      "minecraft:golden_slab_from_gold_block_stonecutting"
+      "mysticcraft:crimson_steel_ingot_from_blasting_crimson_steel_dust"
     ]
   },
   "sends_telemetry_event": false

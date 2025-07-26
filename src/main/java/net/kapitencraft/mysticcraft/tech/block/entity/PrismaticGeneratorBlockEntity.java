@@ -25,7 +25,7 @@ public class PrismaticGeneratorBlockEntity extends GenericFueledGeneratorBlockEn
     protected int getRate(ItemStack stack) {
         GemstoneType.Rarity rarity = IGemstoneItem.getGemRarity(stack);
         GemstoneType type = IGemstoneItem.getGemstone(stack);
-        return type == GemstoneType.SAPPHIRE ? 15 * (rarity.getLevel() + 1) : (int) type.getBaseBlockStrenght() * (rarity.getLevel() + 1);
+        return (type == GemstoneType.SAPPHIRE ? 15 * (rarity.getLevel() + 1) : (int) type.getBaseBlockStrenght() * (rarity.getLevel() + 1));
     }
 
     @Override
@@ -34,7 +34,7 @@ public class PrismaticGeneratorBlockEntity extends GenericFueledGeneratorBlockEn
     }
 
     @Override
-    protected boolean isValidFuel(@NotNull ItemStack stack) {
+    public boolean isValidFuel(@NotNull ItemStack stack) {
         return IGemstoneItem.getGemstone(stack) != GemstoneType.EMPTY;
     }
 
@@ -46,5 +46,10 @@ public class PrismaticGeneratorBlockEntity extends GenericFueledGeneratorBlockEn
     @Override
     public @Nullable AbstractContainerMenu createMenu(int pContainerId, @NotNull Inventory pPlayerInventory, @NotNull Player pPlayer) {
         return new PrismaticGeneratorMenu(pContainerId, pPlayerInventory, this);
+    }
+
+    @Override
+    public int upgradeSlots() {
+        return 3;
     }
 }

@@ -38,13 +38,8 @@ public class MagicFurnaceBlock extends BaseEntityBlock {
     @Override
     public @NotNull InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         if (!pLevel.isClientSide()) {
-            BlockEntity entity = pLevel.getBlockEntity(pPos);
-            if(entity instanceof MagicFurnaceBlockEntity blockEntity) {
-                NetworkHooks.openScreen(((ServerPlayer)pPlayer), blockEntity, pPos);
-                return InteractionResult.CONSUME;
-            } else {
-                throw new IllegalStateException("Our Container provider is missing!");
-            }
+            NetworkHooks.openScreen(((ServerPlayer)pPlayer), (MagicFurnaceBlockEntity) pLevel.getBlockEntity(pPos), pPos);
+            return InteractionResult.CONSUME;
         }
         return InteractionResult.SUCCESS;
     }
@@ -63,5 +58,14 @@ public class MagicFurnaceBlock extends BaseEntityBlock {
     @Override
     public @NotNull RenderShape getRenderShape(@NotNull BlockState pState) {
         return RenderShape.MODEL;
+    }
+
+    @Override
+    public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pMovedByPiston) {
+        if (!pState.is(pNewState.getBlock())) {
+            ((MagicFurnaceBlockEntity) pLevel.getBlockEntity(pPos)).drops();
+        }
+
+        super.onRemove(pState, pLevel, pPos, pNewState, pMovedByPiston);
     }
 }

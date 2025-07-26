@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-//TODO convert to registry?
 public class Reforges {
     public static final String REFORGE_NAME_ID = "ReforgeName";
     private static final HashMap<String, Reforge> reforges = new HashMap<>();

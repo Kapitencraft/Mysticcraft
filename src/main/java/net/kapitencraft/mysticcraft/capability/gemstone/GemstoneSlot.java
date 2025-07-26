@@ -124,20 +124,23 @@ public class GemstoneSlot {
     }
 
     public enum Type implements StringRepresentable {
-        INTELLIGENCE("✎", "intel", GemstoneType.SAPPHIRE),
+        EMPTY("", "empty", (GemstoneType) null),
+        ABILITY_DAMAGE("☄", "ability_damage", GemstoneType.ALMANDINE),
         STRENGTH("❁", "strength", GemstoneType.JASPER),
         HEALTH("❤", "health", GemstoneType.RUBY),
-        ABILITY_DAMAGE("☄", "ability_damage", GemstoneType.ALMANDINE),
-        EMPTY("", "empty", (GemstoneType) null),
-        FISHING_SPEED("\uD83C\uDFA3", "fishing_speed", GemstoneType.AQUAMARINE),
+        ARMOR("⛉", "armor", GemstoneType.AMETHYST),
+        INTELLIGENCE("✎", "intel", GemstoneType.SAPPHIRE),
+        SWIM_SPEED("\ud83c\udf0a", "swim_speed", GemstoneType.AQUAMARINE),
+        FISHING_SPEED("\uD83C\uDFA3", "fishing_speed", GemstoneType.TURQUOISE),
         DRAW_SPEED("\uD83C\uDFF9", "draw_speed", GemstoneType.MOONSTONE),
         MOVE_SPEED("⇒", "move_speed", GemstoneType.CELESTINE),
         ENTITY_REACH("\uD83D\uDDE1", "entity_reach", GemstoneType.PERIDOT),
-        ARMOR("⛉", "armor", GemstoneType.AMETHYST),
+        MOBILITY("⚐", "mobility", GemstoneType.CELESTINE, GemstoneType.AQUAMARINE),
         OFFENCE("☠", "offence", GemstoneType.JASPER, GemstoneType.SAPPHIRE, GemstoneType.ALMANDINE, GemstoneType.MOONSTONE, GemstoneType.CELESTINE, GemstoneType.PERIDOT),
         DEFENCE("\ud83d\udee1", "defence", GemstoneType.RUBY, GemstoneType.AMETHYST, GemstoneType.CELESTINE),
         MAGIC("⚡", "magic", GemstoneType.SAPPHIRE, GemstoneType.ALMANDINE),
-        COMBAT("⚔", "combat", GemstoneType.JASPER, GemstoneType.SAPPHIRE, GemstoneType.ALMANDINE, GemstoneType.MOONSTONE, GemstoneType.RUBY, GemstoneType.AMETHYST, GemstoneType.CELESTINE, GemstoneType.PERIDOT);
+        COMBAT("⚔", "combat", GemstoneType.JASPER, GemstoneType.SAPPHIRE, GemstoneType.ALMANDINE, GemstoneType.MOONSTONE, GemstoneType.RUBY, GemstoneType.AMETHYST, GemstoneType.CELESTINE, GemstoneType.PERIDOT),
+        UNIVERSAL("☆", "universal", GemstoneType.WITHOUT_EMPTY); //exclude empty
 
         public static final Codec<Type> CODEC = StringRepresentable.fromEnum(Type::values);
 

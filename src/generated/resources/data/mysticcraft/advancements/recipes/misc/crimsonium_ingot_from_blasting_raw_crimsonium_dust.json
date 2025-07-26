@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_gold_block": {
+    "has_raw_crimsonium_dust": {
       "conditions": {
         "items": [
           {
             "items": [
-              "minecraft:gold_block"
+              "mysticcraft:raw_crimsonium_dust"
             ]
           }
         ]
@@ -15,20 +15,20 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:golden_wall_from_gold_block_stonecutting"
+        "recipe": "mysticcraft:crimsonium_ingot_from_blasting_raw_crimsonium_dust"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
   },
   "requirements": [
     [
-      "has_gold_block",
+      "has_raw_crimsonium_dust",
       "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
-      "minecraft:golden_wall_from_gold_block_stonecutting"
+      "mysticcraft:crimsonium_ingot_from_blasting_raw_crimsonium_dust"
     ]
   },
   "sends_telemetry_event": false

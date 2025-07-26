@@ -1,4 +1,4 @@
-// 1.20.1	2025-06-16T00:25:48.5787788	Item Models: mysticcraft
+// 1.20.1	2025-07-24T20:34:35.8948483	Item Models: mysticcraft
 6d5ec783f5da1d11f74f865a06a32aca08162116 assets/mysticcraft/models/gemstone/crystal/cluster.json
 41c8926a234481e0a6fd386f0b8bd7f9512070be assets/mysticcraft/models/gemstone/crystal/large.json
 3590331baa3cbd22bd7db093dacdffaa4b4e0b81 assets/mysticcraft/models/gemstone/crystal/medium.json
@@ -20,9 +20,10 @@ d815005d7f565b8fe5c8c058f318841614649001 assets/mysticcraft/models/item/crimson_
 66072cebf81c8a7d25078b0338993e48986b2427 assets/mysticcraft/models/item/crimson_leggings.json
 81f227cda858f6c1eee60ae0370209e6f5ccbdd6 assets/mysticcraft/models/item/crimson_steel_dust.json
 7c7961d9da423509194ec772e003f2acf0221196 assets/mysticcraft/models/item/crimson_steel_ingot.json
+616296659434dcb53eb2a5cfe9270911b3b3815d assets/mysticcraft/models/item/cursed_pearl.json
 78ce08912893f5b001ace4f5c0fb4c3ec721c9f3 assets/mysticcraft/models/item/dagger.json
 8639a1a9c04409f473ab8498ce0dbbe1d57e0f1c assets/mysticcraft/models/item/diamond_double_sword.json
-2cdf1f1cc4b2071454ffb5b96ad3d9dfa31e4d0b assets/mysticcraft/models/item/diamond_hammer.json
+9471838d3303a7e677927055d3ce5c409473c773 assets/mysticcraft/models/item/diamond_hammer.json
 4bc5ffe755c2274054e63605d5ba6c7e7c2c07a6 assets/mysticcraft/models/item/double_sword.json
 3c403159a525fb05370a82776f44a5ae1f87973a assets/mysticcraft/models/item/elemental_shard_of_air.json
 aedd104a8095c91db3a49ee7c1a0d7bb631e8ac2 assets/mysticcraft/models/item/elemental_shard_of_earth.json
@@ -62,6 +63,7 @@ d544d3d6d7958247afefbace0d41e0020d7a469a assets/mysticcraft/models/item/mana_ste
 f533172b5c2fe2b0da6e4abc4d7a36e8b52d6c57 assets/mysticcraft/models/item/missing_slot.json
 a821fbb4a244b26bb80ec044cb0d3d8261fb0730 assets/mysticcraft/models/item/mod_debug_stick.json
 0a8f290b6d34ff95fa68ce37be4a9f894a7b084c assets/mysticcraft/models/item/necrons_handle.json
+7aee02fc0da28495365ad54268b63d1e2085d566 assets/mysticcraft/models/item/netherite_hammer.json
 518e44f45afc07525fbe3ff9d3698107f59ef048 assets/mysticcraft/models/item/orb_of_consumption.json
 af962534ded2d90e326a46b1cb43be5d7ffb6f49 assets/mysticcraft/models/item/raw_crimsonium.json
 db554847974c27049dc61689abf7f89b9bbea6a7 assets/mysticcraft/models/item/raw_crimsonium_dust.json

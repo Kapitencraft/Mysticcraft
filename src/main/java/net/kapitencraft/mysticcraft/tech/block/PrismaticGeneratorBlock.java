@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.tech.block;
 
 import net.kapitencraft.mysticcraft.registry.ModBlockEntities;
+import net.kapitencraft.mysticcraft.tech.block.entity.GenericFueledGeneratorBlockEntity;
 import net.kapitencraft.mysticcraft.tech.block.entity.PrismaticGeneratorBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
@@ -46,5 +47,13 @@ public class PrismaticGeneratorBlock extends BaseEntityBlock {
     @Override
     public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
         return createTickerHelper(pBlockEntityType, ModBlockEntities.PRISMATIC_GENERATOR.get(), PrismaticGeneratorBlockEntity::tick);
+    }
+
+    @Override
+    public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pMovedByPiston) {
+        if (!pState.is(pNewState.getBlock())) {
+            ((GenericFueledGeneratorBlockEntity) pLevel.getBlockEntity(pPos)).drops();
+        }
+        super.onRemove(pState, pLevel, pPos, pNewState, pMovedByPiston);
     }
 }

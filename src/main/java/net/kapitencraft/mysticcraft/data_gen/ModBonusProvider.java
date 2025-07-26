@@ -13,6 +13,7 @@ import net.minecraft.world.item.ArmorItem;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 public class ModBonusProvider extends BonusProvider {
@@ -26,12 +27,12 @@ public class ModBonusProvider extends BonusProvider {
         createSetBonus("freezing_aura").armor(ModItems.FROZEN_BLAZE_ARMOR).setBonus(new FreezingAuraBonus());
         createSetBonus("dominus").armor(ModItems.CRIMSON_ARMOR).setBonus(new DominusBonus());
         createSetBonus("hydra").armor(ModItems.TERROR_ARMOR).setBonus(new HydraBonus());
-        createSetBonus("mana_syphon").armor(ModItems.SOUL_MAGE_ARMOR).setBonus(new SoulMageArmorBonus());
+        createSetBonus("mana_syphon").armor(ModItems.SOUL_MAGE_ARMOR).setBonus(new ManaSyphonBonus());
         createItemBonus(ModItems.SHADOW_DAGGER, "assassin").setBonus(new AssassinBonus());
         createItemBonus(ModItems.SOUL_MAGE_ARMOR.get(ArmorItem.Type.HELMET), "magic_conversion").setBonus(new MagicConversionBonus());
         createItemBonus(ModItems.SOUL_MAGE_ARMOR.get(ArmorItem.Type.CHESTPLATE), "mana_reservoir").setBonus(
                 AttributeModifiersBonus.builder()
-                        .addModifier(ExtraAttributes.MAX_MANA, "ManaReservoir", .2, AttributeModifier.Operation.MULTIPLY_TOTAL)
+                        .addModifier(ExtraAttributes.MAX_MANA, new AttributeModifier(UUID.fromString("ff5f01b1-85c2-482b-be0e-02eff7211613"),  "ManaReservoir", .2, AttributeModifier.Operation.MULTIPLY_TOTAL))
                         .build()
         );
     }

@@ -2,10 +2,10 @@
   "type": "mysticcraft:hydra",
   "data": {},
   "equipment_slots": [
-    "chest",
-    "feet",
+    "legs",
     "head",
-    "legs"
+    "feet",
+    "chest"
   ],
   "wearable_slots": []
 }

@@ -33,7 +33,7 @@ public class GemstoneGrowth {
         Direction main;
         if (directions.contains(Direction.UP)) main = Direction.UP;
         else if (directions.contains(Direction.DOWN)) main = Direction.DOWN;
-        else main = MathHelper.pickRandom(directions);
+        else main = MathHelper.pickRandom(directions, source);
         if (main == null) return;
         level.setBlock(pos, ModBlocks.GEMSTONE_SEED.get().defaultBlockState()
                 .setValue(ModBlockStateProperties.STONE_TYPE, matType)

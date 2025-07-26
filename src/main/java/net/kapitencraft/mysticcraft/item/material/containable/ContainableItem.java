@@ -99,19 +99,20 @@ public abstract class ContainableItem<T extends Item, C extends IContainable<T>>
         }
     }
 
-    public boolean overrideOtherStackedOnMe(@NotNull ItemStack stack, @NotNull ItemStack stack1, @NotNull Slot slot, @NotNull ClickAction action, @NotNull Player player, @NotNull SlotAccess access) {
-        if (action == ClickAction.SECONDARY && slot.allowModification(player)) {
-            List<ItemStack> list = getContents(stack);
+    @Override
+    public boolean overrideOtherStackedOnMe(ItemStack pStack, ItemStack pOther, Slot pSlot, ClickAction pAction, Player pPlayer, SlotAccess pAccess) {
+        if (pAction == ClickAction.SECONDARY && pSlot.allowModification(pPlayer)) {
+            List<ItemStack> list = getContents(pStack);
             if (list == null) return true;
-            if (stack1.isEmpty() && !list.isEmpty()) {
-                remove(list.get(0), 1, stack);
-            } else if (canApply(stack1.getItem())) {
-                int freeValue = getRemainingCapacity(stack);
-                ItemStack holder = getHolder(stack1, list);
-                int toGrow = Math.min(freeValue, stack1.getCount());
+            if (pOther.isEmpty() && !list.isEmpty()) {
+                pAccess.set(remove(list.get(0), 1, pStack));
+            } else if (canApply(pOther.getItem())) {
+                int freeValue = getRemainingCapacity(pStack);
+                ItemStack holder = getHolder(pOther, list);
+                int toGrow = Math.min(freeValue, pOther.getCount());
                 holder.grow(toGrow);
                 if (toGrow > 0) {
-                    playInsertSound(player);
+                    playInsertSound(pPlayer);
                 }
             }
             return true;

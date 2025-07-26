@@ -39,14 +39,15 @@ public class ModItemModelProvider extends ItemModelProvider {
 
         withExistingParent("blazing_salmon", "item/generated").texture("layer0", "item/blazing_salmon_1").texture("layer1", "item/salmon_head");
         withExistingParent("soul_chain", "item/generated").texture("layer0", "item/soul_chain");
+        withExistingParent("cursed_pearl", "item/ender_pearl");
 
         handHeldItem(ModItems.BUILDERS_WAND, mcLoc("item/netherite_shovel"));
         handHeldItem(ModItems.MOD_DEBUG_STICK, mcLoc("item/stick"));
 
         handHeldItem(ModItems.STONE_HAMMER, modLoc("item/hammer/stone"));
         handHeldItem(ModItems.IRON_HAMMER, modLoc("item/hammer/iron"));
-        handHeldItem(ModItems.DIAMOND_HAMMER, modLoc("item/hammer/iron"));
-        //handHeldItem(ModItems.NETHERITE_HAMMER, modLoc("item/hammer/netherite"));
+        handHeldItem(ModItems.DIAMOND_HAMMER, modLoc("item/hammer/diamond"));
+        handHeldItem(ModItems.NETHERITE_HAMMER, modLoc("item/hammer/netherite"));
 
         ModelFile doubleSword = withExistingParent("double_sword", "item/handheld"); //TODO figure out how to change displays
 

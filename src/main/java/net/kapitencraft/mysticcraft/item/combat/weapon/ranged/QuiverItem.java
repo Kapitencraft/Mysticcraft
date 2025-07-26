@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class QuiverItem extends ContainableItem<ArrowItem, QuiverCapability> {
+    //TODO extract from a static variable
     public static final ThreadLocal<ItemStack> operationQuiver = new ThreadLocal<>();
     public static TabGroup QUIVER_GROUP = new TabGroup(TabRegister.TabTypes.WEAPONS_AND_TOOLS);
 

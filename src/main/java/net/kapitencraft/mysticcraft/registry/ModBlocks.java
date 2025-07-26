@@ -109,4 +109,5 @@ public interface ModBlocks {
     BlockRegistryHolder<ManaBatteryBlock, BlockItem> MANA_BATTERY = registerBlock("mana_battery", ManaBatteryBlock::new, MiscHelper.rarity(Rarity.UNCOMMON), TabGroup.TECHNOLOGY);
 
     BlockRegistryHolder<SpellCasterTurretBlock, BlockItem> SPELL_CASTER_TURRET = registerBlock("turret/spell_caster", SpellCasterTurretBlock::new, MiscHelper.rarity(Rarity.RARE), TabGroup.TECHNOLOGY);
+    BlockRegistryHolder<ObeliskTurretBlock, BlockItem> OBELISK_TURRET = registerBlock("turret/obelisk", ObeliskTurretBlock::new, MiscHelper.rarity(Rarity.COMMON), TabGroup.TECHNOLOGY);
 }

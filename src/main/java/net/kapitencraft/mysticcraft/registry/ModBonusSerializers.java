@@ -13,8 +13,8 @@ public interface ModBonusSerializers {
 
     RegistryObject<DataPackSerializer<FreezingAuraBonus>> FREEZING_AURA = REGISTRY.register("frozen_blaze", () -> FreezingAuraBonus.SERIALIZER);
     //RegistryObject<DataPackSerializer<CrimsonArmorFullSetBonus>> CRIMSON_ARMOR = REGISTRY.register("crimson_armor", () -> );
-    RegistryObject<DataPackSerializer<SoulMageArmorBonus>> SOUL_MAGE_ARMOR = REGISTRY.register("soul_mage_armor", () -> SoulMageArmorBonus.SERIALIZER);
-    RegistryObject<DataPackSerializer<MagicConversionBonus>> MAGIC_CONVERSION = REGISTRY.register("soul_mage_armor_helmet", () -> MagicConversionBonus.SERIALIZER);
+    RegistryObject<DataPackSerializer<ManaSyphonBonus>> MANA_SYPHON = REGISTRY.register("mana_syphon", () -> ManaSyphonBonus.SERIALIZER);
+    RegistryObject<DataPackSerializer<MagicConversionBonus>> MAGIC_CONVERSION = REGISTRY.register("magic_conversion", () -> MagicConversionBonus.SERIALIZER);
     RegistryObject<DataPackSerializer<AssassinBonus>> ASSASSIN = REGISTRY.register("assassin", () -> AssassinBonus.SERIALIZER);
     RegistryObject<DataPackSerializer<SacredBonus>> SACRED = REGISTRY.register("sacred", () -> SacredBonus.SERIALIZER);
     RegistryObject<DataPackSerializer<DominusBonus>> DOMINUS = REGISTRY.register("dominus", () -> DominusBonus.SERIALIZER);

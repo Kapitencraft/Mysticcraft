@@ -30,16 +30,7 @@ Ritual Magic?
     Vampire Hunter: An NPC mob that assists players during the night, offering powerful weapons and supplies to help them combat other vampire-like mobs.
 }
 
-
-Tutorial ideen:
-Custom-Model-Armor
-Debugger
-Rendering yipee
-
-
 generic.shield_size (attribute)
 https://www.youtube.com/shorts/LDJCMHqISfw
 
 dexterity: skill for reflecting projectiles
-
-37 fishing rod

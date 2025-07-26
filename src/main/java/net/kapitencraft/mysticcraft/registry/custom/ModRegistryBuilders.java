@@ -9,7 +9,7 @@ import net.minecraftforge.registries.RegistryBuilder;
 
 public interface ModRegistryBuilders {
     RegistryBuilder<Spell> SPELLS = makeBuilder(ModRegistryKeys.SPELLS);
-    RegistryBuilder<Codec<? extends PerkReward>> PERK_AWARDS = makeBuilder(ModRegistryKeys.PERK_AWARDS);
+    RegistryBuilder<Codec<? extends PerkReward>> PERK_REWARDS = makeBuilder(ModRegistryKeys.PERK_REWARDS);
 
     private static <T> RegistryBuilder<T> makeBuilder(ResourceKey<Registry<T>> location) {
         return new RegistryBuilder<T>().setName(location.location());

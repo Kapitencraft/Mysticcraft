@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
+@SuppressWarnings("unchecked")
 public class ModTagProvider {
 
     public static class Item extends ItemTagsProvider {
@@ -58,9 +59,9 @@ public class ModTagProvider {
 
             tag(ModTags.Items.ENDER_HITTABLE).add(ModItems.TALLIN_BOW.get());
 
-            tag(ModTags.Items.TIER_2_HAMMER).add(ModItems.DIAMOND_HAMMER.get());
+            tag(ModTags.Items.TIER_2_HAMMER).add(ModItems.DIAMOND_HAMMER.get(), ModItems.NETHERITE_HAMMER.get());
             tag(ModTags.Items.TIER_1_HAMMER).addTag(ModTags.Items.TIER_2_HAMMER).add(ModItems.IRON_HAMMER.get());
-            tag(ModTags.Items.DEFAULT_HAMMER).addTag(ModTags.Items.TIER_1_HAMMER).add(ModItems.STONE_HAMMER.get());
+            tag(ModTags.Items.HAMMER).addTag(ModTags.Items.TIER_1_HAMMER).add(ModItems.STONE_HAMMER.get());
 
             tag(ModTags.Items.CATALYST).add(
                     ModItems.SPELL_SCROLL.get(),
@@ -70,6 +71,10 @@ public class ModTagProvider {
                     ModItems.SHADOW_DAGGER.get(),
                     ModItems.FIRE_LANCE.get(),
                     ModItems.VOID_STAFF.get(), ModItems.THE_STAFF_DESTRUCTION.get()
+            );
+            tag(ModTags.Items.UPGRADE).add(
+                    ModItems.PARALLEL_PROCESSING_UPGRADE.get(),
+                    ModItems.SPEED_UPGRADE.get()
             );
         }
 
@@ -106,6 +111,8 @@ public class ModTagProvider {
             tag(ModTags.Blocks.FORAGEABLE).addTag(BlockTags.LOGS);
 
             tag(ModTags.Blocks.MINEABLE).addTags(Tags.Blocks.SAND, BlockTags.SNOW, Tags.Blocks.ORES, Tags.Blocks.OBSIDIAN, Tags.Blocks.GRAVEL, Tags.Blocks.NETHERRACK, Tags.Blocks.STONE, Tags.Blocks.END_STONES, Tags.Blocks.COBBLESTONE);
+
+            tag(BlockTags.LOGS).add(ModBlocks.PERIDOT_SYCAMORE_LOG.get());
         }
     }
 }

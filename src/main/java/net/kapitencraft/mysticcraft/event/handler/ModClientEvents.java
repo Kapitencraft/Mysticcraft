@@ -28,6 +28,7 @@ import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.FishingHookRenderer;
+import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
@@ -77,6 +78,7 @@ public class ModClientEvents {
         event.registerEntityRenderer(ModEntityTypes.FIRE_BOLD.get(), FireBoltRenderer::new);
         event.registerEntityRenderer(ModEntityTypes.CRIMSON_DEATH_RAY.get(), CrimsonDeathRayRenderer::new);
         event.registerEntityRenderer(ModEntityTypes.LAVA_FISHING_HOOK.get(), FishingHookRenderer::new);
+        event.registerEntityRenderer(ModEntityTypes.CURSED_PEARL.get(), ThrownItemRenderer::new);
     }
 
     @SubscribeEvent

@@ -4,11 +4,11 @@ import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.registry.ModBlocks;
 import net.kapitencraft.mysticcraft.registry.ModFeatures;
 import net.kapitencraft.mysticcraft.worldgen.feature.GemstoneSpawnFeature;
-import net.kapitencraft.mysticcraft.worldgen.tree.CollosalTrunkPlacer;
+import net.kapitencraft.mysticcraft.worldgen.tree.ColossalFoliagePlacer;
+import net.kapitencraft.mysticcraft.worldgen.tree.ColossalTrunkPlacer;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.util.valueproviders.ConstantInt;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
@@ -16,7 +16,6 @@ import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfigur
 import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
 import net.minecraft.world.level.levelgen.feature.featuresize.TwoLayersFeatureSize;
-import net.minecraft.world.level.levelgen.feature.foliageplacers.AcaciaFoliagePlacer;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 import net.minecraft.world.level.levelgen.structure.templatesystem.BlockMatchTest;
 import net.minecraft.world.level.levelgen.structure.templatesystem.RuleTest;
@@ -42,9 +41,9 @@ public interface ModConfiguredFeatures {
     private static TreeConfiguration.TreeConfigurationBuilder peridotSycamoreTree() {
         return new TreeConfiguration.TreeConfigurationBuilder(
                 BlockStateProvider.simple(ModBlocks.PERIDOT_SYCAMORE_LOG.get()),
-                new CollosalTrunkPlacer(25, 5, 13),
+                new ColossalTrunkPlacer(25, 5, 13),
                 BlockStateProvider.simple(Blocks.ACACIA_LEAVES),
-                new AcaciaFoliagePlacer(ConstantInt.of(2), ConstantInt.of(0)),
+                new ColossalFoliagePlacer(),
                 new TwoLayersFeatureSize(1, 0, 2)
         ).ignoreVines();
     }

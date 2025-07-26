@@ -55,7 +55,7 @@ public class ModEventBusEvents {
     @SubscribeEvent
     public static void registerRegistries(NewRegistryEvent event) {
         event.create(ModRegistryBuilders.SPELLS);
-        event.create(ModRegistryBuilders.PERK_AWARDS);
+        event.create(ModRegistryBuilders.PERK_REWARDS);
         MysticcraftMod.LOGGER.info(Markers.REGISTRY, "Registered custom registries");
     }
 
@@ -79,6 +79,7 @@ public class ModEventBusEvents {
         event.register(ModItems.NECRON_SWORD, new GemstoneSlot.Builder(GemstoneSlot.Type.COMBAT));
         event.register(ModItems.LONGBOW, new GemstoneSlot.Builder(GemstoneSlot.Type.OFFENCE, GemstoneSlot.Type.DRAW_SPEED));
         event.register(ModItems.MANA_STEEL_SWORD, new GemstoneSlot.Builder(GemstoneSlot.Type.COMBAT, GemstoneSlot.Type.COMBAT));
+        event.register(ModItems.LAVA_FISHING_ROD_TEST, new GemstoneSlot.Builder(GemstoneSlot.Type.FISHING_SPEED));
     }
 
     @SubscribeEvent

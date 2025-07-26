@@ -29,12 +29,15 @@ import net.kapitencraft.mysticcraft.item.creative.BuildersWand;
 import net.kapitencraft.mysticcraft.item.creative.ModDebugStickItem;
 import net.kapitencraft.mysticcraft.item.material.*;
 import net.kapitencraft.mysticcraft.item.material.containable.WalletItem;
+import net.kapitencraft.mysticcraft.item.misc.CursedPearlItem;
 import net.kapitencraft.mysticcraft.item.misc.MaterialModItem;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.tools.HammerItem;
 import net.kapitencraft.mysticcraft.item.tools.fishing_rods.LavaFishingRod;
 import net.kapitencraft.mysticcraft.spell.Element;
 import net.kapitencraft.mysticcraft.tech.item.TechWandItem;
+import net.kapitencraft.mysticcraft.tech.item.upgrade.ParallelProcessingUpgradeItem;
+import net.kapitencraft.mysticcraft.tech.item.upgrade.SpeedUpgradeItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -138,10 +141,10 @@ public interface ModItems {
     RegistryObject<MaterialModItem> HARDENED_TEAR = registerMaterial("hardened_tear", Rarity.UNCOMMON, TabGroup.MATERIAL);
 
     //region Hammer
-    RegistryObject<HammerItem> STONE_HAMMER = register("stone_hammer", ()-> new HammerItem(MiscHelper.rarity(Rarity.COMMON), 354), HammerItem.HAMMER_GROUP);
-    RegistryObject<HammerItem> IRON_HAMMER = register("iron_hammer", ()-> new HammerItem(MiscHelper.rarity(Rarity.COMMON), 530), HammerItem.HAMMER_GROUP);
-    RegistryObject<HammerItem> DIAMOND_HAMMER = register("diamond_hammer", ()-> new HammerItem(MiscHelper.rarity(Rarity.UNCOMMON), 846), HammerItem.HAMMER_GROUP);
-    RegistryObject<HammerItem> NETHERITE_HAMMER = register("netherite_hammer", ()-> new HammerItem(MiscHelper.rarity(Rarity.UNCOMMON), 1454), HammerItem.HAMMER_GROUP);
+    RegistryObject<HammerItem> STONE_HAMMER = register("stone_hammer", ()-> new HammerItem(MiscHelper.rarity(Rarity.COMMON), Tiers.STONE, 10), HammerItem.HAMMER_GROUP);
+    RegistryObject<HammerItem> IRON_HAMMER = register("iron_hammer", ()-> new HammerItem(MiscHelper.rarity(Rarity.COMMON), Tiers.IRON, 11), HammerItem.HAMMER_GROUP);
+    RegistryObject<HammerItem> DIAMOND_HAMMER = register("diamond_hammer", ()-> new HammerItem(MiscHelper.rarity(Rarity.UNCOMMON), Tiers.DIAMOND, 11), HammerItem.HAMMER_GROUP);
+    RegistryObject<HammerItem> NETHERITE_HAMMER = register("netherite_hammer", ()-> new HammerItem(MiscHelper.rarity(Rarity.UNCOMMON), Tiers.NETHERITE, 13), HammerItem.HAMMER_GROUP);
     //endregion
 
     HashMap<Element, RegistryObject<ElementalShard>> ELEMENTAL_SHARDS = ElementalShard.registerElementShards();
@@ -180,9 +183,13 @@ public interface ModItems {
     //HashMap<GuildUpgrades, RegistryObject<GuildUpgradeItem>> GUILD_UPGRADES = GuildUpgrades.createRegistry();
     HashMap<PrecursorRelicItem.BossType, RegistryObject<PrecursorRelicItem>> PRECURSOR_RELICTS = PrecursorRelicItem.makeRegistry();
 
+    RegistryObject<CursedPearlItem> CURSED_PEARL = register("cursed_pearl", CursedPearlItem::new, TabGroup.COMBAT);
+
     //region tech
 
     RegistryObject<TechWandItem> TECH_WAND = register("tech_wand", TechWandItem::new, TabGroup.TECHNOLOGY);
 
+    RegistryObject<ParallelProcessingUpgradeItem> PARALLEL_PROCESSING_UPGRADE = register("upgrade/parallel_processing", ParallelProcessingUpgradeItem::new, TabGroup.TECHNOLOGY);
+    RegistryObject<SpeedUpgradeItem> SPEED_UPGRADE = register("upgrade/speed", SpeedUpgradeItem::new, TabGroup.TECHNOLOGY);
     //endregion
 }

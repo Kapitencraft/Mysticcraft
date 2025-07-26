@@ -85,7 +85,7 @@ public enum GemstoneType implements StringRepresentable {
 
     public static DoubleMap<GemstoneType, Rarity, ItemStack> allItems() {
         if (ALL_ITEMS.isEmpty()) {
-            for (GemstoneType type : TYPES_TO_USE) {
+            for (GemstoneType type : WITHOUT_EMPTY) {
                 ALL_ITEMS.put(type, type.registerItems());
             }
             ALL_ITEMS.immutable();
@@ -94,15 +94,15 @@ public enum GemstoneType implements StringRepresentable {
     }
 
     public static DoubleMap<GemstoneType, GemstoneSeedBlock.MaterialType, ItemStack> allSeeds() {
-        return DoubleMap.of(Arrays.stream(TYPES_TO_USE).collect(CollectorHelper.createMap(GemstoneType::seeds)));
+        return DoubleMap.of(Arrays.stream(WITHOUT_EMPTY).collect(CollectorHelper.createMap(GemstoneType::seeds)));
     }
 
     public static Map<GemstoneType, ItemStack> allBlocks() {
-        return Arrays.stream(TYPES_TO_USE).collect(CollectorHelper.createMap(GemstoneType::registerBlock));
+        return Arrays.stream(WITHOUT_EMPTY).collect(CollectorHelper.createMap(GemstoneType::registerBlock));
     }
 
     public static DoubleMap<GemstoneType, GemstoneCrystal.Size, ItemStack> allCrystals() {
-        return DoubleMap.of(Arrays.stream(TYPES_TO_USE).collect(CollectorHelper.createMap(GemstoneType::crystals)));
+        return DoubleMap.of(Arrays.stream(WITHOUT_EMPTY).collect(CollectorHelper.createMap(GemstoneType::crystals)));
     }
 
     public ItemStack registerBlock() {
@@ -132,8 +132,7 @@ public enum GemstoneType implements StringRepresentable {
         return map;
     }
 
-    public static final GemstoneType[] TYPES_TO_USE =  createTypesToUse();
-    public static final Rarity[] RARITIES_TO_USE = createRaritiesToUse();
+    public static final GemstoneType[] WITHOUT_EMPTY = createTypesToUse();
 
     private static Rarity[] createRaritiesToUse() {
         Rarity[] rarities = new Rarity[5];
@@ -153,10 +152,8 @@ public enum GemstoneType implements StringRepresentable {
 
     public HashMap<Rarity, ItemStack> registerItems() {
         HashMap<Rarity, ItemStack> toReturn = new HashMap<>();
-        for (Rarity rarity : RARITIES_TO_USE) {
-            if (rarity != Rarity.EMPTY) {
-                toReturn.put(rarity, IGemstoneItem.createData(rarity, this, ModItems.GEMSTONE));
-            }
+        for (Rarity rarity : Rarity.WITHOUT_EMPTY) {
+            toReturn.put(rarity, IGemstoneItem.createData(rarity, this, ModItems.GEMSTONE));
         }
         return toReturn;
     }
@@ -188,6 +185,9 @@ public enum GemstoneType implements StringRepresentable {
         FLAWLESS(4, colorFromCFormat(ChatFormatting.DARK_PURPLE), 3, "flawless"),
         PERFECT(5, colorFromCFormat(ChatFormatting.GOLD), 4.8, "perfect");
         public static final EnumCodec<Rarity> CODEC = StringRepresentable.fromEnum(Rarity::values);
+
+        public static final Rarity[] WITHOUT_EMPTY = createRaritiesToUse();
+
         public final int colour, level;
         public final double modMul;
         private final String id;

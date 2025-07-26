@@ -53,6 +53,7 @@ public abstract class ShortBowItem extends ModBowItem implements ExtendedItem {
         return !world.isClientSide && !IOHelper.checkForIntAbove0(tag, COOLDOWN_ID);
     }
 
+    //TODO fix not consuming arrows
     @Override
     public void inventoryTick(ItemStack bow, @NotNull Level p_41405_, @NotNull Entity p_41406_, int p_41407_, boolean p_41408_) {
         if (bow.getTag() != null) {

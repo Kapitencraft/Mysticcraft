@@ -48,4 +48,12 @@ public class VulcanicGeneratorBlock extends BaseEntityBlock {
     public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
         return createTickerHelper(pBlockEntityType, ModBlockEntities.VULCANIC_GENERATOR.get(), GenericFueledGeneratorBlockEntity::tick);
     }
+
+    @Override
+    public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pMovedByPiston) {
+        if (!pState.is(pNewState.getBlock())) {
+            ((GenericFueledGeneratorBlockEntity) pLevel.getBlockEntity(pPos)).drops();
+        }
+        super.onRemove(pState, pLevel, pPos, pNewState, pMovedByPiston);
+    }
 }

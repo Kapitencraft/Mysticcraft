@@ -13,7 +13,7 @@ import net.minecraft.resources.ResourceKey;
 public interface ModRegistryKeys {
 
     ResourceKey<Registry<Spell>> SPELLS = createRegistry("spells");
-    ResourceKey<Registry<Codec<? extends PerkReward>>> PERK_AWARDS = createRegistry("perk_awards");
+    ResourceKey<Registry<Codec<? extends PerkReward>>> PERK_REWARDS = createRegistry("perk_rewards");
 
     private static <T> ResourceKey<Registry<T>> createRegistry(String id) {
         return ResourceKey.createRegistryKey(MysticcraftMod.res(id));

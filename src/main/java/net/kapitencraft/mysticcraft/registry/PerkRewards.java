@@ -9,7 +9,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 
 public interface PerkRewards {
-    DeferredRegister<Codec<? extends PerkReward>> REGISTRY = MysticcraftMod.registry(ModRegistryKeys.PERK_AWARDS);
+    DeferredRegister<Codec<? extends PerkReward>> REGISTRY = MysticcraftMod.registry(ModRegistryKeys.PERK_REWARDS);
 
     RegistryObject<Codec<StatPerkReward>> STAT = REGISTRY.register("stat", () -> StatPerkReward.CODEC);
 }

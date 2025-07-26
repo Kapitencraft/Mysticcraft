@@ -14,7 +14,7 @@ import net.minecraft.world.level.material.Fluid;
 public class ModTags {
 
     public interface Items {
-        TagKey<Item> DEFAULT_HAMMER = create("default_hammer");
+        TagKey<Item> HAMMER = create("hammer");
         TagKey<Item> TIER_1_HAMMER = create("tier_1_hammer");
         TagKey<Item> TIER_2_HAMMER = create("tier_2_hammer");
         TagKey<Item> STRIPPED_LOG = forge("stripped_logs");
@@ -25,7 +25,7 @@ public class ModTags {
         TagKey<Item> LANCE = createWeapon("lance");
         TagKey<Item> SPEAR = createWeapon("spear");
         TagKey<Item> CATALYST = create("magic_catalyst");
-
+        TagKey<Item> UPGRADE = create("upgrade");
 
         private static TagKey<Item> create(String s) {
             return ModTags.makeModKey(Registries.ITEM, s);

@@ -1,7 +1,6 @@
 package net.kapitencraft.mysticcraft.tech.gui.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.kapitencraft.kap_lib.client.gui.screen.BlockEntityScreen;
 import net.kapitencraft.kap_lib.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.tech.block.entity.MagicFurnaceBlockEntity;
@@ -13,7 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.NotNull;
 
-public class MagicFurnaceScreen extends BlockEntityScreen<MagicFurnaceBlockEntity, MagicFurnaceMenu> {
+public class MagicFurnaceScreen extends UpgradableBEScreen<MagicFurnaceBlockEntity, MagicFurnaceMenu> {
     public MagicFurnaceScreen(MagicFurnaceMenu p_97741_, Inventory p_97742_, Component title) {
         super(p_97741_, p_97742_, title);
     }

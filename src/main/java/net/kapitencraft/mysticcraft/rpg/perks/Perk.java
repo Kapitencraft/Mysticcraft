@@ -162,7 +162,6 @@ public class Perk {
        private ResourceLocation parentId;
        @Nullable
        private Perk parent;
-       @Nullable
        private DisplayInfo display;
        private PerkReward rewards;
        private int maxLevel, childrenVisibleMin = 1, cost = 1;
