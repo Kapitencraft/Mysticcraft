@@ -4,8 +4,8 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.kapitencraft.kap_lib.registry.ExtraCodecs;
 import net.kapitencraft.kap_lib.registry.vanilla.VanillaAttributeModifierTypes;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
@@ -57,7 +57,7 @@ public class StatPerkReward implements PerkReward {
         private static final Codec<Entry> CODEC = RecordCodecBuilder.create(i -> i.group(
                 VanillaAttributeModifierTypes.OPERATION_CODEC.fieldOf("operation").forGetter(Entry::operation),
                 Codec.DOUBLE.fieldOf("perLevel").forGetter(Entry::perLevel),
-                ExtraCodecs.UUID.fieldOf("id").forGetter(Entry::id)
+                UUIDUtil.STRING_CODEC.fieldOf("id").forGetter(Entry::id)
         ).apply(i, Entry::new));
 
         public AttributeModifier apply(int level) {

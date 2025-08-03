@@ -29,13 +29,12 @@ public class UpgradePerkPacket implements SimplePacket {
     }
 
     @Override
-    public boolean handle(Supplier<NetworkEvent.Context> sup) {
+    public void handle(Supplier<NetworkEvent.Context> sup) {
         ServerPlayer player = sup.get().getSender();
         if (player != null) {
             ServerPerksManager manager = ServerPerksManager.getOrCreateInstance();
             PlayerPerks playerPerks = manager.getPerks(player);
             playerPerks.upgrade(this.perk, this.tree, 1);
         }
-        return false;
     }
 }

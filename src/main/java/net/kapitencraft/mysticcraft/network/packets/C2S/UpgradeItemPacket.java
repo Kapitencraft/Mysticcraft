@@ -17,7 +17,7 @@ public class UpgradeItemPacket implements SimplePacket {
     public void toBytes(FriendlyByteBuf buf) {
     }
 
-    public boolean handle(Supplier<NetworkEvent.Context> supplier) {
+    public void handle(Supplier<NetworkEvent.Context> supplier) {
         NetworkEvent.Context context = supplier.get();
         context.enqueueWork(() -> {
             ServerPlayer player = context.getSender();
@@ -25,6 +25,5 @@ public class UpgradeItemPacket implements SimplePacket {
                 menu.upgrade();
             }
         });
-        return false;
     }
 }

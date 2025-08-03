@@ -25,11 +25,10 @@ public class RemoveManaDistributionNetworkElementPacket implements SimplePacket 
     }
 
     @Override
-    public boolean handle(Supplier<NetworkEvent.Context> supplier) {
+    public void handle(Supplier<NetworkEvent.Context> supplier) {
         supplier.get().enqueueWork(() -> {
             DistributionNetworkManager manager = DistributionNetworkManager.getClient();
             manager.remove(pos, null);
         });
-        return true;
     }
 }

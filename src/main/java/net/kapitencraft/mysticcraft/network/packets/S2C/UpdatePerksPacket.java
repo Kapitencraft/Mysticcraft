@@ -91,11 +91,10 @@ public class UpdatePerksPacket implements SimplePacket {
    }
 
    @Override
-   public boolean handle(Supplier<NetworkEvent.Context> sup) {
+   public void handle(Supplier<NetworkEvent.Context> sup) {
       sup.get().enqueueWork(() -> {
          ClientPerks.getInstance().update(this);
       });
-      return true;
    }
 
     public Map<ResourceLocation, PerkTree.Builder> getTreesAdded() {

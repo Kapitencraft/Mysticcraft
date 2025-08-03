@@ -30,7 +30,7 @@ public class UpdateManaPacket implements SimplePacket {
     }
 
     @Override
-    public boolean handle(Supplier<NetworkEvent.Context> sup) {
+    public void handle(Supplier<NetworkEvent.Context> sup) {
         sup.get().enqueueWork(()-> {
             try {
                 ((IManaStorage) Minecraft.getInstance().level.getBlockEntity(pos)).setMana(this.mana);
@@ -38,6 +38,5 @@ public class UpdateManaPacket implements SimplePacket {
                 MysticcraftMod.LOGGER.warn("unable to sync mana: {}", e.getMessage());
             }
         });
-        return true;
     }
 }

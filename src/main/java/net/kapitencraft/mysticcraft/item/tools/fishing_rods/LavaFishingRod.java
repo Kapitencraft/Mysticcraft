@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.item.tools.fishing_rods;
 
-import net.kapitencraft.kap_lib.entity.fishing.ModFishingHook;
+import net.kapitencraft.kap_lib.entity.fishing.AbstractFishingHook;
 import net.kapitencraft.kap_lib.item.tools.fishing.ModFishingRod;
 import net.kapitencraft.mysticcraft.entity.LavaFishingHook;
 import net.minecraft.world.entity.player.Player;
@@ -13,7 +13,7 @@ public class LavaFishingRod extends ModFishingRod {
     }
 
     @Override
-    public ModFishingHook create(Player player, Level level, int luck, int lureSpeed) {
+    public AbstractFishingHook create(Player player, Level level, int luck, int lureSpeed) {
         return LavaFishingHook.create(player, level, luck, lureSpeed);
     }
 }

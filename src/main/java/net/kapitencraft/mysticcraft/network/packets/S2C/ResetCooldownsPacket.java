@@ -17,7 +17,7 @@ public class ResetCooldownsPacket implements SimplePacket {
     }
 
     @Override
-    public boolean handle(Supplier<NetworkEvent.Context> sup) {
+    public void handle(Supplier<NetworkEvent.Context> sup) {
         NetworkEvent.Context context = sup.get();
         context.enqueueWork(()-> {
             LocalPlayer player = Minecraft.getInstance().player;
@@ -25,7 +25,6 @@ public class ResetCooldownsPacket implements SimplePacket {
                 player.getPersistentData().put("Cooldowns", new CompoundTag());
             }
         });
-        return false;
     }
 
     public static void resetCooldowns(@Nullable Player player) {

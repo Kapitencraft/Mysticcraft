@@ -36,7 +36,7 @@ public class SendCompoundTagPacket implements SimplePacket {
     }
 
     @Override
-    public boolean handle(Supplier<NetworkEvent.Context> sup) {
+    public void handle(Supplier<NetworkEvent.Context> sup) {
         NetworkEvent.Context context = sup.get();
         if (toServer) {
             context.enqueueWork(()-> {
@@ -56,7 +56,6 @@ public class SendCompoundTagPacket implements SimplePacket {
                 }
             });
         }
-        return false;
     }
 
 

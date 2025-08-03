@@ -47,7 +47,7 @@ public abstract class MakeParticlePacket implements SimplePacket {
     }
 
     @Override
-    public boolean handle(Supplier<NetworkEvent.Context> sup) {
+    public void handle(Supplier<NetworkEvent.Context> sup) {
         sup.get().enqueueWork(()-> {
             ClientLevel level = Minecraft.getInstance().level;
             if (level != null && Minecraft.getInstance().getCameraEntity() != null) {
@@ -55,6 +55,5 @@ public abstract class MakeParticlePacket implements SimplePacket {
                 level.addParticle(options, pos.x, pos.y, pos.z, delta.x, delta.y, delta.z);
             }
         });
-        return true;
     }
 }

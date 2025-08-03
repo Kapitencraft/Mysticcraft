@@ -18,7 +18,7 @@ public class UseShortBowPacket implements SimplePacket {
     }
 
     @Override
-    public boolean handle(Supplier<NetworkEvent.Context> sup) {
+    public void handle(Supplier<NetworkEvent.Context> sup) {
         NetworkEvent.Context context = sup.get();
         context.enqueueWork(()-> {
             ServerPlayer player = context.getSender();
@@ -27,6 +27,5 @@ public class UseShortBowPacket implements SimplePacket {
                 shortBowItem.releaseUsing(player.getMainHandItem(), player.level(), player, -1);
             }
         });
-        return true;
     }
 }

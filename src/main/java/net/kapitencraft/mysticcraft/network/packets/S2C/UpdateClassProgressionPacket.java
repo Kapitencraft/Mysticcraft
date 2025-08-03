@@ -27,12 +27,11 @@ public class UpdateClassProgressionPacket implements SimplePacket {
     }
 
     @Override
-    public boolean handle(Supplier<NetworkEvent.Context> sup) {
+    public void handle(Supplier<NetworkEvent.Context> sup) {
         sup.get().enqueueWork(() -> {
             ClientClass clientClass = ClientClass.getInstance();
             clientClass.setLevel(this.level);
             clientClass.setXp(this.xp);
         });
-        return true;
     }
 }

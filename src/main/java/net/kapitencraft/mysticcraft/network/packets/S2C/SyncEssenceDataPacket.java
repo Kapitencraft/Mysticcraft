@@ -28,12 +28,11 @@ public class SyncEssenceDataPacket implements SimplePacket {
     }
 
     @Override
-    public boolean handle(Supplier<NetworkEvent.Context> sup) {
+    public void handle(Supplier<NetworkEvent.Context> sup) {
         sup.get().enqueueWork(()-> {
             LocalPlayer localPlayer = Minecraft.getInstance().player;
             if (localPlayer == null) return;
             localPlayer.getCapability(CapabilityHelper.ESSENCE).ifPresent(essenceHolder -> essenceHolder.copyFrom(holder));
         });
-        return true;
     }
 }

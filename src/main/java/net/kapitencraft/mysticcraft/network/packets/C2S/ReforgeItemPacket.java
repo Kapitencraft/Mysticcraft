@@ -26,7 +26,7 @@ public class ReforgeItemPacket implements SimplePacket {
     }
 
     @Override
-    public boolean handle(Supplier<NetworkEvent.Context> supplier) {
+    public void handle(Supplier<NetworkEvent.Context> supplier) {
         NetworkEvent.Context context = supplier.get();
         context.enqueueWork(() -> {
             ServerPlayer player = context.getSender();
@@ -34,6 +34,5 @@ public class ReforgeItemPacket implements SimplePacket {
                 menu.reforgeForId(reforgeId, player);
             }
         });
-        return false;
     }
 }

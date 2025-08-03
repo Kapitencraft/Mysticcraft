@@ -30,13 +30,12 @@ public class SwingPacket implements SimplePacket {
     }
 
     @Override @SuppressWarnings("all")
-    public boolean handle(Supplier<NetworkEvent.Context> sup) {
+    public void handle(Supplier<NetworkEvent.Context> sup) {
         sup.get().enqueueWork(()-> {
             Entity entity = Minecraft.getInstance().level.getEntity(this.entityId);
             if (entity instanceof LivingEntity living) {
                 living.swing(hand);
             }
         });
-        return false;
     }
 }

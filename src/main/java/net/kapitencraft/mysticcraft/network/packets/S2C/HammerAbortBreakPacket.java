@@ -29,8 +29,7 @@ public class HammerAbortBreakPacket implements SimplePacket {
     }
 
     @Override
-    public boolean handle(Supplier<NetworkEvent.Context> sup) {
+    public void handle(Supplier<NetworkEvent.Context> sup) {
         sup.get().enqueueWork(() -> HammerItem.abort(pos, direction));
-        return true;
     }
 }
