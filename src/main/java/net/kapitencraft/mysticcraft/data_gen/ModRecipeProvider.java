@@ -4,6 +4,7 @@ import net.kapitencraft.kap_lib.crafting.serializers.UpgradeItemRecipe;
 import net.kapitencraft.kap_lib.data_gen.abst.recipe.ArmorRecipeBuilder;
 import net.kapitencraft.kap_lib.data_gen.abst.recipe.UpgradeRecipeBuilder;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.block.entity.pedestal.AltarRecipe;
 import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneType;
 import net.kapitencraft.mysticcraft.capability.gemstone.IGemstoneItem;
 import net.kapitencraft.mysticcraft.item.material.PrecursorRelicItem;
@@ -73,7 +74,6 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
         ).save(consumer);
 
         smeltingAndBlasting(consumer, List.of(ModItems.RAW_CRIMSONIUM.get(), ModItems.RAW_CRIMSONIUM_DUST.get()), RecipeCategory.MISC, ModItems.CRIMSONIUM_INGOT.get(), 1.2f, 100, "crimson");
-
         smeltingAndBlasting(consumer, List.of(ModItems.CRIMSON_STEEL_DUST.get()), RecipeCategory.MISC, ModItems.CRIMSON_STEEL_INGOT.get(), 1.3f, 200, "crimson");
 
         makeModel(SLAB_CONSUMER, ModBlocks.GOLDEN_SLAB.getItem(), Items.GOLD_BLOCK, consumer);
@@ -83,6 +83,12 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
         modStonecutterResultFromBase(consumer, RecipeCategory.BUILDING_BLOCKS, ModBlocks.GOLDEN_SLAB.getItem(), Items.GOLD_BLOCK, 2);
         modStonecutterResultFromBase(consumer, RecipeCategory.BUILDING_BLOCKS, ModBlocks.GOLDEN_WALL.getItem(), Items.GOLD_BLOCK);
         modStonecutterResultFromBase(consumer, RecipeCategory.BUILDING_BLOCKS, ModBlocks.GOLDEN_STAIRS.getItem(), Items.GOLD_BLOCK);
+        modStonecutterResultFromBase(consumer, RecipeCategory.REDSTONE, ModBlocks.LAPIS_BUTTON.get(), Items.LAPIS_BLOCK);
+
+        craftBow(consumer, Items.STRING, ModTags.Items.STRIPPED_LOGS, ModItems.LONGBOW);
+
+        twoByTwoPacker(consumer, RecipeCategory.BUILDING_BLOCKS, ModBlocks.PERIDOT_SYCAMORE_WOOD.getItem(), ModBlocks.PERIDOT_SYCAMORE_LOG.getItem());
+        twoByTwoPacker(consumer, RecipeCategory.BUILDING_BLOCKS, ModBlocks.STRIPPED_PERIDOT_SYCAMORE_WOOD.getItem(), ModBlocks.STRIPPED_PERIDOT_SYCAMORE_LOG.getItem());
 
         //region mana steel sword
         unlock(ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, ModItems.MS_HANDLE.get())
@@ -133,6 +139,8 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .requires(ModBlocks.PERIDOT_SYCAMORE_LOG.getItem()).group("planks"),
                 ModBlocks.PERIDOT_SYCAMORE_LOG.getItem()
         ).save(consumer);
+
+        AltarRecipe.builder(new ItemStack(ModItems.VOID_TOTEM_ITEM.get()), RecipeCategory.COMBAT).middleIngredient(Ingredient.of(Items.TOTEM_OF_UNDYING)).allIngredient(Ingredient.of(Items.ENDER_PEARL)).save(consumer);
     }
 
     private static final BuilderConsumer SLAB_CONSUMER = (like, ingredient) -> slabBuilder(RecipeCategory.BUILDING_BLOCKS, like, ingredient);
@@ -174,9 +182,12 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
     }
 
     private static void craftBow(Consumer<FinishedRecipe> consumer, Item string, Item handle, RegistryObject<? extends Item> result) {
-        unlock(ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, result.get()).pattern(" *#").pattern("* #").pattern(" *#").define('*', string).define('#', handle), handle).save(consumer);
+        unlock(ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, result.get()).pattern(" *#").pattern("* #").pattern(" *#").define('*', string).define('#', handle), string).save(consumer);
     }
 
+    private static void craftBow(Consumer<FinishedRecipe> consumer, Item string, TagKey<Item> handle, RegistryObject<? extends Item> result) {
+        unlock(ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, result.get()).pattern(" *#").pattern("* #").pattern(" *#").define('*', string).define('#', handle), string).save(consumer);
+    }
 
 
     private static void modOreSmelting(Consumer<FinishedRecipe> pFinishedRecipeConsumer, List<ItemLike> pIngredients, RecipeCategory pCategory, ItemLike pResult, float pExperience, int pCookingTIme, String pGroup) {

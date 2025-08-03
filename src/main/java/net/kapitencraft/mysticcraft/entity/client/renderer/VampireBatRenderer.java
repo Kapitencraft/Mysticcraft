@@ -2,6 +2,7 @@ package net.kapitencraft.mysticcraft.entity.client.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.entity.client.model.ModModelLayers;
 import net.kapitencraft.mysticcraft.entity.client.model.VampireBatModel;
 import net.kapitencraft.mysticcraft.entity.vampire.VampireBat;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -11,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class VampireBatRenderer extends MobRenderer<VampireBat, VampireBatModel> {
     public VampireBatRenderer(EntityRendererProvider.Context context) {
-        super(context, new VampireBatModel(VampireBatModel.createBodyLayer().bakeRoot()), 0.25f);
+        super(context, new VampireBatModel(context.bakeLayer(ModModelLayers.VAMPIRE_BAT)), 0.25f);
     }
 
     @Override

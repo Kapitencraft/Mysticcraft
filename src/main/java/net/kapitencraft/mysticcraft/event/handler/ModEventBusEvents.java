@@ -80,6 +80,7 @@ public class ModEventBusEvents {
         event.register(ModItems.LONGBOW, new GemstoneSlot.Builder(GemstoneSlot.Type.OFFENCE, GemstoneSlot.Type.DRAW_SPEED));
         event.register(ModItems.MANA_STEEL_SWORD, new GemstoneSlot.Builder(GemstoneSlot.Type.COMBAT, GemstoneSlot.Type.COMBAT));
         event.register(ModItems.LAVA_FISHING_ROD_TEST, new GemstoneSlot.Builder(GemstoneSlot.Type.FISHING_SPEED));
+        event.register(ModItems.TRAVELERS_BOOTS, new GemstoneSlot.Builder(GemstoneSlot.Type.MOBILITY, GemstoneSlot.Type.MOBILITY));
     }
 
     @SubscribeEvent

@@ -1,10 +1,10 @@
 package net.kapitencraft.mysticcraft.capability.essence;
 
+import net.kapitencraft.kap_lib.helpers.InventoryHelper;
 import net.kapitencraft.mysticcraft.api.Reference;
 import net.kapitencraft.mysticcraft.capability.CapabilityHelper;
 import net.kapitencraft.mysticcraft.capability.ItemData;
 import net.kapitencraft.mysticcraft.capability.dungeon.IPrestigeAbleItem;
-import net.kapitencraft.mysticcraft.helpers.InventoryHelper;
 import net.kapitencraft.mysticcraft.misc.content.EssenceType;
 import net.kapitencraft.mysticcraft.network.ModMessages;
 import net.kapitencraft.mysticcraft.network.packets.S2C.SyncEssenceDataPacket;

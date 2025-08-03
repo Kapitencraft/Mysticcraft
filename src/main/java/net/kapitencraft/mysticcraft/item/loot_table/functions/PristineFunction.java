@@ -2,14 +2,14 @@ package net.kapitencraft.mysticcraft.item.loot_table.functions;
 
 import com.mojang.serialization.Codec;
 import net.kapitencraft.kap_lib.helpers.AttributeHelper;
+import net.kapitencraft.kap_lib.helpers.LootTableHelper;
 import net.kapitencraft.kap_lib.helpers.MathHelper;
 import net.kapitencraft.kap_lib.io.serialization.JsonSerializer;
+import net.kapitencraft.kap_lib.item.loot_table.IConditional;
 import net.kapitencraft.kap_lib.registry.ExtraAttributes;
 import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneItem;
 import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneType;
 import net.kapitencraft.mysticcraft.capability.gemstone.IGemstoneItem;
-import net.kapitencraft.mysticcraft.helpers.LootTableHelper;
-import net.kapitencraft.mysticcraft.item.loot_table.IConditional;
 import net.kapitencraft.mysticcraft.registry.ModItems;
 import net.kapitencraft.mysticcraft.registry.ModLootItemFunctions;
 import net.minecraft.network.chat.Component;

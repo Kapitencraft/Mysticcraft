@@ -6,14 +6,18 @@ import com.google.common.collect.Multimap;
 import net.kapitencraft.kap_lib.helpers.MathHelper;
 import net.kapitencraft.kap_lib.item.bonus.AbstractBonusElement;
 import net.kapitencraft.kap_lib.item.modifier_display.EquipmentDisplayExtension;
+import net.kapitencraft.kap_lib.requirements.RequirementManager;
 import net.kapitencraft.mysticcraft.event.ModEventFactory;
+import net.kapitencraft.mysticcraft.requirement.type.ReforgeRequirementType;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Style;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import org.jetbrains.annotations.ApiStatus;
@@ -27,14 +31,14 @@ import java.util.stream.Stream;
 
 public class Reforges {
     public static final String REFORGE_NAME_ID = "ReforgeName";
-    private static final HashMap<String, Reforge> reforges = new HashMap<>();
+    private static final HashMap<ResourceLocation, Reforge> reforges = new HashMap<>();
     private static final List<Rarity> list = new ArrayList<>();
     public static void registerRarities() {
         list.addAll(List.of(Rarity.values()));
         ModEventFactory.onRarityRegister(list);
     }
 
-    public static Reforge byName(String name) {
+    public static Reforge byName(ResourceLocation name) {
         return reforges.get(name);
     }
 
@@ -45,7 +49,7 @@ public class Reforges {
     @SuppressWarnings("DataFlowIssue")
     public static @Nullable Reforge getReforge(ItemStack stack) {
         if (stack.hasTag()) {
-            String name = stack.getTag().getString(REFORGE_NAME_ID);
+            ResourceLocation name = new ResourceLocation(stack.getTag().getString(REFORGE_NAME_ID));
             if (reforges.containsKey(name)) return reforges.get(name);
         }
         return null;
@@ -56,18 +60,24 @@ public class Reforges {
     }
 
 
-    public static HashMap<String, Reforge> all() {
+    public static HashMap<ResourceLocation, Reforge> all() {
         return reforges;
     }
 
-    public static Reforge makeRandom(boolean withStones, ItemStack stack) {
+    public static Reforge makeRandom(boolean withStones, ItemStack stack, Player player) {
         Reforge current = getReforge(stack);
-        List<Reforge> list = reforges.values().stream().filter(reforge -> reforge != current && (withStones || !reforge.isOnlyFromStone()) && reforge.type().mayApply(stack)).toList();
+        List<Reforge> list = reforges.values().stream()
+                .filter(reforge ->
+                        reforge != current &&
+                                (withStones || !reforge.isOnlyFromStone()) &&
+                                reforge.type().mayApply(stack) &&
+                                RequirementManager.instance.meetsRequirements(ReforgeRequirementType.INSTANCE, reforge, player)
+                ).toList();
         return MathHelper.pickRandom(list);
     }
 
-    public static Reforge applyRandom(boolean withStones, ItemStack stack) {
-        Reforge reforge = makeRandom(withStones, stack);
+    public static Reforge applyRandom(boolean withStones, ItemStack stack, Player player) {
+        Reforge reforge = makeRandom(withStones, stack, player);
         reforge.saveToStack(stack);
         return reforge;
     }

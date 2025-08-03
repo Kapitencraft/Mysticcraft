@@ -3,9 +3,9 @@
   "data": {},
   "equipment_slots": [
     "chest",
+    "head",
     "legs",
-    "feet",
-    "head"
+    "feet"
   ],
   "wearable_slots": []
 }

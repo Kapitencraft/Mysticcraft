@@ -1,0 +1,31 @@
+{
+  "mods": {
+    "kap_lib:generic.intelligence": [
+      3.0,
+      4.0,
+      5.0,
+      6.0,
+      8.0,
+      10.0,
+      10.0
+    ],
+    "minecraft:generic.armor": [
+      0.5,
+      1.0,
+      1.0,
+      1.5,
+      2.0,
+      2.5,
+      2.5
+    ],
+    "minecraft:generic.max_health": [
+      0.1,
+      0.1,
+      0.1,
+      0.3,
+      0.4,
+      0.5,
+      0.5
+    ]
+  }
+}

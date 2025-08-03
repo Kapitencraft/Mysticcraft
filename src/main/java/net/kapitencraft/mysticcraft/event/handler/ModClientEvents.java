@@ -4,6 +4,8 @@ import net.kapitencraft.kap_lib.event.custom.client.RegisterConfigurableOverlays
 import net.kapitencraft.kap_lib.event.custom.client.RegisterInventoryPageRenderersEvent;
 import net.kapitencraft.kap_lib.event.custom.client.RegisterItemModifiersDisplayExtensionsEvent;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.block.entity.render.AltarBlockEntityRenderer;
+import net.kapitencraft.mysticcraft.block.entity.render.BasePedestalBlockEntityRenderer;
 import net.kapitencraft.mysticcraft.block.gemstone.GemstoneBlock;
 import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneHelper;
 import net.kapitencraft.mysticcraft.capability.gemstone.IGemstoneItem;
@@ -16,6 +18,9 @@ import net.kapitencraft.mysticcraft.client.particle.MagicCircleParticle;
 import net.kapitencraft.mysticcraft.client.particle.ShadowSweepParticle;
 import net.kapitencraft.mysticcraft.client.particle.flame.ModFlameParticle;
 import net.kapitencraft.mysticcraft.client.rpg.perks.PerkInventoryPageRenderer;
+import net.kapitencraft.mysticcraft.entity.client.model.ModModelLayers;
+import net.kapitencraft.mysticcraft.entity.client.model.TestEntityModel;
+import net.kapitencraft.mysticcraft.entity.client.model.VampireBatModel;
 import net.kapitencraft.mysticcraft.entity.client.renderer.*;
 import net.kapitencraft.mysticcraft.gui.gemstone_grinder.GemstoneGrinderScreen;
 import net.kapitencraft.mysticcraft.gui.reforging_anvil.ReforgeAnvilScreen;
@@ -79,7 +84,18 @@ public class ModClientEvents {
         event.registerEntityRenderer(ModEntityTypes.CRIMSON_DEATH_RAY.get(), CrimsonDeathRayRenderer::new);
         event.registerEntityRenderer(ModEntityTypes.LAVA_FISHING_HOOK.get(), FishingHookRenderer::new);
         event.registerEntityRenderer(ModEntityTypes.CURSED_PEARL.get(), ThrownItemRenderer::new);
+        event.registerEntityRenderer(ModEntityTypes.DRAGON.get(), DragonRenderer::new);
+
+        event.registerBlockEntityRenderer(ModBlockEntities.ALTAR.get(), AltarBlockEntityRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.PEDESTAL.get(), BasePedestalBlockEntityRenderer::new);
     }
+
+    @SubscribeEvent
+    public static void onEntityRenderersRegisterLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
+        event.registerLayerDefinition(ModModelLayers.VAMPIRE_BAT, VampireBatModel::createBodyLayer);
+        event.registerLayerDefinition(ModModelLayers.DRAGON, TestEntityModel::createBodyLayer);
+    }
+
 
     @SubscribeEvent
     public static void registerParticles(RegisterParticleProvidersEvent event) {

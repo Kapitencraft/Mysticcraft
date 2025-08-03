@@ -14,6 +14,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.AutoRegisterCapability;
 
@@ -85,7 +86,7 @@ public interface IGemstoneHandler extends AbstractCapability<List<GemstoneSlot>>
                 MysticcraftMod.LOGGER.warn(Markers.GEMSTONE, "unable to read Gemstone slots: {}", e.getMessage());
             }
             for (Attribute attribute1 : attributeModifier.keySet()) {
-                modifiers.put(attribute1, AttributeHelper.createModifier("Gemstone Modifications", AttributeModifier.Operation.ADDITION, attributeModifier.get(attribute1)));
+                modifiers.put(attribute1, AttributeHelper.createModifier("Gemstone Modifications", attribute1 == Attributes.MOVEMENT_SPEED ? AttributeModifier.Operation.MULTIPLY_BASE : AttributeModifier.Operation.ADDITION, attributeModifier.get(attribute1)));
             }
         }
         return modifiers;

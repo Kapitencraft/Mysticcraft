@@ -3,25 +3,26 @@ package net.kapitencraft.mysticcraft.network.packets.C2S;
 import net.kapitencraft.kap_lib.io.network.SimplePacket;
 import net.kapitencraft.mysticcraft.gui.reforging_anvil.ReforgeAnvilMenu;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
 public class ReforgeItemPacket implements SimplePacket {
-    private final String reforgeId;
+    private final ResourceLocation reforgeId;
 
-    public ReforgeItemPacket(String reforgeId) {
+    public ReforgeItemPacket(ResourceLocation reforgeId) {
         this.reforgeId = reforgeId;
     }
 
     public ReforgeItemPacket(FriendlyByteBuf buf) {
-        this(buf.readUtf());
+        this(buf.readResourceLocation());
     }
 
     @Override
     public void toBytes(FriendlyByteBuf buf) {
-        buf.writeUtf(reforgeId);
+        buf.writeResourceLocation(reforgeId);
     }
 
     @Override

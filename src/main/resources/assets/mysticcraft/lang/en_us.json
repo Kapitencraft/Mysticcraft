@@ -179,6 +179,7 @@
   "item.minecraft.lingering_potion.effect.stun": "Lingering Potion of Stun",
   "item.minecraft.potion.effect.stun": "Potion of Stun",
   "item.minecraft.splash_potion.effect.stun": "Splash Potion of Stun",
+
   "item.mysticcraft.amethyst_quiver": "Amethyst Quiver",
   "item.mysticcraft.aspect_of_the_end": "Aspect of the End",
   "item.mysticcraft.aspect_of_the_void": "Aspect of the Void",
@@ -269,6 +270,7 @@
   "item.mysticcraft.stone_hammer": "Stone Hammer",
   "item.mysticcraft.tallin_bow": "Tallin Short Bow",
   "item.mysticcraft.tech_wand": "Tech Wand",
+  "item.mysticcraft.travelers_boots": "Traveler's Boots",
   "item.mysticcraft.unbreaking_core": "Unbreaking Core",
   "item.mysticcraft.upper_mana_steel_blade": "Upper Mana Steel Blade",
   "item.mysticcraft.lower_mana_steel_blade": "Lower Mana Steel Blade",
@@ -431,5 +433,6 @@
   "tech_wand.selected": "Origin: %1$s",
   "container.spell_caster_turret": "Spell Caster Turret",
   "container.vulcanic_generator": "Vulcanic Generator",
-  "gemstone_applicable_title": "Applicable Gemstones:"
+  "gemstone_applicable_title": "Applicable Gemstones:",
+  "spell.cast.failed.cooldown": "Spell is on Cooldown"
 }

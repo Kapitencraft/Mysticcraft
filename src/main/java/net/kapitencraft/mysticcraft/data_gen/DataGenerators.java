@@ -28,11 +28,13 @@ public class DataGenerators {
         generator.addProvider(false, ModLootTableProvider.create(output));
         generator.addProvider(true, new ModItemModelProvider(output, helper));
         generator.addProvider(false, new BestiaryProvider(output, provider));
-        generator.addProvider(true, new ReforgeProvider(output));
+        generator.addProvider(true, new ReforgeProvider(output, "mysticcraft"));
         //generator.addProvider(event.includeClient(), provider);
-        generator.addProvider(true, new ModRegistryProvider(output, registries));
+        registries = generator.addProvider(true, new ModRegistryProvider(output, registries)).getRegistryProvider();
         ModTagProvider.Block blockTags = generator.addProvider(true, new ModTagProvider.Block(output, registries, helper));
         generator.addProvider(true, new ModTagProvider.Item(output, registries, blockTags.contentsGetter(), helper));
+        generator.addProvider(true, new ModTagProvider.Biome(output, registries, helper));
+        generator.addProvider(true, new ModTagProvider.Entity(output, registries, helper));
         generator.addProvider(true, new ModAdvancementProvider(output, registries, helper));
         generator.addProvider(true, new ModItemRequirementsProvider(output));
         generator.addProvider(true, new ModBonusProvider(output, registries, helper));

@@ -5,18 +5,23 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
+import net.kapitencraft.kap_lib.inventory.wearable.IWearable;
 import net.kapitencraft.kap_lib.item.bonus.AbstractBonusElement;
 import net.kapitencraft.kap_lib.item.bonus.Bonus;
 import net.kapitencraft.kap_lib.registry.ExtraCodecs;
 import net.kapitencraft.kap_lib.util.ExtraRarities;
-import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.logging.Markers;
+import net.minecraft.Util;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.Rarity;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -30,16 +35,13 @@ import java.util.function.Supplier;
 public class Reforge implements AbstractBonusElement {
     private final MutableComponent name;
     private final HashMap<Attribute, ReforgeStat> statList;
-    private final String registryName;
+    private final ResourceLocation registryName;
     private final boolean onlyFromStone;
     private final Bonus<?> bonus;
     private final Type type;
 
-    private Reforge(Builder builder) {
-        if (builder.registryName == null) {
-            throw new NullPointerException("Reforge name may not be null!");
-        }
-        this.registryName = builder.registryName;
+    private Reforge(Builder builder, ResourceLocation location) {
+        this.registryName = location;
         if (builder.type == null) {
             throw new NullPointerException("Error loading Reforge '" + this.getRegistryName() + "': Reforge type may not be null!");
         }
@@ -50,8 +52,8 @@ public class Reforge implements AbstractBonusElement {
         this.statList = builder.stats;
     }
 
-    public static Reforge.Builder builder(String registryName) {
-        return new Builder(registryName);
+    public static Reforge.Builder builder() {
+        return new Builder();
     }
 
     public boolean isOnlyFromStone() {
@@ -86,7 +88,7 @@ public class Reforge implements AbstractBonusElement {
 
     public void saveToStack(ItemStack stack) {
         ReforgeManager.LOGGER.debug(Markers.REFORGE_MANAGER, "putting Reforge '{}' to the Stack", this.registryName);
-        stack.getOrCreateTag().putString(Reforges.REFORGE_NAME_ID, this.registryName);
+        stack.getOrCreateTag().putString(Reforges.REFORGE_NAME_ID, this.registryName.toString());
     }
 
     public boolean hasModifier(Attribute attribute) {
@@ -101,7 +103,7 @@ public class Reforge implements AbstractBonusElement {
         return type;
     }
 
-    public String getRegistryName() {
+    public ResourceLocation getRegistryName() {
         return registryName;
     }
 
@@ -116,7 +118,7 @@ public class Reforge implements AbstractBonusElement {
 
     @Override
     public ResourceLocation getId() {
-        return MysticcraftMod.res(registryName);
+        return registryName;
     }
 
     @Override
@@ -126,8 +128,7 @@ public class Reforge implements AbstractBonusElement {
 
     @Override
     public String getNameId() {
-        //TODO add RL
-        return "reforge_bonus.mysticcraft." + this.registryName;
+        return Util.makeDescriptionId("reforge_bonus", registryName);
     }
 
 
@@ -139,13 +140,11 @@ public class Reforge implements AbstractBonusElement {
     public static class Builder {
 
         private Bonus<?> bonus = null;
-        private final String registryName;
         private final HashMap<Attribute, ReforgeStat> stats = new HashMap<>();
         private boolean onlyFromStone = false;
         private Type type;
 
-        public Builder(String registryName) {
-            this.registryName = registryName;
+        public Builder() {
         }
 
         public Builder onlyFromStone() {
@@ -163,8 +162,8 @@ public class Reforge implements AbstractBonusElement {
             return this;
         }
 
-        public Reforge build() {
-            return new Reforge(this);
+        public Reforge build(ResourceLocation location) {
+            return new Reforge(this, location);
         }
 
 
@@ -187,11 +186,11 @@ public class Reforge implements AbstractBonusElement {
 
     @SuppressWarnings("deprecation")
     public enum Type implements StringRepresentable {
-        MELEE_WEAPON("melee", stack -> stack.getItem() instanceof SwordItem),
-        RANGED_WEAPON("ranged", stack -> stack.getItem() instanceof BowItem),
-        ARMOR("armor", stack -> stack.getItem() instanceof ArmorItem),
-        FISHING_ROD("fishing", stack -> stack.getItem() instanceof FishingRodItem),
-        EQUIPMENT("equipment", stack -> !(MELEE_WEAPON.mayApply(stack) || RANGED_WEAPON.mayApply(stack) || ARMOR.mayApply(stack) || FISHING_ROD.mayApply(stack)));
+        MELEE_WEAPON("melee", stack -> stack.is(ItemTags.SWORDS)),
+        RANGED_WEAPON("ranged", stack -> stack.is(Tags.Items.TOOLS_BOWS) || stack.is(Tags.Items.TOOLS_CROSSBOWS)),
+        ARMOR("armor", stack -> stack.is(Tags.Items.ARMORS) || stack.is(Items.ELYTRA)), //TODO add custom elytra support
+        FISHING_ROD("fishing", stack -> stack.is(Tags.Items.TOOLS_FISHING_RODS)),
+        EQUIPMENT("equipment", stack -> stack.getItem() instanceof IWearable);
 
         private static final EnumCodec<Type> CODEC = StringRepresentable.fromEnum(Type::values);
 

@@ -1,10 +1,7 @@
 package net.kapitencraft.mysticcraft.config;
 
-import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(modid = MysticcraftMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class CommonModConfig {
 
     private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
@@ -34,7 +31,6 @@ public class CommonModConfig {
 
     private static final ForgeConfigSpec.BooleanValue RESET_BUILDERS_WAND_POS, USE_ON_POS_COMPLETE;
     private static final ForgeConfigSpec.IntValue MAX_GEMSTONE_ITERATIONS, MIN_GEMSTONE_ITERATIONS, MIN_SEED_SPAWNS, MAX_SEED_SPAWNS;
-
 
     public static final ForgeConfigSpec SPEC = BUILDER.build();
 

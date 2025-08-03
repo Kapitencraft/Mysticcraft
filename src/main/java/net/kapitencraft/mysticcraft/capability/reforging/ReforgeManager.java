@@ -41,7 +41,7 @@ public class ReforgeManager extends SimpleJsonResourceReloadListener {
             String type = data[0];
             try {
                 JsonObject object = entry.getValue().getAsJsonObject();
-                Reforge.Builder reforge = new Reforge.Builder(name);
+                Reforge.Builder reforge = new Reforge.Builder();
                 reforge.reforgeType(Reforge.Type.byName(type));
 
                 if (object.has("bonus")) {
@@ -60,7 +60,7 @@ public class ReforgeManager extends SimpleJsonResourceReloadListener {
                     ReforgeStat stat = new ReforgeStat.Builder(array.asList().stream().map(JsonElement::getAsJsonPrimitive).map(JsonPrimitive::getAsDouble).toList()).build();
                     reforge.addStat(attribute, stat);
                 }
-                Reforges.registerReforge(reforge.build());
+                Reforges.registerReforge(reforge.build(entry.getKey().withPath(name)));
             } catch (Exception e) {
                 LOGGER.warn(Markers.REFORGE_MANAGER, "unable to load reforge '{}': {}", name, e.getMessage());
             }

@@ -2,8 +2,8 @@ package net.kapitencraft.mysticcraft.item.loot_table.modifiers;
 
 import com.mojang.serialization.Codec;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.kapitencraft.mysticcraft.helpers.LootTableHelper;
-import net.kapitencraft.mysticcraft.item.loot_table.IConditional;
+import net.kapitencraft.kap_lib.helpers.LootTableHelper;
+import net.kapitencraft.kap_lib.item.loot_table.IConditional;
 import net.kapitencraft.mysticcraft.item.material.EssenceItem;
 import net.kapitencraft.mysticcraft.item.misc.RNGHelper;
 import net.kapitencraft.mysticcraft.misc.content.EssenceType;
@@ -25,7 +25,7 @@ public class AddEssenceModifier extends ModLootModifier implements IConditional 
 
     @Override
     protected @NotNull ObjectArrayList<ItemStack> doApply(ObjectArrayList<ItemStack> generatedLoot, LootContext context) {
-        LivingEntity living = LootTableHelper.getLivingSource(context);
+        LivingEntity living = net.kapitencraft.kap_lib.helpers.LootTableHelper.getLivingSource(context);
         if (living instanceof Mob mob) {
             if (mob.getMobType() == MobType.UNDEAD) {
                 EssenceItem essenceItem = ModItems.ESSENCE.get();

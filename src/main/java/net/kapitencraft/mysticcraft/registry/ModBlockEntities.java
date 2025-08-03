@@ -1,6 +1,8 @@
 package net.kapitencraft.mysticcraft.registry;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.block.entity.pedestal.AltarBlockEntity;
+import net.kapitencraft.mysticcraft.block.entity.pedestal.PedestalBlockEntity;
 import net.kapitencraft.mysticcraft.tech.block.entity.*;
 import net.minecraft.Util;
 import net.minecraft.util.datafix.fixes.References;
@@ -25,6 +27,9 @@ public interface ModBlockEntities {
 
     RegistryObject<BlockEntityType<SpellCasterTurretEntity>> SPELL_CASTER_TURRET = register("turret/spell_caster", SpellCasterTurretEntity::new, ModBlocks.SPELL_CASTER_TURRET);
     RegistryObject<BlockEntityType<ObeliskTurretBlockEntity>> OBELISK_TURRET = register("turret/obelisk", ObeliskTurretBlockEntity::new, ModBlocks.OBELISK_TURRET);
+
+    RegistryObject<BlockEntityType<AltarBlockEntity>> ALTAR = register("altar", AltarBlockEntity::new, ModBlocks.ALTAR);
+    RegistryObject<BlockEntityType<PedestalBlockEntity>> PEDESTAL = register("pedestal", PedestalBlockEntity::new, ModBlocks.PEDESTAL);
 
     @SafeVarargs
     @SuppressWarnings("DataFlowIssue")

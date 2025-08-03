@@ -8,6 +8,8 @@ import net.kapitencraft.mysticcraft.block.gemstone.GemstoneBlock;
 import net.kapitencraft.mysticcraft.block.gemstone.GemstoneCrystal;
 import net.kapitencraft.mysticcraft.block.gemstone.GemstoneGrinderBlock;
 import net.kapitencraft.mysticcraft.block.gemstone.GemstoneSeedBlock;
+import net.kapitencraft.mysticcraft.block.tree.AbstractLogBlock;
+import net.kapitencraft.mysticcraft.block.tree.AbstractWoodBlock;
 import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneItem;
 import net.kapitencraft.mysticcraft.dungeon.generation.DungeonGenerator;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
@@ -82,9 +84,12 @@ public interface ModBlocks {
     BlockRegistryHolder<GemstoneCrystal, GemstoneBlock.Item> GEMSTONE_CRYSTAL = registerBlock("gemstone_crystal", GemstoneCrystal::new, object -> new GemstoneCrystal.Item(), null);
     BlockRegistryHolder<GemstoneSeedBlock, GemstoneSeedBlock.Item> GEMSTONE_SEED = registerBlock("gemstone_seed", GemstoneSeedBlock::new, object -> new GemstoneSeedBlock.Item(), null);
 
-    BlockRegistryHolder<RotatedPillarBlock, BlockItem> STRIPPED_PERIDOT_SYCAMORE_LOG = registerBlock("stripped_peridot_sycamore_log", () -> new AbstractLogBlock(MapColor.COLOR_GREEN, MapColor.COLOR_GREEN, null), MiscHelper.rarity(Rarity.COMMON), TabGroup.PERIDOT_SYCAMORE);
+    BlockRegistryHolder<RotatedPillarBlock, BlockItem> STRIPPED_PERIDOT_SYCAMORE_LOG = registerBlock("stripped_peridot_sycamore_log", () -> new AbstractLogBlock(MapColor.COLOR_LIGHT_GREEN, MapColor.COLOR_LIGHT_GREEN, null), MiscHelper.rarity(Rarity.COMMON), TabGroup.PERIDOT_SYCAMORE);
     BlockRegistryHolder<RotatedPillarBlock, BlockItem> PERIDOT_SYCAMORE_LOG = registerBlock("peridot_sycamore_log", () -> new AbstractLogBlock(MapColor.COLOR_LIGHT_GREEN, MapColor.COLOR_GREEN, STRIPPED_PERIDOT_SYCAMORE_LOG.get()), MiscHelper.rarity(Rarity.COMMON), TabGroup.PERIDOT_SYCAMORE);
     BlockRegistryHolder<Block, BlockItem> PERIDOT_SYCAMORE_PLANKS = registerBlock("peridot_sycamore_planks", () -> new Block(BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).instrument(NoteBlockInstrument.BASS).strength(2.0F, 3.0F).sound(SoundType.WOOD).ignitedByLava()), MiscHelper.rarity(Rarity.COMMON), TabGroup.PERIDOT_SYCAMORE);
+
+    BlockRegistryHolder<RotatedPillarBlock, BlockItem> STRIPPED_PERIDOT_SYCAMORE_WOOD = registerBlock("stripped_peridot_sycamore_wood", () -> new AbstractWoodBlock(MapColor.COLOR_LIGHT_GREEN, null), MiscHelper.rarity(Rarity.COMMON), TabGroup.PERIDOT_SYCAMORE);
+    BlockRegistryHolder<RotatedPillarBlock, BlockItem> PERIDOT_SYCAMORE_WOOD = registerBlock("peridot_sycamore_wood", () -> new AbstractWoodBlock(MapColor.COLOR_GREEN, STRIPPED_PERIDOT_SYCAMORE_WOOD.get()), MiscHelper.rarity(Rarity.COMMON), TabGroup.PERIDOT_SYCAMORE);
 
     BlockRegistryHolder<SaplingBlock, BlockItem> PERIDOT_SYCAMORE_SAPLING = registerBlock("peridot_sycamore_sapling", ()-> new SaplingBlock(new AbstractTreeGrower() {
         @Override
@@ -92,7 +97,6 @@ public interface ModBlocks {
             return ModConfiguredFeatures.PERIDOT_SYCAMORE_TREE;
         }
     }, BlockBehaviour.Properties.copy(Blocks.OAK_SAPLING)), MiscHelper.rarity(Rarity.COMMON), TabGroup.PERIDOT_SYCAMORE);
-
 
     BlockRegistryHolder<ManaRelayBlock, BlockItem> MANA_RELAY = registerBlock("mana_relay", ManaRelayBlock::new, MiscHelper.rarity(Rarity.UNCOMMON), TabGroup.TECHNOLOGY);
     BlockRegistryHolder<ManaPortBlock, BlockItem> MANA_PORT = registerBlock("mana_port", ManaPortBlock::new, MiscHelper.rarity(Rarity.UNCOMMON), TabGroup.TECHNOLOGY);
@@ -103,4 +107,7 @@ public interface ModBlocks {
 
     BlockRegistryHolder<SpellCasterTurretBlock, BlockItem> SPELL_CASTER_TURRET = registerBlock("turret/spell_caster", SpellCasterTurretBlock::new, MiscHelper.rarity(Rarity.RARE), TabGroup.TECHNOLOGY);
     BlockRegistryHolder<ObeliskTurretBlock, BlockItem> OBELISK_TURRET = registerBlock("turret/obelisk", ObeliskTurretBlock::new, MiscHelper.rarity(Rarity.COMMON), TabGroup.TECHNOLOGY);
+
+    BlockRegistryHolder<PedestalBlock, BlockItem> PEDESTAL = registerBlock("pedestal", PedestalBlock::new, MiscHelper.rarity(Rarity.UNCOMMON), TabGroup.BUILDING_MATERIAL);
+    BlockRegistryHolder<AltarBlock, BlockItem> ALTAR = registerBlock("altar", AltarBlock::new, MiscHelper.rarity(Rarity.UNCOMMON), TabGroup.BUILDING_MATERIAL);
 }

@@ -1,5 +1,5 @@
 {
-  "type": "mysticcraft:add_item",
+  "type": "kap_lib:add_item",
   "conditions": [
     {
       "type": "forge:loot_table_id",

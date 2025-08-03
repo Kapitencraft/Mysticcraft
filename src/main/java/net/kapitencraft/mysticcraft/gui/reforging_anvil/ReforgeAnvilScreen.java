@@ -35,10 +35,8 @@ public class ReforgeAnvilScreen extends SimpleScreen<ReforgeAnvilMenu> {
         this.addHoverTooltipAndImgButton(upgradeItemTooltip, BUTTON_LOCATION, this::upgradeUse);
     }
 
-
-
     private void reforgeUse(Button ignored) {
-        String exeRet = this.menu.reforge();
+        ResourceLocation exeRet = this.menu.reforge();
         if (exeRet == null) return;
         this.menu.send(exeRet);
     }

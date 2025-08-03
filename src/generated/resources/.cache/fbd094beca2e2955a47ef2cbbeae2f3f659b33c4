@@ -1,4 +1,4 @@
-// 1.20.1	2025-06-16T00:27:55.7522551	Reforge Provider
+// 1.20.1	2025-08-02T17:44:58.5553099	Reforge Provider
 cf32e56a6c748b671fd9c1bd200929c30b1ce129 data/mysticcraft/reforges/armor/clean.json
 69bb948017349dea1bb3677b11257c492b4a9ddb data/mysticcraft/reforges/armor/fierce.json
 dac5225582d9364cf8ed6d964f8d616f3bfdcd65 data/mysticcraft/reforges/armor/heavy.json
@@ -8,6 +8,8 @@ fb0016789a73d73fcebd9c29abb6a0855a0a401f data/mysticcraft/reforges/armor/pure.js
 6b730b74b1cc3c67bd891b3ab91d0d13b9a38189 data/mysticcraft/reforges/armor/smart.json
 7c182f42743f8a40daca559fa04c6b3490e8d95e data/mysticcraft/reforges/armor/titanic.json
 2dfdf1f90f15f61fc445be5111de8cec72ec6f54 data/mysticcraft/reforges/armor/wise.json
+d362b94c1d8b770e58d6f2066a0047da772fa867 data/mysticcraft/reforges/equipment/astute.json
+bcb2cf79eb4760125d4368c59290c0b5faa61d8a data/mysticcraft/reforges/equipment/blended.json
 dc44a3a58f83c58a0b79b002dbff176d927a26c8 data/mysticcraft/reforges/melee/epic.json
 bae9d8f06ddbb04e39218c0da58cb0a92fdab143 data/mysticcraft/reforges/melee/fair.json
 0121cb4dd50c8a2977aa8cb189f87b4eaedf84fa data/mysticcraft/reforges/melee/fast.json

@@ -2,6 +2,7 @@ package net.kapitencraft.mysticcraft.registry;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.entity.*;
+import net.kapitencraft.mysticcraft.entity.dragon.Dragon;
 import net.kapitencraft.mysticcraft.entity.item.SoulBoundAnimator;
 import net.kapitencraft.mysticcraft.entity.skeleton_master.SkeletonMaster;
 import net.kapitencraft.mysticcraft.entity.vampire.VampireBat;
@@ -34,4 +35,5 @@ public interface ModEntityTypes {
     RegistryObject<EntityType<RifleProjectile>> RIFLE_PROJECTILE = register("rifle_projectile", RifleProjectile::new, MobCategory.MISC, value -> value.sized(0.5f, 0.5f));
     RegistryObject<EntityType<SoulBoundAnimator>> SOUL_BOUND_ANIMATOR = register("soul_bound_animator", SoulBoundAnimator::new, MobCategory.MISC, builder -> builder.sized(0.5f, 1.975f).clientTrackingRange(10));
     RegistryObject<EntityType<ThrownCursedPearl>> CURSED_PEARL = register("cursed_pearl", ThrownCursedPearl::new, MobCategory.MISC, builder -> builder.sized(0.25F, 0.25F).clientTrackingRange(4).updateInterval(10));
+    RegistryObject<EntityType<Dragon>> DRAGON = register("dragon", Dragon::new, MobCategory.CREATURE, builder -> builder.sized(4, 4));
 }

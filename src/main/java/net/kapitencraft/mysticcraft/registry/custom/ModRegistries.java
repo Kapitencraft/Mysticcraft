@@ -13,5 +13,4 @@ import net.minecraftforge.registries.RegistryManager;
 public interface ModRegistries {
     IForgeRegistry<Spell> SPELLS = RegistryManager.ACTIVE.getRegistry(ModRegistryKeys.SPELLS);
     IForgeRegistry<Codec<? extends PerkReward>> PERK_REWARDS = RegistryManager.ACTIVE.getRegistry(ModRegistryKeys.PERK_REWARDS);
-
 }

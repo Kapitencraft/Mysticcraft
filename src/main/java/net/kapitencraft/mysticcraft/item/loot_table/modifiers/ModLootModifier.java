@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.item.loot_table.modifiers;
 
-import net.kapitencraft.mysticcraft.item.loot_table.IConditional;
+import net.kapitencraft.kap_lib.item.loot_table.IConditional;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraftforge.common.loot.LootModifier;
 

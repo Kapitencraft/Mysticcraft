@@ -2,6 +2,7 @@ package net.kapitencraft.mysticcraft.spell.cast;
 
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,9 +10,11 @@ import java.util.Objects;
 
 public class SpellCastContext {
     private final Map<SpellCastContextParam<?>, Object> params;
+    private final Level level;
 
-    private SpellCastContext(Map<SpellCastContextParam<?>, Object> params) {
+    private SpellCastContext(Map<SpellCastContextParam<?>, Object> params, Level level) {
         this.params = ImmutableMap.copyOf(params);
+        this.level = level;
     }
 
     public <T> T getParamOrThrow(SpellCastContextParam<T> param) {
@@ -26,6 +29,10 @@ public class SpellCastContext {
         return (T) params.get(param);
     }
 
+    public Level getLevel() {
+        return level;
+    }
+
     public static class Builder {
         private final Map<SpellCastContextParam<?>, Object> params = new HashMap<>();
 
@@ -33,8 +40,8 @@ public class SpellCastContext {
             params.put(param, value);
         }
 
-        public SpellCastContext build() {
-            return new SpellCastContext(params);
+        public SpellCastContext build(Level level) {
+            return new SpellCastContext(params, level);
         }
     }
 }

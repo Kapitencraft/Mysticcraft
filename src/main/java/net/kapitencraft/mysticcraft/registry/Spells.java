@@ -30,6 +30,7 @@ public interface Spells {
     RegistryObject<FireBoltSpell> FIRE_BOLT_4 = REGISTRY.register("fire_bolt_4", () -> new FireBoltSpell(true, 5.2f));
     RegistryObject<FireLanceSpell> FIRE_LANCE = REGISTRY.register("fire_lance", FireLanceSpell::new);
     RegistryObject<CureVillagerSpell> CURE_VILLAGER = REGISTRY.register("cure_villager", CureVillagerSpell::new);
+    RegistryObject<MakeRainSpell> MAKE_RAIN = REGISTRY.register("make_rain", MakeRainSpell::new);
 
     static Collection<ItemStack> createForCreativeModeTab() {
         return ModRegistries.SPELLS.getValues().stream().filter(s -> s != EMPTY.get()).map(spell -> {

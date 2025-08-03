@@ -3,15 +3,21 @@ package net.kapitencraft.mysticcraft.data_gen;
 import net.kapitencraft.kap_lib.item.combat.armor.AbstractArmorItem;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.registry.ModBlocks;
+import net.kapitencraft.mysticcraft.registry.ModEntityTypes;
 import net.kapitencraft.mysticcraft.registry.ModItems;
 import net.kapitencraft.mysticcraft.tags.ModTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
+import net.minecraft.data.tags.BiomeTagsProvider;
+import net.minecraft.data.tags.EntityTypeTagsProvider;
 import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.data.tags.TagsProvider;
+import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.BlockTagsProvider;
@@ -76,6 +82,8 @@ public class ModTagProvider {
                     ModItems.PARALLEL_PROCESSING_UPGRADE.get(),
                     ModItems.SPEED_UPGRADE.get()
             );
+
+            copy(ModTags.Blocks.STRIPPED_LOGS, ModTags.Items.STRIPPED_LOGS);
         }
 
         @SafeVarargs
@@ -113,6 +121,53 @@ public class ModTagProvider {
             tag(ModTags.Blocks.MINEABLE).addTags(Tags.Blocks.SAND, BlockTags.SNOW, Tags.Blocks.ORES, Tags.Blocks.OBSIDIAN, Tags.Blocks.GRAVEL, Tags.Blocks.NETHERRACK, Tags.Blocks.STONE, Tags.Blocks.END_STONES, Tags.Blocks.COBBLESTONE);
 
             tag(BlockTags.LOGS).add(ModBlocks.PERIDOT_SYCAMORE_LOG.get());
+
+            tag(ModTags.Blocks.STRIPPED_LOGS).add(
+                    Blocks.STRIPPED_OAK_LOG,
+                    Blocks.STRIPPED_ACACIA_LOG,
+                    Blocks.STRIPPED_JUNGLE_LOG,
+                    Blocks.STRIPPED_DARK_OAK_LOG,
+                    Blocks.STRIPPED_SPRUCE_LOG,
+                    Blocks.STRIPPED_OAK_WOOD,
+                    Blocks.STRIPPED_ACACIA_WOOD,
+                    Blocks.STRIPPED_JUNGLE_WOOD,
+                    Blocks.STRIPPED_DARK_OAK_WOOD,
+                    Blocks.STRIPPED_SPRUCE_WOOD,
+                    ModBlocks.STRIPPED_PERIDOT_SYCAMORE_LOG.get()
+            );
+        }
+    }
+
+    public static class Biome extends BiomeTagsProvider {
+
+        public Biome(PackOutput pOutput, CompletableFuture<HolderLookup.Provider> pProvider, @Nullable ExistingFileHelper existingFileHelper) {
+            super(pOutput, pProvider, MysticcraftMod.MOD_ID, existingFileHelper);
+        }
+
+        @Override
+        protected void addTags(HolderLookup.Provider pProvider) {
+            tag(ModTags.Biomes.GEMSTONE_SPAWN)
+                    .addTags(BiomeTags.IS_OVERWORLD, Tags.Biomes.IS_MOUNTAIN)
+                    .add(Biomes.END_HIGHLANDS, Biomes.BASALT_DELTAS);
+        }
+    }
+
+    public static class Entity extends EntityTypeTagsProvider {
+
+        public Entity(PackOutput pOutput, CompletableFuture<HolderLookup.Provider> pProvider, @Nullable ExistingFileHelper existingFileHelper) {
+            super(pOutput, pProvider, MysticcraftMod.MOD_ID, existingFileHelper);
+        }
+
+        @Override
+        protected void addTags(HolderLookup.Provider pProvider) {
+            tag(ModTags.Entities.NETHER_MOBS).add(
+                    EntityType.BLAZE,
+                    EntityType.ZOMBIFIED_PIGLIN,
+                    EntityType.WITHER_SKELETON,
+                    EntityType.PIGLIN,
+                    EntityType.HOGLIN,
+                    ModEntityTypes.FROZEN_BLAZE.get()
+            );
         }
     }
 }

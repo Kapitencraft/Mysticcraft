@@ -17,6 +17,7 @@ import net.minecraft.SharedConstants;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.datafix.DataFixTypes;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -61,6 +62,10 @@ public class PlayerPerks {
          LOGGER.warn("unknown tree: {}", treeId);
          return;
       }
+      unlockTree(tree);
+   }
+
+   public void unlockTree(@NotNull PerkTree tree) {
       this.trees.add(tree);
       this.treesAdded.add(tree);
    }

@@ -62,7 +62,11 @@ public interface SpellHelper {
         double manaToUse = spell.getManaCostForUser(user);
         AttributeInstance manaInstance = user.getAttribute(ExtraAttributes.MANA.get());
         Cooldown cooldown = spell.getCooldown();
-        return cooldown == null || !cooldown.isActive(user) && manaInstance != null && ManaHandler.hasMana(user, manaToUse);
+        if (cooldown != null && cooldown.isActive(user)) {
+            if (user instanceof Player player) player.displayClientMessage(Component.translatable("spell.cast.failed.cooldown").withStyle(ChatFormatting.RED), true);
+            return false;
+        }
+        return manaInstance != null && ManaHandler.hasMana(user, manaToUse);
     }
 
     @SuppressWarnings("DataFlowIssue")
@@ -74,7 +78,7 @@ public interface SpellHelper {
             if (type == SpellTarget.Type.BLOCK) builder.addParam(SpellCastContextParams.TARGET_BLOCK, BlockPos.of(stack.getTag().getLong("target")));
             else if (type == SpellTarget.Type.ENTITY) builder.addParam(SpellCastContextParams.TARGET, user.level().getEntity(stack.getTag().getInt("target")));
             try {
-                spell.cast(builder.build());
+                spell.cast(builder.build(user.level()));
             } catch (SpellExecutionFailedException e) {
                 if (user instanceof Player player) {
                     player.displayClientMessage(Component.translatable(e.getMsg()), true);

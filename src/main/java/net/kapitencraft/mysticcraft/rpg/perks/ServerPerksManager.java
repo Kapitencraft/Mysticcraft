@@ -35,10 +35,6 @@ public final class ServerPerksManager extends SimplePreparableReloadListener<Ser
 
     private static final Gson GSON = (new GsonBuilder()).create();
 
-    private ServerPerksManager() {
-        instance = this;
-    }
-
     @Override
     protected Data prepare(ResourceManager pResourceManager, ProfilerFiller pProfiler) {
         Map<ResourceLocation, JsonElement> perks = new HashMap<>();
@@ -50,13 +46,13 @@ public final class ServerPerksManager extends SimplePreparableReloadListener<Ser
 
     public static ServerPerksManager getOrCreateInstance() {
         if (instance != null) return instance;
-        return new ServerPerksManager();
+        return instance = new ServerPerksManager();
     }
 
     private final Map<UUID, PlayerPerks> perksCache = new HashMap<>();
 
     public static void clearCache() {
-        getOrCreateInstance().perksCache.clear();
+        if (instance != null) instance.perksCache.clear();
     }
 
     public static PerkReward readRewards(JsonObject reward) {
@@ -141,10 +137,10 @@ public final class ServerPerksManager extends SimplePreparableReloadListener<Ser
     }
 
     public PlayerPerks getPerks(ServerPlayer player) {
-        MinecraftServer server = player.server;
         UUID uuid = player.getUUID();
         if (perksCache.containsKey(uuid)) return perksCache.get(uuid);
 
+        MinecraftServer server = player.server;
         PlayerPerks playerPerks = new PlayerPerks(server.getFixerUpper(), this, server.getWorldPath(ModLevelResources.PERKS).resolve(uuid + ".json"), player);
         this.perksCache.put(uuid, playerPerks);
         return playerPerks;

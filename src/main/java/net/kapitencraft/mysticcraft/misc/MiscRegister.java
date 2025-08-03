@@ -21,6 +21,7 @@ import net.kapitencraft.mysticcraft.network.packets.S2C.SyncEssenceDataPacket;
 import net.kapitencraft.mysticcraft.network.packets.S2C.SyncManaDistributionNetworksPacket;
 import net.kapitencraft.mysticcraft.registry.ModAttributes;
 import net.kapitencraft.mysticcraft.registry.ModBlocks;
+import net.kapitencraft.mysticcraft.rpg.classes.RPGClassManager;
 import net.kapitencraft.mysticcraft.rpg.perks.ServerPerksManager;
 import net.kapitencraft.mysticcraft.tags.ModTags;
 import net.kapitencraft.mysticcraft.tech.DistributionNetworkManager;
@@ -95,6 +96,7 @@ public class MiscRegister {
         event.addListener(new BestiaryManager());
         event.addListener(new ReforgeManager());
         event.addListener(ServerPerksManager.getOrCreateInstance());
+        event.addListener(RPGClassManager.getOrCreateInstance());
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)

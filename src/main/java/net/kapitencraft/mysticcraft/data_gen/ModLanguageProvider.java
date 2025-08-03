@@ -5,6 +5,7 @@ import net.kapitencraft.kap_lib.helpers.TextHelper;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.capability.reforging.Reforges;
 import net.kapitencraft.mysticcraft.registry.ModItems;
+import net.minecraft.Util;
 import net.minecraft.data.PackOutput;
 
 public class ModLanguageProvider extends EnglishLanguageProvider {
@@ -15,7 +16,7 @@ public class ModLanguageProvider extends EnglishLanguageProvider {
     @Override
     protected void addTranslations() {
 
-        Reforges.all().keySet().forEach(string -> this.add("reforge." + string, TextHelper.makeGrammar(string)));
+        Reforges.all().keySet().forEach(id -> this.add(Util.makeDescriptionId("reforge", id), TextHelper.makeGrammar(id.getPath())));
         ModItems.getEntries().forEach(this::addItem);
 
         addDeathMessage("chain_lightning", "%1$s got hit by chain lightning from %2$s");
@@ -25,7 +26,5 @@ public class ModLanguageProvider extends EnglishLanguageProvider {
         addDeathMessage("magic_explosion", "%1$s got exploded into a million pieces by %2$s's magic explosion");
         addDeathMessage("numbness", ""); //TODO add msg
         addDeathMessage("fire_lance", "%1$s was burned to ash by %1$s's fire lance");
-
-        Reforges.all().forEach((s, reforge) -> add("reforge." + s, TextHelper.makeGrammar(s)));
     }
 }

@@ -17,11 +17,6 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public class InventoryHelper {
-    public static boolean hasPlayerStackInInventory(Player player, Item item) {
-        Inventory inventory = player.getInventory();
-        return allInventory(inventory).stream()
-                .anyMatch(stack -> !stack.isEmpty() && stack.is(item));
-    }
 
     public static boolean isCreativeMode(Player player) {
         return player.getAbilities().instabuild;
@@ -31,14 +26,6 @@ public class InventoryHelper {
         for (int i = 0; i < inventory.getContainerSize(); i++) {
             consumer.accept(inventory.getItem(i));
         }
-    }
-
-    public static Map<Integer, ItemStack> getAllContent(Inventory inventory) {
-        Map<Integer, ItemStack> data = new HashMap<>();
-        for (int i = 0; i < inventory.getContainerSize(); i++) {
-            data.put(i, inventory.getItem(i));
-        }
-        return data;
     }
 
     public static List<ItemStack> allInventory(Inventory inventory) {
@@ -57,26 +44,6 @@ public class InventoryHelper {
             }
         });
         return stack.getCount() <= 0;
-    }
-
-    public static int getFirstInventoryIndex(Item item, Player player) {
-        for(int i = 0; i < player.getInventory().getContainerSize(); i++) {
-            ItemStack currentStack = player.getInventory().getItem(i);
-            if (!currentStack.isEmpty() && currentStack.is(item)) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    public static ItemStack getFirstStackInventoryIndex(Player player, Item item) {
-        return allInventory(player.getInventory()).stream().filter(
-                stack -> checkItem(stack, item)
-        ).findFirst().orElse(ItemStack.EMPTY);
-    }
-
-    private static boolean checkItem(ItemStack stack, Item item) {
-        return !stack.isEmpty() && stack.is(item);
     }
 
     public static Collection<ItemStack> getByFilter(Player player, Predicate<ItemStack> predicate) {

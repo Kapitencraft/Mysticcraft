@@ -197,6 +197,7 @@ public class MagicFurnaceBlockEntity extends UpgradableBlockEntity implements IM
         CompoundTag tag = new CompoundTag();
         tag.putInt("mana", this.mana);
         tag.putInt("cookTime", this.cookTime);
+        tag.put("inventory", this.items.serializeNBT());
         return tag;
     }
 

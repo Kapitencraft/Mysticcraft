@@ -1,5 +1,6 @@
 package net.kapitencraft.mysticcraft.gui.reforging_anvil;
 
+import net.kapitencraft.kap_lib.requirements.RequirementManager;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.capability.CapabilityHelper;
 import net.kapitencraft.mysticcraft.capability.dungeon.IPrestigeAbleItem;
@@ -15,7 +16,8 @@ import net.kapitencraft.mysticcraft.network.ModMessages;
 import net.kapitencraft.mysticcraft.network.packets.C2S.ReforgeItemPacket;
 import net.kapitencraft.mysticcraft.registry.ModBlocks;
 import net.kapitencraft.mysticcraft.registry.ModMenuTypes;
-import net.minecraft.network.chat.Component;
+import net.kapitencraft.mysticcraft.requirement.type.ReforgeRequirementType;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
@@ -51,7 +53,7 @@ public class ReforgeAnvilMenu extends NoBEMenu<ReforgeAnvilMenu.ReforgeAnvilCont
         this.addSlot(new AnvilSlot(this.container, 1, 115, SLOTS_Y));
     }
 
-    public String reforge() {
+    public ResourceLocation reforge() {
         return this.container.reforge(this.player);
     }
 
@@ -100,17 +102,17 @@ public class ReforgeAnvilMenu extends NoBEMenu<ReforgeAnvilMenu.ReforgeAnvilCont
         return ModBlocks.REFORGING_ANVIL.get();
     }
 
-    public void send(String exeRet) {
+    public void send(ResourceLocation exeRet) {
         ModMessages.sendToServer(new ReforgeItemPacket(exeRet));
     }
 
-    public void reforgeForId(String reforgeId, ServerPlayer player) {
+    public void reforgeForId(ResourceLocation reforgeId, ServerPlayer player) {
         Reforge reforge = Reforges.byName(reforgeId);
-        if (reforge.isOnlyFromStone()) {
-            MysticcraftMod.LOGGER.error("{} tried to apply reforge-stone reforge on an reforge table! disconnecting", player.getGameProfile().getName());
-            player.connection.disconnect(Component.translatable("disconnect.invalid_reforge"));
-        }
-        reforge.saveToStack(this.container.getStack(false));
+        if (!RequirementManager.instance.meetsRequirements(ReforgeRequirementType.INSTANCE, reforge, player)) {
+            MysticcraftMod.LOGGER.warn("{} tried to apply prohibited reforge {}", player.getGameProfile().getName(), reforgeId);
+        } else if (reforge.isOnlyFromStone()) {
+            MysticcraftMod.LOGGER.error("{} tried to apply reforge-stone reforge on an reforge table!", player.getGameProfile().getName());
+        } else reforge.saveToStack(this.container.getStack(false));
     }
 
     @Override
@@ -140,14 +142,14 @@ public class ReforgeAnvilMenu extends NoBEMenu<ReforgeAnvilMenu.ReforgeAnvilCont
             return this.getItem(upgrade ? 1 : 0);
         }
 
-        public String reforge(Player player) {
+        public ResourceLocation reforge(Player player) {
             ItemStack stack = getStack(false);
             if (stack == null || stack.isEmpty()) {
                 return null;
             }
             if (InventoryHelper.isCreativeMode(player) || InventoryHelper.hasInInventory(List.of(new ItemStack(Items.EMERALD, 5)), player) && Reforges.canBeReforged(stack)) {
                 if (!InventoryHelper.isCreativeMode(player)) InventoryHelper.removeFromInventory(new ItemStack(Items.EMERALD, 5), player);
-                return Reforges.applyRandom(false, stack).getRegistryName();
+                return Reforges.applyRandom(false, stack, player).getRegistryName();
             }
             return null;
         }

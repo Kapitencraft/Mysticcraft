@@ -1,11 +1,11 @@
-// 1.20.1	2025-07-26T21:27:43.6398434	Bonuses of 'mysticcraft'
+// 1.20.1	2025-08-02T22:58:16.5941435	Bonuses of 'mysticcraft'
 0c6ba89975cc48eea1e42fbb1c6c3b4b6c9ab155 data/mysticcraft/bonuses/assassin.json
 5180da2af40b0b3592e97c8c672b1c944ca4f430 data/mysticcraft/bonuses/magic_conversion.json
 ef40d8242fc029b607aff15b716a274f61269c41 data/mysticcraft/bonuses/mana_reservoir.json
-bcc93fb14a46a200cd65437ae8154588a1c42195 data/mysticcraft/bonuses/set/dominus.json
-f8bb8128821633ade56675a347d0e60fa10887c3 data/mysticcraft/bonuses/set/freezing_aura.json
-d750a3cfe31a8919c91ea69c29ff845e7f035121 data/mysticcraft/bonuses/set/hydra.json
-945d3025283fbe1c8dd2bc06234d3f940f956881 data/mysticcraft/bonuses/set/mana_syphon.json
+893d0253d013738e30accc6f6be8aa673420f9bd data/mysticcraft/bonuses/set/dominus.json
+49c96f83f791dd548e53f0b450b7cacaa7fc05e2 data/mysticcraft/bonuses/set/freezing_aura.json
+0c53755af65803856e9534ed8c8075603502f15e data/mysticcraft/bonuses/set/hydra.json
+1986491bff22d3f2877bd4b3dd85cc5e1ddb5fee data/mysticcraft/bonuses/set/mana_syphon.json
 b0586a9f18bff4050c8106ea6540f83d6261a77a data/mysticcraft/tags/items/set/dominus/chest.json
 5739c12b6ac9f4b7946641bbafd9d9e9c3e6ae7e data/mysticcraft/tags/items/set/dominus/feet.json
 b59d92ecc8a45a8e4036962c80657b9a5ee57e1d data/mysticcraft/tags/items/set/dominus/head.json

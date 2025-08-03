@@ -5,6 +5,16 @@ Injection Magic;
 Collector's Talisman, Ring, Artifact, Relict;
 Frisbee of Destruction;
 
+classes:
+1. types:
+    1. mage
+    2. warrior
+    3. assassin?
+    4. druid
+    5. priest
+    6. shaman?
+    7. paladin?
+
 Biomes?
 Ritual Magic?
 

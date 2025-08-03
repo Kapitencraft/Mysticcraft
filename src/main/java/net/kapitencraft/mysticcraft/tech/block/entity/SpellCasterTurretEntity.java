@@ -45,7 +45,7 @@ public class SpellCasterTurretEntity extends AbstractTurretBlockEntity implement
             SpellCastContext.Builder builder = new SpellCastContext.Builder();
             builder.addParam(SpellCastContextParams.TARGET, entity.target);
             try {
-                entity.spell.cast(builder.build());
+                entity.spell.cast(builder.build(pLevel));
             } catch (SpellExecutionFailedException ignored) {}
             entity.target = null;
         }

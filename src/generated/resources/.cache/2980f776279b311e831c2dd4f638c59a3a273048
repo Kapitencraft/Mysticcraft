@@ -1,9 +1,10 @@
-// 1.20.1	2025-07-25T20:43:04.1087468	Tags for minecraft:item mod id mysticcraft
+// 1.20.1	2025-07-27T14:49:39.0179524	Tags for minecraft:item mod id mysticcraft
 0c7f2dcdf3089e30ca36b03852ab393f26be7ed7 data/forge/tags/items/armors.json
 b73e877f825a7c7a57721a44b45adcb4d7401a16 data/forge/tags/items/armors/boots.json
 c30fe22910f8b91d66651150287990d662133fb1 data/forge/tags/items/armors/chestplates.json
 b2e88c82e0f50493a1ef447370e7fcaa602c72b6 data/forge/tags/items/armors/helmets.json
 c9a0bd02d5b97b723ededf2ed83dd59be6be5a75 data/forge/tags/items/armors/leggings.json
+ae8c4e43556dfa79fae0abaf2fe54e8dfe99befa data/forge/tags/items/stripped_logs.json
 3f5c00135780eb5a58877f178a7920339d18b517 data/forge/tags/items/tools/bows.json
 1bbd472159723995e84d7833c90518e2960cc015 data/forge/tags/items/tools/fishing_rods.json
 1466919df07556a69b2f26e221f3d59778215055 data/forge/tags/items/tools/shields.json

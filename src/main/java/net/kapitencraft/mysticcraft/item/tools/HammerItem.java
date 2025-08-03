@@ -49,15 +49,15 @@ public class HammerItem extends PickaxeItem {
         return Stream.of(actions).collect(Collectors.toCollection(Sets::newIdentityHashSet));
     }
 
-    public static void gatherBlocks(Level level, BlockPos origin, Direction clickedFace, Consumer<BlockPos> posSink) {
+    public static void gatherBlocks(Level level, BlockPos origin, Direction clickedFace, Consumer<BlockPos> posSink, int extension) {
         BlockState state = level.getBlockState(origin);
         Direction.Axis[] axes = new Direction.Axis[2];
         int i = 0;
         for (Direction.Axis value : Direction.Axis.values()) {
             if (value != clickedFace.getAxis()) axes[i++] = value;
         }
-        for (int a = -1; a <= 1; a++) {
-            for (int b = -1; b <= 1; b++) {
+        for (int a = -extension; a <= extension; a++) {
+            for (int b = -extension; b <= extension; b++) {
                 if (!(a == 0 && b == 0)) {
                     BlockPos pos = origin.relative(axes[0], a).relative(axes[1], b);
                     if (state.is(level.getBlockState(pos).getBlock())) posSink.accept(pos);
@@ -72,6 +72,6 @@ public class HammerItem extends PickaxeItem {
 
     @SuppressWarnings("DataFlowIssue")
     public static void abort(BlockPos pos, Direction direction) {
-        gatherBlocks(Minecraft.getInstance().level, pos, direction, p -> Minecraft.getInstance().level.destroyBlockProgress(getPositionId(p), p, -1));
+        gatherBlocks(Minecraft.getInstance().level, pos, direction, p -> Minecraft.getInstance().level.destroyBlockProgress(getPositionId(p), p, -1), 1);
     }
 }

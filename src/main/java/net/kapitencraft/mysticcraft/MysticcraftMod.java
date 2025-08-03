@@ -3,7 +3,9 @@ package net.kapitencraft.mysticcraft;
 import com.mojang.logging.LogUtils;
 import net.kapitencraft.mysticcraft.config.CommonModConfig;
 import net.kapitencraft.mysticcraft.logging.Markers;
-import net.kapitencraft.mysticcraft.registry.ModRegistryInit;
+import net.kapitencraft.mysticcraft.potion.ModPotions;
+import net.kapitencraft.mysticcraft.registry.*;
+import net.kapitencraft.mysticcraft.villagers.ModVillagers;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -50,7 +52,39 @@ public class MysticcraftMod {
 
     public MysticcraftMod() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        ModRegistryInit.register(modEventBus);
+
+        ModCreativeModTabs.REGISTRY.register(modEventBus);
+        ModEnchantments.REGISTRY.register(modEventBus);
+        ModItems.REGISTRY.register(modEventBus);
+        ModMobEffects.REGISTRY.register(modEventBus);
+        ModPotions.REGISTRY.register(modEventBus);
+        ModBlockEntities.REGISTRY.register(modEventBus);
+        ModBonusSerializers.REGISTRY.register(modEventBus);
+        ModMenuTypes.REGISTRY.register(modEventBus);
+        ModEntityTypes.REGISTRY.register(modEventBus);
+        ModParticleTypes.REGISTRY.register(modEventBus);
+        ModFluidTypes.REGISTRY.register(modEventBus);
+        ModFluids.REGISTRY.register(modEventBus);
+        ModBlocks.REGISTRY.register(modEventBus);
+        ModVillagers.PROFESSION_REGISTRY.register(modEventBus);
+        ModVillagers.POI_TYPE_REGISTRY.register(modEventBus);
+        ModLootModifiers.REGISTRY.register(modEventBus);
+        ModLootItemFunctions.REGISTRY.register(modEventBus);
+        ModLootItemConditions.REGISTRY.register(modEventBus);
+        ModStatTypes.REGISTRY.register(modEventBus);
+        ModFeatures.REGISTRY.register(modEventBus);
+        Spells.REGISTRY.register(modEventBus);
+        ModInventoryPages.REGISTRY.register(modEventBus);
+        PerkRewards.REGISTRY.register(modEventBus);
+        ModCommandArgumentTypes.REGISTRY.register(modEventBus);
+        ModAttributes.REGISTRY.register(modEventBus);
+        ModOverlays.REGISTRY.register(modEventBus);
+        ModCooldowns.REGISTRY.register(modEventBus);
+        ModTrunkPlacers.REGISTRY.register(modEventBus);
+        ModFoliagePlacers.REGISTRY.register(modEventBus);
+        ModRecipeTypes.REGISTRY.register(modEventBus);
+        ModRecipeSerializers.REGISTRY.register(modEventBus);
+
         //ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientModConfig.SPEC);
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, CommonModConfig.SPEC);
         //ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ServerModConfig.SPEC);

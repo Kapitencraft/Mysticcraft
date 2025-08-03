@@ -1,5 +1,6 @@
 package net.kapitencraft.mysticcraft.capability.gemstone;
 
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.kap_lib.item.modifier_display.EquipmentDisplayExtension;
 import net.minecraft.ChatFormatting;
@@ -9,6 +10,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.List;
@@ -63,11 +65,11 @@ public class GemstoneCapability implements IGemstoneHandler, EquipmentDisplayExt
     }
 
     @Override
-    public Multimap<Attribute, AttributeModifier> getModifiers(EquipmentSlot equipmentSlot) {
+    public @NotNull Multimap<Attribute, AttributeModifier> getModifiers(EquipmentSlot equipmentSlot) {
         if (slot == equipmentSlot) {
             return getAttributeModifiers(slot, stack);
         }
-        return null;
+        return ImmutableMultimap.of();
     }
 
     @Override

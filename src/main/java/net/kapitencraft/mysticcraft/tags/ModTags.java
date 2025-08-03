@@ -8,6 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
 
@@ -17,7 +18,7 @@ public class ModTags {
         TagKey<Item> HAMMER = create("hammer");
         TagKey<Item> TIER_1_HAMMER = create("tier_1_hammer");
         TagKey<Item> TIER_2_HAMMER = create("tier_2_hammer");
-        TagKey<Item> STRIPPED_LOG = forge("stripped_logs");
+        TagKey<Item> STRIPPED_LOGS = forge("stripped_logs");
         TagKey<Item> ENDER_HITTABLE = create("ender_hittable");
         TagKey<Item> CLEAVER = createWeapon("cleaver");
         TagKey<Item> DAGGER = createWeapon("dagger");
@@ -44,6 +45,7 @@ public class ModTags {
         TagKey<Block> FARMABLE = createModKey("farmable_blocks");
         TagKey<Block> FORAGEABLE = createModKey("forageable_blocks");
         TagKey<Block> MINEABLE = createModKey("mineable_blocks");
+        TagKey<Block> STRIPPED_LOGS = ModTags.makeForgeKey(Registries.BLOCK, "stripped_logs");
 
         static TagKey<Block> createModKey(String id) {
             return ModTags.makeModKey(Registries.BLOCK, id);
@@ -51,7 +53,6 @@ public class ModTags {
     }
 
     public interface Entities {
-        TagKey<EntityType<?>> OG_NETHER_MOBS = createForge("og_nether_mobs");
         TagKey<EntityType<?>> NETHER_MOBS = createForge("nether_mobs");
 
         private static TagKey<EntityType<?>> createForge(String name) {
@@ -61,6 +62,10 @@ public class ModTags {
 
     public interface Fluids {
         TagKey<Fluid> MANA_FLUID = ModTags.makeModKey(Registries.FLUID, "mana_fluid");
+    }
+
+    public interface Biomes {
+        TagKey<Biome> GEMSTONE_SPAWN = ModTags.makeModKey(Registries.BIOME, "gemstone_spawn");
     }
 
     public static <T> TagKey<T> makeKey(ResourceKey<Registry<T>> key, String id) {

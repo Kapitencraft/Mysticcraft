@@ -45,6 +45,7 @@ public abstract class ItemMixin implements IForgeItem {
         AttributeHelper.AttributeBuilder builder = new AttributeHelper.AttributeBuilder(self().getDefaultAttributeModifiers(slot));
         Reforge reforge = Reforge.getFromStack(stack);
         if (slot == MiscHelper.getSlotForStack(stack) && reforge != null) {
+            //TODO add requirements
             builder.merge(reforge.applyModifiers(self().getRarity(stack)), AttributeModifier.Operation.ADDITION);
         }
         GemstoneHelper.getCapability(stack, iGemstoneHandler ->

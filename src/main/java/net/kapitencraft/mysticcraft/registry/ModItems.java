@@ -165,6 +165,11 @@ public interface ModItems {
     RegistryObject<MaterialModItem> SOUL_STEEL_NUGGET = registerMaterial("soul_steel_nugget", Rarity.UNCOMMON, TabGroup.MATERIAL);
     RegistryObject<MaterialModItem> SHADOW_CRYSTAL = registerMaterial("shadow_crystal", Rarity.UNCOMMON, TabGroup.MATERIAL);
     RegistryObject<DarkDagger> DARK_DAGGER = register("dark_dagger", DarkDagger::new, TabGroup.COMBAT);
+
+    //region armor
+
+    RegistryObject<TravelersBoots> TRAVELERS_BOOTS = register("travelers_boots", TravelersBoots::new, TabGroup.COMBAT);
+
     Map<ArmorItem.Type, RegistryObject<EnderKnightArmorItem>> ENDER_KNIGHT_ARMOR = AbstractArmorItem.createRegistry(REGISTRY, "ender_knight", EnderKnightArmorItem::new);
     Map<ArmorItem.Type, RegistryObject<FrozenBlazeArmorItem>> FROZEN_BLAZE_ARMOR = AbstractArmorItem.createRegistry(REGISTRY, "frozen_blaze", FrozenBlazeArmorItem::new);
     Map<ArmorItem.Type, RegistryObject<ShadowAssassinArmorItem>> SHADOW_ASSASSIN_ARMOR = AbstractArmorItem.createRegistry(REGISTRY, "shadow_assassin", ShadowAssassinArmorItem::new);
@@ -173,7 +178,13 @@ public interface ModItems {
     Map<ArmorItem.Type, RegistryObject<WizardCloakArmorItem>> WIZARD_CLOAK_ARMOR = AbstractArmorItem.createRegistry(REGISTRY, "wizard_cloak", WizardCloakArmorItem::new);
     Map<ArmorItem.Type, RegistryObject<TerrorArmorItem>> TERROR_ARMOR = AbstractArmorItem.createRegistry(REGISTRY, "terror", TerrorArmorItem::new);
 
+    //endregion
+
+    //region spawn eggs
+
     RegistryObject<Item> FROZEN_BLAZE_SPAWN_EGG = REGISTRY.register("frozen_blaze_spawn_egg", ()-> new ForgeSpawnEggItem(ModEntityTypes.FROZEN_BLAZE, -16711681, -16763956, new Item.Properties()));
+
+    //endregion
 
     RegistryObject<GUISlotBlockItem> MISSING_GEMSTONE_SLOT = register("missing_slot", ()-> new GUISlotBlockItem().putTooltip(List.of(Component.literal("This Gemstone Applicable has no gemstone at that slot").withStyle(ChatFormatting.RED))), null);
     RegistryObject<GUISlotBlockItem> EMPTY_APPLICABLE_SLOT = register("empty_applicable", ()-> new GUISlotBlockItem().putTooltip(List.of(Component.literal("There is no Gemstone Applicable in it's slot").withStyle(ChatFormatting.RED))), null);

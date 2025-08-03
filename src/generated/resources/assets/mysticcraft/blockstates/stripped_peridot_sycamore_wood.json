@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "mysticcraft:block/stripped_peridot_sycamore_wood",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "mysticcraft:block/stripped_peridot_sycamore_wood"
+    },
+    "axis=z": {
+      "model": "mysticcraft:block/stripped_peridot_sycamore_wood",
+      "x": 90
+    }
+  }
+}

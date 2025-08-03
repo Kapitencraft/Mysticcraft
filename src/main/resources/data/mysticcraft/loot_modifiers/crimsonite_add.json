@@ -1,5 +1,5 @@
 {
-  "type": "mysticcraft:add_item",
+  "type": "kap_lib:add_item",
   "conditions": [
     {
       "condition": "minecraft:block_state_property",

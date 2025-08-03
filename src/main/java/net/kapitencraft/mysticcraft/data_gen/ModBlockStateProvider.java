@@ -109,6 +109,10 @@ public class ModBlockStateProvider extends BlockStateProvider {
         logBlock(ModBlocks.PERIDOT_SYCAMORE_LOG.get());
         logBlock(ModBlocks.STRIPPED_PERIDOT_SYCAMORE_LOG.get());
         simpleBlockItem(ModBlocks.PERIDOT_SYCAMORE_LOG.get(), this.models().getExistingFile(MysticcraftMod.res("block/peridot_sycamore_log")));
+        simpleBlockItem(ModBlocks.STRIPPED_PERIDOT_SYCAMORE_LOG.get(), this.models().getExistingFile(MysticcraftMod.res("block/stripped_peridot_sycamore_log")));
+
+        wood(ModBlocks.PERIDOT_SYCAMORE_WOOD.get(), MysticcraftMod.res("peridot_sycamore_log"));
+        wood(ModBlocks.STRIPPED_PERIDOT_SYCAMORE_WOOD.get(), MysticcraftMod.res("stripped_peridot_sycamore_log"));
 
         simpleBlock(ModBlocks.PERIDOT_SYCAMORE_PLANKS);
     }
@@ -264,5 +268,19 @@ public class ModBlockStateProvider extends BlockStateProvider {
                         .tintindex(0)
                 )
                 .end();
+    }
+
+    private void wood(RotatedPillarBlock block, ResourceLocation texture) {
+        ModelFile file = models().cubeColumn(name(block), block(texture), block(texture));
+        axisBlock(block, file, file);
+        simpleBlockItem(block, file);
+    }
+
+    private String name(Block block) {
+        return key(block).getPath();
+    }
+
+    private ResourceLocation block(ResourceLocation in) {
+        return in.withPrefix("block/");
     }
 }

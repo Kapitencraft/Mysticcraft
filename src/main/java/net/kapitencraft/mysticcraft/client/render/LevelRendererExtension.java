@@ -41,11 +41,11 @@ public class LevelRendererExtension {
         Minecraft minecraft = Minecraft.getInstance();
         MultiBufferSource.BufferSource source = minecraft.renderBuffers().bufferSource();
         PoseStack stack = event.getPoseStack();
+        stack.pushPose();
+        Camera camera = event.getCamera();
+        Vec3 camPos = camera.getPosition();
+        stack.translate(-camPos.x, -camPos.y, -camPos.z);
         if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_BLOCK_ENTITIES) {
-            stack.pushPose();
-            Camera camera = event.getCamera();
-            Vec3 camPos = camera.getPosition();
-            stack.translate(-camPos.x, -camPos.y, -camPos.z);
             Frustum frustum = event.getFrustum();
             DistributionNetworkManager manager = DistributionNetworkManager.getClient();
             VertexConsumer buffer = source.getBuffer(RenderType.debugLineStrip(20));
@@ -65,7 +65,6 @@ public class LevelRendererExtension {
                     visited.add(node);
                 }
             }
-            stack.popPose();
         }
         if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_ENTITIES) {
             Player player = minecraft.player;
@@ -81,11 +80,11 @@ public class LevelRendererExtension {
                         OutlineBufferSource outlineBufferSource = minecraft.renderBuffers().outlineBufferSource();
                         outlineBufferSource.setColor(0, 127, 204, 255);
                         minecraft.getBlockRenderer().renderSingleBlock(state, stack, outlineBufferSource, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
-                        outlineBufferSource.endOutlineBatch();
                         stack.popPose();
                     }
                 }
             }
         }
+        stack.popPose();
     }
 }

@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.event.handler;
 
 import net.kapitencraft.kap_lib.event.custom.RegisterBonusProvidersEvent;
+import net.kapitencraft.kap_lib.event.custom.RegisterRequirementTypesEvent;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.capability.reforging.Reforges;
 import net.kapitencraft.mysticcraft.capability.spell.SpellHelper;
@@ -8,6 +9,8 @@ import net.kapitencraft.mysticcraft.item.tools.HammerItem;
 import net.kapitencraft.mysticcraft.network.ModMessages;
 import net.kapitencraft.mysticcraft.network.packets.S2C.HammerAbortBreakPacket;
 import net.kapitencraft.mysticcraft.registry.Spells;
+import net.kapitencraft.mysticcraft.requirement.type.ReforgeRequirementType;
+import net.kapitencraft.mysticcraft.rpg.classes.RPGClassManager;
 import net.kapitencraft.mysticcraft.rpg.perks.ServerPerksManager;
 import net.kapitencraft.mysticcraft.spell.Spell;
 import net.kapitencraft.mysticcraft.spell.SpellTarget;
@@ -48,6 +51,7 @@ public class Events {
     @SubscribeEvent
     public static void onServerStopped(ServerStoppedEvent event) {
         ServerPerksManager.clearCache();
+        RPGClassManager.clearCache();
     }
 
 
@@ -151,15 +155,20 @@ public class Events {
                 case CLIENT_HOLD -> {
                     Minecraft minecraft = Minecraft.getInstance();
                     int destroyStage = minecraft.gameMode.getDestroyStage();
-                    HammerItem.gatherBlocks(level, pos, face, p -> level.destroyBlockProgress(HammerItem.getPositionId(p), p, destroyStage));
+                    HammerItem.gatherBlocks(level, pos, face, p -> level.destroyBlockProgress(HammerItem.getPositionId(p), p, destroyStage), 1);
                 }
                 case STOP -> {
                     if (event.getEntity() instanceof ServerPlayer serverPlayer) {
-                        HammerItem.gatherBlocks(level, pos, face, serverPlayer.gameMode::destroyBlock);
+                        HammerItem.gatherBlocks(level, pos, face, serverPlayer.gameMode::destroyBlock, 1);
                     }
                 }
                 case ABORT -> ModMessages.sendToAllConnectedPlayers(p -> new HammerAbortBreakPacket(pos, face), (ServerLevel) event.getEntity().level());
             }
         }
+    }
+
+    @SubscribeEvent
+    public void onRegisterRequirementTypes(RegisterRequirementTypesEvent event) {
+        event.add(ReforgeRequirementType.INSTANCE);
     }
 }
