@@ -2,9 +2,9 @@
   "type": "mysticcraft:dominus",
   "data": {},
   "equipment_slots": [
+    "legs",
     "chest",
     "head",
-    "legs",
     "feet"
   ],
   "wearable_slots": []

@@ -1,10 +1,10 @@
 {
   "values": [
     "mysticcraft:gemstone_block",
+    "mysticcraft:gemstone_seed",
+    "mysticcraft:gemstone_crystal",
     "mysticcraft:reforge_anvil",
     "mysticcraft:gemstone_grinder",
-    "mysticcraft:mangatic_stone",
-    "mysticcraft:gemstone_block",
-    "mysticcraft:gemstone_crystal"
+    "mysticcraft:mangatic_stone"
   ]
 }

@@ -92,8 +92,8 @@ public interface SpellHelper {
             if (ManaHandler.consumeMana(user, manaToUse)) {
                 if (user instanceof ServerPlayer player) {
                     ModCriteriaTriggers.USE_MANA.trigger(player, manaToUse);
+                    if (cooldown != null) cooldown.applyCooldown(user, true);
                 }
-                if (cooldown != null) cooldown.applyCooldown(user, true);
                 sendUseDisplay(user, spell);
                 return true;
             }

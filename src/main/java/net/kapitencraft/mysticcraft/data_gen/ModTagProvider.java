@@ -135,6 +135,23 @@ public class ModTagProvider {
                     Blocks.STRIPPED_SPRUCE_WOOD,
                     ModBlocks.STRIPPED_PERIDOT_SYCAMORE_LOG.get()
             );
+
+            tag(BlockTags.MINEABLE_WITH_PICKAXE).add(ModBlocks.GEMSTONE_BLOCK.get(),
+                            ModBlocks.GEMSTONE_SEED.get(),
+                            ModBlocks.GEMSTONE_CRYSTAL.get(),
+                            ModBlocks.REFORGING_ANVIL.get(),
+                            ModBlocks.GEMSTONE_GRINDER.get(),
+                            ModBlocks.MANGATIC_STONE.get()
+            );
+
+            tag(BlockTags.BUTTONS).add(ModBlocks.LAPIS_BUTTON.get());
+            tag(BlockTags.PRESSURE_PLATES).add(ModBlocks.OBSIDIAN_PRESSURE_PLATE.get());
+            tag(BlockTags.SLABS).add(ModBlocks.GOLDEN_SLAB.get());
+            tag(BlockTags.STAIRS).add(ModBlocks.GOLDEN_STAIRS.get());
+            tag(BlockTags.WALLS).add(ModBlocks.GOLDEN_WALL.get());
+
+            tag(Tags.Blocks.ORES).add(ModBlocks.CRIMSONIUM_ORE.get());
+
         }
     }
 

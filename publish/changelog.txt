@@ -8,3 +8,4 @@ fixed many recipes being under the minecraft namespace
 fixed Item entities merging, but not updating count
 added peridot sycamore trees
 reworked reforge selector
+moved many tags to datagen
