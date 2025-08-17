@@ -70,6 +70,10 @@ public class CircleParticle extends TextureSheetParticle {
         makeCornerVertex(vertexConsumer, vertexPos[1], f7, f4, time);
         makeCornerVertex(vertexConsumer, vertexPos[2], f6, f4, time);
         makeCornerVertex(vertexConsumer, vertexPos[3], f6, f5, time);
+        makeCornerVertex(vertexConsumer, vertexPos[3], f7, f5, time);
+        makeCornerVertex(vertexConsumer, vertexPos[2], f7, f4, time);
+        makeCornerVertex(vertexConsumer, vertexPos[1], f6, f4, time);
+        makeCornerVertex(vertexConsumer, vertexPos[0], f6, f5, time);
     }
 
     private void makeCornerVertex(VertexConsumer consumer, Vector3f vector3f, float u1, float v1, float time) {

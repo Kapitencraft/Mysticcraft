@@ -35,13 +35,11 @@ public class AltarBlockEntityRenderer extends BasePedestalBlockEntityRenderer<Al
         Level level = pBlockEntity.getLevel();
         BlockPos origin = pBlockEntity.getBlockPos();
         for (BlockPos pos : pBlockEntity.getPedestalPositions()) {
-            if (level.getBlockState(pos).isAir()) {
-                pPoseStack.pushPose();
-                pPoseStack.translate(pos.getX() - origin.getX(), 0, pos.getZ() - origin.getZ());
-
-                modelRenderer.renderModel(pPoseStack.last(), consumer, state, model, 1, 1, 1, pPackedLight, pPackedOverlay);
-                pPoseStack.popPose();
-            }
+            pPoseStack.pushPose();
+            pPoseStack.translate(pos.getX() - origin.getX(), 0, pos.getZ() - origin.getZ());
+            boolean air = level.getBlockState(pos).isAir();
+            modelRenderer.renderModel(pPoseStack.last(), consumer, state, model, 1, air ? 0 : 1, air ? 0 : 1, pPackedLight, pPackedOverlay);
+            pPoseStack.popPose();
         }
     }
 }

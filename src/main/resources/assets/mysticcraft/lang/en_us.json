@@ -434,5 +434,6 @@
   "container.spell_caster_turret": "Spell Caster Turret",
   "container.vulcanic_generator": "Vulcanic Generator",
   "gemstone_applicable_title": "Applicable Gemstones:",
-  "spell.cast.failed.cooldown": "Spell is on Cooldown"
+  "spell.cast.failed.cooldown": "Spell is on Cooldown",
+  "pedestal.place.fail": "To many Altars Around!"
 }

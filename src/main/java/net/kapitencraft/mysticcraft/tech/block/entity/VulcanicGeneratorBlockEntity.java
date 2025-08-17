@@ -1,7 +1,6 @@
 package net.kapitencraft.mysticcraft.tech.block.entity;
 
 import net.kapitencraft.mysticcraft.registry.ModBlockEntities;
-import net.kapitencraft.mysticcraft.registry.ModItems;
 import net.kapitencraft.mysticcraft.tech.gui.menu.VulcanicGeneratorMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -15,7 +14,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class VulcanicGeneratorBlockEntity extends GenericFueledGeneratorBlockEntity {
-    private int speed;
 
     public VulcanicGeneratorBlockEntity(BlockPos pPos, BlockState pBlockState) {
         super(ModBlockEntities.VULCANIC_GENERATOR.get(), pPos, pBlockState, 10000);
@@ -44,16 +42,6 @@ public class VulcanicGeneratorBlockEntity extends GenericFueledGeneratorBlockEnt
     @Override
     public @Nullable AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
         return new VulcanicGeneratorMenu(pContainerId, pPlayerInventory, this);
-    }
-
-    @Override
-    public boolean canUpgrade(ItemStack upgradeModule) {
-        return upgradeModule.is(ModItems.SPEED_UPGRADE.get());
-    }
-
-    @Override
-    public void upgrade(ItemStack stack) {
-        speed++;
     }
 
     @Override

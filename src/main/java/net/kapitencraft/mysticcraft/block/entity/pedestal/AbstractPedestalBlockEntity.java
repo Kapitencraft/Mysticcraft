@@ -15,6 +15,12 @@ import org.jetbrains.annotations.Nullable;
 
 public abstract class AbstractPedestalBlockEntity extends BlockEntity {
     private final ItemStackHandler item = new ItemStackHandler(1) {
+
+        @Override
+        public int getSlotLimit(int slot) {
+            return 1;
+        }
+
         @Override
         protected void onContentsChanged(int slot) {
             AbstractPedestalBlockEntity.this.setChanged();
@@ -59,5 +65,22 @@ public abstract class AbstractPedestalBlockEntity extends BlockEntity {
     public void load(CompoundTag pTag) {
         this.item.deserializeNBT(pTag.getCompound("inventory"));
         super.load(pTag);
+    }
+
+    @Override
+    public CompoundTag getUpdateTag() {
+        return saveWithoutMetadata();
+    }
+
+    public ItemStack insertItem(ItemStack playerItem) {
+        return this.item.insertItem(0, playerItem, false);
+    }
+
+    @Override
+    public void setChanged() {
+        super.setChanged();
+        if (!level.isClientSide()) {
+            level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
+        }
     }
 }

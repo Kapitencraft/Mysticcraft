@@ -34,8 +34,8 @@ public class UpgradableBEMenu<BE extends UpgradableBlockEntity> extends BlockEnt
                 }
 
                 @Override
-                public void set(ItemStack pStack) {
-                    super.set(pStack);
+                public void setByPlayer(ItemStack pStack) {
+                    super.setByPlayer(pStack);
                     provider.upgrade(pStack);
                 }
 

@@ -73,7 +73,7 @@ public abstract class GenericFueledGeneratorBlockEntity extends UpgradableBlockE
         }
         if (pBlockEntity.mana < pBlockEntity.maxMana) {
             if (pBlockEntity.burnTime > 0) {
-                pBlockEntity.burnTime-= (pBlockEntity.speed) + 1;
+                pBlockEntity.burnTime -= pBlockEntity.speed + 1;
                 pBlockEntity.mana = Math.min(pBlockEntity.maxMana, pBlockEntity.mana + pBlockEntity.rate);
                 pBlockEntity.setChanged();
             } else {
@@ -167,6 +167,7 @@ public abstract class GenericFueledGeneratorBlockEntity extends UpgradableBlockE
 
     public void drops() {
         Containers.dropContents(this.level, this.worldPosition, this.items.getItems());
+        super.drops();
     }
 
     public abstract boolean isValidFuel(@NotNull ItemStack stack);

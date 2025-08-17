@@ -57,6 +57,8 @@ import java.util.function.Supplier;
 @SuppressWarnings("unused")
 public interface ModItems {
 
+    //region wrapper
+
     static <T extends Item> RegistryObject<T> register(String name, final Supplier<T> supplier, TabGroup group) {
         RegistryObject<T> registryObject = REGISTRY.register(name, supplier);
         if (group != null) group.add(registryObject);
@@ -79,6 +81,7 @@ public interface ModItems {
         return map;
     }
 
+    //endregion
 
     static Collection<RegistryObject<Item>> getEntries() {
         return REGISTRY.getEntries();
@@ -191,7 +194,6 @@ public interface ModItems {
     RegistryObject<BucketItem> BUCKET_OF_MANA = REGISTRY.register("bucket_of_mana", ()-> new BucketItem(ModFluids.SOURCE_MANA_FLUID, MiscHelper.rarity(Rarity.EPIC).stacksTo(1)));
     RegistryObject<GemstoneItem> GEMSTONE = REGISTRY.register("gemstone", GemstoneItem::new);
 
-    //HashMap<GuildUpgrades, RegistryObject<GuildUpgradeItem>> GUILD_UPGRADES = GuildUpgrades.createRegistry();
     HashMap<PrecursorRelicItem.BossType, RegistryObject<PrecursorRelicItem>> PRECURSOR_RELICTS = PrecursorRelicItem.makeRegistry();
 
     RegistryObject<CursedPearlItem> CURSED_PEARL = register("cursed_pearl", CursedPearlItem::new, TabGroup.COMBAT);

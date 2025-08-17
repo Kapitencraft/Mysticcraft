@@ -2,7 +2,7 @@ package net.kapitencraft.mysticcraft.entity.skeleton_master;
 
 import net.kapitencraft.kap_lib.helpers.MathHelper;
 import net.kapitencraft.kap_lib.helpers.MiscHelper;
-import net.kapitencraft.mysticcraft.helpers.ParticleHelper;
+import net.kapitencraft.kap_lib.helpers.ParticleHelper;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.world.phys.Vec3;
 

@@ -30,7 +30,6 @@ public class GemstoneGrinderMenu extends NoBEMenu<GemstoneGrinderMenu.ItemContai
     public GemstoneGrinderMenu(int id, Player player, ContainerLevelAccess access) {
         super(ModMenuTypes.GEM_GRINDER.get(), id, new ItemContainer(), player.level(), player, access);
         Inventory inv = player.getInventory();
-        checkContainerSize(inv, 3);
 
         this.addPlayerInventories(inv, 0, 0);
 

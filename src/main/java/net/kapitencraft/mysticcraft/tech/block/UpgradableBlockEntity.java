@@ -44,9 +44,16 @@ public abstract class UpgradableBlockEntity extends BlockEntity implements IUpgr
         return upgrades;
     }
 
-    private static class UpgradeContainer extends ItemStackHandler {
+    private class UpgradeContainer extends ItemStackHandler {
         public UpgradeContainer() {
             super(8);
+        }
+
+        @Override
+        protected void onLoad() {
+            this.stacks.forEach(s -> {
+                if (!s.isEmpty()) UpgradableBlockEntity.this.upgrade(s);
+            });
         }
 
         public NonNullList<ItemStack> getItems() {

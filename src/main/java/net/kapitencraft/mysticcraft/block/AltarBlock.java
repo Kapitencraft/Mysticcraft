@@ -9,6 +9,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -31,13 +32,19 @@ public class AltarBlock extends PedestalBlock {
                     pLevel.setBlockAndUpdate(pedestalPosition, ModBlocks.PEDESTAL.get().defaultBlockState());
                     if (!InventoryHelper.isCreativeMode(pPlayer)) {
                         stack.shrink(1);
-                        if (stack.isEmpty()) break;
                     }
+                    break;
                 }
             }
             return InteractionResult.sidedSuccess(pLevel.isClientSide);
         }
         return super.use(pState, pLevel, pPos, pPlayer, pHand, pHit);
+    }
+
+    @Override
+    public @Nullable BlockState getStateForPlacement(BlockPlaceContext pContext) {
+        pContext.getClickedPos();
+        return super.getStateForPlacement(pContext);
     }
 
     @Override
@@ -47,6 +54,6 @@ public class AltarBlock extends PedestalBlock {
 
     @Override
     public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        return pLevel.isClientSide ? null : createTickerHelper(pBlockEntityType, ModBlockEntities.ALTAR.get(), AltarBlockEntity::serverTick);
+        return createTickerHelper(pBlockEntityType, ModBlockEntities.ALTAR.get(), pLevel.isClientSide ? AltarBlockEntity::clientTick : AltarBlockEntity::serverTick);
     }
 }

@@ -30,15 +30,18 @@ public class PedestalBlock extends BaseEntityBlock {
 
     @Override
     public @NotNull InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-        ItemStack stack = pPlayer.getItemInHand(pHand);
+        ItemStack playerItem = pPlayer.getItemInHand(pHand);
         AbstractPedestalBlockEntity entity = (AbstractPedestalBlockEntity) pLevel.getBlockEntity(pPos);
-        ItemStack item = entity.getItem();
-        if (!ItemStack.isSameItemSameTags(stack, item)) {
-            entity.setItem(stack);
-            pPlayer.setItemInHand(pHand, item);
-            return InteractionResult.sidedSuccess(pLevel.isClientSide);
+        ItemStack pedestalItem = entity.getItem();
+        if (!pedestalItem.isEmpty()) {
+            if (playerItem.isEmpty() || ItemStack.isSameItemSameTags(playerItem, pedestalItem)) {
+                pPlayer.setItemInHand(pHand, pedestalItem);
+                entity.setItem(ItemStack.EMPTY);
+            }
+        } else {
+            pPlayer.setItemInHand(pHand, entity.insertItem(playerItem));
         }
-        return super.use(pState, pLevel, pPos, pPlayer, pHand, pHit);
+        return InteractionResult.sidedSuccess(pLevel.isClientSide());
     }
 
     @Override
