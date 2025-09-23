@@ -3,9 +3,6 @@ package net.kapitencraft.mysticcraft.client.render;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.kapitencraft.mysticcraft.capability.spell.SpellHelper;
-import net.kapitencraft.mysticcraft.item.combat.spells.SpellItem;
-import net.kapitencraft.mysticcraft.spell.Spell;
-import net.kapitencraft.mysticcraft.spell.SpellTarget;
 import net.kapitencraft.mysticcraft.tech.DistributionNetworkManager;
 import net.kapitencraft.mysticcraft.tech.ManaDistributionNetwork;
 import net.minecraft.client.Camera;
@@ -17,8 +14,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -44,7 +39,7 @@ public class LevelRendererExtension {
         stack.pushPose();
         Camera camera = event.getCamera();
         Vec3 camPos = camera.getPosition();
-        stack.translate(-camPos.x, -camPos.y, -camPos.z);
+        stack.translate(-camPos.x, -camPos.y, -camPos.z); //ALWAYS ensure to translate -camPos because otherwise it will render anywhere, but not where you need it
         if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_BLOCK_ENTITIES) {
             Frustum frustum = event.getFrustum();
             DistributionNetworkManager manager = DistributionNetworkManager.getClient();
@@ -67,22 +62,15 @@ public class LevelRendererExtension {
             }
         }
         if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_ENTITIES) {
-            Player player = minecraft.player;
-            if (player.isUsingItem()) {
-                ItemStack item = player.getUseItem();
-                if (item.getItem() instanceof SpellItem) {
-                    Spell spell = SpellHelper.getActiveSpell(item);
-                    if (spell.getTarget().getType() == SpellTarget.Type.BLOCK) {
-                        BlockPos pos = BlockPos.of(item.getTag().getLong("target"));
-                        stack.pushPose();
-                        stack.translate(pos.getX(), pos.getY(), pos.getZ());
-                        BlockState state = minecraft.level.getBlockState(pos);
-                        OutlineBufferSource outlineBufferSource = minecraft.renderBuffers().outlineBufferSource();
-                        outlineBufferSource.setColor(0, 127, 204, 255);
-                        minecraft.getBlockRenderer().renderSingleBlock(state, stack, outlineBufferSource, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
-                        stack.popPose();
-                    }
-                }
+            BlockPos pos = SpellHelper.getBlockTarget(minecraft.player);
+            if (pos != null) {
+                stack.pushPose();
+                stack.translate(pos.getX(), pos.getY(), pos.getZ());
+                BlockState state = minecraft.level.getBlockState(pos);
+                OutlineBufferSource outlineBufferSource = minecraft.renderBuffers().outlineBufferSource();
+                outlineBufferSource.setColor(0, 127, 204, 255);
+                minecraft.getBlockRenderer().renderSingleBlock(state, stack, outlineBufferSource, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
+                stack.popPose();
             }
         }
         stack.popPose();

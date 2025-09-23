@@ -12,6 +12,7 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(LevelRenderer.class)
@@ -45,5 +46,10 @@ public class LevelRendererMixin {
             }
         }
         return entity.getTeamColor();
+    }
+
+    @ModifyVariable(method = "renderLevel", at = @At(value = "LOAD", ordinal = 0), name = "flag2")
+    private boolean ensureGlowing(boolean in) {
+        return in || SpellHelper.getBlockTarget(Minecraft.getInstance().player) != null;
     }
 }

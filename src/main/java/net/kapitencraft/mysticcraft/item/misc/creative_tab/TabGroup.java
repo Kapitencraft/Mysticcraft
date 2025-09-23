@@ -1,11 +1,15 @@
 package net.kapitencraft.mysticcraft.item.misc.creative_tab;
 
+import net.kapitencraft.kap_lib.helpers.CollectionHelper;
+import net.kapitencraft.mysticcraft.registry.ModCreativeModTabs;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
@@ -16,29 +20,26 @@ import java.util.function.Consumer;
 //TODO rework
 public class TabGroup {
     private static final List<TabGroup> groups = new ArrayList<>();
-    public static final TabGroup TECHNOLOGY = new TabGroup(TabRegister.TabTypes.TECHNOLOGY);
-    public static final TabGroup BUILDING_MATERIAL = new TabGroup(TabRegister.TabTypes.BUILDING_MATERIALS);
-    public static final TabGroup MATERIAL = new TabGroup(TabRegister.TabTypes.MOD_MATERIALS);
-    public static final TabGroup COMBAT = new TabGroup(TabRegister.TabTypes.WEAPONS_AND_TOOLS);
-    public static final TabGroup CRIMSON_MATERIAL = new TabGroup(TabRegister.TabTypes.MOD_MATERIALS);
-    public static final TabGroup TERROR_MATERIAL = new TabGroup(TabRegister.TabTypes.MOD_MATERIALS);
-    public static final TabGroup UTILITIES = new TabGroup(TabRegister.TabTypes.TOOLS_AND_UTILITIES);
-    public static final TabGroup DECO = new TabGroup(TabRegister.TabTypes.DECO);
-    public static final TabGroup GOLDEN_DECO = new TabGroup(TabRegister.TabTypes.DECO);
-    public static final TabGroup OPERATOR = new TabGroup(TabRegister.TabTypes.OPERATOR);
+    public static final TabGroup TECHNOLOGY = TabGroup.builder().tab(ModCreativeModTabs.TECHNOLOGY).build();
+    public static final TabGroup BUILDING_MATERIAL = TabGroup.builder().tab(CreativeModeTabs.BUILDING_BLOCKS).build();
+    public static final TabGroup MATERIAL = TabGroup.builder().tab(ModCreativeModTabs.MATERIALS).build();
+    public static final TabGroup COMBAT = TabGroup.builder().tab(ModCreativeModTabs.WEAPONS_AND_TOOLS).build();
+    public static final TabGroup CRIMSON_MATERIAL = TabGroup.builder().tab(ModCreativeModTabs.MATERIALS).build();
+    public static final TabGroup TERROR_MATERIAL = TabGroup.builder().tab(ModCreativeModTabs.MATERIALS).build();
+    public static final TabGroup UTILITIES = TabGroup.builder().tab(CreativeModeTabs.TOOLS_AND_UTILITIES).build();
+    public static final TabGroup DECO = TabGroup.builder().tab(ModCreativeModTabs.DECORATION).build();
+    public static final TabGroup GOLDEN_DECO = TabGroup.builder().tab(ModCreativeModTabs.DECORATION).build();
+    public static final TabGroup OPERATOR = TabGroup.builder().tab(CreativeModeTabs.OP_BLOCKS).build();
 
-    public static final TabGroup PERIDOT_SYCAMORE = new TabGroup(TabRegister.TabTypes.MOD_MATERIALS);
+    public static final TabGroup PERIDOT_SYCAMORE = new TabGroup(ModCreativeModTabs.MATERIALS.getKey());
 
-    protected final List<TabRegister.TabTypes> types;
+    protected final ResourceKey<CreativeModeTab>[] types;
     protected final List<RegistryObject<? extends Item>> items = new ArrayList<>();
 
-    public TabGroup(TabRegister.TabTypes... type) {
-        this.types = Arrays.asList(type);
+    @SafeVarargs
+    public TabGroup(ResourceKey<CreativeModeTab>... type) {
+        this.types = type;
         groups.add(this);
-    }
-
-    private TabGroup(List<TabRegister.TabTypes> list) {
-        this.types = list;
     }
 
     public TabGroup add(RegistryObject<? extends Item> toAdd) {
@@ -46,19 +47,39 @@ public class TabGroup {
         return this;
     }
 
-    public void register(TabRegister.TabTypes type, Consumer<Collection<ItemStack>> consumer) {
-        if (types.contains(type)) {
+    public void register(ResourceKey<CreativeModeTab> type, Consumer<Collection<ItemStack>> consumer) {
+        if (CollectionHelper.arrayContains(types, type)) {
             consumer.accept(items.stream().map(RegistryObject::get).map(ItemStack::new).toList());
         }
     }
 
-    public static void registerAll(TabRegister.TabTypes types, Consumer<Collection<ItemStack>> consumer) {
-        groups.forEach(group -> group.register(types, consumer));
+    public static void registerAll(ResourceKey<CreativeModeTab> type, Consumer<Collection<ItemStack>> consumer) {
+        groups.forEach(group -> group.register(type, consumer));
     }
 
-    public TabGroup andThen(TabGroup other) {
-        List<TabRegister.TabTypes> own = types;
-        own.addAll(other.types);
-        return new TabGroup(own);
+
+    private static TabGroup.Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        List<ResourceKey<CreativeModeTab>> key;
+
+        private Builder() {}
+
+        public Builder tab(ResourceKey<CreativeModeTab> key) {
+            this.key.add(key);
+            return this;
+        }
+
+        public Builder tab(RegistryObject<CreativeModeTab> tab) {
+            this.key.add(tab.getKey());
+            return this;
+        }
+
+        @SuppressWarnings("unchecked")
+        public TabGroup build() {
+            return new TabGroup(key.toArray(ResourceKey[]::new));
+        }
     }
 }

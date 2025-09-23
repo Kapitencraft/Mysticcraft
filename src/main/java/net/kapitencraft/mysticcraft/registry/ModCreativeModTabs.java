@@ -4,8 +4,6 @@ import net.kapitencraft.kap_lib.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneType;
 import net.kapitencraft.mysticcraft.capability.gemstone.IGemstoneItem;
-import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
-import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
 import net.kapitencraft.mysticcraft.spell.Elements;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.ListTag;
@@ -28,7 +26,6 @@ public interface ModCreativeModTabs {
             .icon(() -> new ItemStack(ModItems.SCYLLA.get()))
             .displayItems((displayParameters, output) -> {
                 output.acceptAll(Spells.createForCreativeModeTab());
-                TabGroup.registerAll(TabRegister.TabTypes.SPELL, output::acceptAll);
             }).build());
 
     RegistryObject<CreativeModeTab> GEMSTONES = REGISTRY.register("gemstone", () -> CreativeModeTab.builder().title(Component.translatable("itemGroup.mysticcraft.gemstone"))
@@ -38,7 +35,6 @@ public interface ModCreativeModTabs {
                 output.acceptAll(GemstoneType.allBlocks().values());
                 output.acceptAll(GemstoneType.allCrystals().actualValues());
                 output.acceptAll(GemstoneType.allSeeds().actualValues());
-                TabGroup.registerAll(TabRegister.TabTypes.GEMSTONE, output::acceptAll);
             }).build());
 
     RegistryObject<CreativeModeTab> MATERIALS = REGISTRY.register("materials", () -> CreativeModeTab.builder().title(Component.translatable("itemGroup.mysticcraft.materials"))
@@ -56,18 +52,20 @@ public interface ModCreativeModTabs {
                     stack.addTagElement("Enchantments", tags);
                     return stack;
                 }));
-                TabGroup.registerAll(TabRegister.TabTypes.MOD_MATERIALS, output::acceptAll);
             }).build());
 
     RegistryObject<CreativeModeTab> WEAPONS_AND_TOOLS = REGISTRY.register("weapons_and_tools", () -> CreativeModeTab.builder().title(Component.translatable("itemGroup.mysticcraft.weapons_and_tools"))
             .icon(()-> new ItemStack(ModItems.MANA_STEEL_SWORD.get()))
-            .displayItems((displayParameters, output) -> TabGroup.registerAll(TabRegister.TabTypes.WEAPONS_AND_TOOLS, output::acceptAll)).build());
+            .build()
+    );
 
     RegistryObject<CreativeModeTab> DECORATION = REGISTRY.register("deco", () -> CreativeModeTab.builder().title(Component.translatable("itemGroup.mysticcraft.deco"))
             .icon(()-> new ItemStack(ModBlocks.GOLDEN_WALL.getItem()))
-            .displayItems((displayParameters, output) -> TabGroup.registerAll(TabRegister.TabTypes.DECO, output::acceptAll)).build());
+            .build()
+    );
     RegistryObject<CreativeModeTab> TECHNOLOGY = REGISTRY.register("technology", () -> CreativeModeTab.builder()
             .title(Component.translatable("itemGroup.mysticcraft.tech"))
             .icon(() -> new ItemStack(ModBlocks.MANA_RELAY.getItem()))
-            .displayItems((pParameters, pOutput) -> TabGroup.registerAll(TabRegister.TabTypes.TECHNOLOGY, pOutput::acceptAll)).build());
+            .build()
+    );
 }

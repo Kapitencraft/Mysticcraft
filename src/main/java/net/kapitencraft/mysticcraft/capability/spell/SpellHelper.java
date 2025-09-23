@@ -9,6 +9,7 @@ import net.kapitencraft.kap_lib.requirements.type.RequirementType;
 import net.kapitencraft.kap_lib.util.ManaHandler;
 import net.kapitencraft.mysticcraft.capability.CapabilityHelper;
 import net.kapitencraft.mysticcraft.event.advancement.ModCriteriaTriggers;
+import net.kapitencraft.mysticcraft.item.combat.spells.SpellItem;
 import net.kapitencraft.mysticcraft.item.combat.spells.SpellScrollItem;
 import net.kapitencraft.mysticcraft.spell.Spell;
 import net.kapitencraft.mysticcraft.spell.SpellExecutionFailedException;
@@ -28,6 +29,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -37,6 +39,15 @@ public interface SpellHelper {
         return CapabilityHelper.getCapability(stack, CapabilityHelper.SPELL);
     }
 
+    @SuppressWarnings("DataFlowIssue")
+    static @Nullable BlockPos getBlockTarget(Player entity) {
+        if (!entity.isUsingItem()) return null;
+        ItemStack stack = entity.getUseItem();
+        if (!(stack.getItem() instanceof SpellItem)) return null;
+        Spell spell = getActiveSpell(stack);
+        if (spell.getTarget().getType() != SpellTarget.Type.BLOCK) return null;
+        return BlockPos.of(stack.getTag().getLong("target"));
+    }
 
     static Spell getActiveSpell(ItemStack stack) {
         return SpellHelper.getCapability(stack).getSlot(0).getSpell();

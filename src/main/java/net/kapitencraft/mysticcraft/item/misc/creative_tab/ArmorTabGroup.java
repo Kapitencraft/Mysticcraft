@@ -1,6 +1,9 @@
 package net.kapitencraft.mysticcraft.item.misc.creative_tab;
 
+import net.kapitencraft.kap_lib.helpers.CollectionHelper;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.RegistryObject;
 
@@ -11,14 +14,14 @@ import java.util.function.Consumer;
 
 public class ArmorTabGroup extends TabGroup {
 
-    public ArmorTabGroup(TabRegister.TabTypes... type) {
+    public ArmorTabGroup(ResourceKey<CreativeModeTab> type) {
         super(type);
     }
     private static final Comparator<ArmorItem> comparator = Comparator.comparingDouble(value -> 4 - value.getEquipmentSlot().getIndex());
 
     @Override
-    public void register(TabRegister.TabTypes type, Consumer<Collection<ItemStack>> consumer) {
-        if (types.contains(type)) {
+    public void register(ResourceKey<CreativeModeTab> type, Consumer<Collection<ItemStack>> consumer) {
+        if (CollectionHelper.arrayContains(types, type)) {
             consumer.accept(items.stream().map(RegistryObject::get).map(item -> item instanceof ArmorItem armorItem ? armorItem : null).filter(Objects::nonNull).sorted(comparator).map(ItemStack::new).toList());
         }
     }

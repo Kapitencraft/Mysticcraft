@@ -435,5 +435,6 @@
   "container.vulcanic_generator": "Vulcanic Generator",
   "gemstone_applicable_title": "Applicable Gemstones:",
   "spell.cast.failed.cooldown": "Spell is on Cooldown",
-  "pedestal.place.fail": "To many Altars Around!"
+  "pedestal.place.fail": "To many Altars Around!",
+  "spell.select.title": "Select Spell"
 }
