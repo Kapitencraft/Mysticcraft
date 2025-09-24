@@ -276,7 +276,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
         simpleBlockItem(block, file);
     }
 
-    private String name(Block block) {
+    public String name(Block block) {
         return key(block).getPath();
     }
 

@@ -16,7 +16,6 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 public class FrozenBlazeArmorItem extends AbstractArmorItem {
-    public static final ArmorTabGroup FROZEN_BLAZE_ARMOR_GROUP = new ArmorTabGroup(TabRegister.TabTypes.WEAPONS_AND_TOOLS);
 
     public FrozenBlazeArmorItem(ArmorItem.Type type) {
         super(ModArmorMaterials.FROZEN_BLAZE, type, new Item.Properties().rarity(ExtraRarities.LEGENDARY).fireResistant());

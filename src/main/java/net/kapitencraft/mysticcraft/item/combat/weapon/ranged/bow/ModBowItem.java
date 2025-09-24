@@ -6,6 +6,8 @@ import net.kapitencraft.kap_lib.item.BaseAttributeUUIDs;
 import net.kapitencraft.kap_lib.registry.ExtraAttributes;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
+import net.kapitencraft.mysticcraft.registry.ModCreativeModTabs;
+import net.minecraft.client.gui.components.tabs.Tab;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
@@ -21,7 +23,7 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class ModBowItem extends BowItem {
-    public static final TabGroup BOW_GROUP = new TabGroup(TabRegister.TabTypes.WEAPONS_AND_TOOLS);
+    public static final TabGroup BOW_GROUP = TabGroup.builder().tab(ModCreativeModTabs.WEAPONS_AND_TOOLS).build();
 
     public abstract double getDivider();
 

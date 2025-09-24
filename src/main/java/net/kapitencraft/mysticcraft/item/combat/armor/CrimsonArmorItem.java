@@ -30,9 +30,6 @@ import java.util.function.Consumer;
 
 public class CrimsonArmorItem extends NetherArmorItem {
 
-
-    public static final ArmorTabGroup CRIMSON_ARMOR_GROUP = new ArmorTabGroup(TabRegister.TabTypes.WEAPONS_AND_TOOLS);
-
     public CrimsonArmorItem(ArmorItem.Type p_40387_) {
         super(ModArmorMaterials.CRIMSON, p_40387_, NETHER_ARMOR_PROPERTIES);
     }

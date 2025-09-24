@@ -6,6 +6,7 @@ import net.kapitencraft.kap_lib.registry.ExtraAttributes;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
+import net.kapitencraft.mysticcraft.registry.ModCreativeModTabs;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.entity.Entity;
@@ -22,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
 
 public abstract class ModSwordItem extends SwordItem {
     public static final float DEFAULT_ATTACK_SPEED = -2.4f;
-    public static final TabGroup SWORD_GROUP = new TabGroup(TabRegister.TabTypes.WEAPONS_AND_TOOLS);
+    public static final TabGroup SWORD_GROUP = TabGroup.builder().tab(ModCreativeModTabs.WEAPONS_AND_TOOLS).build();
     public ModSwordItem(Tier p_43269_, int attackDamage, float attackSpeed, Properties p_43272_) {
         super(p_43269_, attackDamage, attackSpeed, p_43272_);
     }

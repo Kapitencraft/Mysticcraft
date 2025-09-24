@@ -2,6 +2,7 @@ package net.kapitencraft.mysticcraft.item.material;
 
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
+import net.kapitencraft.mysticcraft.registry.ModCreativeModTabs;
 import net.kapitencraft.mysticcraft.registry.ModItems;
 import net.kapitencraft.mysticcraft.spell.Element;
 import net.kapitencraft.mysticcraft.spell.Elements;
@@ -16,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class ElementalShard extends Item {
-    public static final TabGroup ELEMENTS_GROUP = new TabGroup(TabRegister.TabTypes.SPELL, TabRegister.TabTypes.MOD_MATERIALS);
+    public static final TabGroup ELEMENTS_GROUP = TabGroup.builder().tab(ModCreativeModTabs.SPELLS).tab(ModCreativeModTabs.MATERIALS).build();
     private final Element element;
 
     public ElementalShard(Element element) {

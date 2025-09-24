@@ -8,6 +8,8 @@ import net.kapitencraft.mysticcraft.capability.spell.ISpellItem;
 import net.kapitencraft.mysticcraft.item.misc.ModTiers;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
+import net.kapitencraft.mysticcraft.registry.ModCreativeModTabs;
+import net.minecraft.client.gui.components.tabs.Tab;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -22,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Consumer;
 
 public abstract class SpellItem extends SwordItem implements ISpellItem {
-    public static final TabGroup SPELL_GROUP = new TabGroup(TabRegister.TabTypes.SPELL, TabRegister.TabTypes.WEAPONS_AND_TOOLS);
+    public static final TabGroup SPELL_GROUP = TabGroup.builder().tab(ModCreativeModTabs.SPELLS).tab(ModCreativeModTabs.WEAPONS_AND_TOOLS).build();
 
     private final int intelligence;
     private final int ability_damage;

@@ -4,6 +4,7 @@ import net.kapitencraft.kap_lib.helpers.MathHelper;
 import net.kapitencraft.kap_lib.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
+import net.kapitencraft.mysticcraft.registry.ModCreativeModTabs;
 import net.kapitencraft.mysticcraft.registry.ModItems;
 import net.kapitencraft.mysticcraft.registry.ModStatTypes;
 import net.minecraft.network.chat.Component;
@@ -30,7 +31,7 @@ import java.util.function.Supplier;
 
 @Mod.EventBusSubscriber
 public class PrecursorRelicItem extends Item {
-    public static final TabGroup PRECURSOR_GROUP = new TabGroup(TabRegister.TabTypes.MOD_MATERIALS);
+    public static final TabGroup PRECURSOR_GROUP = TabGroup.builder().tab(ModCreativeModTabs.MATERIALS).build();
     private static final UUID DAMAGE_BOOST = UUID.fromString("2e00584a-53e6-4ddf-926f-e13a4c229bdb");
     private static final UUID HP_BOOST = UUID.fromString("e8132f3b-d111-41ae-962c-ebd3385aafdf");
 

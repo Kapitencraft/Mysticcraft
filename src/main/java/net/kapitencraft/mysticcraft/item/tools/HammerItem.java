@@ -3,6 +3,7 @@ package net.kapitencraft.mysticcraft.item.tools;
 import com.google.common.collect.Sets;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
+import net.kapitencraft.mysticcraft.registry.ModCreativeModTabs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -21,7 +22,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class HammerItem extends PickaxeItem {
-    public static final TabGroup HAMMER_GROUP = new TabGroup(TabRegister.TabTypes.MOD_MATERIALS);
+    public static final TabGroup HAMMER_GROUP = TabGroup.builder().tab(ModCreativeModTabs.MATERIALS).build();
     public HammerItem(Properties properties, Tier tier, int pAttackDamageModifier) {
         super(tier, pAttackDamageModifier, -3.2f, properties);
     }

@@ -4,6 +4,7 @@ import net.kapitencraft.kap_lib.helpers.MiscHelper;
 import net.kapitencraft.kap_lib.item.ExtendedItem;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
+import net.kapitencraft.mysticcraft.registry.ModCreativeModTabs;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
@@ -18,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class GemstoneItem extends Item implements IGemstoneItem, ExtendedItem {
-    public static final TabGroup GROUP = new TabGroup(TabRegister.TabTypes.SPELL);
+    public static final TabGroup GROUP = TabGroup.builder().tab(ModCreativeModTabs.SPELLS).build();
     public GemstoneItem() {
         super(MiscHelper.rarity(Rarity.RARE));
     }

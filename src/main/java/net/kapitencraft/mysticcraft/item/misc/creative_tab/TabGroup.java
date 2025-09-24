@@ -58,12 +58,12 @@ public class TabGroup {
     }
 
 
-    private static TabGroup.Builder builder() {
+    public static TabGroup.Builder builder() {
         return new Builder();
     }
 
     public static class Builder {
-        List<ResourceKey<CreativeModeTab>> key;
+        private final List<ResourceKey<CreativeModeTab>> key = new ArrayList<>();
 
         private Builder() {}
 

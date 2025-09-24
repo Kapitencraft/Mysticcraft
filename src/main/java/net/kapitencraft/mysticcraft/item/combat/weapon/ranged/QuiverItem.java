@@ -6,6 +6,7 @@ import net.kapitencraft.mysticcraft.capability.containable.QuiverCapability;
 import net.kapitencraft.mysticcraft.item.material.containable.ContainableItem;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
+import net.kapitencraft.mysticcraft.registry.ModCreativeModTabs;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
@@ -23,7 +24,7 @@ import java.util.List;
 public class QuiverItem extends ContainableItem<ArrowItem, QuiverCapability> {
     //TODO extract from a static variable
     public static final ThreadLocal<ItemStack> operationQuiver = new ThreadLocal<>();
-    public static TabGroup QUIVER_GROUP = new TabGroup(TabRegister.TabTypes.WEAPONS_AND_TOOLS);
+    public static TabGroup QUIVER_GROUP = TabGroup.builder().tab(ModCreativeModTabs.WEAPONS_AND_TOOLS).build();
 
     public QuiverItem(Properties p_41383_, int quiverSize) {
         super(p_41383_, quiverSize);

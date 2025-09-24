@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class SoulMageArmorItem extends NetherArmorItem {
-    public static final ArmorTabGroup SOUL_MAGE_ARMOR_GROUP = new ArmorTabGroup(TabRegister.TabTypes.WEAPONS_AND_TOOLS);
 
     @Override
     public boolean withCustomModel() {
