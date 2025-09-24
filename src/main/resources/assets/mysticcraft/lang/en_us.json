@@ -436,5 +436,6 @@
   "gemstone_applicable_title": "Applicable Gemstones:",
   "spell.cast.failed.cooldown": "Spell is on Cooldown",
   "pedestal.place.fail": "To many Altars Around!",
-  "spell.select.title": "Select Spell"
+  "spell.select.title": "Select Spell",
+  "key.mysticcraft.select_spell_cast": "Select Spell Cast"
 }

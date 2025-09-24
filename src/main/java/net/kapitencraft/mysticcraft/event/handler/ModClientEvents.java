@@ -11,6 +11,7 @@ import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneHelper;
 import net.kapitencraft.mysticcraft.capability.gemstone.IGemstoneItem;
 import net.kapitencraft.mysticcraft.capability.reforging.Reforges;
 import net.kapitencraft.mysticcraft.client.ItemCategory;
+import net.kapitencraft.mysticcraft.client.ModKeyMappings;
 import net.kapitencraft.mysticcraft.client.SpellCastChargeOverlay;
 import net.kapitencraft.mysticcraft.client.particle.CircleParticle;
 import net.kapitencraft.mysticcraft.client.particle.FireNormalParticle;
@@ -37,10 +38,7 @@ import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.client.event.RegisterColorHandlersEvent;
-import net.minecraftforge.client.event.RegisterNamedRenderTypesEvent;
-import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
+import net.minecraftforge.client.event.*;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -49,6 +47,11 @@ import java.util.function.Function;
 
 @Mod.EventBusSubscriber(modid = MysticcraftMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ModClientEvents {
+
+    @SubscribeEvent
+    public static void onRegisterKeyMappings(RegisterKeyMappingsEvent event) {
+        event.register(ModKeyMappings.SELECT_SPELL_CAST);
+    }
 
     @SubscribeEvent
     public static void registerLayer(EntityRenderersEvent.RegisterLayerDefinitions event) {
