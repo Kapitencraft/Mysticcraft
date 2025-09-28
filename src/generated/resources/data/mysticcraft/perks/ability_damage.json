@@ -13,9 +13,9 @@
   "reward": {
     "type": "mysticcraft:stat",
     "entries": {
-      "kap_lib:generic.ability_damage": [
+      "kap_lib:generic.magic_damage": [
         {
-          "id": "bfed84a1-5d7a-4a9b-aa0a-de3e8fc574f4",
+          "id": "f342105c-7fd3-47bd-a916-f0ec09588bc9",
           "operation": 0,
           "perLevel": 2.0
         }

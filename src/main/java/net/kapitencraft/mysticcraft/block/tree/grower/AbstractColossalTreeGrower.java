@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.block.grower;
+package net.kapitencraft.mysticcraft.block.tree.grower;
 
 public abstract class AbstractColossalTreeGrower extends AbstractSizedTreeGrower {
     protected AbstractColossalTreeGrower() {

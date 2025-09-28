@@ -97,7 +97,7 @@ public class PerkProvider implements DataProvider {
                 .maxLevel(5)
                 .cost(3)
                 .display(IGemstoneItem.createData(GemstoneType.Rarity.PERFECT, GemstoneType.ALMANDINE, ModItems.GEMSTONE), FrameType.TASK)
-                .rewards(StatPerkReward.builder().add(ExtraAttributes.ABILITY_DAMAGE.get(), 2, AttributeModifier.Operation.ADDITION))
+                .rewards(StatPerkReward.builder().add(ExtraAttributes.MAGIC_DAMAGE.get(), 2, AttributeModifier.Operation.ADDITION))
                 .parent(manaPool2)
                 .save(sink, MysticcraftMod.res("ability_damage"));
 

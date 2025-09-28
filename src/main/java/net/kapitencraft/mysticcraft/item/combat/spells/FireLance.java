@@ -45,6 +45,6 @@ public class FireLance extends LanceItem implements ISpellItem {
 
     @Override
     public SpellCapabilityProvider createSpells() {
-        return SpellCapabilityProvider.with(Spells.FIRE_LANCE);
+        return SpellCapabilityProvider.with(Spells.FIRE_LANCE, 5);
     }
 }

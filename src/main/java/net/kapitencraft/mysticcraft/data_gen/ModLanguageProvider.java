@@ -8,6 +8,8 @@ import net.kapitencraft.mysticcraft.registry.ModItems;
 import net.minecraft.Util;
 import net.minecraft.data.PackOutput;
 
+import java.util.Comparator;
+
 public class ModLanguageProvider extends EnglishLanguageProvider {
     public ModLanguageProvider(PackOutput output) {
         super(output, MysticcraftMod.MOD_ID);
@@ -17,14 +19,14 @@ public class ModLanguageProvider extends EnglishLanguageProvider {
     protected void addTranslations() {
 
         Reforges.all().keySet().forEach(id -> this.add(Util.makeDescriptionId("reforge", id), TextHelper.makeGrammar(id.getPath())));
-        ModItems.getEntries().forEach(this::addItem);
+        ModItems.getEntries().stream().sorted(Comparator.comparing(o -> o.getKey().location())).forEach(this::addItem);
 
         addDeathMessage("chain_lightning", "%1$s got hit by chain lightning from %2$s");
         addDeathMessage("mana_overflow", "%1$s stood to close to %2$s as they lost control over their mana");
         addDeathMessage("mana_overflow_self", "%1$s couldn't handle their mana");
         addDeathMessage("ability", "%1$s got killed by %2$s's ability");
         addDeathMessage("magic_explosion", "%1$s got exploded into a million pieces by %2$s's magic explosion");
-        addDeathMessage("numbness", ""); //TODO add msg
+        addDeathMessage("numbness", "%1$s didn't survive the backlash");
         addDeathMessage("fire_lance", "%1$s was burned to ash by %1$s's fire lance");
     }
 }

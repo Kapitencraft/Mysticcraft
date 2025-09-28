@@ -12,6 +12,6 @@ public class TheStaffOfDestruction extends NormalSpellItem {
 
     @Override
     public SpellCapabilityProvider createSpells() {
-        return SpellCapabilityProvider.with(Spells.EXPLOSIVE_SIGHT);
+        return SpellCapabilityProvider.with(Spells.EXPLOSIVE_SIGHT, 2);
     }
 }

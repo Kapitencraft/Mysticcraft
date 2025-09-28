@@ -4,6 +4,7 @@ import com.google.common.collect.Multimap;
 import net.kapitencraft.kap_lib.helpers.AttributeHelper;
 import net.kapitencraft.kap_lib.registry.ExtraAttributes;
 import net.kapitencraft.mysticcraft.item.combat.armor.client.NetherArmorItem;
+import net.kapitencraft.mysticcraft.item.misc.creative_tab.ArmorTabGroup;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class TerrorArmorItem extends NetherArmorItem {
+    public static final ArmorTabGroup TAB = ArmorTabGroup.create();
 
     public TerrorArmorItem(Type type) {
         super(ModArmorMaterials.TERROR, type, NETHER_ARMOR_PROPERTIES);

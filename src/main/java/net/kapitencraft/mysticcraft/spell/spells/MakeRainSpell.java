@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 public class MakeRainSpell implements Spell {
     @Override
     public void cast(SpellCastContext context) throws SpellExecutionFailedException {
-        if (context.getLevel() instanceof ServerLevel sL)
+        if (context.getWorld() instanceof ServerLevel sL)
             sL.setWeatherParameters(0, ServerLevel.RAIN_DURATION.sample(sL.getRandom()), true, false);
     }
 

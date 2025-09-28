@@ -12,6 +12,6 @@ public class HeatedScythe extends NormalSpellItem implements IDamageSpellItem, I
 
     @Override
     public SpellCapabilityProvider createSpells() {
-        return SpellCapabilityProvider.with(Spells.FIRE_BOLT_1);
+        return SpellCapabilityProvider.with(Spells.FIRE_BOLT);
     }
 }

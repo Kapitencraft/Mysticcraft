@@ -50,7 +50,7 @@ public class FireBoltProjectile extends SpellProjectile {
     }
 
     public FireBoltProjectile(EntityType<? extends AbstractArrow> type, Level level) {
-        super(type, level, Spells.FIRE_BOLT_1.get());
+        super(type, level, Spells.FIRE_BOLT.get());
         this.explosive = false;
         this.damage = 1;
     }

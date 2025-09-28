@@ -28,7 +28,7 @@ import java.util.function.Supplier;
 @SuppressWarnings("deprecation")
 public enum GemstoneType implements StringRepresentable {
     EMPTY(ChatFormatting.WHITE, ()-> null, 0, "empty", 0),
-    ALMANDINE(ChatFormatting.LIGHT_PURPLE, ExtraAttributes.ABILITY_DAMAGE, 0.3, "almandine", GemstoneBlock.HIGH_MEDIUM_STRENGHT),
+    ALMANDINE(ChatFormatting.LIGHT_PURPLE, ExtraAttributes.MAGIC_DAMAGE, 0.3, "almandine", GemstoneBlock.HIGH_MEDIUM_STRENGHT),
     JASPER(ChatFormatting.DARK_RED, ExtraAttributes.STRENGTH, 2, "jasper", GemstoneBlock.VERY_HIGH_STRENGHT),
     RUBY(ChatFormatting.RED, () -> Attributes.MAX_HEALTH, 0.5, "ruby", GemstoneBlock.LOW_STRENGHT),
     AMETHYST(ChatFormatting.DARK_PURPLE, () -> Attributes.ARMOR, 2.3, "amethyst", GemstoneBlock.LOW_MEDIUM_STRENGHT),

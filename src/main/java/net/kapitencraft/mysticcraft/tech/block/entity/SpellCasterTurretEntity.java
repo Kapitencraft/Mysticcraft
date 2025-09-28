@@ -2,8 +2,8 @@ package net.kapitencraft.mysticcraft.tech.block.entity;
 
 import net.kapitencraft.mysticcraft.item.combat.spells.SpellScrollItem;
 import net.kapitencraft.mysticcraft.registry.ModBlockEntities;
-import net.kapitencraft.mysticcraft.spell.Spell;
 import net.kapitencraft.mysticcraft.spell.SpellExecutionFailedException;
+import net.kapitencraft.mysticcraft.spell.SpellSlot;
 import net.kapitencraft.mysticcraft.spell.SpellTarget;
 import net.kapitencraft.mysticcraft.spell.cast.SpellCastContext;
 import net.kapitencraft.mysticcraft.spell.cast.SpellCastContextParams;
@@ -32,7 +32,7 @@ public class SpellCasterTurretEntity extends AbstractTurretBlockEntity implement
 
     private final ItemHandler inventory = new ItemHandler();
     private int castDuration = 0;
-    private Spell spell;
+    private SpellSlot spell;
 
     public SpellCasterTurretEntity(BlockPos pPos, BlockState pBlockState) {
         super(ModBlockEntities.SPELL_CASTER_TURRET.get(), pPos, pBlockState, MAX_DISTANCE);
@@ -40,16 +40,16 @@ public class SpellCasterTurretEntity extends AbstractTurretBlockEntity implement
 
     public static void tick(Level pLevel, BlockPos pPos, BlockState pState, SpellCasterTurretEntity entity) {
         entity.updateTarget();
-        if (entity.target != null && entity.spell != null  && entity.castDuration++ >= entity.spell.castDuration()) {
+        SpellSlot slot = entity.spell;
+        if (entity.target != null && slot != null  && entity.castDuration++ >= slot.getSpell().castDuration()) {
             entity.castDuration = 0;
             SpellCastContext.Builder builder = new SpellCastContext.Builder();
             builder.addParam(SpellCastContextParams.TARGET, entity.target);
             try {
-                entity.spell.cast(builder.build(pLevel));
+                slot.getSpell().cast(builder.build(pLevel, slot.getLevel()));
             } catch (SpellExecutionFailedException ignored) {}
             entity.target = null;
         }
-
     }
 
     @SuppressWarnings({"DataFlowIssue", "unchecked"})
@@ -57,8 +57,8 @@ public class SpellCasterTurretEntity extends AbstractTurretBlockEntity implement
     protected void selectTarget() {
         ItemStack stack = this.inventory.getStackInSlot(0);
         if (!stack.isEmpty()) {
-            Spell spell = SpellScrollItem.getSpell(stack);
-            List<Entity> entities = this.level.getEntitiesOfClass(Entity.class, checkArea, (SpellTarget<Entity>) spell.getTarget());
+            SpellSlot spell = SpellScrollItem.getSpell(stack);
+            List<Entity> entities = this.level.getEntitiesOfClass(Entity.class, checkArea, (SpellTarget<Entity>) spell.getSpell().getTarget());
             if (!entities.isEmpty()) this.target = entities.get(0);
         }
     }

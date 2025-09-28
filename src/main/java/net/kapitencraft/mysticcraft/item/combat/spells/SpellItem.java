@@ -7,9 +7,7 @@ import net.kapitencraft.kap_lib.registry.ExtraAttributes;
 import net.kapitencraft.mysticcraft.capability.spell.ISpellItem;
 import net.kapitencraft.mysticcraft.item.misc.ModTiers;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
-import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
 import net.kapitencraft.mysticcraft.registry.ModCreativeModTabs;
-import net.minecraft.client.gui.components.tabs.Tab;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -44,7 +42,7 @@ public abstract class SpellItem extends SwordItem implements ISpellItem {
                 builder.put(ExtraAttributes.INTELLIGENCE.get(), AttributeHelper.createModifier("SpellItemIntelligence", AttributeModifier.Operation.ADDITION, intelligence));
             }
             if (this.ability_damage > 0) {
-                builder.put(ExtraAttributes.ABILITY_DAMAGE.get(), AttributeHelper.createModifier("SpellItemAbilityDamage", AttributeModifier.Operation.ADDITION, ability_damage));
+                builder.put(ExtraAttributes.MAGIC_DAMAGE.get(), AttributeHelper.createModifier("SpellItemAbilityDamage", AttributeModifier.Operation.ADDITION, ability_damage));
             }
         }
         builder.putAll(super.getDefaultAttributeModifiers(slot));

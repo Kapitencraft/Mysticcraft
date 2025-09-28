@@ -81,6 +81,14 @@ public interface ModItems {
         return map;
     }
 
+    static <T extends AbstractArmorItem> Map<ArmorItem.Type, RegistryObject<T>> registerArmor(DeferredRegister<Item> registry, String baseName, Function<ArmorItem.Type, T> creator, TabGroup group) {
+        Map<ArmorItem.Type, RegistryObject<T>> map = AbstractArmorItem.createRegistry(registry, baseName, creator);
+        for (RegistryObject<T> obj : map.values()) {
+            group.add(obj);
+        }
+        return map;
+    }
+
     //endregion
 
     static Collection<RegistryObject<Item>> getEntries() {
@@ -88,7 +96,6 @@ public interface ModItems {
     }
 
     DeferredRegister<Item> REGISTRY = MysticcraftMod.registry(ForgeRegistries.ITEMS);
-
 
     //RegistryObject<BackpackItem> BACKPACK = register("backpack", BackpackItem::new, TabGroup.MATERIAL);
     RegistryObject<WalletItem> WALLET = register("wallet", WalletItem::new, TabGroup.MATERIAL);
@@ -142,6 +149,7 @@ public interface ModItems {
     RegistryObject<MaterialModItem> RAW_CRIMSONIUM = registerMaterial("raw_crimsonium", Rarity.UNCOMMON, TabGroup.CRIMSON_MATERIAL);
     RegistryObject<MaterialModItem> RAW_CRIMSONIUM_DUST = registerMaterial("raw_crimsonium_dust", Rarity.RARE, TabGroup.CRIMSON_MATERIAL);
     RegistryObject<MaterialModItem> HARDENED_TEAR = registerMaterial("hardened_tear", Rarity.UNCOMMON, TabGroup.MATERIAL);
+    RegistryObject<MaterialModItem> LAPIS_DUST = registerMaterial("lapis_dust", Rarity.COMMON, TabGroup.MATERIAL);
 
     //region Hammer
     RegistryObject<HammerItem> STONE_HAMMER = register("stone_hammer", ()-> new HammerItem(MiscHelper.rarity(Rarity.COMMON), Tiers.STONE, 10), HammerItem.HAMMER_GROUP);
@@ -173,13 +181,13 @@ public interface ModItems {
 
     RegistryObject<TravelersBoots> TRAVELERS_BOOTS = register("travelers_boots", TravelersBoots::new, TabGroup.COMBAT);
 
-    Map<ArmorItem.Type, RegistryObject<EnderKnightArmorItem>> ENDER_KNIGHT_ARMOR = AbstractArmorItem.createRegistry(REGISTRY, "ender_knight", EnderKnightArmorItem::new);
-    Map<ArmorItem.Type, RegistryObject<FrozenBlazeArmorItem>> FROZEN_BLAZE_ARMOR = AbstractArmorItem.createRegistry(REGISTRY, "frozen_blaze", FrozenBlazeArmorItem::new);
-    Map<ArmorItem.Type, RegistryObject<ShadowAssassinArmorItem>> SHADOW_ASSASSIN_ARMOR = AbstractArmorItem.createRegistry(REGISTRY, "shadow_assassin", ShadowAssassinArmorItem::new);
-    Map<ArmorItem.Type, RegistryObject<CrimsonArmorItem>> CRIMSON_ARMOR = AbstractArmorItem.createRegistry(REGISTRY, "crimson", CrimsonArmorItem::new);
-    Map<ArmorItem.Type, RegistryObject<SoulMageArmorItem>> SOUL_MAGE_ARMOR = AbstractArmorItem.createRegistry(REGISTRY, "soul_mage", SoulMageArmorItem::new);
-    Map<ArmorItem.Type, RegistryObject<WizardCloakArmorItem>> WIZARD_CLOAK_ARMOR = AbstractArmorItem.createRegistry(REGISTRY, "wizard_cloak", WizardCloakArmorItem::new);
-    Map<ArmorItem.Type, RegistryObject<TerrorArmorItem>> TERROR_ARMOR = AbstractArmorItem.createRegistry(REGISTRY, "terror", TerrorArmorItem::new);
+    Map<ArmorItem.Type, RegistryObject<EnderKnightArmorItem>> ENDER_KNIGHT_ARMOR = registerArmor(REGISTRY, "ender_knight", EnderKnightArmorItem::new, EnderKnightArmorItem.TAB);
+    Map<ArmorItem.Type, RegistryObject<FrozenBlazeArmorItem>> FROZEN_BLAZE_ARMOR = registerArmor(REGISTRY, "frozen_blaze", FrozenBlazeArmorItem::new, FrozenBlazeArmorItem.TAB);
+    Map<ArmorItem.Type, RegistryObject<ShadowAssassinArmorItem>> SHADOW_ASSASSIN_ARMOR = registerArmor(REGISTRY, "shadow_assassin", ShadowAssassinArmorItem::new, ShadowAssassinArmorItem.TAB);
+    Map<ArmorItem.Type, RegistryObject<CrimsonArmorItem>> CRIMSON_ARMOR = registerArmor(REGISTRY, "crimson", CrimsonArmorItem::new, CrimsonArmorItem.TAB);
+    Map<ArmorItem.Type, RegistryObject<SoulMageArmorItem>> SOUL_MAGE_ARMOR = registerArmor(REGISTRY, "soul_mage", SoulMageArmorItem::new, SoulMageArmorItem.TAB);
+    Map<ArmorItem.Type, RegistryObject<WizardCloakArmorItem>> WIZARD_CLOAK_ARMOR = registerArmor(REGISTRY, "wizard_cloak", WizardCloakArmorItem::new, WizardCloakArmorItem.TAB);
+    Map<ArmorItem.Type, RegistryObject<TerrorArmorItem>> TERROR_ARMOR = registerArmor(REGISTRY, "terror", TerrorArmorItem::new, TerrorArmorItem.TAB);
 
     //endregion
 

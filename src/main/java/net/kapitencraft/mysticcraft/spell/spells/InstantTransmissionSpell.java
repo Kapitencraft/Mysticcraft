@@ -4,17 +4,15 @@ import net.kapitencraft.kap_lib.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.spell.Spell;
 import net.kapitencraft.mysticcraft.spell.SpellTarget;
 import net.kapitencraft.mysticcraft.spell.cast.SpellCastContext;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 public class InstantTransmissionSpell implements Spell {
-    private static final Component[] description = new Component[]{Component.literal("teleports you 8 blocks ahead")};
 
     @Override
     public void cast(SpellCastContext context) {
-        MiscHelper.saveTeleport(context.getCaster(), 8);
+        MiscHelper.saveTeleport(context.getCaster(), context.getLevel() * 2);
         context.getCaster().setDeltaMovement(Vec3.ZERO);
     }
 

@@ -1,6 +1,8 @@
 package net.kapitencraft.mysticcraft.entity.dragon;
 
 import com.mojang.serialization.Dynamic;
+import net.kapitencraft.mysticcraft.registry.ModSensorTypes;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.Util;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
@@ -9,8 +11,11 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.Brain;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.ai.sensing.Sensor;
+import net.minecraft.world.entity.ai.sensing.SensorType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -18,12 +23,21 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.List;
 
-public class Dragon extends Mob {
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
+public class Dragon extends PathfinderMob {
+    private static final List<MemoryModuleType<?>> MEMORY_MODULE_TYPES = List.of();
+    private static final List<SensorType<? extends Sensor<? super Dragon>>> SENSOR_TYPES = List.of(
+            ModSensorTypes.DRAGON_TEMPTATIONS.get()
+    );
+
     private final NonNullList<ItemStack> armor = NonNullList.withSize(4, ItemStack.EMPTY);
     private final DragonBossEvent event;
 
-    public Dragon(EntityType<? extends Mob> pEntityType, Level pLevel) {
+    public Dragon(EntityType<Dragon> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
         this.event = new DragonBossEvent(Component.translatable(Util.makeDescriptionId("entity", ForgeRegistries.ENTITY_TYPES.getKey(pEntityType))));
     }
@@ -47,6 +61,11 @@ public class Dragon extends Mob {
     @Override
     protected Brain<?> makeBrain(Dynamic<?> pDynamic) {
         return DragonBossAi.makeBrain(this, pDynamic);
+    }
+
+    @Override
+    protected Brain.Provider<?> brainProvider() {
+        return Brain.provider(MEMORY_MODULE_TYPES, SENSOR_TYPES);
     }
 
     @Override

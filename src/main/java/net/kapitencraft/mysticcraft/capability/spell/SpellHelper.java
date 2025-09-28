@@ -15,6 +15,7 @@ import net.kapitencraft.mysticcraft.spell.Spell;
 import net.kapitencraft.mysticcraft.spell.SpellExecutionFailedException;
 import net.kapitencraft.mysticcraft.spell.SpellSlot;
 import net.kapitencraft.mysticcraft.spell.SpellTarget;
+import net.kapitencraft.mysticcraft.spell.capability.PlayerSpells;
 import net.kapitencraft.mysticcraft.spell.cast.SpellCastContext;
 import net.kapitencraft.mysticcraft.spell.cast.SpellCastContextParams;
 import net.minecraft.ChatFormatting;
@@ -31,12 +32,23 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public interface SpellHelper {
 
     static SpellCapability getCapability(ItemStack stack) {
         return CapabilityHelper.getCapability(stack, CapabilityHelper.SPELL);
+    }
+
+    @SuppressWarnings("ConstantValue")
+    static List<SpellSlot> getAvailableSpells(Player player) {
+        List<SpellSlot> list = new ArrayList<>(PlayerSpells.get(player).getData());
+        if (!player.getMainHandItem().isEmpty()) {
+            SpellCapability capability = getCapability(player.getMainHandItem());
+            if (capability != null) list.addAll(capability.getData());
+        }
+        return list;
     }
 
     @SuppressWarnings("DataFlowIssue")
@@ -53,9 +65,16 @@ public interface SpellHelper {
         return SpellHelper.getCapability(stack).getSlot(0).getSpell();
     }
 
+    static SpellSlot getActiveSlot(ItemStack stack) {
+        return SpellHelper.getCapability(stack).getSlot(0);
+    }
+
+    static void setSpell(ItemStack stack, int i, SpellSlot spell) {
+        CapabilityHelper.exeCapability(stack, CapabilityHelper.SPELL, spellCapability -> spellCapability.setSlot(i, spell.copy()));
+    }
 
     static void setSpell(ItemStack stack, int i, Spell spell) {
-        CapabilityHelper.exeCapability(stack, CapabilityHelper.SPELL, spellCapability -> spellCapability.setSlot(i, new SpellSlot(spell)));
+        setSpell(stack, i, new SpellSlot(spell));
     }
 
     static boolean hasSpell(ItemStack stack, Spell spell) {
@@ -81,7 +100,7 @@ public interface SpellHelper {
     }
 
     @SuppressWarnings("DataFlowIssue")
-    static boolean handleManaAndExecute(LivingEntity user, Spell spell, ItemStack stack) {
+    static boolean handleManaAndExecute(LivingEntity user, Spell spell, int level, ItemStack stack) {
         if (canExecuteSpell(user, spell, stack)) {
             SpellCastContext.Builder builder = new SpellCastContext.Builder();
             builder.addParam(SpellCastContextParams.CASTER, user);
@@ -89,7 +108,7 @@ public interface SpellHelper {
             if (type == SpellTarget.Type.BLOCK) builder.addParam(SpellCastContextParams.TARGET_BLOCK, BlockPos.of(stack.getTag().getLong("target")));
             else if (type == SpellTarget.Type.ENTITY) builder.addParam(SpellCastContextParams.TARGET, user.level().getEntity(stack.getTag().getInt("target")));
             try {
-                spell.cast(builder.build(user.level()));
+                spell.cast(builder.build(user.level(), level));
             } catch (SpellExecutionFailedException e) {
                 if (user instanceof Player player) {
                     player.displayClientMessage(Component.translatable(e.getMsg()), true);
@@ -124,9 +143,10 @@ public interface SpellHelper {
     }
 
     static void appendFullDisplay(List<Component> list, ItemStack stack, Player player) {
-        Spell spell = SpellScrollItem.getSpell(stack);
-        if (spell == null) return;
-        list.add(Component.translatable("spell.title", Component.translatable(spell.getDescriptionId())).withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.GOLD));
+        SpellSlot spellSlot = SpellScrollItem.getSpell(stack);
+        if (spellSlot == null) return;
+        Spell spell = spellSlot.getSpell();
+        list.add(Component.translatable("spell.title", spellSlot.description()).withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.GOLD));
         list.addAll(spell.getDescription());
         MutableComponent component = null;
         if (spell.castDuration() > 0) component = Component.translatable("cast_duration.display", MathHelper.shortRound(spell.castDuration() / 20.));

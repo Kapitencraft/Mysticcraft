@@ -53,6 +53,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
                                 new ConfiguredModel(gemstoneBlock)
                         );
         simpleBlockItem(ModBlocks.GEMSTONE_BLOCK.get(), gemstoneBlock);
+        simpleBlock(ModBlocks.THISTLE.get(), models().cross("thistle", MysticcraftMod.res("block/thistle")).renderType("cutout"));
 
         makeGemstoneCrystals();
 

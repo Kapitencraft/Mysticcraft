@@ -6,6 +6,7 @@ import net.kapitencraft.kap_lib.client.armor.provider.SimpleModelProvider;
 import net.kapitencraft.kap_lib.item.combat.armor.AbstractArmorItem;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.item.combat.armor.client.model.ShadowAssassinArmorModel;
+import net.kapitencraft.mysticcraft.item.misc.creative_tab.ArmorTabGroup;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -16,6 +17,7 @@ import net.minecraft.world.item.Rarity;
 import org.jetbrains.annotations.Nullable;
 
 public class ShadowAssassinArmorItem extends AbstractArmorItem {
+    public static final ArmorTabGroup TAB = ArmorTabGroup.create();
 
     public ShadowAssassinArmorItem(ArmorItem.Type type) {
         super(ModArmorMaterials.SHADOW_ASSASSIN, type, new Properties().rarity(Rarity.EPIC));

@@ -11,6 +11,6 @@ public class InfernalScythe extends NormalSpellItem implements IDamageSpellItem,
 
     @Override
     public SpellCapabilityProvider createSpells() {
-        return SpellCapabilityProvider.with(Spells.FIRE_BOLT_4);
+        return SpellCapabilityProvider.with(Spells.FIRE_BOLT, 15);
     }
 }

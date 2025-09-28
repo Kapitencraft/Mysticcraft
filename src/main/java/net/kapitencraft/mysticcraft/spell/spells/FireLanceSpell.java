@@ -35,7 +35,7 @@ public class FireLanceSpell implements Spell {
     public void cast(SpellCastContext context) throws SpellExecutionFailedException {
         LivingEntity user = context.getCaster();
         Vec3 offset = SpellHelper.getCastOffset(new Vec2(0, user.yBodyRot), user.getUsedItemHand() == InteractionHand.OFF_HAND);
-        ArrayList<Vec3> lineOfSight = MathHelper.lineOfSight(user, 10, 0.05);
+        ArrayList<Vec3> lineOfSight = MathHelper.lineOfSight(user, context.getLevel() * 2, 0.05);
         lineOfSight.stream()
                 .map(vec3 -> FireLanceSpell.merge(vec3.add(offset), user))
                 .flatMap(Collection::stream)

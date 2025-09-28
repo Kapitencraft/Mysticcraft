@@ -20,7 +20,7 @@ public class SpellCasterTurretMenu extends BlockEntityMenu<SpellCasterTurretEnti
         this.addSlot(new SlotItemHandler(provider.getInventory(), 0, 80, 55) {
             @Override
             public boolean mayPlace(@NotNull ItemStack stack) {
-                return stack.is(ModItems.SPELL_SCROLL.get()) && SpellScrollItem.getSpell(stack).getTarget().getType() == SpellTarget.Type.ENTITY;
+                return stack.is(ModItems.SPELL_SCROLL.get()) && SpellScrollItem.getSpell(stack).getSpell().getTarget().getType() == SpellTarget.Type.ENTITY;
             }
         });
 

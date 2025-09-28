@@ -33,6 +33,8 @@
   "block.mysticcraft.turret.spell_caster": "Spell Caster Turret",
   "block.mysticcraft.vulcanic_generator": "Vulcanic Generator",
 
+  "bonus.mysticcraft.assassin": "Assassin",
+  "bonus.mysticcraft.assassin.desc": "deal double damage from behind your enemy",
 
   "builders_wand.cone": "Cone",
   "builders_wand.cuboid": "Cube",
@@ -233,6 +235,7 @@
   "item.mysticcraft.iron_hammer": "Iron Hammer",
   "item.mysticcraft.iron_shield": "Iron Shield",
   "item.mysticcraft.jolly_pink_rock": "Jolly Pink Rock",
+  "item.mysticcraft.lapis_dust": "Lapis Dust",
   "item.mysticcraft.lasrs_eye": "L.A.S.R.'s Eye",
   "item.mysticcraft.longbow": "Longbow",
   "item.mysticcraft.lower_mana_steel_sword_part": "Lower Mana Steel Sword Blade Part",
@@ -270,6 +273,10 @@
   "item.mysticcraft.stone_hammer": "Stone Hammer",
   "item.mysticcraft.tallin_bow": "Tallin Short Bow",
   "item.mysticcraft.tech_wand": "Tech Wand",
+  "item.mysticcraft.terror_boots": "Terror Boots",
+  "item.mysticcraft.terror_leggings": "Terror Leggings",
+  "item.mysticcraft.terror_chestplate": "Terror Chestplate",
+  "item.mysticcraft.terror_helmet": "Terror Helmet",
   "item.mysticcraft.travelers_boots": "Traveler's Boots",
   "item.mysticcraft.unbreaking_core": "Unbreaking Core",
   "item.mysticcraft.upper_mana_steel_blade": "Upper Mana Steel Blade",
@@ -373,11 +380,10 @@
   "spell.mysticcraft.ether_warp.desc": "teleports you up to 57 blocks ahead",
   "spell.mysticcraft.explosive_sight": "Explosive Sight",
   "spell.mysticcraft.explosive_sight.desc": "Explodes in a range of 150 blocks",
-  "spell.mysticcraft.fire_bolt_1": "Fire Bolt",
-  "spell.mysticcraft.fire_bolt_2": "Fire Bolt",
-  "spell.mysticcraft.fire_bolt_3": "Fire Bolt",
-  "spell.mysticcraft.fire_bolt_4": "Fire Bolt",
+  "spell.mysticcraft.fire_bolt": "Fire Bolt",
+  "spell.mysticcraft.fire_bolt.desc": "shoots a fire bolt, dealing a decent amount of damage and exploding on higher levels",
   "spell.mysticcraft.fire_lance": "Fire Lance",
+  "spell.mysticcraft.fire_lance.desc": "creates a fire lance, burning everything in a line in front of the caster",
   "spell.mysticcraft.instant_transmission": "Instant Transmission",
   "spell.mysticcraft.instant_transmission.desc": "teleports you 8 blocks ahead",
   "spell.mysticcraft.implosion": "Implosion",
@@ -437,5 +443,6 @@
   "spell.cast.failed.cooldown": "Spell is on Cooldown",
   "pedestal.place.fail": "To many Altars Around!",
   "spell.select.title": "Select Spell",
-  "key.mysticcraft.select_spell_cast": "Select Spell Cast"
+  "key.mysticcraft.select_spell_cast": "Select Spell Cast",
+  "spell.available.title": "Spells"
 }

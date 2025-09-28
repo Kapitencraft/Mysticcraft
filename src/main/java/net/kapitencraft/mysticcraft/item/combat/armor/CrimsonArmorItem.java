@@ -13,7 +13,7 @@ import net.kapitencraft.mysticcraft.capability.dungeon.IStarAbleItem;
 import net.kapitencraft.mysticcraft.item.combat.armor.client.NetherArmorItem;
 import net.kapitencraft.mysticcraft.item.combat.armor.client.model.CrimsonArmorModel;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.ArmorTabGroup;
-import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
+import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.misc.content.EssenceType;
 import net.kapitencraft.mysticcraft.registry.ModItems;
 import net.minecraft.world.entity.Entity;
@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class CrimsonArmorItem extends NetherArmorItem {
+    public static final TabGroup TAB = ArmorTabGroup.create();
 
     public CrimsonArmorItem(ArmorItem.Type p_40387_) {
         super(ModArmorMaterials.CRIMSON, p_40387_, NETHER_ARMOR_PROPERTIES);

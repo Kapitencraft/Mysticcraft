@@ -10,9 +10,12 @@ import net.kapitencraft.mysticcraft.capability.item_stat.ItemStatCapabilityProvi
 import net.kapitencraft.mysticcraft.capability.spell.ISpellItem;
 import net.kapitencraft.mysticcraft.capability.spell.SpellCapabilityProvider;
 import net.kapitencraft.mysticcraft.item.material.containable.ContainableItem;
+import net.kapitencraft.mysticcraft.spell.capability.PlayerSpellsCapabilityProvider;
 import net.kapitencraft.mysticcraft.tags.ModTags;
 import net.kapitencraft.mysticcraft.worldgen.gemstone.GemstoneDecorator;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ElytraItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -78,5 +81,13 @@ public class MysticcraftServer {
                 .forEach(capability::add);
         if (capability.has())
             event.addCapability(MysticcraftMod.res("stats"), new ItemStatCapabilityProvider(capability));
+    }
+
+    @SubscribeEvent
+    public static void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
+        Entity object = event.getObject();
+        if (object instanceof Player) {
+            event.addCapability(MysticcraftMod.res("player_spells"), PlayerSpellsCapabilityProvider.create());
+        }
     }
 }

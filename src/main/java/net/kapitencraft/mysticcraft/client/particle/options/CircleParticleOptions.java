@@ -55,7 +55,7 @@ public class CircleParticleOptions extends SimpleColoredParticleOptions<CirclePa
 
     @Override
     public @NotNull String writeToString() {
-        return String.format("%s %.2f %.2f %.2f %.2f %.2f", BuiltInRegistries.PARTICLE_TYPE.getKey(this.getType()), this.size, this.expandSpeed, this.color.r, this.color.g, this.color.b);
+        return String.format("%s %.2f %.2f %.2f %.2f %.2f", BuiltInRegistries.PARTICLE_TYPE.getKey(this.getType()), this.size, this.expandSpeed, this.color.r(), this.color.g(), this.color.b());
     }
 
     @Override

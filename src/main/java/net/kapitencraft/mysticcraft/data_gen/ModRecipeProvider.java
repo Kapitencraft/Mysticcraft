@@ -15,6 +15,7 @@ import net.minecraft.Util;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -65,6 +66,9 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
         hammerCrushing(consumer, ModTags.Items.TIER_1_HAMMER, ModItems.CRIMSONIUM_INGOT, ModItems.CRIMSONIUM_DUST, 1);
         hammerCrushing(consumer, ModTags.Items.HAMMER, ModItems.CRIMSONITE_CLUSTER, ModItems.CRIMSONITE_DUST, 2);
         hammerCrushing(consumer, ModTags.Items.HAMMER, ModItems.RAW_CRIMSONIUM, ModItems.RAW_CRIMSONIUM_DUST, 2);
+        hammerCrushing(consumer, ModTags.Items.HAMMER, Items.COBBLESTONE, Items.GRAVEL, 1, MysticcraftMod.res("crushing/"));
+        hammerCrushing(consumer, ModTags.Items.HAMMER, Items.GRAVEL, Items.SAND, 1, MysticcraftMod.res("crushing/sand"));
+        hammerCrushing(consumer, ModTags.Items.TIER_1_HAMMER, Items.LAPIS_LAZULI, ModItems.LAPIS_DUST.get(), 1);
 
         unlock(ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.CRIMSON_STEEL_DUST.get(), 4)
                         .group("crimson")
@@ -168,8 +172,21 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
     }
 
     private static void hammerCrushing(Consumer<FinishedRecipe> consumer, TagKey<Item> hammerTier, RegistryObject<? extends Item> material, RegistryObject<? extends Item> result, int amount) {
-        unlock(ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, result.get(), amount).requires(hammerTier).requires(material.get()), material.get()).save(consumer);
+        hammerCrushing(consumer, hammerTier, material.get(), result.get(), amount);
     }
+
+    private static void hammerCrushing(Consumer<FinishedRecipe> consumer, TagKey<Item> hammerTier, Item material, Item result, int amount, ResourceLocation location) {
+        unlock(ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, result, amount).requires(hammerTier).requires(material), material).save(consumer, location);
+    }
+
+    private static void hammerCrushing(Consumer<FinishedRecipe> consumer, TagKey<Item> hammerTier, RegistryObject<? extends Item> material, RegistryObject<? extends Item> result, int amount, ResourceLocation location) {
+        hammerCrushing(consumer, hammerTier, material.get(), result.get(), amount, location);
+    }
+
+    private static void hammerCrushing(Consumer<FinishedRecipe> consumer, TagKey<Item> hammerTier, Item material, Item result, int amount) {
+        unlock(ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, result, amount).requires(hammerTier).requires(material), material).save(consumer);
+    }
+
 
     private static void craftHammer(Consumer<FinishedRecipe> consumer, Item material, Item materialBlock, RegistryObject<? extends Item> result) {
         unlock(ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, result.get())

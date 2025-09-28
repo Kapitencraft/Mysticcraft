@@ -12,18 +12,15 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class FireBoltSpell implements Spell {
-    private final boolean explosive;
-    private final float baseDamage;
 
-    public FireBoltSpell(boolean explosive, float baseDamage) {
-        this.explosive = explosive;
-        this.baseDamage = baseDamage;
+    public FireBoltSpell() {
     }
 
     @Override
     public void cast(SpellCastContext context) throws SpellExecutionFailedException {
         LivingEntity caster = context.getCaster();
-        FireBoltProjectile projectile = FireBoltProjectile.createProjectile(caster.level(), caster, explosive, baseDamage, this);
+        float baseDamage = context.getLevel() * 1.4f;
+        FireBoltProjectile projectile = FireBoltProjectile.createProjectile(context.getWorld(), caster, context.getLevel() > 10, baseDamage, this);
         projectile.shootFromRotation(caster, caster.getXRot(), caster.getYRot(), 0, 2, 1);
         projectile.setBaseDamage(baseDamage);
         caster.level().addFreshEntity(projectile);

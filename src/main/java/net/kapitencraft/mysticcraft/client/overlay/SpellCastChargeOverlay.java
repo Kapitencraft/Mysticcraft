@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.client;
+package net.kapitencraft.mysticcraft.client.overlay;
 
 import net.kapitencraft.kap_lib.client.overlay.OverlayProperties;
 import net.kapitencraft.kap_lib.client.overlay.holder.Overlay;

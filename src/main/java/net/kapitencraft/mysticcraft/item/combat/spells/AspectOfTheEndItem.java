@@ -11,6 +11,6 @@ public class AspectOfTheEndItem extends NormalSpellItem {
 
     @Override
     public SpellCapabilityProvider createSpells() {
-        return SpellCapabilityProvider.with(Spells.INSTANT_TRANSMISSION);
+        return SpellCapabilityProvider.with(Spells.INSTANT_TRANSMISSION, 4);
     }
 }

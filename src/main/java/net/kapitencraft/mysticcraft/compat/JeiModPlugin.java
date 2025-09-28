@@ -10,6 +10,7 @@ import net.kapitencraft.mysticcraft.item.combat.spells.SpellScrollItem;
 import net.kapitencraft.mysticcraft.registry.ModBlocks;
 import net.kapitencraft.mysticcraft.registry.ModItems;
 import net.kapitencraft.mysticcraft.registry.custom.ModRegistries;
+import net.kapitencraft.mysticcraft.spell.SpellSlot;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
@@ -30,6 +31,10 @@ public class JeiModPlugin implements IModPlugin {
         registration.registerSubtypeInterpreter(ModBlocks.GEMSTONE_CRYSTAL.getItem(), gemstoneInterpreter);
         registration.registerSubtypeInterpreter(ModBlocks.GEMSTONE_SEED.getItem(), gemstoneInterpreter);
 
-        registration.registerSubtypeInterpreter(ModItems.SPELL_SCROLL.get(), (ingredient, context) -> Objects.requireNonNull(ModRegistries.SPELLS.getKey(SpellScrollItem.getSpell(ingredient)), "unknown spell in item " + ingredient).toString());
+        registration.registerSubtypeInterpreter(ModItems.SPELL_SCROLL.get(), (ingredient, context) -> {
+            SpellSlot spellSlot = SpellScrollItem.getSpell(ingredient);
+            if (spellSlot == null) return "null";
+            return Objects.requireNonNull(ModRegistries.SPELLS.getKey(spellSlot.getSpell()), "unknown spell in item " + ingredient) + "$" + spellSlot.getLevel();
+        });
     }
 }

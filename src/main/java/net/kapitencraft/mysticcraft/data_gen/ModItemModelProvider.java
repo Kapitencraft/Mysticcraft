@@ -3,6 +3,7 @@ package net.kapitencraft.mysticcraft.data_gen;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.block.gemstone.GemstoneCrystal;
 import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneType;
+import net.kapitencraft.mysticcraft.registry.ModBlocks;
 import net.kapitencraft.mysticcraft.registry.ModItems;
 import net.kapitencraft.mysticcraft.spell.Element;
 import net.kapitencraft.mysticcraft.spell.Elements;
@@ -22,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 
 public class ModItemModelProvider extends ItemModelProvider {
-    //TODO add textures
 
     public ModItemModelProvider(PackOutput output, ExistingFileHelper existingFileHelper) {
         super(output, MysticcraftMod.MOD_ID, existingFileHelper);
@@ -57,6 +57,7 @@ public class ModItemModelProvider extends ItemModelProvider {
 
         simpleItem(ModItems.EMPTY_APPLICABLE_SLOT, mcLoc("block/red_stained_glass"));
         simpleItem(ModItems.MISSING_GEMSTONE_SLOT, mcLoc("block/red_stained_glass"));
+        simpleItem(ModBlocks.THISTLE.item(), modLoc("block/thistle"));
 
         List<RegistryObject<? extends Item>> handhelds = List.of(
                 ModItems.AOTE,
@@ -95,7 +96,8 @@ public class ModItemModelProvider extends ItemModelProvider {
                 ModItems.ORB_OF_CONSUMPTION,
                 ModItems.MANA_STEEL_INGOT,
                 ModItems.SHADOW_CRYSTAL,
-                ModItems.VOID_TOTEM_ITEM
+                ModItems.VOID_TOTEM_ITEM,
+                ModItems.LAPIS_DUST
          );
         simples.forEach(itemRegistryObject -> simpleItem(itemRegistryObject, null));
 

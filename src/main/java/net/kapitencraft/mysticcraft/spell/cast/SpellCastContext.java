@@ -10,10 +10,12 @@ import java.util.Objects;
 
 public class SpellCastContext {
     private final Map<SpellCastContextParam<?>, Object> params;
-    private final Level level;
+    private final Level world;
+    private final int level;
 
-    private SpellCastContext(Map<SpellCastContextParam<?>, Object> params, Level level) {
+    private SpellCastContext(Map<SpellCastContextParam<?>, Object> params, Level world, int level) {
         this.params = ImmutableMap.copyOf(params);
+        this.world = world;
         this.level = level;
     }
 
@@ -29,7 +31,11 @@ public class SpellCastContext {
         return (T) params.get(param);
     }
 
-    public Level getLevel() {
+    public Level getWorld() {
+        return world;
+    }
+
+    public int getLevel() {
         return level;
     }
 
@@ -40,8 +46,8 @@ public class SpellCastContext {
             params.put(param, value);
         }
 
-        public SpellCastContext build(Level level) {
-            return new SpellCastContext(params, level);
+        public SpellCastContext build(Level world, int level) {
+            return new SpellCastContext(params, world, level);
         }
     }
 }

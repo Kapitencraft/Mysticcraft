@@ -7,6 +7,7 @@ import net.kapitencraft.mysticcraft.capability.gemstone.IGemstoneHandler;
 import net.kapitencraft.mysticcraft.capability.item_stat.ItemStatCapability;
 import net.kapitencraft.mysticcraft.capability.spell.SpellCapability;
 import net.kapitencraft.mysticcraft.misc.content.EssenceHolder;
+import net.kapitencraft.mysticcraft.spell.capability.PlayerSpells;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -26,6 +27,7 @@ public interface CapabilityHelper {
     Capability<QuiverCapability> QUIVER = CapabilityManager.get(new CapabilityToken<>(){});
     Capability<WalletCapability> WALLET = CapabilityManager.get(new CapabilityToken<>(){});
     Capability<SpellCapability> SPELL = CapabilityManager.get(new CapabilityToken<>(){});
+    Capability<PlayerSpells> PLAYER_SPELLS = CapabilityManager.get(new CapabilityToken<>(){});
 
     static <K> boolean exeCapability(ItemStack stack, Capability<K> capability, NonNullConsumer<K> consumer) {
         LazyOptional<K> optional = stack.getCapability(capability);

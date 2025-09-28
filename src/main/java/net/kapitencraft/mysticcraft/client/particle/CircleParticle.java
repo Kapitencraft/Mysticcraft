@@ -38,8 +38,8 @@ public class CircleParticle extends TextureSheetParticle {
     public void tick() {
         float lifePercentage = (float) age / lifetime;
         this.setAlpha(1f - lifePercentage);
-        Color color = new Color(startColor);
-        this.setColor(color.r, color.g, color.b);
+        Color color = Color.fromARGBPacked(startColor);
+        this.setColor(color.r(), color.g(), color.b());
         super.tick();
     }
 

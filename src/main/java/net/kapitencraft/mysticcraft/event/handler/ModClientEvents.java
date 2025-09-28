@@ -12,7 +12,8 @@ import net.kapitencraft.mysticcraft.capability.gemstone.IGemstoneItem;
 import net.kapitencraft.mysticcraft.capability.reforging.Reforges;
 import net.kapitencraft.mysticcraft.client.ItemCategory;
 import net.kapitencraft.mysticcraft.client.ModKeyMappings;
-import net.kapitencraft.mysticcraft.client.SpellCastChargeOverlay;
+import net.kapitencraft.mysticcraft.client.overlay.SpellCastChargeOverlay;
+import net.kapitencraft.mysticcraft.client.overlay.SpellSelectionOverlay;
 import net.kapitencraft.mysticcraft.client.particle.CircleParticle;
 import net.kapitencraft.mysticcraft.client.particle.FireNormalParticle;
 import net.kapitencraft.mysticcraft.client.particle.MagicCircleParticle;
@@ -38,7 +39,10 @@ import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.*;
+import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.client.event.RegisterColorHandlersEvent;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
+import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -73,7 +77,6 @@ public class ModClientEvents {
         MenuScreens.register(ModMenuTypes.VULCANIC_GENERATOR.get(), VulcanicGeneratorScreen::new);
         MenuScreens.register(ModMenuTypes.MAGIC_FURNACE.get(), MagicFurnaceScreen::new);
         MenuScreens.register(ModMenuTypes.MANA_BATTERY.get(), ManaBatteryScreen::new);
-
         MenuScreens.register(ModMenuTypes.SPELL_CASTER_TURRET.get(), SpellCasterTurretScreen::new);
     }
 
@@ -132,11 +135,6 @@ public class ModClientEvents {
     }
 
     @SubscribeEvent
-    public static void onRegisterNamedRenderTypes(RegisterNamedRenderTypesEvent event) {
-        //event.register();
-    }
-
-    @SubscribeEvent
     public static void onRegisterItemModifiersDisplayExtensions(RegisterItemModifiersDisplayExtensionsEvent event) {
         event.registerEquipment(GemstoneHelper::getCapability);
         event.registerEquipment(Reforges::getReforgeDisplayExtension);
@@ -150,6 +148,6 @@ public class ModClientEvents {
     @SubscribeEvent
     public static void onRegisterConfigurableOverlays(RegisterConfigurableOverlaysEvent event) {
         event.addOverlay(ModOverlays.CAST_CHARGE, SpellCastChargeOverlay::new);
+        event.addOverlay(ModOverlays.SPELL_SELECTION, SpellSelectionOverlay::new);
     }
-
 }

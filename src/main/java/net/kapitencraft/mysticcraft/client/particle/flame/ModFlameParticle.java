@@ -17,9 +17,9 @@ public class ModFlameParticle extends TextureSheetParticle {
         this.friction = 0.5f;
         this.lifetime = 25;
         this.hasPhysics = false;
-        this.rCol = color.r;
-        this.gCol = color.g;
-        this.bCol = color.b;
+        this.rCol = color.r();
+        this.gCol = color.g();
+        this.bCol = color.b();
         this.pickSprite(spriteSet);
     }
 

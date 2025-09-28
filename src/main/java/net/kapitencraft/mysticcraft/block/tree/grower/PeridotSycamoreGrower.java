@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.block.grower;
+package net.kapitencraft.mysticcraft.block.tree.grower;
 
 import net.kapitencraft.mysticcraft.worldgen.ModConfiguredFeatures;
 import net.minecraft.resources.ResourceKey;

@@ -8,6 +8,7 @@ import net.kapitencraft.mysticcraft.item.combat.spells.SpellScrollItem;
 import net.kapitencraft.mysticcraft.item.combat.spells.necron_sword.NecronSword;
 import net.kapitencraft.mysticcraft.registry.ModItems;
 import net.kapitencraft.mysticcraft.registry.Spells;
+import net.kapitencraft.mysticcraft.spell.SpellSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -53,7 +54,12 @@ public class AnvilUses {
         registerAnvilUse(
                 both(
                         stack -> stack.getItem() instanceof NecronSword && !SpellHelper.hasSpell(stack, Spells.WITHER_IMPACT.get()),
-                        stack -> stack.getItem() instanceof SpellScrollItem && SpellScrollItem.getSpell(stack).canApply(ModItems.NECRON_SWORD.get())
+                        stack -> {
+                            if (!stack.is(ModItems.SPELL_SCROLL.get())) return false;
+
+                            SpellSlot spellSlot = SpellScrollItem.getSpell(stack);
+                            return spellSlot != null && spellSlot.getSpell().canApply(ModItems.NECRON_SWORD.get());
+                        }
                 ),
                 (stack, stack1) -> {
                     if (SpellHelper.hasAnySpell(stack)) SpellHelper.setSpell(stack, 0, Spells.WITHER_IMPACT.get());

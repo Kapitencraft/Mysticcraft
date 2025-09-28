@@ -23,6 +23,7 @@ public class DataGenerators {
         ExistingFileHelper helper = event.getExistingFileHelper();
         CompletableFuture<HolderLookup.Provider> registries = event.getLookupProvider();
         ModLanguageProvider provider = new ModLanguageProvider(output);
+        generator.addProvider(true, new ModTextureProvider(helper, output));
         generator.addProvider(true, new ModBlockStateProvider(output, helper));
         generator.addProvider(true, new ModRecipeProvider(output));
         generator.addProvider(false, ModLootTableProvider.create(output));

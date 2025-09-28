@@ -2,10 +2,7 @@ package net.kapitencraft.mysticcraft.network;
 
 import net.kapitencraft.kap_lib.io.network.SimplePacket;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.network.packets.C2S.ReforgeItemPacket;
-import net.kapitencraft.mysticcraft.network.packets.C2S.UpgradeItemPacket;
-import net.kapitencraft.mysticcraft.network.packets.C2S.UpgradePerkPacket;
-import net.kapitencraft.mysticcraft.network.packets.C2S.UseShortBowPacket;
+import net.kapitencraft.mysticcraft.network.packets.C2S.*;
 import net.kapitencraft.mysticcraft.network.packets.S2C.*;
 import net.kapitencraft.mysticcraft.network.packets.SendCompoundTagPacket;
 import net.minecraft.network.FriendlyByteBuf;
@@ -64,6 +61,7 @@ public class ModMessages {
         addMessage(RemoveManaDistributionNetworkElementPacket.class, NetworkDirection.PLAY_TO_CLIENT, RemoveManaDistributionNetworkElementPacket::new);
         addMessage(HammerAbortBreakPacket.class, NetworkDirection.PLAY_TO_CLIENT, HammerAbortBreakPacket::new);
         addMessage(UpdateClassProgressionPacket.class, NetworkDirection.PLAY_TO_CLIENT, UpdateClassProgressionPacket::new);
+        addMessage(SelectSpellSlotPacket.class, NetworkDirection.PLAY_TO_SERVER, SelectSpellSlotPacket::new);
     }
 
     private static <T extends SimplePacket> void addMessage(Class<T> tClass, NetworkDirection direction, Function<FriendlyByteBuf, T> decoder) {

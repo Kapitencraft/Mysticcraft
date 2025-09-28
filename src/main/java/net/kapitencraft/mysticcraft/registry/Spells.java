@@ -24,10 +24,7 @@ public interface Spells {
     RegistryObject<ExplosiveSightSpell> EXPLOSIVE_SIGHT = REGISTRY.register("explosive_sight", ExplosiveSightSpell::new);
     RegistryObject<ShadowStepSpell> SHADOW_STEP = REGISTRY.register("shadow_step", ShadowStepSpell::new);
     RegistryObject<HugeHealSpell> HUGE_HEAL = REGISTRY.register("huge_heal", HugeHealSpell::new);
-    RegistryObject<FireBoltSpell> FIRE_BOLT_1 = REGISTRY.register("fire_bolt_1", () -> new FireBoltSpell(false, 1));
-    RegistryObject<FireBoltSpell> FIRE_BOLT_2 = REGISTRY.register("fire_bolt_2", () -> new FireBoltSpell(false, 1.4f));
-    RegistryObject<FireBoltSpell> FIRE_BOLT_3 = REGISTRY.register("fire_bolt_3", () -> new FireBoltSpell(true, 2.8f));
-    RegistryObject<FireBoltSpell> FIRE_BOLT_4 = REGISTRY.register("fire_bolt_4", () -> new FireBoltSpell(true, 5.2f));
+    RegistryObject<FireBoltSpell> FIRE_BOLT = REGISTRY.register("fire_bolt", FireBoltSpell::new);
     RegistryObject<FireLanceSpell> FIRE_LANCE = REGISTRY.register("fire_lance", FireLanceSpell::new);
     RegistryObject<CureVillagerSpell> CURE_VILLAGER = REGISTRY.register("cure_villager", CureVillagerSpell::new);
     RegistryObject<MakeRainSpell> MAKE_RAIN = REGISTRY.register("make_rain", MakeRainSpell::new);

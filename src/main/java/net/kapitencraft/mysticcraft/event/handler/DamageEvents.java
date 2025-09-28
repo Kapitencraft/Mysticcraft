@@ -106,7 +106,7 @@ public class DamageEvents {
         if (attacker == null) { return; }
         if (event.getSource() instanceof ISpellSource abilitySource) {
             double intel = attacker.getAttributeValue(ExtraAttributes.INTELLIGENCE.get());
-            double ability_damage = attacker.getAttributeValue(ExtraAttributes.ABILITY_DAMAGE.get());
+            double ability_damage = attacker.getAttributeValue(ExtraAttributes.MAGIC_DAMAGE.get());
             MathHelper.mul(event::getAmount, event::setAmount, (float) ((1 + (intel / 100) * abilitySource.getScaling()) * (1 + (ability_damage / 100))));
         }
     }

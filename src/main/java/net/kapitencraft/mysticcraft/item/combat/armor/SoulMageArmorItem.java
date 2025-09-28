@@ -7,7 +7,6 @@ import net.kapitencraft.kap_lib.registry.ExtraAttributes;
 import net.kapitencraft.kap_lib.util.ExtraRarities;
 import net.kapitencraft.mysticcraft.item.combat.armor.client.NetherArmorItem;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.ArmorTabGroup;
-import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -17,6 +16,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class SoulMageArmorItem extends NetherArmorItem {
+    public static final ArmorTabGroup TAB = ArmorTabGroup.create();
 
     @Override
     public boolean withCustomModel() {

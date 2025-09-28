@@ -16,9 +16,9 @@ public class TabRegister {
 
     @SubscribeEvent
     public static void addToTabs(BuildCreativeModeTabContentsEvent event) {
-        TabGroup.registerAll(event.getTabKey(), event::acceptAll);
+        MutableHashedLinkedMap<ItemStack, CreativeModeTab.TabVisibility> entries = event.getEntries();
+        TabGroup.registerAll(event.getTabKey(), entries);
         if (event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
-            MutableHashedLinkedMap<ItemStack, CreativeModeTab.TabVisibility> entries = event.getEntries();
             entries.putAfter(new ItemStack(Items.STONE_HOE), new ItemStack(ModItems.STONE_HAMMER.get()), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
             entries.putAfter(new ItemStack(Items.IRON_HOE), new ItemStack(ModItems.IRON_HAMMER.get()), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
             entries.putAfter(new ItemStack(Items.DIAMOND_HOE), new ItemStack(ModItems.DIAMOND_HAMMER.get()), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);

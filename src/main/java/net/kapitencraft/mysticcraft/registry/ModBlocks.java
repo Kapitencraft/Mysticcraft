@@ -17,6 +17,7 @@ import net.kapitencraft.mysticcraft.tech.block.*;
 import net.kapitencraft.mysticcraft.worldgen.ModConfiguredFeatures;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
@@ -26,6 +27,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -40,6 +42,8 @@ import java.util.function.Supplier;
 public interface ModBlocks {
     DeferredRegister<Block> REGISTRY = MysticcraftMod.registry(ForgeRegistries.BLOCKS);
     List<RegistryObject<? extends BlockItem>> ITEM_BLOCKS = new ArrayList<>();
+    BlockBehaviour.Properties FLOWER_PROPERTIES = BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).noCollission().instabreak().sound(SoundType.GRASS).offsetType(BlockBehaviour.OffsetType.XZ).pushReaction(PushReaction.DESTROY);
+
     private static <T extends Block> BlockRegistryHolder<T, BlockItem> registerBlock(String name, Supplier<T> block, Item.Properties properties, TabGroup group) {
         return registerBlock(name, block, object -> new BlockItem(object.get(), properties), group);
     }
@@ -110,4 +114,7 @@ public interface ModBlocks {
 
     BlockRegistryHolder<PedestalBlock, BlockItem> PEDESTAL = registerBlock("pedestal", PedestalBlock::new, MiscHelper.rarity(Rarity.UNCOMMON), TabGroup.BUILDING_MATERIAL);
     BlockRegistryHolder<AltarBlock, BlockItem> ALTAR = registerBlock("altar", AltarBlock::new, MiscHelper.rarity(Rarity.UNCOMMON), TabGroup.BUILDING_MATERIAL);
+
+    BlockRegistryHolder<FlowerBlock, BlockItem> THISTLE = registerBlock("thistle", () -> new FlowerBlock(MobEffects.UNLUCK, 20, FLOWER_PROPERTIES), new Item.Properties(), TabGroup.MATERIAL); //TODO add effect
+    BlockRegistryHolder<MistletoeBlock, BlockItem> MISTLETOE = registerBlock("mistletoe", MistletoeBlock::new, new Item.Properties(), TabGroup.MATERIAL);
 }

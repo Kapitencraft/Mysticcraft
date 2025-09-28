@@ -17,6 +17,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
@@ -83,6 +84,14 @@ public class ModTagProvider {
                     ModItems.SPEED_UPGRADE.get()
             );
 
+            tag(ModTags.Items.DRAGON_TEMPTING).add(
+                    Items.SALMON,
+                    Items.COOKED_SALMON,
+                    Items.COD,
+                    Items.COOKED_COD,
+                    Items.TROPICAL_FISH
+            );
+
             copy(ModTags.Blocks.STRIPPED_LOGS, ModTags.Items.STRIPPED_LOGS);
         }
 
@@ -111,6 +120,8 @@ public class ModTagProvider {
             tag(Tags.Blocks.NEEDS_NETHERITE_TOOL).add(ModBlocks.CRIMSONIUM_ORE.get(),
                     ModBlocks.GEMSTONE_CRYSTAL.get(), ModBlocks.GEMSTONE_BLOCK.get()
             );
+
+            tag(BlockTags.SMALL_FLOWERS).add(ModBlocks.THISTLE.get());
 
             tag(Tags.Blocks.ORES).add(ModBlocks.CRIMSONIUM_ORE.get(), ModBlocks.GEMSTONE_SEED.get());
 

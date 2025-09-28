@@ -13,7 +13,9 @@ import net.kapitencraft.mysticcraft.requirement.type.ReforgeRequirementType;
 import net.kapitencraft.mysticcraft.rpg.classes.RPGClassManager;
 import net.kapitencraft.mysticcraft.rpg.perks.ServerPerksManager;
 import net.kapitencraft.mysticcraft.spell.Spell;
+import net.kapitencraft.mysticcraft.spell.SpellSlot;
 import net.kapitencraft.mysticcraft.spell.SpellTarget;
+import net.kapitencraft.mysticcraft.spell.capability.PlayerSpells;
 import net.kapitencraft.mysticcraft.tags.ModTags;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -35,6 +37,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.*;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
+import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.server.ServerStoppedEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -54,7 +57,6 @@ public class Events {
         RPGClassManager.clearCache();
     }
 
-
     //region spell item
 
     @SubscribeEvent
@@ -63,15 +65,26 @@ public class Events {
         LivingEntity entity = event.getEntity();
         ItemStack stack = entity.getItemInHand(hand);
         if (stack.is(ModTags.Items.CATALYST)) {
-            Spell spell = SpellHelper.getActiveSpell(stack);
+            SpellSlot slot = SpellHelper.getActiveSlot(stack);
+            Spell spell = slot.getSpell();
             if (spell != Spells.EMPTY.get()) {
                 Level level = event.getLevel();
                 if (stack.hasTag()) stack.getTag().remove("target");
                 if (SpellHelper.canExecuteSpell(entity, spell, stack)) {
-                    if (spell.castDuration() == 0) SpellHelper.handleManaAndExecute(entity, spell, stack);
+                    if (spell.castDuration() == 0) SpellHelper.handleManaAndExecute(entity, spell, slot.getLevel(), stack);
                     else entity.startUsingItem(hand);
                     event.setCancellationResult(InteractionResult.sidedSuccess(level.isClientSide));
                 }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onLivingEquipmentChange(LivingEquipmentChangeEvent event) {
+        LivingEntity entity = event.getEntity();
+        if (entity instanceof Player player) {
+            if (event.getFrom().is(ModTags.Items.CATALYST) || event.getTo().is(ModTags.Items.CATALYST)) {
+                PlayerSpells.get(player).updateSlot();
             }
         }
     }
@@ -80,13 +93,14 @@ public class Events {
     @SubscribeEvent
     public static void onLivingEntityUseItemTick(LivingEntityUseItemEvent.Tick event) {
         ItemStack stack = event.getItem();
-        if (!stack.is(ModTags.Items.CATALYST)) return;
         LivingEntity living = event.getEntity();
+        if (!stack.is(ModTags.Items.CATALYST)) return;
         Level level = living.level();
         int duration = stack.getUseDuration() - event.getDuration();
-        Spell spell = SpellHelper.getActiveSpell(stack);
+        SpellSlot slot = SpellHelper.getActiveSlot(stack);
+        Spell spell = slot.getSpell();
         if (duration >= spell.castDuration()) {
-            if (!SpellHelper.handleManaAndExecute(living, spell, stack) || spell.getType() == Spell.Type.RELEASE) living.stopUsingItem();
+            if (!SpellHelper.handleManaAndExecute(living, spell, slot.getLevel(), stack) || spell.getType() == Spell.Type.RELEASE) living.stopUsingItem();
         } else {
             SpellTarget<?> target = spell.getTarget();
             SpellTarget.Type<?> type = target.getType();

@@ -11,6 +11,6 @@ public class FieryScythe extends NormalSpellItem implements IDamageSpellItem, IF
 
     @Override
     public SpellCapabilityProvider createSpells() {
-        return SpellCapabilityProvider.with(Spells.FIRE_BOLT_2);
+        return SpellCapabilityProvider.with(Spells.FIRE_BOLT, 4);
     }
 }

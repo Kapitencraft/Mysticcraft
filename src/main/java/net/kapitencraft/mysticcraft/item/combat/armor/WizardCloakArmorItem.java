@@ -6,6 +6,7 @@ import net.kapitencraft.kap_lib.helpers.MiscHelper;
 import net.kapitencraft.kap_lib.item.combat.armor.AbstractArmorItem;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.item.combat.armor.client.model.WizardCloakModel;
+import net.kapitencraft.mysticcraft.item.misc.creative_tab.ArmorTabGroup;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ArmorItem;
@@ -14,7 +15,7 @@ import net.minecraft.world.item.Rarity;
 import org.jetbrains.annotations.Nullable;
 
 public class WizardCloakArmorItem extends AbstractArmorItem {
-
+    public static final ArmorTabGroup TAB = ArmorTabGroup.create();
     //TODO add crafting recipe
 
     public WizardCloakArmorItem(ArmorItem.Type type) {

@@ -14,7 +14,7 @@ public class HugeHealSpell implements Spell {
 
     @Override
     public void cast(SpellCastContext context) {
-        context.getParamOrThrow(SpellCastContextParams.CASTER).heal(5f);
+        context.getParamOrThrow(SpellCastContextParams.CASTER).heal(context.getLevel() * 2.5f);
     }
 
     @Override
