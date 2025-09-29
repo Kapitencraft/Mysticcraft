@@ -29,10 +29,6 @@ import java.util.List;
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 public class Dragon extends PathfinderMob {
-    private static final List<MemoryModuleType<?>> MEMORY_MODULE_TYPES = List.of();
-    private static final List<SensorType<? extends Sensor<? super Dragon>>> SENSOR_TYPES = List.of(
-            ModSensorTypes.DRAGON_TEMPTATIONS.get()
-    );
 
     private final NonNullList<ItemStack> armor = NonNullList.withSize(4, ItemStack.EMPTY);
     private final DragonBossEvent event;
@@ -61,11 +57,6 @@ public class Dragon extends PathfinderMob {
     @Override
     protected Brain<?> makeBrain(Dynamic<?> pDynamic) {
         return DragonBossAi.makeBrain(this, pDynamic);
-    }
-
-    @Override
-    protected Brain.Provider<?> brainProvider() {
-        return Brain.provider(MEMORY_MODULE_TYPES, SENSOR_TYPES);
     }
 
     @Override

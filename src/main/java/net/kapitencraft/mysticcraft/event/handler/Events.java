@@ -84,7 +84,7 @@ public class Events {
         LivingEntity entity = event.getEntity();
         if (entity instanceof Player player) {
             if (event.getFrom().is(ModTags.Items.CATALYST) || event.getTo().is(ModTags.Items.CATALYST)) {
-                PlayerSpells.get(player).updateSlot();
+                PlayerSpells.get(player).updateSlot(event.getTo());
             }
         }
     }

@@ -2,9 +2,11 @@ package net.kapitencraft.mysticcraft.spell.capability;
 
 import net.kapitencraft.kap_lib.item.capability.AbstractCapability;
 import net.kapitencraft.mysticcraft.capability.CapabilityHelper;
+import net.kapitencraft.mysticcraft.capability.spell.SpellHelper;
 import net.kapitencraft.mysticcraft.registry.Spells;
 import net.kapitencraft.mysticcraft.spell.SpellSlot;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,8 +48,12 @@ public class PlayerSpells implements AbstractCapability<List<SpellSlot>> {
         this.slot = slot;
     }
 
-    public void updateSlot() {
-        if (this.slot >= this.spells.size()) this.slot = 0;
+    public void updateSlot(ItemStack next) {
+        SpellSlot activeSlot = SpellHelper.getActiveSlot(next);
+        if (activeSlot.getSpell() != Spells.EMPTY.get())
+            this.slot = this.spells.size();
+        else if (this.slot >= this.spells.size())
+            this.slot = 0;
     }
 
     public int getSlot() {
