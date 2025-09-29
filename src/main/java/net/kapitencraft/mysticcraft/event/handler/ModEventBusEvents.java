@@ -5,6 +5,7 @@ import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneSlot;
 import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneType;
 import net.kapitencraft.mysticcraft.capability.reforging.Reforges;
 import net.kapitencraft.mysticcraft.entity.FrozenBlazeEntity;
+import net.kapitencraft.mysticcraft.entity.dragon.Dragon;
 import net.kapitencraft.mysticcraft.entity.vampire.VampireBat;
 import net.kapitencraft.mysticcraft.event.advancement.ModCriteriaTriggers;
 import net.kapitencraft.mysticcraft.event.custom.AddGemstonesToItemEvent;
@@ -87,5 +88,6 @@ public class ModEventBusEvents {
     public static void onEntityAttributeCreation(EntityAttributeCreationEvent event) {
         event.put(ModEntityTypes.VAMPIRE_BAT.get(), VampireBat.createAttributes().build());
         event.put(ModEntityTypes.FROZEN_BLAZE.get(), FrozenBlazeEntity.createAttributes().build());
+        event.put(ModEntityTypes.DRAGON.get(), Dragon.createAttributes().build());
     }
 }

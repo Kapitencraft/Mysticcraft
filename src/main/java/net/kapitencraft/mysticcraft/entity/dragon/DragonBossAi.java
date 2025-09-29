@@ -18,12 +18,13 @@ import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.minecraft.world.entity.ai.sensing.Sensor;
 import net.minecraft.world.entity.ai.sensing.SensorType;
-import net.minecraft.world.entity.animal.axolotl.AxolotlAi;
 import net.minecraft.world.entity.schedule.Activity;
 
 import java.util.List;
+import java.util.Optional;
 
 public class DragonBossAi {
+
     public static final List<Activity> ACTIVITIES = List.of(
             Activity.FIGHT, Activity.REST, Activity.IDLE
     );
@@ -40,7 +41,8 @@ public class DragonBossAi {
             MemoryModuleType.TEMPTING_PLAYER,
             MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE,
             MemoryModuleType.PATH,
-            MemoryModuleType.WALK_TARGET
+            MemoryModuleType.WALK_TARGET,
+            MemoryModuleType.NEAREST_ATTACKABLE
     );
 
     public static Brain<?> makeBrain(Dragon dragon, Dynamic<?> pDynamic) {
@@ -49,7 +51,6 @@ public class DragonBossAi {
         initCoreActivity(brain);
         initIdleActivity(brain);
         initFightActivity(dragon, brain);
-
         return brain;
     }
 
@@ -64,10 +65,21 @@ public class DragonBossAi {
     private static void initIdleActivity(Brain<Dragon> brain) {
         brain.addActivity(Activity.IDLE, ImmutableList.of(
                 Pair.of(0, SetEntityLookTargetSometimes.create(EntityType.PLAYER, 6.0F, UniformInt.of(30, 60))),
-                Pair.of(1, new AnimalMakeLove(EntityType.AXOLOTL, 0.2F)),
-                Pair.of(2, new RunOne<>(ImmutableList.of(Pair.of(new FollowTemptation(AxolotlAi::getSpeedModifier), 1), Pair.of(BabyFollowAdult.create(ADULT_FOLLOW_RANGE, AxolotlAi::getSpeedModifierFollowingAdult), 1)))),
+                Pair.of(2, new RunOne<>(ImmutableList.of(
+                        Pair.of(new FollowTemptation(LivingEntity::getSpeed), 1)
+                ))),
                 Pair.of(3, StartAttacking.create(DragonBossAi::findNearestValidAttackTarget)),
-                Pair.of(4, new GateBehavior<>(ImmutableMap.of(MemoryModuleType.WALK_TARGET, MemoryStatus.VALUE_ABSENT), ImmutableSet.of(), GateBehavior.OrderPolicy.ORDERED, GateBehavior.RunningPolicy.TRY_ALL, ImmutableList.of(Pair.of(RandomStroll.swim(0.5F), 2), Pair.of(RandomStroll.stroll(0.15F, false), 2), Pair.of(SetWalkTargetFromLookTarget.create(AxolotlAi::canSetWalkTargetFromLookTarget, AxolotlAi::getSpeedModifier, 3), 3), Pair.of(BehaviorBuilder.triggerIf(Entity::isInWaterOrBubble), 5), Pair.of(BehaviorBuilder.triggerIf(Entity::onGround), 5))))));
+                Pair.of(4, new GateBehavior<>(ImmutableMap.of(MemoryModuleType.WALK_TARGET, MemoryStatus.VALUE_ABSENT), ImmutableSet.of(), GateBehavior.OrderPolicy.ORDERED, GateBehavior.RunningPolicy.TRY_ALL, ImmutableList.of(
+                        Pair.of(RandomStroll.swim(0.5F), 2),
+                        Pair.of(RandomStroll.stroll(0.15F, false), 2),
+                        Pair.of(BehaviorBuilder.triggerIf(Entity::isInWaterOrBubble), 5),
+                        Pair.of(BehaviorBuilder.triggerIf(Entity::onGround), 5)
+                )))
+        ));
+    }
+
+    private static Optional<? extends LivingEntity> findNearestValidAttackTarget(Dragon p_149299_) {
+        return BehaviorUtils.isBreeding(p_149299_) ? Optional.empty() : p_149299_.getBrain().getMemory(MemoryModuleType.NEAREST_ATTACKABLE);
     }
 
     private static void initFightActivity(Dragon dragon, Brain<Dragon> pBrain) {
