@@ -44,7 +44,8 @@ public class Dragon extends PathfinderMob {
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 300D)
-                .add(Attributes.ATTACK_DAMAGE, 10);
+                .add(Attributes.ATTACK_DAMAGE, 10)
+                .add(Attributes.MOVEMENT_SPEED, .3375);
     }
 
     @Override

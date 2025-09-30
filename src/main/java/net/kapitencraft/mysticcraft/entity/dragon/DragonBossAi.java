@@ -31,15 +31,13 @@ public class DragonBossAi {
     );
 
     private static final List<SensorType<? extends Sensor<? super Dragon>>> SENSORS = List.of(
-            SensorType.HURT_BY,
             ModSensorTypes.DRAGON_TEMPTATIONS.get(),
             ModSensorTypes.DRAGON_ATTACKABLES.get(),
             SensorType.NEAREST_LIVING_ENTITIES
     );
 
     private static final List<MemoryModuleType<?>> MEMORIES = List.of(
-            MemoryModuleType.HURT_BY,
-            MemoryModuleType.HURT_BY_ENTITY,
+            MemoryModuleType.LOOK_TARGET,
             MemoryModuleType.ATTACK_TARGET,
             MemoryModuleType.ATTACK_COOLING_DOWN,
             MemoryModuleType.TEMPTING_PLAYER,
