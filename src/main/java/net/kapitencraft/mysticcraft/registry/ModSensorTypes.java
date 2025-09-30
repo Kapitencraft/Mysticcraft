@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.registry;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.entity.ai.DragonAttackablesSensor;
 import net.kapitencraft.mysticcraft.tags.ModTags;
 import net.minecraft.world.entity.ai.sensing.Sensor;
 import net.minecraft.world.entity.ai.sensing.SensorType;
@@ -20,4 +21,5 @@ public interface ModSensorTypes {
     }
 
     RegistryObject<SensorType<TemptingSensor>> DRAGON_TEMPTATIONS = register("dragon_temptations", () -> new TemptingSensor(Ingredient.of(ModTags.Items.DRAGON_TEMPTING)));
+    RegistryObject<SensorType<DragonAttackablesSensor>> DRAGON_ATTACKABLES = register("dragon_attackables", DragonAttackablesSensor::new);
 }

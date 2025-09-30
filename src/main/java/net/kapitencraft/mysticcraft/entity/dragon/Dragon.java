@@ -10,8 +10,6 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
-import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Contract;
@@ -60,7 +58,7 @@ public class Dragon extends PathfinderMob {
     }
 
     @Override
-    public @NotNull ItemStack getItemBySlot(EquipmentSlot pSlot) {
+    public ItemStack getItemBySlot(EquipmentSlot pSlot) {
         if (pSlot.isArmor()) return armor.get(pSlot.getIndex());
         return ItemStack.EMPTY;
     }
@@ -99,12 +97,6 @@ public class Dragon extends PathfinderMob {
         brain.setActiveActivityToFirstValid(DragonBossAi.ACTIVITIES);
         this.level().getProfiler().pop();
         super.customServerAiStep();
-    }
-
-    @Override
-    protected PathNavigation createNavigation(Level pLevel) {
-        FlyingPathNavigation navigation = new FlyingPathNavigation(this, pLevel);
-        return navigation;
     }
 
     @SuppressWarnings("unchecked")

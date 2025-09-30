@@ -10,3 +10,4 @@ added peridot sycamore trees
 reworked reforge selector
 moved many tags to datagen
 circle particles will now show from both sides
+nerved Hammer damage

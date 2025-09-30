@@ -152,10 +152,10 @@ public interface ModItems {
     RegistryObject<MaterialModItem> LAPIS_DUST = registerMaterial("lapis_dust", Rarity.COMMON, TabGroup.MATERIAL);
 
     //region Hammer
-    RegistryObject<HammerItem> STONE_HAMMER = register("stone_hammer", ()-> new HammerItem(MiscHelper.rarity(Rarity.COMMON), Tiers.STONE, 10), HammerItem.HAMMER_GROUP);
-    RegistryObject<HammerItem> IRON_HAMMER = register("iron_hammer", ()-> new HammerItem(MiscHelper.rarity(Rarity.COMMON), Tiers.IRON, 11), HammerItem.HAMMER_GROUP);
-    RegistryObject<HammerItem> DIAMOND_HAMMER = register("diamond_hammer", ()-> new HammerItem(MiscHelper.rarity(Rarity.UNCOMMON), Tiers.DIAMOND, 11), HammerItem.HAMMER_GROUP);
-    RegistryObject<HammerItem> NETHERITE_HAMMER = register("netherite_hammer", ()-> new HammerItem(MiscHelper.rarity(Rarity.UNCOMMON), Tiers.NETHERITE, 13), HammerItem.HAMMER_GROUP);
+    RegistryObject<HammerItem> STONE_HAMMER = register("stone_hammer", ()-> new HammerItem(MiscHelper.rarity(Rarity.COMMON), Tiers.STONE, 4), HammerItem.HAMMER_GROUP);
+    RegistryObject<HammerItem> IRON_HAMMER = register("iron_hammer", ()-> new HammerItem(MiscHelper.rarity(Rarity.COMMON), Tiers.IRON, 5), HammerItem.HAMMER_GROUP);
+    RegistryObject<HammerItem> DIAMOND_HAMMER = register("diamond_hammer", ()-> new HammerItem(MiscHelper.rarity(Rarity.UNCOMMON), Tiers.DIAMOND, 5), HammerItem.HAMMER_GROUP);
+    RegistryObject<HammerItem> NETHERITE_HAMMER = register("netherite_hammer", ()-> new HammerItem(MiscHelper.rarity(Rarity.UNCOMMON), Tiers.NETHERITE, 6), HammerItem.HAMMER_GROUP);
     //endregion
 
     HashMap<Element, RegistryObject<ElementalShard>> ELEMENTAL_SHARDS = ElementalShard.registerElementShards();

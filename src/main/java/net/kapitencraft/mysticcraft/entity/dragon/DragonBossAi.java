@@ -22,6 +22,7 @@ import net.minecraft.world.entity.schedule.Activity;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public class DragonBossAi {
 
@@ -31,18 +32,23 @@ public class DragonBossAi {
 
     private static final List<SensorType<? extends Sensor<? super Dragon>>> SENSORS = List.of(
             SensorType.HURT_BY,
-            ModSensorTypes.DRAGON_TEMPTATIONS.get()
+            ModSensorTypes.DRAGON_TEMPTATIONS.get(),
+            ModSensorTypes.DRAGON_ATTACKABLES.get(),
+            SensorType.NEAREST_LIVING_ENTITIES
     );
 
     private static final List<MemoryModuleType<?>> MEMORIES = List.of(
             MemoryModuleType.HURT_BY,
             MemoryModuleType.HURT_BY_ENTITY,
             MemoryModuleType.ATTACK_TARGET,
+            MemoryModuleType.ATTACK_COOLING_DOWN,
             MemoryModuleType.TEMPTING_PLAYER,
             MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE,
             MemoryModuleType.PATH,
             MemoryModuleType.WALK_TARGET,
-            MemoryModuleType.NEAREST_ATTACKABLE
+            MemoryModuleType.NEAREST_ATTACKABLE,
+            MemoryModuleType.NEAREST_LIVING_ENTITIES,
+            MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES
     );
 
     public static Brain<?> makeBrain(Dragon dragon, Dynamic<?> pDynamic) {
@@ -51,6 +57,7 @@ public class DragonBossAi {
         initCoreActivity(brain);
         initIdleActivity(brain);
         initFightActivity(dragon, brain);
+        brain.setCoreActivities(Set.of(Activity.CORE));
         return brain;
     }
 
@@ -84,13 +91,19 @@ public class DragonBossAi {
 
     private static void initFightActivity(Dragon dragon, Brain<Dragon> pBrain) {
         pBrain.addActivityAndRemoveMemoryWhenStopped(Activity.FIGHT, 10,
-                ImmutableList.of(StopAttackingIfTargetInvalid.create(
-                        (p_219540_) -> !dragon.canTargetEntity(p_219540_),
-                        DragonBossAi::onTargetInvalid,
-                        false
-                ), SetEntityLookTarget.create(
-                        (target) -> isTarget(pBrain, target),
-                        (float)dragon.getAttributeValue(Attributes.FOLLOW_RANGE)), SetWalkTargetFromAttackTargetIfTargetOutOfReach.create(1.2F), MeleeAttack.create(18)),
+                ImmutableList.of(
+                        StopAttackingIfTargetInvalid.create(
+                                (p_219540_) -> !dragon.canTargetEntity(p_219540_),
+                                DragonBossAi::onTargetInvalid,
+                                false
+                        ),
+                        SetEntityLookTarget.create(
+                                (target) -> isTarget(pBrain, target),
+                                (float)dragon.getAttributeValue(Attributes.FOLLOW_RANGE)
+                        ),
+                        SetWalkTargetFromAttackTargetIfTargetOutOfReach.create(1.2F),
+                        MeleeAttack.create(18)
+                ),
                 MemoryModuleType.ATTACK_TARGET
         );
     }
