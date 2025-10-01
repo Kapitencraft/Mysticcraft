@@ -21,9 +21,7 @@ public class ObeliskTurretBlockEntity extends AbstractTurretBlockEntity {
     public static void tick(Level pLevel, BlockPos pPos, BlockState pState, ObeliskTurretBlockEntity entity) {
         entity.updateTarget();
         if (entity.target != null) {
-            entity.target.invulnerableTime = 0;
             if ((entity.activeTicks & 7) == 0 && !entity.target.hurt(pLevel.damageSources().source(ModDamageTypes.SCORCH), entity.damage)) {
-                entity.target = null;
                 entity.unselectTarget();
             }
             if ((entity.activeTicks++ & 31) == 0) entity.damage <<= 1;
@@ -41,5 +39,6 @@ public class ObeliskTurretBlockEntity extends AbstractTurretBlockEntity {
     protected void unselectTarget() {
         damage = 1;
         activeTicks = 0;
+        target = null;
     }
 }

@@ -100,7 +100,8 @@ public class DragonBossAi {
                                 (float)dragon.getAttributeValue(Attributes.FOLLOW_RANGE)
                         ),
                         SetWalkTargetFromAttackTargetIfTargetOutOfReach.create(1.2F),
-                        MeleeAttack.create(18)
+                        MeleeAttack.create(18),
+                        new BreathFire()
                 ),
                 MemoryModuleType.ATTACK_TARGET
         );

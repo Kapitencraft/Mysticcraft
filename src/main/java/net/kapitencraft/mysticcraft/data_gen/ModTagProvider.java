@@ -8,12 +8,10 @@ import net.kapitencraft.mysticcraft.registry.ModItems;
 import net.kapitencraft.mysticcraft.tags.ModTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.tags.BiomeTagsProvider;
-import net.minecraft.data.tags.EntityTypeTagsProvider;
-import net.minecraft.data.tags.ItemTagsProvider;
-import net.minecraft.data.tags.TagsProvider;
+import net.minecraft.data.tags.*;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ArmorItem;
@@ -34,9 +32,9 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
 @SuppressWarnings("unchecked")
-public class ModTagProvider {
+public interface ModTagProvider {
 
-    public static class Item extends ItemTagsProvider {
+    class Item extends ItemTagsProvider {
 
         public Item(PackOutput output, CompletableFuture<HolderLookup.Provider> registries, CompletableFuture<TagsProvider.TagLookup<net.minecraft.world.level.block.Block>> tagLookup, @Nullable ExistingFileHelper existingFileHelper) {
             super(output, registries, tagLookup, MysticcraftMod.MOD_ID, existingFileHelper);
@@ -109,7 +107,7 @@ public class ModTagProvider {
         }
     }
 
-    public static class Block extends BlockTagsProvider {
+    class Block extends BlockTagsProvider {
 
         public Block(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, @Nullable ExistingFileHelper existingFileHelper) {
             super(output, lookupProvider, MysticcraftMod.MOD_ID, existingFileHelper);
@@ -166,7 +164,7 @@ public class ModTagProvider {
         }
     }
 
-    public static class Biome extends BiomeTagsProvider {
+    class Biome extends BiomeTagsProvider {
 
         public Biome(PackOutput pOutput, CompletableFuture<HolderLookup.Provider> pProvider, @Nullable ExistingFileHelper existingFileHelper) {
             super(pOutput, pProvider, MysticcraftMod.MOD_ID, existingFileHelper);
@@ -180,7 +178,7 @@ public class ModTagProvider {
         }
     }
 
-    public static class Entity extends EntityTypeTagsProvider {
+    class Entity extends EntityTypeTagsProvider {
 
         public Entity(PackOutput pOutput, CompletableFuture<HolderLookup.Provider> pProvider, @Nullable ExistingFileHelper existingFileHelper) {
             super(pOutput, pProvider, MysticcraftMod.MOD_ID, existingFileHelper);
@@ -195,6 +193,23 @@ public class ModTagProvider {
                     EntityType.PIGLIN,
                     EntityType.HOGLIN,
                     ModEntityTypes.FROZEN_BLAZE.get()
+            );
+        }
+    }
+
+    class DamageTypes extends DamageTypeTagsProvider {
+
+        public DamageTypes(PackOutput pOutput, CompletableFuture<HolderLookup.Provider> pLookupProvider, @Nullable ExistingFileHelper existingFileHelper) {
+            super(pOutput, pLookupProvider, MysticcraftMod.MOD_ID, existingFileHelper);
+        }
+
+        @Override
+        protected void addTags(HolderLookup.Provider pProvider) {
+            tag(DamageTypeTags.IS_FIRE).add(
+                    ModDamageTypes.SCORCH
+            );
+            tag(DamageTypeTags.BYPASSES_COOLDOWN).add(
+                    ModDamageTypes.SCORCH
             );
         }
     }

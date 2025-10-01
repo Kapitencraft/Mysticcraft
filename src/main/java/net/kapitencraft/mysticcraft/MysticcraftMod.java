@@ -85,6 +85,7 @@ public class MysticcraftMod {
         ModRecipeTypes.REGISTRY.register(modEventBus);
         ModRecipeSerializers.REGISTRY.register(modEventBus);
         ModSensorTypes.REGISTRY.register(modEventBus);
+        ModMemoryModuleTypes.REGISTRY.register(modEventBus);
 
         //ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientModConfig.SPEC);
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, CommonModConfig.SPEC);

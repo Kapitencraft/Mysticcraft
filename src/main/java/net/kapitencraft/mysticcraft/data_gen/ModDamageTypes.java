@@ -13,7 +13,6 @@ public interface ModDamageTypes {
     ResourceKey<DamageType> ABILITY = register("ability");
     ResourceKey<DamageType> MAGIC_EXPLOSION = register("magic_explosion");
     ResourceKey<DamageType> NUMBNESS = register("numbness");
-    ResourceKey<DamageType> FIRE_LANCE = register("fire_lance");
     ResourceKey<DamageType> SCORCH = register("scorch");
 
     static ResourceKey<DamageType> register(String name) {
@@ -25,7 +24,6 @@ public interface ModDamageTypes {
         context.register(ABILITY, new DamageType("ability", .1f));
         context.register(MAGIC_EXPLOSION, new DamageType("magic_explosion", .3f));
         context.register(NUMBNESS, new DamageType("numbness", .1f));
-        context.register(FIRE_LANCE, new DamageType("fire_lance", .1f));
         context.register(SCORCH, new DamageType("scorch", .1f));
     }
 }

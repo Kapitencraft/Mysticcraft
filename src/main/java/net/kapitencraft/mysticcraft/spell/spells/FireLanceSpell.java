@@ -43,7 +43,7 @@ public class FireLanceSpell implements Spell {
                     if (living.getLastDamageSource() instanceof SpellDamageSource abilitySource && Objects.equals(abilitySource.getSpell(), this)) {
                         living.invulnerableTime = 0;
                     }
-                    living.hurt(SpellDamageSource.create(ModDamageTypes.FIRE_LANCE, user, 0.2f, this), 4);
+                    living.hurt(SpellDamageSource.create(ModDamageTypes.SCORCH, user, 0.2f, this), 4);
                     living.addEffect(new MobEffectInstance(ModMobEffects.BLAZING.get(), 40, 2));
                 });
 

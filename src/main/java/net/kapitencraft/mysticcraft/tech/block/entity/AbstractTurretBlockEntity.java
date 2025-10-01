@@ -19,7 +19,6 @@ public class AbstractTurretBlockEntity extends BlockEntity {
     protected void updateTarget() {
         if (this.target != null) {
             if (!checkArea.intersects(this.target.getBoundingBox())) {
-                this.target = null;
                 this.unselectTarget();
             }
         }

@@ -54,6 +54,11 @@
   "command.perks.award.success": "Successfully awarded one token in the %s tree",
   "command.perks.award_multiple.success": "Successfully awarded %2$s token(s) in the %1$s tree",
 
+  "death.attack.mana_overflow": "%1$s was hit by magic collapse of %2$s",
+  "death.attack.mana_overflow_self": "%1$s couldn't handle his mana",
+  "death.attack.scorch": "%1$s went up in flames from %1$s's fire",
+  "death.attack.numbness": "%1$s didn't survive the backlash",
+
   "disconnect.invalid_reforge": "Attempted to apply invalid reforge",
 
   "effect.mysticcraft.blazing": "Blazing",

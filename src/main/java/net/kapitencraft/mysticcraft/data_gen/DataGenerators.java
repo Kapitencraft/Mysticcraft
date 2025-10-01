@@ -36,6 +36,7 @@ public class DataGenerators {
         generator.addProvider(true, new ModTagProvider.Item(output, registries, blockTags.contentsGetter(), helper));
         generator.addProvider(true, new ModTagProvider.Biome(output, registries, helper));
         generator.addProvider(true, new ModTagProvider.Entity(output, registries, helper));
+        generator.addProvider(true, new ModTagProvider.DamageTypes(output, registries, helper));
         generator.addProvider(true, new ModAdvancementProvider(output, registries, helper));
         generator.addProvider(true, new ModItemRequirementsProvider(output));
         generator.addProvider(true, new ModBonusProvider(output, registries, helper));

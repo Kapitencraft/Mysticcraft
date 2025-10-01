@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.entity.ai;
+package net.kapitencraft.mysticcraft.entity.ai.sensor;
 
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;

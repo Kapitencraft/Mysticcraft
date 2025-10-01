@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.registry;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.entity.ai.DragonAttackablesSensor;
+import net.kapitencraft.mysticcraft.entity.ai.sensor.DragonAttackablesSensor;
 import net.kapitencraft.mysticcraft.tags.ModTags;
 import net.minecraft.world.entity.ai.sensing.Sensor;
 import net.minecraft.world.entity.ai.sensing.SensorType;
