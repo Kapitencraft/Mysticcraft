@@ -1,4 +1,4 @@
-// 1.20.1	2025-07-27T14:49:39.0179524	Tags for minecraft:item mod id mysticcraft
+// 1.20.1	2025-10-01T20:16:27.7892197	Tags for minecraft:item mod id mysticcraft
 0c7f2dcdf3089e30ca36b03852ab393f26be7ed7 data/forge/tags/items/armors.json
 b73e877f825a7c7a57721a44b45adcb4d7401a16 data/forge/tags/items/armors/boots.json
 c30fe22910f8b91d66651150287990d662133fb1 data/forge/tags/items/armors/chestplates.json
@@ -10,6 +10,7 @@ ae8c4e43556dfa79fae0abaf2fe54e8dfe99befa data/forge/tags/items/stripped_logs.jso
 1466919df07556a69b2f26e221f3d59778215055 data/forge/tags/items/tools/shields.json
 d06862026e332f6b213614dc74c567fc600b7235 data/minecraft/tags/items/fishes.json
 c3a8f7e74ef42ae34433ede0decf54f199952174 data/minecraft/tags/items/swords.json
+75405951a46bebd7a140c5ab55dcaeec6aef8d84 data/mysticcraft/tags/items/dragon_tempting.json
 7a7e502c4c78087706af817bb59c937d8225f54a data/mysticcraft/tags/items/ender_hittable.json
 62ab21405e51c9d8f9442a53a48d015dc0ada823 data/mysticcraft/tags/items/hammer.json
 0f88420dc3d183ee02abe0300784ecc5f3ca9847 data/mysticcraft/tags/items/magic_catalyst.json
