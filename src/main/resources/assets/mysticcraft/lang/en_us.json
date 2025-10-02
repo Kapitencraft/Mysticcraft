@@ -62,6 +62,7 @@
   "disconnect.invalid_reforge": "Attempted to apply invalid reforge",
 
   "effect.mysticcraft.blazing": "Blazing",
+  "effect.mysticcraft.displacement": "Displacement",
   "effect.mysticcraft.vulnerability": "Vulnerability",
 
   "element.air": "Air",

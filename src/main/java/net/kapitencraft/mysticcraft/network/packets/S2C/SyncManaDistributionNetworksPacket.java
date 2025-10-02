@@ -9,12 +9,7 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.Objects;
 import java.util.function.Supplier;
 
-public class SyncManaDistributionNetworksPacket implements SimplePacket {
-    private final DistributionNetworkManager manager;
-
-    public SyncManaDistributionNetworksPacket(DistributionNetworkManager manager) {
-        this.manager = manager;
-    }
+public record SyncManaDistributionNetworksPacket(DistributionNetworkManager manager) implements SimplePacket {
 
     public SyncManaDistributionNetworksPacket(FriendlyByteBuf buf) {
         this(DistributionNetworkManager.load(Objects.requireNonNull(buf.readNbt(), "buf could not read NBT")));

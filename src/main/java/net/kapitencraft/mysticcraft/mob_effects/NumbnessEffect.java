@@ -9,9 +9,9 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import org.jetbrains.annotations.NotNull;
 
-public class NumbnessMobEffect extends MobEffect {
+public class NumbnessEffect extends MobEffect {
     public static final String NUMBNESS_ID = "numbnessAmount";
-    public NumbnessMobEffect() {
+    public NumbnessEffect() {
         super(MobEffectCategory.HARMFUL, -10092442);
     }
 

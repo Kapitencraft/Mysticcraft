@@ -3,6 +3,8 @@ package net.kapitencraft.mysticcraft.entity.dragon;
 import net.kapitencraft.kap_lib.helpers.MathHelper;
 import net.kapitencraft.kap_lib.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.data_gen.ModDamageTypes;
+import net.kapitencraft.mysticcraft.network.ModMessages;
+import net.kapitencraft.mysticcraft.network.packets.S2C.DragonBreathFireParticlesPacket;
 import net.kapitencraft.mysticcraft.registry.ModMemoryModuleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
@@ -13,6 +15,7 @@ import net.minecraft.world.entity.ai.memory.MemoryStatus;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 public class BreathFire extends Behavior<Dragon> {
 
@@ -26,9 +29,10 @@ public class BreathFire extends Behavior<Dragon> {
     @Override
     protected void tick(ServerLevel pLevel, Dragon pOwner, long pGameTime) {
         List<LivingEntity> cone = MathHelper.getAllEntitiesInsideCone(LivingEntity.class, 15, 10, pOwner.getEyePosition(), pOwner.getRotationVector(), pLevel);
-        cone.stream().filter(pOwner::canTargetEntity).forEach(living -> {
+        cone.stream().filter(Predicate.not(pOwner::is)).filter(pOwner::canTargetEntity).forEach(living -> {
             living.hurt(new DamageSource(MiscHelper.lookupDamageTypeHolder(pLevel, ModDamageTypes.SCORCH), pOwner), 10); //deal 10 base fire damage
         });
+        ModMessages.sendToAllConnectedPlayers(p -> new DragonBreathFireParticlesPacket(pOwner.getId()), pLevel);
     }
 
     @Override

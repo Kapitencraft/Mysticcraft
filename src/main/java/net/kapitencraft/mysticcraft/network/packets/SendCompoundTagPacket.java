@@ -13,16 +13,8 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class SendCompoundTagPacket implements SimplePacket {
-    private final CompoundTag toSend;
-    private final int entityIdToReceive;
-    private final boolean toServer;
-
-    public SendCompoundTagPacket(CompoundTag toSend, int entityIdToReceive, boolean toServer) {
-        this.toSend = toSend;
-        this.entityIdToReceive = entityIdToReceive;
-        this.toServer = toServer;
-    }
+public record SendCompoundTagPacket(CompoundTag toSend, int entityIdToReceive,
+                                    boolean toServer) implements SimplePacket {
 
     public SendCompoundTagPacket(FriendlyByteBuf buf) {
         this(IOHelper.fromString(buf.readUtf()), buf.readInt(), buf.readBoolean());
@@ -39,7 +31,7 @@ public class SendCompoundTagPacket implements SimplePacket {
     public void handle(Supplier<NetworkEvent.Context> sup) {
         NetworkEvent.Context context = sup.get();
         if (toServer) {
-            context.enqueueWork(()-> {
+            context.enqueueWork(() -> {
                 ServerPlayer serverPlayer = context.getSender();
                 if (serverPlayer != null) {
                     ServerLevel level = serverPlayer.serverLevel();
@@ -48,7 +40,7 @@ public class SendCompoundTagPacket implements SimplePacket {
                 }
             });
         } else {
-            context.enqueueWork(()-> {
+            context.enqueueWork(() -> {
                 ClientLevel level = Minecraft.getInstance().level;
                 if (level != null) {
                     Entity entity = level.getEntity(entityIdToReceive);

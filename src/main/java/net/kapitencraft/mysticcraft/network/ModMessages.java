@@ -62,6 +62,7 @@ public class ModMessages {
         addMessage(HammerAbortBreakPacket.class, NetworkDirection.PLAY_TO_CLIENT, HammerAbortBreakPacket::new);
         addMessage(UpdateClassProgressionPacket.class, NetworkDirection.PLAY_TO_CLIENT, UpdateClassProgressionPacket::new);
         addMessage(SelectSpellSlotPacket.class, NetworkDirection.PLAY_TO_SERVER, SelectSpellSlotPacket::new);
+        addMessage(DragonBreathFireParticlesPacket.class, NetworkDirection.PLAY_TO_CLIENT, DragonBreathFireParticlesPacket::new);
     }
 
     private static <T extends SimplePacket> void addMessage(Class<T> tClass, NetworkDirection direction, Function<FriendlyByteBuf, T> decoder) {

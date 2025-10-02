@@ -17,12 +17,13 @@ public class ModPotionBrewing {
     private static final List<Mix> POTION_MIXES = new ArrayList<>();
 
     private static final Item DURATION = Items.REDSTONE;
-    private static final Item STRENGHT = Items.GLOWSTONE_DUST;
+    private static final Item STRENGTH = Items.GLOWSTONE_DUST;
 
     static {
         try {
             addMix(Potions.AWKWARD, ModItems.HARDENED_TEAR.get(), ModPotions.STUN.get());
             addMix(ModPotions.STUN.get(), DURATION, ModPotions.LONG_STUN.get());
+            addMix(Potions.AWKWARD, Items.CHORUS_FRUIT, ModPotions.DISPLACEMENT.get());
         } catch (Throwable throwable) {
             MysticcraftMod.LOGGER.warn("failed to load Potions: {}", throwable.getMessage());
         }

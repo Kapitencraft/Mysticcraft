@@ -9,14 +9,7 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class HammerAbortBreakPacket implements SimplePacket {
-    private final BlockPos pos;
-    private final Direction direction;
-
-    public HammerAbortBreakPacket(BlockPos pos, Direction direction) {
-        this.pos = pos;
-        this.direction = direction;
-    }
+public record HammerAbortBreakPacket(BlockPos pos, Direction direction) implements SimplePacket {
 
     public HammerAbortBreakPacket(FriendlyByteBuf buf) {
         this(buf.readBlockPos(), buf.readEnum(Direction.class));

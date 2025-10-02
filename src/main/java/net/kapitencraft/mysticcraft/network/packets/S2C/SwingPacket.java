@@ -10,14 +10,7 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class SwingPacket implements SimplePacket {
-    private final InteractionHand hand;
-    private final int entityId;
-
-    public SwingPacket(InteractionHand hand, int entityId) {
-        this.hand = hand;
-        this.entityId = entityId;
-    }
+public record SwingPacket(InteractionHand hand, int entityId) implements SimplePacket {
 
     public SwingPacket(FriendlyByteBuf buf) {
         this(buf.readEnum(InteractionHand.class), buf.readInt());
@@ -29,9 +22,10 @@ public class SwingPacket implements SimplePacket {
         buf.writeInt(entityId);
     }
 
-    @Override @SuppressWarnings("all")
+    @Override
+    @SuppressWarnings("all")
     public void handle(Supplier<NetworkEvent.Context> sup) {
-        sup.get().enqueueWork(()-> {
+        sup.get().enqueueWork(() -> {
             Entity entity = Minecraft.getInstance().level.getEntity(this.entityId);
             if (entity instanceof LivingEntity living) {
                 living.swing(hand);

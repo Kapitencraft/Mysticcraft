@@ -8,12 +8,7 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class RemoveManaDistributionNetworkElementPacket implements SimplePacket {
-    private final BlockPos pos;
-
-    public RemoveManaDistributionNetworkElementPacket(BlockPos pos) {
-        this.pos = pos;
-    }
+public record RemoveManaDistributionNetworkElementPacket(BlockPos pos) implements SimplePacket {
 
     public RemoveManaDistributionNetworkElementPacket(FriendlyByteBuf buf) {
         this(buf.readBlockPos());

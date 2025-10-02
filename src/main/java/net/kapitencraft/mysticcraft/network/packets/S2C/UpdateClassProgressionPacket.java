@@ -7,14 +7,7 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class UpdateClassProgressionPacket implements SimplePacket {
-    private final int level;
-    private final float xp;
-
-    public UpdateClassProgressionPacket(int level, float xp) {
-        this.level = level;
-        this.xp = xp;
-    }
+public record UpdateClassProgressionPacket(int level, float xp) implements SimplePacket {
 
     public UpdateClassProgressionPacket(FriendlyByteBuf buf) {
         this(buf.readInt(), buf.readFloat());

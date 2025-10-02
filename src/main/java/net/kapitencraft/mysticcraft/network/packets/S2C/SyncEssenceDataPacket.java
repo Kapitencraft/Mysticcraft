@@ -11,12 +11,7 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class SyncEssenceDataPacket implements SimplePacket {
-    private final EssenceHolder holder;
-
-    public SyncEssenceDataPacket(EssenceHolder holder) {
-        this.holder = holder;
-    }
+public record SyncEssenceDataPacket(EssenceHolder holder) implements SimplePacket {
 
     public SyncEssenceDataPacket(FriendlyByteBuf buf) {
         this(new EssenceHolder(buf.readMap(buf1 -> buf1.readEnum(EssenceType.class), FriendlyByteBuf::readInt)));
@@ -29,7 +24,7 @@ public class SyncEssenceDataPacket implements SimplePacket {
 
     @Override
     public void handle(Supplier<NetworkEvent.Context> sup) {
-        sup.get().enqueueWork(()-> {
+        sup.get().enqueueWork(() -> {
             LocalPlayer localPlayer = Minecraft.getInstance().player;
             if (localPlayer == null) return;
             localPlayer.getCapability(CapabilityHelper.ESSENCE).ifPresent(essenceHolder -> essenceHolder.copyFrom(holder));

@@ -12,4 +12,6 @@
   "auto-crafting",
   "mana-generation",
   "mana-furnace and similar machines"
+  //TODO crash when killed, fix explosive sight not working
+
 ]

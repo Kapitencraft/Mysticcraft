@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Dynamic;
+import net.kapitencraft.mysticcraft.registry.ModMemoryModuleTypes;
 import net.kapitencraft.mysticcraft.registry.ModSensorTypes;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.entity.Entity;
@@ -46,7 +47,8 @@ public class DragonBossAi {
             MemoryModuleType.WALK_TARGET,
             MemoryModuleType.NEAREST_ATTACKABLE,
             MemoryModuleType.NEAREST_LIVING_ENTITIES,
-            MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES
+            MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES,
+            ModMemoryModuleTypes.DRAGON_FIRE_BREATH_COOLDOWN.get()
     );
 
     public static Brain<?> makeBrain(Dragon dragon, Dynamic<?> pDynamic) {

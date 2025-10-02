@@ -12,7 +12,7 @@ import net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword.ManaSteelSwor
 import net.kapitencraft.mysticcraft.item.material.PrecursorRelicItem;
 import net.kapitencraft.mysticcraft.item.misc.SoulbindHelper;
 import net.kapitencraft.mysticcraft.misc.damage_source.ISpellSource;
-import net.kapitencraft.mysticcraft.mob_effects.NumbnessMobEffect;
+import net.kapitencraft.mysticcraft.mob_effects.NumbnessEffect;
 import net.kapitencraft.mysticcraft.registry.ModMobEffects;
 import net.kapitencraft.mysticcraft.spell.spells.WitherShieldSpell;
 import net.minecraft.nbt.CompoundTag;
@@ -81,7 +81,7 @@ public class DamageEvents {
         }
         if (living.hasEffect(ModMobEffects.NUMBNESS.get())) {
             event.setCanceled(true);
-            IOHelper.increaseFloatTagValue(tag, NumbnessMobEffect.NUMBNESS_ID, event.getAmount());
+            IOHelper.increaseFloatTagValue(tag, NumbnessEffect.NUMBNESS_ID, event.getAmount());
         }
         if (event.getSource().getDirectEntity() instanceof SmallFireball smallFireball) {
             if (smallFireball.getOwner() instanceof FrozenBlazeEntity) {

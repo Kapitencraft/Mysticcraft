@@ -10,14 +10,7 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class UpdateManaPacket implements SimplePacket {
-    private final BlockPos pos;
-    private final int mana;
-
-    public UpdateManaPacket(BlockPos pos, int mana) {
-        this.pos = pos;
-        this.mana = mana;
-    }
+public record UpdateManaPacket(BlockPos pos, int mana) implements SimplePacket {
 
     public UpdateManaPacket(FriendlyByteBuf buf) {
         this(buf.readBlockPos(), buf.readInt());
@@ -31,7 +24,7 @@ public class UpdateManaPacket implements SimplePacket {
 
     @Override
     public void handle(Supplier<NetworkEvent.Context> sup) {
-        sup.get().enqueueWork(()-> {
+        sup.get().enqueueWork(() -> {
             try {
                 ((IManaStorage) Minecraft.getInstance().level.getBlockEntity(pos)).setMana(this.mana);
             } catch (Exception e) {
