@@ -29,5 +29,5 @@ public class ModVillagers {
         return ()-> new PoiType(ImmutableSet.copyOf(blockSupplier.get().getStateDefinition().getPossibleStates()), 2, 1);
     }
 
-    public static final VillagerRegistryHolder GEMSTONE_MAKER = register("gemstone_grinder_poi", "gemstone_maker", createPoi(ModBlocks.GEMSTONE_GRINDER), SoundEvents.VILLAGER_WORK_WEAPONSMITH);
+    public static final VillagerRegistryHolder GEMSTONE_MAKER = register("gemstone_grinder_poi", "gemstone_maker", createPoi(ModBlocks.ARTIFICER_TABLE), SoundEvents.VILLAGER_WORK_WEAPONSMITH);
 }

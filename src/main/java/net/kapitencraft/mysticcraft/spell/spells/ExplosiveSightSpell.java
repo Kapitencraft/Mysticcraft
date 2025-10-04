@@ -32,7 +32,7 @@ public class ExplosiveSightSpell implements Spell {
             Explosion explosion = new Explosion(caster.level(), caster, pos.getX(), pos.getY(), pos.getZ(), 10, false, Explosion.BlockInteraction.DESTROY_WITH_DECAY);
             explosion.explode();
             explosion.finalizeExplosion(true);
-            ManaAOE.execute(caster, this, 0.2f, context.getLevel() * 5, 5);
+            ManaAOE.execute(caster, this, context.getLevel() * 5, 5);
             Vec3 vec3 = pos.getCenter();
             ParticleHelper.sendParticles(caster.level(), new CircleParticleOptions(new Color(1, 0, 0, 1), 31, 6), true, vec3.x, vec3.y, vec3.z, 1, 0, 0, 0, 0);
             MiscHelper.shakeGround((ServerLevel) caster.level(), vec3, 4f, 3f, 2f);

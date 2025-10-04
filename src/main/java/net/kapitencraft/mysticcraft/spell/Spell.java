@@ -48,7 +48,7 @@ public interface Spell {
 
     enum Type {
         RELEASE,
-        CYCLE
+        HOLD
     }
 
     boolean canApply(Item item);

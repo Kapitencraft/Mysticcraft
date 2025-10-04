@@ -14,18 +14,18 @@ import java.util.List;
 
 public class ManaAOE {
 
-    public static void execute(LivingEntity user, Spell spell, float intScaling, float damage, double range) {
+    public static void execute(LivingEntity user, Spell spell, float damage, double range) {
         final Vec3 center = new Vec3((user.getX()), (user.getY()), (user.getZ()));
         List<LivingEntity> entFound = user.level().getEntitiesOfClass(LivingEntity.class, new AABB(center, center).inflate(range), e -> true).stream().sorted(Comparator.comparingDouble(entCnd -> entCnd.distanceToSqr(center))).toList();
         DamageCounter.activate();
         for (LivingEntity entityIterator : entFound) {
             if (!(entityIterator == user)) {
-                entityIterator.hurt(SpellDamageSource.createDirect(user, intScaling, spell), damage);
+                entityIterator.hurt(SpellDamageSource.createDirect(user, spell), damage);
             }
         }
         DamageCounter.DamageHolder holder = DamageCounter.getDamage(true);
         if (!user.level().isClientSide() && user instanceof Player player && holder.hasDamage()) {
-            SpellProjectile.sendDamageMessage(player, spell, holder.hit(), (float) holder.damage());
+            SpellProjectile.sendDamageMessage(player, spell, holder.hit(), holder.damage());
         }
     }
 }

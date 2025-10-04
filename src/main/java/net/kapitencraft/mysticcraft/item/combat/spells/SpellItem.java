@@ -24,13 +24,13 @@ import java.util.function.Consumer;
 public abstract class SpellItem extends SwordItem implements ISpellItem {
     public static final TabGroup SPELL_GROUP = TabGroup.builder().tab(ModCreativeModTabs.SPELLS).tab(ModCreativeModTabs.WEAPONS_AND_TOOLS).build();
 
-    private final int intelligence;
-    private final int ability_damage;
+    private final int maxMana;
+    private final int magicDamage;
 
-    public SpellItem(Properties p_41383_, int damage, float speed, int intelligence, int ability_damage) {
+    public SpellItem(Properties p_41383_, int damage, float speed, int maxMana, int magicDamage) {
         super(ModTiers.SPELL_TIER, damage, speed,  p_41383_.stacksTo(1));
-        this.intelligence = intelligence;
-        this.ability_damage = ability_damage;
+        this.maxMana = maxMana;
+        this.magicDamage = magicDamage;
     }
 
     //Creating The Attribute Modifiers for this to work
@@ -38,11 +38,11 @@ public abstract class SpellItem extends SwordItem implements ISpellItem {
     public @NotNull Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(@NotNull EquipmentSlot slot) {
         HashMultimap<Attribute, AttributeModifier> builder = HashMultimap.create();
         if (slot == EquipmentSlot.MAINHAND) {
-            if (this.intelligence > 0) {
-                builder.put(ExtraAttributes.INTELLIGENCE.get(), AttributeHelper.createModifier("SpellItemIntelligence", AttributeModifier.Operation.ADDITION, intelligence));
+            if (this.maxMana > 0) {
+                builder.put(ExtraAttributes.MAX_MANA.get(), AttributeHelper.createModifier("SpellItemIntelligence", AttributeModifier.Operation.ADDITION, maxMana));
             }
-            if (this.ability_damage > 0) {
-                builder.put(ExtraAttributes.MAGIC_DAMAGE.get(), AttributeHelper.createModifier("SpellItemAbilityDamage", AttributeModifier.Operation.ADDITION, ability_damage));
+            if (this.magicDamage > 0) {
+                builder.put(ExtraAttributes.MAGIC_DAMAGE.get(), AttributeHelper.createModifier("SpellItemAbilityDamage", AttributeModifier.Operation.ADDITION, magicDamage));
             }
         }
         builder.putAll(super.getDefaultAttributeModifiers(slot));

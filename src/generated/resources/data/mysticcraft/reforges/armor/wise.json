@@ -1,6 +1,6 @@
 {
   "mods": {
-    "kap_lib:generic.intelligence": [
+    "kap_lib:generic.max_mana": [
       30.0,
       50.0,
       80.0,

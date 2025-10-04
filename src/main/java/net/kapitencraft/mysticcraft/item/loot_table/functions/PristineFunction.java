@@ -26,7 +26,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class PristineFunction extends LootItemConditionalFunction implements IConditional {
     private static final Codec<PristineFunction> CODEC = LootTableHelper.simpleCodec(PristineFunction::new);
-    protected PristineFunction(LootItemCondition[] p_80678_) {
+    public PristineFunction(LootItemCondition[] p_80678_) {
         super(p_80678_);
     }
 

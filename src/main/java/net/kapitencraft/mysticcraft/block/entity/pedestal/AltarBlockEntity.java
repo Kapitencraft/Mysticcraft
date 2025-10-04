@@ -57,7 +57,6 @@ public class AltarBlockEntity extends AbstractPedestalBlockEntity {
     }
 
     public static void serverTick(Level level, BlockPos pos, BlockState state, AltarBlockEntity altarBlockEntity) {
-        //TODO store pedestals here for quick access
         SimpleContainer container = new SimpleContainer(9);
         PedestalBlockEntity[] pedestals = new PedestalBlockEntity[8];
         container.setItem(0, altarBlockEntity.getItem());

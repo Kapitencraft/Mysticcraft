@@ -66,14 +66,14 @@ public class ModBlockStateProvider extends BlockStateProvider {
                         new ConfiguredModel(models().getExistingFile(key(Blocks.BASALT)))
                 );
 
-        ResourceLocation WEST_EAST_TEXTURE = MysticcraftMod.res("block/gemstone_grinder_west_east");
-        ResourceLocation NORTH_SOUTH_TEXTURE = MysticcraftMod.res("block/gemstone_grinder_north_south");
-        getVariantBuilder(ModBlocks.GEMSTONE_GRINDER.get())
+        ResourceLocation WEST_EAST_TEXTURE = MysticcraftMod.res("block/artificer_table_west_east");
+        ResourceLocation NORTH_SOUTH_TEXTURE = MysticcraftMod.res("block/artificer_table_north_south");
+        getVariantBuilder(ModBlocks.ARTIFICER_TABLE.get())
                 .partialState()
                 .setModels(
-                        new ConfiguredModel(models().getBuilder("gemstone_grinder")
-                                .texture("down", MysticcraftMod.res("block/gemstone_grinder_bottom"))
-                                .texture("up", MysticcraftMod.res("block/gemstone_grinder_top"))
+                        new ConfiguredModel(models().withExistingParent("artificer_table", "block/cube")
+                                .texture("down", MysticcraftMod.res("block/artificer_table_bottom"))
+                                .texture("up", MysticcraftMod.res("block/artificer_table_top"))
                                 .texture("north", NORTH_SOUTH_TEXTURE)
                                 .texture("east", WEST_EAST_TEXTURE)
                                 .texture("south", NORTH_SOUTH_TEXTURE)
@@ -81,6 +81,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
                                 .texture("particle", NORTH_SOUTH_TEXTURE)
                         )
                 );
+        simpleBlockItem(ModBlocks.ARTIFICER_TABLE.get(), new ModelFile.UncheckedModelFile(MysticcraftMod.res("block/artificer_table")));
 
         getVariantBuilder(ModBlocks.SOUL_CHAIN.get()).forAllStates(state -> {
             Direction.Axis axis = state.getValue(RotatedPillarBlock.AXIS);

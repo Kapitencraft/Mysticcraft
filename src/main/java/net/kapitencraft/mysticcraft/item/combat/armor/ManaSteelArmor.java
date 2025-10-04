@@ -24,7 +24,8 @@ public class ManaSteelArmor extends AbstractArmorItem {
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeMods(EquipmentSlot slot) {
         HashMultimap<Attribute, AttributeModifier> builder = HashMultimap.create();
-        builder.put(ExtraAttributes.INTELLIGENCE.get(), AttributeHelper.createModifier("ManaSteelIntelligence", AttributeModifier.Operation.ADDITION, 300));
+        builder.put(ExtraAttributes.MAX_MANA.get(), AttributeHelper.createModifier("ManaSteelMaxMana", AttributeModifier.Operation.ADDITION, 300));
+        builder.put(ExtraAttributes.MANA_REGEN.get(), AttributeHelper.createModifier("ManaSteelManaRegen", AttributeModifier.Operation.MULTIPLY_BASE, 2));
         return builder;
     }
 

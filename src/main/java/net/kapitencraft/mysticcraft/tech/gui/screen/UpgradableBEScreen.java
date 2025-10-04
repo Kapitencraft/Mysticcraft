@@ -10,4 +10,6 @@ public abstract class UpgradableBEScreen<BE extends UpgradableBlockEntity, M ext
     public UpgradableBEScreen(M menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
     }
+
+    //TODO add visuals
 }

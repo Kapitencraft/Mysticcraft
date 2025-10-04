@@ -2,8 +2,6 @@
   "type": "kap_lib:armor",
   "category": "equipment",
   "material": {
-    "type": "forge:nbt",
-    "count": 12,
     "item": "mysticcraft:frozen_blaze_rod"
   },
   "results": "mysticcraft:frozen_blaze"

@@ -42,7 +42,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
     @Override
     protected void buildRecipes(@NotNull Consumer<FinishedRecipe> consumer) {
         ArmorRecipeBuilder.create(ModItems.CRIMSON_ARMOR).material(ModItems.CRIMSON_STEEL_INGOT).save(consumer, "mysticcraft:crimson_armor");
-        ArmorRecipeBuilder.create(ModItems.FROZEN_BLAZE_ARMOR).material(StrictNBTIngredient.of(new ItemStack(ModItems.FROZEN_BLAZE_ROD.get(), 12))).save(consumer, "mysticcraft:frozen_blaze_armor"); //TODO fix
+        ArmorRecipeBuilder.create(ModItems.FROZEN_BLAZE_ARMOR).material(ModItems.FROZEN_BLAZE_ROD).save(consumer, "mysticcraft:frozen_blaze_armor");
         ArmorRecipeBuilder.create(ModItems.SOUL_MAGE_ARMOR).material(ModBlocks.SOUL_CHAIN.item()).save(consumer, "mysticcraft:soul_mage_armor");
         ArmorRecipeBuilder.create(ModItems.SHADOW_ASSASSIN_ARMOR).material(PartialNBTIngredient.of(ModItems.DYED_LEATHER.get(), Util.make(new CompoundTag(), c -> {
             CompoundTag display = new CompoundTag();

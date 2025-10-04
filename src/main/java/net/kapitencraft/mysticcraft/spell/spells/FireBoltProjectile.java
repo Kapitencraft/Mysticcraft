@@ -95,7 +95,7 @@ public class FireBoltProjectile extends SpellProjectile {
     private void damage(LivingEntity living) {
         this.addHitEntity(living);
         float health = living.getHealth();
-        living.hurt(SpellDamageSource.createIndirect(this, this.getOwner(), 0.6f, this.spell), (float) this.damage);
+        living.hurt(SpellDamageSource.createIndirect(this, this.getOwner(), this.spell), (float) this.damage);
         this.damageInflicted += (health - living.getHealth());
         living.setSecondsOnFire((int) Math.floor(this.damage));
     }

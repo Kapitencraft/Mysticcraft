@@ -1,9 +1,9 @@
-// 1.20.1	2025-09-27T13:45:16.9261121	Block States: mysticcraft
+// 1.20.1	2025-10-04T16:52:18.7958665	Block States: mysticcraft
+976f82e95ecd585522b1743fb061ae17e2147dbc assets/mysticcraft/blockstates/artificer_table.json
 5637f5f443cb8049d9f40a1f2e13f5d8705df435 assets/mysticcraft/blockstates/crimsonium_ore.json
 892ef4535d80db73e54fbbfa2b0a9e4f316fd4fe assets/mysticcraft/blockstates/fragile_basalt.json
 f5ab741f65926f72e8efde5b1bec4468a6d01092 assets/mysticcraft/blockstates/gemstone_block.json
 ad094fca14857a88d69a3b5bcda1dc5b15e743b9 assets/mysticcraft/blockstates/gemstone_crystal.json
-136b09c6c68d5212def46d4d3ab8380d35d55f6f assets/mysticcraft/blockstates/gemstone_grinder.json
 4f0cf6a097c687ab351a6f072f0c804b27a66022 assets/mysticcraft/blockstates/gemstone_seed.json
 de8666c16bed871939f3679f48f2e9633bf90e6e assets/mysticcraft/blockstates/golden_slab.json
 171a2ccc4865040624f40b34399a6b5e35f33dd3 assets/mysticcraft/blockstates/golden_stairs.json
@@ -19,6 +19,7 @@ fdbb8cbfa966b20295a5649af04089f61ddd5535 assets/mysticcraft/blockstates/soul_cha
 7b33e6327069df5112c87341f8c6c5b6c7c879b5 assets/mysticcraft/blockstates/stripped_peridot_sycamore_log.json
 82b79c79dc2f9ee21a97e4f41ea4c0f3dccfcf9d assets/mysticcraft/blockstates/stripped_peridot_sycamore_wood.json
 64f618951f7d95e1adb386b3e655c6cfefb77ec8 assets/mysticcraft/blockstates/thistle.json
+e5bf333f74e3d5744fb7158b6f122d333f7ff8ed assets/mysticcraft/models/block/artificer_table.json
 d7f3e722c5a7940eb312b7657df80cfba78ced59 assets/mysticcraft/models/block/colored_block.json
 d43c46e8e869782160286bff1551efa19b1d1207 assets/mysticcraft/models/block/crimsonium_ore.json
 9d4f33ae74a0e33822f1fec20869398b730e15e4 assets/mysticcraft/models/block/gemstone/block.json
@@ -31,7 +32,6 @@ bcf0069c79830016e2ae8f9d5b4a9b02e22b7a67 assets/mysticcraft/models/block/gemston
 41393a9290e4a330bd354547bbb6dc2fdc1912db assets/mysticcraft/models/block/gemstone/seed/end_stone.json
 3150c99b79d5318c17c3d1eab7352d200fa5d4d3 assets/mysticcraft/models/block/gemstone/seed/netherrack.json
 d9e09cc87ee25705c44580fb574e788a4f4346ad assets/mysticcraft/models/block/gemstone/seed/stone.json
-d2839da6b883a3e53bb5a798df940415362a9e36 assets/mysticcraft/models/block/gemstone_grinder.json
 b785452759d502c711baedf045cbdefbef9b0371 assets/mysticcraft/models/block/golden_slab.json
 9982686918c8834489cd2b550921916ecc78a74c assets/mysticcraft/models/block/golden_slab_top.json
 92e8c925c15f784b6a77d29dbedad2d676b06d0a assets/mysticcraft/models/block/golden_stairs.json
@@ -56,6 +56,7 @@ dac30d3380dda2fc21ea6000bc84c0ff29bd2b6c assets/mysticcraft/models/block/peridot
 a55f08b05b08992d98b9620b48de4cb1e4deab0b assets/mysticcraft/models/block/stripped_peridot_sycamore_wood.json
 303a88c7ea3918ea52b3057694c5d46dbfa34ec5 assets/mysticcraft/models/block/thistle.json
 e90245b10c25643f592dbcc91f14e328ec72b27a assets/mysticcraft/models/block/tinted_cross.json
+af9466d5d9522f1fd9b0574a6c0113e468e4fa8e assets/mysticcraft/models/item/artificer_table.json
 168b0574c5164266d06cc385248852f9ff96f1e7 assets/mysticcraft/models/item/crimsonium_ore.json
 8a580e75a9a4909277be804d3d7844ded80294c3 assets/mysticcraft/models/item/gemstone_block.json
 10a821bbc79bf1d028e694b49a37db3aef54dd79 assets/mysticcraft/models/item/gemstone_seed.json

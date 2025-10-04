@@ -56,7 +56,7 @@ public class MistletoeBlock extends Block {
     }
 
     /**
-     * Returns the blockstate with the given rotation from the passed blockstate. If inapplicable, returns the passed
+     * Returns the blockstate with the given rot from the passed blockstate. If inapplicable, returns the passed
      * blockstate.
      * @deprecated call via {@link net.minecraft.world.level.block.state.BlockBehaviour.BlockStateBase#rotate} whenever
      * possible. Implementing/overriding is fine.

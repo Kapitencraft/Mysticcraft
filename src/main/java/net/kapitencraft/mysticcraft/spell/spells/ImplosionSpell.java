@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 public class ImplosionSpell implements Spell {
     @Override
     public void cast(SpellCastContext context) {
-        ManaAOE.execute(context.getCaster(), this, 0.1f, context.getLevel(), 5);
+        ManaAOE.execute(context.getCaster(), this, context.getLevel(), 5);
     }
 
     @Override

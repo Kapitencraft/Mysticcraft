@@ -1,10 +1,10 @@
-// 1.20.1	2025-09-27T13:45:16.9210945	Tags for minecraft:block mod id mysticcraft
+// 1.20.1	2025-10-04T00:18:46.8347958	Tags for minecraft:block mod id mysticcraft
 139c369d5aa84326c785340637ffaa507becc2c7 data/forge/tags/blocks/needs_netherite_tool.json
 ad7f664e8643d550a01d60f61ea8806487546b84 data/forge/tags/blocks/ores.json
 ae8c4e43556dfa79fae0abaf2fe54e8dfe99befa data/forge/tags/blocks/stripped_logs.json
 0b926b5724ca07d5bbf76058edb75a86f65b3594 data/minecraft/tags/blocks/buttons.json
 14d00c7b500d30f562e43a0afc7b5e90103c8e7a data/minecraft/tags/blocks/logs.json
-4eea771a4a68702519b6e15f322328ac643961d1 data/minecraft/tags/blocks/mineable/pickaxe.json
+bbfa31995080a3aa681133b1d415a1a903693a0f data/minecraft/tags/blocks/mineable/pickaxe.json
 8b09decadc1e3962f1a5a04ab3102d21e9f1b1cc data/minecraft/tags/blocks/pressure_plates.json
 24dba72d17279f8806c0529f70c1d9bc56cb1a06 data/minecraft/tags/blocks/slabs.json
 9e5dd5e11cc2e4c0e74f3aaa28be0406ee40715a data/minecraft/tags/blocks/small_flowers.json

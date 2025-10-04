@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "down": "mysticcraft:block/artificer_table_bottom",
+    "east": "mysticcraft:block/artificer_table_west_east",
+    "north": "mysticcraft:block/artificer_table_north_south",
+    "particle": "mysticcraft:block/artificer_table_north_south",
+    "south": "mysticcraft:block/artificer_table_north_south",
+    "up": "mysticcraft:block/artificer_table_top",
+    "west": "mysticcraft:block/artificer_table_west_east"
+  }
+}

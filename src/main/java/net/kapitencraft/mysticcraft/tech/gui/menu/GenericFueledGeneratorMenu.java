@@ -54,4 +54,8 @@ public class GenericFueledGeneratorMenu extends UpgradableBEMenu<GenericFueledGe
         }
         return super.quickMoveStack(playerIn, index);
     }
+
+    public int getRate() {
+        return this.blockEntity.getCurrentRate();
+    }
 }

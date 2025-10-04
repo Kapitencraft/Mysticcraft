@@ -53,4 +53,25 @@ public class ModRenderTypes extends RenderType {
                     .setTransparencyState(GHOST_TRANSPARENCY)
                     .createCompositeState(false)
     );
+    private static final ShaderStateShard CHROMATIC_CUTOUT_SHARD = new ShaderStateShard(ModShaders::getRendertypeChromaticCutoutShader);
+
+    public static final RenderType CHROMATIC_CUTOUT = RenderType.create(
+            "mysticcraft:chromatic_cutout",
+            DefaultVertexFormat.BLOCK, VertexFormat.Mode.QUADS, 2097152, true, false,
+            RenderType.CompositeState.builder()
+                    .setShaderState(CHROMATIC_CUTOUT_SHARD)
+                    .setTextureState(RenderType.BLOCK_SHEET)
+                    .setTransparencyState(RenderStateShard.NO_TRANSPARENCY)
+                    .createCompositeState(false)
+    );
+
+    public static final RenderType CHROMATIC_CUTOUT_ENTITY = RenderType.create(
+            "mysticcraft:chromatic_cutout_entity",
+            DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, true, false,
+            RenderType.CompositeState.builder()
+                    .setShaderState(CHROMATIC_CUTOUT_SHARD)
+                    .setTextureState(RenderType.BLOCK_SHEET)
+                    .setTransparencyState(RenderStateShard.NO_TRANSPARENCY)
+                    .createCompositeState(true)
+    );
 }

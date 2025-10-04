@@ -8,8 +8,8 @@
 
   "argument.perk_tree.unknown": "Unknown perk tree",
 
+  "block.mysticcraft.artificer_table": "Artificer Table",
   "block.mysticcraft.crimsonium_ore": "Crimsonium Ore",
-  "block.mysticcraft.gemstone_grinder": "Gemstone Grinder",
   "block.mysticcraft.golden_slab": "Golden Slab",
   "block.mysticcraft.golden_stairs": "Golden Stairs",
   "block.mysticcraft.golden_wall": "Golden Wall",
@@ -46,6 +46,8 @@
 
   "container.prismatic_generator": "Prismatic Generator",
   "container.magic_furnace": "Magic Furnace",
+  "container.mana_battery": "Mana Battery",
+  "container.artificer_table": "Artificer Table",
 
   "command.misc.extra_upgrade.success": "Successfully added %1$s Prestiges and %2$s stars to the item",
   "command.misc.hyper_max.success": "Successfully Hyper Maxed Item",
@@ -99,6 +101,7 @@
 
   "entity.minecraft.villager.mysticcraft.gemstone_maker": "Gemstone Maker",
   "entity.minecraft.villager.mysticcraft.guild_master": "Guild Master",
+  "entity.mysticcraft.dragon": "Dragon",
   "entity.mysticcraft.fire_bolt": "Fire Bolt",
   "entity.mysticcraft.frozen_blaze": "Frozen Blaze",
   "entity.mysticcraft.skeleton_master": "Skeleton Master",
@@ -213,6 +216,7 @@
   "item.mysticcraft.diamond_cleaver": "Diamond Cleaver",
   "item.mysticcraft.diamond_double_sword": "Diamond Double Sword",
   "item.mysticcraft.diamond_hammer": "Diamond Hammer",
+  "item.mysticcraft.dragon_spawn_egg": "Dragon Spawn Egg",
   "item.mysticcraft.dyed_leather": "Dyed Leather",
   "item.mysticcraft.elemental_shard": "Elemental Shard of",
   "item.mysticcraft.empty_applicable": "§4Put a Gemstone Item into the upper slot",
@@ -450,5 +454,6 @@
   "pedestal.place.fail": "To many Altars Around!",
   "spell.select.title": "Select Spell",
   "key.mysticcraft.select_spell_cast": "Select Spell Cast",
-  "spell.available.title": "Spells"
+  "spell.available.title": "Spells",
+  "mana.generator.rate": "Generation Rate: %1$s"
 }

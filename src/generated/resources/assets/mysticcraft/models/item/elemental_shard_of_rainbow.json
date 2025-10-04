@@ -1,5 +1,6 @@
 {
   "parent": "minecraft:item/generated",
+  "render_type": "mysticcraft:chromatic_cutout",
   "textures": {
     "layer0": "mysticcraft:item/elements/rainbow_shard"
   }

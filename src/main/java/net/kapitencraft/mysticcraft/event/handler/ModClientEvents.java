@@ -20,11 +20,12 @@ import net.kapitencraft.mysticcraft.client.particle.MagicCircleParticle;
 import net.kapitencraft.mysticcraft.client.particle.ShadowSweepParticle;
 import net.kapitencraft.mysticcraft.client.particle.flame.ModFlameParticle;
 import net.kapitencraft.mysticcraft.client.rpg.perks.PerkInventoryPageRenderer;
+import net.kapitencraft.mysticcraft.client.shader.ModRenderTypes;
 import net.kapitencraft.mysticcraft.entity.client.model.ModModelLayers;
 import net.kapitencraft.mysticcraft.entity.client.model.TestEntityModel;
 import net.kapitencraft.mysticcraft.entity.client.model.VampireBatModel;
 import net.kapitencraft.mysticcraft.entity.client.renderer.*;
-import net.kapitencraft.mysticcraft.gui.gemstone_grinder.GemstoneGrinderScreen;
+import net.kapitencraft.mysticcraft.gui.artificer_table.ArtificerTableScreen;
 import net.kapitencraft.mysticcraft.gui.reforging_anvil.ReforgeAnvilScreen;
 import net.kapitencraft.mysticcraft.item.ColoredItem;
 import net.kapitencraft.mysticcraft.misc.ModItemProperties;
@@ -39,10 +40,7 @@ import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.client.event.RegisterColorHandlersEvent;
-import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
-import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
+import net.minecraftforge.client.event.*;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -71,7 +69,7 @@ public class ModClientEvents {
     }
 
     private static void registerMenuScreens() {
-        MenuScreens.register(ModMenuTypes.GEM_GRINDER.get(), GemstoneGrinderScreen::new);
+        MenuScreens.register(ModMenuTypes.GEM_GRINDER.get(), ArtificerTableScreen::new);
         MenuScreens.register(ModMenuTypes.REFORGING_ANVIL.get(), ReforgeAnvilScreen::new);
         MenuScreens.register(ModMenuTypes.PRISMATIC_GENERATOR.get(), PrismaticGeneratorScreen::new);
         MenuScreens.register(ModMenuTypes.VULCANIC_GENERATOR.get(), VulcanicGeneratorScreen::new);
@@ -115,7 +113,6 @@ public class ModClientEvents {
     @SubscribeEvent
     public static void registerColors(RegisterColorHandlersEvent.Item event) {
         registerColor(event, ColoredItem::getColor, ModItems.DYED_LEATHER.get());
-        //registerColor(event, RainbowElementalShard::getColor, ModItems.RAINBOW_ELEMENTAL_SHARD.get()); TODO rainbow shader
         registerColor(event, IGemstoneItem::getColor, ModItems.GEMSTONE.get(), ModBlocks.GEMSTONE_BLOCK.getItem(), ModBlocks.GEMSTONE_CRYSTAL.getItem(), ModBlocks.GEMSTONE_SEED.getItem());
     }
 
@@ -150,4 +147,10 @@ public class ModClientEvents {
         event.addOverlay(ModOverlays.CAST_CHARGE, SpellCastChargeOverlay::new);
         event.addOverlay(ModOverlays.SPELL_SELECTION, SpellSelectionOverlay::new);
     }
+
+    @SubscribeEvent
+    public static void onRegisterNamedRenderTypes(RegisterNamedRenderTypesEvent event) {
+        event.register("chromatic_cutout", ModRenderTypes.CHROMATIC_CUTOUT, ModRenderTypes.CHROMATIC_CUTOUT_ENTITY);
+    }
+
 }

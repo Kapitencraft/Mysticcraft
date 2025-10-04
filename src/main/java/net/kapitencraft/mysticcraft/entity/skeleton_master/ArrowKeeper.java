@@ -37,7 +37,7 @@ public class ArrowKeeper {
     void nextTargetRotation() {
         if ((targetRotation+=90) >= 360) {
             if (targetRotation % 90 != 0) {
-                throw new IllegalStateException("target rotation should always be multiplicative of 90");
+                throw new IllegalStateException("target rot should always be multiplicative of 90");
             }
             targetRotation-= 360;
         }

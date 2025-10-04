@@ -50,9 +50,9 @@ public class GemstoneSpawnFeature extends Feature<GemstoneSpawnFeature.Config> {
             GemstoneType gemstoneType = MysticcraftServer.getInstance().decorator.makeType(biomeHolder); //make gemstone type
             if (gemstoneType == null) continue; //ensure gemstone type != null
             int xRot = Mth.nextInt(source, 0, 180);
-            int yRot = Mth.nextInt(source, 0, 359); //create a random rotation to spawn gemstone seed in
+            int yRot = Mth.nextInt(source, 0, 359); //create a random rot to spawn gemstone seed in
             Vec3 viewVec = MathHelper.calculateViewVector(90 - xRot, yRot);
-            Vec3 max = viewVec.scale(30); //scale rotation vec to a max distance of 30 blocks
+            Vec3 max = viewVec.scale(30); //scale rot vec to a max distance of 30 blocks
             BlockHitResult result = pLevel.clip(new ClipContext(viewVec.add(pPos.getCenter()), max.add(pPos.getCenter()), ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, null)); //create hit result
             BlockPos current = result.getBlockPos();
             if (!pLevel.hasChunkAt(current)) continue;

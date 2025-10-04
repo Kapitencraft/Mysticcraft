@@ -144,6 +144,10 @@ public abstract class GenericFueledGeneratorBlockEntity extends UpgradableBlockE
         return maxBurnTime == 0 ? 0 : 13 * this.burnTime / this.maxBurnTime;
     }
 
+    public int getCurrentRate() {
+        return rate;
+    }
+
     private class ItemHandler extends ItemStackHandler {
         public ItemHandler() {
             super(1);

@@ -55,7 +55,6 @@ import net.minecraftforge.event.entity.EntityLeaveLevelEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.living.LivingChangeTargetEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.event.entity.living.LivingHealEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.event.village.VillagerTradesEvent;
@@ -153,12 +152,6 @@ public class MiscRegister {
         if (event.getEntity() instanceof Player player) {
             player.getPersistentData().putDouble("Mana", player.getAttributeValue(ExtraAttributes.MANA.get()));
         }
-    }
-
-    @SubscribeEvent
-    public static void healthRegenRegister(LivingHealEvent event) {
-        LivingEntity living = event.getEntity();
-        if (event.getAmount() > 0) MiscHelper.createDamageIndicator(living, event.getAmount(), "heal");
     }
 
     @SubscribeEvent

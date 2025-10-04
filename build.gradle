@@ -13,7 +13,7 @@ plugins {
 }
 apply plugin: 'org.spongepowered.mixin'
 
-version = "v${mod_version}-mc${mc_version}-FML${forge_version}"
+version = "v${mod_version}-mc${mc_version}"
 group = mod_group_id // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = mod_id
 
@@ -123,7 +123,7 @@ dependencies {
 
     runtimeOnly(fg.deobf("blank:debug_plus:v1.0.0-mc${mc_version}"))
 
-    implementation fg.deobf("maven.modrinth:kap_lib:v${kap_lib_version}-mc${mc_version}-FML${forge_version}")
+    implementation fg.deobf("maven.modrinth:kap_lib:v${kap_lib_version}-mc${mc_version}")
 
     // For more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html

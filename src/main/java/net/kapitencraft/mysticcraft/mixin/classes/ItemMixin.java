@@ -78,7 +78,7 @@ public abstract class ItemMixin implements IForgeItem {
     private int checkSpellItemUseDuration(int i, ItemStack obj) {
         if (obj.is(ModTags.Items.CATALYST)) {
             Spell spell = SpellHelper.getActiveSpell(obj);
-            return spell.getType() == Spell.Type.CYCLE ? Integer.MAX_VALUE : spell.castDuration() + 1;
+            return spell.getType() == Spell.Type.HOLD ? Integer.MAX_VALUE : spell.castDuration() + 1;
         }
         return 0;
     }

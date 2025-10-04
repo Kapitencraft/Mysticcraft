@@ -31,16 +31,18 @@ public class SpellSelectionOverlay extends Overlay {
 
     @Override
     public void render(ForgeGui gui, GuiGraphics graphics, int screenWidth, int screenHeight, LocalPlayer player) {
-        PlayerSpells spells = PlayerSpells.get(player);
-        List<SpellSlot> slots = spells.getData();
-        int slot = spells.getSlot();
-        for (int i = 0; i < slots.size(); i++) {
-            if (slot == i) graphics.drawString(gui.getFont(),
-                    Component.literal("> ").withStyle(ChatFormatting.YELLOW).append(slots.get(i).description()),
-                    0, 10*i, -1);
-            else graphics.drawString(gui.getFont(),
-                    Component.literal("  ").append(slots.get(i).description()),
-                    0, 10*i, -1);
+        if (!player.isRemoved() && !player.isDeadOrDying()) {
+            PlayerSpells spells = PlayerSpells.get(player);
+            List<SpellSlot> slots = spells.getData();
+            int slot = spells.getSlot();
+            for (int i = 0; i < slots.size(); i++) {
+                if (slot == i) graphics.drawString(gui.getFont(),
+                        Component.literal("> ").withStyle(ChatFormatting.YELLOW).append(slots.get(i).description()),
+                        0, 10 * i, -1);
+                else graphics.drawString(gui.getFont(),
+                        Component.literal("  ").append(slots.get(i).description()),
+                        0, 10 * i, -1);
+            }
         }
     }
 }

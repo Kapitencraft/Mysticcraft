@@ -32,7 +32,7 @@ public enum GemstoneType implements StringRepresentable {
     JASPER(ChatFormatting.DARK_RED, ExtraAttributes.STRENGTH, 2, "jasper", GemstoneBlock.VERY_HIGH_STRENGHT),
     RUBY(ChatFormatting.RED, () -> Attributes.MAX_HEALTH, 0.5, "ruby", GemstoneBlock.LOW_STRENGHT),
     AMETHYST(ChatFormatting.DARK_PURPLE, () -> Attributes.ARMOR, 2.3, "amethyst", GemstoneBlock.LOW_MEDIUM_STRENGHT),
-    SAPPHIRE((ChatFormatting.BLUE), ExtraAttributes.INTELLIGENCE, 2.7, "sapphire", GemstoneBlock.MEDIUM_STRENGHT),
+    SAPPHIRE((ChatFormatting.BLUE), ExtraAttributes.MAX_MANA, 2.7, "sapphire", GemstoneBlock.MEDIUM_STRENGHT),
     AQUAMARINE(ChatFormatting.AQUA, ForgeMod.SWIM_SPEED, 0.1, "aquamarine", GemstoneBlock.VERY_LOW_STRENGHT),
     TURQUOISE(ChatFormatting.DARK_AQUA, ExtraAttributes.FISHING_SPEED, 2.9, "turquoise", GemstoneBlock.LOW_MEDIUM_STRENGHT),
     MOONSTONE(0x0A0A0A, ExtraAttributes.DRAW_SPEED, 0.5, "moonstone", GemstoneBlock.HIGH_STRENGHT),

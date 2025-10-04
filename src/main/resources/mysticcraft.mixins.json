@@ -8,7 +8,8 @@
     "client.HandItemLayerRendererMixin",
     "client.ItemStackClientMixin",
     "client.LevelRendererMixin",
-    "client.MakeCutoutTranslucentMixin"
+    "client.MakeCutoutTranslucentMixin",
+    "client.RenderTypeMixin"
   ],
   "mixins": [
     "BlockStateMixin",

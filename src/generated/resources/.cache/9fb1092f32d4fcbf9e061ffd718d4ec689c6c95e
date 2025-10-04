@@ -1,4 +1,4 @@
-// 1.20.1	2025-10-01T20:16:27.8011374	Recipes
+// 1.20.1	2025-10-04T01:14:18.2095308	Recipes
 06cb8570c7ad645f9d1a244b220d4dcd5ff5c998 data/mysticcraft/advancements/recipes/building_blocks/golden_slab.json
 1750ec7255c4a634230a9a1cb283d023f78b95b6 data/mysticcraft/advancements/recipes/building_blocks/golden_slab_from_gold_block_stonecutting.json
 0fed254ae48431da6ed5f83b7e58903df881bbff data/mysticcraft/advancements/recipes/building_blocks/golden_stairs.json
@@ -10,7 +10,7 @@ f3a0b0c5bc21dc3635a3f15ba75e8bb3f66d8fa4 data/mysticcraft/advancements/recipes/b
 9f0cc8e315f27a41e579a5f482671e96a41ef170 data/mysticcraft/advancements/recipes/building_blocks/stripped_peridot_sycamore_wood.json
 8f0dd0c8f1d32d054defa0334f8ac3a41116a4be data/mysticcraft/advancements/recipes/combat/astrea.json
 b65784fea3f4d4f24f61086d88fc6c92e5fd1669 data/mysticcraft/advancements/recipes/combat/crimson_armor.json
-e1e0b36b46da4a5b42499461283928ff5315095b data/mysticcraft/advancements/recipes/combat/frozen_blaze_armor.json
+05a3c1b7c50daf4f771e05d4132e1c79bc60f3d3 data/mysticcraft/advancements/recipes/combat/frozen_blaze_armor.json
 ccd6347f92a8695d95f1df9d42d453b31fd134d2 data/mysticcraft/advancements/recipes/combat/hyperion.json
 c21f2b715b30d937e43d8b3f316b4170744c7208 data/mysticcraft/advancements/recipes/combat/longbow.json
 d88792e2e06795e250dc252d5043cbe656a97be3 data/mysticcraft/advancements/recipes/combat/lower_mana_steel_blade.json
@@ -56,7 +56,7 @@ a7ada1b4b3b0c4f70b98f330ed015379fc02a7db data/mysticcraft/recipes/crimson_steel_
 58716658800f3a47d1011c5ef6e769a0434a192c data/mysticcraft/recipes/crushing/.json
 eb0519d291d96094a51be5781e45d960e629465e data/mysticcraft/recipes/crushing/sand.json
 923c56f82bc8fe126966d9a46b30f8be1d432261 data/mysticcraft/recipes/diamond_hammer.json
-3f392f8f181c6c6946b7d9cc3fd884538eb5db8f data/mysticcraft/recipes/frozen_blaze_armor.json
+6be63eb5a4a683433206995069ffe4fce689f4a2 data/mysticcraft/recipes/frozen_blaze_armor.json
 fcec82ec422f4ddfcbe05d10cdc42e8c846ee700 data/mysticcraft/recipes/golden_slab.json
 168fdbf24f8f41befe42b1f4f5ac3d857a2ad304 data/mysticcraft/recipes/golden_slab_from_gold_block_stonecutting.json
 1ae5fd427a1fada0f51bba804ea2693fbbf6fb05 data/mysticcraft/recipes/golden_stairs.json

@@ -86,7 +86,7 @@ public interface SpellHelper {
     }
 
     static boolean canExecuteSpell(LivingEntity user, Spell spell, ItemStack stack) {
-        if (user.getAttribute(ExtraAttributes.INTELLIGENCE.get()) == null || user instanceof Player player && !RequirementManager.instance.meetsRequirements(RequirementType.ITEM, stack.getItem(), player)) {
+        if (user.getAttribute(ExtraAttributes.MAX_MANA.get()) == null || user instanceof Player player && !RequirementManager.instance.meetsRequirements(RequirementType.ITEM, stack.getItem(), player)) {
             return false;
         }
         double manaToUse = spell.getManaCostForUser(user);

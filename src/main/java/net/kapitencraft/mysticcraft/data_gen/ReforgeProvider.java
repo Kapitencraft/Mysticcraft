@@ -61,7 +61,7 @@ public class ReforgeProvider implements DataProvider {
         add("fair", new Reforge.Builder()
                 .reforgeType(Reforge.Type.MELEE_WEAPON)
                 .addStat(ExtraAttributes.CRIT_DAMAGE, 2, 3, 4, 7, 10, 15, 23)
-                .addStat(ExtraAttributes.INTELLIGENCE, 2, 3, 4, 7, 10, 15, 23)
+                .addStat(ExtraAttributes.MAX_MANA, 2, 3, 4, 7, 10, 15, 23)
                 .addStat(ExtraAttributes.STRENGTH, 2, 3, 4, 7, 10, 17, 30)
         );
         add("fast", new Reforge.Builder()
@@ -76,20 +76,20 @@ public class ReforgeProvider implements DataProvider {
         add("heroic", new Reforge.Builder()
                 .reforgeType(Reforge.Type.MELEE_WEAPON)
                 .addStat(ExtraAttributes.BONUS_ATTACK_SPEED, 1, 2, 2, 3, 5, 7, 10)
-                .addStat(ExtraAttributes.INTELLIGENCE, 40, 50, 65, 80, 100, 125, 154)
+                .addStat(ExtraAttributes.MAX_MANA, 40, 50, 65, 80, 100, 125, 154)
                 .addStat(ExtraAttributes.STRENGTH, 15, 20, 25, 32, 40, 50, 63)
         );
         add("legendary", new Reforge.Builder()
                 .reforgeType(Reforge.Type.MELEE_WEAPON)
                 .addStat(ExtraAttributes.BONUS_ATTACK_SPEED, 2, 3, 5, 7, 10, 15, 22)
                 .addStat(ExtraAttributes.CRIT_DAMAGE, 6.5, 13, 18, 26, 35, 45, 57)
-                .addStat(ExtraAttributes.INTELLIGENCE, 5, 8, 12, 18, 25, 35, 48)
+                .addStat(ExtraAttributes.MAX_MANA, 5, 8, 12, 18, 25, 35, 48)
                 .addStat(ExtraAttributes.STRENGTH, 3, 7, 12, 18, 25, 32, 40)
         );
         add("odd", new Reforge.Builder()
                 .reforgeType(Reforge.Type.MELEE_WEAPON)
                 .addStat(ExtraAttributes.CRIT_DAMAGE, 7.2, 14, 19.5, 30.0, 40.2, 53, 66)
-                .addStat(ExtraAttributes.INTELLIGENCE, -5, -10, -18, -32, -50, -72, -110)
+                .addStat(ExtraAttributes.MAX_MANA, -5, -10, -18, -32, -50, -72, -110)
         );
         add("sacred", new Reforge.Builder()
                 .reforgeType(Reforge.Type.MELEE_WEAPON)
@@ -111,7 +111,7 @@ public class ReforgeProvider implements DataProvider {
         add("awkward", new Reforge.Builder()
                 .reforgeType(Reforge.Type.RANGED_WEAPON)
                 .addStat(ExtraAttributes.CRIT_DAMAGE, 5, 10, 15, 22, 30, 35, 50)
-                .addStat(ExtraAttributes.INTELLIGENCE, -5, -10, -18, -32, -50, -72, -100)
+                .addStat(ExtraAttributes.MAX_MANA, -5, -10, -18, -32, -50, -72, -100)
                 .addStat(ExtraAttributes.CRIT_CHANCE, 10, 12, 15, 20, 25, 30, 37)
         );
         add("deadly", new Reforge.Builder()
@@ -138,7 +138,7 @@ public class ReforgeProvider implements DataProvider {
                 .reforgeType(Reforge.Type.RANGED_WEAPON)
                 .addStat(ExtraAttributes.CRIT_CHANCE, 10, 12, 14, 17, 20, 25, 32)
                 .addStat(ExtraAttributes.CRIT_DAMAGE, 2, 4, 7, 10, 15, 20, 27)
-                .addStat(ExtraAttributes.INTELLIGENCE, 3, 5, 6, 12, 20, 30, 45)
+                .addStat(ExtraAttributes.MAX_MANA, 3, 5, 6, 12, 20, 30, 45)
         );
         add("rapid", new Reforge.Builder()
                 .reforgeType(Reforge.Type.RANGED_WEAPON)
@@ -149,7 +149,7 @@ public class ReforgeProvider implements DataProvider {
                 .reforgeType(Reforge.Type.RANGED_WEAPON)
                 .addStat(ExtraAttributes.CRIT_CHANCE, 10, 12, 14, 17, 20, 25, 32)
                 .addStat(ExtraAttributes.CRIT_DAMAGE, 2, 4, 7, 10, 15, 20, 27)
-                .addStat(ExtraAttributes.INTELLIGENCE, 3, 5, 6, 12, 20, 30, 42)
+                .addStat(ExtraAttributes.MAX_MANA, 3, 5, 6, 12, 20, 30, 42)
         );
         add("unreal", new Reforge.Builder()
                 .reforgeType(Reforge.Type.RANGED_WEAPON)
@@ -191,7 +191,7 @@ public class ReforgeProvider implements DataProvider {
                 .addStat(ExtraAttributes.STRENGTH, 2., 4., 6., 8., 10., 12., 15.)
                 .addStat(ExtraAttributes.CRIT_CHANCE, 0.5, 0.8, 1.1, 1.5, 1.9, 2.4, 3.)
                 .addStat(Attributes.MOVEMENT_SPEED, ReforgeStat.build(2., 2., 2., 2., 2., 2., 2.))
-                .addStat(ExtraAttributes.INTELLIGENCE, 15., 22., 30., 40., 52., 67., 90.)
+                .addStat(ExtraAttributes.MAX_MANA, 15., 22., 30., 40., 52., 67., 90.)
         );
         add("pure", new Reforge.Builder()
                 .reforgeType(Reforge.Type.ARMOR)
@@ -200,14 +200,14 @@ public class ReforgeProvider implements DataProvider {
                 .addStat(ExtraAttributes.CRIT_CHANCE, 1., 1.6, 2.2, 3.0, 3.8, 4.8, 6.)
                 .addStat(ExtraAttributes.CRIT_DAMAGE, 2., 3., 4., 6., 8., 10., 13.)
                 .addStat(Attributes.MOVEMENT_SPEED, 1., 1., 1., 1., 1., 1., 1.)
-                .addStat(ExtraAttributes.INTELLIGENCE, 2., 3., 5., 10., 17., 30., 45.)
+                .addStat(ExtraAttributes.MAX_MANA, 2., 3., 5., 10., 17., 30., 45.)
                 .addStat(ExtraAttributes.BONUS_ATTACK_SPEED, 1., 1., 1.5, 2.1, 3., 4.1, 5.5)
         );
         add("smart", Reforge.builder()
                 .reforgeType(Reforge.Type.ARMOR)
                 .addStat(Attributes.MAX_HEALTH, ReforgeStat.build(0.4, 0.6, 0.8, 1., 1.2, 1.4, 1.6))
                 .addStat(Attributes.ARMOR, ReforgeStat.build(4., 6., 9., 12., 15., 20., 30.))
-                .addStat(ExtraAttributes.INTELLIGENCE, 20., 40., 60., 80., 100., 130., 165.)
+                .addStat(ExtraAttributes.MAX_MANA, 20., 40., 60., 80., 100., 130., 165.)
         );
         add("titanic", Reforge.builder()
                 .reforgeType(Reforge.Type.ARMOR)
@@ -218,7 +218,7 @@ public class ReforgeProvider implements DataProvider {
                 .reforgeType(Reforge.Type.ARMOR)
                 .addStat(Attributes.MAX_HEALTH, ReforgeStat.build(0.6, 0.8, 1., 1.2, 1.5, 2., 2.8))
                 .addStat(Attributes.MOVEMENT_SPEED, ReforgeStat.build(1., 1., 1., 2., 2., 3., 5.))
-                .addStat(ExtraAttributes.INTELLIGENCE, 30., 50., 80., 110., 145., 190., 250.)
+                .addStat(ExtraAttributes.MAX_MANA, 30., 50., 80., 110., 145., 190., 250.)
         );
         //endregion
         //region equipment
@@ -226,7 +226,7 @@ public class ReforgeProvider implements DataProvider {
                 .reforgeType(Reforge.Type.EQUIPMENT)
                 .addStat(Attributes.MAX_HEALTH, .1, .1, .1, .3, .4, .5, .5)
                 .addStat(Attributes.ARMOR, .5, 1, 1, 1.5, 2, 2.5, 2.5)
-                .addStat(ExtraAttributes.INTELLIGENCE.get(), 3, 4, 5, 6, 8, 10, 10)
+                .addStat(ExtraAttributes.MAX_MANA.get(), 3, 4, 5, 6, 8, 10, 10)
         );
         add("blended", Reforge.builder()
                 .reforgeType(Reforge.Type.EQUIPMENT)

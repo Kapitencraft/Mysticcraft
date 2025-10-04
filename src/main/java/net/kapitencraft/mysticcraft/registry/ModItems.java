@@ -105,8 +105,11 @@ public interface ModItems {
     RegistryObject<BuildersWand> BUILDERS_WAND = register("builders_wand", BuildersWand::new, TabGroup.UTILITIES);
 
     //region Weaponry
+    RegistryObject<DarkDagger> DARK_DAGGER = register("dark_dagger", DarkDagger::new, TabGroup.COMBAT);
+    RegistryObject<TallinBow> TALLIN_BOW = register("tallin_bow", TallinBow::new, ModBowItem.BOW_GROUP);
+    RegistryObject<DoubleSword> DIAMOND_DOUBLE_SWORD = register("diamond_double_sword", () -> new DoubleSword(Tiers.DIAMOND, MiscHelper.rarity(Rarity.UNCOMMON)), DoubleSword.DOUBLE_SWORD_GROUP);
+    RegistryObject<ManaSteelSwordItem> MANA_STEEL_SWORD = register("mana_steel_sword", ManaSteelSwordItem::new, ModSwordItem.SWORD_GROUP);
     RegistryObject<LongBowItem> LONGBOW = register("longbow", LongBowItem::new, ModBowItem.BOW_GROUP);
-    RegistryObject<WizardHatItem> WIZARD_HAT = register("wizard_hat", WizardHatItem::new, ModBowItem.BOW_GROUP);
     RegistryObject<TheStaffOfDestruction> THE_STAFF_DESTRUCTION = register("staff_of_destruction", TheStaffOfDestruction::new, SpellItem.SPELL_GROUP);
     RegistryObject<GhostlySword> GHOSTLY_SWORD = register("ghostly_sword", GhostlySword::new, TabGroup.COMBAT);
     RegistryObject<NecronSword> NECRON_SWORD = register("necron_sword", ()-> new NecronSword(NecronSword.BASE_DAMAGE, NecronSword.BASE_INTEL, NecronSword.BASE_FEROCITY, NecronSword.BASE_STRENGHT), NecronSword.NECRON_GROUP);
@@ -128,7 +131,7 @@ public interface ModItems {
     RegistryObject<VoidStaffItem> VOID_STAFF = register("void_staff", VoidStaffItem::new, SpellItem.SPELL_GROUP);
     //endregion
 
-    RegistryObject<LavaFishingRod> LAVA_FISHING_ROD_TEST = register("lava_fishing_rod", () -> new LavaFishingRod(Rarity.RARE), TabGroup.MATERIAL);
+    //region material
     RegistryObject<SpellScrollItem> SPELL_SCROLL = register("spell_scroll", SpellScrollItem::new, null);
     RegistryObject<MaterialModItem> ORB_OF_CONSUMPTION = registerNonStackableMaterial("orb_of_consumption", Rarity.EPIC, TabGroup.MATERIAL);
     RegistryObject<MaterialModItem> NECRONS_HANDLE = registerNonStackableMaterial("necrons_handle", ExtraRarities.LEGENDARY, TabGroup.MATERIAL);
@@ -150,6 +153,14 @@ public interface ModItems {
     RegistryObject<MaterialModItem> RAW_CRIMSONIUM_DUST = registerMaterial("raw_crimsonium_dust", Rarity.RARE, TabGroup.CRIMSON_MATERIAL);
     RegistryObject<MaterialModItem> HARDENED_TEAR = registerMaterial("hardened_tear", Rarity.UNCOMMON, TabGroup.MATERIAL);
     RegistryObject<MaterialModItem> LAPIS_DUST = registerMaterial("lapis_dust", Rarity.COMMON, TabGroup.MATERIAL);
+    HashMap<Element, RegistryObject<ElementalShard>> ELEMENTAL_SHARDS = ElementalShard.registerElementShards();
+    RegistryObject<RainbowElementalShard> RAINBOW_ELEMENTAL_SHARD = register("elemental_shard_of_rainbow", RainbowElementalShard::new, ElementalShard.ELEMENTS_GROUP);
+    RegistryObject<MaterialModItem> FROZEN_BLAZE_ROD = registerMaterial("frozen_blaze_rod", Rarity.RARE, TabGroup.MATERIAL);
+    RegistryObject<MaterialModItem> SOUL_STEEL_ALLOY = registerMaterial("soul_steel_alloy", Rarity.RARE, TabGroup.MATERIAL);
+    RegistryObject<MaterialModItem> SOUL_STEEL_NUGGET = registerMaterial("soul_steel_nugget", Rarity.UNCOMMON, TabGroup.MATERIAL);
+    RegistryObject<MaterialModItem> SHADOW_CRYSTAL = registerMaterial("shadow_crystal", Rarity.UNCOMMON, TabGroup.MATERIAL);
+    RegistryObject<DyedLeatherItem> DYED_LEATHER = register("dyed_leather",  DyedLeatherItem::new, TabGroup.MATERIAL);
+    //endregion
 
     //region Hammer
     RegistryObject<HammerItem> STONE_HAMMER = register("stone_hammer", ()-> new HammerItem(MiscHelper.rarity(Rarity.COMMON), Tiers.STONE, 4), HammerItem.HAMMER_GROUP);
@@ -158,28 +169,18 @@ public interface ModItems {
     RegistryObject<HammerItem> NETHERITE_HAMMER = register("netherite_hammer", ()-> new HammerItem(MiscHelper.rarity(Rarity.UNCOMMON), Tiers.NETHERITE, 6), HammerItem.HAMMER_GROUP);
     //endregion
 
-    HashMap<Element, RegistryObject<ElementalShard>> ELEMENTAL_SHARDS = ElementalShard.registerElementShards();
-    RegistryObject<RainbowElementalShard> RAINBOW_ELEMENTAL_SHARD = register("elemental_shard_of_rainbow", RainbowElementalShard::new, ElementalShard.ELEMENTS_GROUP);
-    RegistryObject<MaterialModItem> FROZEN_BLAZE_ROD = registerMaterial("frozen_blaze_rod", Rarity.RARE, TabGroup.MATERIAL);
-    RegistryObject<TallinBow> TALLIN_BOW = register("tallin_bow", TallinBow::new, ModBowItem.BOW_GROUP);
-    RegistryObject<DoubleSword> DIAMOND_DOUBLE_SWORD = register("diamond_double_sword", () -> new DoubleSword(Tiers.DIAMOND, MiscHelper.rarity(Rarity.UNCOMMON)), DoubleSword.DOUBLE_SWORD_GROUP);
-    RegistryObject<ManaSteelSwordItem> MANA_STEEL_SWORD = register("mana_steel_sword", ManaSteelSwordItem::new, ModSwordItem.SWORD_GROUP);
+    RegistryObject<LavaFishingRod> LAVA_FISHING_ROD_TEST = register("lava_fishing_rod", () -> new LavaFishingRod(Rarity.RARE), TabGroup.MATERIAL);
     RegistryObject<IronShield> IRON_SHIELD = register("iron_shield", IronShield::new, ModShieldItem.SHIELD_GROUP);
     RegistryObject<GoldenShield> GOLDEN_SHIELD = register("golden_shield", GoldenShield::new, ModShieldItem.SHIELD_GROUP);
-    RegistryObject<DyedLeatherItem> DYED_LEATHER = register("dyed_leather",  DyedLeatherItem::new, TabGroup.MATERIAL);
 
     RegistryObject<QuiverItem> AMETHYST_QUIVER = register("amethyst_quiver", ()-> new QuiverItem(MiscHelper.rarity(Rarity.RARE), 16), QuiverItem.QUIVER_GROUP);
     RegistryObject<LavaFishItem> BLAZING_SALMON = register("blazing_salmon", ()-> new LavaFishItem(1, 1.2f, new MobEffectInstance(ModMobEffects.BLAZING.get(), 100, 1)), LavaFishItem.LAVA_FISH_GROUP);
     RegistryObject<LavaFishItem> MAGMA_COD = register("magma_cod", ()-> new LavaFishItem(2, 1.1f, new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 150, 1)), LavaFishItem.LAVA_FISH_GROUP);
 
-    RegistryObject<MaterialModItem> SOUL_STEEL_ALLOY = registerMaterial("soul_steel_alloy", Rarity.RARE, TabGroup.MATERIAL);
-    RegistryObject<MaterialModItem> SOUL_STEEL_NUGGET = registerMaterial("soul_steel_nugget", Rarity.UNCOMMON, TabGroup.MATERIAL);
-    RegistryObject<MaterialModItem> SHADOW_CRYSTAL = registerMaterial("shadow_crystal", Rarity.UNCOMMON, TabGroup.MATERIAL);
-    RegistryObject<DarkDagger> DARK_DAGGER = register("dark_dagger", DarkDagger::new, TabGroup.COMBAT);
-
     //region armor
 
     RegistryObject<TravelersBoots> TRAVELERS_BOOTS = register("travelers_boots", TravelersBoots::new, TabGroup.COMBAT);
+    RegistryObject<WizardHatItem> WIZARD_HAT = register("wizard_hat", WizardHatItem::new, ModBowItem.BOW_GROUP);
 
     Map<ArmorItem.Type, RegistryObject<EnderKnightArmorItem>> ENDER_KNIGHT_ARMOR = registerArmor(REGISTRY, "ender_knight", EnderKnightArmorItem::new, EnderKnightArmorItem.TAB);
     Map<ArmorItem.Type, RegistryObject<FrozenBlazeArmorItem>> FROZEN_BLAZE_ARMOR = registerArmor(REGISTRY, "frozen_blaze", FrozenBlazeArmorItem::new, FrozenBlazeArmorItem.TAB);
@@ -193,7 +194,8 @@ public interface ModItems {
 
     //region spawn eggs
 
-    RegistryObject<Item> FROZEN_BLAZE_SPAWN_EGG = REGISTRY.register("frozen_blaze_spawn_egg", ()-> new ForgeSpawnEggItem(ModEntityTypes.FROZEN_BLAZE, -16711681, -16763956, new Item.Properties()));
+    RegistryObject<Item> FROZEN_BLAZE_SPAWN_EGG = register("frozen_blaze_spawn_egg", ()-> new ForgeSpawnEggItem(ModEntityTypes.FROZEN_BLAZE, -16711681, -16763956, new Item.Properties()), TabGroup.SPAWN_EGGS);
+    RegistryObject<Item> DRAGON_SPAWN_EGG = register("dragon_spawn_egg", () -> new ForgeSpawnEggItem(ModEntityTypes.DRAGON, 0xFF4F0000, 0xFFFF0000, new Item.Properties()), TabGroup.SPAWN_EGGS);
 
     //endregion
 

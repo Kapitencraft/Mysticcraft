@@ -31,7 +31,8 @@ public class SoulMageArmorItem extends NetherArmorItem {
     public Multimap<Attribute, AttributeModifier> getAttributeMods(EquipmentSlot slot) {
         HashMultimap<Attribute, AttributeModifier> builder = HashMultimap.create();
         if (slot == this.getEquipmentSlot()) {
-            builder.put(ExtraAttributes.INTELLIGENCE.get(), AttributeHelper.createModifier("SoulMageArmorIntelligence", AttributeModifier.Operation.ADDITION,345));
+            builder.put(ExtraAttributes.MAX_MANA.get(), AttributeHelper.createModifier("SoulMageArmorMaxMana", AttributeModifier.Operation.ADDITION,345));
+            builder.put(ExtraAttributes.MAGIC_DAMAGE.get(), AttributeHelper.createModifier("SoulMageArmorDamage", AttributeModifier.Operation.ADDITION, 3));
         }
         return builder;
     }

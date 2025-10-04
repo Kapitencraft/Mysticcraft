@@ -4,9 +4,9 @@ import net.kapitencraft.kap_lib.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.block.*;
 import net.kapitencraft.mysticcraft.block.deco.*;
+import net.kapitencraft.mysticcraft.block.gemstone.ArtificerTableBlock;
 import net.kapitencraft.mysticcraft.block.gemstone.GemstoneBlock;
 import net.kapitencraft.mysticcraft.block.gemstone.GemstoneCrystal;
-import net.kapitencraft.mysticcraft.block.gemstone.GemstoneGrinderBlock;
 import net.kapitencraft.mysticcraft.block.gemstone.GemstoneSeedBlock;
 import net.kapitencraft.mysticcraft.block.tree.AbstractLogBlock;
 import net.kapitencraft.mysticcraft.block.tree.AbstractWoodBlock;
@@ -69,7 +69,7 @@ public interface ModBlocks {
         }
         return registryObject;
     }
-    BlockRegistryHolder<GemstoneGrinderBlock, BlockItem> GEMSTONE_GRINDER = registerBlock("gemstone_grinder", GemstoneGrinderBlock::new, MiscHelper.rarity(Rarity.RARE), GemstoneItem.GROUP);
+    BlockRegistryHolder<ArtificerTableBlock, BlockItem> ARTIFICER_TABLE = registerBlock("artificer_table", ArtificerTableBlock::new, MiscHelper.rarity(Rarity.RARE), GemstoneItem.GROUP);
 
     BlockRegistryHolder<ReforgeAnvilBlock, BlockItem> REFORGING_ANVIL = registerBlock("reforge_anvil", ReforgeAnvilBlock::new, MiscHelper.rarity(Rarity.UNCOMMON), TabGroup.MATERIAL);
     RegistryObject<LiquidBlock> MANA_FLUID_BLOCK = REGISTRY.register("mana_fluid_block", ManaLiquidBlock::new);

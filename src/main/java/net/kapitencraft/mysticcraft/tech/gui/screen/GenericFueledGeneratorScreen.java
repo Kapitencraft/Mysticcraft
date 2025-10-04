@@ -29,6 +29,9 @@ public class GenericFueledGeneratorScreen extends UpgradableBEScreen<GenericFuel
         if (this.menu.isLit()) {
             int k = this.menu.getLitProgress();
             graphics.blit(getTexture(), this.leftPos + 80, this.topPos + 23 + 12 - k, 176, 12 - k, 14, k + 1);
+            if (MathHelper.is2dBetween(pMouseX, pMouseY, this.leftPos + 80, this.topPos + 22, this.leftPos + 94, this.topPos + 36) && this.menu.getRate() > 0) {
+                graphics.renderTooltip(this.font, Component.translatable("mana.generator.rate", this.menu.getRate()), pMouseX, pMouseY);
+            }
         }
         graphics.fill(this.leftPos + 158, this.topPos + 75 - this.menu.getManaTankScaledFillPercentage(), this.leftPos + 168, this.topPos + 75, 0xFF005FFF);
     }

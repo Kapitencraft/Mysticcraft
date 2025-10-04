@@ -149,7 +149,7 @@ public interface ModTagProvider {
                             ModBlocks.GEMSTONE_SEED.get(),
                             ModBlocks.GEMSTONE_CRYSTAL.get(),
                             ModBlocks.REFORGING_ANVIL.get(),
-                            ModBlocks.GEMSTONE_GRINDER.get(),
+                            ModBlocks.ARTIFICER_TABLE.get(),
                             ModBlocks.MANGATIC_STONE.get()
             );
 
@@ -193,6 +193,22 @@ public interface ModTagProvider {
                     EntityType.PIGLIN,
                     EntityType.HOGLIN,
                     ModEntityTypes.FROZEN_BLAZE.get()
+            );
+            tag(ModTags.Entities.DRAGON_TARGETS).add(
+                    EntityType.VILLAGER,
+                    EntityType.IRON_GOLEM,
+                    EntityType.SLIME,
+                    EntityType.ZOMBIE,
+                    EntityType.ZOMBIE_VILLAGER,
+                    EntityType.HUSK,
+                    EntityType.SKELETON,
+                    EntityType.WITHER_SKELETON,
+                    EntityType.RAVAGER,
+                    EntityType.ILLUSIONER,
+                    EntityType.VINDICATOR,
+                    EntityType.PILLAGER,
+                    EntityType.EVOKER,
+                    EntityType.STRAY
             );
         }
     }

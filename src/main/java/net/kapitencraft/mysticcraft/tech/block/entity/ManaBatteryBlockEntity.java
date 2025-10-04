@@ -4,6 +4,7 @@ import net.kapitencraft.mysticcraft.capability.mana.IManaStorage;
 import net.kapitencraft.mysticcraft.registry.ModBlockEntities;
 import net.kapitencraft.mysticcraft.tech.gui.menu.ManaBatteryMenu;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
@@ -72,5 +73,17 @@ public class ManaBatteryBlockEntity extends BlockEntity implements IManaStorage,
     @Override
     public @Nullable AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
         return new ManaBatteryMenu(pContainerId, pPlayerInventory, this);
+    }
+
+    @Override
+    protected void saveAdditional(CompoundTag pTag) {
+        super.saveAdditional(pTag);
+        pTag.putInt("StoredMana", this.storedMana);
+    }
+
+    @Override
+    public void load(CompoundTag pTag) {
+        super.load(pTag);
+        this.storedMana = pTag.getInt("StoredMana");
     }
 }

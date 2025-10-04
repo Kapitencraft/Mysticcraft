@@ -26,7 +26,7 @@ public class DataGenerators {
         generator.addProvider(true, new ModTextureProvider(helper, output));
         generator.addProvider(true, new ModBlockStateProvider(output, helper));
         generator.addProvider(true, new ModRecipeProvider(output));
-        generator.addProvider(false, ModLootTableProvider.create(output));
+        generator.addProvider(true, ModLootTableProvider.create(output));
         generator.addProvider(true, new ModItemModelProvider(output, helper));
         generator.addProvider(false, new BestiaryProvider(output, provider));
         generator.addProvider(true, new ReforgeProvider(output, "mysticcraft"));

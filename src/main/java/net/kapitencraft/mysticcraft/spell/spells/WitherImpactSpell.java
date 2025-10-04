@@ -15,14 +15,15 @@ import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.NotNull;
 
 public class WitherImpactSpell implements Spell {
+    private static final Color EXPLOSION_COLOR = Color.fromARGBPacked(0xFF8F00FF);
 
     @Override
     public void cast(SpellCastContext context) {
         LivingEntity user = context.getCaster();
         Spells.WITHER_SHIELD.get().cast(context);
         MiscHelper.saveTeleport(user, 10);
-        ManaAOE.execute(user, this, 0.4f, 5, 5);
-        ParticleHelper.sendParticles(user.level(), new CircleParticleOptions(new Color(143f / 255, 0, 1, 1), 5, 0.6), false, user.getX(), user.getY(), user.getZ(), 1, 0, 0, 0, 0);
+        ManaAOE.execute(user, this, 5, 5);
+        ParticleHelper.sendParticles(user.level(), new CircleParticleOptions(EXPLOSION_COLOR, 5, 0.6), false, user.getX(), user.getY(), user.getZ(), 1, 0, 0, 0, 0);
     }
 
     @Override

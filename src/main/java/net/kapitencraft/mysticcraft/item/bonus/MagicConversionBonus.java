@@ -25,7 +25,7 @@ public class MagicConversionBonus implements Bonus<MagicConversionBonus> {
     @Override
     public @Nullable Multimap<Attribute, AttributeModifier> getModifiers(LivingEntity living) {
         HashMultimap<Attribute, AttributeModifier> builder = HashMultimap.create();
-        builder.put(ExtraAttributes.MAGIC_DAMAGE.get(), AttributeHelper.addLiquidModifier(ID, "Soul Mage Helmet Bonus", AttributeModifier.Operation.ADDITION, (living1 -> living1.getAttributeValue(ExtraAttributes.INTELLIGENCE.get()) / 25), living));
+        builder.put(ExtraAttributes.MAGIC_DAMAGE.get(), AttributeHelper.addLiquidModifier(ID, "Soul Mage Helmet Bonus", AttributeModifier.Operation.ADDITION, (living1 -> living1.getAttributeValue(ExtraAttributes.MAX_MANA.get()) / 25), living));
         return builder;
     }
 }

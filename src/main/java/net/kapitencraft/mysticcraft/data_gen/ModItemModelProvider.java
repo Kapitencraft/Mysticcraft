@@ -110,7 +110,11 @@ public class ModItemModelProvider extends ItemModelProvider {
         );
         armors.stream().flatMap(equipmentSlotMap -> equipmentSlotMap.values().stream())
                         .forEach(registryObject -> simpleItem(registryObject, null));
-
+        List<RegistryObject<? extends Item>> spawnEggs = List.of(
+                ModItems.FROZEN_BLAZE_SPAWN_EGG,
+                ModItems.DRAGON_SPAWN_EGG
+        );
+        spawnEggs.forEach(registryObject -> withExistingParent(registryObject.getId().getPath(), "item/template_spawn_egg"));
     }
 
     private ModelFile makeDagger() {
@@ -146,8 +150,10 @@ public class ModItemModelProvider extends ItemModelProvider {
         }
     }
 
+    //TODO make rainbow be pixel related
     private void makeRainbowElementShard() {
         withExistingParent("elemental_shard_of_rainbow", "item/generated")
+                .renderType(MysticcraftMod.res("chromatic_cutout"))
                 .texture("layer0", modLoc("item/elements/rainbow_shard"));
     }
 

@@ -13,9 +13,9 @@ public class ManaExplosion extends ModExplosion {
         return Explosion.BlockInteraction.KEEP;
     }
 
-    public ManaExplosion(Level level, @NotNull Entity source, double x, double y, double z, float radius, float intScaling, Spell spell) {
+    public ManaExplosion(Level level, @NotNull Entity source, double x, double y, double z, float radius, Spell spell) {
         super(level, source, x, y, z, radius);
-        this.setDamageSource(SpellDamageSource.createExplosion(source, intScaling, spell));
+        this.setDamageSource(SpellDamageSource.createExplosion(source, spell));
     }
 
     @Override

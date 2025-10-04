@@ -5,9 +5,7 @@ import com.google.common.collect.Multimap;
 import net.kapitencraft.kap_lib.item.BaseAttributeUUIDs;
 import net.kapitencraft.kap_lib.registry.ExtraAttributes;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
-import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
 import net.kapitencraft.mysticcraft.registry.ModCreativeModTabs;
-import net.minecraft.client.gui.components.tabs.Tab;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
@@ -99,7 +97,7 @@ public abstract class ModBowItem extends BowItem {
             }
             bow.hurtAndBreak(1, archer, (living) -> living.broadcastBreakEvent(archer.getUsedItemHand()));
             world.addFreshEntity(arrow);
-            if ( !(archer instanceof Player player && player.getAbilities().instabuild) || bow.getEnchantmentLevel(Enchantments.INFINITY_ARROWS) > 0) {
+            if (!(archer instanceof Player player && player.getAbilities().instabuild) && bow.getEnchantmentLevel(Enchantments.INFINITY_ARROWS) <= 0) {
                 arrowStack.shrink(1);
                 if (arrowStack.isEmpty() && archer instanceof Player player) player.getInventory().removeItem(arrowStack);
             }

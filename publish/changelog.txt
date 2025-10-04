@@ -13,3 +13,6 @@ circle particles will now show from both sides
 nerved Hammer damage
 fixed colored flames being colored wrong due to getting their color multiplied with a blue particle
 added dragon
+renamed Gemstone Grinder -> Artificer Table
+reworked artificer table GUI to be more dynamical
+renamed Spell.Type.CYCLE -> HOLD

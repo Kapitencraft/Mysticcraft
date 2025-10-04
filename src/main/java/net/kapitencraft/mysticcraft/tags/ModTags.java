@@ -55,6 +55,7 @@ public class ModTags {
 
     public interface Entities {
         TagKey<EntityType<?>> NETHER_MOBS = createForge("nether_mobs");
+        TagKey<EntityType<?>> DRAGON_TARGETS = ModTags.makeModKey(Registries.ENTITY_TYPE, "dragon_targets");
 
         private static TagKey<EntityType<?>> createForge(String name) {
             return ModTags.makeForgeKey(Registries.ENTITY_TYPE, name);

@@ -104,10 +104,9 @@ public class DamageEvents {
     public static void damageAttributeRegister(LivingHurtEvent event) {
         @Nullable LivingEntity attacker = MiscHelper.getAttacker(event.getSource());
         if (attacker == null) { return; }
-        if (event.getSource() instanceof ISpellSource abilitySource) {
-            double intel = attacker.getAttributeValue(ExtraAttributes.INTELLIGENCE.get());
+        if (event.getSource() instanceof ISpellSource) {
             double ability_damage = attacker.getAttributeValue(ExtraAttributes.MAGIC_DAMAGE.get());
-            MathHelper.mul(event::getAmount, event::setAmount, (float) ((1 + (intel / 100) * abilitySource.getScaling()) * (1 + (ability_damage / 100))));
+            MathHelper.mul(event::getAmount, event::setAmount, (float) ((1 + (ability_damage / 100))));
         }
     }
 
