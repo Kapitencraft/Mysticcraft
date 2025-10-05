@@ -1,12 +1,17 @@
 package net.kapitencraft.mysticcraft.tech.block.entity;
 
+import net.kapitencraft.kap_lib.helpers.MathHelper;
+import net.kapitencraft.kap_lib.helpers.ParticleHelper;
 import net.kapitencraft.mysticcraft.data_gen.ModDamageTypes;
 import net.kapitencraft.mysticcraft.registry.ModBlockEntities;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
+import org.joml.Vector3f;
 
 import java.util.List;
 
@@ -21,6 +26,14 @@ public class ObeliskTurretBlockEntity extends AbstractTurretBlockEntity {
     public static void tick(Level pLevel, BlockPos pPos, BlockState pState, ObeliskTurretBlockEntity entity) {
         entity.updateTarget();
         if (entity.target != null) {
+            if (!pLevel.isClientSide) {
+                Vec3 center = new Vec3(pPos.getX() + .5, pPos.getY() + 14f / 16, pPos.getZ() + .5);
+                List<Vec3> positions = MathHelper.makeLine(entity.target.getEyePosition(), center, .2f);
+                for (Vec3 position : positions) {
+                    ParticleHelper.sendParticles(pLevel, new DustParticleOptions(new Vector3f(1, 0, 0), .5f), false, position, 10, .05, .05, .05, 0);
+                }
+            }
+
             if ((entity.activeTicks & 7) == 0 && !entity.target.hurt(pLevel.damageSources().source(ModDamageTypes.SCORCH), entity.damage)) {
                 entity.unselectTarget();
             }
@@ -31,7 +44,7 @@ public class ObeliskTurretBlockEntity extends AbstractTurretBlockEntity {
     @SuppressWarnings("DataFlowIssue")
     @Override
     protected void selectTarget() {
-        List<Entity> entities = this.level.getEntitiesOfClass(Entity.class, checkArea, e -> e instanceof LivingEntity living && !living.isRemoved() && !living.isDeadOrDying());
+        List<Entity> entities = this.level.getEntitiesOfClass(Entity.class, checkArea, e -> e instanceof LivingEntity living && !living.isRemoved() && !living.isDeadOrDying() && !living.fireImmune());
         if (!entities.isEmpty()) this.target = entities.get(0);
     }
 

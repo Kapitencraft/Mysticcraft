@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.data_gen;
 
 import com.mojang.blaze3d.platform.NativeImage;
+import net.kapitencraft.kap_lib.KapLibMod;
 import net.kapitencraft.kap_lib.data_gen.abst.TextureProvider;
 import net.kapitencraft.kap_lib.util.Color;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
@@ -20,6 +21,8 @@ public class ModTextureProvider extends TextureProvider {
                 .then(Transfer.create(new ResourceLocation("item/redstone")));
         register(new ResourceLocation("particle/flame"), MysticcraftMod.res("particle/pale_flame"))
                 .then(new Pale());
+        register(MysticcraftMod.res("item/elements/rainbow_shard"), MysticcraftMod.res("item/rainbow_sword"))
+                .then(Transfer.createWithMask(new ResourceLocation("item/diamond_sword"), KapLibMod.res("item/mask/sword")));
     }
 
     protected record Pale() implements Converter {

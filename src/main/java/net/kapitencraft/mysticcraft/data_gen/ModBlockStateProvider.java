@@ -93,6 +93,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
         //simpleBlock(ModBlocks.MANGATIC_SLIME);
         simpleBlock(ModBlocks.MANGATIC_STONE);
+        simpleBlockWithItem(ModBlocks.OBELISK_TURRET.get(), models().getExistingFile(MysticcraftMod.res("block/turret/obelisk")));
 
         ResourceLocation GOLD_BLOCK = new ResourceLocation("block/gold_block");
 

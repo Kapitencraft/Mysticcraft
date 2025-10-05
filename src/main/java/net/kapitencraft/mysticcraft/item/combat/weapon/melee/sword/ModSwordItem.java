@@ -2,10 +2,9 @@ package net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import net.kapitencraft.kap_lib.item.creative_tab.TabGroup;
 import net.kapitencraft.kap_lib.registry.ExtraAttributes;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
-import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
 import net.kapitencraft.mysticcraft.registry.ModCreativeModTabs;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -23,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
 
 public abstract class ModSwordItem extends SwordItem {
     public static final float DEFAULT_ATTACK_SPEED = -2.4f;
-    public static final TabGroup SWORD_GROUP = TabGroup.builder().tab(ModCreativeModTabs.WEAPONS_AND_TOOLS).build();
+    public static final TabGroup SWORD_GROUP = TabGroup.create(ModCreativeModTabs.WEAPONS_AND_TOOLS);
     public ModSwordItem(Tier p_43269_, int attackDamage, float attackSpeed, Properties p_43272_) {
         super(p_43269_, attackDamage, attackSpeed, p_43272_);
     }

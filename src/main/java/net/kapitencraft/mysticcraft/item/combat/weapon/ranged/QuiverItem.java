@@ -1,11 +1,10 @@
 package net.kapitencraft.mysticcraft.item.combat.weapon.ranged;
 
+import net.kapitencraft.kap_lib.item.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.capability.CapabilityHelper;
 import net.kapitencraft.mysticcraft.capability.containable.ContainableCapabilityProvider;
 import net.kapitencraft.mysticcraft.capability.containable.QuiverCapability;
 import net.kapitencraft.mysticcraft.item.material.containable.ContainableItem;
-import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
-import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
 import net.kapitencraft.mysticcraft.registry.ModCreativeModTabs;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
@@ -24,7 +23,7 @@ import java.util.List;
 public class QuiverItem extends ContainableItem<ArrowItem, QuiverCapability> {
     //TODO extract from a static variable
     public static final ThreadLocal<ItemStack> operationQuiver = new ThreadLocal<>();
-    public static TabGroup QUIVER_GROUP = TabGroup.builder().tab(ModCreativeModTabs.WEAPONS_AND_TOOLS).build();
+    public static TabGroup QUIVER_GROUP = TabGroup.create(ModCreativeModTabs.WEAPONS_AND_TOOLS);
 
     public QuiverItem(Properties p_41383_, int quiverSize) {
         super(p_41383_, quiverSize);

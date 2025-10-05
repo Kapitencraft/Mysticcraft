@@ -1,7 +1,6 @@
 package net.kapitencraft.mysticcraft.item.material;
 
-import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
-import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
+import net.kapitencraft.kap_lib.item.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.registry.ModCreativeModTabs;
 import net.kapitencraft.mysticcraft.registry.ModItems;
 import net.kapitencraft.mysticcraft.spell.Element;

@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.registry;
 
 import net.kapitencraft.kap_lib.helpers.MiscHelper;
+import net.kapitencraft.kap_lib.item.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.block.*;
 import net.kapitencraft.mysticcraft.block.deco.*;
@@ -12,7 +13,7 @@ import net.kapitencraft.mysticcraft.block.tree.AbstractLogBlock;
 import net.kapitencraft.mysticcraft.block.tree.AbstractWoodBlock;
 import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneItem;
 import net.kapitencraft.mysticcraft.dungeon.generation.DungeonGenerator;
-import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
+import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroups;
 import net.kapitencraft.mysticcraft.tech.block.*;
 import net.kapitencraft.mysticcraft.worldgen.ModConfiguredFeatures;
 import net.minecraft.resources.ResourceKey;
@@ -71,50 +72,50 @@ public interface ModBlocks {
     }
     BlockRegistryHolder<ArtificerTableBlock, BlockItem> ARTIFICER_TABLE = registerBlock("artificer_table", ArtificerTableBlock::new, MiscHelper.rarity(Rarity.RARE), GemstoneItem.GROUP);
 
-    BlockRegistryHolder<ReforgeAnvilBlock, BlockItem> REFORGING_ANVIL = registerBlock("reforge_anvil", ReforgeAnvilBlock::new, MiscHelper.rarity(Rarity.UNCOMMON), TabGroup.MATERIAL);
+    BlockRegistryHolder<ReforgeAnvilBlock, BlockItem> REFORGING_ANVIL = registerBlock("reforge_anvil", ReforgeAnvilBlock::new, MiscHelper.rarity(Rarity.UNCOMMON), TabGroups.MATERIAL);
     RegistryObject<LiquidBlock> MANA_FLUID_BLOCK = REGISTRY.register("mana_fluid_block", ManaLiquidBlock::new);
-    BlockRegistryHolder<Block, BlockItem> MANGATIC_STONE = registerBlock("mangatic_stone", ()-> new Block(BlockBehaviour.Properties.copy(Blocks.END_STONE)), MiscHelper.rarity(Rarity.RARE), TabGroup.MATERIAL);
-    BlockRegistryHolder<MangaticSlimeBlock, BlockItem> MANGATIC_SLIME = registerBlock("mangatic_slime", MangaticSlimeBlock::new, new Item.Properties().rarity(Rarity.EPIC), TabGroup.MATERIAL);
-    BlockRegistryHolder<ObsidianPressurePlate, BlockItem> OBSIDIAN_PRESSURE_PLATE = registerBlock("obsidian_pressure_plate", ObsidianPressurePlate::new, new Item.Properties().rarity(Rarity.UNCOMMON), TabGroup.DECO);
-    BlockRegistryHolder<Block, BlockItem> CRIMSONIUM_ORE = registerBlock("crimsonium_ore", ()-> new Block(BlockBehaviour.Properties.copy(Blocks.STONE)), new Item.Properties().rarity(Rarity.UNCOMMON), TabGroup.MATERIAL);
+    BlockRegistryHolder<Block, BlockItem> MANGATIC_STONE = registerBlock("mangatic_stone", ()-> new Block(BlockBehaviour.Properties.copy(Blocks.END_STONE)), MiscHelper.rarity(Rarity.RARE), TabGroups.MATERIAL);
+    BlockRegistryHolder<MangaticSlimeBlock, BlockItem> MANGATIC_SLIME = registerBlock("mangatic_slime", MangaticSlimeBlock::new, new Item.Properties().rarity(Rarity.EPIC), TabGroups.MATERIAL);
+    BlockRegistryHolder<ObsidianPressurePlate, BlockItem> OBSIDIAN_PRESSURE_PLATE = registerBlock("obsidian_pressure_plate", ObsidianPressurePlate::new, new Item.Properties().rarity(Rarity.UNCOMMON), TabGroups.DECO);
+    BlockRegistryHolder<Block, BlockItem> CRIMSONIUM_ORE = registerBlock("crimsonium_ore", ()-> new Block(BlockBehaviour.Properties.copy(Blocks.STONE)), new Item.Properties().rarity(Rarity.UNCOMMON), TabGroups.MATERIAL);
     RegistryObject<Block> FRAGILE_BASALT = REGISTRY.register("fragile_basalt", FragileBasaltBlock::new);
     RegistryObject<Block> DUNGEON_GENERATOR = REGISTRY.register("dungeon_generator", DungeonGenerator::new);
-    BlockRegistryHolder<GoldenSlab, BlockItem> GOLDEN_SLAB = registerBlock("golden_slab", GoldenSlab::new, MiscHelper.rarity(Rarity.COMMON), TabGroup.GOLDEN_DECO);
-    BlockRegistryHolder<GoldenStairs, BlockItem> GOLDEN_STAIRS = registerBlock("golden_stairs", GoldenStairs::new, MiscHelper.rarity(Rarity.COMMON), TabGroup.GOLDEN_DECO);
-    BlockRegistryHolder<GoldenWall, BlockItem> GOLDEN_WALL = registerBlock("golden_wall", GoldenWall::new, MiscHelper.rarity(Rarity.COMMON), TabGroup.GOLDEN_DECO);
-    BlockRegistryHolder<LapisButton, BlockItem> LAPIS_BUTTON = registerBlock("lapis_button", LapisButton::new, MiscHelper.rarity(Rarity.UNCOMMON), TabGroup.DECO);
-    BlockRegistryHolder<SoulChain, BlockItem> SOUL_CHAIN = registerBlock("soul_chain", SoulChain::new, MiscHelper.rarity(Rarity.RARE), TabGroup.DECO);
+    BlockRegistryHolder<GoldenSlab, BlockItem> GOLDEN_SLAB = registerBlock("golden_slab", GoldenSlab::new, MiscHelper.rarity(Rarity.COMMON), TabGroups.GOLDEN_DECO);
+    BlockRegistryHolder<GoldenStairs, BlockItem> GOLDEN_STAIRS = registerBlock("golden_stairs", GoldenStairs::new, MiscHelper.rarity(Rarity.COMMON), TabGroups.GOLDEN_DECO);
+    BlockRegistryHolder<GoldenWall, BlockItem> GOLDEN_WALL = registerBlock("golden_wall", GoldenWall::new, MiscHelper.rarity(Rarity.COMMON), TabGroups.GOLDEN_DECO);
+    BlockRegistryHolder<LapisButton, BlockItem> LAPIS_BUTTON = registerBlock("lapis_button", LapisButton::new, MiscHelper.rarity(Rarity.UNCOMMON), TabGroups.DECO);
+    BlockRegistryHolder<SoulChain, BlockItem> SOUL_CHAIN = registerBlock("soul_chain", SoulChain::new, MiscHelper.rarity(Rarity.RARE), TabGroups.DECO);
     BlockRegistryHolder<GemstoneBlock, GemstoneBlock.Item> GEMSTONE_BLOCK = registerBlock("gemstone_block", GemstoneBlock::new, object -> new GemstoneBlock.Item(), null);
     BlockRegistryHolder<GemstoneCrystal, GemstoneBlock.Item> GEMSTONE_CRYSTAL = registerBlock("gemstone_crystal", GemstoneCrystal::new, object -> new GemstoneCrystal.Item(), null);
     BlockRegistryHolder<GemstoneSeedBlock, GemstoneSeedBlock.Item> GEMSTONE_SEED = registerBlock("gemstone_seed", GemstoneSeedBlock::new, object -> new GemstoneSeedBlock.Item(), null);
 
-    BlockRegistryHolder<RotatedPillarBlock, BlockItem> STRIPPED_PERIDOT_SYCAMORE_LOG = registerBlock("stripped_peridot_sycamore_log", () -> new AbstractLogBlock(MapColor.COLOR_LIGHT_GREEN, MapColor.COLOR_LIGHT_GREEN, null), MiscHelper.rarity(Rarity.COMMON), TabGroup.PERIDOT_SYCAMORE);
-    BlockRegistryHolder<RotatedPillarBlock, BlockItem> PERIDOT_SYCAMORE_LOG = registerBlock("peridot_sycamore_log", () -> new AbstractLogBlock(MapColor.COLOR_LIGHT_GREEN, MapColor.COLOR_GREEN, STRIPPED_PERIDOT_SYCAMORE_LOG.get()), MiscHelper.rarity(Rarity.COMMON), TabGroup.PERIDOT_SYCAMORE);
-    BlockRegistryHolder<Block, BlockItem> PERIDOT_SYCAMORE_PLANKS = registerBlock("peridot_sycamore_planks", () -> new Block(BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).instrument(NoteBlockInstrument.BASS).strength(2.0F, 3.0F).sound(SoundType.WOOD).ignitedByLava()), MiscHelper.rarity(Rarity.COMMON), TabGroup.PERIDOT_SYCAMORE);
+    BlockRegistryHolder<RotatedPillarBlock, BlockItem> STRIPPED_PERIDOT_SYCAMORE_LOG = registerBlock("stripped_peridot_sycamore_log", () -> new AbstractLogBlock(MapColor.COLOR_LIGHT_GREEN, MapColor.COLOR_LIGHT_GREEN, null), MiscHelper.rarity(Rarity.COMMON), TabGroups.PERIDOT_SYCAMORE);
+    BlockRegistryHolder<RotatedPillarBlock, BlockItem> PERIDOT_SYCAMORE_LOG = registerBlock("peridot_sycamore_log", () -> new AbstractLogBlock(MapColor.COLOR_LIGHT_GREEN, MapColor.COLOR_GREEN, STRIPPED_PERIDOT_SYCAMORE_LOG.get()), MiscHelper.rarity(Rarity.COMMON), TabGroups.PERIDOT_SYCAMORE);
+    BlockRegistryHolder<Block, BlockItem> PERIDOT_SYCAMORE_PLANKS = registerBlock("peridot_sycamore_planks", () -> new Block(BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).instrument(NoteBlockInstrument.BASS).strength(2.0F, 3.0F).sound(SoundType.WOOD).ignitedByLava()), MiscHelper.rarity(Rarity.COMMON), TabGroups.PERIDOT_SYCAMORE);
 
-    BlockRegistryHolder<RotatedPillarBlock, BlockItem> STRIPPED_PERIDOT_SYCAMORE_WOOD = registerBlock("stripped_peridot_sycamore_wood", () -> new AbstractWoodBlock(MapColor.COLOR_LIGHT_GREEN, null), MiscHelper.rarity(Rarity.COMMON), TabGroup.PERIDOT_SYCAMORE);
-    BlockRegistryHolder<RotatedPillarBlock, BlockItem> PERIDOT_SYCAMORE_WOOD = registerBlock("peridot_sycamore_wood", () -> new AbstractWoodBlock(MapColor.COLOR_GREEN, STRIPPED_PERIDOT_SYCAMORE_WOOD.get()), MiscHelper.rarity(Rarity.COMMON), TabGroup.PERIDOT_SYCAMORE);
+    BlockRegistryHolder<RotatedPillarBlock, BlockItem> STRIPPED_PERIDOT_SYCAMORE_WOOD = registerBlock("stripped_peridot_sycamore_wood", () -> new AbstractWoodBlock(MapColor.COLOR_LIGHT_GREEN, null), MiscHelper.rarity(Rarity.COMMON), TabGroups.PERIDOT_SYCAMORE);
+    BlockRegistryHolder<RotatedPillarBlock, BlockItem> PERIDOT_SYCAMORE_WOOD = registerBlock("peridot_sycamore_wood", () -> new AbstractWoodBlock(MapColor.COLOR_GREEN, STRIPPED_PERIDOT_SYCAMORE_WOOD.get()), MiscHelper.rarity(Rarity.COMMON), TabGroups.PERIDOT_SYCAMORE);
 
     BlockRegistryHolder<SaplingBlock, BlockItem> PERIDOT_SYCAMORE_SAPLING = registerBlock("peridot_sycamore_sapling", ()-> new SaplingBlock(new AbstractTreeGrower() {
         @Override
         protected @Nullable ResourceKey<ConfiguredFeature<?, ?>> getConfiguredFeature(RandomSource pRandom, boolean pHasFlowers) {
             return ModConfiguredFeatures.PERIDOT_SYCAMORE_TREE;
         }
-    }, BlockBehaviour.Properties.copy(Blocks.OAK_SAPLING)), MiscHelper.rarity(Rarity.COMMON), TabGroup.PERIDOT_SYCAMORE);
+    }, BlockBehaviour.Properties.copy(Blocks.OAK_SAPLING)), MiscHelper.rarity(Rarity.COMMON), TabGroups.PERIDOT_SYCAMORE);
 
-    BlockRegistryHolder<ManaRelayBlock, BlockItem> MANA_RELAY = registerBlock("mana_relay", ManaRelayBlock::new, MiscHelper.rarity(Rarity.UNCOMMON), TabGroup.TECHNOLOGY);
-    BlockRegistryHolder<ManaPortBlock, BlockItem> MANA_PORT = registerBlock("mana_port", ManaPortBlock::new, MiscHelper.rarity(Rarity.UNCOMMON), TabGroup.TECHNOLOGY);
-    BlockRegistryHolder<PrismaticGeneratorBlock, BlockItem> PRISMATIC_GENERATOR = registerBlock("prismatic_generator", PrismaticGeneratorBlock::new, MiscHelper.rarity(Rarity.RARE), TabGroup.TECHNOLOGY);
-    BlockRegistryHolder<VulcanicGeneratorBlock, BlockItem> VULCANIC_GENERATOR = registerBlock("vulcanic_generator", VulcanicGeneratorBlock::new, MiscHelper.rarity(Rarity.COMMON), TabGroup.TECHNOLOGY);
-    BlockRegistryHolder<MagicFurnaceBlock, BlockItem> MAGIC_FURNACE = registerBlock("magic_furnace", MagicFurnaceBlock::new, MiscHelper.rarity(Rarity.UNCOMMON), TabGroup.TECHNOLOGY);
-    BlockRegistryHolder<ManaBatteryBlock, BlockItem> MANA_BATTERY = registerBlock("mana_battery", ManaBatteryBlock::new, MiscHelper.rarity(Rarity.UNCOMMON), TabGroup.TECHNOLOGY);
+    BlockRegistryHolder<ManaRelayBlock, BlockItem> MANA_RELAY = registerBlock("mana_relay", ManaRelayBlock::new, MiscHelper.rarity(Rarity.UNCOMMON), TabGroups.TECHNOLOGY);
+    BlockRegistryHolder<ManaPortBlock, BlockItem> MANA_PORT = registerBlock("mana_port", ManaPortBlock::new, MiscHelper.rarity(Rarity.UNCOMMON), TabGroups.TECHNOLOGY);
+    BlockRegistryHolder<PrismaticGeneratorBlock, BlockItem> PRISMATIC_GENERATOR = registerBlock("prismatic_generator", PrismaticGeneratorBlock::new, MiscHelper.rarity(Rarity.RARE), TabGroups.TECHNOLOGY);
+    BlockRegistryHolder<VulcanicGeneratorBlock, BlockItem> VULCANIC_GENERATOR = registerBlock("vulcanic_generator", VulcanicGeneratorBlock::new, MiscHelper.rarity(Rarity.COMMON), TabGroups.TECHNOLOGY);
+    BlockRegistryHolder<MagicFurnaceBlock, BlockItem> MAGIC_FURNACE = registerBlock("magic_furnace", MagicFurnaceBlock::new, MiscHelper.rarity(Rarity.UNCOMMON), TabGroups.TECHNOLOGY);
+    BlockRegistryHolder<ManaBatteryBlock, BlockItem> MANA_BATTERY = registerBlock("mana_battery", ManaBatteryBlock::new, MiscHelper.rarity(Rarity.UNCOMMON), TabGroups.TECHNOLOGY);
 
-    BlockRegistryHolder<SpellCasterTurretBlock, BlockItem> SPELL_CASTER_TURRET = registerBlock("turret/spell_caster", SpellCasterTurretBlock::new, MiscHelper.rarity(Rarity.RARE), TabGroup.TECHNOLOGY);
-    BlockRegistryHolder<ObeliskTurretBlock, BlockItem> OBELISK_TURRET = registerBlock("turret/obelisk", ObeliskTurretBlock::new, MiscHelper.rarity(Rarity.COMMON), TabGroup.TECHNOLOGY);
+    BlockRegistryHolder<SpellCasterTurretBlock, BlockItem> SPELL_CASTER_TURRET = registerBlock("turret/spell_caster", SpellCasterTurretBlock::new, MiscHelper.rarity(Rarity.RARE), TabGroups.TECHNOLOGY);
+    BlockRegistryHolder<ObeliskTurretBlock, BlockItem> OBELISK_TURRET = registerBlock("turret/obelisk", ObeliskTurretBlock::new, MiscHelper.rarity(Rarity.COMMON), TabGroups.TECHNOLOGY);
 
-    BlockRegistryHolder<PedestalBlock, BlockItem> PEDESTAL = registerBlock("pedestal", PedestalBlock::new, MiscHelper.rarity(Rarity.UNCOMMON), TabGroup.BUILDING_MATERIAL);
-    BlockRegistryHolder<AltarBlock, BlockItem> ALTAR = registerBlock("altar", AltarBlock::new, MiscHelper.rarity(Rarity.UNCOMMON), TabGroup.BUILDING_MATERIAL);
+    BlockRegistryHolder<PedestalBlock, BlockItem> PEDESTAL = registerBlock("pedestal", PedestalBlock::new, MiscHelper.rarity(Rarity.UNCOMMON), TabGroups.BUILDING_MATERIAL);
+    BlockRegistryHolder<AltarBlock, BlockItem> ALTAR = registerBlock("altar", AltarBlock::new, MiscHelper.rarity(Rarity.UNCOMMON), TabGroups.BUILDING_MATERIAL);
 
-    BlockRegistryHolder<FlowerBlock, BlockItem> THISTLE = registerBlock("thistle", () -> new FlowerBlock(MobEffects.UNLUCK, 20, FLOWER_PROPERTIES), new Item.Properties(), TabGroup.MATERIAL); //TODO add effect
-    BlockRegistryHolder<MistletoeBlock, BlockItem> MISTLETOE = registerBlock("mistletoe", MistletoeBlock::new, new Item.Properties(), TabGroup.MATERIAL);
+    BlockRegistryHolder<FlowerBlock, BlockItem> THISTLE = registerBlock("thistle", () -> new FlowerBlock(MobEffects.UNLUCK, 20, FLOWER_PROPERTIES), new Item.Properties(), TabGroups.MATERIAL); //TODO add effect
+    BlockRegistryHolder<MistletoeBlock, BlockItem> MISTLETOE = registerBlock("mistletoe", MistletoeBlock::new, new Item.Properties(), TabGroups.MATERIAL);
 }

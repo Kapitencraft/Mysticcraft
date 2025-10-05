@@ -150,7 +150,6 @@ public class ModItemModelProvider extends ItemModelProvider {
         }
     }
 
-    //TODO make rainbow be pixel related
     private void makeRainbowElementShard() {
         withExistingParent("elemental_shard_of_rainbow", "item/generated")
                 .renderType(MysticcraftMod.res("chromatic_cutout"))

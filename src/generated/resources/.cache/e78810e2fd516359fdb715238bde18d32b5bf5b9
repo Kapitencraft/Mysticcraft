@@ -1,4 +1,4 @@
-// 1.20.1	2025-10-04T16:52:18.7958665	Block States: mysticcraft
+// 1.20.1	2025-10-05T02:48:30.7592912	Block States: mysticcraft
 976f82e95ecd585522b1743fb061ae17e2147dbc assets/mysticcraft/blockstates/artificer_table.json
 5637f5f443cb8049d9f40a1f2e13f5d8705df435 assets/mysticcraft/blockstates/crimsonium_ore.json
 892ef4535d80db73e54fbbfa2b0a9e4f316fd4fe assets/mysticcraft/blockstates/fragile_basalt.json
@@ -19,6 +19,7 @@ fdbb8cbfa966b20295a5649af04089f61ddd5535 assets/mysticcraft/blockstates/soul_cha
 7b33e6327069df5112c87341f8c6c5b6c7c879b5 assets/mysticcraft/blockstates/stripped_peridot_sycamore_log.json
 82b79c79dc2f9ee21a97e4f41ea4c0f3dccfcf9d assets/mysticcraft/blockstates/stripped_peridot_sycamore_wood.json
 64f618951f7d95e1adb386b3e655c6cfefb77ec8 assets/mysticcraft/blockstates/thistle.json
+cd10e96088808c90f3c3f2d43916a830e27e4e79 assets/mysticcraft/blockstates/turret/obelisk.json
 e5bf333f74e3d5744fb7158b6f122d333f7ff8ed assets/mysticcraft/models/block/artificer_table.json
 d7f3e722c5a7940eb312b7657df80cfba78ced59 assets/mysticcraft/models/block/colored_block.json
 d43c46e8e869782160286bff1551efa19b1d1207 assets/mysticcraft/models/block/crimsonium_ore.json
@@ -69,3 +70,4 @@ e006488f5004ea152de48d2ae8d9b11c49f93aa1 assets/mysticcraft/models/item/peridot_
 091154e56d41ab292c6518649d971243ea403935 assets/mysticcraft/models/item/peridot_sycamore_wood.json
 c7f73d8ad8ef97665603b806656434643d334eb3 assets/mysticcraft/models/item/stripped_peridot_sycamore_log.json
 0cc4abd03961dcb330d4d1c8e0b42d455b0f9f01 assets/mysticcraft/models/item/stripped_peridot_sycamore_wood.json
+82cfdfa7d4066cd139ecbb65935cb89759f22975 assets/mysticcraft/models/turret/obelisk.json

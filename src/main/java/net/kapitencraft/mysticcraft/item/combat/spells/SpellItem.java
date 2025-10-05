@@ -3,10 +3,10 @@ package net.kapitencraft.mysticcraft.item.combat.spells;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.kap_lib.helpers.AttributeHelper;
+import net.kapitencraft.kap_lib.item.creative_tab.TabGroup;
 import net.kapitencraft.kap_lib.registry.ExtraAttributes;
 import net.kapitencraft.mysticcraft.capability.spell.ISpellItem;
 import net.kapitencraft.mysticcraft.item.misc.ModTiers;
-import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.registry.ModCreativeModTabs;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.world.InteractionHand;
@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Consumer;
 
 public abstract class SpellItem extends SwordItem implements ISpellItem {
-    public static final TabGroup SPELL_GROUP = TabGroup.builder().tab(ModCreativeModTabs.SPELLS).tab(ModCreativeModTabs.WEAPONS_AND_TOOLS).build();
+    public static final TabGroup SPELL_GROUP = TabGroup.create(ModCreativeModTabs.WEAPONS_AND_TOOLS);
 
     private final int maxMana;
     private final int magicDamage;

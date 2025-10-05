@@ -112,7 +112,7 @@ public class ArtificerTableMenu extends NoBEMenu<ArtificerTableMenu.ItemContaine
                 return GemstoneHelper.hasCapability(stack);
             } else {
                 ItemStack applicableStack = getApplicable();
-                return GemstoneHelper.exCapability(applicableStack, handler -> {
+                return ArtificerTableMenu.this.unlocked[this.getSlotIndex() - 1] && GemstoneHelper.exCapability(applicableStack, handler -> {
                     int slotId = ItemContainer.getSlotForItem(this.getSlotIndex(), applicableStack);
                     return handler.putGemstoneFromStack(stack, slotId);
                 });

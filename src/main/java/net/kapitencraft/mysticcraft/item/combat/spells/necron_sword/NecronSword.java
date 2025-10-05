@@ -3,12 +3,11 @@ package net.kapitencraft.mysticcraft.item.combat.spells.necron_sword;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.kapitencraft.kap_lib.helpers.AttributeHelper;
+import net.kapitencraft.kap_lib.item.creative_tab.TabGroup;
 import net.kapitencraft.kap_lib.registry.ExtraAttributes;
 import net.kapitencraft.kap_lib.util.ExtraRarities;
 import net.kapitencraft.mysticcraft.capability.spell.SpellCapabilityProvider;
 import net.kapitencraft.mysticcraft.item.combat.spells.SpellItem;
-import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroup;
-import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabRegister;
 import net.kapitencraft.mysticcraft.registry.ModCreativeModTabs;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -18,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Consumer;
 
 public class NecronSword extends SpellItem {
-    public static final TabGroup NECRON_GROUP = TabGroup.builder().tab(ModCreativeModTabs.WEAPONS_AND_TOOLS).build();
+    public static final TabGroup NECRON_GROUP = TabGroup.create(ModCreativeModTabs.WEAPONS_AND_TOOLS);
     public static final int BASE_DAMAGE = 12;
     public static final double BASE_STRENGHT = 150;
     public static final int REFINED_BASE_DAMAGE = 13;

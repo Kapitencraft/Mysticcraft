@@ -2,9 +2,9 @@ package net.kapitencraft.mysticcraft.item.combat.armor;
 
 import com.google.common.collect.Multimap;
 import net.kapitencraft.kap_lib.helpers.AttributeHelper;
+import net.kapitencraft.kap_lib.item.creative_tab.ArmorTabGroup;
 import net.kapitencraft.kap_lib.registry.ExtraAttributes;
 import net.kapitencraft.mysticcraft.item.combat.armor.client.NetherArmorItem;
-import net.kapitencraft.mysticcraft.item.misc.creative_tab.ArmorTabGroup;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
