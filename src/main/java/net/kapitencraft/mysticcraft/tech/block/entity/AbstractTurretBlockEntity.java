@@ -3,16 +3,21 @@ package net.kapitencraft.mysticcraft.tech.block.entity;
 import net.kapitencraft.mysticcraft.tech.block.UpgradableBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.items.ItemStackHandler;
 
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.UUID;
 import java.util.function.Predicate;
 
@@ -83,19 +88,37 @@ public abstract class AbstractTurretBlockEntity extends UpgradableBlockEntity {
     //TODO target selector
 
     public static class TargetSelector implements Predicate<LivingEntity> {
+        private final List<UUID> playersToIgnore = new ArrayList<>();
 
+        public void addPlayer(Player player) {
+            this.playersToIgnore.add(player.getUUID());
+        }
+
+        public void deserialize(CompoundTag tag) {
+            ListTag playersToIgnore = tag.getList("PlayersToIgnore", 11);
+
+        }
+
+        private void serialize(CompoundTag tag) {
+            ListTag listTag = new ListTag();
+            playersToIgnore.stream().map(NbtUtils::createUUID).forEach(listTag::add);
+            tag.put("PlayersToIgnore", listTag);
+        }
+
+        /**
+         * @return whether the given entity may be targeted by the turret
+         */
         @Override
         public boolean test(LivingEntity living) {
-            return false;
+            return !(living instanceof Player player) || !playersToIgnore.contains(player.getUUID());
         }
     }
 
     private enum TargetOrder implements StringRepresentable {
         MOST_HEALTH(Comparator.comparingDouble(LivingEntity::getHealth)),
-        MOST_ARMOR(Comparator.comparingInt(LivingEntity::getArmorValue))
-
-        ;
-
+        MOST_ARMOR(Comparator.comparingInt(LivingEntity::getArmorValue)),
+        LEAST_HEALTH(Comparator.comparingDouble(LivingEntity::getHealth).reversed()),
+        LEAST_ARMOR(Comparator.comparingInt(LivingEntity::getArmorValue).reversed());
 
         private final Comparator<LivingEntity> comparator;
 
