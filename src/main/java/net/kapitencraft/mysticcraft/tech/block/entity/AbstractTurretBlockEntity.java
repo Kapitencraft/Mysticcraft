@@ -8,12 +8,14 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.items.ItemStackHandler;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -25,6 +27,7 @@ public abstract class AbstractTurretBlockEntity extends UpgradableBlockEntity {
     protected final AABB checkArea; //TODO un-finalize when upgrades are added
     private UUID owner;
     protected Entity target;
+    protected final TargetSelector targetSelector = new TargetSelector();
 
     public AbstractTurretBlockEntity(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState, double radius) {
         super(pType, pPos, pBlockState);
@@ -35,6 +38,7 @@ public abstract class AbstractTurretBlockEntity extends UpgradableBlockEntity {
         if (this.target != null) {
             if (!checkArea.intersects(this.target.getBoundingBox())) {
                 this.unselectTarget();
+                this.target = null; //set target to null so super-classes do not implement that behaviour by themselves
             }
         }
         if (this.target == null && this.level != null) {
@@ -47,11 +51,21 @@ public abstract class AbstractTurretBlockEntity extends UpgradableBlockEntity {
      */
     protected abstract void unselectTarget();
 
-    protected abstract void selectTarget();
+    @SuppressWarnings("DataFlowIssue")
+    protected void selectTarget() {
+        List<LivingEntity> entities = this.level.getEntitiesOfClass(LivingEntity.class, checkArea, living -> !living.isRemoved() && !living.isDeadOrDying() && !living.fireImmune());
+        int i = 0;
+        while (!canTarget(entities.get(i))) i++;
+        this.target = entities.get(i);
+    }
 
     @Override
     public boolean canUpgrade(ItemStack upgradeModule) {
         return false;
+    }
+
+    protected boolean canTarget(LivingEntity living) {
+        return this.targetSelector.test(living);
     }
 
     @Override
@@ -73,16 +87,22 @@ public abstract class AbstractTurretBlockEntity extends UpgradableBlockEntity {
     protected void saveAdditional(CompoundTag pTag) {
         super.saveAdditional(pTag);
         pTag.putString("Owner", this.owner.toString());
+        CompoundTag tag = new CompoundTag();
+        this.targetSelector.serialize(tag);
+        pTag.put("Selector", tag);
     }
 
     @Override
     public void load(CompoundTag pTag) {
         super.load(pTag);
         this.owner = UUID.fromString(pTag.getString("Owner"));
+        this.targetSelector.deserialize(pTag.getCompound("Selector"));
     }
 
     public void setOwner(UUID uuid) {
         this.owner = uuid;
+        this.targetSelector.playersToIgnore.clear(); //clear entries and reset
+        this.targetSelector.playersToIgnore.add(uuid);
     }
 
     //TODO target selector
@@ -118,7 +138,9 @@ public abstract class AbstractTurretBlockEntity extends UpgradableBlockEntity {
         MOST_HEALTH(Comparator.comparingDouble(LivingEntity::getHealth)),
         MOST_ARMOR(Comparator.comparingInt(LivingEntity::getArmorValue)),
         LEAST_HEALTH(Comparator.comparingDouble(LivingEntity::getHealth).reversed()),
-        LEAST_ARMOR(Comparator.comparingInt(LivingEntity::getArmorValue).reversed());
+        LEAST_ARMOR(Comparator.comparingInt(LivingEntity::getArmorValue).reversed()),
+        FASTEST(Comparator.comparingDouble(l -> l.getAttributeValue(Attributes.MOVEMENT_SPEED))),
+        SLOWEST(FASTEST.comparator.reversed());
 
         private final Comparator<LivingEntity> comparator;
 
@@ -127,7 +149,7 @@ public abstract class AbstractTurretBlockEntity extends UpgradableBlockEntity {
         }
 
         @Override
-        public String getSerializedName() {
+        public @NotNull String getSerializedName() {
             return this.name().toLowerCase();
         }
     }

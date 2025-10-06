@@ -6,16 +6,18 @@ import net.kapitencraft.mysticcraft.data_gen.ModDamageTypes;
 import net.kapitencraft.mysticcraft.registry.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
 import java.util.List;
 
 public class ObeliskTurretBlockEntity extends AbstractTurretBlockEntity {
+    public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
+
     private int activeTicks;
     private int damage = 1;
 
@@ -36,22 +38,16 @@ public class ObeliskTurretBlockEntity extends AbstractTurretBlockEntity {
 
             if ((entity.activeTicks & 7) == 0 && !entity.target.hurt(pLevel.damageSources().source(ModDamageTypes.SCORCH), entity.damage)) {
                 entity.unselectTarget();
-            }
+                entity.target = null;
+                pLevel.setBlock(pPos, pState.setValue(POWERED, false), 18);
+            } else if (!pState.getValue(POWERED)) pLevel.setBlock(pPos, pState.setValue(POWERED, true), 18);
             if ((entity.activeTicks++ & 31) == 0) entity.damage <<= 1;
         }
-    }
-
-    @SuppressWarnings("DataFlowIssue")
-    @Override
-    protected void selectTarget() {
-        List<Entity> entities = this.level.getEntitiesOfClass(Entity.class, checkArea, e -> e instanceof LivingEntity living && !living.isRemoved() && !living.isDeadOrDying() && !living.fireImmune());
-        if (!entities.isEmpty()) this.target = entities.get(0);
     }
 
     @Override
     protected void unselectTarget() {
         damage = 1;
         activeTicks = 0;
-        target = null;
     }
 }
