@@ -118,4 +118,6 @@ public interface ModBlocks {
 
     BlockRegistryHolder<FlowerBlock, BlockItem> THISTLE = registerBlock("thistle", () -> new FlowerBlock(MobEffects.UNLUCK, 20, FLOWER_PROPERTIES), new Item.Properties(), TabGroups.MATERIAL); //TODO add effect
     BlockRegistryHolder<MistletoeBlock, BlockItem> MISTLETOE = registerBlock("mistletoe", MistletoeBlock::new, new Item.Properties(), TabGroups.MATERIAL);
+
+    BlockRegistryHolder<Block, BlockItem> SHADER_TEST_BLOCK = registerBlock("shader_test", () -> new Block(BlockBehaviour.Properties.copy(Blocks.AMETHYST_BLOCK)), new Item.Properties(), TabGroups.MATERIAL);
 }

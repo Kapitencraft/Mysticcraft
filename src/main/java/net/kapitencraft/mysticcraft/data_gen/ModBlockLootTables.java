@@ -58,6 +58,7 @@ public class ModBlockLootTables extends BlockLootSubProvider {
         dropSelf(ModBlocks.PEDESTAL.get());
         dropSelf(ModBlocks.THISTLE.get());
         dropSelf(ModBlocks.MISTLETOE.get());
+        dropSelf(ModBlocks.SHADER_TEST_BLOCK.get());
         this.add(ModBlocks.CRIMSONIUM_ORE.get(), createOreDrop(ModBlocks.CRIMSONIUM_ORE.get(), ModItems.RAW_CRIMSONIUM.get()));
         gemstone(ModBlocks.GEMSTONE_BLOCK.get());
         gemstone(ModBlocks.GEMSTONE_CRYSTAL.get());

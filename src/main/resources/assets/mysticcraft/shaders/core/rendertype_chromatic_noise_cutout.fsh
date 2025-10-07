@@ -17,16 +17,14 @@ in float vertexDistance;
 in vec4 vertexColor;
 in vec2 texCoord0;
 in vec4 normal;
-in vec2 worldPos;
+in vec3 worldPos;
 
 out vec4 fragColor;
 
 void main() {
-    vec2 textureSize = textureSize(Sampler0, 0) * texCoord0;
-    textureSize = vec2(floor(textureSize.x), floor(textureSize.y)) / 1440 + worldPos;
     vec4 color = texture(Sampler0, texCoord0) * vertexColor * ColorModulator;
     if (color.a < .1) discard;
-    float chroma = chromaPos(ChromaConfig.a, filterStage(textureSize, int(ChromaConfig.r)), ChromaConfig.g);
+    float chroma = chromaPos(ChromaConfig.a, worldPos.xz, ChromaConfig.g);
     fragColor = linear_fog(
         vec4(hsb2rgb(vec3(fract(chroma + GameTime * ChromaConfig.b * GAME_TIME_SCALE), 1.0, 1.0)) * color.rgb, color.a),
         vertexDistance, FogStart, FogEnd, FogColor

@@ -55,8 +55,9 @@ public abstract class AbstractTurretBlockEntity extends UpgradableBlockEntity {
     protected void selectTarget() {
         List<LivingEntity> entities = this.level.getEntitiesOfClass(LivingEntity.class, checkArea, living -> !living.isRemoved() && !living.isDeadOrDying() && !living.fireImmune());
         int i = 0;
-        while (!canTarget(entities.get(i))) i++;
-        this.target = entities.get(i);
+        while (entities.size() > i && !canTarget(entities.get(i))) i++;
+        if (entities.size() > i) //only update the target when there's actually a entity to target
+            this.target = entities.get(i);
     }
 
     @Override

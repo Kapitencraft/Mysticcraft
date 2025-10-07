@@ -2,10 +2,10 @@
   "type": "mysticcraft:mana_syphon",
   "data": {},
   "equipment_slots": [
+    "chest",
     "legs",
-    "feet",
     "head",
-    "chest"
+    "feet"
   ],
   "wearable_slots": []
 }

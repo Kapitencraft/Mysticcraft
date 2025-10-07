@@ -20,7 +20,7 @@ out float vertexDistance;
 out vec4 vertexColor;
 out vec2 texCoord0;
 out vec4 normal;
-out vec2 worldPos;
+out vec3 worldPos;
 
 void main() {
     vec3 pos = Position + ChunkOffset;
@@ -29,6 +29,6 @@ void main() {
     vertexDistance = fog_distance(ModelViewMat, pos, FogShape);
     vertexColor = Color; // * minecraft_sample_lightmap(Sampler2, UV2);
     texCoord0 = UV0;
+    worldPos = pos;
     normal = ProjMat * ModelViewMat * vec4(Normal, 0.0);
-    worldPos = vec2(floor(pos.x), floor(pos.z));
 }

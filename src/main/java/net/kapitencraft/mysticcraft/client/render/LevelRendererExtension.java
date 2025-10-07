@@ -61,7 +61,7 @@ public class LevelRendererExtension {
                 }
             }
         }
-        if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_ENTITIES) {
+        else if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_ENTITIES) {
             BlockPos pos = SpellHelper.getBlockTarget(minecraft.player);
             if (pos != null) {
                 stack.pushPose();

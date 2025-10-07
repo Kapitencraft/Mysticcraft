@@ -54,6 +54,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
                         );
         simpleBlockItem(ModBlocks.GEMSTONE_BLOCK.get(), gemstoneBlock);
         simpleBlock(ModBlocks.THISTLE.get(), models().cross("thistle", MysticcraftMod.res("block/thistle")).renderType("cutout"));
+        simpleBlockWithItem(ModBlocks.SHADER_TEST_BLOCK.get(), models().cubeAll("shader_test", MysticcraftMod.res("block/example")).renderType("mysticcraft:chromatic_cutout"));
 
         makeGemstoneCrystals();
 

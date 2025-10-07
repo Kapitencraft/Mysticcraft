@@ -1,5 +1,6 @@
 package net.kapitencraft.mysticcraft.event.handler;
 
+import net.kapitencraft.kap_lib.event.custom.client.RegisterChunkBufferLayersEvent;
 import net.kapitencraft.kap_lib.event.custom.client.RegisterConfigurableOverlaysEvent;
 import net.kapitencraft.kap_lib.event.custom.client.RegisterInventoryPageRenderersEvent;
 import net.kapitencraft.kap_lib.event.custom.client.RegisterItemModifiersDisplayExtensionsEvent;
@@ -49,6 +50,12 @@ import java.util.function.Function;
 
 @Mod.EventBusSubscriber(modid = MysticcraftMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ModClientEvents {
+
+    @SubscribeEvent
+    public static void onRegisterChunkBufferLayers(RegisterChunkBufferLayersEvent event) {
+        event.register(ModRenderTypes.CHROMATIC_CUTOUT);
+    }
+
 
     @SubscribeEvent
     public static void onRegisterKeyMappings(RegisterKeyMappingsEvent event) {

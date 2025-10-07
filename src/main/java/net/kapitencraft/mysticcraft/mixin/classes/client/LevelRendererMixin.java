@@ -1,13 +1,16 @@
 package net.kapitencraft.mysticcraft.mixin.classes.client;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.kapitencraft.mysticcraft.capability.spell.SpellHelper;
 import net.kapitencraft.mysticcraft.item.combat.spells.SpellItem;
 import net.kapitencraft.mysticcraft.spell.Spell;
 import net.kapitencraft.mysticcraft.spell.SpellTarget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
+import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -16,9 +19,13 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(LevelRenderer.class)
-public class LevelRendererMixin {
+public abstract class LevelRendererMixin {
 
     @Shadow @Final private Minecraft minecraft;
+
+    @Shadow protected abstract void renderChunkLayer(RenderType pRenderType, PoseStack pPoseStack, double pCamX, double pCamY, double pCamZ, Matrix4f pProjectionMatrix);
+
+    @Shadow private double prevCamX;
 
     @SuppressWarnings("DataFlowIssue")
     @Redirect(method = "renderLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;shouldEntityAppearGlowing(Lnet/minecraft/world/entity/Entity;)Z"))
