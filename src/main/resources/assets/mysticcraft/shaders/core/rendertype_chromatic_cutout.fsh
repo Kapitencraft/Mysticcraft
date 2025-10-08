@@ -24,12 +24,12 @@ out vec4 fragColor;
 void main() {
     vec4 color = texture(Sampler0, texCoord0) * vertexColor * ColorModulator;
     if (color.a < .1) discard;
-    vec2 texturePos = textureSize(Sampler0, 0) * texCoord0;
-    vec2 deltaPos = (vec2(int(texturePos.x) & 15, int(texturePos.y) & 15) + worldPos.xz * 16);
-    fragColor = vec4(deltaPos, 1, 1); //TODO 3d filtered Stage
-    float chroma = chromaPos(ChromaConfig.a, texturePos, ChromaConfig.g);
-    //fragColor = linear_fog(
-    //    vec4(hsb2rgb(vec3(fract(chroma + GameTime * ChromaConfig.b * GAME_TIME_SCALE), 1.0, 1.0)) * color.rgb, color.a),
-    //    vertexDistance, FogStart, FogEnd, FogColor
-    //);
+    vec3 texturePos = vec3(vec2(int(texturePos.x) & 15, int(texturePos.y) & 15), 0);
+    //vec2 deltaPos = ();
+    vec3 deltaPos = worldPos * .01;
+    float chroma = chromaPos(ChromaConfig.a, deltaPos, ChromaConfig.g);
+    fragColor = linear_fog(
+        vec4(hsb2rgb(vec3(fract(chroma + GameTime * ChromaConfig.b * GAME_TIME_SCALE), 1.0, 1.0)) * color.rgb, color.a),
+        vertexDistance, FogStart, FogEnd, FogColor
+    );
 }
