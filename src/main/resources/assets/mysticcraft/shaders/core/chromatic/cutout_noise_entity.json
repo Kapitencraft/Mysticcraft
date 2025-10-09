@@ -4,8 +4,8 @@
     "srcrgb": "srcalpha",
     "dstrgb": "1-srcalpha"
   },
-  "vertex": "mysticcraft:rendertype_chromatic_cutout",
-  "fragment": "mysticcraft:rendertype_chromatic_cutout",
+  "vertex": "mysticcraft:chromatic/cutout_noise_entity",
+  "fragment": "mysticcraft:chromatic/cutout_noise_entity",
   "attributes": [
     "Position",
     "Color",

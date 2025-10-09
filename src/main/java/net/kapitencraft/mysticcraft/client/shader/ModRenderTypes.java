@@ -54,6 +54,9 @@ public class ModRenderTypes extends RenderType {
                     .createCompositeState(false)
     );
     private static final ShaderStateShard CHROMATIC_CUTOUT_SHARD = new ShaderStateShard(ModShaders::getRendertypeChromaticCutoutShader);
+    private static final ShaderStateShard CHROMATIC_CUTOUT_ENTITY_SHARD = new ShaderStateShard(ModShaders::getRendertypeChromaticCutoutEntityShader);
+    private static final ShaderStateShard CHROMATIC_CUTOUT_NOISE_SHARD = new ShaderStateShard(ModShaders::getRendertypeChromaticCutoutNoiseShader);
+    private static final ShaderStateShard CHROMATIC_CUTOUT_NOISE_ENTITY_SHARD = new ShaderStateShard(ModShaders::getRendertypeChromaticCutoutNoiseEntityShader);
 
     public static final RenderType CHROMATIC_CUTOUT = RenderType.create(
             "mysticcraft:chromatic_cutout",
@@ -69,9 +72,29 @@ public class ModRenderTypes extends RenderType {
             "mysticcraft:chromatic_cutout_entity",
             DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, true, false,
             RenderType.CompositeState.builder()
-                    .setShaderState(CHROMATIC_CUTOUT_SHARD)
+                    .setShaderState(CHROMATIC_CUTOUT_ENTITY_SHARD)
                     .setTextureState(RenderType.BLOCK_SHEET)
                     .setTransparencyState(RenderStateShard.NO_TRANSPARENCY)
                     .createCompositeState(true)
+    );
+
+    public static final RenderType CHROMATIC_CUTOUT_NOISE = RenderType.create(
+            "mysticcraft:chromatic_cutout_noise",
+            DefaultVertexFormat.BLOCK, VertexFormat.Mode.QUADS, 256, true, false,
+            RenderType.CompositeState.builder()
+                    .setShaderState(CHROMATIC_CUTOUT_NOISE_SHARD)
+                    .setTextureState(RenderType.BLOCK_SHEET)
+                    .setTransparencyState(RenderStateShard.NO_TRANSPARENCY)
+                    .createCompositeState(false)
+    );
+
+    public static final RenderType CHROMATIC_CUTOUT_ENTITY_NOISE = RenderType.create(
+            "mysticcraft:chromatic_cutout_noise_entity",
+            DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, true, false,
+            RenderType.CompositeState.builder()
+                    .setShaderState(CHROMATIC_CUTOUT_NOISE_ENTITY_SHARD)
+                    .setTextureState(RenderType.BLOCK_SHEET)
+                    .setTransparencyState(RenderStateShard.NO_TRANSPARENCY)
+                    .createCompositeState(false)
     );
 }

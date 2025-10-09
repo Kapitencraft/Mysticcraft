@@ -24,10 +24,9 @@ out vec4 fragColor;
 void main() {
     vec4 color = texture(Sampler0, texCoord0) * vertexColor * ColorModulator;
     if (color.a < .1) discard;
-    vec2 texturePos = textureSize(Sampler0, 0) * texCoord0;
-    vec3 textureLoc = vec3(vec2(int(texturePos.x) & 15, int(texturePos.y) & 15), 0);
-    vec3 deltaPos = worldPos * .01;
-    float chroma = chromaPos(ChromaConfig.a, deltaPos, ChromaConfig.g);
+    vec2 textureSize = textureSize(Sampler0, 0) * texCoord0;
+    textureSize = vec2(floor(textureSize.x), floor(textureSize.y)) / 1440;
+    float chroma = chromaPos(ChromaConfig.a, filterStage(textureSize, int(ChromaConfig.r)), ChromaConfig.g);
     fragColor = linear_fog(
         vec4(hsb2rgb(vec3(fract(chroma + GameTime * ChromaConfig.b * GAME_TIME_SCALE), 1.0, 1.0)) * color.rgb, color.a),
         vertexDistance, FogStart, FogEnd, FogColor

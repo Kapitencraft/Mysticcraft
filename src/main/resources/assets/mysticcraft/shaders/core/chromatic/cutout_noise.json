@@ -4,8 +4,8 @@
     "srcrgb": "srcalpha",
     "dstrgb": "1-srcalpha"
   },
-  "vertex": "mysticcraft:rendertype_chromatic_noise_cutout",
-  "fragment": "mysticcraft:rendertype_chromatic_noise_cutout",
+  "vertex": "mysticcraft:chromatic/cutout_noise",
+  "fragment": "mysticcraft:chromatic/cutout_noise",
   "attributes": [
     "Position",
     "Color",
@@ -27,6 +27,7 @@
     { "name": "FogColor", "type": "float", "count": 4, "values": [ 0.0, 0.0, 0.0, 0.0 ] },
     { "name": "FogShape", "type": "int", "count": 1, "values": [ 0 ] },
     { "name": "ChromaConfig", "type": "float", "count": 4, "values":  [ 0.0, 0.0, 0.0, 0.0 ]},
-    { "name": "GameTime", "type": "float", "count": 1, "values":  [ 0.0 ]}
+    { "name": "GameTime", "type": "float", "count": 1, "values":  [ 0.0 ]},
+    { "name": "ChunkPosition", "type": "int", "count": 3, "values": [ 0, 0, 0 ]}
   ]
 }

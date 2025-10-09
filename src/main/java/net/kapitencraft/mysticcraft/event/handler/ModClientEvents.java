@@ -54,6 +54,7 @@ public class ModClientEvents {
     @SubscribeEvent
     public static void onRegisterChunkBufferLayers(RegisterChunkBufferLayersEvent event) {
         event.register(ModRenderTypes.CHROMATIC_CUTOUT);
+        event.register(ModRenderTypes.CHROMATIC_CUTOUT_NOISE);
     }
 
 
@@ -158,6 +159,6 @@ public class ModClientEvents {
     @SubscribeEvent
     public static void onRegisterNamedRenderTypes(RegisterNamedRenderTypesEvent event) {
         event.register("chromatic_cutout", ModRenderTypes.CHROMATIC_CUTOUT, ModRenderTypes.CHROMATIC_CUTOUT_ENTITY);
+        event.register("chromatic_cutout_noise", ModRenderTypes.CHROMATIC_CUTOUT_NOISE, ModRenderTypes.CHROMATIC_CUTOUT_ENTITY_NOISE);
     }
-
 }

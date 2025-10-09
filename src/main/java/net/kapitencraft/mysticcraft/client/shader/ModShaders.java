@@ -17,13 +17,31 @@ public class ModShaders {
 
     @Nullable
     private static ShaderInstance rendertypeChromaticCutoutShader;
+    private static ShaderInstance rendertypeChromaticCutoutEntityShader;
+    private static ShaderInstance rendertypeChromaticCutoutNoiseShader;
+    private static ShaderInstance rendertypeChromaticCutoutNoiseEntityShader;
 
     public static ShaderInstance getRendertypeChromaticCutoutShader() {
         return Objects.requireNonNull(rendertypeChromaticCutoutShader, "attempted to get Rendertype Chroma before load");
     }
 
+    public static ShaderInstance getRendertypeChromaticCutoutEntityShader() {
+        return Objects.requireNonNull(rendertypeChromaticCutoutEntityShader, "attempted to get Rendertype Chroma Entity before load");
+    }
+
+    public static ShaderInstance getRendertypeChromaticCutoutNoiseShader() {
+        return Objects.requireNonNull(rendertypeChromaticCutoutNoiseShader, "attempted to get Rendertype Chroma Noise before load");
+    }
+
+    public static ShaderInstance getRendertypeChromaticCutoutNoiseEntityShader() {
+        return Objects.requireNonNull(rendertypeChromaticCutoutNoiseEntityShader, "attempted to get Rendertype Chroma Noise Entity before load");
+    }
+
     @SubscribeEvent
     public static void createShaders(RegisterShadersEvent event) throws IOException {
-        event.registerShader(new ShaderInstance(event.getResourceProvider(), MysticcraftMod.res("rendertype_chromatic_cutout"), DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP), shaderInstance -> rendertypeChromaticCutoutShader = shaderInstance);
+        event.registerShader(new ShaderInstance(event.getResourceProvider(), MysticcraftMod.res("chromatic/cutout"), DefaultVertexFormat.BLOCK), shaderInstance -> rendertypeChromaticCutoutShader = shaderInstance);
+        event.registerShader(new ShaderInstance(event.getResourceProvider(), MysticcraftMod.res("chromatic/cutout_entity"), DefaultVertexFormat.NEW_ENTITY), shaderInstance -> rendertypeChromaticCutoutEntityShader = shaderInstance);
+        event.registerShader(new ShaderInstance(event.getResourceProvider(), MysticcraftMod.res("chromatic/cutout_noise"), DefaultVertexFormat.BLOCK), shaderInstance -> rendertypeChromaticCutoutNoiseShader = shaderInstance);
+        event.registerShader(new ShaderInstance(event.getResourceProvider(), MysticcraftMod.res("chromatic/cutout_noise_entity"), DefaultVertexFormat.NEW_ENTITY), shaderInstance -> rendertypeChromaticCutoutNoiseEntityShader = shaderInstance);
     }
 }
