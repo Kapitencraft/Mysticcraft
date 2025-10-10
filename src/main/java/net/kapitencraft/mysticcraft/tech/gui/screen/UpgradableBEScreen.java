@@ -3,6 +3,7 @@ package net.kapitencraft.mysticcraft.tech.gui.screen;
 import net.kapitencraft.kap_lib.client.gui.screen.BlockEntityScreen;
 import net.kapitencraft.mysticcraft.tech.block.UpgradableBlockEntity;
 import net.kapitencraft.mysticcraft.tech.gui.menu.UpgradableBEMenu;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -12,4 +13,12 @@ public abstract class UpgradableBEScreen<BE extends UpgradableBlockEntity, M ext
     }
 
     //TODO add visuals
+
+    @Override
+    public void renderBackground(GuiGraphics pGuiGraphics) {
+        super.renderBackground(pGuiGraphics);
+        if (this.menu.doesShowUpgrades()) {
+
+        }
+    }
 }

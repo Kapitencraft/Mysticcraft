@@ -25,7 +25,7 @@ public class UpgradableBEMenu<BE extends UpgradableBlockEntity> extends BlockEnt
             this.addSlot(new SlotItemHandler(provider.getUpgrades(), i, 184 + i % 2 * 18, 14 + i / 2 * 18) {
                 @Override
                 public boolean isActive() {
-                    return provider.upgradeSlots() > slot;
+                    return provider.upgradeSlots() > slot && UpgradableBEMenu.this.showUpgrades;
                 }
 
                 @Override

@@ -24,9 +24,11 @@ out vec4 fragColor;
 void main() {
     vec4 color = texture(Sampler0, texCoord0) * vertexColor * ColorModulator;
     if (color.a < .1) discard;
-    vec2 texturePos = textureSize(Sampler0, 0) * texCoord0;
-    vec3 textureLoc = vec3(vec2(int(texturePos.x) & 15, int(texturePos.y) & 15), 0);
-    vec3 deltaPos = (vec3(floor(worldPos.x), floor(worldPos.y), floor(worldPos.z)) + (textureLoc / 16)) / 360;
+    vec3 deltaPos = worldPos;
+    deltaPos *= 16;
+    deltaPos = vec3(floor(deltaPos.x), floor(deltaPos.y), floor(deltaPos.z)); //create pixels
+    deltaPos *= .0625;
+    deltaPos /= 180;
     float chroma = chromaPos(ChromaConfig.a, deltaPos, ChromaConfig.g);
     fragColor = linear_fog(
         vec4(hsb2rgb(vec3(fract(chroma + GameTime * ChromaConfig.b * GAME_TIME_SCALE), 1.0, 1.0)) * color.rgb, color.a),
