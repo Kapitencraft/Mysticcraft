@@ -1,0 +1,20 @@
+{
+  "criteria": {
+    "has_frozen_blaze_rod": {
+      "conditions": {
+        "items": [
+          {
+            "items": "mysticcraft:frozen_blaze_rod"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_frozen_blaze_rod"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

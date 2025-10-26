@@ -1,46 +1,53 @@
 package net.kapitencraft.mysticcraft.block.entity.pedestal;
 
 import com.google.common.base.Preconditions;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import net.kapitencraft.kap_lib.helpers.CollectorHelper;
-import net.kapitencraft.kap_lib.helpers.NetworkHelper;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.kapitencraft.mysticcraft.registry.ModRecipeSerializers;
 import net.kapitencraft.mysticcraft.registry.ModRecipeTypes;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.advancements.Advancement;
-import net.minecraft.advancements.CriterionTriggerInstance;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.advancements.Criterion;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.data.recipes.RecipeCategory;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.Arrays;
-import java.util.function.Consumer;
+import java.util.List;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class AltarRecipe implements Recipe<SimpleContainer> {
-    private final Ingredient[] ingredients;
-    private final ItemStack result;
-    private final ResourceLocation id;
+public class AltarRecipe implements Recipe<AltarRecipeInput> {
+    public static final MapCodec<AltarRecipe> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
+            Ingredient.CODEC.listOf().fieldOf("ingredients").forGetter(a -> a.ingredients),
+            ItemStack.CODEC.fieldOf("result").forGetter(a -> a.result)
+    ).apply(i, AltarRecipe::new));
+    public static final StreamCodec<RegistryFriendlyByteBuf, AltarRecipe> STREAM_CODEC = StreamCodec.composite(
+            Ingredient.CONTENTS_STREAM_CODEC.apply(ByteBufCodecs.list()), a -> a.ingredients,
+            ItemStack.STREAM_CODEC, a -> a.result,
+            AltarRecipe::new
+    );
 
-    public AltarRecipe(Ingredient[] ingredients, ItemStack result, ResourceLocation id) {
+    private final List<Ingredient> ingredients;
+    private final ItemStack result;
+
+    public AltarRecipe(List<Ingredient> ingredients, ItemStack result) {
         this.ingredients = ingredients;
         this.result = result;
-        this.id = id;
     }
 
     public static Builder builder(ItemStack result, RecipeCategory category) {
@@ -48,15 +55,15 @@ public class AltarRecipe implements Recipe<SimpleContainer> {
     }
 
     @Override
-    public boolean matches(SimpleContainer pContainer, Level pLevel) {
+    public boolean matches(AltarRecipeInput input, Level pLevel) {
         for (int i = 0; i < 9; i++) {
-            if (!ingredients[i].test(pContainer.getItem(i))) return false;
+            if (!ingredients.get(i).test(input.getItem(i))) return false;
         }
         return true;
     }
 
     @Override
-    public @NotNull ItemStack assemble(SimpleContainer pContainer, RegistryAccess pRegistryAccess) {
+    public ItemStack assemble(AltarRecipeInput input, HolderLookup.Provider registries) {
         return result.copy();
     }
 
@@ -66,13 +73,8 @@ public class AltarRecipe implements Recipe<SimpleContainer> {
     }
 
     @Override
-    public ItemStack getResultItem(RegistryAccess pRegistryAccess) {
+    public ItemStack getResultItem(HolderLookup.Provider registries) {
         return result.copy();
-    }
-
-    @Override
-    public ResourceLocation getId() {
-        return id;
     }
 
     @Override
@@ -88,24 +90,13 @@ public class AltarRecipe implements Recipe<SimpleContainer> {
     public static class Serializer implements RecipeSerializer<AltarRecipe> {
 
         @Override
-        public AltarRecipe fromJson(ResourceLocation pRecipeId, JsonObject pSerializedRecipe) {
-            Ingredient[] ingredients = GsonHelper.getAsJsonArray(pSerializedRecipe, "ingredients")
-                    .asList().stream().map(Ingredient::fromJson).toArray(Ingredient[]::new);
-            ItemStack result = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(pSerializedRecipe, "result"));
-            return new AltarRecipe(ingredients, result, pRecipeId);
+        public MapCodec<AltarRecipe> codec() {
+            return CODEC;
         }
 
         @Override
-        public @Nullable AltarRecipe fromNetwork(ResourceLocation pRecipeId, FriendlyByteBuf pBuffer) {
-            Ingredient[] ingredients = NetworkHelper.readArray(pBuffer, Ingredient[]::new, Ingredient::fromNetwork);
-            ItemStack result = pBuffer.readItem();
-            return new AltarRecipe(ingredients, result, pRecipeId);
-        }
-
-        @Override
-        public void toNetwork(FriendlyByteBuf pBuffer, AltarRecipe pRecipe) {
-            NetworkHelper.writeArray(pBuffer, pRecipe.ingredients, (buf, ingredient) -> ingredient.toNetwork(buf));
-            pBuffer.writeItem(pRecipe.result);
+        public StreamCodec<RegistryFriendlyByteBuf, AltarRecipe> streamCodec() {
+            return STREAM_CODEC;
         }
     }
 
@@ -150,8 +141,8 @@ public class AltarRecipe implements Recipe<SimpleContainer> {
         }
 
         @Override
-        public Builder unlockedBy(String pCriterionName, CriterionTriggerInstance pCriterionTrigger) {
-            advancement.addCriterion(pCriterionName, pCriterionTrigger);
+        public RecipeBuilder unlockedBy(String name, Criterion<?> criterion) {
+            advancement.addCriterion(name, criterion);
             return this;
         }
 
@@ -167,43 +158,8 @@ public class AltarRecipe implements Recipe<SimpleContainer> {
         }
 
         @Override
-        public void save(Consumer<FinishedRecipe> pFinishedRecipeConsumer, ResourceLocation pRecipeId) {
-            pFinishedRecipeConsumer.accept(new Result(pRecipeId, this.ingredients, this.result, this.advancement, pRecipeId.withPrefix("recipes/" + this.category.getFolderName() + "/")));
-        }
-
-        private record Result(ResourceLocation id, Ingredient[] ingredients, ItemStack result,
-                              Advancement.Builder advancement, ResourceLocation advancementId) implements FinishedRecipe {
-
-            @Override
-            public void serializeRecipeData(JsonObject pJson) {
-                JsonArray array = Arrays.stream(ingredients).map(Ingredient::toJson).collect(CollectorHelper.toJsonArray());
-                pJson.add("ingredients", array);
-
-                JsonObject object = new JsonObject();
-                object.addProperty("item", ForgeRegistries.ITEMS.getKey(this.result.getItem()).toString());
-                if (this.result.getCount() > 1) object.addProperty("count", this.result.getCount());
-                pJson.add("result", object);
-            }
-
-            @Override
-            public ResourceLocation getId() {
-                return id;
-            }
-
-            @Override
-            public RecipeSerializer<?> getType() {
-                return ModRecipeSerializers.ALTAR.get();
-            }
-
-            @Override
-            public @NotNull JsonObject serializeAdvancement() {
-                return advancement.serializeToJson();
-            }
-
-            @Override
-            public @Nullable ResourceLocation getAdvancementId() {
-                return advancementId;
-            }
+        public void save(RecipeOutput recipeOutput, ResourceLocation id) {
+            recipeOutput.accept(id, new AltarRecipe(List.of(this.ingredients), this.result), this.advancement.build(id.withPrefix("recipes/")));
         }
     }
 }

@@ -1,5 +1,6 @@
 package net.kapitencraft.mysticcraft.item.creative;
 
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
@@ -16,7 +17,7 @@ public class ModDebugStickItem extends Item {
     }
 
     @Override
-    public int getUseDuration(@NotNull ItemStack p_41454_) {
+    public int getUseDuration(ItemStack stack, LivingEntity entity) {
         return 72;
     }
 }

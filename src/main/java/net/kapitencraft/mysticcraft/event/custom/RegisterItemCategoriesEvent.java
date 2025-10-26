@@ -3,8 +3,8 @@ package net.kapitencraft.mysticcraft.event.custom;
 import net.kapitencraft.mysticcraft.client.ItemCategory;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.eventbus.api.Event;
-import net.minecraftforge.fml.event.IModBusEvent;
+import net.neoforged.bus.api.Event;
+import net.neoforged.fml.event.IModBusEvent;
 
 import java.util.List;
 import java.util.function.Predicate;

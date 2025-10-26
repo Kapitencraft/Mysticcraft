@@ -1,0 +1,15 @@
+{
+  "type": "kap_lib:upgrade_item",
+  "category": "equipment",
+  "craft_type": "eight",
+  "material": {
+    "item": "mysticcraft:bigfoots_lasso"
+  },
+  "result": {
+    "count": 1,
+    "id": "mysticcraft:scylla"
+  },
+  "source": {
+    "item": "mysticcraft:necron_sword"
+  }
+}

@@ -2,8 +2,9 @@ package net.kapitencraft.mysticcraft.mixin.classes;
 
 import net.kapitencraft.kap_lib.helpers.MiscHelper;
 import net.kapitencraft.kap_lib.util.ManaHandler;
-import net.kapitencraft.mysticcraft.capability.CapabilityHelper;
+import net.kapitencraft.mysticcraft.capability.elytra.ElytraAttachment;
 import net.kapitencraft.mysticcraft.capability.elytra.ElytraData;
+import net.kapitencraft.mysticcraft.registry.ModDataComponentTypes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ElytraItem;
 import net.minecraft.world.item.Item;
@@ -32,8 +33,9 @@ public abstract class ElytraItemMixin extends Item {
 
     @Inject(method = "elytraFlightTick", at = @At("RETURN"), remap = false)
     private void elytraFlightTick(ItemStack stack, LivingEntity entity, int flightTicks, CallbackInfoReturnable<Boolean> cir) {
-        CapabilityHelper.exeCapability(stack, CapabilityHelper.ELYTRA, data -> {
-            int manaBoost = data.getLevelForData(ElytraData.MANA_BOOST);
+        ElytraAttachment attachment = stack.get(ModDataComponentTypes.ELYTRA);
+        if (attachment != null && attachment.data() == ElytraData.MANA_BOOST) {
+            int manaBoost = attachment.level();
             if (manaBoost > 0) {
                 if (ManaHandler.consumeMana(entity, 1.5)) {
                     entity.setDeltaMovement(getFireworkSpeedBoost(entity, manaBoost));
@@ -41,7 +43,7 @@ public abstract class ElytraItemMixin extends Item {
                         MiscHelper.sendManaBoostParticles(entity, entity.getRandom(), entity.getDeltaMovement());
                 }
             }
-        });
+        }
     }
 
     @Unique

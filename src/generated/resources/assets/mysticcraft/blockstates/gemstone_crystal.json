@@ -1,105 +1,209 @@
 {
   "variants": {
-    "facing=down,size=cluster": {
+    "facing=down,size=cluster,waterlogged=false": {
       "model": "mysticcraft:block/gemstone/crystal/cluster",
       "x": 180
     },
-    "facing=down,size=large": {
+    "facing=down,size=cluster,waterlogged=true": {
+      "model": "mysticcraft:block/gemstone/crystal/cluster",
+      "x": 180
+    },
+    "facing=down,size=large,waterlogged=false": {
       "model": "mysticcraft:block/gemstone/crystal/large",
       "x": 180
     },
-    "facing=down,size=medium": {
+    "facing=down,size=large,waterlogged=true": {
+      "model": "mysticcraft:block/gemstone/crystal/large",
+      "x": 180
+    },
+    "facing=down,size=medium,waterlogged=false": {
       "model": "mysticcraft:block/gemstone/crystal/medium",
       "x": 180
     },
-    "facing=down,size=small": {
+    "facing=down,size=medium,waterlogged=true": {
+      "model": "mysticcraft:block/gemstone/crystal/medium",
+      "x": 180
+    },
+    "facing=down,size=small,waterlogged=false": {
       "model": "mysticcraft:block/gemstone/crystal/small",
       "x": 180
     },
-    "facing=east,size=cluster": {
+    "facing=down,size=small,waterlogged=true": {
+      "model": "mysticcraft:block/gemstone/crystal/small",
+      "x": 180
+    },
+    "facing=east,size=cluster,waterlogged=false": {
       "model": "mysticcraft:block/gemstone/crystal/cluster",
       "x": 90,
       "y": 90
     },
-    "facing=east,size=large": {
+    "facing=east,size=cluster,waterlogged=true": {
+      "model": "mysticcraft:block/gemstone/crystal/cluster",
+      "x": 90,
+      "y": 90
+    },
+    "facing=east,size=large,waterlogged=false": {
       "model": "mysticcraft:block/gemstone/crystal/large",
       "x": 90,
       "y": 90
     },
-    "facing=east,size=medium": {
+    "facing=east,size=large,waterlogged=true": {
+      "model": "mysticcraft:block/gemstone/crystal/large",
+      "x": 90,
+      "y": 90
+    },
+    "facing=east,size=medium,waterlogged=false": {
       "model": "mysticcraft:block/gemstone/crystal/medium",
       "x": 90,
       "y": 90
     },
-    "facing=east,size=small": {
+    "facing=east,size=medium,waterlogged=true": {
+      "model": "mysticcraft:block/gemstone/crystal/medium",
+      "x": 90,
+      "y": 90
+    },
+    "facing=east,size=small,waterlogged=false": {
       "model": "mysticcraft:block/gemstone/crystal/small",
       "x": 90,
       "y": 90
     },
-    "facing=north,size=cluster": {
+    "facing=east,size=small,waterlogged=true": {
+      "model": "mysticcraft:block/gemstone/crystal/small",
+      "x": 90,
+      "y": 90
+    },
+    "facing=north,size=cluster,waterlogged=false": {
       "model": "mysticcraft:block/gemstone/crystal/cluster",
       "x": 90
     },
-    "facing=north,size=large": {
+    "facing=north,size=cluster,waterlogged=true": {
+      "model": "mysticcraft:block/gemstone/crystal/cluster",
+      "x": 90
+    },
+    "facing=north,size=large,waterlogged=false": {
       "model": "mysticcraft:block/gemstone/crystal/large",
       "x": 90
     },
-    "facing=north,size=medium": {
+    "facing=north,size=large,waterlogged=true": {
+      "model": "mysticcraft:block/gemstone/crystal/large",
+      "x": 90
+    },
+    "facing=north,size=medium,waterlogged=false": {
       "model": "mysticcraft:block/gemstone/crystal/medium",
       "x": 90
     },
-    "facing=north,size=small": {
+    "facing=north,size=medium,waterlogged=true": {
+      "model": "mysticcraft:block/gemstone/crystal/medium",
+      "x": 90
+    },
+    "facing=north,size=small,waterlogged=false": {
       "model": "mysticcraft:block/gemstone/crystal/small",
       "x": 90
     },
-    "facing=south,size=cluster": {
+    "facing=north,size=small,waterlogged=true": {
+      "model": "mysticcraft:block/gemstone/crystal/small",
+      "x": 90
+    },
+    "facing=south,size=cluster,waterlogged=false": {
       "model": "mysticcraft:block/gemstone/crystal/cluster",
       "x": 90,
       "y": 180
     },
-    "facing=south,size=large": {
+    "facing=south,size=cluster,waterlogged=true": {
+      "model": "mysticcraft:block/gemstone/crystal/cluster",
+      "x": 90,
+      "y": 180
+    },
+    "facing=south,size=large,waterlogged=false": {
       "model": "mysticcraft:block/gemstone/crystal/large",
       "x": 90,
       "y": 180
     },
-    "facing=south,size=medium": {
+    "facing=south,size=large,waterlogged=true": {
+      "model": "mysticcraft:block/gemstone/crystal/large",
+      "x": 90,
+      "y": 180
+    },
+    "facing=south,size=medium,waterlogged=false": {
       "model": "mysticcraft:block/gemstone/crystal/medium",
       "x": 90,
       "y": 180
     },
-    "facing=south,size=small": {
+    "facing=south,size=medium,waterlogged=true": {
+      "model": "mysticcraft:block/gemstone/crystal/medium",
+      "x": 90,
+      "y": 180
+    },
+    "facing=south,size=small,waterlogged=false": {
       "model": "mysticcraft:block/gemstone/crystal/small",
       "x": 90,
       "y": 180
     },
-    "facing=up,size=cluster": {
+    "facing=south,size=small,waterlogged=true": {
+      "model": "mysticcraft:block/gemstone/crystal/small",
+      "x": 90,
+      "y": 180
+    },
+    "facing=up,size=cluster,waterlogged=false": {
       "model": "mysticcraft:block/gemstone/crystal/cluster"
     },
-    "facing=up,size=large": {
+    "facing=up,size=cluster,waterlogged=true": {
+      "model": "mysticcraft:block/gemstone/crystal/cluster"
+    },
+    "facing=up,size=large,waterlogged=false": {
       "model": "mysticcraft:block/gemstone/crystal/large"
     },
-    "facing=up,size=medium": {
+    "facing=up,size=large,waterlogged=true": {
+      "model": "mysticcraft:block/gemstone/crystal/large"
+    },
+    "facing=up,size=medium,waterlogged=false": {
       "model": "mysticcraft:block/gemstone/crystal/medium"
     },
-    "facing=up,size=small": {
+    "facing=up,size=medium,waterlogged=true": {
+      "model": "mysticcraft:block/gemstone/crystal/medium"
+    },
+    "facing=up,size=small,waterlogged=false": {
       "model": "mysticcraft:block/gemstone/crystal/small"
     },
-    "facing=west,size=cluster": {
+    "facing=up,size=small,waterlogged=true": {
+      "model": "mysticcraft:block/gemstone/crystal/small"
+    },
+    "facing=west,size=cluster,waterlogged=false": {
       "model": "mysticcraft:block/gemstone/crystal/cluster",
       "x": 90,
       "y": 270
     },
-    "facing=west,size=large": {
+    "facing=west,size=cluster,waterlogged=true": {
+      "model": "mysticcraft:block/gemstone/crystal/cluster",
+      "x": 90,
+      "y": 270
+    },
+    "facing=west,size=large,waterlogged=false": {
       "model": "mysticcraft:block/gemstone/crystal/large",
       "x": 90,
       "y": 270
     },
-    "facing=west,size=medium": {
+    "facing=west,size=large,waterlogged=true": {
+      "model": "mysticcraft:block/gemstone/crystal/large",
+      "x": 90,
+      "y": 270
+    },
+    "facing=west,size=medium,waterlogged=false": {
       "model": "mysticcraft:block/gemstone/crystal/medium",
       "x": 90,
       "y": 270
     },
-    "facing=west,size=small": {
+    "facing=west,size=medium,waterlogged=true": {
+      "model": "mysticcraft:block/gemstone/crystal/medium",
+      "x": 90,
+      "y": 270
+    },
+    "facing=west,size=small,waterlogged=false": {
+      "model": "mysticcraft:block/gemstone/crystal/small",
+      "x": 90,
+      "y": 270
+    },
+    "facing=west,size=small,waterlogged=true": {
       "model": "mysticcraft:block/gemstone/crystal/small",
       "x": 90,
       "y": 270

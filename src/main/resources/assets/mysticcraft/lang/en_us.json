@@ -90,15 +90,13 @@
   "enchantment.mysticcraft.capacity": "Capacity",
   "enchantment.mysticcraft.capacity.desc": "increases the capacity of stashes",
   "enchantment.mysticcraft.efficient_jewelling": "Efficient Jewelling",
-  "enchantment.mysticcraft.efficient_jewelling.desc": "grants %1$s Stats from Gemstone modifications",
-  "enchantment.mysticcraft.flash": "Flash",
-  "enchantment.mysticcraft.flash.desc": "decreases lure time of fishing by at least %1$s and maximal %2$s ticks",
+  "enchantment.mysticcraft.efficient_jewelling.desc": "grants increased stats from gemstone modifiers",
   "enchantment.mysticcraft.infinite_quiver": "Infinite Quiver",
   "enchantment.mysticcraft.infinite_quiver.desc": "grant's a chance to not consume a arrow out of your quiver",
   "enchantment.mysticcraft.mana_syphon": "Mana Syphon",
-  "enchantment.mysticcraft.mana_syphon.desc": "increases your mana by %1$s of your max mana when hitting an enemy",
+  "enchantment.mysticcraft.mana_syphon.desc": "increases your mana by a fraction of your max mana when hitting an enemy",
   "enchantment.mysticcraft.ultimate_wise": "Ultimate Wise",
-  "enchantment.mysticcraft.ultimate_wise.desc": "reduces Mana Cost by %1$s",
+  "enchantment.mysticcraft.ultimate_wise.desc": "reduces Mana Cost significantly",
 
   "entity.minecraft.villager.mysticcraft.gemstone_maker": "Gemstone Maker",
   "entity.minecraft.villager.mysticcraft.guild_master": "Guild Master",
@@ -120,6 +118,7 @@
 
   "gem_type.empty": "Empty",
   "gem_type.almandine": "Almandine",
+  "gem_type.amber": "Amber",
   "gem_type.amethyst": "Amethyst",
   "gem_type.aquamarine": "Aquamarine",
   "gem_type.celestine": "Celestine",
@@ -159,9 +158,9 @@
   "item.indicator.uncommon": "UNCOMMON",
   "item.indicator.rare": "RARE",
   "item.indicator.epic": "EPIC",
-  "item.indicator.legendary": "LEGENDARY",
-  "item.indicator.mythic": "MYTHIC",
-  "item.indicator.divine": "DIVINE",
+  "item.indicator.kap_lib$legendary": "LEGENDARY",
+  "item.indicator.kap_lib$mythic": "MYTHIC",
+  "item.indicator.kap_lib$divine": "DIVINE",
 
   "item.indicator.axe": "AXE",
   "item.indicator.block": "BLOCK",
@@ -302,7 +301,6 @@
   "item.mysticcraft.warped_leggings": "Warped Leggings",
   "item.mysticcraft.wizard_hat": "Wizard Hat",
 
-  "item.requires": "requires %1$s to be used",
   "item.soulbound": "Soulbound",
   "item.unbreaking_core.desc": "makes an item unbreakable when applied in an anvil",
 
@@ -324,11 +322,6 @@
   "key.mysticcraft.previous_spell": "Previous Spell",
 
   "mana.container.info": "Mana: %1$s / %2$s",
-
-  "mysticcraft.ench_desc.not_tradeable": "Can not be traded with Villagers",
-  "mysticcraft.ench_desc.shift": "press [Shift] for enchantment descriptions",
-  "mysticcraft.ench_desc.treasure": "Treasure Enchantment; may not be obtained from Enchantment Table",
-
 
   "perks.toast.description": "§e%1$s§r for the §b%2$s§r",
   "perks.toast.title": "New Tokens awarded!",
@@ -378,6 +371,17 @@
   "set_bonus.mana_syphon": "Regenerate 10 Mana on kill",
   "set_bonus.magic_conversion": "Grants §c+1 Ability Damage§r per §25Intelligence§r you have",
 
+  "skill.combat": "Combat",
+  "skill.enchanting": "Enchanting",
+  "skill.farming": "Farming",
+  "skill.fishing": "Fishing",
+  "skill.mining": "Mining",
+
+  "skill.toast.gained_xp.title": "%1$s Xp Gained!",
+  "skill.toast.gained_xp.format": "+%1$s",
+
+  "skill.toast.level_up": "%1$s LEVEL UP!",
+
   "soulbound.toss": "You may not drop Soulbound items",
 
   "spell.cast": "Used %1$s: %2$s",
@@ -423,6 +427,17 @@
   "stat_req.items_picked_up": "%1$s %2$s picked up",
   "stat_req.entities_killed": "%1$s %2$s kills",
 
+  "target_priority.closest": "Closest",
+  "target_priority.furthest": "Furthest",
+  "target_priority.most_health": "Most Health",
+  "target_priority.most_armor": "Most Armor",
+  "target_priority.least_health": "Least Health",
+  "target_priority.least_armor": "Least Armor",
+  "target_priority.furthest_from_death": "Furthest from Death",
+  "target_priority.closest_to_death": "Closest to Death",
+  "target_priority.fastest": "Fastest",
+  "target_priority.slowest": "Slowest",
+
   "tech_wand.connect.already": "%1$s is already connected to %2$s",
   "tech_wand.connect.failed": "Matter in the way blocked the connection from being established",
   "tech_wand.connect.self": "Connectors can not connect to themselves",
@@ -448,7 +463,7 @@
   "overlay.cast_charge": "Spell Cast Charge Overlay",
   "cast_duration.display": "Cast Duration: §b%1$ss§r",
   "tech_wand.selected": "Origin: %1$s",
-  "container.spell_caster_turret": "Spell Caster Turret",
+  "container.turret.spell_caster": "Spell Caster Turret",
   "container.vulcanic_generator": "Vulcanic Generator",
   "gemstone_applicable_title": "Applicable Gemstones:",
   "spell.cast.failed.cooldown": "Spell is on Cooldown",
@@ -456,5 +471,9 @@
   "spell.select.title": "Select Spell",
   "key.mysticcraft.select_spell_cast": "Select Spell Cast",
   "spell.available.title": "Spells",
-  "mana.generator.rate": "Generation Rate: %1$s"
+  "mana.generator.rate": "Generation Rate: %1$s",
+  "container.turret.obelisk": "Obelisk",
+  "container.reforge_anvil": "Reforge Anvil",
+  "wallet.balance": "Balance: %1$s / %2$s ",
+  "skills.title": "Skills"
 }

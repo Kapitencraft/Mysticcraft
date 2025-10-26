@@ -1,5 +1,6 @@
 package net.kapitencraft.mysticcraft.tech.block;
 
+import com.mojang.serialization.MapCodec;
 import net.kapitencraft.mysticcraft.tech.block.entity.ManaPortBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -18,10 +19,17 @@ import net.minecraft.world.level.material.PushReaction;
 import org.jetbrains.annotations.Nullable;
 
 public class ManaPortBlock extends BaseEntityBlock {
+    private static final MapCodec<ManaPortBlock> CODEC = MapCodec.unit(ManaPortBlock::new);
+
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
+    }
+
     private static final EnumProperty<Direction> FACING = BlockStateProperties.FACING;
 
     public ManaPortBlock() {
-        super(Properties.copy(Blocks.AMETHYST_BLOCK).pushReaction(PushReaction.BLOCK));
+        super(Properties.ofFullCopy(Blocks.AMETHYST_BLOCK).pushReaction(PushReaction.BLOCK));
     }
 
     @Override

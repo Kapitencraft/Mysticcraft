@@ -8,24 +8,25 @@ import net.kapitencraft.kap_lib.client.particle.animation.spawners.RingSpawner;
 import net.kapitencraft.kap_lib.client.particle.animation.terminators.BonusRemovedTerminator;
 import net.kapitencraft.kap_lib.client.util.pos_target.PositionTarget;
 import net.kapitencraft.kap_lib.helpers.MiscHelper;
-import net.kapitencraft.kap_lib.io.serialization.DataPackSerializer;
+import net.kapitencraft.kap_lib.io.serialization.RegistrySerializer;
 import net.kapitencraft.kap_lib.registry.ExtraAttributes;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.client.particle.flame.FlamesForColors;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraftforge.common.ForgeMod;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.UUID;
-
 public class DominusBonus extends StackingBonus<DominusBonus> {
-    private static final UUID MODIFIER_ID = UUID.randomUUID();
-    public static final DataPackSerializer<DominusBonus> SERIALIZER = DataPackSerializer.unit(DominusBonus::new);
+    public static final DominusBonus INSTANCE = new DominusBonus();
+
+    private static final ResourceLocation MODIFIER_ID = MysticcraftMod.res("dominus");
+    public static final RegistrySerializer<DominusBonus> SERIALIZER = RegistrySerializer.unit(INSTANCE);
 
     public DominusBonus() {
         super(MiscHelper.DamageType.MELEE, 200, "dominus");
@@ -33,7 +34,7 @@ public class DominusBonus extends StackingBonus<DominusBonus> {
 
     @Override
     public void onApply(LivingEntity living) {
-        if (living.level() instanceof ServerLevel sL) {
+        if (living.level() instanceof ServerLevel) {
             ParticleAnimation.builder()
                     .spawnTime(ParticleAnimation.SpawnTime.absolute(2))
                     .spawn(RingSpawner.fullCircle(2)
@@ -44,22 +45,22 @@ public class DominusBonus extends StackingBonus<DominusBonus> {
                             .setParticle(FlamesForColors.RED)
                     ).finalizes(EmptyFinalizer.builder())
                     .terminatedWhen(new BonusRemovedTerminator.Instance(living.getId(), MysticcraftMod.res("dominus")))
-                    .sendToAllPlayers(sL);
+                    .sendToAllPlayers();
         }
     }
 
     @Override
-    public DataPackSerializer<DominusBonus> getSerializer() {
+    public RegistrySerializer<DominusBonus> getSerializer() {
         return SERIALIZER;
     }
 
     @Override
-    public @Nullable Multimap<Attribute, AttributeModifier> getModifiers(LivingEntity living) {
-        HashMultimap<Attribute, AttributeModifier> multimap = HashMultimap.create();
+    public @Nullable Multimap<Holder<Attribute>, AttributeModifier> getModifiers(LivingEntity living) {
+        HashMultimap<Holder<Attribute>, AttributeModifier> multimap = HashMultimap.create();
         int stack = getStack(living);
-        multimap.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(MODIFIER_ID, "DominusBonus", stack * .1, AttributeModifier.Operation.MULTIPLY_BASE));
-        multimap.put(ForgeMod.ENTITY_REACH.get(), new AttributeModifier(MODIFIER_ID, "DominusBonus", stack * .2, AttributeModifier.Operation.ADDITION));
-        multimap.put(ExtraAttributes.FEROCITY.get(), new AttributeModifier(MODIFIER_ID, "DominusBonus", stack * 2, AttributeModifier.Operation.ADDITION));
+        multimap.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(MODIFIER_ID, stack * .1, AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
+        multimap.put(Attributes.ENTITY_INTERACTION_RANGE, new AttributeModifier(MODIFIER_ID, stack * .2, AttributeModifier.Operation.ADD_VALUE));
+        multimap.put(ExtraAttributes.FEROCITY, new AttributeModifier(MODIFIER_ID, stack * 2, AttributeModifier.Operation.ADD_VALUE));
         return multimap;
     }
 }

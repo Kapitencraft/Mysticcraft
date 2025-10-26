@@ -66,6 +66,11 @@ public class CrimsonDeathRayProjectile extends AbstractArrow {
         return ItemStack.EMPTY;
     }
 
+    @Override
+    protected ItemStack getDefaultPickupItem() {
+        return ItemStack.EMPTY;
+    }
+
     public static CrimsonDeathRayProjectile createProjectile(Level level, LivingEntity owner, float yRot) {
         return new CrimsonDeathRayProjectile(level, owner, yRot);
     }

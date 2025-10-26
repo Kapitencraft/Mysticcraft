@@ -1,28 +1,33 @@
 package net.kapitencraft.mysticcraft.network.packets.S2C;
 
-import net.kapitencraft.kap_lib.io.network.SimplePacket;
+import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.item.tools.HammerItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-import java.util.function.Supplier;
-
-public record HammerAbortBreakPacket(BlockPos pos, Direction direction) implements SimplePacket {
+public record HammerAbortBreakPacket(BlockPos pos, Direction direction) implements CustomPacketPayload {
+    public static final Type<HammerAbortBreakPacket> TYPE = new Type<>(MysticcraftMod.res("hammer_abort_break"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, HammerAbortBreakPacket> STREAM_CODEC = StreamCodec.composite(
+            BlockPos.STREAM_CODEC, HammerAbortBreakPacket::pos,
+            Direction.STREAM_CODEC, HammerAbortBreakPacket::direction,
+            HammerAbortBreakPacket::new
+    );
 
     public HammerAbortBreakPacket(FriendlyByteBuf buf) {
         this(buf.readBlockPos(), buf.readEnum(Direction.class));
     }
 
-    @Override
-    public void toBytes(FriendlyByteBuf buf) {
-        buf.writeBlockPos(pos);
-        buf.writeEnum(direction);
+    public void handle(IPayloadContext context) {
+        context.enqueueWork(() -> HammerItem.abort(pos, direction));
     }
 
     @Override
-    public void handle(Supplier<NetworkEvent.Context> sup) {
-        sup.get().enqueueWork(() -> HammerItem.abort(pos, direction));
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }

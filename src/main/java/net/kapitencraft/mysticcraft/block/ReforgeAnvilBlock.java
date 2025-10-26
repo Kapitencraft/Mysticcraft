@@ -3,7 +3,6 @@ package net.kapitencraft.mysticcraft.block;
 import net.kapitencraft.mysticcraft.gui.reforging_anvil.ReforgeAnvilMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleMenuProvider;
@@ -14,22 +13,21 @@ import net.minecraft.world.level.block.AnvilBlock;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class ReforgeAnvilBlock extends AnvilBlock {
     private static final Component CONTAINER_NAME = Component.translatable("container.reforge_anvil");
 
     public ReforgeAnvilBlock() {
-        super(Properties.copy(Blocks.ANVIL));
+        super(Properties.ofFullCopy(Blocks.ANVIL));
     }
 
     @Override
-    public @NotNull InteractionResult use(@NotNull BlockState pState, Level pLevel, @NotNull BlockPos pPos, @NotNull Player pPlayer, @NotNull InteractionHand pHand, @NotNull BlockHitResult pHit) {
-        if (pLevel.isClientSide) {
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+        if (level.isClientSide) {
             return InteractionResult.SUCCESS;
         } else {
-            pPlayer.openMenu(pState.getMenuProvider(pLevel, pPos));
+            player.openMenu(state.getMenuProvider(level, pos));
             return InteractionResult.CONSUME;
         }
     }

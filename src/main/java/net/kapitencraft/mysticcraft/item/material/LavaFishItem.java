@@ -10,7 +10,7 @@ import net.minecraft.world.item.Item;
 public class LavaFishItem extends Item {
     public static final TabGroup LAVA_FISH_GROUP = TabGroup.builder().tab(ModCreativeModTabs.MATERIALS).tab(CreativeModeTabs.FOOD_AND_DRINKS).build();
     public LavaFishItem(int nutrition, float saturationModifier, MobEffectInstance instance) {
-        super(new Properties().fireResistant().food(new FoodProperties.Builder().nutrition(nutrition).saturationMod(saturationModifier)
+        super(new Properties().fireResistant().food(new FoodProperties.Builder().nutrition(nutrition).saturationModifier(saturationModifier)
                 .effect(()-> instance, 1).build()));
     }
 }

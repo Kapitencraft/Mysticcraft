@@ -13,6 +13,6 @@ public class CrimsonDeathRayRenderer extends EntityRenderer<CrimsonDeathRayProje
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull CrimsonDeathRayProjectile p_114482_) {
-        return new ResourceLocation("minecraft", "textures/entity/projectiles/arrow.png");
+        return ResourceLocation.withDefaultNamespace("textures/entity/projectiles/arrow.png");
     }
 }

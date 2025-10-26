@@ -3,14 +3,16 @@ package net.kapitencraft.mysticcraft.entity;
 import net.kapitencraft.kap_lib.entity.fishing.AbstractFishingHook;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.registry.ModEntityTypes;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.loot.LootTable;
 
 public class LavaFishingHook extends AbstractFishingHook {
-    private static final ResourceLocation LAVA_FISHING_LOOT = MysticcraftMod.res("gameplay/lava_fishing");
+    private static final ResourceKey<LootTable> LAVA_FISHING_LOOT = ResourceKey.create(Registries.LOOT_TABLE, MysticcraftMod.res("gameplay/lava_fishing"));
 
     protected LavaFishingHook(Player player, Level level, int luck, int lureSpeed) {
         super(ModEntityTypes.LAVA_FISHING_HOOK.get(), player, level, luck, lureSpeed, FluidTags.LAVA);
@@ -25,7 +27,7 @@ public class LavaFishingHook extends AbstractFishingHook {
     }
 
     @Override
-    public ResourceLocation lootTableId() {
+    public ResourceKey<LootTable> lootTableId() {
         return LAVA_FISHING_LOOT;
     }
 }

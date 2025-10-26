@@ -1,37 +1,25 @@
 package net.kapitencraft.mysticcraft.network.packets.C2S;
 
-import net.kapitencraft.kap_lib.io.network.SimplePacket;
-import net.kapitencraft.mysticcraft.spell.capability.PlayerSpells;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.NetworkEvent;
+import io.netty.buffer.ByteBuf;
+import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.registry.ModAttachmentTypes;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-import java.util.function.Supplier;
+public record SelectSpellSlotPacket(int slot) implements CustomPacketPayload {
+    public static final Type<SelectSpellSlotPacket> TYPE = new Type<>(MysticcraftMod.res("select_spell_slot"));
+    public static final StreamCodec<ByteBuf, SelectSpellSlotPacket> STREAM_CODEC = ByteBufCodecs.INT.map(SelectSpellSlotPacket::new, SelectSpellSlotPacket::slot);
 
-public class SelectSpellSlotPacket implements SimplePacket {
-    private final int slot;
-
-    public SelectSpellSlotPacket(int slot) {
-        this.slot = slot;
-    }
-
-    public SelectSpellSlotPacket(FriendlyByteBuf buf) {
-        this(buf.readShort());
-    }
-
-    @Override
-    public void toBytes(FriendlyByteBuf buf) {
-        buf.writeShort(this.slot);
-    }
-
-    @SuppressWarnings("DataFlowIssue")
-    @Override
-    public void handle(Supplier<NetworkEvent.Context> sup) {
-        NetworkEvent.Context context = sup.get();
+    public void handle(IPayloadContext context) {
         context.enqueueWork(() -> {
-            ServerPlayer sender = context.getSender();
-            PlayerSpells spells = PlayerSpells.get(sender);
-            spells.setSelectedSlot(slot);
+            context.player().setData(ModAttachmentTypes.SELECTED_SPELL_SLOT, slot);
         });
+    }
+
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }

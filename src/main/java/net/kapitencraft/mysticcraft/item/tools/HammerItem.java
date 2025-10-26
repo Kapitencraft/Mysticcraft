@@ -11,8 +11,8 @@ import net.minecraft.world.item.PickaxeItem;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.ToolAction;
-import net.minecraftforge.common.ToolActions;
+import net.neoforged.neoforge.common.ItemAbilities;
+import net.neoforged.neoforge.common.ItemAbility;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 public class HammerItem extends PickaxeItem {
     public static final TabGroup HAMMER_GROUP = TabGroup.create(ModCreativeModTabs.MATERIALS);
     public HammerItem(Properties properties, Tier tier, int pAttackDamageModifier) {
-        super(tier, pAttackDamageModifier, -3.2f, properties);
+        super(tier, properties.attributes(createAttributes(tier, pAttackDamageModifier, -3.2f)));
     }
 
     @Override
@@ -32,20 +32,20 @@ public class HammerItem extends PickaxeItem {
     }
 
     @Override
-    public ItemStack getCraftingRemainingItem(ItemStack itemStack) {
+    public @NotNull ItemStack getCraftingRemainingItem(ItemStack itemStack) {
         ItemStack old = itemStack.copy();
         old.setDamageValue(old.getDamageValue()+1);
         return old;
     }
 
     @Override
-    public boolean canPerformAction(@NotNull ItemStack stack, @NotNull ToolAction toolAction) {
+    public boolean canPerformAction(@NotNull ItemStack stack, @NotNull ItemAbility toolAction) {
         return DEFAULT_HAMMER_ACTIONS.contains(toolAction);
     }
 
-    private static final Set<ToolAction> DEFAULT_HAMMER_ACTIONS = of(ToolActions.PICKAXE_DIG, ToolActions.SWORD_SWEEP);
+    private static final Set<ItemAbility> DEFAULT_HAMMER_ACTIONS = of(ItemAbilities.PICKAXE_DIG, ItemAbilities.SWORD_SWEEP);
 
-    private static Set<ToolAction> of(ToolAction... actions) {
+    private static Set<ItemAbility> of(ItemAbility... actions) {
         return Stream.of(actions).collect(Collectors.toCollection(Sets::newIdentityHashSet));
     }
 

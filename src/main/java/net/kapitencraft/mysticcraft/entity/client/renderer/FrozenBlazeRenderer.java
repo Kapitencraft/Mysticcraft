@@ -1,5 +1,6 @@
 package net.kapitencraft.mysticcraft.entity.client.renderer;
 
+import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.entity.FrozenBlazeEntity;
 import net.minecraft.client.model.BlazeModel;
 import net.minecraft.client.model.geom.ModelLayers;
@@ -16,7 +17,7 @@ public class FrozenBlazeRenderer extends MobRenderer<FrozenBlazeEntity, BlazeMod
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull FrozenBlazeEntity p_114482_) {
-        return new ResourceLocation("mysticcraft:textures/entity/frozen_blaze.png");
+        return MysticcraftMod.res("textures/entity/frozen_blaze.png");
     }
 
     @Override

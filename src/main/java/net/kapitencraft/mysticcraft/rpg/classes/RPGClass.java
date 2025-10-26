@@ -1,25 +1,42 @@
 package net.kapitencraft.mysticcraft.rpg.classes;
 
-import com.google.gson.JsonObject;
-import net.kapitencraft.mysticcraft.rpg.perks.PerkTree;
-import net.kapitencraft.mysticcraft.rpg.perks.ServerPerksManager;
-import net.minecraft.server.level.ServerPlayer;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.kapitencraft.mysticcraft.rpg.traits.Traits;
+
+import java.util.EnumMap;
+import java.util.Map;
 
 public class RPGClass {
+    private final EnumMap<Traits.Type, Integer> traitEntries;
 
-    private final PerkTree tree;
+    public static final Codec<RPGClass> DIRECT_CODEC = RecordCodecBuilder.create(i -> i.group(
+            Codec.unboundedMap(Traits.Type.CODEC, Codec.INT).fieldOf("traits").forGetter(c -> c.traitEntries)
+    ).apply(i, RPGClass::new));
 
-    public RPGClass(PerkTree tree) {
-        this.tree = tree;
+    private RPGClass() {
+        this.traitEntries = new EnumMap<>(Traits.Type.class);
     }
 
-    public JsonObject toJson() {
-        JsonObject object = new JsonObject();
-        object.addProperty("tree", this.tree.id().toString());
-        return object;
+    private RPGClass(Map<Traits.Type, Integer> entries) {
+        this();
+        this.traitEntries.putAll(entries);
     }
 
-    public void select(ServerPlayer player) {
-        ServerPerksManager.getOrCreateInstance().getPerks(player).unlockTree(this.tree);
+    public static RPGClass.Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        private final Map<Traits.Type, Integer> entries = new EnumMap<>(Traits.Type.class);
+
+        public Builder addTrait(Traits.Type type, int amount) {
+            this.entries.put(type, amount);
+            return this;
+        }
+
+        public RPGClass build() {
+            return new RPGClass(entries);
+        }
     }
 }

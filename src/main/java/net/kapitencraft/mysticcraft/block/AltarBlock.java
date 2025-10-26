@@ -6,7 +6,7 @@ import net.kapitencraft.mysticcraft.registry.ModBlockEntities;
 import net.kapitencraft.mysticcraft.registry.ModBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -16,29 +16,27 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class AltarBlock extends PedestalBlock {
 
     @Override
-    public @NotNull InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-        ItemStack stack = pPlayer.getItemInHand(pHand);
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (stack.is(ModBlocks.PEDESTAL.getItem())) {
-            AltarBlockEntity blockEntity = ((AltarBlockEntity) pLevel.getBlockEntity(pPos));
+            AltarBlockEntity blockEntity = ((AltarBlockEntity) level.getBlockEntity(pos));
             for (BlockPos pedestalPosition : blockEntity.getPedestalPositions()) {
-                BlockState state = pLevel.getBlockState(pedestalPosition);
-                if (!state.is(ModBlocks.PEDESTAL.get()) && pLevel.getBlockState(pedestalPosition).canBeReplaced()) {
-                    pLevel.setBlockAndUpdate(pedestalPosition, ModBlocks.PEDESTAL.get().defaultBlockState());
-                    if (!InventoryHelper.isCreativeMode(pPlayer)) {
+                BlockState pedestalState = level.getBlockState(pedestalPosition);
+                if (!pedestalState.is(ModBlocks.PEDESTAL.get()) && level.getBlockState(pedestalPosition).canBeReplaced()) {
+                    level.setBlockAndUpdate(pedestalPosition, ModBlocks.PEDESTAL.get().defaultBlockState());
+                    if (!InventoryHelper.isCreativeMode(player)) {
                         stack.shrink(1);
                     }
                     break;
                 }
             }
-            return InteractionResult.sidedSuccess(pLevel.isClientSide);
+            return ItemInteractionResult.sidedSuccess(level.isClientSide);
         }
-        return super.use(pState, pLevel, pPos, pPlayer, pHand, pHit);
+        return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
     }
 
     @Override

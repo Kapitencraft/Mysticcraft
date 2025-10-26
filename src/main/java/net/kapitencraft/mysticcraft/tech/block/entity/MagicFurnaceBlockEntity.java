@@ -6,6 +6,7 @@ import net.kapitencraft.mysticcraft.registry.ModItems;
 import net.kapitencraft.mysticcraft.tech.block.UpgradableBlockEntity;
 import net.kapitencraft.mysticcraft.tech.gui.menu.MagicFurnaceMenu;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -14,16 +15,17 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.AbstractCookingRecipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
+import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.items.ItemStackHandler;
+import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,7 +35,7 @@ public class MagicFurnaceBlockEntity extends UpgradableBlockEntity implements IM
     private final ItemHandler items = new ItemHandler();
 
     private int mana, cookTime;
-    private AbstractCookingRecipe recipe;
+    private RecipeHolder<SmeltingRecipe> recipe;
 
     public MagicFurnaceBlockEntity(BlockPos pPos, BlockState pBlockState) {
         super(ModBlockEntities.MAGIC_FURNACE.get(), pPos, pBlockState);
@@ -41,20 +43,21 @@ public class MagicFurnaceBlockEntity extends UpgradableBlockEntity implements IM
 
     //region persistence
 
+
     @Override
-    protected void saveAdditional(@NotNull CompoundTag pTag) {
-        super.saveAdditional(pTag);
-        pTag.putInt("mana", this.mana);
-        pTag.putInt("cookTime", this.cookTime);
-        pTag.put("inventory", this.items.serializeNBT());
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+        tag.putInt("mana", this.mana);
+        tag.putInt("cookTime", this.cookTime);
+        tag.put("inventory", this.items.serializeNBT(registries));
     }
 
     @Override
-    public void load(@NotNull CompoundTag pTag) {
-        super.load(pTag);
-        this.mana = pTag.getInt("mana");
-        this.cookTime = pTag.getInt("cookTime");
-        this.items.deserializeNBT(pTag.getCompound("inventory"));
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        this.mana = tag.getInt("mana");
+        this.cookTime = tag.getInt("cookTime");
+        this.items.deserializeNBT(registries, tag.getCompound("inventory"));
         this.updateRecipe();
     }
 
@@ -110,8 +113,8 @@ public class MagicFurnaceBlockEntity extends UpgradableBlockEntity implements IM
     public static void tick(Level level, BlockPos pos, BlockState blockState, MagicFurnaceBlockEntity blockEntity) {
         if (blockEntity.canInsertIntoOutput(level) && blockEntity.mana > 10) {
             blockEntity.mana-=10;
-            if ((blockEntity.cookTime += (1 + blockEntity.speed)) > blockEntity.recipe.getCookingTime()) {
-                ItemStack stack = blockEntity.recipe.getResultItem(level.registryAccess());
+            if ((blockEntity.cookTime += (1 + blockEntity.speed)) > blockEntity.recipe.value().getCookingTime()) {
+                ItemStack stack = blockEntity.recipe.value().getResultItem(level.registryAccess());
                 blockEntity.items.insertItem(1, stack.copyWithCount(stack.getCount() * (1 + blockEntity.parallel)), false);
                 blockEntity.items.extractItem(0, 1 + blockEntity.parallel, false);
                 blockEntity.cookTime = 0;
@@ -123,7 +126,7 @@ public class MagicFurnaceBlockEntity extends UpgradableBlockEntity implements IM
 
     private boolean canInsertIntoOutput(Level level) {
         if (this.recipe != null) {
-            ItemStack result = this.recipe.getResultItem(level.registryAccess());
+            ItemStack result = this.recipe.value().getResultItem(level.registryAccess());
             ItemStack output = this.items.getStackInSlot(1);
             return output.isEmpty() || (output.is(result.getItem()) && output.getCount() + result.getCount() <= this.items.getSlotLimit(1));
         }
@@ -135,7 +138,7 @@ public class MagicFurnaceBlockEntity extends UpgradableBlockEntity implements IM
     }
 
     public int getBurnProgress() {
-        return this.recipe == null ? 0 : 24 * cookTime / recipe.getCookingTime();
+        return this.recipe == null ? 0 : 24 * cookTime / recipe.value().getCookingTime();
     }
 
     public void drops() {
@@ -188,16 +191,16 @@ public class MagicFurnaceBlockEntity extends UpgradableBlockEntity implements IM
         if (level != null) {
             ItemStack stack = items.getStackInSlot(0);
             MagicFurnaceBlockEntity.this.recipe = level.getRecipeManager()
-                    .getRecipeFor(RecipeType.SMELTING, new SimpleContainer(stack), level).orElse(null);
+                    .getRecipeFor(RecipeType.SMELTING, new SingleRecipeInput(stack), level).orElse(null);
         }
     }
 
     @Override
-    public @NotNull CompoundTag getUpdateTag() {
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
         CompoundTag tag = new CompoundTag();
         tag.putInt("mana", this.mana);
         tag.putInt("cookTime", this.cookTime);
-        tag.put("inventory", this.items.serializeNBT());
+        tag.put("inventory", this.items.serializeNBT(registries));
         return tag;
     }
 

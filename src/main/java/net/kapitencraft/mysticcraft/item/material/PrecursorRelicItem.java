@@ -3,6 +3,7 @@ package net.kapitencraft.mysticcraft.item.material;
 import net.kapitencraft.kap_lib.helpers.MathHelper;
 import net.kapitencraft.kap_lib.helpers.MiscHelper;
 import net.kapitencraft.kap_lib.item.creative_tab.TabGroup;
+import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.registry.ModCreativeModTabs;
 import net.kapitencraft.mysticcraft.registry.ModItems;
 import net.kapitencraft.mysticcraft.registry.ModStatTypes;
@@ -16,23 +17,20 @@ import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
-import net.minecraftforge.event.entity.EntityJoinLevelEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
+import net.neoforged.neoforge.registries.DeferredItem;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-@Mod.EventBusSubscriber
+@EventBusSubscriber
 public class PrecursorRelicItem extends Item {
     public static final TabGroup PRECURSOR_GROUP = TabGroup.create(ModCreativeModTabs.MATERIALS);
-    private static final UUID DAMAGE_BOOST = UUID.fromString("2e00584a-53e6-4ddf-926f-e13a4c229bdb");
-    private static final UUID HP_BOOST = UUID.fromString("e8132f3b-d111-41ae-962c-ebd3385aafdf");
 
     private final String translationKey;
 
@@ -46,7 +44,7 @@ public class PrecursorRelicItem extends Item {
     }
 
 
-    public static HashMap<BossType, RegistryObject<PrecursorRelicItem>> makeRegistry() {
+    public static HashMap<BossType, DeferredItem<PrecursorRelicItem>> makeRegistry() {
         return ModItems.createRegistry(PrecursorRelicItem::new, BossType::getItemName, List.of(BossType.values()), PRECURSOR_GROUP);
     }
 
@@ -70,17 +68,17 @@ public class PrecursorRelicItem extends Item {
             AttributeInstance attackDamage = boss.getAttribute(Attributes.ATTACK_DAMAGE);
             AttributeInstance hp = boss.getAttribute(Attributes.MAX_HEALTH);
             if (attackDamage != null) {
-                attackDamage.addPermanentModifier(new AttributeModifier(DAMAGE_BOOST, "Necron's Damage Boost", 1.8, AttributeModifier.Operation.MULTIPLY_TOTAL));
+                attackDamage.addPermanentModifier(new AttributeModifier(MysticcraftMod.res("necron_attack_damage"), 1.8, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
             }
             if (hp != null) {
-                hp.addPermanentModifier(new AttributeModifier(HP_BOOST, "Necron's HP Boost", 0.5, AttributeModifier.Operation.MULTIPLY_TOTAL));
+                hp.addPermanentModifier(new AttributeModifier(MysticcraftMod.res("necron_hp"), 0.5, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
             }
             boss.setHealth(boss.getMaxHealth());
         }),
         GOLDOR(ModStatTypes.GOLDORS_KILLED, "jolly_pink_rock", "Goldor", boss -> {
             AttributeInstance hp = boss.getAttribute(Attributes.MAX_HEALTH);
             if (hp != null) {
-                hp.addPermanentModifier(new AttributeModifier(HP_BOOST, "Goldor's HP Boost", 2, AttributeModifier.Operation.MULTIPLY_TOTAL));
+                hp.addPermanentModifier(new AttributeModifier(MysticcraftMod.res("goldor_hp"), 2, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
             }
             boss.setHealth(boss.getMaxHealth());
         }),

@@ -17,13 +17,10 @@
     "ExplosionMixin",
     "FireworkRocketEntityMixin",
     "IncreaseFeatureGenRangeMixin",
-    "InventoryMixin",
     "ItemMixin",
-    "ItemStackMixin",
     "LivingEntityMixin",
     "MerchantMenuMixin",
     "PlayerMixin",
-    "RandomChanceConditionMixin",
     "ServerPlaceRecipeMixin",
     "StructureTemplateMixin",
     "WitherSkullMixin"

@@ -1,0 +1,23 @@
+{
+  "values": {
+    "minecraft:blackstone": 40,
+    "minecraft:blaze_rod": 50,
+    "minecraft:bone": 20,
+    "minecraft:bow": 200,
+    "minecraft:crimson_fungus": 10,
+    "minecraft:enchanted_book": 200,
+    "minecraft:glowstone": 50,
+    "minecraft:gold_ingot": 50,
+    "minecraft:golden_axe": 20,
+    "minecraft:magma_cream": 40,
+    "minecraft:netherite_scrap": 400,
+    "minecraft:potion": 20,
+    "minecraft:quartz": 50,
+    "minecraft:soul_sand": 20,
+    "minecraft:string": 40,
+    "minecraft:warped_fungus": 10,
+    "minecraft:warped_fungus_on_a_stick": 20,
+    "mysticcraft:blazing_salmon": 50,
+    "mysticcraft:magma_cod": 75
+  }
+}

@@ -11,7 +11,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,14 +33,13 @@ public class GemstoneItem extends Item implements IGemstoneItem, ExtendedItem {
         );
     }
 
-
     @Override
-    public void appendHoverTextWithPlayer(@NotNull ItemStack itemStack, @Nullable Level level, @NotNull List<Component> list, @NotNull TooltipFlag flag, Player player) {
+    public void appendHoverTextWithPlayer(@NotNull ItemStack itemStack, @Nullable TooltipContext context, @NotNull List<Component> list, @NotNull TooltipFlag flag, @Nullable Player player) {
         list.add(Component.translatable("gemstone_item.translation", makeAttributeName(itemStack)).withStyle(ChatFormatting.GREEN));
     }
 
     private Component makeAttributeName(ItemStack stack) {
-        return Component.translatable(IGemstoneItem.getGemstone(stack).getModifiedAttribute().get().getDescriptionId());
+        return Component.translatable(IGemstoneItem.getGemstone(stack).getModifiedAttribute().value().getDescriptionId());
     }
 
     public static ItemStack of(GemstoneSlot slot) {

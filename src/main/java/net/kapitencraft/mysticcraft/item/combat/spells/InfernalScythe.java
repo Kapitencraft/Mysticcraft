@@ -1,16 +1,20 @@
 package net.kapitencraft.mysticcraft.item.combat.spells;
 
+import net.kapitencraft.kap_lib.helpers.MiscHelper;
 import net.kapitencraft.kap_lib.util.ExtraRarities;
-import net.kapitencraft.mysticcraft.capability.spell.SpellCapabilityProvider;
+import net.kapitencraft.mysticcraft.capability.spell.ItemSpells;
+import net.kapitencraft.mysticcraft.registry.ModDataComponentTypes;
 import net.kapitencraft.mysticcraft.registry.Spells;
+import net.kapitencraft.mysticcraft.spell.SpellSlot;
+
+import java.util.List;
 
 public class InfernalScythe extends NormalSpellItem implements IDamageSpellItem, IFireScytheItem {
     public InfernalScythe() {
-        super(new Properties().rarity(ExtraRarities.LEGENDARY), 350, 69);
-    }
-
-    @Override
-    public SpellCapabilityProvider createSpells() {
-        return SpellCapabilityProvider.with(Spells.FIRE_BOLT, 15);
+        super(MiscHelper.rarity(ExtraRarities.LEGENDARY).component(ModDataComponentTypes.ITEM_SPELLS, new ItemSpells(
+                List.of(
+                        new SpellSlot(Spells.FIRE_BOLT, 15)
+                )
+        )).attributes(createAttributes(350, 69)));
     }
 }

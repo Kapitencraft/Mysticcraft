@@ -4,12 +4,12 @@ import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.gui.screen.SimpleScreen;
 import net.kapitencraft.mysticcraft.gui.screen.tooltip.ReforgeItemTooltip;
 import net.kapitencraft.mysticcraft.gui.screen.tooltip.UpgradeItemTooltip;
-import net.kapitencraft.mysticcraft.network.ModMessages;
 import net.kapitencraft.mysticcraft.network.packets.C2S.UpgradeItemPacket;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 
 public class ReforgeAnvilScreen extends SimpleScreen<ReforgeAnvilMenu> {
@@ -42,6 +42,6 @@ public class ReforgeAnvilScreen extends SimpleScreen<ReforgeAnvilMenu> {
     }
     private void upgradeUse(Button ignored) {
         this.menu.upgrade();
-        ModMessages.sendToServer(new UpgradeItemPacket());
+        PacketDistributor.sendToServer(new UpgradeItemPacket());
     }
 }

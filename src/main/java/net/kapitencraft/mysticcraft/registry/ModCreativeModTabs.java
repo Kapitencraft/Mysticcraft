@@ -5,30 +5,27 @@ import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneType;
 import net.kapitencraft.mysticcraft.capability.gemstone.IGemstoneItem;
 import net.kapitencraft.mysticcraft.spell.Elements;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
 public interface ModCreativeModTabs {
     DeferredRegister<CreativeModeTab> REGISTRY = MysticcraftMod.registry(Registries.CREATIVE_MODE_TAB);
 
-    RegistryObject<CreativeModeTab> SPELLS = REGISTRY.register("spell", () -> CreativeModeTab.builder().title(Component.translatable("itemGroup.mysticcraft.spell"))
+    Holder<CreativeModeTab> SPELLS = REGISTRY.register("spell", () -> CreativeModeTab.builder().title(Component.translatable("itemGroup.mysticcraft.spell"))
             .icon(() -> new ItemStack(ModItems.SCYLLA.get()))
             .displayItems((displayParameters, output) -> {
                 output.acceptAll(Spells.createForCreativeModeTab());
             }).build());
 
-    RegistryObject<CreativeModeTab> GEMSTONES = REGISTRY.register("gemstone", () -> CreativeModeTab.builder().title(Component.translatable("itemGroup.mysticcraft.gemstone"))
+    Holder<CreativeModeTab> GEMSTONES = REGISTRY.register("gemstone", () -> CreativeModeTab.builder().title(Component.translatable("itemGroup.mysticcraft.gemstone"))
             .icon(() -> IGemstoneItem.createData(GemstoneType.Rarity.PERFECT, GemstoneType.JASPER, ModItems.GEMSTONE))
             .displayItems((displayParameters, output) -> {
                 output.acceptAll(GemstoneType.allItems().actualValues());
@@ -37,33 +34,28 @@ public interface ModCreativeModTabs {
                 output.acceptAll(GemstoneType.allSeeds().actualValues());
             }).build());
 
-    RegistryObject<CreativeModeTab> MATERIALS = REGISTRY.register("materials", () -> CreativeModeTab.builder().title(Component.translatable("itemGroup.mysticcraft.materials"))
+    Holder<CreativeModeTab> MATERIALS = REGISTRY.register("materials", () -> CreativeModeTab.builder().title(Component.translatable("itemGroup.mysticcraft.materials"))
             .icon(()-> new ItemStack(ModItems.ELEMENTAL_SHARDS.get(Elements.FIRE).get()))
             .displayItems((displayParameters, output) -> {
                 output.accept(MiscHelper.of(() -> {
                     ItemStack stack = new ItemStack(Items.PRISMARINE_SHARD);
-                    ListTag tags = EnchantedBookItem.getEnchantments(stack);
-                    stack.setHoverName(Component.literal("Enchantments"));
-                    for (Enchantment enchantment : ForgeRegistries.ENCHANTMENTS) {
-                        ResourceLocation location = EnchantmentHelper.getEnchantmentId(enchantment);
-                        tags.add(EnchantmentHelper.storeEnchantment(location, enchantment.getMaxLevel()));
-                    }
-                    stack.hideTooltipPart(ItemStack.TooltipPart.MODIFIERS);
-                    stack.addTagElement("Enchantments", tags);
+                    HolderLookup.RegistryLookup<Enchantment> lookup = displayParameters.holders().lookupOrThrow(Registries.ENCHANTMENT);
+                    lookup.listElements().forEach(r -> stack.enchant(r, r.value().getMaxLevel()));
+                    stack.set(DataComponents.ITEM_NAME, Component.literal("Enchantments"));
                     return stack;
                 }));
             }).build());
 
-    RegistryObject<CreativeModeTab> WEAPONS_AND_TOOLS = REGISTRY.register("weapons_and_tools", () -> CreativeModeTab.builder().title(Component.translatable("itemGroup.mysticcraft.weapons_and_tools"))
+    Holder<CreativeModeTab> WEAPONS_AND_TOOLS = REGISTRY.register("weapons_and_tools", () -> CreativeModeTab.builder().title(Component.translatable("itemGroup.mysticcraft.weapons_and_tools"))
             .icon(()-> new ItemStack(ModItems.MANA_STEEL_SWORD.get()))
             .build()
     );
 
-    RegistryObject<CreativeModeTab> DECORATION = REGISTRY.register("deco", () -> CreativeModeTab.builder().title(Component.translatable("itemGroup.mysticcraft.deco"))
+    Holder<CreativeModeTab> DECORATION = REGISTRY.register("deco", () -> CreativeModeTab.builder().title(Component.translatable("itemGroup.mysticcraft.deco"))
             .icon(()-> new ItemStack(ModBlocks.GOLDEN_WALL.getItem()))
             .build()
     );
-    RegistryObject<CreativeModeTab> TECHNOLOGY = REGISTRY.register("technology", () -> CreativeModeTab.builder()
+    Holder<CreativeModeTab> TECHNOLOGY = REGISTRY.register("technology", () -> CreativeModeTab.builder()
             .title(Component.translatable("itemGroup.mysticcraft.tech"))
             .icon(() -> new ItemStack(ModBlocks.MANA_RELAY.getItem()))
             .build()

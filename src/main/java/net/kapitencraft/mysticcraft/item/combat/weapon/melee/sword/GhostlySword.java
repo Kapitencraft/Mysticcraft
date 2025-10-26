@@ -6,16 +6,6 @@ import net.minecraft.world.item.Rarity;
 
 public class GhostlySword extends ModSwordItem {
     public GhostlySword() {
-        super(ModTiers.GHOSTLY_TIER, 4, DEFAULT_ATTACK_SPEED, MiscHelper.rarity(Rarity.EPIC));
-    }
-
-    @Override
-    public double getStrenght() {
-        return 80;
-    }
-
-    @Override
-    public double getCritDamage() {
-        return 0;
+        super(ModTiers.GHOSTLY_TIER, MiscHelper.rarity(Rarity.EPIC).attributes(createAttributes(ModTiers.GHOSTLY_TIER, 4, DEFAULT_ATTACK_SPEED, 80, 0)));
     }
 }

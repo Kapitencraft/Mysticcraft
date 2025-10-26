@@ -4,10 +4,11 @@ import net.kapitencraft.kap_lib.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.block.ModBlockStateProperties;
 import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneType;
 import net.kapitencraft.mysticcraft.capability.gemstone.IGemstoneItem;
+import net.kapitencraft.mysticcraft.capability.gemstone.ItemGemstoneData;
 import net.kapitencraft.mysticcraft.registry.ModBlocks;
+import net.kapitencraft.mysticcraft.registry.ModDataComponentTypes;
 import net.kapitencraft.mysticcraft.worldgen.gemstone.GemstoneGrowth;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
@@ -18,7 +19,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -31,10 +32,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Supplier;
 
 public class GemstoneSeedBlock extends Block {
-    //TODO fix renderer clipping through blocks
 
     public GemstoneSeedBlock() {
-        super(Properties.copy(Blocks.DIAMOND_BLOCK));
+        super(Properties.ofFullCopy(Blocks.DIAMOND_BLOCK));
         this.registerDefaultState(this.getStateDefinition().any().setValue(ModBlockStateProperties.GEMSTONE_TYPE, GemstoneType.EMPTY));
     }
 
@@ -57,10 +57,10 @@ public class GemstoneSeedBlock extends Block {
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext pContext) {
         ItemStack clickItem = pContext.getItemInHand();
-        CompoundTag tag = clickItem.getTagElement("GemstoneData");
-        if (!clickItem.is(ModBlocks.GEMSTONE_SEED.getItem()) || tag == null) throw new IllegalStateException("Do not overwrite Item");
-        MaterialType type = MaterialType.CODEC.byName(tag.getString("Material"), MaterialType.STONE);
-        GemstoneType gemType = GemstoneType.CODEC.byName(tag.getString("GemId"), GemstoneType.RUBY);
+        ItemGemstoneData data = clickItem.get(ModDataComponentTypes.ITEM_GEMSTONE_DATA);
+        MaterialType type = clickItem.get(ModDataComponentTypes.GEMSTONE_SEED_MATERIAL);
+        if (!clickItem.is(ModBlocks.GEMSTONE_SEED.getItem()) || data == null || type == null) throw new IllegalStateException("Do not overwrite Item");
+        GemstoneType gemType = data.type();
         return defaultBlockState()
                 .setValue(BlockStateProperties.FACING, pContext.getClickedFace())
                 .setValue(ModBlockStateProperties.GEMSTONE_TYPE, gemType)
@@ -68,7 +68,7 @@ public class GemstoneSeedBlock extends Block {
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter level, BlockPos pos, Player player) {
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
         return Item.createData(state.getValue(ModBlockStateProperties.GEMSTONE_TYPE), state.getValue(ModBlockStateProperties.STONE_TYPE));
     }
 
@@ -84,7 +84,7 @@ public class GemstoneSeedBlock extends Block {
 
         public static ItemStack createData(GemstoneType type, MaterialType materialType) {
             ItemStack stack = IGemstoneItem.createData(GemstoneType.Rarity.EMPTY, type, ModBlocks.GEMSTONE_SEED::getItem);
-            stack.getOrCreateTag().getCompound("GemstoneData").putString("Material", materialType.getSerializedName());
+            stack.set(ModDataComponentTypes.GEMSTONE_SEED_MATERIAL, materialType);
             return stack;
         }
     }
@@ -95,7 +95,7 @@ public class GemstoneSeedBlock extends Block {
         DEEPSLATE("deepslate", ()-> Blocks.DEEPSLATE),
         NETHERRACK("netherrack", ()-> Blocks.NETHERRACK);
 
-        private static final EnumCodec<MaterialType> CODEC = StringRepresentable.fromEnum(MaterialType::values);
+        public static final EnumCodec<MaterialType> CODEC = StringRepresentable.fromEnum(MaterialType::values);
 
         private final String name;
         private final Supplier<Block> block;
@@ -116,6 +116,6 @@ public class GemstoneSeedBlock extends Block {
     }
 
     public static MaterialType getType(ItemStack stack) {
-        return MaterialType.CODEC.byName(stack.getOrCreateTagElement("GemstoneData").getString("Material"), MaterialType.STONE);
+        return stack.getOrDefault(ModDataComponentTypes.GEMSTONE_SEED_MATERIAL, MaterialType.STONE);
     }
 }

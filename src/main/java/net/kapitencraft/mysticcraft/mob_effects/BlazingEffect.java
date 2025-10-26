@@ -11,12 +11,13 @@ public class BlazingEffect extends MobEffect {
     }
 
     @Override
-    public boolean isDurationEffectTick(int p_19455_, int p_19456_) {
+    public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
         return true;
     }
 
     @Override
-    public void applyEffectTick(@NotNull LivingEntity living, int i) {
-        living.setSecondsOnFire(i);
+    public boolean applyEffectTick(@NotNull LivingEntity living, int i) {
+        living.setRemainingFireTicks(i * 20);
+        return true;
     }
 }

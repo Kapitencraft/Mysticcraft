@@ -1,0 +1,20 @@
+{
+  "criteria": {
+    "has_crimson_steel_ingot": {
+      "conditions": {
+        "items": [
+          {
+            "items": "mysticcraft:crimson_steel_ingot"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_crimson_steel_ingot"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

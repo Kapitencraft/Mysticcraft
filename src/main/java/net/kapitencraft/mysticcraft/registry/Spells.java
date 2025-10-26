@@ -3,34 +3,33 @@ package net.kapitencraft.mysticcraft.registry;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.capability.spell.SpellHelper;
 import net.kapitencraft.mysticcraft.registry.custom.ModRegistries;
-import net.kapitencraft.mysticcraft.registry.custom.ModRegistryKeys;
 import net.kapitencraft.mysticcraft.spell.Spell;
 import net.kapitencraft.mysticcraft.spell.spells.*;
+import net.minecraft.core.Holder;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.Collection;
 
 public interface Spells {
-    DeferredRegister<Spell> REGISTRY = MysticcraftMod.registry(ModRegistryKeys.SPELLS);
+    DeferredRegister<Spell> REGISTRY = MysticcraftMod.registry(ModRegistries.Keys.SPELLS);
 
-    RegistryObject<EmptySpell> EMPTY = REGISTRY.register("empty", EmptySpell::new);
-    RegistryObject<WitherImpactSpell> WITHER_IMPACT = REGISTRY.register("wither_impact", WitherImpactSpell::new);
-    RegistryObject<WitherShieldSpell> WITHER_SHIELD = REGISTRY.register("wither_shield", WitherShieldSpell::new);
-    RegistryObject<ImplosionSpell> IMPLOSION = REGISTRY.register("implosion", ImplosionSpell::new);
-    RegistryObject<InstantTransmissionSpell> INSTANT_TRANSMISSION = REGISTRY.register("instant_transmission", InstantTransmissionSpell::new);
-    RegistryObject<EtherWarpSpell> ETHER_WARP = REGISTRY.register("ether_warp", EtherWarpSpell::new);
-    RegistryObject<ExplosiveSightSpell> EXPLOSIVE_SIGHT = REGISTRY.register("explosive_sight", ExplosiveSightSpell::new);
-    RegistryObject<ShadowStepSpell> SHADOW_STEP = REGISTRY.register("shadow_step", ShadowStepSpell::new);
-    RegistryObject<HugeHealSpell> HUGE_HEAL = REGISTRY.register("huge_heal", HugeHealSpell::new);
-    RegistryObject<FireBoltSpell> FIRE_BOLT = REGISTRY.register("fire_bolt", FireBoltSpell::new);
-    RegistryObject<FireLanceSpell> FIRE_LANCE = REGISTRY.register("fire_lance", FireLanceSpell::new);
-    RegistryObject<CureVillagerSpell> CURE_VILLAGER = REGISTRY.register("cure_villager", CureVillagerSpell::new);
-    RegistryObject<MakeRainSpell> MAKE_RAIN = REGISTRY.register("make_rain", MakeRainSpell::new);
+    Holder<Spell> EMPTY = REGISTRY.register("empty", EmptySpell::new);
+    Holder<Spell> WITHER_IMPACT = REGISTRY.register("wither_impact", WitherImpactSpell::new);
+    Holder<Spell> WITHER_SHIELD = REGISTRY.register("wither_shield", WitherShieldSpell::new);
+    Holder<Spell> IMPLOSION = REGISTRY.register("implosion", ImplosionSpell::new);
+    Holder<Spell> INSTANT_TRANSMISSION = REGISTRY.register("instant_transmission", InstantTransmissionSpell::new);
+    Holder<Spell> ETHER_WARP = REGISTRY.register("ether_warp", EtherWarpSpell::new);
+    Holder<Spell> EXPLOSIVE_SIGHT = REGISTRY.register("explosive_sight", ExplosiveSightSpell::new);
+    Holder<Spell> SHADOW_STEP = REGISTRY.register("shadow_step", ShadowStepSpell::new);
+    Holder<Spell> HUGE_HEAL = REGISTRY.register("huge_heal", HugeHealSpell::new);
+    Holder<Spell> FIRE_BOLT = REGISTRY.register("fire_bolt", FireBoltSpell::new);
+    Holder<Spell> FIRE_LANCE = REGISTRY.register("fire_lance", FireLanceSpell::new);
+    Holder<Spell> CURE_VILLAGER = REGISTRY.register("cure_villager", CureVillagerSpell::new);
+    Holder<Spell> MAKE_RAIN = REGISTRY.register("make_rain", MakeRainSpell::new);
 
     static Collection<ItemStack> createForCreativeModeTab() {
-        return ModRegistries.SPELLS.getValues().stream().filter(s -> s != EMPTY.get()).map(spell -> {
+        return ModRegistries.SPELLS.holders().filter(s -> s != EMPTY).map(spell -> {
             ItemStack stack = new ItemStack(ModItems.SPELL_SCROLL.get());
             SpellHelper.setSpell(stack, 0, spell);
             return stack;

@@ -1,0 +1,18 @@
+{
+  "values": [
+    "minecraft:villager",
+    "minecraft:iron_golem",
+    "minecraft:slime",
+    "minecraft:zombie",
+    "minecraft:zombie_villager",
+    "minecraft:husk",
+    "minecraft:skeleton",
+    "minecraft:wither_skeleton",
+    "minecraft:ravager",
+    "minecraft:illusioner",
+    "minecraft:vindicator",
+    "minecraft:pillager",
+    "minecraft:evoker",
+    "minecraft:stray"
+  ]
+}

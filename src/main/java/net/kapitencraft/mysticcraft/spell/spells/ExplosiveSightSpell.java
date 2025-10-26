@@ -1,6 +1,5 @@
 package net.kapitencraft.mysticcraft.spell.spells;
 
-import net.kapitencraft.kap_lib.cooldown.Cooldown;
 import net.kapitencraft.kap_lib.helpers.MiscHelper;
 import net.kapitencraft.kap_lib.helpers.ParticleHelper;
 import net.kapitencraft.kap_lib.util.Color;
@@ -18,11 +17,13 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-public class ExplosiveSightSpell implements Spell {
+public class ExplosiveSightSpell extends Spell {
     private static final SpellTarget<BlockState> TARGET = SpellTarget.Type.BLOCK.always();
+
+    public ExplosiveSightSpell() {
+        super(150, 90, Type.RELEASE, TARGET, ModCooldowns.EXPLOSIVE_SIGHT);
+    }
 
     @Override
     public void cast(SpellCastContext context) {
@@ -32,36 +33,11 @@ public class ExplosiveSightSpell implements Spell {
             Explosion explosion = new Explosion(caster.level(), caster, pos.getX(), pos.getY(), pos.getZ(), 10, false, Explosion.BlockInteraction.DESTROY_WITH_DECAY);
             explosion.explode();
             explosion.finalizeExplosion(true);
-            ManaAOE.execute(caster, this, context.getLevel() * 5, 5);
+            ManaAOE.execute(caster, this.getHolder(), context.getLevel() * 5, 5);
             Vec3 vec3 = pos.getCenter();
             ParticleHelper.sendParticles(caster.level(), new CircleParticleOptions(new Color(1, 0, 0, 1), 31, 6), true, vec3.x, vec3.y, vec3.z, 1, 0, 0, 0, 0);
             MiscHelper.shakeGround((ServerLevel) caster.level(), vec3, 4f, 3f, 2f);
         }
-    }
-
-    @Override
-    public int castDuration() {
-        return 90;
-    }
-
-    @Override
-    public double manaCost() {
-        return 150;
-    }
-
-    @Override
-    public @NotNull Type getType() {
-        return Type.RELEASE;
-    }
-
-    @Override
-    public @NotNull SpellTarget<?> getTarget() {
-        return TARGET;
-    }
-
-    @Override
-    public @Nullable Cooldown getCooldown() {
-        return ModCooldowns.EXPLOSIVE_SIGHT.get();
     }
 
     @Override

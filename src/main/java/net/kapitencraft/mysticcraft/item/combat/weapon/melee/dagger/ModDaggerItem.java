@@ -3,7 +3,6 @@ package net.kapitencraft.mysticcraft.item.combat.weapon.melee.dagger;
 import net.kapitencraft.kap_lib.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword.ModSwordItem;
 import net.kapitencraft.mysticcraft.mixin.duck.IAttacker;
-import net.kapitencraft.mysticcraft.network.ModMessages;
 import net.kapitencraft.mysticcraft.network.packets.S2C.SwingPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -11,11 +10,12 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class ModDaggerItem extends ModSwordItem {
-    public ModDaggerItem(Tier p_43269_, int attackDamage, Properties p_43272_) {
-        super(p_43269_, attackDamage, -1.8f, p_43272_);
+    public ModDaggerItem(Tier p_43269_, Properties p_43272_) {
+        super(p_43269_, p_43272_);
     }
 
     /**
@@ -31,7 +31,7 @@ public abstract class ModDaggerItem extends ModSwordItem {
                     MiscHelper.swapHands(pAttacker);
                     IAttacker.of(player).setOffhandAttack();
                     player.attack(pTarget);
-                    ModMessages.sendToAllConnectedPlayers(player1 -> new SwingPacket(InteractionHand.OFF_HAND, player.getId()), (ServerLevel) player.level());
+                    PacketDistributor.sendToPlayersInDimension((ServerLevel) player.level(), new SwingPacket(InteractionHand.OFF_HAND, player.getId()));
                     IAttacker.of(player).setMainhandAttack();
                     MiscHelper.swapHands(pAttacker);
                 }

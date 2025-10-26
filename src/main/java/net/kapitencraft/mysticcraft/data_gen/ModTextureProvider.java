@@ -8,7 +8,7 @@ import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
-import net.minecraftforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 public class ModTextureProvider extends TextureProvider {
     public ModTextureProvider(ExistingFileHelper existingFileHelper, PackOutput output) {
@@ -17,12 +17,12 @@ public class ModTextureProvider extends TextureProvider {
 
     @Override
     protected void createEntries() {
-        register(new ResourceLocation("item/lapis_lazuli"), MysticcraftMod.res("item/lapis_dust"))
-                .then(Transfer.create(new ResourceLocation("item/redstone")));
-        register(new ResourceLocation("particle/flame"), MysticcraftMod.res("particle/pale_flame"))
+        register(ResourceLocation.withDefaultNamespace("item/lapis_lazuli"), MysticcraftMod.res("item/lapis_dust"))
+                .then(Transfer.create(ResourceLocation.withDefaultNamespace("item/redstone")));
+        register(ResourceLocation.withDefaultNamespace("particle/flame"), MysticcraftMod.res("particle/pale_flame"))
                 .then(new Pale());
         register(MysticcraftMod.res("item/elements/rainbow_shard"), MysticcraftMod.res("item/rainbow_sword"))
-                .then(Transfer.createWithMask(new ResourceLocation("item/diamond_sword"), KapLibMod.res("item/mask/sword")));
+                .then(Transfer.createWithMask(ResourceLocation.withDefaultNamespace("item/diamond_sword"), KapLibMod.res("item/mask/sword")));
     }
 
     protected record Pale() implements Converter {

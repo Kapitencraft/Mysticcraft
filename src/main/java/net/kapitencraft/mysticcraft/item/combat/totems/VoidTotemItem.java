@@ -7,12 +7,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,7 +28,7 @@ public class VoidTotemItem extends AbstractTotemItem implements ExtendedItem {
         if (source.is(DamageTypes.FELL_OUT_OF_WORLD)) {
             if (living instanceof ServerPlayer player) {
                 player.setHealth(player.getMaxHealth());
-                player.serverLevel().getServer().getPlayerList().respawn(player, true);
+                player.serverLevel().getServer().getPlayerList().respawn(player, true, Entity.RemovalReason.CHANGED_DIMENSION);
                 return true;
             }
         }
@@ -36,7 +36,7 @@ public class VoidTotemItem extends AbstractTotemItem implements ExtendedItem {
     }
 
     @Override
-    public void appendHoverTextWithPlayer(@NotNull ItemStack itemStack, @Nullable Level level, @NotNull List<Component> list, @NotNull TooltipFlag flag, Player player) {
+    public void appendHoverTextWithPlayer(@NotNull ItemStack itemStack, @Nullable TooltipContext context, @NotNull List<Component> list, @NotNull TooltipFlag flag, @Nullable Player player) {
         list.add(Component.translatable("void_totem.translation"));
     }
 }

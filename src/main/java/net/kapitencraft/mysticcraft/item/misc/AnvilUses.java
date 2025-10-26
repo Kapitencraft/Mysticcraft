@@ -1,7 +1,6 @@
 package net.kapitencraft.mysticcraft.item.misc;
 
-import net.kapitencraft.mysticcraft.capability.CapabilityHelper;
-import net.kapitencraft.mysticcraft.capability.elytra.ElytraCapability;
+import net.kapitencraft.mysticcraft.capability.elytra.ElytraAttachment;
 import net.kapitencraft.mysticcraft.capability.spell.SpellHelper;
 import net.kapitencraft.mysticcraft.item.combat.spells.SpellItem;
 import net.kapitencraft.mysticcraft.item.combat.spells.SpellScrollItem;
@@ -9,10 +8,12 @@ import net.kapitencraft.mysticcraft.item.combat.spells.necron_sword.NecronSword;
 import net.kapitencraft.mysticcraft.registry.ModItems;
 import net.kapitencraft.mysticcraft.registry.Spells;
 import net.kapitencraft.mysticcraft.spell.SpellSlot;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.event.AnvilUpdateEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.minecraft.world.item.component.Unbreakable;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.AnvilUpdateEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,7 @@ import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
-@Mod.EventBusSubscriber
+@EventBusSubscriber
 public class AnvilUses {
     private static final List<AnvilUse> uses = new ArrayList<>();
 
@@ -48,21 +49,21 @@ public class AnvilUses {
                         ItemStack::isDamageableItem,
                         stack -> stack.is(ModItems.UNBREAKING_CORE.get())
                 ),
-                (stack, stack1) -> stack.getOrCreateTag().putBoolean("Unbreakable", true),
+                (stack, stack1) -> stack.set(DataComponents.UNBREAKABLE, new Unbreakable(true)),
                 10
         );
         registerAnvilUse(
                 both(
-                        stack -> stack.getItem() instanceof NecronSword && !SpellHelper.hasSpell(stack, Spells.WITHER_IMPACT.get()),
+                        stack -> stack.getItem() instanceof NecronSword && !SpellHelper.hasSpell(stack, Spells.WITHER_IMPACT.value()),
                         stack -> {
                             if (!stack.is(ModItems.SPELL_SCROLL.get())) return false;
 
                             SpellSlot spellSlot = SpellScrollItem.getSpell(stack);
-                            return spellSlot != null && spellSlot.getSpell().canApply(ModItems.NECRON_SWORD.get());
+                            return spellSlot != null && spellSlot.getSpell().value().canApply(ModItems.NECRON_SWORD.get());
                         }
                 ),
                 (stack, stack1) -> {
-                    if (SpellHelper.hasAnySpell(stack)) SpellHelper.setSpell(stack, 0, Spells.WITHER_IMPACT.get());
+                    if (SpellHelper.hasAnySpell(stack)) SpellHelper.setSpell(stack, 0, Spells.WITHER_IMPACT);
                     else SpellHelper.setSpell(stack, 0, SpellScrollItem.getSpell(stack1));
                 },
                 20
@@ -86,12 +87,8 @@ public class AnvilUses {
                 15
         );
         registerAnvilUse(
-                simple(CapabilityHelper::hasElytraCapability).and((stack, stack2) ->
-                        CapabilityHelper.testCapability(stack, CapabilityHelper.ELYTRA, iElytraData ->
-                                CapabilityHelper.testCapability(stack2, CapabilityHelper.ELYTRA, iElytraData1 -> iElytraData.getData() == iElytraData1.getData()
-                                )
-                        )),
-                ElytraCapability::merge,
+                ElytraAttachment::canCombine,
+                ElytraAttachment::merge,
                 1
         );
     }

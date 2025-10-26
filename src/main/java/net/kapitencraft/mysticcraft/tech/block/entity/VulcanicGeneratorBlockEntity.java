@@ -9,7 +9,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.ForgeHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,7 +25,7 @@ public class VulcanicGeneratorBlockEntity extends GenericFueledGeneratorBlockEnt
 
     @Override
     protected int getBurnTime(ItemStack stack) {
-        return ForgeHooks.getBurnTime(stack, null);
+        return stack.getBurnTime(null);
     }
 
     @Override

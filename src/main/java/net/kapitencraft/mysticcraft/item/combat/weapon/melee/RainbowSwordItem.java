@@ -7,16 +7,6 @@ import net.minecraft.world.item.Tiers;
 
 public class RainbowSwordItem extends ModSwordItem {
     public RainbowSwordItem() {
-        super(Tiers.IRON, 10, -2.4f, MiscHelper.rarity(Rarity.RARE));
-    }
-
-    @Override
-    public double getStrenght() {
-        return 25;
-    }
-
-    @Override
-    public double getCritDamage() {
-        return 60;
+        super(Tiers.IRON, MiscHelper.rarity(Rarity.RARE).attributes(createAttributes(Tiers.IRON, 10, -2.4f, 25, 60)));
     }
 }

@@ -1,17 +1,27 @@
 package net.kapitencraft.mysticcraft.event.handler;
 
+import com.google.common.collect.Multimap;
+import com.mojang.datafixers.util.Either;
 import net.kapitencraft.kap_lib.event.custom.RegisterBonusProvidersEvent;
 import net.kapitencraft.kap_lib.event.custom.RegisterRequirementTypesEvent;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.capability.elytra.ElytraAttachment;
+import net.kapitencraft.mysticcraft.capability.elytra.ElytraData;
+import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneHandler;
+import net.kapitencraft.mysticcraft.capability.reforging.Reforge;
 import net.kapitencraft.mysticcraft.capability.reforging.Reforges;
 import net.kapitencraft.mysticcraft.capability.spell.SpellHelper;
+import net.kapitencraft.mysticcraft.data_gen.ModDamageTypes;
 import net.kapitencraft.mysticcraft.item.tools.HammerItem;
-import net.kapitencraft.mysticcraft.network.ModMessages;
 import net.kapitencraft.mysticcraft.network.packets.S2C.HammerAbortBreakPacket;
+import net.kapitencraft.mysticcraft.registry.ModAttachmentTypes;
+import net.kapitencraft.mysticcraft.registry.ModDataComponentTypes;
+import net.kapitencraft.mysticcraft.registry.ModMobEffects;
 import net.kapitencraft.mysticcraft.registry.Spells;
 import net.kapitencraft.mysticcraft.requirement.type.ReforgeRequirementType;
-import net.kapitencraft.mysticcraft.rpg.classes.RPGClassManager;
-import net.kapitencraft.mysticcraft.rpg.perks.ServerPerksManager;
+import net.kapitencraft.mysticcraft.rpg.skill.PlayerPlacedBlocks;
+import net.kapitencraft.mysticcraft.rpg.skill.PlayerSkills;
+import net.kapitencraft.mysticcraft.rpg.skill.Skill;
 import net.kapitencraft.mysticcraft.spell.Spell;
 import net.kapitencraft.mysticcraft.spell.SpellSlot;
 import net.kapitencraft.mysticcraft.spell.SpellTarget;
@@ -20,41 +30,62 @@ import net.kapitencraft.mysticcraft.tags.ModTags;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.CropBlock;
+import net.minecraft.world.level.block.NetherWartBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.*;
-import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
-import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.server.ServerStoppedEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.ItemAttributeModifierEvent;
+import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
+import net.neoforged.neoforge.event.entity.living.LivingEquipmentChangeEvent;
+import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
+import net.neoforged.neoforge.event.entity.player.ItemFishedEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEnchantItemEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.registries.datamaps.RegisterDataMapTypesEvent;
 
-@Mod.EventBusSubscriber
+import java.util.HashMap;
+
+@EventBusSubscriber
 public class Events {
+
+    @SubscribeEvent
+    public static void onMobEffect(MobEffectEvent.Remove event) {
+        LivingEntity entity = event.getEntity();
+        if (event.getEffect() == ModMobEffects.NUMBNESS) {
+            entity.hurt(entity.damageSources().source(ModDamageTypes.NUMBNESS), entity.getData(ModAttachmentTypes.NUMBNESS_DAMAGE));
+        }
+    }
 
     @SubscribeEvent
     public static void onRegisterBonusProviders(RegisterBonusProvidersEvent event) {
         event.register(MysticcraftMod.res("reforge"), Reforges::getReforgeBonus);
-    }
-
-    @SubscribeEvent
-    public static void onServerStopped(ServerStoppedEvent event) {
-        ServerPerksManager.clearCache();
-        RPGClassManager.clearCache();
     }
 
     //region spell item
@@ -62,17 +93,17 @@ public class Events {
     @SubscribeEvent
     public static void onLivingEntityUseItemStart(PlayerInteractEvent.RightClickItem event) {
         InteractionHand hand = event.getHand();
-        LivingEntity entity = event.getEntity();
-        ItemStack stack = entity.getItemInHand(hand);
+        Player player = event.getEntity();
+        ItemStack stack = player.getItemInHand(hand);
         if (stack.is(ModTags.Items.CATALYST)) {
-            SpellSlot slot = SpellHelper.getActiveSlot(stack);
-            Spell spell = slot.getSpell();
-            if (spell != Spells.EMPTY.get()) {
+            SpellSlot slot = SpellHelper.getActiveSpellSlot(player);
+            Holder<Spell> spell = slot.getSpell();
+            if (spell != Spells.EMPTY) {
                 Level level = event.getLevel();
-                if (stack.hasTag()) stack.getTag().remove("target");
-                if (SpellHelper.canExecuteSpell(entity, spell, stack)) {
-                    if (spell.castDuration() == 0) SpellHelper.handleManaAndExecute(entity, spell, slot.getLevel(), stack);
-                    else entity.startUsingItem(hand);
+                stack.remove(ModDataComponentTypes.SPELL_TARGET);
+                if (SpellHelper.canExecuteSpell(player, spell.value(), stack)) {
+                    if (spell.value().castDuration() == 0) SpellHelper.handleManaAndExecute(player, spell, slot.getLevel(), stack);
+                    else player.startUsingItem(hand);
                     event.setCancellationResult(InteractionResult.sidedSuccess(level.isClientSide));
                 }
             }
@@ -80,11 +111,11 @@ public class Events {
     }
 
     @SubscribeEvent
-    public void onLivingEquipmentChange(LivingEquipmentChangeEvent event) {
+    public static void onLivingEquipmentChange(LivingEquipmentChangeEvent event) {
         LivingEntity entity = event.getEntity();
         if (entity instanceof Player player) {
             if (event.getFrom().is(ModTags.Items.CATALYST) || event.getTo().is(ModTags.Items.CATALYST)) {
-                PlayerSpells.get(player).updateSlot(event.getTo());
+                PlayerSpells.updateSlot(player, event.getTo());
             }
         }
     }
@@ -93,63 +124,65 @@ public class Events {
     @SubscribeEvent
     public static void onLivingEntityUseItemTick(LivingEntityUseItemEvent.Tick event) {
         ItemStack stack = event.getItem();
-        LivingEntity living = event.getEntity();
-        if (!stack.is(ModTags.Items.CATALYST)) return;
-        Level level = living.level();
-        int duration = stack.getUseDuration() - event.getDuration();
-        SpellSlot slot = SpellHelper.getActiveSlot(stack);
-        Spell spell = slot.getSpell();
+        if (!stack.is(ModTags.Items.CATALYST) || !(event.getEntity() instanceof Player player)) return;
+        Level level = player.level(); //TODO entity spells
+        int duration = stack.getUseDuration(player) - event.getDuration();
+        SpellSlot slot = SpellHelper.getActiveSpellSlot(player);
+        Holder<Spell> spellHolder = slot.getSpell();
+        Spell spell = spellHolder.value();
         if (duration >= spell.castDuration()) {
-            if (!SpellHelper.handleManaAndExecute(living, spell, slot.getLevel(), stack) || spell.getType() == Spell.Type.RELEASE) living.stopUsingItem();
+            if (!SpellHelper.handleManaAndExecute(player, spellHolder, slot.getLevel(), stack) || spell.getType() == Spell.Type.RELEASE) player.stopUsingItem();
         } else {
             SpellTarget<?> target = spell.getTarget();
             SpellTarget.Type<?> type = target.getType();
             if (type == SpellTarget.Type.SELF) {
-                if (!((SpellTarget<LivingEntity>) target).test(living)) {
-                    living.stopUsingItem();
+                if (!((SpellTarget<LivingEntity>) target).test(player)) {
+                    player.stopUsingItem();
                 }
-            } else if (type == SpellTarget.Type.BLOCK) {
-                BlockHitResult result = level.clip(new ClipContext(
-                        living.getEyePosition(),
-                        living.getLookAngle().scale(100).add(living.getEyePosition()),
-                        ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, living
-                ));
-                if (result.getType() != HitResult.Type.MISS && ((SpellTarget<BlockState>) target).test(level.getBlockState(result.getBlockPos()))) {
-                    CompoundTag tag = stack.getTag();
-                    if (tag != null && tag.contains("target", Tag.TAG_LONG)) {
-                        if (!BlockPos.of(tag.getLong("target")).equals(result.getBlockPos())) {
-                            if (living instanceof Player player && level.isClientSide)
-                                player.sendSystemMessage(Component.translatable("spell.cast.failed"));
-                            living.stopUsingItem();
-                        }
-                    } else stack.getOrCreateTag().putLong("target", result.getBlockPos().asLong());
-                } else {
-                    if (living instanceof Player player && level.isClientSide)
-                        player.sendSystemMessage(Component.translatable("spell.cast.failed"));
-                    living.stopUsingItem();
-                }
-            } else if (type == SpellTarget.Type.ENTITY) {
-                Vec3 start = living.getEyePosition();
-                Vec3 end = living.getLookAngle().scale(100).add(living.getEyePosition());
-                EntityHitResult result = ProjectileUtil.getEntityHitResult(level, living,
-                        start,
-                        end,
-                        new AABB(start, end),
-                        entity -> entity != living,
-                        0
-                );
-                if (result != null && ((SpellTarget<Entity>) target).test(result.getEntity())) {
-                    CompoundTag tag = stack.getTag();
-                    if (tag != null && tag.contains("target", Tag.TAG_LONG)) {
-                        if (tag.getInt("target") != result.getEntity().getId()) {
-                            if (living instanceof Player player && level.isClientSide) player.sendSystemMessage(Component.translatable("spell.cast.failed"));
-                            living.stopUsingItem();
-                        }
-                    } else stack.getOrCreateTag().putLong("target", result.getEntity().getId());
-                } else {
-                    if (living instanceof Player player && level.isClientSide)
-                        player.sendSystemMessage(Component.translatable("spell.cast.failed"));
-                    living.stopUsingItem();
+            } else {
+                Either<BlockPos, Integer> either = stack.get(ModDataComponentTypes.SPELL_TARGET);
+                if (type == SpellTarget.Type.BLOCK) {
+                    BlockHitResult result = level.clip(new ClipContext(
+                            player.getEyePosition(),
+                            player.getLookAngle().scale(100).add(player.getEyePosition()),
+                            ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, player
+                    ));
+                    if (result.getType() != HitResult.Type.MISS && ((SpellTarget<BlockState>) target).test(level.getBlockState(result.getBlockPos()))) {
+                        if (either != null && either.left().isPresent()) {
+                            if (!either.left().get().equals(result.getBlockPos())) {
+                                if (level.isClientSide)
+                                    player.sendSystemMessage(Component.translatable("spell.cast.failed"));
+                                player.stopUsingItem();
+                            }
+                        } else stack.set(ModDataComponentTypes.SPELL_TARGET, Either.left(result.getBlockPos()));
+                    } else {
+                        if (level.isClientSide)
+                            player.sendSystemMessage(Component.translatable("spell.cast.failed"));
+                        player.stopUsingItem();
+                    }
+                } else if (type == SpellTarget.Type.ENTITY) {
+                    Vec3 start = player.getEyePosition();
+                    Vec3 end = player.getLookAngle().scale(100).add(player.getEyePosition());
+                    EntityHitResult result = ProjectileUtil.getEntityHitResult(level, player,
+                            start,
+                            end,
+                            new AABB(start, end),
+                            entity -> entity != player,
+                            0
+                    );
+                    if (result != null && ((SpellTarget<Entity>) target).test(result.getEntity())) {
+                        if (either != null && either.right().isPresent()) {
+                            if (either.right().get() != result.getEntity().getId()) {
+                                if (level.isClientSide) player.sendSystemMessage(Component.translatable("spell.cast.failed"));
+                                player.stopUsingItem();
+                            }
+                        } else
+                            stack.set(ModDataComponentTypes.SPELL_TARGET, Either.right(result.getEntity().getId()));
+                    } else {
+                        if (level.isClientSide)
+                            player.sendSystemMessage(Component.translatable("spell.cast.failed"));
+                        player.stopUsingItem();
+                    }
                 }
             }
         }
@@ -176,13 +209,119 @@ public class Events {
                         HammerItem.gatherBlocks(level, pos, face, serverPlayer.gameMode::destroyBlock, 1);
                     }
                 }
-                case ABORT -> ModMessages.sendToAllConnectedPlayers(p -> new HammerAbortBreakPacket(pos, face), (ServerLevel) event.getEntity().level());
+                case ABORT -> PacketDistributor.sendToPlayersInDimension((ServerLevel) event.getEntity().level(), new HammerAbortBreakPacket(pos, face));
             }
         }
     }
 
     @SubscribeEvent
-    public void onRegisterRequirementTypes(RegisterRequirementTypesEvent event) {
+    public static void onItemAttributeModifier(ItemAttributeModifierEvent event) {
+        ItemStack stack = event.getItemStack();
+        Reforge reforge = Reforge.getFromStack(stack);
+        EquipmentSlot slot = stack.getEquipmentSlot();
+        if (stack.getItem() instanceof ArmorItem armorItem)
+            slot = armorItem.getEquipmentSlot();
+        else if (stack.is(Items.ELYTRA))
+            slot = EquipmentSlot.CHEST;
+        else if (slot == null)
+            slot = EquipmentSlot.MAINHAND;
+        EquipmentSlotGroup group = EquipmentSlotGroup.bySlot(slot);
+        if (reforge != null) {
+            HashMap<Holder<Attribute>, Double> map = reforge.applyModifiers(stack.getRarity());
+            //TODO add reqs
+            map.forEach((attribute, value) -> event.addModifier(attribute, new AttributeModifier(Reforge.MODIFIER_ID, value, AttributeModifier.Operation.ADD_VALUE), group));
+        }
+        GemstoneHandler handler = stack.get(ModDataComponentTypes.EMBEDDED_GEMSTONES);
+        if (handler != null) {
+            Multimap<Holder<Attribute>, AttributeModifier> modifiers = handler.getAttributeModifiers();
+            modifiers.forEach((attributeHolder, modifier) -> event.addModifier(attributeHolder, modifier, group));
+        }
+        ElytraAttachment attachment = stack.get(ModDataComponentTypes.ELYTRA);
+        if (attachment != null && attachment.data() == ElytraData.GRAVITY_BOOST) {
+            event.addModifier(Attributes.GRAVITY, new AttributeModifier(MysticcraftMod.res("elytra"), attachment.level() * -.2, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL), EquipmentSlotGroup.CHEST);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onRegisterRequirementTypes(RegisterRequirementTypesEvent event) {
         event.add(ReforgeRequirementType.INSTANCE);
+    }
+
+    @SubscribeEvent
+    public static void onRegisterDataMapTypes(RegisterDataMapTypesEvent event) {
+        event.register(Skill.FISHING_XP_MAP);
+        event.register(Skill.COMBAT_XP_MAP);
+        event.register(Skill.FARMING_XP_MAP);
+        event.register(Skill.ENCHANTING_XP_MAP);
+        event.register(Skill.MINING_XP_MAP);
+    }
+
+    @SubscribeEvent
+    public static void onItemFished(ItemFishedEvent event) {
+        Player player = event.getEntity();
+        int xpToGet = 0;
+        for (ItemStack drop : event.getDrops()) {
+            Integer xp = drop.getItemHolder().getData(Skill.FISHING_XP_MAP);
+            if (xp == null) {
+                PlayerSkills.LOGGER.warn("unable to retrieve fishing xp for item {}", drop);
+                continue;
+            }
+            xpToGet += xp;
+        }
+        if (xpToGet > 0 && player instanceof ServerPlayer sp) {
+            PlayerSkills.reward(sp, Skill.FISHING, xpToGet, true);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onBlockBreak(BlockEvent.BreakEvent event) {
+        BlockState state = event.getState();
+        Block block = state.getBlock();
+        if (event.getPlayer() instanceof ServerPlayer serverPlayer) {
+            Holder<Block> holder = state.getBlockHolder();
+            if (block instanceof CropBlock || block instanceof NetherWartBlock) {
+                if (block instanceof CropBlock cropBlock ? cropBlock.isMaxAge(state) : state.getValue(BlockStateProperties.AGE_3) == 3) {
+                    Integer xp = holder.getData(Skill.FARMING_XP_MAP);
+                    if (xp != null) {
+                        PlayerSkills.reward(serverPlayer, Skill.FARMING, xp, true);
+                    } else {
+                        PlayerSkills.LOGGER.warn("unable to retrieve farming xp for crop {}", state);
+                    }
+                }
+            } else {
+                if (!PlayerPlacedBlocks.get(serverPlayer.level()).hasBlock(event.getPos())) {
+                    Integer miningXp = holder.getData(Skill.MINING_XP_MAP);
+                    if (miningXp != null) {
+                        PlayerSkills.reward(serverPlayer, Skill.MINING, miningXp, true);
+                    } else {
+                        PlayerSkills.LOGGER.warn("unable to retrieve mining xp for block {}", state);
+                    }
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onPlayerEnchantItem(PlayerEnchantItemEvent event) {
+        Player player = event.getEntity();
+        if (!player.level().isClientSide()) {
+            int xpToGain = 0;
+            for (EnchantmentInstance enchantment : event.getEnchantments()) {
+                Integer xp = enchantment.enchantment.getData(Skill.ENCHANTING_XP_MAP);
+                if (xp != null) xpToGain += xp * enchantment.level;
+                else
+                    PlayerSkills.LOGGER.warn("unable to get xp for enchantment: {}", enchantment.enchantment);
+            }
+            if (xpToGain > 0) {
+                PlayerSkills.reward((ServerPlayer) player, Skill.ENCHANTING, xpToGain, true);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onBlockEntityPlace(BlockEvent.EntityPlaceEvent event) {
+        if (event.getEntity() instanceof ServerPlayer) {
+            PlayerPlacedBlocks.get(event.getEntity().level()).addBlock(event.getPos());
+        }
     }
 }

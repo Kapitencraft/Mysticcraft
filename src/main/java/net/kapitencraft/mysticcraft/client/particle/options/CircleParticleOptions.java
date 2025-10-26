@@ -1,21 +1,18 @@
 package net.kapitencraft.mysticcraft.client.particle.options;
 
-import com.mojang.brigadier.StringReader;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.kapitencraft.kap_lib.util.Color;
 import net.kapitencraft.mysticcraft.registry.ModParticleTypes;
-import net.minecraft.core.particles.DustParticleOptionsBase;
-import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Vector3f;
 
 public class CircleParticleOptions extends SimpleColoredParticleOptions<CircleParticleOptions> {
-    private static final Codec<CircleParticleOptions> CODEC = RecordCodecBuilder.create(optionsInstance ->
+    private static final MapCodec<CircleParticleOptions> CODEC = RecordCodecBuilder.mapCodec(optionsInstance ->
             optionsInstance.group(
                 Color.CODEC.fieldOf("color")
                     .forGetter(CircleParticleOptions::getColor),
@@ -24,11 +21,19 @@ public class CircleParticleOptions extends SimpleColoredParticleOptions<CirclePa
                 Codec.DOUBLE.fieldOf("expandSpeed")
                     .forGetter(CircleParticleOptions::getExpandSpeed)
             ).apply(optionsInstance, CircleParticleOptions::new));
+
+    public static final StreamCodec<? super RegistryFriendlyByteBuf, CircleParticleOptions> STREAM_CODEC = StreamCodec.composite(
+            Color.STREAM_CODEC, CircleParticleOptions::getColor,
+            ByteBufCodecs.DOUBLE, CircleParticleOptions::getSize,
+            ByteBufCodecs.DOUBLE, CircleParticleOptions::getExpandSpeed,
+            CircleParticleOptions::new
+    );
+
     private final double size;
     private final double expandSpeed;
 
     public CircleParticleOptions(Color color, double size, double expandSpeed) {
-        super(true, new Deserializer(), color);
+        super(true, color);
         this.size = size;
         this.expandSpeed = expandSpeed;
     }
@@ -47,41 +52,12 @@ public class CircleParticleOptions extends SimpleColoredParticleOptions<CirclePa
     }
 
     @Override
-    public void writeToNetwork(FriendlyByteBuf buf) {
-        buf.writeDouble(size);
-        buf.writeDouble(expandSpeed);
-        color.write(buf);
-    }
-
-    @Override
-    public @NotNull String writeToString() {
-        return String.format("%s %.2f %.2f %.2f %.2f %.2f", BuiltInRegistries.PARTICLE_TYPE.getKey(this.getType()), this.size, this.expandSpeed, this.color.r(), this.color.g(), this.color.b());
-    }
-
-    @Override
-    public @NotNull Codec<CircleParticleOptions> codec() {
+    public @NotNull MapCodec<CircleParticleOptions> codec() {
         return CODEC;
     }
 
-    public static class Deserializer implements ParticleOptions.Deserializer<CircleParticleOptions> {
-
-        @Override
-        public @NotNull CircleParticleOptions fromCommand(@NotNull ParticleType<CircleParticleOptions> type, @NotNull StringReader reader) throws CommandSyntaxException {
-            Vector3f vector3f = DustParticleOptionsBase.readVector3f(reader);
-            Color color = new Color(vector3f.x, vector3f.y, vector3f.z, 1);
-            reader.expect(' ');
-            double size = reader.readDouble();
-            reader.expect(' ');
-            double expandSpeed = reader.readDouble();
-            return new CircleParticleOptions(color, size, expandSpeed);
-        }
-
-        @Override
-        public @NotNull CircleParticleOptions fromNetwork(@NotNull ParticleType<CircleParticleOptions> type, FriendlyByteBuf buf) {
-            double size = buf.readDouble();
-            double expandSize = buf.readDouble();
-            Color color = Color.read(buf);
-            return new CircleParticleOptions(color, size, expandSize);
-        }
+    @Override
+    public @NotNull StreamCodec<? super RegistryFriendlyByteBuf, CircleParticleOptions> streamCodec() {
+        return STREAM_CODEC;
     }
 }

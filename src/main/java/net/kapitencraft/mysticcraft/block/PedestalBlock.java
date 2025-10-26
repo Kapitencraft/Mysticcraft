@@ -1,10 +1,11 @@
 package net.kapitencraft.mysticcraft.block;
 
+import com.mojang.serialization.MapCodec;
 import net.kapitencraft.mysticcraft.block.entity.pedestal.AbstractPedestalBlockEntity;
 import net.kapitencraft.mysticcraft.block.entity.pedestal.PedestalBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -18,8 +19,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class PedestalBlock extends BaseEntityBlock {
+    public static final MapCodec<PedestalBlock> CODEC = simpleCodec(PedestalBlock::new);
+
+    private PedestalBlock(Properties properties) {
+        super(properties);
+    }
+
     public PedestalBlock() {
-        super(Properties.copy(Blocks.STONE).noOcclusion());
+        this(Properties.ofFullCopy(Blocks.STONE).noOcclusion());
     }
 
     @SuppressWarnings("deprecation")
@@ -29,19 +36,18 @@ public class PedestalBlock extends BaseEntityBlock {
     }
 
     @Override
-    public @NotNull InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-        ItemStack playerItem = pPlayer.getItemInHand(pHand);
-        AbstractPedestalBlockEntity entity = (AbstractPedestalBlockEntity) pLevel.getBlockEntity(pPos);
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        AbstractPedestalBlockEntity entity = (AbstractPedestalBlockEntity) level.getBlockEntity(pos);
         ItemStack pedestalItem = entity.getItem();
         if (!pedestalItem.isEmpty()) {
-            if (playerItem.isEmpty() || ItemStack.isSameItemSameTags(playerItem, pedestalItem)) {
-                pPlayer.setItemInHand(pHand, pedestalItem);
+            if (stack.isEmpty() || ItemStack.isSameItemSameComponents(stack, pedestalItem)) {
+                player.setItemInHand(hand, pedestalItem);
                 entity.setItem(ItemStack.EMPTY);
             }
         } else {
-            pPlayer.setItemInHand(pHand, entity.insertItem(playerItem));
+            player.setItemInHand(hand, entity.insertItem(stack));
         }
-        return InteractionResult.sidedSuccess(pLevel.isClientSide());
+        return ItemInteractionResult.sidedSuccess(level.isClientSide());
     }
 
     @Override
@@ -53,5 +59,10 @@ public class PedestalBlock extends BaseEntityBlock {
     public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pMovedByPiston) {
         ((AbstractPedestalBlockEntity) pLevel.getBlockEntity(pPos)).drops();
         super.onRemove(pState, pLevel, pPos, pNewState, pMovedByPiston);
+    }
+
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
     }
 }

@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class MangaticSlimeBlock extends SlimeBlock {
     public MangaticSlimeBlock() {
-        super(Properties.copy(Blocks.SLIME_BLOCK));
+        super(Properties.ofFullCopy(Blocks.SLIME_BLOCK));
     }
 
     @Override

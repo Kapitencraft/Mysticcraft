@@ -2,14 +2,16 @@ package net.kapitencraft.mysticcraft.capability.gemstone;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.kapitencraft.mysticcraft.gui.artificer_table.ArtificerTableMenu;
+import io.netty.buffer.ByteBuf;
+import net.kapitencraft.kap_lib.helpers.ExtraStreamCodecs;
 import net.kapitencraft.mysticcraft.registry.ModItems;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.ItemStack;
@@ -17,58 +19,39 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-public class GemstoneSlot {
+public record GemstoneSlot(Type type, GemstoneType gemstoneType, GemstoneType.Rarity rarity) {
 
     public static final Codec<GemstoneSlot> CODEC = RecordCodecBuilder.create(gemstoneSlotInstance ->
             gemstoneSlotInstance.group(
-                    Type.CODEC.fieldOf("Type").forGetter(GemstoneSlot::getType),
-                    GemstoneType.CODEC.optionalFieldOf("Gem", GemstoneType.EMPTY).forGetter(GemstoneSlot::getAppliedGemstone),
-                    GemstoneType.Rarity.CODEC.optionalFieldOf("GemRarity", GemstoneType.Rarity.EMPTY).forGetter(GemstoneSlot::getGemRarity)
+                    Type.CODEC.fieldOf("type").forGetter(GemstoneSlot::type),
+                    GemstoneType.CODEC.optionalFieldOf("gem", GemstoneType.EMPTY).forGetter(GemstoneSlot::gemstoneType),
+                    GemstoneType.Rarity.CODEC.optionalFieldOf("rarity", GemstoneType.Rarity.EMPTY).forGetter(GemstoneSlot::rarity)
             ).apply(gemstoneSlotInstance, GemstoneSlot::new)
     );
+    public static final StreamCodec<RegistryFriendlyByteBuf, GemstoneSlot> STREAM_CODEC = StreamCodec.composite(
+            Type.STREAM_CODEC, GemstoneSlot::type,
+            GemstoneType.STREAM_CODEC, GemstoneSlot::gemstoneType,
+            GemstoneType.Rarity.STREAM_CODEC, GemstoneSlot::rarity,
+            GemstoneSlot::new
+    );
+
     public static final GemstoneSlot BLOCKED = new GemstoneSlot(Type.EMPTY, GemstoneType.EMPTY, GemstoneType.Rarity.EMPTY);
 
 
-    private GemstoneType.Rarity gemRarity;
-    private final Type type;
-    @NotNull
-    private GemstoneType appliedGemstoneType;
-    GemstoneSlot(Type gemType, GemstoneType appliedGemstoneType, GemstoneType.Rarity rarity) {
-        this.type = gemType;
-        this.appliedGemstoneType = Objects.requireNonNull(appliedGemstoneType);
-        this.gemRarity = rarity;
-    }
-
-    public static void toNw(FriendlyByteBuf buf, GemstoneSlot slot) {
-        buf.writeEnum(slot.type);
-        buf.writeEnum(slot.appliedGemstoneType);
-        buf.writeEnum(slot.gemRarity);
-    }
-
-    public static GemstoneSlot fromNw(FriendlyByteBuf buf) {
-        return new GemstoneSlot(buf.readEnum(Type.class), buf.readEnum(GemstoneType.class), buf.readEnum(GemstoneType.Rarity.class));
-    }
-
     private int getColorForRarity() {
-        return this.gemRarity.colour;
+        return this.rarity.color;
     }
 
-    public GemstoneType.Rarity getGemRarity() {
-        return this.gemRarity;
+    public GemstoneSlot setApplied(GemstoneType type, GemstoneType.Rarity rarity) {
+        return new GemstoneSlot(this.type, type, rarity);
     }
-
-    public Type getType() {
-        return this.type;
-    }
-
 
     public GemstoneSlot empty() {
         return new GemstoneSlot(this.type, GemstoneType.EMPTY, GemstoneType.Rarity.EMPTY);
     }
 
-    private boolean isValidGemstone(GemstoneType gemstoneType) {
+    public boolean isValidGemstone(GemstoneType gemstoneType) {
         for (GemstoneType gemstoneType1 : this.type.applicable) {
             if (gemstoneType1 != null && gemstoneType1.equals(gemstoneType) || gemstoneType == GemstoneType.EMPTY) {
                 return true;
@@ -76,49 +59,32 @@ public class GemstoneSlot {
         }
         return false;
     }
-    public boolean putGemstone(GemstoneType gemstoneType, GemstoneType.Rarity rarity) {
-        if (this.isValidGemstone(gemstoneType)) {
-            this.appliedGemstoneType = Objects.requireNonNull(gemstoneType);
-            this.gemRarity = rarity;
-            return true;
-        }
-        return false;
-    }
 
     public ItemStack toItem() {
-        if (this.gemRarity == GemstoneType.Rarity.EMPTY || this.appliedGemstoneType == GemstoneType.EMPTY || this == BLOCKED) {
+        if (this.rarity == GemstoneType.Rarity.EMPTY || this.gemstoneType == GemstoneType.EMPTY || this == BLOCKED) {
             return ItemStack.EMPTY;
         }
-        return IGemstoneItem.createData(this.gemRarity, this.appliedGemstoneType, ModItems.GEMSTONE);
-    }
-
-    public GemstoneType getAppliedGemstone() {
-        return this.appliedGemstoneType;
+        return IGemstoneItem.createData(this.rarity, this.gemstoneType, ModItems.GEMSTONE);
     }
 
     @SuppressWarnings("ALL")
     public MutableComponent getDisplay() {
-        boolean flag = this.appliedGemstoneType == GemstoneType.EMPTY;
+        boolean flag = this.gemstoneType == GemstoneType.EMPTY;
         Style rarityColorStyle = Style.EMPTY.withColor(getColorForRarity());
-        Style gemstoneColorStyle = Style.EMPTY.withColor((flag ? ChatFormatting.GRAY.getColor() : appliedGemstoneType.getColour()));
+        Style gemstoneColorStyle = Style.EMPTY.withColor((flag ? ChatFormatting.GRAY.getColor() : gemstoneType.getColor()));
         return Component.literal("[").withStyle(rarityColorStyle).append(Component.literal(this.type.getUNICODE()).withStyle(gemstoneColorStyle)).append(Component.literal("]").withStyle(rarityColorStyle));
     }
 
-
-    public static GemstoneSlot[] of(Type... types) {
-        return new Builder(types).build();
-    }
-
     @Override
-    public String toString() {
-        return "GemstoneSlot{Rarity: " + this.getGemRarity().getId() + ", applied GemstoneType: " + this.appliedGemstoneType.getId() + "}";
+    public @NotNull String toString() {
+        return "GemstoneSlot{Rarity: " + this.rarity.getId() + ", applied GemstoneType: " + this.gemstoneType.getId() + "}";
     }
 
     public List<? extends FormattedCharSequence> createPossibleList() {
         List<Component> components = new ArrayList<>();
         components.add(Component.translatable("gemstone_applicable_title").withStyle(ChatFormatting.GREEN));
         for (GemstoneType gemstoneType : this.type.applicable) {
-            components.add(Component.translatable("gem_type." + gemstoneType.getSerializedName()).withStyle(style -> style.withColor(TextColor.fromRgb(gemstoneType.getColour()))));
+            components.add(Component.translatable("gem_type." + gemstoneType.getSerializedName()).withStyle(style -> style.withColor(TextColor.fromRgb(gemstoneType.getColor()))));
         }
         return components.stream().map(Component::getVisualOrderText).toList();
     }
@@ -143,6 +109,7 @@ public class GemstoneSlot {
         UNIVERSAL("☆", "universal", GemstoneType.WITHOUT_EMPTY); //exclude empty
 
         public static final Codec<Type> CODEC = StringRepresentable.fromEnum(Type::values);
+        public static final StreamCodec<ByteBuf, Type> STREAM_CODEC = ExtraStreamCodecs.enumCodec(Type.values());
 
         public final String UNICODE;
         public final String id;
@@ -162,23 +129,6 @@ public class GemstoneSlot {
         @Override
         public @NotNull String getSerializedName() {
             return id;
-        }
-    }
-
-    public static class Builder {
-        private final Type[] types;
-
-        public Builder(Type... types) {
-            this.types = types;
-        }
-
-        public GemstoneSlot[] build() {
-            if (types.length > ArtificerTableMenu.MAX_GEMSTONE_SLOTS) throw new IllegalStateException("detected Gemstone builder exceeding size limit (found: " + types.length + ", max: " + ArtificerTableMenu.MAX_GEMSTONE_SLOTS + ")");
-            GemstoneSlot[] slots = new GemstoneSlot[types.length];
-            for (int i = 0; i < slots.length; i++) {
-                slots[i] = new GemstoneSlot(types[i], GemstoneType.EMPTY, GemstoneType.Rarity.EMPTY);
-            }
-            return slots;
         }
     }
 }

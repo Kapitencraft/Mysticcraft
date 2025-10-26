@@ -8,12 +8,12 @@ import com.mojang.logging.LogUtils;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import net.kapitencraft.mysticcraft.logging.Markers;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.EntityType;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
@@ -35,7 +35,7 @@ public class BestiaryManager extends SimpleJsonResourceReloadListener {
     protected void apply(@NotNull Map<ResourceLocation, JsonElement> map, @NotNull ResourceManager manager, @NotNull ProfilerFiller filler) {
         Stopwatch stopwatch = Stopwatch.createStarted();
         map.forEach((location, element) -> {
-            EntityType<?> type = ForgeRegistries.ENTITY_TYPES.getValue(location);
+            EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(location);
             try {
                 DataResult<Bestiary> bestiaryDataResult = Bestiary.CODEC.parse(JsonOps.INSTANCE, element);
                 bestiaryDataResult.result().ifPresent(bestiary -> bestiariesForType.put(type, bestiary));

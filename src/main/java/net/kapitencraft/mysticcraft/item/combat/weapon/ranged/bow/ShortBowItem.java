@@ -1,11 +1,10 @@
 package net.kapitencraft.mysticcraft.item.combat.weapon.ranged.bow;
 
-import net.kapitencraft.kap_lib.helpers.IOHelper;
 import net.kapitencraft.kap_lib.helpers.MathHelper;
 import net.kapitencraft.kap_lib.item.ExtendedItem;
 import net.kapitencraft.kap_lib.registry.ExtraAttributes;
+import net.kapitencraft.mysticcraft.registry.ModDataComponentTypes;
 import net.minecraft.ChatFormatting;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
@@ -31,46 +30,39 @@ public abstract class ShortBowItem extends ModBowItem implements ExtendedItem {
         super(p_40660_);
     }
 
-
-    @Override
-    public void releaseUsing(@NotNull ItemStack bow, @NotNull Level world, @NotNull LivingEntity archer, int timeLeft) {
-        CompoundTag tag = bow.getOrCreateTag();
-        if (canShoot(tag, world)) {
-            createArrows(bow, world, archer);
-            bow.getOrCreateTag().putInt(COOLDOWN_ID, (int) (this.createCooldown(archer) / 0.05));
-        }
-    }
+    //TODO re-implement
 
     public float createCooldown(LivingEntity archer) {
         float base_cooldown = this.getShotCooldown();
-        if (archer != null) base_cooldown *= (1 / ((float) archer.getAttributeValue(ExtraAttributes.DRAW_SPEED.get()) / 100));
+        if (archer != null) base_cooldown *= (1 / ((float) archer.getAttributeValue(ExtraAttributes.DRAW_SPEED) / 100));
         return (float) MathHelper.defRound(base_cooldown);
     }
 
     public abstract float getShotCooldown();
 
-    public boolean canShoot(CompoundTag tag, Level world) {
-        return !world.isClientSide && !IOHelper.checkForIntAbove0(tag, COOLDOWN_ID);
+    public boolean canShoot(ItemStack bow, Level world) {
+        return !world.isClientSide && !bow.has(ModDataComponentTypes.SHORTBOW_COOLDOWN);
     }
 
     @Override
     public void inventoryTick(ItemStack bow, @NotNull Level p_41405_, @NotNull Entity p_41406_, int p_41407_, boolean p_41408_) {
-        if (bow.getTag() != null) {
-            CompoundTag tag = bow.getTag();
-            IOHelper.reduceBy1(tag, COOLDOWN_ID);
+        Integer i = bow.get(ModDataComponentTypes.SHORTBOW_COOLDOWN);
+        if (i != null) {
+            if (i-- > 0) {
+                bow.set(ModDataComponentTypes.SHORTBOW_COOLDOWN, i);
+            } else {
+                bow.remove(ModDataComponentTypes.SHORTBOW_COOLDOWN);
+            }
         }
     }
 
     @Override
-    public void appendHoverTextWithPlayer(@NotNull ItemStack stack, @Nullable Level level, @NotNull List<Component> list, @NotNull TooltipFlag flag, Player player) {
-        super.appendHoverText(stack, level, list, flag);
+    public void appendHoverTextWithPlayer(@NotNull ItemStack itemStack, @Nullable TooltipContext context, @NotNull List<Component> list, @NotNull TooltipFlag flag, @Nullable Player player) {
+        super.appendHoverText(itemStack, context, list, flag);
         list.add(CommonComponents.EMPTY);
         list.add(Component.literal("Shot Cooldown: ").append(this.createCooldown(player) + "s").withStyle(ChatFormatting.GREEN));
         list.add(CommonComponents.EMPTY);
         list.add(Component.literal("Short Bow: Instantly Shoots!").withStyle(ChatFormatting.DARK_PURPLE));
-    }
 
-    public void createArrows(@NotNull ItemStack bow, @NotNull Level world, @NotNull LivingEntity archer) {
-        createArrowProperties(archer, true, bow, this.getKB(), archer.getXRot(), archer.getYRot());
     }
 }

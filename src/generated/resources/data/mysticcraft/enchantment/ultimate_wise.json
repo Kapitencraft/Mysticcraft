@@ -1,0 +1,35 @@
+{
+  "anvil_cost": 4,
+  "description": {
+    "translate": "enchantment.mysticcraft.ultimate_wise"
+  },
+  "effects": {
+    "minecraft:attributes": [
+      {
+        "amount": {
+          "type": "minecraft:linear",
+          "base": -0.1,
+          "per_level_above_first": -0.1
+        },
+        "attribute": "kap_lib:generic.mana_cost",
+        "id": "mysticcraft:ultimate_wise",
+        "operation": "add_multiplied_total"
+      }
+    ]
+  },
+  "exclusive_set": "#kap_lib:ultimate",
+  "max_cost": {
+    "base": 6,
+    "per_level_above_first": 10
+  },
+  "max_level": 5,
+  "min_cost": {
+    "base": 5,
+    "per_level_above_first": 10
+  },
+  "slots": [
+    "mainhand"
+  ],
+  "supported_items": "#minecraft:enchantable/weapon",
+  "weight": 2
+}

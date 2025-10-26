@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "cookingtime": 200,
+  "experience": 1.2,
+  "group": "crimson",
+  "ingredient": {
+    "item": "mysticcraft:raw_crimsonium"
+  },
+  "result": {
+    "count": 1,
+    "id": "mysticcraft:crimsonium_ingot"
+  }
+}

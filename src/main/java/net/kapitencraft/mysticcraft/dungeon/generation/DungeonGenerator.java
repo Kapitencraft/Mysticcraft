@@ -5,6 +5,6 @@ import net.minecraft.world.level.block.Blocks;
 
 public class DungeonGenerator extends Block {
     public DungeonGenerator() {
-        super(Properties.copy(Blocks.STRUCTURE_BLOCK));
+        super(Properties.ofFullCopy(Blocks.STRUCTURE_BLOCK));
     }
 }

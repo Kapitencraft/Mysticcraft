@@ -1,10 +1,13 @@
 package net.kapitencraft.mysticcraft.gui.artificer_table;
 
-import net.kapitencraft.mysticcraft.capability.CapabilityHelper;
-import net.kapitencraft.mysticcraft.capability.gemstone.*;
-import net.kapitencraft.mysticcraft.gui.GUISlotBlockItem;
+import net.kapitencraft.kap_lib.client.gui.GUISlotBlockItem;
+import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneHandler;
+import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneItem;
+import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneSlot;
+import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneType;
 import net.kapitencraft.mysticcraft.gui.NoBEMenu;
 import net.kapitencraft.mysticcraft.registry.ModBlocks;
+import net.kapitencraft.mysticcraft.registry.ModDataComponentTypes;
 import net.kapitencraft.mysticcraft.registry.ModMenuTypes;
 import net.minecraft.util.Mth;
 import net.minecraft.world.SimpleContainer;
@@ -21,10 +24,11 @@ import java.util.Arrays;
 
 public class ArtificerTableMenu extends NoBEMenu<ArtificerTableMenu.ItemContainer> {
 
-    public static final int MAX_GEMSTONE_SLOTS = 5;
+    public static int MAX_GEMSTONE_SLOTS = 5;
     private static boolean[][] unlockedCache;
 
     private boolean[] unlocked;
+
     public ArtificerTableMenu(int id, Inventory inventory) {
         this(id, inventory.player, ContainerLevelAccess.NULL);
     }
@@ -83,16 +87,17 @@ public class ArtificerTableMenu extends NoBEMenu<ArtificerTableMenu.ItemContaine
             if (this.getSlotIndex() == 0) {
                 ArtificerTableMenu.this.container.emptyItemHandler(false);
                 ArtificerTableMenu.this.unlocked = new boolean[MAX_GEMSTONE_SLOTS];
+                ArtificerTableMenu.this.container.handlerCache = null;
                 Arrays.fill(ArtificerTableMenu.this.unlocked, false);
-
             }
-            else GemstoneHelper.getCapability(getApplicable(), handler ->
-                    handler.putGemstone(
-                            GemstoneType.EMPTY,
-                            GemstoneType.Rarity.EMPTY,
-                            ArtificerTableMenu.this.container.getSlotForItem(getSlotIndex())
-                    )
-            );
+            else {
+                ArtificerTableMenu.this.container.handlerCache.putGemstone(
+                        GemstoneType.EMPTY,
+                        GemstoneType.Rarity.EMPTY,
+                        ArtificerTableMenu.this.container.getSlotForItem(getSlotIndex())
+                );
+                getApplicable().set(ModDataComponentTypes.EMBEDDED_GEMSTONES, ArtificerTableMenu.this.container.handlerCache);
+            }
             super.onTake(pPlayer, pStack);
         }
 
@@ -109,31 +114,38 @@ public class ArtificerTableMenu extends NoBEMenu<ArtificerTableMenu.ItemContaine
         @Override
         public boolean mayPlace(@NotNull ItemStack stack) {
             if (this.getSlotIndex() == 0) {
-                return GemstoneHelper.hasCapability(stack);
+                return stack.has(ModDataComponentTypes.EMBEDDED_GEMSTONES);
             } else {
                 ItemStack applicableStack = getApplicable();
-                return ArtificerTableMenu.this.unlocked[this.getSlotIndex() - 1] && GemstoneHelper.exCapability(applicableStack, handler -> {
-                    int slotId = ItemContainer.getSlotForItem(this.getSlotIndex(), applicableStack);
-                    return handler.putGemstoneFromStack(stack, slotId);
-                });
+                if (!ArtificerTableMenu.this.unlocked[this.getSlotIndex() - 1]) {
+                    return false;
+                }
+                int slotId = ItemContainer.getSlotForItem(this.getSlotIndex(), applicableStack);
+                boolean check = ArtificerTableMenu.this.container.handlerCache.putGemstoneFromStack(stack, slotId);
+                if (check) applicableStack.set(ModDataComponentTypes.EMBEDDED_GEMSTONES, ArtificerTableMenu.this.container.handlerCache);
+                return check;
             }
         }
 
         @Override
         public void set(@NotNull ItemStack stack) {
-            if (this.getSlotIndex() == 0) GemstoneHelper.getCapability(stack, iGemstoneHandler -> {
-                ItemStack[] stacks = getGemstoneForSlot(iGemstoneHandler);
-                ArtificerTableMenu.this.unlocked = getOrCacheUnlockedSlots(iGemstoneHandler.getSlotAmount());
-                for (int i = 0; i < MAX_GEMSTONE_SLOTS; i++) {
-                    this.container.setItem(i + 1, stacks[i]);
+            if (this.getSlotIndex() == 0) {
+                GemstoneHandler handler = stack.get(ModDataComponentTypes.EMBEDDED_GEMSTONES);
+                ArtificerTableMenu.this.container.handlerCache = handler;
+                if (handler != null) {
+                    ItemStack[] stacks = getGemstoneForSlot(handler);
+                    ArtificerTableMenu.this.unlocked = getOrCacheUnlockedSlots(handler.getSlotAmount());
+                    for (int i = 0; i < MAX_GEMSTONE_SLOTS; i++) {
+                        this.container.setItem(i + 1, stacks[i]);
+                    }
                 }
-            });
+            }
             super.set(stack);
         }
 
-        private static ItemStack[] getGemstoneForSlot(IGemstoneHandler applicable) {
+        private static ItemStack[] getGemstoneForSlot(GemstoneHandler applicable) {
             ItemStack[] stacks = new ItemStack[MAX_GEMSTONE_SLOTS];
-            GemstoneSlot[] slots = applicable.getSlots();
+            GemstoneSlot[] slots = applicable.slots();
             int slotAmount = applicable.getSlotAmount();
             boolean[] slotsUnlocked = getOrCacheUnlockedSlots(slotAmount);
             int j = 0;
@@ -154,6 +166,8 @@ public class ArtificerTableMenu extends NoBEMenu<ArtificerTableMenu.ItemContaine
     }
 
     public static class ItemContainer extends SimpleContainer {
+        private GemstoneHandler handlerCache;
+
         public ItemContainer() {
             super(1 + MAX_GEMSTONE_SLOTS);
         }
@@ -163,7 +177,7 @@ public class ArtificerTableMenu extends NoBEMenu<ArtificerTableMenu.ItemContaine
         }
 
         public void emptyItemHandler(boolean checkHasApplicable) {
-            if (checkHasApplicable && GemstoneHelper.hasCapability(getApplicable())) return;
+            if (checkHasApplicable && handlerCache != null) return;
             for (int i = 1; i <= 5; i++) {
                 this.setItem(i, ItemStack.EMPTY);
             }
@@ -174,17 +188,17 @@ public class ArtificerTableMenu extends NoBEMenu<ArtificerTableMenu.ItemContaine
             return getSlotForItem(slotId, applicable);
         }
 
-        public static int getSlotForItem(@Range(from = 0, to = MAX_GEMSTONE_SLOTS - 1) int slotId, ItemStack applicable) {
-            return applicable.getCapability(CapabilityHelper.GEMSTONE).map(handler -> {
-                boolean[] unlockedSlots = getOrCacheUnlockedSlots(handler.getSlotAmount());
-                int j = 0;
-                for (int i = 0; i < slotId - 1; i++) {
-                    if (unlockedSlots[i]) {
-                        j++;
-                    }
+        public static int getSlotForItem(@Range(from = 0, to = 9) int slotId, ItemStack applicable) {
+            GemstoneHandler handler = applicable.get(ModDataComponentTypes.EMBEDDED_GEMSTONES);
+            if (handler == null) return -1;
+            boolean[] unlockedSlots = getOrCacheUnlockedSlots(handler.getSlotAmount());
+            int j = 0;
+            for (int i = 0; i < slotId - 1; i++) {
+                if (unlockedSlots[i]) {
+                    j++;
                 }
-                return j;
-            }).orElse(-1);
+            }
+            return j;
         }
     }
 

@@ -6,6 +6,6 @@ import net.minecraft.world.level.block.state.properties.BlockSetType;
 
 public class ObsidianPressurePlate extends PressurePlateBlock {
     public ObsidianPressurePlate() {
-        super(Sensitivity.EVERYTHING, Properties.copy(Blocks.OBSIDIAN).noCollission(), BlockSetType.STONE);
+        super(BlockSetType.STONE, Properties.ofFullCopy(Blocks.OBSIDIAN).noCollission());
     }
 }

@@ -4,8 +4,11 @@ import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.item.loot_table.functions.PristineFunction;
 import net.kapitencraft.mysticcraft.registry.ModBlocks;
 import net.kapitencraft.mysticcraft.registry.ModItems;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.world.flag.FeatureFlags;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.LootPool;
@@ -13,10 +16,9 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.DynamicLoot;
 import net.minecraft.world.level.storage.loot.functions.ApplyBonusCount;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
-import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -24,8 +26,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ModBlockLootTables extends BlockLootSubProvider {
-    protected ModBlockLootTables() {
-        super(Set.of(), FeatureFlags.REGISTRY.allFlags());
+    protected ModBlockLootTables(HolderLookup.Provider provider) {
+        super(Set.of(), FeatureFlags.REGISTRY.allFlags(), provider);
     }
 
     @Override
@@ -59,6 +61,7 @@ public class ModBlockLootTables extends BlockLootSubProvider {
         dropSelf(ModBlocks.THISTLE.get());
         dropSelf(ModBlocks.MISTLETOE.get());
         dropSelf(ModBlocks.SHADER_TEST_BLOCK.get());
+        dropSelf(ModBlocks.MOON_BLOSSOM.get());
         this.add(ModBlocks.CRIMSONIUM_ORE.get(), createOreDrop(ModBlocks.CRIMSONIUM_ORE.get(), ModItems.RAW_CRIMSONIUM.get()));
         gemstone(ModBlocks.GEMSTONE_BLOCK.get());
         gemstone(ModBlocks.GEMSTONE_CRYSTAL.get());
@@ -66,28 +69,28 @@ public class ModBlockLootTables extends BlockLootSubProvider {
 
     @Override
     protected @NotNull Iterable<Block> getKnownBlocks() {
-        List<Block> blocks = ModBlocks.REGISTRY.getEntries().stream().map(RegistryObject::get).collect(Collectors.toList());
+        List<Block> blocks = ModBlocks.REGISTRY.getEntries().stream().map(DeferredHolder::get).collect(Collectors.toList());
         blocks.removeAll(NOT_USABLE);
         return blocks;
     }
 
     private static final List<Block> NOT_USABLE = List.of(
             ModBlocks.MANA_FLUID_BLOCK.get(),
-            ModBlocks.FRAGILE_BASALT.get(),
             ModBlocks.DUNGEON_GENERATOR.get(),
             ModBlocks.GEMSTONE_SEED.get() //shouldn't drop anything
     );
 
     private void gemstone(Block pBlock) {
+        HolderLookup.RegistryLookup<Enchantment> registrylookup = this.registries.lookupOrThrow(Registries.ENCHANTMENT);
         this.add(pBlock,
                 LootTable.lootTable().withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1.0F))
                         .add(DynamicLoot.dynamicEntry(MysticcraftMod.res("gemstone_block"))
-                                .when(HAS_SILK_TOUCH).otherwise(
+                                .when(this.hasSilkTouch()).otherwise(
                                         this.applyExplosionDecay(pBlock,
                                                 DynamicLoot.dynamicEntry(MysticcraftMod.res("gemstone_item"))
                                                         .apply(SetItemCountFunction.setCount(UniformGenerator.between(1, 5), false))
-                                                        .apply(ApplyBonusCount.addOreBonusCount(Enchantments.BLOCK_FORTUNE))
-                                                        .apply(() -> new PristineFunction(new LootItemCondition[0]))
+                                                        .apply(ApplyBonusCount.addOreBonusCount(registrylookup.getOrThrow(Enchantments.FORTUNE)))
+                                                        .apply(() -> new PristineFunction(List.of()))
                                         )
                                 )
                         )

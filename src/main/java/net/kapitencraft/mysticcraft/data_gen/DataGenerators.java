@@ -6,14 +6,14 @@ import net.kapitencraft.mysticcraft.data_gen.advancement.ModAdvancementProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
-import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.data.event.GatherDataEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.data.event.GatherDataEvent;
 
 import java.util.concurrent.CompletableFuture;
 
-@Mod.EventBusSubscriber(modid = MysticcraftMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = MysticcraftMod.MOD_ID)
 public class DataGenerators {
 
     @SubscribeEvent
@@ -25,21 +25,20 @@ public class DataGenerators {
         ModLanguageProvider provider = new ModLanguageProvider(output);
         generator.addProvider(true, new ModTextureProvider(helper, output));
         generator.addProvider(true, new ModBlockStateProvider(output, helper));
-        generator.addProvider(true, new ModRecipeProvider(output));
-        generator.addProvider(true, ModLootTableProvider.create(output));
         generator.addProvider(true, new ModItemModelProvider(output, helper));
-        generator.addProvider(false, new BestiaryProvider(output, provider));
         generator.addProvider(true, new ReforgeProvider(output, "mysticcraft"));
         //generator.addProvider(event.includeClient(), provider);
         registries = generator.addProvider(true, new ModRegistryProvider(output, registries)).getRegistryProvider();
         ModTagProvider.Block blockTags = generator.addProvider(true, new ModTagProvider.Block(output, registries, helper));
-        generator.addProvider(true, new ModTagProvider.Item(output, registries, blockTags.contentsGetter(), helper));
+        generator.addProvider(true, ModLootTableProvider.create(output, registries));
+        generator.addProvider(true, new ModRecipeProvider(output, registries));
+        generator.addProvider(true, new ModTagProvider.Items(output, registries, blockTags.contentsGetter(), helper));
         generator.addProvider(true, new ModTagProvider.Biome(output, registries, helper));
         generator.addProvider(true, new ModTagProvider.Entity(output, registries, helper));
         generator.addProvider(true, new ModTagProvider.DamageTypes(output, registries, helper));
         generator.addProvider(true, new ModAdvancementProvider(output, registries, helper));
         generator.addProvider(true, new ModItemRequirementsProvider(output));
         generator.addProvider(true, new ModBonusProvider(output, registries, helper));
-        generator.addProvider(true, new PerkProvider(output, registries));
+        generator.addProvider(true, new ModDataMapsProvider(output, registries));
     }
 }

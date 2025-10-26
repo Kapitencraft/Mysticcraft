@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "blooming=false": {
+      "model": "mysticcraft:block/moon_blossom_closed"
+    },
+    "blooming=true": {
+      "model": "mysticcraft:block/moon_blossom_open"
+    }
+  }
+}

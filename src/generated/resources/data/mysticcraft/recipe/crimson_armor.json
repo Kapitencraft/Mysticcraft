@@ -1,0 +1,7 @@
+{
+  "type": "kap_lib:armor",
+  "material": {
+    "item": "mysticcraft:crimson_steel_ingot"
+  },
+  "results": "mysticcraft:crimson"
+}

@@ -1,14 +1,17 @@
 package net.kapitencraft.mysticcraft.network.packets.C2S;
 
-import net.kapitencraft.kap_lib.io.network.SimplePacket;
+import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.gui.reforging_anvil.ReforgeAnvilMenu;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.world.entity.player.Player;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-import java.util.function.Supplier;
-
-public class UpgradeItemPacket implements SimplePacket {
+public class UpgradeItemPacket implements CustomPacketPayload {
+    public static final StreamCodec<RegistryFriendlyByteBuf, UpgradeItemPacket> STREAM_CODEC = StreamCodec.unit(new UpgradeItemPacket());
+    public static final Type<UpgradeItemPacket> TYPE = new Type<>(MysticcraftMod.res("upgrade_item"));
 
     public UpgradeItemPacket() {
 
@@ -17,13 +20,17 @@ public class UpgradeItemPacket implements SimplePacket {
     public void toBytes(FriendlyByteBuf buf) {
     }
 
-    public void handle(Supplier<NetworkEvent.Context> supplier) {
-        NetworkEvent.Context context = supplier.get();
+    public void handle(IPayloadContext context) {
         context.enqueueWork(() -> {
-            ServerPlayer player = context.getSender();
-            if (player != null && player.containerMenu instanceof ReforgeAnvilMenu menu) {
+            Player player = context.player();
+            if (player.containerMenu instanceof ReforgeAnvilMenu menu) {
                 menu.upgrade();
             }
         });
+    }
+
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }

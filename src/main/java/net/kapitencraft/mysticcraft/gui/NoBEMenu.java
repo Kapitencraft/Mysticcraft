@@ -1,6 +1,5 @@
 package net.kapitencraft.mysticcraft.gui;
 
-import net.kapitencraft.kap_lib.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
@@ -84,10 +83,16 @@ public abstract class NoBEMenu<T extends Container> extends AbstractContainerMen
     }
 
     private void addPlayerInventory(Inventory playerInventory, int xOffset, int yOffSet) {
-        MiscHelper.repeat(3, i -> MiscHelper.repeat(9, l -> this.addSlot(new Slot(playerInventory, l + i * 9 + 9, xOffset + 8 + l * 18, yOffSet + 84 + i * 18))));
+        for (int i = 0; i < 3; i++) {
+            for (int l = 0; l < 9; l++) {
+                this.addSlot(new Slot(playerInventory, l + i * 9 + 9, xOffset + 8 + l * 18, yOffSet + 84 + i * 18));
+            }
+        }
     }
     private void addPlayerHotbar(Inventory playerInventory, int xOffset, int yOffSet) {
-        MiscHelper.repeat(9, i -> this.addSlot(new Slot(playerInventory, i, xOffset + 8 + i * 18, yOffSet + 142)));
+        for (int i = 0; i < 9; i++) {
+            this.addSlot(new Slot(playerInventory, i, xOffset + 8 + i * 18, yOffSet + 142));
+        }
     }
 
     @Override

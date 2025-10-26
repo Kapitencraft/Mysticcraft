@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "!": {
+      "item": "minecraft:stick"
+    },
+    "#": {
+      "item": "minecraft:stone"
+    },
+    "*": {
+      "item": "minecraft:cobblestone"
+    }
+  },
+  "pattern": [
+    "#*#",
+    " ! ",
+    " ! "
+  ],
+  "result": {
+    "count": 1,
+    "id": "mysticcraft:stone_hammer"
+  }
+}

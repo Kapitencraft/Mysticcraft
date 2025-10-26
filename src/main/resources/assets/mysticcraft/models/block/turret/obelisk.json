@@ -85,7 +85,7 @@
 				"up": {"uv": [7, 6, 9, 8], "texture": "#laser"},
 				"down": {"uv": [0, 0, 2, 2], "texture": "#missing"}
 			},
-			"forge_data": {
+			"neoforge_data": {
 				"sky_light": 15,
 				"block_light": 15
 			}

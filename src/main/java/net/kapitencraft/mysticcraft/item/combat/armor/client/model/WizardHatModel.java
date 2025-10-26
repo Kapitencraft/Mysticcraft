@@ -4,15 +4,12 @@ package net.kapitencraft.mysticcraft.item.combat.armor.client.model;// Made with
 
 
 import net.kapitencraft.kap_lib.client.armor.ArmorModel;
-import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.resources.ResourceLocation;
 
 public class WizardHatModel extends ArmorModel {
 	// This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
-	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation("modid", "wizardhatmodel"), "main");
 
 	public WizardHatModel(ModelPart root) {
 		super(root);

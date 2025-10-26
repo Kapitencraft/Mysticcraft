@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.worldgen.tree;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.kapitencraft.mysticcraft.registry.ModFoliagePlacers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
@@ -15,7 +15,7 @@ import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvi
 import org.jetbrains.annotations.NotNull;
 
 public class ColossalFoliagePlacer extends FoliagePlacer {
-    public static final Codec<ColossalFoliagePlacer> CODEC = Codec.unit(ColossalFoliagePlacer::new);
+    public static final MapCodec<ColossalFoliagePlacer> CODEC = MapCodec.unit(ColossalFoliagePlacer::new);
 
     public ColossalFoliagePlacer() {
         super(ConstantInt.of(4), ConstantInt.of(0));
@@ -23,7 +23,7 @@ public class ColossalFoliagePlacer extends FoliagePlacer {
 
     @Override
     protected @NotNull FoliagePlacerType<?> type() {
-        return ModFoliagePlacers.COLOSSAL.get();
+        return ModFoliagePlacers.COLOSSAL.value();
     }
 
     @Override

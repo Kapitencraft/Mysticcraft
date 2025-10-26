@@ -1,0 +1,34 @@
+{
+  "criteria": {
+    "arch_mage": {
+      "conditions": {
+        "type": "more",
+        "value": 10000.0
+      },
+      "trigger": "kap_lib:mana_consumed"
+    }
+  },
+  "display": {
+    "background": "minecraft:textures/block/amethyst_block.png",
+    "description": {
+      "translate": "advancements.mysticcraft.archmage"
+    },
+    "frame": "challenge",
+    "icon": {
+      "count": 1,
+      "id": "mysticcraft:elemental_shard_of_rainbow"
+    },
+    "title": {
+      "translate": "advancements.mysticcraft.archmage.title"
+    }
+  },
+  "requirements": [
+    [
+      "arch_mage"
+    ]
+  ],
+  "rewards": {
+    "experience": 100
+  },
+  "sends_telemetry_event": true
+}

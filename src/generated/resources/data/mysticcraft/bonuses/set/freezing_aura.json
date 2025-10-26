@@ -1,6 +1,8 @@
 {
   "type": "mysticcraft:frozen_blaze",
-  "data": {},
+  "bonus": {
+    "type": "mysticcraft:frozen_blaze"
+  },
   "equipment_slots": [
     "chest",
     "legs",

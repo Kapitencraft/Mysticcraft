@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.item.bonus;
 
 import net.kapitencraft.kap_lib.helpers.MathHelper;
-import net.kapitencraft.kap_lib.io.serialization.DataPackSerializer;
+import net.kapitencraft.kap_lib.io.serialization.RegistrySerializer;
 import net.kapitencraft.kap_lib.item.bonus.Bonus;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.LivingEntity;
@@ -10,10 +10,12 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class FreezingAuraBonus implements Bonus<FreezingAuraBonus> {
-    public static final DataPackSerializer<FreezingAuraBonus> SERIALIZER = DataPackSerializer.unit(FreezingAuraBonus::new);
+    public static final FreezingAuraBonus INSTANCE = new FreezingAuraBonus();
+
+    public static final RegistrySerializer<FreezingAuraBonus> SERIALIZER = RegistrySerializer.unit(INSTANCE);
 
     @Override
-    public DataPackSerializer<FreezingAuraBonus> getSerializer() {
+    public RegistrySerializer<FreezingAuraBonus> getSerializer() {
         return SERIALIZER;
     }
 

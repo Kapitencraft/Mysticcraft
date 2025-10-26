@@ -1,5 +1,7 @@
 {
   "type": "mysticcraft:assassin",
-  "data": {},
+  "bonus": {
+    "type": "mysticcraft:assassin"
+  },
   "item": "mysticcraft:shadow_dagger"
 }

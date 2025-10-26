@@ -1,13 +1,14 @@
 package net.kapitencraft.mysticcraft.item.combat.armor.client;
 
 import net.kapitencraft.mysticcraft.item.combat.armor.TieredArmorItem;
+import net.minecraft.core.Holder;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 
 import java.util.List;
 
 public abstract class NetherArmorItem extends TieredArmorItem {
-    public NetherArmorItem(ArmorMaterial material, ArmorItem.Type type, Properties properties) {
+    public NetherArmorItem(Holder<ArmorMaterial> material, ArmorItem.Type type, Properties properties) {
         super(material, type, properties);
     }
 

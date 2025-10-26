@@ -4,6 +4,7 @@ import net.kapitencraft.kap_lib.util.DamageCounter;
 import net.kapitencraft.mysticcraft.misc.damage_source.SpellDamageSource;
 import net.kapitencraft.mysticcraft.spell.Spell;
 import net.kapitencraft.mysticcraft.spell.spells.SpellProjectile;
+import net.minecraft.core.Holder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
@@ -14,13 +15,13 @@ import java.util.List;
 
 public class ManaAOE {
 
-    public static void execute(LivingEntity user, Spell spell, float damage, double range) {
+    public static void execute(LivingEntity user, Holder<Spell> spell, float damage, double range) {
         final Vec3 center = new Vec3((user.getX()), (user.getY()), (user.getZ()));
         List<LivingEntity> entFound = user.level().getEntitiesOfClass(LivingEntity.class, new AABB(center, center).inflate(range), e -> true).stream().sorted(Comparator.comparingDouble(entCnd -> entCnd.distanceToSqr(center))).toList();
         DamageCounter.activate();
         for (LivingEntity entityIterator : entFound) {
             if (!(entityIterator == user)) {
-                entityIterator.hurt(SpellDamageSource.createDirect(user, spell), damage);
+                entityIterator.hurt(SpellDamageSource.createDirect(user, spell.value()), damage);
             }
         }
         DamageCounter.DamageHolder holder = DamageCounter.getDamage(true);

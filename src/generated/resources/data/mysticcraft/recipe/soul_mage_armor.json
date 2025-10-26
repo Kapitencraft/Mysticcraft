@@ -1,0 +1,7 @@
+{
+  "type": "kap_lib:armor",
+  "material": {
+    "item": "mysticcraft:soul_chain"
+  },
+  "results": "mysticcraft:soul_mage"
+}

@@ -1,15 +1,13 @@
 package net.kapitencraft.mysticcraft.item.misc;
 
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
+import net.kapitencraft.mysticcraft.registry.ModDataComponentTypes;
+import net.minecraft.util.Unit;
 import net.minecraft.world.item.ItemStack;
 
 public class SoulbindHelper {
-    public static final String SOULBOUND_TAG_ID = "Soulbound";
 
     public static boolean isSoulbound(ItemStack stack) {
-        CompoundTag tag = stack.getOrCreateTag();
-        return tag.contains(SOULBOUND_TAG_ID, Tag.TAG_BYTE) && tag.getBoolean(SOULBOUND_TAG_ID);
+        return stack.has(ModDataComponentTypes.SOUL_BOUND);
     }
 
     public static boolean isNotSoulbound(ItemStack stack) {
@@ -17,7 +15,6 @@ public class SoulbindHelper {
     }
 
     public static void setSoulbound(ItemStack stack) {
-        CompoundTag tag = stack.getOrCreateTag();
-        tag.putBoolean(SOULBOUND_TAG_ID, true);
+        stack.set(ModDataComponentTypes.SOUL_BOUND, Unit.INSTANCE);
     }
 }

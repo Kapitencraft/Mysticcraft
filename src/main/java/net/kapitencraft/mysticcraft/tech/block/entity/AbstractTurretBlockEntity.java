@@ -1,10 +1,13 @@
 package net.kapitencraft.mysticcraft.tech.block.entity;
 
+import net.kapitencraft.mysticcraft.network.packets.C2S.SetTargetPriorityPacket;
 import net.kapitencraft.mysticcraft.tech.block.UpgradableBlockEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.NbtUtils;
+import net.minecraft.nbt.StringTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -14,13 +17,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.items.ItemStackHandler;
+import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Predicate;
 
 public abstract class AbstractTurretBlockEntity extends UpgradableBlockEntity {
@@ -54,6 +55,8 @@ public abstract class AbstractTurretBlockEntity extends UpgradableBlockEntity {
     @SuppressWarnings("DataFlowIssue")
     protected void selectTarget() {
         List<LivingEntity> entities = this.level.getEntitiesOfClass(LivingEntity.class, checkArea, living -> !living.isRemoved() && !living.isDeadOrDying() && !living.fireImmune());
+        if (entities.isEmpty()) return;
+        entities.sort(this.targetSelector.comparator);
         int i = 0;
         while (entities.size() > i && !canTarget(entities.get(i))) i++;
         if (entities.size() > i) //only update the target when there's actually a entity to target
@@ -80,35 +83,39 @@ public abstract class AbstractTurretBlockEntity extends UpgradableBlockEntity {
     }
 
     @Override
-    public ItemStackHandler getUpgrades() {
-        return null;
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+        tag.putString("Owner", this.owner.toString());
+        CompoundTag selector = new CompoundTag();
+        this.targetSelector.serialize(selector);
+        selector.put("Selector", selector);
     }
 
     @Override
-    protected void saveAdditional(CompoundTag pTag) {
-        super.saveAdditional(pTag);
-        pTag.putString("Owner", this.owner.toString());
-        CompoundTag tag = new CompoundTag();
-        this.targetSelector.serialize(tag);
-        pTag.put("Selector", tag);
-    }
-
-    @Override
-    public void load(CompoundTag pTag) {
-        super.load(pTag);
-        this.owner = UUID.fromString(pTag.getString("Owner"));
-        this.targetSelector.deserialize(pTag.getCompound("Selector"));
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        this.owner = UUID.fromString(tag.getString("Owner"));
+        this.targetSelector.deserialize(tag.getCompound("Selector"));
     }
 
     public void setOwner(UUID uuid) {
         this.owner = uuid;
-        this.targetSelector.playersToIgnore.clear(); //clear entries and reset
-        this.targetSelector.playersToIgnore.add(uuid);
+        List<UUID> toIgnore = this.targetSelector.predicate.playersToIgnore;
+        toIgnore.clear(); //clear entries and reset
+        toIgnore.add(uuid);
+        this.setChanged();
     }
 
-    //TODO target selector
+    public TargetSelector getSelector() {
+        return this.targetSelector;
+    }
 
-    public static class TargetSelector implements Predicate<LivingEntity> {
+    public void setTargetPriority(int slot, int index) {
+        this.targetSelector.orders[slot] = TargetPriority.values()[index];
+        this.targetSelector.recalculateComparator();
+    }
+
+    public static class TargetPredicate implements Predicate<LivingEntity> {
         private final List<UUID> playersToIgnore = new ArrayList<>();
 
         public void addPlayer(Player player) {
@@ -117,12 +124,12 @@ public abstract class AbstractTurretBlockEntity extends UpgradableBlockEntity {
 
         public void deserialize(CompoundTag tag) {
             ListTag playersToIgnore = tag.getList("PlayersToIgnore", 11);
-
+            playersToIgnore.stream().map(Tag::getAsString).map(UUID::fromString).forEach(this.playersToIgnore::add);
         }
 
         private void serialize(CompoundTag tag) {
             ListTag listTag = new ListTag();
-            playersToIgnore.stream().map(NbtUtils::createUUID).forEach(listTag::add);
+            playersToIgnore.stream().map(UUID::toString).map(StringTag::valueOf).forEach(listTag::add);
             tag.put("PlayersToIgnore", listTag);
         }
 
@@ -135,23 +142,114 @@ public abstract class AbstractTurretBlockEntity extends UpgradableBlockEntity {
         }
     }
 
-    private enum TargetOrder implements StringRepresentable {
+    public enum TargetPriority implements StringRepresentable {
+        CLOSEST(Comparator.comparingDouble(l -> 0)),
         MOST_HEALTH(Comparator.comparingDouble(LivingEntity::getHealth)),
         MOST_ARMOR(Comparator.comparingInt(LivingEntity::getArmorValue)),
         LEAST_HEALTH(Comparator.comparingDouble(LivingEntity::getHealth).reversed()),
         LEAST_ARMOR(Comparator.comparingInt(LivingEntity::getArmorValue).reversed()),
+        FURTHEST_FROM_DEATH(Comparator.comparingDouble(l -> l.getHealth() / l.getMaxHealth())),
+        CLOSEST_TO_DEATH(FURTHEST_FROM_DEATH.comparator.reversed()),
         FASTEST(Comparator.comparingDouble(l -> l.getAttributeValue(Attributes.MOVEMENT_SPEED))),
         SLOWEST(FASTEST.comparator.reversed());
 
         private final Comparator<LivingEntity> comparator;
 
-        TargetOrder(Comparator<LivingEntity> comparator) {
+        static final EnumCodec<TargetPriority> CODEC = StringRepresentable.fromEnum(TargetPriority::values);
+
+        TargetPriority(Comparator<LivingEntity> comparator) {
             this.comparator = comparator;
         }
 
         @Override
         public @NotNull String getSerializedName() {
             return this.name().toLowerCase();
+        }
+
+        public String getTranslationKey() {
+            return "target_priority." + getSerializedName();
+        }
+    }
+
+    public class TargetSelector {
+        private final TargetPredicate predicate;
+        private final TargetPriority[] orders = new TargetPriority[]{TargetPriority.CLOSEST, TargetPriority.CLOSEST, TargetPriority.CLOSEST};
+        private Comparator<LivingEntity> comparator;
+
+        private TargetSelector() {
+            this.predicate = new TargetPredicate();
+            this.recalculateComparator();
+        }
+
+        /**
+         * recalculates the chained comparator used when selecting a target
+         */
+        private void recalculateComparator() {
+            Comparator<LivingEntity> c = null;
+            Set<TargetPriority> prev = new HashSet<>(3);
+            for (TargetPriority order : orders) {
+                if (prev.contains(order)) continue; //skip multiple
+                if (c == null) {
+                    c = getComparator(order);
+                } else {
+                    c = c.thenComparing(getComparator(order));
+                }
+                prev.add(order);
+            }
+            this.comparator = c;
+        }
+
+        private Comparator<LivingEntity> getComparator(TargetPriority order) {
+            if (order == TargetPriority.CLOSEST) {
+                Vec3 center = worldPosition.getCenter();
+                return Comparator.comparingDouble(l -> l.distanceToSqr(center));
+            }
+            return order.comparator;
+        }
+
+        public void cycleOrder(int index, boolean forward) {
+            TargetPriority[] values = TargetPriority.values();
+            TargetPriority order = orders[index];
+            int ordinal = order.ordinal();
+            if (forward) {
+                if (++ordinal == values.length) ordinal = 0;
+            } else {
+                if (--ordinal < 0) {
+                    ordinal = values.length - 1;
+                }
+            }
+            orders[index] = values[ordinal];
+            PacketDistributor.sendToServer(new SetTargetPriorityPacket(getBlockPos(), index, ordinal));
+            this.recalculateComparator();
+            setChanged();
+        }
+
+        public void serialize(CompoundTag tag) {
+            CompoundTag predicateTag = new CompoundTag();
+            this.predicate.serialize(predicateTag);
+            tag.put("Predicate", predicateTag);
+            ListTag orders = new ListTag();
+            for (TargetPriority order : this.orders) {
+                orders.add(StringTag.valueOf(order.getSerializedName()));
+            }
+            tag.put("Orders", orders);
+        }
+
+        public void deserialize(CompoundTag tag) {
+            this.predicate.deserialize(tag.getCompound("Predicate"));
+            ListTag list = tag.getList("Orders", 8);
+            for (int i = 0; i < list.size(); i++) {
+                orders[i] = TargetPriority.CODEC.byName(list.getString(i), TargetPriority.CLOSEST);
+            }
+            this.recalculateComparator();
+        }
+
+        public TargetPriority[] getOrders() {
+            return orders;
+        }
+
+        protected boolean test(LivingEntity living) {
+            return this.predicate.test(living);
         }
     }
 }

@@ -21,7 +21,7 @@ public abstract class StackingBonus<T extends StackingBonus<T>> implements Bonus
     @Override
     public float onEntityHurt(LivingEntity attacked, LivingEntity attacker, MiscHelper.DamageType type, float damage) {
         if (type == this.type) {
-            CompoundTag tag = IOHelper.getOrCreateTag(attacked.getPersistentData(), typeName);
+            CompoundTag tag = IOHelper.getOrCreateCompound(attacked.getPersistentData(), typeName);
             IOHelper.increaseIntegerTagValue(tag, "stack", 1);
             tag.putInt("duration", duration);
         }

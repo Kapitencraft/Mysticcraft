@@ -77,7 +77,7 @@ public class CircleParticle extends TextureSheetParticle {
     }
 
     private void makeCornerVertex(VertexConsumer consumer, Vector3f vector3f, float u1, float v1, float time) {
-        consumer.vertex(vector3f.x(), vector3f.y(), vector3f.z()).uv(u1, v1).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(getLightColor(time)).endVertex();
+        consumer.addVertex(vector3f.x(), vector3f.y(), vector3f.z()).setUv(u1, v1).setColor(this.rCol, this.gCol, this.bCol, this.alpha).setLight(getLightColor(time));
     }
 
     @Override
@@ -94,7 +94,7 @@ public class CircleParticle extends TextureSheetParticle {
 
         @Nullable
         @Override
-        public Particle createParticle(CircleParticleOptions pType, ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed) {
+        public Particle createParticle(CircleParticleOptions pType, @NotNull ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed) {
             return new CircleParticle(pLevel, pX, pY, pZ, pType.getColor(), pType.getSize(), pType.getExpandSpeed()).withTexture(spriteSet);
         }
     }

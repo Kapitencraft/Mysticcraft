@@ -1,21 +1,21 @@
 package net.kapitencraft.mysticcraft.item.combat.spells.necron_sword;
 
-import com.google.common.collect.Multimap;
-import net.kapitencraft.kap_lib.helpers.AttributeHelper;
 import net.kapitencraft.kap_lib.registry.ExtraAttributes;
-import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.kapitencraft.kap_lib.util.attribute.BaseAttributeLocations;
+import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneHandler;
+import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneSlot;
+import net.kapitencraft.mysticcraft.registry.ModDataComponentTypes;
+import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.function.Consumer;
 
 public class Scylla extends NecronSword {
     public Scylla() {
-        super(REFINED_BASE_DAMAGE, BASE_INTEL, BASE_FEROCITY, BASE_STRENGHT);
-    }
-
-    @Override
-    protected @NotNull Consumer<Multimap<Attribute, AttributeModifier>> getAdditionalModifiers() {
-        return multimap -> multimap.put(ExtraAttributes.CRIT_DAMAGE.get(), AttributeHelper.createModifier("Scylla Modifiers", AttributeModifier.Operation.ADDITION, 35));
+        super(new Properties().attributes(createNecronAttributes(REFINED_BASE_DAMAGE, BASE_INTEL, BASE_FEROCITY, BASE_STRENGHT)
+                .add(
+                        ExtraAttributes.CRIT_DAMAGE,
+                        new AttributeModifier(BaseAttributeLocations.CRIT_DAMAGE, 35, AttributeModifier.Operation.ADD_VALUE),
+                        EquipmentSlotGroup.MAINHAND
+                ).build()
+        ).component(ModDataComponentTypes.EMBEDDED_GEMSTONES, GemstoneHandler.create(GemstoneSlot.Type.COMBAT, GemstoneSlot.Type.COMBAT)));
     }
 }

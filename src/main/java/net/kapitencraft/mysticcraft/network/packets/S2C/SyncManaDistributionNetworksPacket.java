@@ -1,27 +1,28 @@
 package net.kapitencraft.mysticcraft.network.packets.S2C;
 
-import net.kapitencraft.kap_lib.io.network.SimplePacket;
+import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.tech.DistributionNetworkManager;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-import java.util.Objects;
-import java.util.function.Supplier;
+public record SyncManaDistributionNetworksPacket(DistributionNetworkManager manager) implements CustomPacketPayload {
+    public static final Type<SyncManaDistributionNetworksPacket> TYPE = new Type<>(MysticcraftMod.res("sync_mana_dist_networks"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, SyncManaDistributionNetworksPacket> STREAM_CODEC = StreamCodec.of(
+            (buffer, value) ->
+                    buffer.writeNbt(value.manager().saveDirectly(new CompoundTag())),
+            buffer ->
+                    new SyncManaDistributionNetworksPacket(DistributionNetworkManager.loadDirectly(buffer.readNbt()))
+    );
 
-public record SyncManaDistributionNetworksPacket(DistributionNetworkManager manager) implements SimplePacket {
-
-    public SyncManaDistributionNetworksPacket(FriendlyByteBuf buf) {
-        this(DistributionNetworkManager.load(Objects.requireNonNull(buf.readNbt(), "buf could not read NBT")));
+    public void handle(IPayloadContext context) {
+        context.enqueueWork(() -> DistributionNetworkManager.applyClient(this.manager));
     }
 
     @Override
-    public void toBytes(FriendlyByteBuf buf) {
-        buf.writeNbt(this.manager.save(new CompoundTag()));
-    }
-
-    @Override
-    public void handle(Supplier<NetworkEvent.Context> sup) {
-        sup.get().enqueueWork(() -> DistributionNetworkManager.applyClient(this.manager));
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }

@@ -1,5 +1,6 @@
 package net.kapitencraft.mysticcraft.gui.screen;
 
+import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -7,7 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 public class DefaultBackgroundScreen extends Screen implements IBackgroundScreen {
-    private static final ResourceLocation BACKGROUND_TEXTURE = new ResourceLocation("mysticcraft:textures/gui/browsable_background.png");
+    private static final ResourceLocation BACKGROUND_TEXTURE = MysticcraftMod.res("textures/gui/background.png");
 
     protected int leftPos;
     protected int topPos;
@@ -25,12 +26,12 @@ public class DefaultBackgroundScreen extends Screen implements IBackgroundScreen
 
     @Override
     public void render(@NotNull GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
-        this.renderBackground(graphics);
+        this.renderBackground(graphics, pMouseX, pMouseY, pPartialTick);
         super.render(graphics, pMouseX, pMouseY, pPartialTick);
     }
 
     @Override
-    public void renderBackground(@NotNull GuiGraphics graphics) {
+    public void renderBackground(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         graphics.blit(BACKGROUND_TEXTURE, this.leftPos, this.topPos, 0, 0, 0, getImageWidth(),  getImageHeight(), getImageWidth(), getImageHeight());
     }
 

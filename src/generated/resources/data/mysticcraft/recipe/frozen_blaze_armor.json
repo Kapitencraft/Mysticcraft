@@ -1,0 +1,7 @@
+{
+  "type": "kap_lib:armor",
+  "material": {
+    "item": "mysticcraft:frozen_blaze_rod"
+  },
+  "results": "mysticcraft:frozen_blaze"
+}

@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "#": {
+      "item": "mysticcraft:mana_steel_sword_handle"
+    },
+    "*": {
+      "item": "mysticcraft:lower_mana_steel_blade"
+    },
+    "+": {
+      "item": "mysticcraft:upper_mana_steel_blade"
+    }
+  },
+  "pattern": [
+    "  +",
+    " * ",
+    "#  "
+  ],
+  "result": {
+    "count": 1,
+    "id": "mysticcraft:mana_steel_sword"
+  }
+}

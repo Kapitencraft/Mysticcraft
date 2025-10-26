@@ -1,31 +1,32 @@
 package net.kapitencraft.mysticcraft.network.packets.C2S;
 
-import net.kapitencraft.kap_lib.io.network.SimplePacket;
+import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.bow.ShortBowItem;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.world.entity.player.Player;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-import java.util.function.Supplier;
-
-public class UseShortBowPacket implements SimplePacket {
+public class UseShortBowPacket implements CustomPacketPayload {
+    private static final UseShortBowPacket INSTANCE = new UseShortBowPacket();
+    public static final StreamCodec<RegistryFriendlyByteBuf, UseShortBowPacket> STREAM_CODEC = StreamCodec.unit(INSTANCE);
+    public static final Type<UseShortBowPacket> TYPE = new Type<>(MysticcraftMod.res("use_short_bow"));
 
     public UseShortBowPacket() {
     }
 
-    @Override
-    public void toBytes(FriendlyByteBuf buf) {
-    }
-
-    @Override
-    public void handle(Supplier<NetworkEvent.Context> sup) {
-        NetworkEvent.Context context = sup.get();
+    public void handle(IPayloadContext context) {
         context.enqueueWork(()-> {
-            ServerPlayer player = context.getSender();
-            if (player == null) return;
+            Player player = context.player();
             if (player.getMainHandItem().getItem() instanceof ShortBowItem shortBowItem) {
                 shortBowItem.releaseUsing(player.getMainHandItem(), player.level(), player, -1);
             }
         });
+    }
+
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }

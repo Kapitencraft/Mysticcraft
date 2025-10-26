@@ -15,43 +15,39 @@ import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraftforge.common.Tags;
-import net.minecraftforge.common.data.BlockTagsProvider;
-import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.common.data.BlockTagsProvider;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.registries.DeferredItem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Stream;
 
 @SuppressWarnings("unchecked")
 public interface ModTagProvider {
 
-    class Item extends ItemTagsProvider {
+    class Items extends ItemTagsProvider {
 
-        public Item(PackOutput output, CompletableFuture<HolderLookup.Provider> registries, CompletableFuture<TagsProvider.TagLookup<net.minecraft.world.level.block.Block>> tagLookup, @Nullable ExistingFileHelper existingFileHelper) {
+        public Items(PackOutput output, CompletableFuture<HolderLookup.Provider> registries, CompletableFuture<TagsProvider.TagLookup<net.minecraft.world.level.block.Block>> tagLookup, @Nullable ExistingFileHelper existingFileHelper) {
             super(output, registries, tagLookup, MysticcraftMod.MOD_ID, existingFileHelper);
         }
 
         @Override
         protected void addTags(HolderLookup.@NotNull Provider pProvider) {
-            addArmors(
-                    ModItems.CRIMSON_ARMOR,
-                    ModItems.SHADOW_ASSASSIN_ARMOR,
-                    ModItems.FROZEN_BLAZE_ARMOR,
-                    ModItems.TERROR_ARMOR,
-                    ModItems.ENDER_KNIGHT_ARMOR
-            );
+            addArmor(ModItems.CRIMSON_ARMOR);
+            addArmor(ModItems.SHADOW_ASSASSIN_ARMOR);
+            addArmor(ModItems.FROZEN_BLAZE_ARMOR);
+            addArmor(ModItems.TERROR_ARMOR);
+            addArmor(ModItems.ENDER_KNIGHT_ARMOR);
+
             tag(ModTags.Items.DAGGER).add(ModItems.SHADOW_DAGGER.get(), ModItems.DARK_DAGGER.get());
-            tag(Tags.Items.TOOLS_BOWS).add(ModItems.LONGBOW.get(), ModItems.TALLIN_BOW.get());
-            tag(Tags.Items.TOOLS_FISHING_RODS).add(ModItems.LAVA_FISHING_ROD_TEST.get());
+            tag(Tags.Items.TOOLS_BOW).add(ModItems.LONGBOW.get(), ModItems.TALLIN_BOW.get());
+            tag(Tags.Items.TOOLS_FISHING_ROD).add(ModItems.LAVA_FISHING_ROD_TEST.get());
             tag(ItemTags.SWORDS).addTags(
                     //ModTags.Items.CLEAVER,
                     ModTags.Items.DAGGER
@@ -59,7 +55,7 @@ public interface ModTagProvider {
                     //ModTags.Items.LANCE,
                     //ModTags.Items.SPEAR
             ).add(ModItems.MANA_STEEL_SWORD.get(), ModItems.AOTE.get(), ModItems.AOTV.get());
-            tag(Tags.Items.TOOLS_SHIELDS).add(ModItems.GOLDEN_SHIELD.get(), ModItems.IRON_SHIELD.get());
+            tag(Tags.Items.TOOLS_SHIELD).add(ModItems.GOLDEN_SHIELD.get(), ModItems.IRON_SHIELD.get());
             tag(ItemTags.FISHES).add(ModItems.MAGMA_COD.get(), ModItems.BLAZING_SALMON.get());
 
             tag(ModTags.Items.ENDER_HITTABLE).add(ModItems.TALLIN_BOW.get());
@@ -67,6 +63,9 @@ public interface ModTagProvider {
             tag(ModTags.Items.TIER_2_HAMMER).add(ModItems.DIAMOND_HAMMER.get(), ModItems.NETHERITE_HAMMER.get());
             tag(ModTags.Items.TIER_1_HAMMER).addTag(ModTags.Items.TIER_2_HAMMER).add(ModItems.IRON_HAMMER.get());
             tag(ModTags.Items.HAMMER).addTag(ModTags.Items.TIER_1_HAMMER).add(ModItems.STONE_HAMMER.get());
+            tag(ItemTags.MINING_ENCHANTABLE).addTags(ModTags.Items.HAMMER);
+            tag(ItemTags.DURABILITY_ENCHANTABLE).addTags(ModTags.Items.HAMMER);
+            tag(ItemTags.MINING_LOOT_ENCHANTABLE).addTags(ModTags.Items.HAMMER);
 
             tag(ModTags.Items.CATALYST).add(
                     ModItems.SPELL_SCROLL.get(),
@@ -83,27 +82,27 @@ public interface ModTagProvider {
             );
 
             tag(ModTags.Items.DRAGON_TEMPTING).add(
-                    Items.SALMON,
-                    Items.COOKED_SALMON,
-                    Items.COD,
-                    Items.COOKED_COD,
-                    Items.TROPICAL_FISH
+                    net.minecraft.world.item.Items.SALMON,
+                    net.minecraft.world.item.Items.COOKED_SALMON,
+                    net.minecraft.world.item.Items.COD,
+                    net.minecraft.world.item.Items.COOKED_COD,
+                    net.minecraft.world.item.Items.TROPICAL_FISH
+            );
+            tag(ModTags.Items.CONTAINER_ENCHANTABLE).add(
+                    ModItems.WALLET.value(),
+                    ModItems.AMETHYST_QUIVER.value()
             );
 
             copy(ModTags.Blocks.STRIPPED_LOGS, ModTags.Items.STRIPPED_LOGS);
         }
 
-        @SafeVarargs
-        private void addArmors(Map<ArmorItem.Type, ? extends RegistryObject<? extends AbstractArmorItem>>... armorElements) {
-            collect(Arrays.stream(armorElements).map(Map::values).flatMap(Collection::stream), tag(Tags.Items.ARMORS));
-            collect(Arrays.stream(armorElements).map(map -> map.get(ArmorItem.Type.BOOTS)), tag(Tags.Items.ARMORS_BOOTS));
-            collect(Arrays.stream(armorElements).map(map -> map.get(ArmorItem.Type.LEGGINGS)), tag(Tags.Items.ARMORS_LEGGINGS));
-            collect(Arrays.stream(armorElements).map(map -> map.get(ArmorItem.Type.CHESTPLATE)), tag(Tags.Items.ARMORS_CHESTPLATES));
-            collect(Arrays.stream(armorElements).map(map -> map.get(ArmorItem.Type.HELMET)), tag(Tags.Items.ARMORS_HELMETS));
-        }
-
-        private void collect(Stream<? extends RegistryObject<? extends AbstractArmorItem>> stream, IntrinsicTagAppender<net.minecraft.world.item.Item> appender) {
-            stream.map(RegistryObject::get).forEach(appender::add);
+        private void addArmor(Map<ArmorItem.Type, ? extends DeferredItem<? extends AbstractArmorItem>> armorElements) {
+            IntrinsicTagAppender<Item> armorTag = tag(Tags.Items.ARMORS);
+            armorElements.values().stream().map(DeferredItem::get).forEach(armorTag::add);
+            tag(ItemTags.FOOT_ARMOR).add(armorElements.get(ArmorItem.Type.BOOTS).get());
+            tag(ItemTags.LEG_ARMOR).add(armorElements.get(ArmorItem.Type.LEGGINGS).get());
+            tag(ItemTags.CHEST_ARMOR).add(armorElements.get(ArmorItem.Type.CHESTPLATE).get());
+            tag(ItemTags.HEAD_ARMOR).add(armorElements.get(ArmorItem.Type.HELMET).get());
         }
     }
 
@@ -127,7 +126,7 @@ public interface ModTagProvider {
 
             tag(ModTags.Blocks.FORAGEABLE).addTag(BlockTags.LOGS);
 
-            tag(ModTags.Blocks.MINEABLE).addTags(Tags.Blocks.SAND, BlockTags.SNOW, Tags.Blocks.ORES, Tags.Blocks.OBSIDIAN, Tags.Blocks.GRAVEL, Tags.Blocks.NETHERRACK, Tags.Blocks.STONE, Tags.Blocks.END_STONES, Tags.Blocks.COBBLESTONE);
+            tag(ModTags.Blocks.MINEABLE).addTags(BlockTags.SAND, BlockTags.SNOW, Tags.Blocks.ORES, Tags.Blocks.OBSIDIANS, Tags.Blocks.GRAVELS, Tags.Blocks.NETHERRACKS, Tags.Blocks.STONES, Tags.Blocks.END_STONES, Tags.Blocks.COBBLESTONES);
 
             tag(BlockTags.LOGS).add(ModBlocks.PERIDOT_SYCAMORE_LOG.get());
 

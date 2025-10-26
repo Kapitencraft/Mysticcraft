@@ -4,7 +4,6 @@ import net.kapitencraft.kap_lib.helpers.MathHelper;
 import net.kapitencraft.kap_lib.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.client.particle.flame.FlamesForColors;
 import net.kapitencraft.mysticcraft.data_gen.ModDamageTypes;
-import net.kapitencraft.mysticcraft.network.ModMessages;
 import net.kapitencraft.mysticcraft.network.packets.S2C.BreathParticlesPacket;
 import net.kapitencraft.mysticcraft.registry.ModMemoryModuleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -14,6 +13,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.behavior.Behavior;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
@@ -38,7 +38,7 @@ public class BreathFire extends Behavior<Dragon> {
         cone.stream().filter(pOwner::canTargetEntity).forEach(living -> {
             living.hurt(new DamageSource(MiscHelper.lookupDamageTypeHolder(pLevel, ModDamageTypes.SCORCH), pOwner), 10); //deal 10 base fire damage per tick
         });
-        ModMessages.sendToAllConnectedPlayers(p -> new BreathParticlesPacket(FlamesForColors.ORANGE, pOwner.getId()), pLevel);
+        PacketDistributor.sendToAllPlayers(new BreathParticlesPacket(FlamesForColors.ORANGE, pOwner.getId()));
     }
 
     @Override

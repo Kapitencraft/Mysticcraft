@@ -1,20 +1,19 @@
 package net.kapitencraft.mysticcraft.capability;
 
-import com.google.common.collect.Multimap;
+import com.mojang.serialization.Codec;
 import net.kapitencraft.mysticcraft.capability.dungeon.IPrestigeAbleItem;
 import net.kapitencraft.mysticcraft.capability.dungeon.IStarAbleItem;
+import net.kapitencraft.mysticcraft.registry.ModDataComponentTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Consumer;
 
 public interface ITieredItem extends IStarAbleItem, IPrestigeAbleItem {
     String ID = "Tier";
@@ -45,7 +44,7 @@ public interface ITieredItem extends IStarAbleItem, IPrestigeAbleItem {
     }
 
     static @NotNull ItemTier getTier(ItemStack stack) {
-        return ItemTier.getByName(stack.getOrCreateTag().getString(ID));
+        return stack.getOrDefault(ModDataComponentTypes.TIER, ItemTier.DEFAULT);
     }
 
     @Override
@@ -53,18 +52,17 @@ public interface ITieredItem extends IStarAbleItem, IPrestigeAbleItem {
         return ITieredItem.getTier(stack).getStarAmount();
     }
 
-
     ItemTier fromDefault();
-    Consumer<Multimap<Attribute, AttributeModifier>> getModifiersForSlot(ItemStack stack, ItemTier tier);
 
-    enum ItemTier {
-        INFERNAL("infernal", 1.521379, 4, null, 25),
-        FIERY("fiery", 1, 3, INFERNAL, 20),
-        BURNING("burning", 0.586206, 2, FIERY, 20),
-        HOT("hot", 0.260689, 1, BURNING, 15),
-        DEFAULT("default", 0, 0, null, 10);
+    enum ItemTier implements StringRepresentable {
+        INFERNAL("infernal", 4, 4, null, 25),
+        FIERY("fiery", 2.5, 3, INFERNAL, 20),
+        BURNING("burning", 1.6, 2, FIERY, 20),
+        HOT("hot", 1.25, 1, BURNING, 15),
+        DEFAULT("default", 1, 0, null, 10);
 
         public static final List<ItemTier> NETHER_ARMOR_TIERS = List.of(ItemTier.HOT, ItemTier.BURNING, ItemTier.FIERY, ItemTier.INFERNAL);
+        public static final Codec<ItemTier> CODEC = StringRepresentable.fromEnum(ItemTier::values);
 
 
         final String name;
@@ -113,11 +111,16 @@ public interface ITieredItem extends IStarAbleItem, IPrestigeAbleItem {
         }
 
         public void saveToStack(ItemStack stack) {
-            stack.getOrCreateTag().putString(ID, this.getRegName());
+            stack.set(ModDataComponentTypes.TIER, this);
         }
 
         public String getRegName() {
             return name;
+        }
+
+        @Override
+        public @NotNull String getSerializedName() {
+            return this.name;
         }
     }
 }

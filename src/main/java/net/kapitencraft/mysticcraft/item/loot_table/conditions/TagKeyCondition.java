@@ -1,8 +1,8 @@
 package net.kapitencraft.mysticcraft.item.loot_table.conditions;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.kapitencraft.kap_lib.io.serialization.JsonSerializer;
 import net.kapitencraft.mysticcraft.api.Reference;
 import net.kapitencraft.mysticcraft.item.loot_table.LootContextReader;
 import net.kapitencraft.mysticcraft.registry.ModLootItemConditions;
@@ -25,7 +25,7 @@ import java.util.Optional;
 public class TagKeyCondition extends BaseCondition {
     private static final TagKeyCondition EMPTY = new TagKeyCondition(null, "", null);
 
-    public static final Codec<TagKeyCondition> CODEC = RecordCodecBuilder.create(tagKeyConditionInstance ->
+    public static final MapCodec<TagKeyCondition> CODEC = RecordCodecBuilder.mapCodec(tagKeyConditionInstance ->
             tagKeyConditionInstance.group(
                     Type.CODEC.fieldOf("type").forGetter(TagKeyCondition::type),
                     Codec.STRING.fieldOf("id").forGetter(TagKeyCondition::getId),
@@ -65,7 +65,7 @@ public class TagKeyCondition extends BaseCondition {
 
     @Override
     public @NotNull LootItemConditionType getType() {
-        return ModLootItemConditions.TAG_KEY.get();
+        return ModLootItemConditions.TAG_KEY.value();
     }
 
 
@@ -89,9 +89,6 @@ public class TagKeyCondition extends BaseCondition {
         }
         return reference.getValue();
     }
-
-    public static final JsonSerializer<TagKeyCondition> SERIALIZER = new JsonSerializer<>(CODEC, ()-> EMPTY);
-
     public enum Type implements StringRepresentable {
         ENTITY("entities"),
         BLOCK("blocks"),

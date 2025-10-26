@@ -2,8 +2,8 @@ package net.kapitencraft.mysticcraft.helpers;
 
 import net.kapitencraft.kap_lib.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.capability.ITieredItem;
-import net.kapitencraft.mysticcraft.capability.essence.IEssenceData;
 import net.kapitencraft.mysticcraft.item.combat.armor.TieredArmorItem;
+import net.minecraft.core.Holder;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -37,7 +37,7 @@ public class InventoryHelper {
     public static boolean removeFromInventory(ItemStack stack, Player player) {
         Inventory inventory = player.getInventory();
         forInventory(inventory, stack1 -> {
-            if (ItemStack.isSameItemSameTags(stack, stack1) && stack.getCount() > 0) {
+            if (ItemStack.isSameItemSameComponents(stack, stack1) && stack.getCount() > 0) {
                 int size = Math.min(stack1.getCount(), stack.getCount());
                 stack1.shrink(size);
                 stack.shrink(size);
@@ -63,7 +63,7 @@ public class InventoryHelper {
         return stack -> stack.getItem() == item;
     }
 
-    public static boolean hasSetInInventory(Player player,  ArmorMaterial material) {
+    public static boolean hasSetInInventory(Player player, Holder<ArmorMaterial> material) {
         List<EquipmentSlot> slots = new ArrayList<>();
         allInventory(player.getInventory()).stream().map(ItemStack::getItem).filter(
                 item -> item instanceof ArmorItem armorItem && armorItem.getMaterial() == material
@@ -86,12 +86,7 @@ public class InventoryHelper {
     public static List<ItemStack> getRemaining(List<ItemStack> content, Player player) {
         List<ItemStack> ret = new ArrayList<>();
         for (ItemStack stack : content) {
-            if (stack.getItem() instanceof IEssenceData) {
-                ItemStack essence = IEssenceData.getAllFromPlayer(player, stack);
-                stack.shrink(essence.getCount());
-                if (stack.getCount() < 0) stack.setCount(0);
-            }
-            Collection<ItemStack> list = getByFilter(player, stack1 -> ItemStack.isSameItemSameTags(stack, stack1));
+            Collection<ItemStack> list = getByFilter(player, stack1 -> ItemStack.isSameItemSameComponents(stack, stack1));
             list.forEach(stack1 -> stack.shrink(stack1.getCount()));
             if (stack.getCount() > 0) {
                 ret.add(stack);

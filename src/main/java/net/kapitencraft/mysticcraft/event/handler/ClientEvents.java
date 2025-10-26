@@ -1,21 +1,22 @@
 package net.kapitencraft.mysticcraft.event.handler;
 
 import net.kapitencraft.kap_lib.event.custom.client.RegisterEnchantmentApplicableCharsEvent;
+import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.client.ModKeyMappings;
 import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.bow.ShortBowItem;
-import net.kapitencraft.mysticcraft.network.ModMessages;
 import net.kapitencraft.mysticcraft.network.packets.C2S.UseShortBowPacket;
 import net.kapitencraft.mysticcraft.registry.ModItems;
 import net.kapitencraft.mysticcraft.spell.capability.SelectSpellCastScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.InteractionHand;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.InputEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.InputEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 
-@Mod.EventBusSubscriber(Dist.CLIENT)
+@EventBusSubscriber(Dist.CLIENT)
 public class ClientEvents {
 
     @SubscribeEvent
@@ -24,7 +25,7 @@ public class ClientEvents {
         if (event.isAttack() && player != null && player.getMainHandItem().getItem() instanceof ShortBowItem) {
             event.setCanceled(true);
             player.swing(InteractionHand.MAIN_HAND);
-            ModMessages.sendToServer(new UseShortBowPacket());
+            PacketDistributor.sendToServer(new UseShortBowPacket());
         }
     }
 
@@ -37,6 +38,6 @@ public class ClientEvents {
 
     @SubscribeEvent
     public static void onRegisterEnchantmentApplicableChars(RegisterEnchantmentApplicableCharsEvent event) {
-        event.register(ModItems.DIAMOND_HAMMER.get());
+        event.register(ModItems.DIAMOND_HAMMER.get(), MysticcraftMod.res("item/hammer/diamond"));
     }
 }

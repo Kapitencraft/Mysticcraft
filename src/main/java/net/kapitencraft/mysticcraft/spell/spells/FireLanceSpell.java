@@ -18,18 +18,16 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-public class FireLanceSpell implements Spell {
-
-    //public static List<Component> getDescription() {
-    //    return List.of(Component.literal("Fires a line of fire where you are looking and deals 40 Base Ability Damage per seconds"));
-    //}
+public class FireLanceSpell extends Spell {
+    public FireLanceSpell() {
+        super(5, 40, Type.HOLD, SpellTarget.SELF, null);
+    }
 
     @Override
     public void cast(SpellCastContext context) throws SpellExecutionFailedException {
@@ -44,7 +42,7 @@ public class FireLanceSpell implements Spell {
                         living.invulnerableTime = 0;
                     }
                     living.hurt(SpellDamageSource.create(ModDamageTypes.SCORCH, user, this), 4);
-                    living.addEffect(new MobEffectInstance(ModMobEffects.BLAZING.get(), 40, 2));
+                    living.addEffect(new MobEffectInstance(ModMobEffects.BLAZING, 40, 2));
                 });
     }
 
@@ -52,26 +50,6 @@ public class FireLanceSpell implements Spell {
         ParticleHelper.sendParticles(user.level(), ParticleTypes.SMALL_FLAME, false, source, 10, 0.1/8, 0.1/8, 0.1/8, 0);
         return MathHelper.getEntitiesAround(LivingEntity.class, user.level(), source, 0.1).stream()
                 .filter(living -> living != user).toList();
-    }
-
-    @Override
-    public double manaCost() {
-        return 5;
-    }
-
-    @Override
-    public int castDuration() {
-        return 40;
-    }
-
-    @Override
-    public @NotNull Type getType() {
-        return Type.HOLD;
-    }
-
-    @Override
-    public @NotNull SpellTarget getTarget() {
-        return SpellTarget.SELF;
     }
 
     @Override

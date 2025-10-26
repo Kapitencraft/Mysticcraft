@@ -8,12 +8,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.SlotItemHandler;
+import net.neoforged.neoforge.items.SlotItemHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class UpgradableBEMenu<BE extends UpgradableBlockEntity> extends BlockEntityMenu<BE> {
-    private boolean showUpgrades;
+    private boolean showUpgrades = false;
 
     protected UpgradableBEMenu(@Nullable MenuType<?> menuType, int containerId, int slotAmount, Inventory inventory, BE provider) {
         super(menuType, containerId, slotAmount + 8, inventory, provider);
@@ -22,7 +22,7 @@ public class UpgradableBEMenu<BE extends UpgradableBlockEntity> extends BlockEnt
 
         for (int i = 0; i < 8; i++) {
             int slot = i;
-            this.addSlot(new SlotItemHandler(provider.getUpgrades(), i, 184 + i % 2 * 18, 14 + i / 2 * 18) {
+            this.addSlot(new SlotItemHandler(provider.getUpgrades(), i, 184 + i % 2 * 18, 31 + i / 2 * 18) {
                 @Override
                 public boolean isActive() {
                     return provider.upgradeSlots() > slot && UpgradableBEMenu.this.showUpgrades;

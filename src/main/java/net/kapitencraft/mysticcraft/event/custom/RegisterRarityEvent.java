@@ -1,8 +1,8 @@
 package net.kapitencraft.mysticcraft.event.custom;
 
 import net.minecraft.world.item.Rarity;
-import net.minecraftforge.eventbus.api.Event;
-import net.minecraftforge.fml.event.IModBusEvent;
+import net.neoforged.bus.api.Event;
+import net.neoforged.fml.event.IModBusEvent;
 
 import java.util.List;
 

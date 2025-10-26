@@ -28,6 +28,7 @@ public class ModTags {
         TagKey<Item> CATALYST = create("magic_catalyst");
         TagKey<Item> UPGRADE = create("upgrade");
         TagKey<Item> DRAGON_TEMPTING = create("dragon_tempting");
+        TagKey<Item> CONTAINER_ENCHANTABLE = create("container_enchantable");
 
         private static TagKey<Item> create(String s) {
             return ModTags.makeModKey(Registries.ITEM, s);
@@ -38,7 +39,7 @@ public class ModTags {
         }
 
         private static TagKey<Item> forge(String s) {
-            return ModTags.makeForgeKey(Registries.ITEM, s);
+            return ModTags.makeSharedTag(Registries.ITEM, s);
         }
     }
 
@@ -46,7 +47,9 @@ public class ModTags {
         TagKey<Block> FARMABLE = createModKey("farmable_blocks");
         TagKey<Block> FORAGEABLE = createModKey("forageable_blocks");
         TagKey<Block> MINEABLE = createModKey("mineable_blocks");
-        TagKey<Block> STRIPPED_LOGS = ModTags.makeForgeKey(Registries.BLOCK, "stripped_logs");
+        TagKey<Block> STRIPPED_LOGS = ModTags.makeSharedTag(Registries.BLOCK, "stripped_logs");
+        TagKey<Block> NEEDS_MANA_STEEL_TOOL = createModKey("needs_mana_steel_tool");
+        TagKey<Block> INCORRECT_FOR_MANA_STEEL_TOOL = createModKey("incorrect_for_mana_steel_tool");
 
         static TagKey<Block> createModKey(String id) {
             return ModTags.makeModKey(Registries.BLOCK, id);
@@ -58,7 +61,7 @@ public class ModTags {
         TagKey<EntityType<?>> DRAGON_TARGETS = ModTags.makeModKey(Registries.ENTITY_TYPE, "dragon_targets");
 
         private static TagKey<EntityType<?>> createForge(String name) {
-            return ModTags.makeForgeKey(Registries.ENTITY_TYPE, name);
+            return ModTags.makeSharedTag(Registries.ENTITY_TYPE, name);
         }
     }
 
@@ -71,14 +74,14 @@ public class ModTags {
     }
 
     public static <T> TagKey<T> makeKey(ResourceKey<Registry<T>> key, String id) {
-        return TagKey.create(key, new ResourceLocation(id));
+        return TagKey.create(key, ResourceLocation.parse(id));
     }
 
     public static <T> TagKey<T> makeModKey(ResourceKey<Registry<T>> key, String id) {
         return TagKey.create(key, MysticcraftMod.res(id));
     }
 
-    public static <T> TagKey<T> makeForgeKey(ResourceKey<Registry<T>> key, String id) {
-        return makeKey(key, "forge:" + id);
+    public static <T> TagKey<T> makeSharedTag(ResourceKey<Registry<T>> key, String id) {
+        return makeKey(key, "c:" + id);
     }
 }

@@ -1,6 +1,5 @@
 package net.kapitencraft.mysticcraft.capability.containable;
 
-import com.google.common.collect.ImmutableList;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
@@ -15,17 +14,6 @@ public abstract class ContainableCapability<T extends Item> implements IContaina
 
     public List<ItemStack> getContent() {
         return content;
-    }
-
-    @Override
-    public void copyFrom(List<ItemStack> itemStacks) {
-        this.content.clear();
-        this.content.addAll(itemStacks);
-    }
-
-    @Override
-    public List<ItemStack> getData() {
-        return ImmutableList.copyOf(this.content);
     }
 
     @Override

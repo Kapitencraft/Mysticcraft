@@ -3,53 +3,73 @@ package net.kapitencraft.mysticcraft.spell;
 import net.kapitencraft.kap_lib.cooldown.Cooldown;
 import net.kapitencraft.kap_lib.helpers.AttributeHelper;
 import net.kapitencraft.kap_lib.helpers.MathHelper;
-import net.kapitencraft.kap_lib.helpers.TextHelper;
 import net.kapitencraft.kap_lib.registry.ExtraAttributes;
 import net.kapitencraft.mysticcraft.registry.custom.ModRegistries;
 import net.kapitencraft.mysticcraft.spell.cast.SpellCastContext;
-import net.minecraft.Util;
-import net.minecraft.network.chat.Component;
+import net.minecraft.core.Holder;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
+public abstract class Spell {
+    private final double manaCost;
+    private final int castDuration;
+    private final Type type;
+    private final SpellTarget<?> target;
+    private final @Nullable Holder<Cooldown> cooldown;
+    private final Holder.Reference<Spell> holder = ModRegistries.SPELLS.createIntrusiveHolder(this);
 
-public interface Spell {
-
-    void cast(SpellCastContext context) throws SpellExecutionFailedException;
-
-    double manaCost();
-
-    int castDuration();
-
-    @NotNull Type getType();
-
-    @NotNull SpellTarget<?> getTarget();
-
-    default @Nullable Cooldown getCooldown() {
-        return null;
+    protected Spell(double manaCost, int castDuration, Type type, SpellTarget<?> target, @Nullable Holder<Cooldown> cooldown) {
+        this.manaCost = manaCost;
+        this.castDuration = castDuration;
+        this.type = type;
+        this.target = target;
+        this.cooldown = cooldown;
     }
 
-    default List<Component> getDescription() {
-        return TextHelper.getDescriptionOrEmpty(this.getDescriptionId(), null);
+    public abstract void cast(SpellCastContext context) throws SpellExecutionFailedException;
+
+    public double manaCost() {
+        return manaCost;
     }
 
-    default double getManaCostForUser(LivingEntity user) {
-        AttributeInstance instance = user.getAttribute(ExtraAttributes.MANA_COST.get());
+    public int castDuration() {
+        return castDuration;
+    }
+
+    @NotNull
+    public Type getType() {
+        return type;
+    }
+
+    public @NotNull SpellTarget<?> getTarget() {
+        return target;
+    }
+
+    public @Nullable Cooldown getCooldown() {
+        return cooldown == null ? null : cooldown.value();
+    }
+
+    public Holder.Reference<Spell> getHolder() {
+        return holder;
+    }
+
+    public boolean is(TagKey<Spell> key) {
+        return holder.is(key);
+    }
+
+    public double getManaCostForUser(LivingEntity user) {
+        AttributeInstance instance = user.getAttribute(ExtraAttributes.MANA_COST);
         return MathHelper.defRound(AttributeHelper.getAttributeValue(instance, this.manaCost()));
     }
 
-    default String getDescriptionId() {
-        return Util.makeDescriptionId("spell", ModRegistries.SPELLS.getKey(this));
-    }
-
-    enum Type {
+    public enum Type {
         RELEASE,
         HOLD
     }
 
-    boolean canApply(Item item);
+    public abstract boolean canApply(Item item);
 }

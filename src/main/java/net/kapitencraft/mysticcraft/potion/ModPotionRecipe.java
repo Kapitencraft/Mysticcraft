@@ -3,7 +3,7 @@ package net.kapitencraft.mysticcraft.potion;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.common.brewing.IBrewingRecipe;
+import net.neoforged.neoforge.common.brewing.IBrewingRecipe;
 import org.jetbrains.annotations.NotNull;
 
 /**

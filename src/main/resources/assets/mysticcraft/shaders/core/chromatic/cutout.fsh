@@ -2,6 +2,7 @@
 
 #moj_import <fog.glsl>
 #moj_import <kap_lib:extras.glsl>
+#moj_import <kap_lib:chroma.glsl>
 const float GAME_TIME_SCALE = 200.0;
 
 uniform sampler2D Sampler0;

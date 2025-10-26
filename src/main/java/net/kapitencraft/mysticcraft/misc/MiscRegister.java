@@ -4,26 +4,17 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.kapitencraft.kap_lib.helpers.MiscHelper;
-import net.kapitencraft.kap_lib.registry.ExtraAttributes;
 import net.kapitencraft.kap_lib.tags.ExtraTags;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.bestiary.BestiaryManager;
-import net.kapitencraft.mysticcraft.capability.CapabilityHelper;
 import net.kapitencraft.mysticcraft.capability.ITieredItem;
 import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneType;
-import net.kapitencraft.mysticcraft.capability.item_stat.ItemStatCapability;
 import net.kapitencraft.mysticcraft.capability.reforging.ReforgeManager;
 import net.kapitencraft.mysticcraft.helpers.InventoryHelper;
 import net.kapitencraft.mysticcraft.item.misc.SoulbindHelper;
-import net.kapitencraft.mysticcraft.misc.content.EssenceHolder;
-import net.kapitencraft.mysticcraft.network.ModMessages;
-import net.kapitencraft.mysticcraft.network.packets.S2C.SyncEssenceDataPacket;
 import net.kapitencraft.mysticcraft.network.packets.S2C.SyncManaDistributionNetworksPacket;
 import net.kapitencraft.mysticcraft.registry.ModAttributes;
 import net.kapitencraft.mysticcraft.registry.ModBlocks;
-import net.kapitencraft.mysticcraft.rpg.classes.RPGClassManager;
-import net.kapitencraft.mysticcraft.rpg.perks.ServerPerksManager;
-import net.kapitencraft.mysticcraft.tags.ModTags;
 import net.kapitencraft.mysticcraft.tech.DistributionNetworkManager;
 import net.kapitencraft.mysticcraft.villagers.ModVillagers;
 import net.minecraft.core.BlockPos;
@@ -37,7 +28,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Arrow;
@@ -45,48 +35,33 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.BasicItemListing;
-import net.minecraftforge.event.AddReloadListenerEvent;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.OnDatapackSyncEvent;
-import net.minecraftforge.event.entity.EntityAttributeModificationEvent;
-import net.minecraftforge.event.entity.EntityJoinLevelEvent;
-import net.minecraftforge.event.entity.EntityLeaveLevelEvent;
-import net.minecraftforge.event.entity.item.ItemTossEvent;
-import net.minecraftforge.event.entity.living.LivingChangeTargetEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.level.BlockEvent;
-import net.minecraftforge.event.village.VillagerTradesEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.common.BasicItemListing;
+import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.neoforged.neoforge.event.OnDatapackSyncEvent;
+import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
+import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
+import net.neoforged.neoforge.event.entity.item.ItemTossEvent;
+import net.neoforged.neoforge.event.entity.living.LivingChangeTargetEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
+import net.neoforged.neoforge.event.village.VillagerTradesEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 
 
-@Mod.EventBusSubscriber
+@EventBusSubscriber
 public class MiscRegister {
 
 
     @SubscribeEvent
     public static void onPlayerCloned(PlayerEvent.Clone event) {
-        if(event.isWasDeath()) {
-            event.getOriginal().getCapability(CapabilityHelper.ESSENCE).ifPresent(oldStore ->
-                    event.getOriginal().getCapability(CapabilityHelper.ESSENCE).ifPresent(newStore ->
-                            newStore.copyFrom(oldStore)));
-        }
-    }
-
-    @SubscribeEvent
-    public static void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
-        if (event.getObject() instanceof Player) {
-            if (!event.getObject().getCapability(CapabilityHelper.ESSENCE).isPresent()) {
-                event.addCapability(MysticcraftMod.res("essence"), new EssenceHolder());
-            }
-        }
     }
 
     @SubscribeEvent
@@ -94,29 +69,25 @@ public class MiscRegister {
         MysticcraftMod.sendRegisterDisplay("Reloadables");
         event.addListener(new BestiaryManager());
         event.addListener(new ReforgeManager());
-        event.addListener(ServerPerksManager.getOrCreateInstance());
-        event.addListener(RPGClassManager.getOrCreateInstance());
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void changeAttackTarget(LivingChangeTargetEvent event) {
-        LivingEntity newTarget = event.getNewTarget();
+        LivingEntity newTarget = event.getNewAboutToBeSetTarget();
         if (newTarget != null && newTarget.isInvisible()) event.setCanceled(true);
     }
 
 
+    @SuppressWarnings("removal")
     @SubscribeEvent
-    public static void entityTick(LivingEvent.LivingTickEvent event) {
-        LivingEntity living = event.getEntity();
-        if (living instanceof Player player) {
+    public static void entityTick(EntityTickEvent.Post event) {
+        Entity entity = event.getEntity();
+        if (entity instanceof Player player) {
             if (InventoryHelper.hasSetInInventory(player, ITieredItem.ItemTier.INFERNAL) && player instanceof ServerPlayer serverPlayer) {
                 MiscHelper.awardAchievement(serverPlayer, MysticcraftMod.res("infernal_armor"));
             }
-            if (player instanceof ServerPlayer serverPlayer) {
-                ServerPerksManager.getOrCreateInstance().getPerks(serverPlayer).flushDirty(serverPlayer);
-            }
         }
-        if (living instanceof Mob mob) {
+        if (entity instanceof Mob mob) {
             if (mob.getTarget() != null && mob.getTarget().isInvisible()) {
                 mob.setTarget(null);
             }
@@ -134,28 +105,10 @@ public class MiscRegister {
                 }
             }
         }
-        if (event.getEntity() instanceof Player player) {
-                    AttributeInstance instance = player.getAttribute(ExtraAttributes.MANA.get());
-            if (instance == null) throw new IllegalStateException();
-            else {
-                double mana;
-                if (player.getPersistentData().contains("Mana", 6)) {
-                    mana = player.getPersistentData().getDouble("Mana");
-                } else mana = 100;
-                instance.setBaseValue(mana);
-            }
-        }
     }
 
     @SubscribeEvent
-    public static void leaveLevelEvent(EntityLeaveLevelEvent event) {
-        if (event.getEntity() instanceof Player player) {
-            player.getPersistentData().putDouble("Mana", player.getAttributeValue(ExtraAttributes.MANA.get()));
-        }
-    }
-
-    @SubscribeEvent
-    public void onBlockEntityPlace(BlockEvent.EntityPlaceEvent event) {
+    public static void onBlockEntityPlace(BlockEvent.EntityPlaceEvent event) {
         LevelAccessor level = event.getLevel();
         BlockPos pos = event.getPos();
         for (Direction direction : Direction.values()) {
@@ -167,22 +120,10 @@ public class MiscRegister {
         }
     }
 
-
-    @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void blockBreakRegister(BlockEvent.BreakEvent event) {
-        Player player = event.getPlayer(); ItemStack mainHandItem = player.getMainHandItem(); BlockState state = event.getState();
-
-        if (state.is(ModTags.Blocks.FARMABLE) || state.is(ModTags.Blocks.FORAGEABLE)) {
-            mainHandItem.getCapability(CapabilityHelper.ITEM_STAT).ifPresent(iItemStatHandler -> iItemStatHandler.increase(ItemStatCapability.Type.FARMED, 1));
-        } else if (state.is(ModTags.Blocks.MINEABLE)) {
-            mainHandItem.getCapability(CapabilityHelper.ITEM_STAT).ifPresent(iItemStatHandler -> iItemStatHandler.increase(ItemStatCapability.Type.MINED, 1));
-        }
-    }
-
     @SubscribeEvent
     public static void registerVillagerProfession(VillagerTradesEvent event) {
         Int2ObjectMap<List<VillagerTrades.ItemListing>> trades = event.getTrades();
-        if (event.getType() == ModVillagers.GEMSTONE_MAKER.getProfession().get()) {
+        if (event.getType() == ModVillagers.GEMSTONE_MAKER.profession().value()) {
             Multimap<Integer, VillagerTrades.ItemListing> multimap = HashMultimap.create();
             for (GemstoneType type : GemstoneType.WITHOUT_EMPTY) {
                 ItemStack sell = GemstoneType.allItems().get(type, GemstoneType.Rarity.ROUGH);
@@ -231,17 +172,12 @@ public class MiscRegister {
     @SubscribeEvent
     public static void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
         ServerPlayer player = (ServerPlayer) event.getEntity();
-        ServerPerksManager.getOrCreateInstance().getPerks(player).save();
     }
 
     @SubscribeEvent
     public static void onOnDatapackSync(OnDatapackSyncEvent event) {
         Consumer<ServerPlayer> syncData = player -> {
-            ModMessages.sendToClientPlayer(new SyncEssenceDataPacket(player.getCapability(CapabilityHelper.ESSENCE).orElseGet(EssenceHolder::new)), player);
-            //ModMessages.sendToClientPlayer(SyncGemstoneDataToPlayerPacket.fromPlayer(serverPlayer), serverPlayer);
-            //ModMessages.sendToClientPlayer(SyncElytraDataToPlayerPacket.fromPlayer(serverPlayer), serverPlayer);
-            ModMessages.sendToClientPlayer(new SyncManaDistributionNetworksPacket(DistributionNetworkManager.get(player.level())), player);
-            ServerPerksManager.getOrCreateInstance().getPerks(player).reload();
+            PacketDistributor.sendToPlayer(player, new SyncManaDistributionNetworksPacket(DistributionNetworkManager.get(player.level())));
             player.getStats().sendStats(player);
         };
         ServerPlayer player = event.getPlayer();
@@ -249,13 +185,14 @@ public class MiscRegister {
         if (player != null) {
             syncData.accept(player);
         } else {
-            event.getPlayers().forEach(syncData);
+            event.getRelevantPlayers().forEach(syncData);
         }
     }
 
     @SubscribeEvent
-    public void onEntityAttributeModification(EntityAttributeModificationEvent event) {
-        event.add(EntityType.PLAYER, ModAttributes.CAST_DURATION.get());
+    public static void onEntityAttributeModification(EntityAttributeModificationEvent event) {
+        event.add(EntityType.PLAYER, ModAttributes.CAST_DURATION);
+        ModAttributes.XP_BOOSTS.values().forEach(h -> event.add(EntityType.PLAYER, h));
     }
 
 }

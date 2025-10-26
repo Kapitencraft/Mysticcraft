@@ -1,5 +1,6 @@
 package net.kapitencraft.mysticcraft.capability.spell;
 
+import com.mojang.datafixers.util.Either;
 import net.kapitencraft.kap_lib.cooldown.Cooldown;
 import net.kapitencraft.kap_lib.helpers.MathHelper;
 import net.kapitencraft.kap_lib.helpers.TextHelper;
@@ -7,10 +8,10 @@ import net.kapitencraft.kap_lib.registry.ExtraAttributes;
 import net.kapitencraft.kap_lib.requirements.RequirementManager;
 import net.kapitencraft.kap_lib.requirements.type.RequirementType;
 import net.kapitencraft.kap_lib.util.ManaHandler;
-import net.kapitencraft.mysticcraft.capability.CapabilityHelper;
-import net.kapitencraft.mysticcraft.event.advancement.ModCriteriaTriggers;
 import net.kapitencraft.mysticcraft.item.combat.spells.SpellItem;
 import net.kapitencraft.mysticcraft.item.combat.spells.SpellScrollItem;
+import net.kapitencraft.mysticcraft.registry.ModAttachmentTypes;
+import net.kapitencraft.mysticcraft.registry.ModDataComponentTypes;
 import net.kapitencraft.mysticcraft.spell.Spell;
 import net.kapitencraft.mysticcraft.spell.SpellExecutionFailedException;
 import net.kapitencraft.mysticcraft.spell.SpellSlot;
@@ -19,12 +20,14 @@ import net.kapitencraft.mysticcraft.spell.capability.PlayerSpells;
 import net.kapitencraft.mysticcraft.spell.cast.SpellCastContext;
 import net.kapitencraft.mysticcraft.spell.cast.SpellCastContextParams;
 import net.minecraft.ChatFormatting;
+import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec2;
@@ -37,76 +40,83 @@ import java.util.List;
 
 public interface SpellHelper {
 
-    static SpellCapability getCapability(ItemStack stack) {
-        return CapabilityHelper.getCapability(stack, CapabilityHelper.SPELL);
+    static ItemSpells getSpells(ItemStack stack) {
+        return stack.get(ModDataComponentTypes.ITEM_SPELLS);
     }
 
-    @SuppressWarnings("ConstantValue")
     static List<SpellSlot> getAvailableSpells(Player player) {
-        List<SpellSlot> list = new ArrayList<>(PlayerSpells.get(player).getData());
+        List<SpellSlot> list = new ArrayList<>(PlayerSpells.get(player).slots());
         if (!player.getMainHandItem().isEmpty()) {
-            SpellCapability capability = getCapability(player.getMainHandItem());
-            if (capability != null) list.addAll(capability.getData());
+            ItemSpells capability = getSpells(player.getMainHandItem());
+            if (capability != null) list.addAll(capability.slots());
         }
         return list;
     }
 
-    @SuppressWarnings("DataFlowIssue")
+    static Holder<Spell> getActiveSpell(Player player) {
+        return getActiveSpellSlot(player).getSpell();
+    }
+
+    static SpellSlot getActiveSpellSlot(Player player) {
+        return getAvailableSpells(player).get(player.getData(ModAttachmentTypes.SELECTED_SPELL_SLOT));
+    }
+
     static @Nullable BlockPos getBlockTarget(Player entity) {
         if (!entity.isUsingItem()) return null;
         ItemStack stack = entity.getUseItem();
         if (!(stack.getItem() instanceof SpellItem)) return null;
-        Spell spell = getActiveSpell(stack);
-        if (spell.getTarget().getType() != SpellTarget.Type.BLOCK) return null;
-        return BlockPos.of(stack.getTag().getLong("target"));
+        Holder<Spell> spell = getActiveSpell(entity);
+        if (spell.value().getTarget().getType() != SpellTarget.Type.BLOCK) return null;
+        Either<BlockPos, Integer> either = stack.get(ModDataComponentTypes.SPELL_TARGET);
+        return either != null ? either.left().orElse(null) : null;
     }
 
-    static Spell getActiveSpell(ItemStack stack) {
-        return SpellHelper.getCapability(stack).getSlot(0).getSpell();
-    }
-
-    static SpellSlot getActiveSlot(ItemStack stack) {
-        return SpellHelper.getCapability(stack).getSlot(0);
+    static boolean isSpellTarget(ItemStack useItem, Holder<Spell> spell, Entity target) {
+        if (!(useItem.getItem() instanceof SpellItem)) return false;
+        if (spell.value().getTarget().getType() != SpellTarget.Type.BLOCK) return false;
+        Either<BlockPos, Integer> either = useItem.get(ModDataComponentTypes.SPELL_TARGET);
+        return either != null ? either.right().map(e -> e == target.getId()).orElse(false) : false;
     }
 
     static void setSpell(ItemStack stack, int i, SpellSlot spell) {
-        CapabilityHelper.exeCapability(stack, CapabilityHelper.SPELL, spellCapability -> spellCapability.setSlot(i, spell.copy()));
+        stack.update(ModDataComponentTypes.ITEM_SPELLS, new ItemSpells(List.of(new SpellSlot())), s -> s.setSlot(i, spell));
     }
 
-    static void setSpell(ItemStack stack, int i, Spell spell) {
+    static void setSpell(ItemStack stack, int i, Holder<Spell> spell) {
         setSpell(stack, i, new SpellSlot(spell));
     }
 
     static boolean hasSpell(ItemStack stack, Spell spell) {
-        return SpellHelper.getCapability(stack).hasSpell(spell);
+        return SpellHelper.getSpells(stack).hasSpell(spell);
     }
 
     static boolean hasAnySpell(ItemStack stack) {
-        return SpellHelper.getCapability(stack).getFirstEmpty() != 0;
+        return stack.has(ModDataComponentTypes.ITEM_SPELLS) && SpellHelper.getSpells(stack).getFirstEmpty() != 0;
     }
 
     static boolean canExecuteSpell(LivingEntity user, Spell spell, ItemStack stack) {
-        if (user.getAttribute(ExtraAttributes.MAX_MANA.get()) == null || user instanceof Player player && !RequirementManager.instance.meetsRequirements(RequirementType.ITEM, stack.getItem(), player)) {
+        if (user.getAttribute(ExtraAttributes.MAX_MANA) == null || user instanceof Player player && !RequirementManager.instance.meetsRequirements(RequirementType.ITEM, stack.getItem(), player)) {
             return false;
         }
         double manaToUse = spell.getManaCostForUser(user);
-        AttributeInstance manaInstance = user.getAttribute(ExtraAttributes.MANA.get());
         Cooldown cooldown = spell.getCooldown();
         if (cooldown != null && cooldown.isActive(user)) {
             if (user instanceof Player player) player.displayClientMessage(Component.translatable("spell.cast.failed.cooldown").withStyle(ChatFormatting.RED), true);
             return false;
         }
-        return manaInstance != null && ManaHandler.hasMana(user, manaToUse);
+        return ManaHandler.isMagical(user) && ManaHandler.hasMana(user, manaToUse);
     }
 
     @SuppressWarnings("DataFlowIssue")
-    static boolean handleManaAndExecute(LivingEntity user, Spell spell, int level, ItemStack stack) {
+    static boolean handleManaAndExecute(LivingEntity user, Holder<Spell> spellHolder, int level, ItemStack stack) {
+        Spell spell = spellHolder.value();
         if (canExecuteSpell(user, spell, stack)) {
             SpellCastContext.Builder builder = new SpellCastContext.Builder();
             builder.addParam(SpellCastContextParams.CASTER, user);
             SpellTarget.Type<?> type = spell.getTarget().getType();
-            if (type == SpellTarget.Type.BLOCK) builder.addParam(SpellCastContextParams.TARGET_BLOCK, BlockPos.of(stack.getTag().getLong("target")));
-            else if (type == SpellTarget.Type.ENTITY) builder.addParam(SpellCastContextParams.TARGET, user.level().getEntity(stack.getTag().getInt("target")));
+            Either<BlockPos, Integer> either = stack.get(ModDataComponentTypes.SPELL_TARGET);
+            if (type == SpellTarget.Type.BLOCK) builder.addParam(SpellCastContextParams.TARGET_BLOCK, either.left().get());
+            else if (type == SpellTarget.Type.ENTITY) builder.addParam(SpellCastContextParams.TARGET, user.level().getEntity(either.right().get()));
             try {
                 spell.cast(builder.build(user.level(), level));
             } catch (SpellExecutionFailedException e) {
@@ -120,24 +130,24 @@ public interface SpellHelper {
             Cooldown cooldown = spell.getCooldown();
 
             if (ManaHandler.consumeMana(user, manaToUse)) {
-                if (user instanceof ServerPlayer player) {
-                    ModCriteriaTriggers.USE_MANA.trigger(player, manaToUse);
-                    if (cooldown != null) cooldown.applyCooldown(user, true);
+                if (user instanceof ServerPlayer && cooldown != null) {
+                    cooldown.applyCooldown(user, true);
                 }
-                sendUseDisplay(user, spell);
+                sendUseDisplay(user, spellHolder);
                 return true;
             }
         }
         return false;
     }
 
-    private static void sendUseDisplay(LivingEntity user, Spell spell) {
+    private static void sendUseDisplay(LivingEntity user, Holder<Spell> spell) {
         if (user instanceof Player player) {
-            double manaCost = spell.getManaCostForUser(player);
+            double manaCost = spell.value().getManaCostForUser(player);
+            MutableComponent title = Component.translatable(Util.makeDescriptionId("spell", spell.getKey().location()));
             MutableComponent visible;
             String wrappedManaUsage = TextHelper.wrapInRed("-" + manaCost + " Mana");
-            if (spell.getType() == Spell.Type.RELEASE) visible = Component.translatable("spell.cast", Component.translatable(spell.getDescriptionId()), wrappedManaUsage);
-            else visible = Component.translatable("spell.use", Component.translatable(spell.getDescriptionId()), wrappedManaUsage);
+            if (spell.value().getType() == Spell.Type.RELEASE) visible = Component.translatable("spell.cast", title, wrappedManaUsage);
+            else visible = Component.translatable("spell.use", title, wrappedManaUsage);
             TextHelper.setHotbarDisplay(player, visible.withStyle(ChatFormatting.AQUA));
         }
     }
@@ -145,9 +155,10 @@ public interface SpellHelper {
     static void appendFullDisplay(List<Component> list, ItemStack stack, Player player) {
         SpellSlot spellSlot = SpellScrollItem.getSpell(stack);
         if (spellSlot == null) return;
-        Spell spell = spellSlot.getSpell();
+        Holder<Spell> spellHolder = spellSlot.getSpell();
+        Spell spell = spellHolder.value();
         list.add(Component.translatable("spell.title", spellSlot.description()).withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.GOLD));
-        list.addAll(spell.getDescription());
+        list.addAll(TextHelper.getDescriptionOrEmpty(Util.makeDescriptionId("spell", spellHolder.getKey().location()), c -> c));
         MutableComponent component = null;
         if (spell.castDuration() > 0) component = Component.translatable("cast_duration.display", MathHelper.shortRound(spell.castDuration() / 20.));
         if (spell.getCooldown() != null && player != null) {

@@ -1,31 +1,40 @@
 package net.kapitencraft.mysticcraft.item.combat.weapon.melee.cleaver;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
 import net.kapitencraft.kap_lib.registry.ExtraAttributes;
-import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.kap_lib.util.attribute.BaseAttributeLocations;
 import net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword.ModSwordItem;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Tier;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 
 public abstract class CleaverItem extends ModSwordItem {
 
-    public CleaverItem(Tier p_43269_, int attackDamage, Properties p_43272_) {
-        super(p_43269_, attackDamage, -2.8f, p_43272_);
+    public CleaverItem(Tier p_43269_, Properties p_43272_) {
+        super(p_43269_, p_43272_);
     }
 
-    protected abstract double getArmorShredderBonus();
-
-    @Override
-    public @NotNull Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(@NotNull EquipmentSlot slot) {
-        HashMultimap<Attribute, AttributeModifier> builder = HashMultimap.create();
-        builder.putAll(super.getDefaultAttributeModifiers(slot));
-        if (slot == EquipmentSlot.MAINHAND) {
-            builder.put(ExtraAttributes.ARMOR_SHREDDER.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_ADD_FOR_SLOT[5], "Shredder Bonus for Cleaver", this.getArmorShredderBonus(), AttributeModifier.Operation.ADDITION));
-        }
-        return builder;
+    protected static ItemAttributeModifiers createAttributes(Tier tier, int damage, int armorShredder) {
+        return ItemAttributeModifiers.builder()
+                .add(
+                        Attributes.ATTACK_DAMAGE,
+                        new AttributeModifier(
+                                BASE_ATTACK_DAMAGE_ID, damage + tier.getAttackDamageBonus(), AttributeModifier.Operation.ADD_VALUE
+                        ),
+                        EquipmentSlotGroup.MAINHAND
+                ).add(
+                        Attributes.ATTACK_SPEED,
+                        new AttributeModifier(
+                                BASE_ATTACK_SPEED_ID, -2.8, AttributeModifier.Operation.ADD_VALUE
+                        ),
+                        EquipmentSlotGroup.MAINHAND
+                ).add(
+                        ExtraAttributes.ARMOR_SHREDDER,
+                        new AttributeModifier(
+                                BaseAttributeLocations.ARMOR_SHREDDER, armorShredder, AttributeModifier.Operation.ADD_VALUE
+                        ),
+                        EquipmentSlotGroup.MAINHAND
+                ).build();
     }
 }

@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.block.entity.pedestal;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -10,7 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.items.ItemStackHandler;
+import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class AbstractPedestalBlockEntity extends BlockEntity {
@@ -55,21 +56,21 @@ public abstract class AbstractPedestalBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void saveAdditional(CompoundTag pTag) {
-        super.saveAdditional(pTag);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
 
-        pTag.put("inventory", this.item.serializeNBT());
+        tag.put("inventory", this.item.serializeNBT(registries));
     }
 
     @Override
-    public void load(CompoundTag pTag) {
-        this.item.deserializeNBT(pTag.getCompound("inventory"));
-        super.load(pTag);
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        this.item.deserializeNBT(registries, tag.getCompound("inventory"));
+        super.loadAdditional(tag, registries);
     }
 
     @Override
-    public CompoundTag getUpdateTag() {
-        return saveWithoutMetadata();
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        return saveWithoutMetadata(registries);
     }
 
     public ItemStack insertItem(ItemStack playerItem) {

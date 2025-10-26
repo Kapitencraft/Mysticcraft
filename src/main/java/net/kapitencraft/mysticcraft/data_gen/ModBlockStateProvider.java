@@ -2,25 +2,25 @@ package net.kapitencraft.mysticcraft.data_gen;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.block.ModBlockStateProperties;
-import net.kapitencraft.mysticcraft.block.gemstone.GemstoneCrystal;
+import net.kapitencraft.mysticcraft.block.MoonBlossomFlowerBlock;
+import net.kapitencraft.mysticcraft.block.gemstone.GemstoneCrystalBlock;
 import net.kapitencraft.mysticcraft.block.gemstone.GemstoneSeedBlock;
 import net.kapitencraft.mysticcraft.registry.BlockRegistryHolder;
 import net.kapitencraft.mysticcraft.registry.ModBlocks;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.block.AnvilBlock;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraftforge.client.model.generators.BlockStateProvider;
-import net.minecraftforge.client.model.generators.ConfiguredModel;
-import net.minecraftforge.client.model.generators.ItemModelBuilder;
-import net.minecraftforge.client.model.generators.ModelFile;
-import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
+import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
+import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
+import net.neoforged.neoforge.client.model.generators.ModelFile;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 public class ModBlockStateProvider extends BlockStateProvider {
 
@@ -29,7 +29,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
     }
 
     public ResourceLocation key(Block block) {
-        return ForgeRegistries.BLOCKS.getKey(block);
+        return BuiltInRegistries.BLOCK.getKey(block);
     }
 
 
@@ -54,18 +54,21 @@ public class ModBlockStateProvider extends BlockStateProvider {
                         );
         simpleBlockItem(ModBlocks.GEMSTONE_BLOCK.get(), gemstoneBlock);
         simpleBlock(ModBlocks.THISTLE.get(), models().cross("thistle", MysticcraftMod.res("block/thistle")).renderType("cutout"));
+        getVariantBuilder(ModBlocks.MOON_BLOSSOM.get()).forAllStates(state -> {
+            Boolean value = state.getValue(MoonBlossomFlowerBlock.BLOOMING);
+            return ConfiguredModel.builder().modelFile(
+                    value ?
+                            models().cross("moon_blossom_open", MysticcraftMod.res("block/moon_blossom_open")).renderType("cutout")
+                            : models().cross("moon_blossom_closed", MysticcraftMod.res("block/moon_blossom_closed")).renderType("cutout")
+            ).build();
+        });
+
         simpleBlockWithItem(ModBlocks.SHADER_TEST_BLOCK.get(), models().cubeAll("shader_test", MysticcraftMod.res("block/example")).renderType("mysticcraft:chromatic_cutout"));
 
         makeGemstoneCrystals();
 
         makeGemstoneSeeds();
         makeGemstoneSeedItem();
-
-        getVariantBuilder(ModBlocks.FRAGILE_BASALT.get())
-                .partialState()
-                .setModels(
-                        new ConfiguredModel(models().getExistingFile(key(Blocks.BASALT)))
-                );
 
         ResourceLocation WEST_EAST_TEXTURE = MysticcraftMod.res("block/artificer_table_west_east");
         ResourceLocation NORTH_SOUTH_TEXTURE = MysticcraftMod.res("block/artificer_table_north_south");
@@ -96,17 +99,17 @@ public class ModBlockStateProvider extends BlockStateProvider {
         simpleBlock(ModBlocks.MANGATIC_STONE);
         simpleBlockWithItem(ModBlocks.OBELISK_TURRET.get(), models().getExistingFile(MysticcraftMod.res("block/turret/obelisk")));
 
-        ResourceLocation GOLD_BLOCK = new ResourceLocation("block/gold_block");
+        ResourceLocation GOLD_BLOCK = ResourceLocation.withDefaultNamespace("block/gold_block");
 
         slabBlock(ModBlocks.GOLDEN_SLAB.get(), GOLD_BLOCK, GOLD_BLOCK);
         stairsBlock(ModBlocks.GOLDEN_STAIRS.get(), GOLD_BLOCK);
         wallBlock(ModBlocks.GOLDEN_WALL.get(), GOLD_BLOCK);
 
-        ResourceLocation LAPIS_BLOCK = new ResourceLocation("block/lapis_block");
+        ResourceLocation LAPIS_BLOCK = ResourceLocation.withDefaultNamespace("block/lapis_block");
         buttonBlock(ModBlocks.LAPIS_BUTTON.get(), LAPIS_BLOCK);
         simpleBlockItem(ModBlocks.LAPIS_BUTTON.get(), itemModels().buttonInventory("lapis_button_inventory", LAPIS_BLOCK));
 
-        ResourceLocation OBSIDIAN = new ResourceLocation("block/obsidian");
+        ResourceLocation OBSIDIAN = ResourceLocation.withDefaultNamespace("block/obsidian");
         pressurePlateBlock(ModBlocks.OBSIDIAN_PRESSURE_PLATE.get(), OBSIDIAN);
         itemModels().pressurePlate("obsidian_pressure_plate", OBSIDIAN);
 
@@ -146,7 +149,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
                     };
                     return ConfiguredModel.builder()
                             .modelFile(models().getBuilder("reforge_anvil")
-                                    .parent(models().getExistingFile(new ResourceLocation("template_anvil")))
+                                    .parent(models().getExistingFile(ResourceLocation.withDefaultNamespace("template_anvil")))
                                     .texture("top", MysticcraftMod.res("block/reforging_anvil_top"))
                             )
                             .rotationY(rot)
@@ -169,14 +172,14 @@ public class ModBlockStateProvider extends BlockStateProvider {
                 default -> 0;
             };
             return ConfiguredModel.builder()
-                    .modelFile(gemstoneCrystal(state.getValue(GemstoneCrystal.SIZE)))
+                    .modelFile(gemstoneCrystal(state.getValue(GemstoneCrystalBlock.SIZE)))
                     .rotationX(xRot)
                     .rotationY(yRot)
                     .build();
         }, ModBlockStateProperties.GEMSTONE_TYPE);
     }
 
-    private ModelFile gemstoneCrystal(GemstoneCrystal.Size size) {
+    private ModelFile gemstoneCrystal(GemstoneCrystalBlock.Size size) {
         return this.models().getBuilder("block/gemstone/crystal/" + size.getSerializedName())
                 .texture("cross", MysticcraftMod.res("block/gemstone/crystal/" + size.getSerializedName()))
                 .parent(tintedCross())
@@ -216,14 +219,10 @@ public class ModBlockStateProvider extends BlockStateProvider {
             Direction direction = state.getValue(BlockStateProperties.FACING);
             GemstoneSeedBlock.MaterialType type = state.getValue(ModBlockStateProperties.STONE_TYPE);
             int yRot = switch (direction) {
-                case DOWN, EAST:
-                    yield 90;
-                case WEST, UP:
-                    yield 270;
-                case SOUTH:
-                    yield 180;
-                case NORTH:
-                    yield 0;
+                case DOWN, EAST -> 90;
+                case WEST, UP -> 270;
+                case SOUTH -> 180;
+                case NORTH -> 0;
             };
             return ConfiguredModel.builder()
                     .modelFile(variantGemstoneSeed(type))

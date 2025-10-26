@@ -7,6 +7,7 @@ import net.kapitencraft.mysticcraft.capability.reforging.Reforges;
 import net.kapitencraft.mysticcraft.registry.ModItems;
 import net.minecraft.Util;
 import net.minecraft.data.PackOutput;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 import java.util.Comparator;
 
@@ -19,7 +20,7 @@ public class ModLanguageProvider extends EnglishLanguageProvider {
     protected void addTranslations() {
 
         Reforges.all().keySet().forEach(id -> this.add(Util.makeDescriptionId("reforge", id), TextHelper.makeGrammar(id.getPath())));
-        ModItems.getEntries().stream().sorted(Comparator.comparing(o -> o.getKey().location())).forEach(this::addItem);
+        ModItems.getEntries().stream().sorted(Comparator.comparing(o -> o.getKey().location())).forEach(DeferredHolder::get);
 
         addDeathMessage("mana_overflow", "%1$s stood to close to %2$s as they lost control over their mana");
         addDeathMessage("mana_overflow_self", "%1$s couldn't handle their mana");

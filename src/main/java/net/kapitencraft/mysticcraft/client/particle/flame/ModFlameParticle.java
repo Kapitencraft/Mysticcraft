@@ -4,10 +4,9 @@ import net.kapitencraft.kap_lib.util.Color;
 import net.kapitencraft.mysticcraft.client.particle.options.FlameParticleOptions;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 @OnlyIn(Dist.CLIENT)
 public class ModFlameParticle extends RisingParticle {

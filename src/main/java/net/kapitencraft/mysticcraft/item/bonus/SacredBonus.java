@@ -1,23 +1,25 @@
 package net.kapitencraft.mysticcraft.item.bonus;
 
 import net.kapitencraft.kap_lib.helpers.MiscHelper;
-import net.kapitencraft.kap_lib.io.serialization.DataPackSerializer;
+import net.kapitencraft.kap_lib.io.serialization.RegistrySerializer;
 import net.kapitencraft.kap_lib.item.bonus.Bonus;
+import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobType;
 
 public class SacredBonus implements Bonus<SacredBonus> {
-    public static final DataPackSerializer<SacredBonus> SERIALIZER = DataPackSerializer.unit(SacredBonus::new);
+    private static final SacredBonus INSTANCE = new SacredBonus();
+    public static final RegistrySerializer<SacredBonus> SERIALIZER = RegistrySerializer.unit(INSTANCE);
 
     @Override
-    public DataPackSerializer<SacredBonus> getSerializer() {
+    public RegistrySerializer<SacredBonus> getSerializer() {
         return SERIALIZER;
     }
 
     @Override
     public float onEntityHurt(LivingEntity attacked, LivingEntity attacker, MiscHelper.DamageType type, float damage) {
-        if (attacked instanceof Mob mob && mob.getMobType() == MobType.UNDEAD) return damage * 1.1f;
+        if (attacker.getType().is(EntityTypeTags.UNDEAD)) {
+            return damage * 1.1f;
+        }
         return damage;
     }
 }

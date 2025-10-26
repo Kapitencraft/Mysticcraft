@@ -8,8 +8,8 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
-import net.minecraftforge.common.ToolAction;
-import net.minecraftforge.common.ToolActions;
+import net.neoforged.neoforge.common.ItemAbilities;
+import net.neoforged.neoforge.common.ItemAbility;
 import org.jetbrains.annotations.Nullable;
 
 public class AbstractLogBlock extends RotatedPillarBlock {
@@ -21,8 +21,8 @@ public class AbstractLogBlock extends RotatedPillarBlock {
     }
 
     @Override
-    public @Nullable BlockState getToolModifiedState(BlockState state, UseOnContext context, ToolAction toolAction, boolean simulate) {
-        if (context.getItemInHand().canPerformAction(toolAction) && toolAction == ToolActions.AXE_STRIP && stripped != null) {
+    public @Nullable BlockState getToolModifiedState(BlockState state, UseOnContext context, ItemAbility toolAction, boolean simulate) {
+        if (context.getItemInHand().canPerformAction(toolAction) && toolAction == ItemAbilities.AXE_STRIP && stripped != null) {
             return stripped.defaultBlockState().setValue(AXIS, state.getValue(AXIS));
         }
         return super.getToolModifiedState(state, context, toolAction, simulate);

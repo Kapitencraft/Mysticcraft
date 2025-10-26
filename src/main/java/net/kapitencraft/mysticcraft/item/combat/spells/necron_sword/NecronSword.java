@@ -1,17 +1,22 @@
 package net.kapitencraft.mysticcraft.item.combat.spells.necron_sword;
 
-import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import net.kapitencraft.kap_lib.helpers.AttributeHelper;
 import net.kapitencraft.kap_lib.item.creative_tab.TabGroup;
 import net.kapitencraft.kap_lib.registry.ExtraAttributes;
 import net.kapitencraft.kap_lib.util.ExtraRarities;
-import net.kapitencraft.mysticcraft.capability.spell.SpellCapabilityProvider;
+import net.kapitencraft.kap_lib.util.attribute.BaseAttributeLocations;
+import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneHandler;
+import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneSlot;
 import net.kapitencraft.mysticcraft.item.combat.spells.SpellItem;
+import net.kapitencraft.mysticcraft.item.misc.ModTiers;
 import net.kapitencraft.mysticcraft.registry.ModCreativeModTabs;
-import net.minecraft.world.entity.EquipmentSlot;
+import net.kapitencraft.mysticcraft.registry.ModDataComponentTypes;
+import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
@@ -19,37 +24,71 @@ import java.util.function.Consumer;
 public class NecronSword extends SpellItem {
     public static final TabGroup NECRON_GROUP = TabGroup.create(ModCreativeModTabs.WEAPONS_AND_TOOLS);
     public static final int BASE_DAMAGE = 12;
-    public static final double BASE_STRENGHT = 150;
+    public static final int BASE_STRENGHT = 150;
     public static final int REFINED_BASE_DAMAGE = 13;
-    public static final double BASE_FEROCITY = 30;
+    public static final int BASE_FEROCITY = 30;
     public static final int BASE_INTEL = 50;
-    private final double FEROCITY;
-    private final double STRENGHT;
 
-    public NecronSword(int damage, int intelligence, double ferocity, double strenght) {
-        super(new Properties().rarity(ExtraRarities.LEGENDARY), damage, -2.4f, intelligence, 0);
-        this.FEROCITY = ferocity;
-        this.STRENGHT = strenght;
+    protected NecronSword(Properties properties) {
+        super(properties.rarity(ExtraRarities.LEGENDARY));
     }
 
-    @Override
-    public @NotNull Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(@NotNull EquipmentSlot slot) {
-        HashMultimap<Attribute, AttributeModifier> multimap = HashMultimap.create();
-        multimap.putAll(super.getDefaultAttributeModifiers(slot));
-        if (slot == EquipmentSlot.MAINHAND) {
-            multimap.put(ExtraAttributes.FEROCITY.get(), AttributeHelper.createModifier("Necron Modifier", AttributeModifier.Operation.ADDITION, this.FEROCITY));
-            multimap.put(ExtraAttributes.STRENGTH.get(), AttributeHelper.createModifier("Necron Modifier", AttributeModifier.Operation.ADDITION, this.STRENGHT));
-            this.getAdditionalModifiers().accept(multimap);
-        }
-        return multimap;
+    public NecronSword() {
+        this(new Properties()
+                .attributes(createNecronAttributes(NecronSword.BASE_DAMAGE, NecronSword.BASE_INTEL, NecronSword.BASE_FEROCITY, NecronSword.BASE_STRENGHT).build())
+                .component(ModDataComponentTypes.EMBEDDED_GEMSTONES, GemstoneHandler.create(GemstoneSlot.Type.COMBAT))
+        );
     }
+
+    protected static ItemAttributeModifiers.Builder createNecronAttributes(int damage, int maxMana, int ferocity, int strength) {
+        return ItemAttributeModifiers.builder()
+                .add(
+                        Attributes.ATTACK_DAMAGE,
+                        new AttributeModifier(
+                                BASE_ATTACK_DAMAGE_ID, damage + ModTiers.SPELL_TIER.getAttackDamageBonus(), AttributeModifier.Operation.ADD_VALUE
+                        ),
+                        EquipmentSlotGroup.MAINHAND
+                ).add(
+                        Attributes.ATTACK_SPEED,
+                        new AttributeModifier(
+                                BASE_ATTACK_SPEED_ID, -2.4, AttributeModifier.Operation.ADD_VALUE
+                        ),
+                        EquipmentSlotGroup.MAINHAND
+                ).add(
+                        ExtraAttributes.MAX_MANA,
+                        new AttributeModifier(
+                                MysticcraftMod.res("tool_max_mana_modifier"), maxMana, AttributeModifier.Operation.ADD_VALUE
+                        ),
+                        EquipmentSlotGroup.MAINHAND
+                ).add(
+                        ExtraAttributes.FEROCITY,
+                        new AttributeModifier(
+                                BaseAttributeLocations.FEROCITY, ferocity, AttributeModifier.Operation.ADD_VALUE
+                        ),
+                        EquipmentSlotGroup.MAINHAND
+                ).add(
+                        ExtraAttributes.STRENGTH,
+                        new AttributeModifier(
+                                BaseAttributeLocations.STRENGTH, strength, AttributeModifier.Operation.ADD_VALUE
+                        ),
+                        EquipmentSlotGroup.MAINHAND
+                );
+    }
+
+
+    //@Override
+    //public @NotNull Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(@NotNull EquipmentSlot slot) {
+    //    HashMultimap<Attribute, AttributeModifier> multimap = HashMultimap.create();
+    //    multimap.putAll(super.getDefaultAttributeModifiers(slot));
+    //    if (slot == EquipmentSlot.MAINHAND) {
+    //        multimap.put(ExtraAttributes.FEROCITY.get(), AttributeHelper.createModifier("Necron Modifier", AttributeModifier.Operation.ADDITION, this.FEROCITY));
+    //        multimap.put(ExtraAttributes.STRENGTH.get(), AttributeHelper.createModifier("Necron Modifier", AttributeModifier.Operation.ADDITION, this.STRENGHT));
+    //        this.getAdditionalModifiers().accept(multimap);
+    //    }
+    //    return multimap;
+    //}
 
     protected @NotNull Consumer<Multimap<Attribute, AttributeModifier>> getAdditionalModifiers() {
         return multimap -> {};
-    }
-
-    @Override
-    public SpellCapabilityProvider createSpells() {
-        return SpellCapabilityProvider.empty();
     }
 }

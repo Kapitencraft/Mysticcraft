@@ -5,7 +5,7 @@ import net.minecraft.world.item.Tier;
 
 public abstract class LanceItem extends ModSwordItem {
 
-    public LanceItem(Tier p_43269_, int attackDamage, Properties p_43272_) {
-        super(p_43269_, attackDamage, -2.2f, p_43272_);
+    public LanceItem(Tier p_43269_, Properties p_43272_) {
+        super(p_43269_, p_43272_);
     }
 }

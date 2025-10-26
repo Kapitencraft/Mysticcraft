@@ -3,8 +3,8 @@ package net.kapitencraft.mysticcraft.event.custom;
 import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneType;
 import net.minecraft.core.Holder;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraftforge.eventbus.api.Event;
-import net.minecraftforge.fml.event.IModBusEvent;
+import net.neoforged.bus.api.Event;
+import net.neoforged.fml.event.IModBusEvent;
 
 import java.util.HashMap;
 import java.util.function.Predicate;

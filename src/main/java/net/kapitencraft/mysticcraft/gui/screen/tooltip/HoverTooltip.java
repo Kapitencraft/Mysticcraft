@@ -2,6 +2,7 @@ package net.kapitencraft.mysticcraft.gui.screen.tooltip;
 
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ImageButton;
+import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
@@ -27,7 +28,7 @@ public class HoverTooltip {
     }
 
     public ImageButton createButton(ResourceLocation imageLocation, int leftPos, int topPos, Button.OnPress task) {
-        return new ImageButton(leftPos + xOffsetStart, topPos + yOffsetStart, 16, 16, 0, 0, 16, imageLocation, 16, 16, task);
+        return new ImageButton(leftPos + xOffsetStart, topPos + yOffsetStart, 16, 16, new WidgetSprites(imageLocation, imageLocation), task);
     }
 
     public List<Component> getText() {

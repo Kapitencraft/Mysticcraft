@@ -4,45 +4,40 @@ package net.kapitencraft.mysticcraft.spell;
 import com.mojang.serialization.Codec;
 import net.kapitencraft.mysticcraft.registry.Spells;
 import net.kapitencraft.mysticcraft.registry.custom.ModRegistries;
+import net.minecraft.Util;
+import net.minecraft.core.Holder;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.function.Supplier;
 
 public class SpellSlot {
 
-    public static final Codec<SpellSlot> CODEC = ModRegistries.SPELLS.getCodec().xmap(SpellSlot::new, SpellSlot::getSpell);
+    public static final Codec<SpellSlot> CODEC = ModRegistries.SPELLS.holderByNameCodec().xmap(SpellSlot::new, SpellSlot::getSpell);
     public static final Codec<List<SpellSlot>> LIST_CODEC = SpellSlot.CODEC.listOf();
+    public static final StreamCodec<RegistryFriendlyByteBuf, SpellSlot> STREAM_CODEC = ByteBufCodecs.holderRegistry(ModRegistries.Keys.SPELLS).map(SpellSlot::new, SpellSlot::getSpell);
 
-    private @NotNull Spell spell;
-    private int level;
+    private final @NotNull Holder<Spell> spell;
+    private final int level;
 
     public SpellSlot() {
         this(Spells.EMPTY);
     }
 
-    public SpellSlot(@NotNull Spell spell) {
+    public SpellSlot(@NotNull Holder<Spell> spell) {
+        this(spell, 1);
+    }
+
+    public SpellSlot(@NotNull Holder<Spell> spell, int level) {
         this.spell = spell;
-        this.level = 1;
-    }
-
-    public SpellSlot(Spell spell, int level) {
-        this(spell);
         this.level = level;
     }
 
-    public SpellSlot(Supplier<? extends @NotNull Spell> spellSupplier) {
-        this(spellSupplier.get());
-    }
-
-    public SpellSlot(Supplier<? extends Spell> spell, int level) {
-        this(spell);
-        this.level = level;
-    }
-
-    public @NotNull Spell getSpell() {
+    public @NotNull Holder<Spell> getSpell() {
         return this.spell;
     }
 
@@ -54,7 +49,15 @@ public class SpellSlot {
         return new SpellSlot(this.spell, this.level);
     }
 
+    public SpellSlot withLevel(int level) {
+        return new SpellSlot(this.spell, level);
+    }
+
+    public SpellSlot withSpell(Holder<Spell> spell) {
+        return new SpellSlot(spell, this.level);
+    }
+
     public Component description() {
-        return Component.translatable(spell.getDescriptionId()).append(CommonComponents.SPACE).append(Component.translatable("enchantment.level." + this.level));
+        return Component.translatable(Util.makeDescriptionId("spell", spell.getKey().location())).append(CommonComponents.SPACE).append(Component.translatable("enchantment.level." + this.level));
     }
 }

@@ -1,14 +1,13 @@
 {
   "type": "kap_lib:attribute_modifiers",
-  "data": {
+  "bonus": {
+    "type": "kap_lib:attribute_modifiers",
     "entries": {
       "kap_lib:generic.max_mana": [
         {
-          "type": "minecraft:default",
           "amount": 0.2,
-          "name": "ManaReservoir",
-          "operation": 2,
-          "uuid": "ff5f01b1-85c2-482b-be0e-02eff7211613"
+          "id": "mysticcraft:mana_reservoir",
+          "operation": "add_multiplied_total"
         }
       ]
     }

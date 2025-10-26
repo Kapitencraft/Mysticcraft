@@ -1,8 +1,7 @@
 package net.kapitencraft.mysticcraft.item.loot_table.conditions;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.kapitencraft.kap_lib.io.serialization.JsonSerializer;
 import net.kapitencraft.mysticcraft.registry.ModLootItemConditions;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
@@ -10,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class LootTableTypeCondition extends BaseCondition {
     private static final LootTableTypeCondition EMPTY = new LootTableTypeCondition(null);
-    private static final Codec<LootTableTypeCondition> CODEC = RecordCodecBuilder.create(lootTableTypeConditionInstance ->
+    public static final MapCodec<LootTableTypeCondition> CODEC = RecordCodecBuilder.mapCodec(lootTableTypeConditionInstance ->
             lootTableTypeConditionInstance.group(
                     TagKeyCondition.Type.CODEC.fieldOf("type").forGetter(i -> i.type)
             ).apply(lootTableTypeConditionInstance, LootTableTypeCondition::new)
@@ -23,13 +22,11 @@ public class LootTableTypeCondition extends BaseCondition {
 
     @Override
     public @NotNull LootItemConditionType getType() {
-        return ModLootItemConditions.TYPE.get();
+        return ModLootItemConditions.TYPE.value();
     }
 
     @Override
     public boolean test(LootContext context) {
         return type.is(context);
     }
-
-    public static final JsonSerializer<LootTableTypeCondition> SERIALIZER = new JsonSerializer<>(CODEC, () -> EMPTY);
 }

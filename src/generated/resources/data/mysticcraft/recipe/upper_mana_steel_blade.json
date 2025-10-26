@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "*": {
+      "item": "mysticcraft:mana_steel_ingot"
+    },
+    "+": {
+      "type": "neoforge:components",
+      "components": {
+        "mysticcraft:gemstone/data": {
+          "type": "ruby",
+          "rarity": "perfect"
+        }
+      },
+      "items": "mysticcraft:gemstone"
+    }
+  },
+  "pattern": [
+    " * ",
+    " * ",
+    "*+*"
+  ],
+  "result": {
+    "count": 1,
+    "id": "mysticcraft:upper_mana_steel_blade"
+  }
+}

@@ -1,11 +1,9 @@
 package net.kapitencraft.mysticcraft.item.loot_table.functions;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.kapitencraft.kap_lib.helpers.AttributeHelper;
-import net.kapitencraft.kap_lib.helpers.LootTableHelper;
 import net.kapitencraft.kap_lib.helpers.MathHelper;
-import net.kapitencraft.kap_lib.io.serialization.JsonSerializer;
-import net.kapitencraft.kap_lib.item.loot_table.IConditional;
 import net.kapitencraft.kap_lib.registry.ExtraAttributes;
 import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneItem;
 import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneType;
@@ -24,9 +22,11 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import org.jetbrains.annotations.NotNull;
 
-public class PristineFunction extends LootItemConditionalFunction implements IConditional {
-    private static final Codec<PristineFunction> CODEC = LootTableHelper.simpleCodec(PristineFunction::new);
-    public PristineFunction(LootItemCondition[] p_80678_) {
+import java.util.List;
+
+public class PristineFunction extends LootItemConditionalFunction {
+    public static final MapCodec<PristineFunction> CODEC = RecordCodecBuilder.mapCodec(i -> commonFields(i).apply(i, PristineFunction::new));
+    public PristineFunction(List<LootItemCondition> p_80678_) {
         super(p_80678_);
     }
 
@@ -39,7 +39,7 @@ public class PristineFunction extends LootItemConditionalFunction implements ICo
             } else {
                 Entity entity = context.getParamOrNull(LootContextParams.THIS_ENTITY);
                 if (entity instanceof LivingEntity living) {
-                    double pristine = AttributeHelper.getSaveAttributeValue(ExtraAttributes.PRISTINE.get(), living);
+                    double pristine = AttributeHelper.getSaveAttributeValue(ExtraAttributes.PRISTINE, living);
                     while (gemstoneLevel < 5 && pristine > 0) {
                         if (MathHelper.chance(pristine / 100, living)) {
                             gemstoneLevel++;
@@ -58,15 +58,8 @@ public class PristineFunction extends LootItemConditionalFunction implements ICo
         return stack;
     }
 
-    public static final JsonSerializer<PristineFunction> SERIALIZER = new JsonSerializer<>(CODEC);
-
     @Override
-    public @NotNull LootItemFunctionType getType() {
+    public LootItemFunctionType<? extends LootItemConditionalFunction> getType() {
         return ModLootItemFunctions.PRISTINE_MODIFIER.get();
-    }
-
-    @Override
-    public LootItemCondition[] getConditions() {
-        return predicates;
     }
 }

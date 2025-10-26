@@ -1,0 +1,13 @@
+{
+  "entries": [
+    {
+      "enum": "net/minecraft/client/model/HumanoidModel$ArmPose",
+      "name": "mysticcraft$CAST_SPELL",
+      "constructor": "(ZLnet/neoforged/neoforge/client/IArmPoseTransformer;)V",
+      "parameters": {
+        "class": "net/kapitencraft/mysticcraft/client/model/ModArmPoseProxies",
+        "field": "CAST_SPELL"
+      }
+    }
+  ]
+}

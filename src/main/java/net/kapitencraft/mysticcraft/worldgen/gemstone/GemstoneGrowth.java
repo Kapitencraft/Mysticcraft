@@ -3,7 +3,7 @@ package net.kapitencraft.mysticcraft.worldgen.gemstone;
 import net.kapitencraft.kap_lib.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.block.ModBlockStateProperties;
-import net.kapitencraft.mysticcraft.block.gemstone.GemstoneCrystal;
+import net.kapitencraft.mysticcraft.block.gemstone.GemstoneCrystalBlock;
 import net.kapitencraft.mysticcraft.block.gemstone.GemstoneSeedBlock;
 import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneType;
 import net.kapitencraft.mysticcraft.logging.Markers;
@@ -69,14 +69,14 @@ public class GemstoneGrowth {
                 if (state.is(Blocks.AIR) && level.hasChunkAt(pos)) {
                     level.setBlock(pos, GEMSTONE_CRYSTAL_STATE
                             .setValue(ModBlockStateProperties.GEMSTONE_TYPE, type)
-                            .setValue(GemstoneCrystal.SIZE, GemstoneCrystal.Size.SMALL)
+                            .setValue(GemstoneCrystalBlock.SIZE, GemstoneCrystalBlock.Size.SMALL)
                             .setValue(BlockStateProperties.FACING, direction), 3
                     );
                     break;
                 } else if (state.is(GEMSTONE_CRYSTAL)) {
-                    GemstoneCrystal.Size size = state.getValue(GemstoneCrystal.SIZE);
-                    if (size != GemstoneCrystal.Size.CLUSTER) {
-                        level.setBlock(pos, state.setValue(GemstoneCrystal.SIZE, size.next()), 3);
+                    GemstoneCrystalBlock.Size size = state.getValue(GemstoneCrystalBlock.SIZE);
+                    if (size != GemstoneCrystalBlock.Size.CLUSTER) {
+                        level.setBlock(pos, state.setValue(GemstoneCrystalBlock.SIZE, size.next()), 3);
                     } else {
                         level.setBlock(pos, GEMSTONE_BLOCK
                                 .setValue(ModBlockStateProperties.GEMSTONE_TYPE, type), 3

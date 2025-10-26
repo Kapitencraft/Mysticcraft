@@ -1,13 +1,9 @@
 package net.kapitencraft.mysticcraft.spell.capability;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.blaze3d.vertex.*;
 import net.kapitencraft.mysticcraft.capability.spell.SpellHelper;
 import net.kapitencraft.mysticcraft.client.ModKeyMappings;
-import net.kapitencraft.mysticcraft.network.ModMessages;
 import net.kapitencraft.mysticcraft.network.packets.C2S.SelectSpellSlotPacket;
 import net.kapitencraft.mysticcraft.spell.SpellSlot;
 import net.minecraft.client.Minecraft;
@@ -18,7 +14,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import org.jetbrains.annotations.NotNull;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
@@ -32,7 +28,7 @@ public class SelectSpellCastScreen extends Screen {
     }
 
     @Override
-    public void renderBackground(@NotNull GuiGraphics pGuiGraphics) {
+    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
     }
 
     @Override
@@ -45,8 +41,7 @@ public class SelectSpellCastScreen extends Screen {
         RenderSystem.defaultBlendFunc();
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        BufferBuilder builder = Tesselator.getInstance().getBuilder();
-        builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+        BufferBuilder builder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
 
         int selectedIndex = getSelectedIndex(pMouseX - middleX, pMouseY - middleY);
         int amount = this.spells.size();
@@ -56,7 +51,7 @@ public class SelectSpellCastScreen extends Screen {
             boolean b = selectedIndex == i;
             drawSlice(builder, middleX, middleY, 10, 45, 135, ((i - 0.5f) / amount + 0.25f) * 360, ((i + 0.5f) / amount + 0.25f) * 360, b ? 63 : 0, b ? 161 : 0, b ? 191 : 0, b ? 60 : 64);
         }
-        Tesselator.getInstance().end();
+        BufferUploader.drawWithShader(builder.build());
         RenderSystem.disableBlend();
 
         //render internal
@@ -106,10 +101,10 @@ public class SelectSpellCastScreen extends Screen {
             float pos2InX = x + radiusIn * (float) Math.cos(angle2);
             float pos2InY = y + radiusIn * (float) Math.sin(angle2);
 
-            buffer.vertex(pos1OutX, pos1OutY, z).color(r, g, b, a).endVertex();
-            buffer.vertex(pos1InX, pos1InY, z).color(r, g, b, a).endVertex();
-            buffer.vertex(pos2InX, pos2InY, z).color(r, g, b, a).endVertex();
-            buffer.vertex(pos2OutX, pos2OutY, z).color(r, g, b, a).endVertex();
+            buffer.addVertex(pos1OutX, pos1OutY, z).setColor(r, g, b, a);
+            buffer.addVertex(pos1InX, pos1InY, z).setColor(r, g, b, a);
+            buffer.addVertex(pos2InX, pos2InY, z).setColor(r, g, b, a);
+            buffer.addVertex(pos2OutX, pos2OutY, z).setColor(r, g, b, a);
         }
     }
 
@@ -133,8 +128,7 @@ public class SelectSpellCastScreen extends Screen {
     public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
         int selectedIndex = getSelectedIndex((int) pMouseX - width / 2, (int) pMouseY - height / 2);
         if (selectedIndex > -1) {
-            ModMessages.sendToServer(new SelectSpellSlotPacket(selectedIndex));
-            PlayerSpells.get(Minecraft.getInstance().player).setSelectedSlot(selectedIndex);
+            PacketDistributor.sendToServer(new SelectSpellSlotPacket(selectedIndex));
             this.onClose();
             return true;
         }

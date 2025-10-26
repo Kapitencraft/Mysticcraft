@@ -13,6 +13,6 @@ public class FireBoltRenderer extends EntityRenderer<FireBoltProjectile> {
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull FireBoltProjectile p_114482_) {
-        return new ResourceLocation("minecraft", "textures/entity/projectiles/arrow.png");
+        return ResourceLocation.withDefaultNamespace("textures/entity/projectiles/arrow.png");
     }
 }

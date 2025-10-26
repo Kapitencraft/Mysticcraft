@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.worldgen.tree;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.kapitencraft.mysticcraft.registry.ModTrunkPlacers;
 import net.minecraft.core.BlockPos;
@@ -21,7 +22,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 public class ColossalTrunkPlacer extends TrunkPlacer {
-    public static final Codec<ColossalTrunkPlacer> CODEC = RecordCodecBuilder.create(pInstance -> pInstance.group(
+    public static final MapCodec<ColossalTrunkPlacer> CODEC = RecordCodecBuilder.mapCodec(pInstance -> pInstance.group(
             Codec.INT.fieldOf("base_height").forGetter(g -> g.baseHeight),
             Codec.INT.fieldOf("height_rand_a").forGetter(g -> g.heightRandA),
             Codec.INT.fieldOf("height_rand_b").forGetter(g -> g.heightRandB)
@@ -33,7 +34,7 @@ public class ColossalTrunkPlacer extends TrunkPlacer {
 
     @Override
     protected @NotNull TrunkPlacerType<?> type() {
-        return ModTrunkPlacers.COLOSSAL.get();
+        return ModTrunkPlacers.COLOSSAL.value();
     }
 
     @Override

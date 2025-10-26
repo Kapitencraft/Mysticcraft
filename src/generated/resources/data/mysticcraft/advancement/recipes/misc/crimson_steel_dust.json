@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_crimsonium_dust": {
+      "conditions": {
+        "items": [
+          {
+            "items": "mysticcraft:crimsonium_dust"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "mysticcraft:crimson_steel_dust"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_crimsonium_dust"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "mysticcraft:crimson_steel_dust"
+    ]
+  }
+}

@@ -2,17 +2,13 @@ package net.kapitencraft.mysticcraft.gui.reforging_anvil;
 
 import net.kapitencraft.kap_lib.requirements.RequirementManager;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.capability.CapabilityHelper;
 import net.kapitencraft.mysticcraft.capability.dungeon.IPrestigeAbleItem;
 import net.kapitencraft.mysticcraft.capability.dungeon.IReAnUpgradeable;
-import net.kapitencraft.mysticcraft.capability.essence.IEssenceData;
 import net.kapitencraft.mysticcraft.capability.reforging.Reforge;
 import net.kapitencraft.mysticcraft.capability.reforging.Reforges;
 import net.kapitencraft.mysticcraft.gui.IMenu;
 import net.kapitencraft.mysticcraft.gui.NoBEMenu;
 import net.kapitencraft.mysticcraft.helpers.InventoryHelper;
-import net.kapitencraft.mysticcraft.item.material.EssenceItem;
-import net.kapitencraft.mysticcraft.network.ModMessages;
 import net.kapitencraft.mysticcraft.network.packets.C2S.ReforgeItemPacket;
 import net.kapitencraft.mysticcraft.registry.ModBlocks;
 import net.kapitencraft.mysticcraft.registry.ModMenuTypes;
@@ -29,6 +25,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -88,12 +85,6 @@ public class ReforgeAnvilMenu extends NoBEMenu<ReforgeAnvilMenu.ReforgeAnvilCont
     }
 
     private void removeItems(List<ItemStack> toRemove) {
-        List<ItemStack> allEssence = toRemove.stream().filter(stack -> stack.getItem() instanceof EssenceItem).toList();
-        this.player.getCapability(CapabilityHelper.ESSENCE).ifPresent(essenceHolder ->
-                allEssence.forEach(stack ->
-                        essenceHolder.remove(IEssenceData.read(stack), stack.getCount())
-                )
-        );
         toRemove.forEach(stack -> net.kapitencraft.kap_lib.helpers.InventoryHelper.removeFromInventory(stack, player));
     }
 
@@ -103,7 +94,7 @@ public class ReforgeAnvilMenu extends NoBEMenu<ReforgeAnvilMenu.ReforgeAnvilCont
     }
 
     public void send(ResourceLocation exeRet) {
-        ModMessages.sendToServer(new ReforgeItemPacket(exeRet));
+        PacketDistributor.sendToServer(new ReforgeItemPacket(exeRet));
     }
 
     public void reforgeForId(ResourceLocation reforgeId, ServerPlayer player) {

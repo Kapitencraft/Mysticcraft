@@ -1,17 +1,22 @@
 package net.kapitencraft.mysticcraft.client.particle;
 
-import com.mojang.brigadier.StringReader;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import org.jetbrains.annotations.NotNull;
 
 public class MagicCircleParticleType extends ParticleType<MagicCircleParticleType> implements ParticleOptions {
+    public static final MapCodec<MagicCircleParticleType> CODEC = Codec.INT.xmap(MagicCircleParticleType::new, MagicCircleParticleType::getLiving).fieldOf("living");
+    public static final StreamCodec<ByteBuf, MagicCircleParticleType> STREAM_CODEC = ByteBufCodecs.INT.map(MagicCircleParticleType::new, MagicCircleParticleType::getLiving);
+
     private final int living;
     public MagicCircleParticleType(int living) {
-        super(false, DESERIALIZER);
+        super(false);
         this.living = living;
     }
 
@@ -19,36 +24,18 @@ public class MagicCircleParticleType extends ParticleType<MagicCircleParticleTyp
         return living;
     }
 
-    public static final Deserializer<MagicCircleParticleType> DESERIALIZER = new ParticleOptions.Deserializer<>() {
-
-        @Override
-        public @NotNull MagicCircleParticleType fromCommand(@NotNull ParticleType<MagicCircleParticleType> type, @NotNull StringReader reader) throws CommandSyntaxException {
-            return new MagicCircleParticleType(0);
-        }
-
-        @Override
-        public @NotNull MagicCircleParticleType fromNetwork(@NotNull ParticleType<MagicCircleParticleType> p_123735_, @NotNull FriendlyByteBuf byteBuf) {
-            return new MagicCircleParticleType(byteBuf.readInt());
-        }
-    };
-
     @Override
     public @NotNull MagicCircleParticleType getType() {
         return this;
     }
 
     @Override
-    public void writeToNetwork(@NotNull FriendlyByteBuf byteBuf) {
-        byteBuf.writeInt(living);
+    public @NotNull MapCodec<MagicCircleParticleType> codec() {
+        return CODEC;
     }
 
     @Override
-    public @NotNull String writeToString() {
-        return "";
-    }
-
-    @Override
-    public @NotNull Codec<MagicCircleParticleType> codec() {
-        return Codec.unit(this::getType);
+    public StreamCodec<? super RegistryFriendlyByteBuf, MagicCircleParticleType> streamCodec() {
+        return STREAM_CODEC;
     }
 }

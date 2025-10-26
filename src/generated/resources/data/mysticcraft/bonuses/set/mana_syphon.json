@@ -1,6 +1,8 @@
 {
   "type": "mysticcraft:mana_syphon",
-  "data": {},
+  "bonus": {
+    "type": "mysticcraft:mana_syphon"
+  },
   "equipment_slots": [
     "chest",
     "legs",

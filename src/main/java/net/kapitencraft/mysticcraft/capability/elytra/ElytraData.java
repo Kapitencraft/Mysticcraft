@@ -1,5 +1,8 @@
 package net.kapitencraft.mysticcraft.capability.elytra;
 
+import net.kapitencraft.kap_lib.helpers.ExtraStreamCodecs;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
@@ -10,6 +13,7 @@ public enum ElytraData implements StringRepresentable {
     GRAVITY_BOOST(3, "gravity");
 
     public static final EnumCodec<ElytraData> CODEC = StringRepresentable.fromEnum(ElytraData::values);
+    public static final StreamCodec<? super RegistryFriendlyByteBuf, ElytraData> STREAM_CODEC = ExtraStreamCodecs.enumCodec(ElytraData.values());
 
     private final int maxLevel;
     private final String name;

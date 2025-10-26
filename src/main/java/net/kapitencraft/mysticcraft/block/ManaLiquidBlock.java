@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 public class ManaLiquidBlock extends LiquidBlock {
 
     public ManaLiquidBlock() {
-        super(ModFluids.SOURCE_MANA_FLUID, BlockBehaviour.Properties.copy(Blocks.LAVA));
+        super(ModFluids.SOURCE_MANA_FLUID.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.LAVA));
     }
 
 

@@ -62,11 +62,11 @@ public class VampireBat extends Monster implements IVampire {
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 15D)
-                .add(ExtraAttributes.BONUS_ATTACK_SPEED.get(), 100);
+                .add(ExtraAttributes.BONUS_ATTACK_SPEED, 100);
     }
 
-    protected float getStandingEyeHeight(@NotNull Pose pose, EntityDimensions p_27441_) {
-        return p_27441_.height / 2.0F;
+    protected float getStandingEyeHeight(@NotNull Pose pose, EntityDimensions dimensions) {
+        return dimensions.height() / 2.0F;
     }
 
     @Override

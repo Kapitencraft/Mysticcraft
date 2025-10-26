@@ -8,17 +8,19 @@ import net.kapitencraft.kap_lib.helpers.InventoryHelper;
 import net.kapitencraft.mysticcraft.capability.dungeon.IPrestigeAbleItem;
 import net.kapitencraft.mysticcraft.capability.dungeon.IStarAbleItem;
 import net.kapitencraft.mysticcraft.item.misc.SoulbindHelper;
-import net.kapitencraft.mysticcraft.network.ModMessages;
-import net.kapitencraft.mysticcraft.network.packets.S2C.ResetCooldownsPacket;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.EnchantmentTags;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,8 +35,6 @@ public class MiscCommand {
                         .executes(MiscCommand::exeEnchantmentUpgrades)
                 ).then(Commands.literal("hyper_max")
                         .executes(MiscCommand::exeHyperMax)
-                ).then(Commands.literal("reset_cooldowns")
-                        .executes(MiscCommand::resetCooldowns)
                 ).then(Commands.literal("soulbind_all")
                         .executes(MiscCommand::soulbindAll)
                 )
@@ -53,15 +53,19 @@ public class MiscCommand {
             ItemStack stack1 = player.getMainHandItem();
             if (stack1.isEnchantable()) {
                 int i = 0;
-                Map<Enchantment, Integer> enchantments = new HashMap<>();
-                if (Enchantments.SHARPNESS.canEnchant(stack1)) enchantments.put(Enchantments.SHARPNESS, 5);
-                if (Enchantments.BLOCK_FORTUNE.canEnchant(stack1)) enchantments.put(Enchantments.BLOCK_FORTUNE, 3);
-                if (Enchantments.ALL_DAMAGE_PROTECTION.canEnchant(stack1)) {
-                    enchantments.put(Enchantments.ALL_DAMAGE_PROTECTION, 4);
+                HolderLookup.RegistryLookup<Enchantment> lookup = player.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
+                Map<Holder<Enchantment>, Integer> enchantments = new HashMap<>();
+                Holder.Reference<Enchantment> sharp = lookup.getOrThrow(Enchantments.SHARPNESS);
+                if (sharp.value().canEnchant(stack1)) enchantments.put(sharp, 5);
+                Holder.Reference<Enchantment> fortune = lookup.getOrThrow(Enchantments.FORTUNE);
+                if (fortune.value().canEnchant(stack1)) enchantments.put(fortune, 3);
+                Holder.Reference<Enchantment> prot = lookup.getOrThrow(Enchantments.PROTECTION);
+                if (prot.value().canEnchant(stack1)) {
+                    enchantments.put(prot, 4);
                 }
-                for (Enchantment enchantment : BuiltInRegistries.ENCHANTMENT) {
-                    if (enchantment.canEnchant(stack1) && isCompatible(enchantments, enchantment) && !enchantment.isCurse()) {
-                        enchantments.put(enchantment, enchantment.getMaxLevel());
+                for (Holder<Enchantment> enchantment : lookup.listElements().toList()) {
+                    if (enchantment.value().canEnchant(stack1) && isCompatible(enchantments, enchantment) && !enchantment.is(EnchantmentTags.CURSE)) {
+                        enchantments.put(enchantment, enchantment.value().getMaxLevel());
                         i++;
                     }
                 }
@@ -74,9 +78,9 @@ public class MiscCommand {
         });
     }
 
-    private static boolean isCompatible(Map<Enchantment, Integer> map, Enchantment enchantment) {
-        for (Enchantment enchantment1 : map.keySet()) {
-            if (!enchantment.isCompatibleWith(enchantment1)) {
+    private static boolean isCompatible(Map<Holder<Enchantment>, Integer> map, Holder<Enchantment> enchantment) {
+        for (Holder<Enchantment> enchantment1 : map.keySet()) {
+            if (!enchantment.value().exclusiveSet().contains(enchantment1)) {
                 return false;
             }
         }
@@ -88,17 +92,17 @@ public class MiscCommand {
         ServerPlayer serverPlayer = stack.getPlayer();
         if (serverPlayer != null) {
             ItemStack mainHandItem = serverPlayer.getMainHandItem();
-            Map<Enchantment, Integer> enchantments = mainHandItem.getAllEnchantments();
-            Map<Enchantment, Integer> newEnchantments = new HashMap<>();
-            for (Map.Entry<Enchantment, Integer> entry : enchantments.entrySet()) {
-                Enchantment key = entry.getKey();
-                if (entry.getValue() < Math.floor(key.getMaxLevel() * 1.5)) {
-                    newEnchantments.put(key, (int) (key.getMaxLevel() * 1.5));
+            ItemEnchantments enchantments = mainHandItem.getAllEnchantments(serverPlayer.registryAccess().lookupOrThrow(Registries.ENCHANTMENT));
+            Map<Holder<Enchantment>, Integer> newEnchantments = new HashMap<>();
+            for (Map.Entry<Holder<Enchantment>, Integer> entry : enchantments.entrySet()) {
+                Holder<Enchantment> key = entry.getKey();
+                if (entry.getValue() < Math.floor(key.value().getMaxLevel() * 1.5)) {
+                    newEnchantments.put(key, (int) (key.value().getMaxLevel() * 1.5));
                 } else {
                     newEnchantments.put(key, entry.getValue());
                 }
             }
-            mainHandItem.getOrCreateTag().remove("Enchantments");
+
             newEnchantments.forEach(mainHandItem::enchant);
             return 1;
         }
@@ -136,14 +140,6 @@ public class MiscCommand {
             }
             Component component = Component.translatable("command.misc.extra_upgrade.success", prestiges, stars);
             stack.sendSuccess(() -> component, true);
-            return 1;
-        });
-    }
-
-    private static int resetCooldowns(CommandContext<CommandSourceStack> context) {
-        return CommandHelper.checkNonConsoleCommand(context, (player, stack) -> {
-            ResetCooldownsPacket.resetCooldowns(player);
-            ModMessages.sendToClientPlayer(new ResetCooldownsPacket(), player);
             return 1;
         });
     }

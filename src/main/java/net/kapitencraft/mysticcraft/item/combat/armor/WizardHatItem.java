@@ -1,39 +1,56 @@
 package net.kapitencraft.mysticcraft.item.combat.armor;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
 import net.kapitencraft.kap_lib.client.armor.provider.ArmorModelProvider;
 import net.kapitencraft.kap_lib.client.armor.provider.SimpleModelProvider;
+import net.kapitencraft.kap_lib.helpers.MiscHelper;
 import net.kapitencraft.kap_lib.item.combat.armor.AbstractArmorItem;
 import net.kapitencraft.kap_lib.registry.ExtraAttributes;
+import net.kapitencraft.kap_lib.util.attribute.BaseAttributeLocations;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.item.combat.armor.client.model.WizardHatModel;
+import net.kapitencraft.mysticcraft.registry.ModArmorMaterials;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 import org.jetbrains.annotations.Nullable;
 
 public class WizardHatItem extends AbstractArmorItem {
 
     public WizardHatItem() {
-        super(ModArmorMaterials.WIZARD_HAT, Type.HELMET, new Item.Properties().rarity(Rarity.RARE));
+        super(ModArmorMaterials.WIZARD_HAT, Type.HELMET, MiscHelper.rarity(Rarity.RARE));
     }
 
-    private static final String ModifierName = "Modded Attribute Modifier";
     @Override
-    public @NotNull Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(@NotNull EquipmentSlot slot) {
-        HashMultimap<Attribute, AttributeModifier> builder = HashMultimap.create();
-        if (slot == EquipmentSlot.HEAD) {
-            builder.put(ExtraAttributes.MANA_COST.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_MUL_FOR_SLOT[0], ModifierName, -0.05, AttributeModifier.Operation.MULTIPLY_TOTAL));
-            builder.put(ExtraAttributes.MAGIC_DAMAGE.get(), new AttributeModifier(MysticcraftMod.ITEM_ATTRIBUTE_MODIFIER_MUL_FOR_SLOT[0], ModifierName, 0.2, AttributeModifier.Operation.MULTIPLY_TOTAL));
-        }
-        builder.putAll(super.getDefaultAttributeModifiers(slot));
-        return builder;
+    public ItemAttributeModifiers getDefaultAttributeModifiers(ItemStack stack) {
+        return ItemAttributeModifiers.builder()
+                .add(
+                        ExtraAttributes.MANA_COST,
+                        new AttributeModifier(
+                                BaseAttributeLocations.MANA_COST, -.05, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
+                        ),
+                        EquipmentSlotGroup.MAINHAND
+                ).add(
+                        ExtraAttributes.MAGIC_DAMAGE,
+                        new AttributeModifier(
+                                BaseAttributeLocations.MAGIC_DAMAGE, .2, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
+                        ),
+                        EquipmentSlotGroup.MAINHAND
+                ).add(
+                        Attributes.ARMOR,
+                        new AttributeModifier(
+                                ResourceLocation.withDefaultNamespace("armor.helmet"),
+                                7,
+                                AttributeModifier.Operation.ADD_VALUE
+                        ),
+                        EquipmentSlotGroup.MAINHAND
+                ).build();
     }
 
     @Override
@@ -47,7 +64,7 @@ public class WizardHatItem extends AbstractArmorItem {
     }
 
     @Override
-    public @Nullable String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
-        return AbstractArmorItem.makeCustomTextureLocation(MysticcraftMod.MOD_ID, "wizard_hat/wizard_hat_green");
+    public @Nullable ResourceLocation getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, ArmorMaterial.Layer layer, boolean innerModel) {
+        return makeCustomTextureLocation(MysticcraftMod.MOD_ID, "wizard_hat/wizard_hat_green");
     }
 }

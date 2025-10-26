@@ -13,6 +13,7 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 
 public class AltarBlockEntityRenderer extends BasePedestalBlockEntityRenderer<AltarBlockEntity> {
     private final BlockRenderDispatcher dispatcher;
@@ -41,5 +42,11 @@ public class AltarBlockEntityRenderer extends BasePedestalBlockEntityRenderer<Al
             modelRenderer.renderModel(pPoseStack.last(), consumer, state, model, 1, air ? 0 : 1, air ? 0 : 1, pPackedLight, pPackedOverlay);
             pPoseStack.popPose();
         }
+    }
+
+    @Override
+    public AABB getRenderBoundingBox(AltarBlockEntity blockEntity) {
+        BlockPos pos = blockEntity.getBlockPos();
+        return new AABB(pos).inflate(3, 0, 3);
     }
 }

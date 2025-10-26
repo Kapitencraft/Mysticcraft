@@ -1,0 +1,13 @@
+{
+  "type": "kap_lib:armor",
+  "material": {
+    "type": "neoforge:components",
+    "components": {
+      "minecraft:dyed_color": {
+        "rgb": 3355189
+      }
+    },
+    "items": "mysticcraft:dyed_leather"
+  },
+  "results": "mysticcraft:shadow_assassin"
+}

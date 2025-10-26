@@ -1,28 +1,23 @@
 package net.kapitencraft.mysticcraft.item.combat.weapon.melee.dagger;
 
+import net.kapitencraft.kap_lib.helpers.MiscHelper;
 import net.kapitencraft.kap_lib.util.ExtraRarities;
-import net.kapitencraft.mysticcraft.capability.spell.ISpellItem;
-import net.kapitencraft.mysticcraft.capability.spell.SpellCapabilityProvider;
+import net.kapitencraft.mysticcraft.capability.spell.ItemSpells;
+import net.kapitencraft.mysticcraft.item.misc.ModTiers;
+import net.kapitencraft.mysticcraft.registry.ModDataComponentTypes;
 import net.kapitencraft.mysticcraft.registry.Spells;
+import net.kapitencraft.mysticcraft.spell.SpellSlot;
 
-public class ShadowDagger extends DarkDagger implements ISpellItem {
+import java.util.List;
+
+public class ShadowDagger extends DarkDagger {
 
     public ShadowDagger() {
-        super(ExtraRarities.LEGENDARY, 3);
-    }
-
-    @Override
-    public double getStrenght() {
-        return 35;
-    }
-
-    @Override
-    public double getCritDamage() {
-        return 100;
-    }
-
-    @Override
-    public SpellCapabilityProvider createSpells() {
-        return SpellCapabilityProvider.with(Spells.SHADOW_STEP);
+        super(MiscHelper.rarity(ExtraRarities.LEGENDARY)
+                .component(ModDataComponentTypes.ITEM_SPELLS, new ItemSpells(
+                        List.of(
+                                new SpellSlot(Spells.SHADOW_STEP)
+                        )
+                )).attributes(createAttributes(ModTiers.SHADOW_TIER, 3, -1.8f, 35, 100)));
     }
 }

@@ -1,8 +1,5 @@
 package net.kapitencraft.mysticcraft.item.creative;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
-import net.kapitencraft.kap_lib.helpers.AttributeHelper;
 import net.kapitencraft.kap_lib.helpers.MathHelper;
 import net.kapitencraft.kap_lib.helpers.MiscHelper;
 import net.kapitencraft.kap_lib.helpers.TextHelper;
@@ -19,9 +16,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -30,7 +24,6 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraftforge.common.ForgeMod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -66,7 +59,7 @@ public class BuildersWand extends Item implements ExtendedItem {
     }
 
     @Override
-    public void appendHoverTextWithPlayer(@NotNull ItemStack itemStack, @Nullable Level level, @NotNull List<Component> list, @NotNull TooltipFlag flag, Player player) {
+    public void appendHoverTextWithPlayer(@NotNull ItemStack itemStack, @Nullable TooltipContext context, @NotNull List<Component> list, @NotNull TooltipFlag flag, @Nullable Player player) {
         String s = TextHelper.makeList(posList, TextHelper::fromBlockPos);
         Component component = TextHelper.makeList(useAbles, Component::empty, Block::getName, MutableComponent::append);
         list.add(Component.literal("saved positions: " + s).withStyle(ChatFormatting.GREEN));
@@ -80,6 +73,7 @@ public class BuildersWand extends Item implements ExtendedItem {
         } else {
             list.add(Component.literal("press [CTRL] for controls"));
         }
+
     }
 
     private void setMsg(MutableComponent component) {
@@ -143,13 +137,6 @@ public class BuildersWand extends Item implements ExtendedItem {
             return InteractionResultHolder.fail(player.getItemInHand(hand));
         }
         return InteractionResultHolder.success(player.getItemInHand(hand));
-    }
-
-    @Override
-    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
-        HashMultimap<Attribute, AttributeModifier> multimap = HashMultimap.create();
-        multimap.put(ForgeMod.BLOCK_REACH.get(), AttributeHelper.createModifier("Builder's Wand Modifier", AttributeModifier.Operation.ADDITION, 100));
-        return slot == EquipmentSlot.MAINHAND ? multimap : super.getAttributeModifiers(slot, stack);
     }
 
     private void use(Level level) {

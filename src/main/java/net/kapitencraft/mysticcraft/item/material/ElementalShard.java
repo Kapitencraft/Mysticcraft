@@ -9,7 +9,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredItem;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -29,7 +29,7 @@ public class ElementalShard extends Item {
         return Component.translatable("item.mysticcraft.elemental_shard").append(" ").append(Component.translatable("element." + element.getName()));
     }
 
-    public static HashMap<Element, RegistryObject<ElementalShard>> registerElementShards() {
+    public static HashMap<Element, DeferredItem<ElementalShard>> registerElementShards() {
         return ModItems.createRegistry(ElementalShard::new, value -> "elemental_shard_of_" + value.getName(), List.of(Elements.values()), ELEMENTS_GROUP);
     }
 }

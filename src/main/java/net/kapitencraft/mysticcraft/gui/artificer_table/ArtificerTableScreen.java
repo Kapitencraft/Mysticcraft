@@ -3,8 +3,9 @@ package net.kapitencraft.mysticcraft.gui.artificer_table;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.kapitencraft.kap_lib.client.UsefulTextures;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.capability.CapabilityHelper;
+import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneHandler;
 import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneSlot;
+import net.kapitencraft.mysticcraft.registry.ModDataComponentTypes;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
@@ -30,10 +31,9 @@ public class ArtificerTableScreen extends AbstractContainerScreen<ArtificerTable
                     ItemStack target = this.menu.getApplicable();
                     int slotId = menu.getSlotForItem(this.hoveredSlot.index - 36);
                     if (slotId < 0 || slotId > ArtificerTableMenu.MAX_GEMSTONE_SLOTS) return;
-                    CapabilityHelper.exeCapability(target, CapabilityHelper.GEMSTONE, handler -> {
-                        GemstoneSlot slot = handler.getSlots()[slotId];
-                        graphics.renderTooltip(this.font, slot.createPossibleList(), pX, pY);
-                    });
+                    GemstoneHandler gemstoneHandler = target.get(ModDataComponentTypes.EMBEDDED_GEMSTONES);
+                    GemstoneSlot slot = gemstoneHandler.slots()[slotId];
+                    graphics.renderTooltip(this.font, slot.createPossibleList(), pX, pY);
                 }
             }
         }

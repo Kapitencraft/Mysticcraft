@@ -16,6 +16,7 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.HalfTransparentBlock;
@@ -41,7 +42,7 @@ public class GemstoneBlock extends HalfTransparentBlock {
     public static final float VERY_HIGH_STRENGHT = 10;
 
     public GemstoneBlock() {
-        super(Properties.copy(Blocks.AMETHYST_CLUSTER).requiresCorrectToolForDrops().noOcclusion());
+        super(Properties.ofFullCopy(Blocks.AMETHYST_CLUSTER).requiresCorrectToolForDrops().noOcclusion());
         this.registerDefaultState(this.getStateDefinition().any().setValue(ModBlockStateProperties.GEMSTONE_TYPE, GemstoneType.EMPTY));
     }
 
@@ -67,7 +68,7 @@ public class GemstoneBlock extends HalfTransparentBlock {
     }
 
     public static int getColor(BlockState state, BlockAndTintGetter ignored0, BlockPos ignored, int tintIndex) {
-        return tintIndex == 0 ? getType(state).getColour() : -1;
+        return tintIndex == 0 ? getType(state).getColor() : -1;
     }
 
     public static <T extends net.minecraft.world.item.Item & IGemstoneItem> ItemStack getItem(BlockState state, Supplier<T> supplier) {
@@ -85,7 +86,7 @@ public class GemstoneBlock extends HalfTransparentBlock {
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter level, BlockPos pos, Player player) {
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
         return getItem(state, ModBlocks.GEMSTONE_BLOCK::getItem);
     }
 

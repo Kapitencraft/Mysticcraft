@@ -1,37 +1,32 @@
 package net.kapitencraft.mysticcraft.network.packets.S2C;
 
 import net.kapitencraft.kap_lib.helpers.MathHelper;
-import net.kapitencraft.kap_lib.helpers.NetworkHelper;
-import net.kapitencraft.kap_lib.io.network.SimplePacket;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-import java.util.function.Supplier;
+public record BreathParticlesPacket(ParticleOptions options, int entityId) implements CustomPacketPayload {
+    public static final Type<BreathParticlesPacket> TYPE = new Type<>(MysticcraftMod.res("breath_particles"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, BreathParticlesPacket> STREAM_CODEC = StreamCodec.composite(
+            ParticleTypes.STREAM_CODEC, BreathParticlesPacket::options,
+            ByteBufCodecs.INT, BreathParticlesPacket::entityId,
+            BreathParticlesPacket::new
+    );
 
-public record BreathParticlesPacket(ParticleOptions options, int entityId) implements SimplePacket {
-
-    public BreathParticlesPacket(FriendlyByteBuf buf) {
-        this(NetworkHelper.readParticleOptions(buf), buf.readInt());
-    }
-
-    @Override
-    public void toBytes(FriendlyByteBuf friendlyByteBuf) {
-        NetworkHelper.writeParticleOptions(friendlyByteBuf, options);
-        friendlyByteBuf.writeInt(entityId);
-    }
-
-    @Override
-    public void handle(Supplier<NetworkEvent.Context> supplier) {
-        supplier.get().enqueueWork(() -> {
+    public void handle(IPayloadContext context) {
+        context.enqueueWork(() -> {
             Minecraft instance = Minecraft.getInstance();
             ClientLevel level = instance.level;
             if (level != null) {
@@ -53,5 +48,10 @@ public record BreathParticlesPacket(ParticleOptions options, int entityId) imple
                 }
             }
         });
+    }
+
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return null;
     }
 }

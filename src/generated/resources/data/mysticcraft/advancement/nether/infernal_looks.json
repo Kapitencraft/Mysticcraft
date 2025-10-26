@@ -1,0 +1,61 @@
+{
+  "parent": "minecraft:nether/netherite_armor",
+  "criteria": {
+    "infernal_looks": {
+      "conditions": {
+        "items": [
+          {
+            "components": {
+              "mysticcraft:tier": "infernal"
+            },
+            "items": "#minecraft:head_armor"
+          },
+          {
+            "components": {
+              "mysticcraft:tier": "infernal"
+            },
+            "items": "#minecraft:chest_armor"
+          },
+          {
+            "components": {
+              "mysticcraft:tier": "infernal"
+            },
+            "items": "#minecraft:leg_armor"
+          },
+          {
+            "components": {
+              "mysticcraft:tier": "infernal"
+            },
+            "items": "#minecraft:foot_armor"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.mysticcraft.infernal_armor"
+    },
+    "frame": "challenge",
+    "icon": {
+      "components": {
+        "mysticcraft:tier": "infernal"
+      },
+      "count": 1,
+      "id": "mysticcraft:crimson_chestplate"
+    },
+    "title": {
+      "translate": "advancements.mysticcraft.infernal_armor.title"
+    }
+  },
+  "requirements": [
+    [
+      "infernal_looks"
+    ]
+  ],
+  "rewards": {
+    "experience": 100
+  },
+  "sends_telemetry_event": true
+}

@@ -6,7 +6,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -32,7 +31,7 @@ public class SoulBoundAnimator extends ArmorStand {
 
     public SoulBoundAnimator(Player player, ItemStack stack, int slotId) {
         super(ModEntityTypes.SOUL_BOUND_ANIMATOR.get(), player.level());
-        EquipmentSlot slot = LivingEntity.getEquipmentSlotForItem(stack);
+        EquipmentSlot slot = stack.getEquipmentSlot();
         this.setItemSlot(slot, stack);
         this.setPos(player.position());
         this.storageSlot = slot;

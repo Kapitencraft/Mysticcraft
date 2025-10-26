@@ -8,10 +8,12 @@ import com.mojang.serialization.JsonOps;
 import net.kapitencraft.kap_lib.inventory.wearable.IWearable;
 import net.kapitencraft.kap_lib.item.bonus.AbstractBonusElement;
 import net.kapitencraft.kap_lib.item.bonus.Bonus;
-import net.kapitencraft.kap_lib.registry.ExtraCodecs;
 import net.kapitencraft.kap_lib.util.ExtraRarities;
+import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.logging.Markers;
+import net.kapitencraft.mysticcraft.registry.ModDataComponentTypes;
 import net.minecraft.Util;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -21,8 +23,7 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Rarity;
-import net.minecraftforge.common.Tags;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,11 +31,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 
 public class Reforge implements AbstractBonusElement {
+    public static final ResourceLocation MODIFIER_ID = MysticcraftMod.res("reforge");
+
     private final MutableComponent name;
-    private final HashMap<Attribute, ReforgeStat> statList;
+    private final HashMap<Holder<Attribute>, ReforgeStat> statList;
     private final ResourceLocation registryName;
     private final boolean onlyFromStone;
     private final Bonus<?> bonus;
@@ -64,23 +66,23 @@ public class Reforge implements AbstractBonusElement {
         JsonObject object = new JsonObject();
         JsonObject mods = new JsonObject();
         final List<Rarity> rarities = List.of(Rarity.COMMON, Rarity.UNCOMMON, Rarity.RARE, Rarity.EPIC, ExtraRarities.LEGENDARY, ExtraRarities.MYTHIC, ExtraRarities.DIVINE);
-        for (Map.Entry<Attribute, ReforgeStat> entry : statList.entrySet()) {
+        for (Map.Entry<Holder<Attribute>, ReforgeStat> entry : statList.entrySet()) {
             JsonArray array = new JsonArray();
             rarities.forEach(rarity -> array.add(entry.getValue().apply(rarity)));
-            mods.add(String.valueOf(ForgeRegistries.ATTRIBUTES.getKey(entry.getKey())), array);
+            mods.add(String.valueOf(entry.getKey().getKey().location()), array);
         }
         object.add("mods", mods);
         if (this.bonus != null) {
-            DataResult<JsonElement> result = ExtraCodecs.BONUS.encodeStart(JsonOps.INSTANCE, this.bonus);
-            result.get().ifLeft(e -> object.add("bonus", e))
-                    .ifRight(jsonElementPartialResult -> ReforgeManager.LOGGER.warn(Markers.REFORGE_MANAGER, "unable to save bonus: {}", jsonElementPartialResult.message()));
+            DataResult<JsonElement> result = Bonus.CODEC.encodeStart(JsonOps.INSTANCE, this.bonus);
+            result.resultOrPartial(s -> ReforgeManager.LOGGER.warn(Markers.REFORGE_MANAGER, "unable to save bonus: {}", s))
+                            .ifPresent(e -> object.add("bonus", e));
         }
         return object;
     }
 
-    public HashMap<Attribute, Double> applyModifiers(Rarity rarity) {
-        HashMap<Attribute, Double> map = new HashMap<>();
-        for (Attribute attribute : this.statList.keySet()) {
+    public HashMap<Holder<Attribute>, Double> applyModifiers(Rarity rarity) {
+        HashMap<Holder<Attribute>, Double> map = new HashMap<>();
+        for (Holder<Attribute> attribute : this.statList.keySet()) {
             map.put(attribute, this.statList.get(attribute).apply(rarity));
         }
         return map;
@@ -88,7 +90,7 @@ public class Reforge implements AbstractBonusElement {
 
     public void saveToStack(ItemStack stack) {
         ReforgeManager.LOGGER.debug(Markers.REFORGE_MANAGER, "putting Reforge '{}' to the Stack", this.registryName);
-        stack.getOrCreateTag().putString(Reforges.REFORGE_NAME_ID, this.registryName.toString());
+        stack.set(ModDataComponentTypes.REFORGE, this);
     }
 
     public boolean hasModifier(Attribute attribute) {
@@ -140,7 +142,7 @@ public class Reforge implements AbstractBonusElement {
     public static class Builder {
 
         private Bonus<?> bonus = null;
-        private final HashMap<Attribute, ReforgeStat> stats = new HashMap<>();
+        private final HashMap<Holder<Attribute>, ReforgeStat> stats = new HashMap<>();
         private boolean onlyFromStone = false;
         private Type type;
 
@@ -167,29 +169,24 @@ public class Reforge implements AbstractBonusElement {
         }
 
 
-        public Builder addStat(Attribute attribute, double... stat) {
+        public Builder addStat(Holder<Attribute> attribute, double... stat) {
             return this.addStat(attribute, ReforgeStat.build(stat));
         }
 
-        public Builder addStat(Attribute attribute, ReforgeStat stat) {
+        public Builder addStat(Holder<Attribute> attribute, ReforgeStat stat) {
             if (!stats.containsKey(attribute)) {
                 stats.put(attribute, stat);
             }
             return this;
-        }
-
-
-        public Builder addStat(Supplier<Attribute> attribute, double... stat) {
-            return addStat(attribute.get(), stat);
         }
     }
 
     @SuppressWarnings("deprecation")
     public enum Type implements StringRepresentable {
         MELEE_WEAPON("melee", stack -> stack.is(ItemTags.SWORDS)),
-        RANGED_WEAPON("ranged", stack -> stack.is(Tags.Items.TOOLS_BOWS) || stack.is(Tags.Items.TOOLS_CROSSBOWS)),
+        RANGED_WEAPON("ranged", stack -> stack.is(Tags.Items.TOOLS_BOW) || stack.is(Tags.Items.TOOLS_CROSSBOW)),
         ARMOR("armor", stack -> stack.is(Tags.Items.ARMORS) || stack.is(Items.ELYTRA)), //TODO add custom elytra support
-        FISHING_ROD("fishing", stack -> stack.is(Tags.Items.TOOLS_FISHING_RODS)),
+        FISHING_ROD("fishing", stack -> stack.is(Tags.Items.TOOLS_FISHING_ROD)),
         EQUIPMENT("equipment", stack -> stack.getItem() instanceof IWearable);
 
         private static final EnumCodec<Type> CODEC = StringRepresentable.fromEnum(Type::values);

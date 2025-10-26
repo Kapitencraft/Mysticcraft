@@ -1,82 +1,83 @@
-buildscript {
-    repositories {}
-    dependencies {
-        classpath 'org.spongepowered:mixingradle:0.7.+'
-    }
-}
-
 plugins {
     id 'eclipse'
     id 'maven-publish'
-    id 'net.minecraftforge.gradle' version '5.1.+'
-    id 'org.parchmentmc.librarian.forgegradle' version '1.+'
+    id 'net.neoforged.moddev' version '2.0.88'
 }
-apply plugin: 'org.spongepowered.mixin'
 
 version = "v${mod_version}-mc${mc_version}"
 group = mod_group_id // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = mod_id
 
-// Mojang ships Java 17 to end users in 1.18+, so your mod should target Java 17.
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+// Mojang ships Java 21 to end users in 1.21+, so your mod should target Java 21.
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
 println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
-minecraft {
-    // The mappings can be changed at any time and must be in the following format.
-    // Channel:   Version:
-    // official   MCVersion             Official field/method names from Mojang mapping files
-    // parchment  YYYY.MM.DD-MCVersion  Open community-sourced parameter names and javadocs layered on top of official
-    //
-    // You must be aware of the Mojang license when using the 'official' or 'parchment' mappings.
-    // See more information here: https://github.com/MinecraftForge/MCPConfig/blob/master/Mojang.md
-    //
-    // Parchment is an unofficial project maintained by ParchmentMC, separate from MinecraftForge
-    // Additional setup is needed to use their mappings: https://github.com/ParchmentMC/Parchment/wiki/Getting-Started
-    //
-    // Use non-default mappings at your own risk. They may not always work.
-    // Simply re-run your setup task after changing the mappings to update your workspace.
-    mappings channel: 'parchment', version: "${parchment_version}-${mc_version}"
+neoForge {
 
-    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg') // Currently, this location cannot be changed from the default.
+    version = project.neo_version
+
+    parchment {
+        mappingsVersion = project.parchment_version
+        minecraftVersion = project.mc_version
+    }
+    // When true, this property will have all Eclipse/IntelliJ IDEA run configurations run the "prepareX" task for the given run configuration before launching the game.
+    // In most cases, it is not necessary to enable.
+    // enableEclipsePrepareRuns = true
+    // enableIdeaPrepareRuns = true
+
+    // When true, this property will add the folder name of all declared run configurations to generated IDE run configurations.
+    // The folder name can be set on a run configuration using the "folderName" property.
+    // By default, the folder name of a run configuration is the name of the Gradle project containing it.
+    // generateRunFolders = true
 
     // Default run configurations.
     // These can be tweaked, removed, or duplicated as needed.
     runs {
+        // applies to all the run configs below
         configureEach {
-            workingDirectory project.file('run')
 
+            systemProperty 'forge.enabledGameTestNamespaces', mod_id
             // Recommended logging data for a userdev environment
             // The markers can be added/remove as needed separated by commas.
             // "SCAN": For mods scan.
             // "REGISTRIES": For firing of registry events.
             // "REGISTRYDUMP": For getting the contents of all registries.
-            property 'forge.logging.markers', 'REGISTRIES'
+            systemProperty 'forge.logging.markers', 'REGISTRIES'
 
             // Recommended logging level for the console
             // You can set various levels here.
             // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
-            property 'forge.logging.console.level', 'warn'
-
-            // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
-            property 'forge.enabledGameTestNamespaces', mod_id
-
-            mods {
-                "${mod_id}" {
-                    source sourceSets.main
-                }
-            }
+            logLevel = org.slf4j.event.Level.WARN
         }
 
         client {
-            args '--uuid', '00c930fd-9d29-44ca-b614-e5ce6e8bd457'
+            client()
+            // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
+            programArguments.addAll '--username', 'Kapitencraft', '--uuid', '00c930fd-9d29-44ca-b614-e5ce6e8bd457'
         }
+
+        kaupenClient {
+            client()
+            programArguments.addAll '--username', 'Kaupenjoe', '--uuid', '665ad10f-5548-4985-986b-b642732ddce0'
+        }
+
         server {
-            args '--nogui'
+            server()
+            programArgument '--nogui'
         }
 
         data {
-            // Specify the mod id for data generation, where to output the resulting resource, and where to look for existing resources.
-            args '--mod', mod_id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/'), '--existing-mod', 'kap_lib'
+            data()
+            // example of overriding the workingDirectory set in configureEach above
+
+            // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
+            programArguments.addAll '--mod', mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath(), '--existing-mod', 'kap_lib'
+        }
+    }
+
+    mods {
+        "${mod_id}" {
+            sourceSet(sourceSets.main)
         }
     }
 }
@@ -103,7 +104,6 @@ repositories {
                 url = "https://api.modrinth.com/maven"
             }
         }
-        forRepositories(fg.repository)
         filter {
             includeGroup "maven.modrinth"
         }
@@ -111,43 +111,35 @@ repositories {
 }
 
 dependencies {
-    // Specify the version of Minecraft to use. If this is any group other than 'net.minecraft', it is assumed
-    // that the dep is a ForgeGradle 'patcher' dependency, and its patches will be applied.
-    // The user dev artifact is a special name and will get all sorts of transformations applied to it.
-    minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 
-    compileOnly(fg.deobf("mezz.jei:jei-${mc_version}-common-api:${jei_version}"))
-    compileOnly(fg.deobf("mezz.jei:jei-${mc_version}-forge-api:${jei_version}"))
+    compileOnly "mezz.jei:jei-${mc_version}-common-api:${jei_version}"
+    compileOnly "mezz.jei:jei-${mc_version}-neoforge-api:${jei_version}"
     // at runtime, use the full JEI jar for Forge
-    runtimeOnly(fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}"))
+    runtimeOnly "mezz.jei:jei-${mc_version}-neoforge:${jei_version}"
 
-    runtimeOnly(fg.deobf("blank:debug_plus:v1.0.0-mc${mc_version}"))
+    //runtimeOnly "blank:debug_plus:v1.0.0-mc${mc_version}"
 
-    implementation fg.deobf("maven.modrinth:kap_lib:v${kap_lib_version}-mc${mc_version}")
-
-    // For more info...
-    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
-    // http://www.gradle.org/docs/current/userguide/dependency_management.html
-    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+    implementation "maven.modrinth:kap_lib:v${kap_lib_version}-mc${mc_version}"
 }
 
 tasks.named('processResources', ProcessResources).configure {
     var metaProperties = [
-            minecraft_version: mc_version, minecraft_version_range: mc_version_range,
-            forge_version    : forge_version, forge_version_range: forge_version_range,
+            minecraft_version: mc_version, mc_version_range: mc_version_range,
+            neo_version    : neo_version, neo_version_range: neo_version_range,
+            loader_version_range: loader_version_range,
             mod_id           : mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
             mod_authors      : mod_authors, mod_description: mod_description,
     ]
     inputs.properties metaProperties
 
-    filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
+    filesMatching(['META-INF/neoforge.mods.toml', 'pack.mcmeta']) {
         expand metaProperties + [project: project]
     }
 
     var publishProperties = [
             mod_id: mod_id, mod_name: mod_name,
             mod_version: mod_version, minecraft_version: mc_version,
-            forge_version: forge_version, kap_lib_version: kap_lib_version
+            neo_version: neo_version, kap_lib_version: kap_lib_version
     ]
 
     inputs.properties publishProperties
@@ -155,13 +147,6 @@ tasks.named('processResources', ProcessResources).configure {
         filteringCharset = 'UTF-8'
         expand publishProperties
     }
-}
-
-
-mixin {
-    //MixinGradle Settings
-    add sourceSets.main, "${mod_id}.mixin-refmap.json"
-    config "${mod_id}.mixins.json"
 }
 
 // Example for how to get properties into the manifest for reading at runtime.
@@ -178,10 +163,6 @@ jar {
         ])
     }
 }
-
-// Example configuration to allow publishing using the maven-publish plugin
-// This is the preferred method to reobfuscate your jar file
-jar.finalizedBy('reobfJar')
 // However if you are in a multi-project build, dev time needs unobfed jar files, so you can delay the obfuscation until publishing by doing
 // publish.dependsOn('reobfJar')
 

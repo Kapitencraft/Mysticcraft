@@ -1,18 +1,18 @@
 package net.kapitencraft.mysticcraft.client;
 
 import net.minecraft.client.Minecraft;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
+@EventBusSubscriber(value = Dist.CLIENT)
 public class ClientData {
     private static int time = 0;
 
     @SubscribeEvent
-    public static void tickEvent(TickEvent.PlayerTickEvent event) {
-        if (event.phase == TickEvent.Phase.END && event.player == Minecraft.getInstance().player) {
+    public static void tickEvent(PlayerTickEvent.Post event) {
+        if (event.getEntity() == Minecraft.getInstance().player) {
             time++;
         }
     }

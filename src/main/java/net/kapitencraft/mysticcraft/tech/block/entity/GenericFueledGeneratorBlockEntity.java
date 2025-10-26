@@ -5,6 +5,7 @@ import net.kapitencraft.mysticcraft.registry.ModItems;
 import net.kapitencraft.mysticcraft.tech.block.UpgradableBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
@@ -17,8 +18,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,26 +37,34 @@ public abstract class GenericFueledGeneratorBlockEntity extends UpgradableBlockE
 
     //region persistence
 
+
     @Override
-    protected void saveAdditional(CompoundTag pTag) {
-        super.saveAdditional(pTag);
-        pTag.putInt("mana", this.mana);
-        pTag.putInt("burnTime", this.burnTime);
-        pTag.putInt("rate", this.rate);
-        pTag.putInt("speed", this.speed);
-        pTag.put("inventory", this.items.serializeNBT());
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+        tag.putInt("mana", this.mana);
+        tag.putInt("burnTime", this.burnTime);
+        tag.putInt("rate", this.rate);
+        tag.put("inventory", this.items.serializeNBT(registries));
+        tag.putInt("speed", this.speed);
     }
 
     @Override
-    public void load(CompoundTag pTag) {
-        super.load(pTag);
-        this.mana = pTag.getInt("mana");
-        this.burnTime = pTag.getInt("burnTime");
-        this.rate = pTag.getInt("rate");
-        this.items.deserializeNBT(pTag.getCompound("inventory"));
-        this.speed = pTag.getInt("speed");
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        this.mana = tag.getInt("mana");
+        this.burnTime = tag.getInt("burnTime");
+        this.rate = tag.getInt("rate");
+        this.items.deserializeNBT(registries, tag.getCompound("inventory"));
+        this.speed = tag.getInt("speed");
         this.setChanged();
     }
+
+
+    @Override
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        return saveWithoutMetadata(registries);
+    }
+
 
     //endregion
 
@@ -179,16 +188,6 @@ public abstract class GenericFueledGeneratorBlockEntity extends UpgradableBlockE
     @Override
     public @Nullable Packet<ClientGamePacketListener> getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);
-    }
-
-    @Override
-    public @NotNull CompoundTag getUpdateTag() {
-        CompoundTag tag = new CompoundTag();
-        tag.putInt("mana", this.mana);
-        tag.putInt("burnTime", this.burnTime);
-        tag.putInt("rate", this.rate);
-        tag.putInt("speed", this.speed);
-        return tag;
     }
 
     @Override

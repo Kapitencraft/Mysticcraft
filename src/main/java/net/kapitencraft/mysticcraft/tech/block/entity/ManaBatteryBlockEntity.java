@@ -4,6 +4,7 @@ import net.kapitencraft.mysticcraft.capability.mana.IManaStorage;
 import net.kapitencraft.mysticcraft.registry.ModBlockEntities;
 import net.kapitencraft.mysticcraft.tech.gui.menu.ManaBatteryMenu;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
@@ -76,14 +77,14 @@ public class ManaBatteryBlockEntity extends BlockEntity implements IManaStorage,
     }
 
     @Override
-    protected void saveAdditional(CompoundTag pTag) {
-        super.saveAdditional(pTag);
-        pTag.putInt("StoredMana", this.storedMana);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+        tag.putInt("StoredMana", this.storedMana);
     }
 
     @Override
-    public void load(CompoundTag pTag) {
-        super.load(pTag);
-        this.storedMana = pTag.getInt("StoredMana");
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        this.storedMana = tag.getInt("StoredMana");
     }
 }

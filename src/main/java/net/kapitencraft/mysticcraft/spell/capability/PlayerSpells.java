@@ -1,62 +1,42 @@
 package net.kapitencraft.mysticcraft.spell.capability;
 
-import net.kapitencraft.kap_lib.item.capability.AbstractCapability;
-import net.kapitencraft.mysticcraft.capability.CapabilityHelper;
+import com.mojang.serialization.Codec;
+import net.kapitencraft.mysticcraft.capability.spell.ItemSpells;
 import net.kapitencraft.mysticcraft.capability.spell.SpellHelper;
+import net.kapitencraft.mysticcraft.registry.ModAttachmentTypes;
+import net.kapitencraft.mysticcraft.registry.ModDataComponentTypes;
 import net.kapitencraft.mysticcraft.registry.Spells;
 import net.kapitencraft.mysticcraft.spell.SpellSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class PlayerSpells implements AbstractCapability<List<SpellSlot>> {
+public record PlayerSpells(List<SpellSlot> slots) {
+    public static final Codec<PlayerSpells> CODEC = SpellSlot.LIST_CODEC.xmap(PlayerSpells::new, PlayerSpells::slots);
+
     public static PlayerSpells get(Player player) {
-        return player.getCapability(CapabilityHelper.PLAYER_SPELLS).orElse(null); //f*** you lazy optionals
-    }
-
-
-    private int slot;
-
-    private final List<SpellSlot> spells = new ArrayList<>();
-
-    public PlayerSpells() {
+        return player.getData(ModAttachmentTypes.PLAYER_SPELLS);
     }
 
     public static PlayerSpells create() {
-        PlayerSpells spells = new PlayerSpells();
-        spells.spells.add(new SpellSlot(Spells.HUGE_HEAL, 6));
-        spells.spells.add(new SpellSlot(Spells.CURE_VILLAGER));
-        spells.spells.add(new SpellSlot(Spells.EXPLOSIVE_SIGHT, 10));
-
-        return spells;
+        return new PlayerSpells(List.of(
+                new SpellSlot(Spells.HUGE_HEAL, 6),
+                new SpellSlot(Spells.CURE_VILLAGER),
+                new SpellSlot(Spells.EXPLOSIVE_SIGHT, 10)
+        ));
     }
 
-    @Override
-    public void copyFrom(List<SpellSlot> data) {
-        spells.clear();
-        spells.addAll(data);
-    }
+    public static void updateSlot(Player player, ItemStack to) {
+        int selected = player.getData(ModAttachmentTypes.SELECTED_SPELL_SLOT);
+        PlayerSpells spells = get(player);
+        if (to.has(ModDataComponentTypes.ITEM_SPELLS)) {
+            ItemSpells itemSpells = SpellHelper.getSpells(to);
+            if (itemSpells.getFirstEmpty() != 0)
+                selected = spells.slots.size(); //move to slot above player slots, which should match the first item slot
+        } else if (selected >= spells.slots.size())
+                selected = 0;
 
-    @Override
-    public List<SpellSlot> getData() {
-        return spells;
-    }
-
-    public void setSelectedSlot(int slot) {
-        this.slot = slot;
-    }
-
-    public void updateSlot(ItemStack next) {
-        SpellSlot activeSlot = SpellHelper.getActiveSlot(next);
-        if (activeSlot.getSpell() != Spells.EMPTY.get())
-            this.slot = this.spells.size();
-        else if (this.slot >= this.spells.size())
-            this.slot = 0;
-    }
-
-    public int getSlot() {
-        return this.slot;
+        player.setData(ModAttachmentTypes.SELECTED_SPELL_SLOT, selected);
     }
 }

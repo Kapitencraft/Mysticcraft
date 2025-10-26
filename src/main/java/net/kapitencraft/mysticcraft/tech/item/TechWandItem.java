@@ -2,13 +2,12 @@ package net.kapitencraft.mysticcraft.tech.item;
 
 import net.kapitencraft.kap_lib.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.registry.ModBlocks;
+import net.kapitencraft.mysticcraft.registry.ModDataComponentTypes;
 import net.kapitencraft.mysticcraft.tech.DistributionNetworkManager;
 import net.kapitencraft.mysticcraft.tech.ManaDistributionNetwork;
 import net.kapitencraft.mysticcraft.tech.block.DistributionNetworkBlock;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -21,7 +20,6 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -37,25 +35,24 @@ public class TechWandItem extends Item {
         BlockPos clicked = pContext.getClickedPos();
         BlockState clickedState = level.getBlockState(clicked);
         ItemStack item = pContext.getItemInHand();
+        Player player = pContext.getPlayer();
         if (clickedState.is(ModBlocks.MANA_RELAY.get()) || clickedState.is(ModBlocks.MANA_PORT.get())) {
-            CompoundTag tag = item.getOrCreateTag();
-            Player player = pContext.getPlayer();
-            if (tag.contains("origin", Tag.TAG_LONG)) {
-                BlockPos original = BlockPos.of(tag.getLong("origin"));
-                if (!original.equals(clicked)) {
+            BlockPos origin = item.get(ModDataComponentTypes.TECH_WAND_ORIGIN);
+            if (origin != null) {
+                if (!origin.equals(clicked)) {
                     DistributionNetworkManager manager = DistributionNetworkManager.get(level);
                     if (manager != null) {
                         //HitResult result = level.clip(new ClipContext(original.getCenter(), clicked.getCenter(), ClipContext.Block.COLLIDER, ClipContext.Fluid.ANY, null));
                         //if (result.getType() != HitResult.Type.MISS) {
                         //    if (player != null) player.sendSystemMessage(Component.translatable("tech_wand.connect.failed").withStyle(ChatFormatting.RED));
                         //}
-                        ManaDistributionNetwork firstNetwork = manager.getOrCreateNetwork(original, getNodeType(level, original));
+                        ManaDistributionNetwork firstNetwork = manager.getOrCreateNetwork(origin, getNodeType(level, origin));
                         ManaDistributionNetwork secondNetwork = manager.getOrCreateNetwork(clicked, getNodeType(level, clicked));
-                        if (firstNetwork == secondNetwork && firstNetwork.getNode(original).getConnected().contains(firstNetwork.getNode(clicked))) {
-                            sendMessage(player, Component.translatable("tech_wand.connect.already", convertBlockPos(original), convertBlockPos(clicked)).withStyle(ChatFormatting.RED));
+                        if (firstNetwork == secondNetwork && firstNetwork.getNode(origin).getConnected().contains(firstNetwork.getNode(clicked))) {
+                            sendMessage(player, Component.translatable("tech_wand.connect.already", convertBlockPos(origin), convertBlockPos(clicked)).withStyle(ChatFormatting.RED));
                         } else {
-                            manager.connect(firstNetwork, secondNetwork, original, clicked, level);
-                            sendMessage(player, Component.translatable("tech_wand.connect.success", convertBlockPos(original), convertBlockPos(clicked)).withStyle(ChatFormatting.GREEN));
+                            manager.connect(firstNetwork, secondNetwork, origin, clicked, level);
+                            sendMessage(player, Component.translatable("tech_wand.connect.success", convertBlockPos(origin), convertBlockPos(clicked)).withStyle(ChatFormatting.GREEN));
                         }
                         return InteractionResult.sidedSuccess(level.isClientSide());
                     }
@@ -63,7 +60,7 @@ public class TechWandItem extends Item {
                     sendMessage(player, Component.translatable("tech_wand.connect.self").withStyle(ChatFormatting.RED));
                 }
             } else {
-                tag.putLong("origin", clicked.asLong());
+                item.set(ModDataComponentTypes.TECH_WAND_ORIGIN, clicked);
                 sendMessage(player, Component.translatable("tech_wand.connect.stored", convertBlockPos(clicked)).withStyle(ChatFormatting.GREEN));
                 return InteractionResult.sidedSuccess(level.isClientSide());
             }
@@ -91,16 +88,15 @@ public class TechWandItem extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
         ItemStack stack = pPlayer.getItemInHand(pUsedHand);
-        stack.removeTagKey("origin");
+        stack.remove(ModDataComponentTypes.TECH_WAND_ORIGIN);
         return InteractionResultHolder.sidedSuccess(stack, pLevel.isClientSide);
     }
 
     @Override
-    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        if (pStack.hasTag()) {
-            BlockPos pos = BlockPos.of(pStack.getTag().getLong("origin"));
-            pTooltipComponents.add(Component.translatable("tech_wand.selected", convertBlockPos(pos)).withStyle(ChatFormatting.GREEN));
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        if (stack.has(ModDataComponentTypes.TECH_WAND_ORIGIN)) {
+            tooltipComponents.add(Component.translatable("tech_wand.selected", convertBlockPos(stack.get(ModDataComponentTypes.TECH_WAND_ORIGIN))).withStyle(ChatFormatting.GREEN));
         }
-        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
+        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
     }
 }

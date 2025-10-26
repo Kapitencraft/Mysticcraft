@@ -1,16 +1,20 @@
 package net.kapitencraft.mysticcraft.item.combat.spells;
 
-import net.kapitencraft.mysticcraft.capability.spell.SpellCapabilityProvider;
+import net.kapitencraft.kap_lib.helpers.MiscHelper;
+import net.kapitencraft.mysticcraft.capability.spell.ItemSpells;
+import net.kapitencraft.mysticcraft.registry.ModDataComponentTypes;
 import net.kapitencraft.mysticcraft.registry.Spells;
+import net.kapitencraft.mysticcraft.spell.SpellSlot;
 import net.minecraft.world.item.Rarity;
 
-public class AspectOfTheEndItem extends NormalSpellItem {
-    public AspectOfTheEndItem(int intel) {
-        super(new Properties().rarity(Rarity.UNCOMMON), intel, 0);
-    }
+import java.util.List;
 
-    @Override
-    public SpellCapabilityProvider createSpells() {
-        return SpellCapabilityProvider.with(Spells.INSTANT_TRANSMISSION, 4);
+public class AspectOfTheEndItem extends NormalSpellItem {
+    public AspectOfTheEndItem(int maxMana) {
+        super(MiscHelper.rarity(Rarity.UNCOMMON).component(ModDataComponentTypes.ITEM_SPELLS, new ItemSpells(
+                List.of(
+                        new SpellSlot(Spells.INSTANT_TRANSMISSION, 4)
+                )
+        )).attributes(createAttributes(maxMana, 0)));
     }
 }

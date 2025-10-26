@@ -1,15 +1,15 @@
-// 1.20.1	2025-10-04T00:18:46.8347958	Tags for minecraft:block mod id mysticcraft
-139c369d5aa84326c785340637ffaa507becc2c7 data/forge/tags/blocks/needs_netherite_tool.json
-ad7f664e8643d550a01d60f61ea8806487546b84 data/forge/tags/blocks/ores.json
-ae8c4e43556dfa79fae0abaf2fe54e8dfe99befa data/forge/tags/blocks/stripped_logs.json
-0b926b5724ca07d5bbf76058edb75a86f65b3594 data/minecraft/tags/blocks/buttons.json
-14d00c7b500d30f562e43a0afc7b5e90103c8e7a data/minecraft/tags/blocks/logs.json
-bbfa31995080a3aa681133b1d415a1a903693a0f data/minecraft/tags/blocks/mineable/pickaxe.json
-8b09decadc1e3962f1a5a04ab3102d21e9f1b1cc data/minecraft/tags/blocks/pressure_plates.json
-24dba72d17279f8806c0529f70c1d9bc56cb1a06 data/minecraft/tags/blocks/slabs.json
-9e5dd5e11cc2e4c0e74f3aaa28be0406ee40715a data/minecraft/tags/blocks/small_flowers.json
-db2a6839aebb72d5aa540ca43a814213e1a71f74 data/minecraft/tags/blocks/stairs.json
-2dc59aa265e7e959255cda5d9d51d3702fe4ff09 data/minecraft/tags/blocks/walls.json
-453ef4aa8cca1958f61d7b3df571255aea409300 data/mysticcraft/tags/blocks/farmable_blocks.json
-b147fcff5c0b4d72df1cb7809b063b2562180832 data/mysticcraft/tags/blocks/forageable_blocks.json
-cafea7a375ea7c056e04d68f3b9876b3b36fd815 data/mysticcraft/tags/blocks/mineable_blocks.json
+// 1.21.1	2025-10-19T17:26:03.8402336	Tags for minecraft:block mod id mysticcraft
+ad7f664e8643d550a01d60f61ea8806487546b84 data/c/tags/block/ores.json
+ae8c4e43556dfa79fae0abaf2fe54e8dfe99befa data/c/tags/block/stripped_logs.json
+0b926b5724ca07d5bbf76058edb75a86f65b3594 data/minecraft/tags/block/buttons.json
+14d00c7b500d30f562e43a0afc7b5e90103c8e7a data/minecraft/tags/block/logs.json
+bbfa31995080a3aa681133b1d415a1a903693a0f data/minecraft/tags/block/mineable/pickaxe.json
+8b09decadc1e3962f1a5a04ab3102d21e9f1b1cc data/minecraft/tags/block/pressure_plates.json
+24dba72d17279f8806c0529f70c1d9bc56cb1a06 data/minecraft/tags/block/slabs.json
+9e5dd5e11cc2e4c0e74f3aaa28be0406ee40715a data/minecraft/tags/block/small_flowers.json
+db2a6839aebb72d5aa540ca43a814213e1a71f74 data/minecraft/tags/block/stairs.json
+2dc59aa265e7e959255cda5d9d51d3702fe4ff09 data/minecraft/tags/block/walls.json
+453ef4aa8cca1958f61d7b3df571255aea409300 data/mysticcraft/tags/block/farmable_blocks.json
+b147fcff5c0b4d72df1cb7809b063b2562180832 data/mysticcraft/tags/block/forageable_blocks.json
+fa1d423c702e13bfc3fb055f959114f9d44a78f8 data/mysticcraft/tags/block/mineable_blocks.json
+139c369d5aa84326c785340637ffaa507becc2c7 data/neoforge/tags/block/needs_netherite_tool.json

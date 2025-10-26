@@ -1,0 +1,15 @@
+{
+  "type": "kap_lib:upgrade_item",
+  "category": "equipment",
+  "craft_type": "eight",
+  "material": {
+    "item": "mysticcraft:lasrs_eye"
+  },
+  "result": {
+    "count": 1,
+    "id": "mysticcraft:hyperion"
+  },
+  "source": {
+    "item": "mysticcraft:necron_sword"
+  }
+}

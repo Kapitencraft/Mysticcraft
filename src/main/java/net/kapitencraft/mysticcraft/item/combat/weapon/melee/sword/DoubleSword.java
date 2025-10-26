@@ -6,17 +6,7 @@ import net.minecraft.world.item.Tier;
 
 public class DoubleSword extends ModSwordItem {
     public static final TabGroup DOUBLE_SWORD_GROUP = TabGroup.create(ModCreativeModTabs.WEAPONS_AND_TOOLS);;
-    public DoubleSword(Tier p_43269_, Properties p_43272_) {
-        super(p_43269_, 0, -2.1f, p_43272_);
-    }
-
-    @Override
-    public double getStrenght() {
-        return 150;
-    }
-
-    @Override
-    public double getCritDamage() {
-        return 100;
+    public DoubleSword(Tier tier, Properties properties, int damage, int strength, int critDamage) {
+        super(tier, properties.attributes(createAttributes(tier, damage, -2.1f, strength, critDamage)));
     }
 }

@@ -1,13 +1,19 @@
 package net.kapitencraft.mysticcraft.config;
 
-import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
-@Mod.EventBusSubscriber(modid = MysticcraftMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ClientModConfig {
 
-    private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
+    private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
 
-    public static final ForgeConfigSpec SPEC = BUILDER.build();
+    private static final ModConfigSpec.BooleanValue SKILL_LEVEL_ROMAN = BUILDER
+            .comment("whether to show skill level numbers in roman (true) or arabian (false) literals")
+            .define("skill_level_roman", true);
+
+    public static final ModConfigSpec SPEC = BUILDER.build();
+
+
+    public static boolean showSkillLevelsAsRoman() {
+        return SKILL_LEVEL_ROMAN.get();
+    }
 }

@@ -1,10 +1,11 @@
 package net.kapitencraft.mysticcraft.config;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class CommonModConfig {
 
-    private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
+    private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
 
     static {
         RESET_BUILDERS_WAND_POS = BUILDER
@@ -29,10 +30,10 @@ public class CommonModConfig {
                 .defineInRange("max_gemstone_iteration", 350, 150, 750);
     }
 
-    private static final ForgeConfigSpec.BooleanValue RESET_BUILDERS_WAND_POS, USE_ON_POS_COMPLETE;
-    private static final ForgeConfigSpec.IntValue MAX_GEMSTONE_ITERATIONS, MIN_GEMSTONE_ITERATIONS, MIN_SEED_SPAWNS, MAX_SEED_SPAWNS;
+    private static final ModConfigSpec.BooleanValue RESET_BUILDERS_WAND_POS, USE_ON_POS_COMPLETE;
+    private static final ModConfigSpec.IntValue MAX_GEMSTONE_ITERATIONS, MIN_GEMSTONE_ITERATIONS, MIN_SEED_SPAWNS, MAX_SEED_SPAWNS;
 
-    public static final ForgeConfigSpec SPEC = BUILDER.build();
+    public static final ModConfigSpec SPEC = BUILDER.build();
 
     public static boolean shouldResetBuilderWandPos() {
         return RESET_BUILDERS_WAND_POS.get();

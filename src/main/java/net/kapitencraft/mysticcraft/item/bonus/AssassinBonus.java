@@ -2,15 +2,17 @@ package net.kapitencraft.mysticcraft.item.bonus;
 
 import net.kapitencraft.kap_lib.helpers.MathHelper;
 import net.kapitencraft.kap_lib.helpers.MiscHelper;
-import net.kapitencraft.kap_lib.io.serialization.DataPackSerializer;
+import net.kapitencraft.kap_lib.io.serialization.RegistrySerializer;
 import net.kapitencraft.kap_lib.item.bonus.Bonus;
 import net.minecraft.world.entity.LivingEntity;
 
 public class AssassinBonus implements Bonus<AssassinBonus> {
-    public static final DataPackSerializer<AssassinBonus> SERIALIZER = DataPackSerializer.unit(AssassinBonus::new);
+    public static final AssassinBonus INSTANCE = new AssassinBonus();
+
+    public static final RegistrySerializer<AssassinBonus> SERIALIZER = RegistrySerializer.unit(INSTANCE);
 
     @Override
-    public DataPackSerializer<AssassinBonus> getSerializer() {
+    public RegistrySerializer<AssassinBonus> getSerializer() {
         return SERIALIZER;
     }
 

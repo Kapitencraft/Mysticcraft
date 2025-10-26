@@ -3,19 +3,20 @@ package net.kapitencraft.mysticcraft.registry;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredRegister;
+
+import java.util.function.Supplier;
 
 public interface ModStatTypes {
 
     DeferredRegister<ResourceLocation> REGISTRY = MysticcraftMod.registry(Registries.CUSTOM_STAT);
 
-    private static RegistryObject<ResourceLocation> register(String name) {
+    private static Supplier<ResourceLocation> register(String name) {
         return REGISTRY.register(name, () -> MysticcraftMod.res(name));
     }
 
-    RegistryObject<ResourceLocation> NECRONS_KILLED = register("necrons_killed");
-    RegistryObject<ResourceLocation> STORMS_KILLED = register("storms_killed");
-    RegistryObject<ResourceLocation> MAXORS_KILLED = register("maxors_killed");
-    RegistryObject<ResourceLocation> GOLDORS_KILLED = register("goldors_killed");
+    Supplier<ResourceLocation> NECRONS_KILLED = register("necrons_killed");
+    Supplier<ResourceLocation> STORMS_KILLED = register("storms_killed");
+    Supplier<ResourceLocation> MAXORS_KILLED = register("maxors_killed");
+    Supplier<ResourceLocation> GOLDORS_KILLED = register("goldors_killed");
 }

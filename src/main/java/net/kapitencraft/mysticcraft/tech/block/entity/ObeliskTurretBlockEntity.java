@@ -4,18 +4,26 @@ import net.kapitencraft.kap_lib.helpers.MathHelper;
 import net.kapitencraft.kap_lib.helpers.ParticleHelper;
 import net.kapitencraft.mysticcraft.data_gen.ModDamageTypes;
 import net.kapitencraft.mysticcraft.registry.ModBlockEntities;
+import net.kapitencraft.mysticcraft.tech.gui.menu.ObeliskTurretMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
 import java.util.List;
 
-public class ObeliskTurretBlockEntity extends AbstractTurretBlockEntity {
+public class ObeliskTurretBlockEntity extends AbstractTurretBlockEntity implements MenuProvider {
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
     private int activeTicks;
@@ -49,5 +57,15 @@ public class ObeliskTurretBlockEntity extends AbstractTurretBlockEntity {
     protected void unselectTarget() {
         damage = 1;
         activeTicks = 0;
+    }
+
+    @Override
+    public @NotNull Component getDisplayName() {
+        return Component.translatable("container.turret.obelisk");
+    }
+
+    @Override
+    public @Nullable AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
+        return new ObeliskTurretMenu(pContainerId, pPlayerInventory, this);
     }
 }

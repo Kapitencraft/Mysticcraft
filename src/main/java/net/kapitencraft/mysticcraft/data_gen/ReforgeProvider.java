@@ -226,7 +226,7 @@ public class ReforgeProvider implements DataProvider {
                 .reforgeType(Reforge.Type.EQUIPMENT)
                 .addStat(Attributes.MAX_HEALTH, .1, .1, .1, .3, .4, .5, .5)
                 .addStat(Attributes.ARMOR, .5, 1, 1, 1.5, 2, 2.5, 2.5)
-                .addStat(ExtraAttributes.MAX_MANA.get(), 3, 4, 5, 6, 8, 10, 10)
+                .addStat(ExtraAttributes.MAX_MANA, 3, 4, 5, 6, 8, 10, 10)
         );
         add("blended", Reforge.builder()
                 .reforgeType(Reforge.Type.EQUIPMENT)
@@ -234,6 +234,6 @@ public class ReforgeProvider implements DataProvider {
     }
 
     private void add(String name, Reforge.Builder builder) {
-        reforges.add(builder.build(new ResourceLocation(modId, name)));
+        reforges.add(builder.build(ResourceLocation.fromNamespaceAndPath(modId, name)));
     }
 }

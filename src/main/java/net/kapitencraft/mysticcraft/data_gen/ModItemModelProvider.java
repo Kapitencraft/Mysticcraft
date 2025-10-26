@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.data_gen;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.block.gemstone.GemstoneCrystal;
+import net.kapitencraft.mysticcraft.block.gemstone.GemstoneCrystalBlock;
 import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneType;
 import net.kapitencraft.mysticcraft.registry.ModBlocks;
 import net.kapitencraft.mysticcraft.registry.ModItems;
@@ -12,11 +12,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
-import net.minecraftforge.client.model.generators.ItemModelBuilder;
-import net.minecraftforge.client.model.generators.ItemModelProvider;
-import net.minecraftforge.client.model.generators.ModelFile;
-import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
+import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
+import net.neoforged.neoforge.client.model.generators.ModelFile;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.registries.DeferredItem;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -55,11 +55,10 @@ public class ModItemModelProvider extends ItemModelProvider {
 
         parentItem(ModItems.DIAMOND_DOUBLE_SWORD, modLoc("double_sword"), null);
 
-        simpleItem(ModItems.EMPTY_APPLICABLE_SLOT, mcLoc("block/red_stained_glass"));
-        simpleItem(ModItems.MISSING_GEMSTONE_SLOT, mcLoc("block/red_stained_glass"));
-        simpleItem(ModBlocks.THISTLE.item(), modLoc("block/thistle"));
+        generatedItem(ModBlocks.THISTLE.item(), modLoc("block/thistle"));
+        generatedItem(ModBlocks.MOON_BLOSSOM.item(), modLoc("block/moon_blossom_closed"));
 
-        List<RegistryObject<? extends Item>> handhelds = List.of(
+        List<DeferredItem<? extends Item>> handhelds = List.of(
                 ModItems.AOTE,
                 ModItems.AOTV,
                 ModItems.ASTREA,
@@ -73,9 +72,9 @@ public class ModItemModelProvider extends ItemModelProvider {
                 ModItems.GHOSTLY_SWORD,
                 ModItems.NECRONS_HANDLE
         );
-        handhelds.forEach(itemRegistryObject -> handHeldItem(itemRegistryObject, null));
+        handhelds.forEach(item -> handHeldItem(item, null));
 
-        List<RegistryObject<? extends Item>> simples = List.of(
+        List<DeferredItem<? extends Item>> simples = List.of(
                 ModItems.BUCKET_OF_MANA,
                 ModItems.CRIMSON_STEEL_DUST,
                 ModItems.CRIMSON_STEEL_INGOT,
@@ -99,9 +98,9 @@ public class ModItemModelProvider extends ItemModelProvider {
                 ModItems.VOID_TOTEM_ITEM,
                 ModItems.LAPIS_DUST
          );
-        simples.forEach(itemRegistryObject -> simpleItem(itemRegistryObject, null));
+        simples.forEach(item -> generatedItem(item, null));
 
-        List<Map<ArmorItem.Type, ? extends RegistryObject<? extends Item>>> armors = List.of(
+        List<Map<ArmorItem.Type, ? extends DeferredItem<? extends Item>>> armors = List.of(
                 ModItems.CRIMSON_ARMOR,
                 ModItems.FROZEN_BLAZE_ARMOR,
                 ModItems.SHADOW_ASSASSIN_ARMOR,
@@ -109,8 +108,8 @@ public class ModItemModelProvider extends ItemModelProvider {
                 ModItems.SOUL_MAGE_ARMOR
         );
         armors.stream().flatMap(equipmentSlotMap -> equipmentSlotMap.values().stream())
-                        .forEach(registryObject -> simpleItem(registryObject, null));
-        List<RegistryObject<? extends Item>> spawnEggs = List.of(
+                        .forEach(registryObject -> generatedItem(registryObject, null));
+        List<DeferredItem<? extends Item>> spawnEggs = List.of(
                 ModItems.FROZEN_BLAZE_SPAWN_EGG,
                 ModItems.DRAGON_SPAWN_EGG
         );
@@ -158,7 +157,7 @@ public class ModItemModelProvider extends ItemModelProvider {
 
     private void makeGemstoneCrystalItems() {
         ItemModelBuilder builder = withExistingParent("gemstone_crystal", "item/generated");
-        for (GemstoneCrystal.Size size : GemstoneCrystal.Size.values()) {
+        for (GemstoneCrystalBlock.Size size : GemstoneCrystalBlock.Size.values()) {
             builder
                     .override()
                     .predicate(modLoc("size"), (size.ordinal() + 1) * .1f)
@@ -166,7 +165,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         }
     }
 
-    private ModelFile makeGemstoneCrystalItemModel(GemstoneCrystal.Size size) {
+    private ModelFile makeGemstoneCrystalItemModel(GemstoneCrystalBlock.Size size) {
         return withExistingParent("gemstone/crystal/" + size.getSerializedName(), "mysticcraft:item/gemstone_crystal")
                 .texture("layer0", modLoc("block/gemstone/crystal/" + size.getSerializedName()));
     }
@@ -186,17 +185,21 @@ public class ModItemModelProvider extends ItemModelProvider {
                 .texture("layer0", modLoc("item/gemstone/item/" + rarity.getId()));
     }
 
-    private ItemModelBuilder simpleItem(RegistryObject<? extends Item> item, @Nullable ResourceLocation texture) {
+    private ItemModelBuilder simpleItem(DeferredItem<? extends Item> item) {
+        return generatedItem(item, null);
+    }
+
+    private ItemModelBuilder generatedItem(DeferredItem<? extends Item> item, @Nullable ResourceLocation texture) {
         return parentItem(item, mcLoc("item/generated"), texture);
     }
 
-    private ItemModelBuilder handHeldItem(RegistryObject<? extends Item> item, @Nullable ResourceLocation texture) {
+    private ItemModelBuilder handHeldItem(DeferredItem<? extends Item> item, @Nullable ResourceLocation texture) {
         return parentItem(item, mcLoc("item/handheld"), texture);
     }
 
-    private ItemModelBuilder parentItem(RegistryObject<? extends Item> item, ResourceLocation parent, @Nullable ResourceLocation texture) {
+    private ItemModelBuilder parentItem(DeferredItem<? extends Item> item, ResourceLocation parent, @Nullable ResourceLocation texture) {
         return withExistingParent(item.getId().getPath(),
                 parent).texture("layer0",
-                (texture == null ? modLoc("item/" + item.getId().getPath()) : texture));
+                (texture == null ? item.getId().withPrefix("item/") : texture));
     }
 }

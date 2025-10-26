@@ -1,0 +1,20 @@
+{
+  "criteria": {
+    "has_dyed_leather": {
+      "conditions": {
+        "items": [
+          {
+            "items": "mysticcraft:dyed_leather"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_dyed_leather"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

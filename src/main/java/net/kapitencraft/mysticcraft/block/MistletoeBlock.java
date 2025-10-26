@@ -17,6 +17,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
@@ -61,7 +62,8 @@ public class MistletoeBlock extends Block {
      * @deprecated call via {@link net.minecraft.world.level.block.state.BlockBehaviour.BlockStateBase#rotate} whenever
      * possible. Implementing/overriding is fine.
      */
-    public BlockState rotate(BlockState pState, Rotation pRotation) {
+    @Deprecated
+    public @NotNull BlockState rotate(BlockState pState, Rotation pRotation) {
         return pState.setValue(FACING, pRotation.rotate(pState.getValue(FACING)));
     }
 
@@ -71,6 +73,7 @@ public class MistletoeBlock extends Block {
      * @deprecated call via {@link net.minecraft.world.level.block.state.BlockBehaviour.BlockStateBase#mirror} whenever
      * possible. Implementing/overriding is fine.
      */
+    @Deprecated
     public BlockState mirror(BlockState pState, Mirror pMirror) {
         return pState.rotate(pMirror.getRotation(pState.getValue(FACING)));
     }

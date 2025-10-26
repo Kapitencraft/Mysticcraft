@@ -1,17 +1,14 @@
 package net.kapitencraft.mysticcraft.capability.dungeon;
 
-import com.google.common.collect.Multimap;
-import net.kapitencraft.kap_lib.helpers.AttributeHelper;
+import net.kapitencraft.mysticcraft.registry.ModDataComponentTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
 public interface IStarAbleItem extends IReAnUpgradeable {
-    char STAR = '\u2606';
+    char STAR = '☆';
     int MAX_STARS = 25;
     String TAG_ID = "StarData";
     List<String> COLOR_FOR_STAR_ROW = List.of("§6", "§5", "§b", "§c", "§4");
@@ -33,11 +30,11 @@ public interface IStarAbleItem extends IReAnUpgradeable {
     static boolean hasStars(ItemStack stack) { return getStars(stack) > 0; }
 
     static int getStars(ItemStack stack) {
-        return stack.getOrCreateTag().getInt(TAG_ID);
+        return stack.getOrDefault(ModDataComponentTypes.STARS, 0);
     }
 
     static void setStars(ItemStack stack, int stars) {
-        stack.getOrCreateTag().putInt(TAG_ID, stars);
+        stack.set(ModDataComponentTypes.STARS, stars);
     }
 
     default ItemStack upgrade(ItemStack in) {
@@ -48,10 +45,6 @@ public interface IStarAbleItem extends IReAnUpgradeable {
     @Override
     default boolean mayUpgrade(ItemStack stack) {
         return getStars(stack) < getMaxStars(stack);
-    }
-
-    static Multimap<Attribute, AttributeModifier> modifyData(ItemStack stack, Multimap<Attribute, AttributeModifier> map) {
-        return AttributeHelper.increaseByPercent(map, getStars(stack) * 0.02, AttributeModifier.Operation.values(), null);
     }
 
     int getMaxStars(ItemStack stack);

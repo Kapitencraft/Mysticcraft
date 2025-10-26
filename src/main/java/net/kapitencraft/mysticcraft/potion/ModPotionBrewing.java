@@ -2,11 +2,13 @@ package net.kapitencraft.mysticcraft.potion;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.registry.ModItems;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
 
@@ -21,9 +23,9 @@ public class ModPotionBrewing {
 
     static {
         try {
-            addMix(Potions.AWKWARD, ModItems.HARDENED_TEAR.get(), ModPotions.STUN.get());
-            addMix(ModPotions.STUN.get(), DURATION, ModPotions.LONG_STUN.get());
-            addMix(Potions.AWKWARD, Items.CHORUS_FRUIT, ModPotions.DISPLACEMENT.get());
+            addMix(Potions.AWKWARD, ModItems.HARDENED_TEAR.get(), ModPotions.STUN);
+            addMix(ModPotions.STUN, DURATION, ModPotions.LONG_STUN);
+            addMix(Potions.AWKWARD, Items.CHORUS_FRUIT, ModPotions.DISPLACEMENT);
         } catch (Throwable throwable) {
             MysticcraftMod.LOGGER.warn("failed to load Potions: {}", throwable.getMessage());
         }
@@ -42,34 +44,35 @@ public class ModPotionBrewing {
         return false;
     }
 
-    public static ItemStack mix(ItemStack p_43530_, ItemStack p_43531_) {
-        if (!p_43531_.isEmpty()) {
-            Potion potion = PotionUtils.getPotion(p_43531_);
-            Item item = p_43531_.getItem();
+    public static ItemStack mix(ItemStack p_43530_, ItemStack stack) {
+        if (!stack.isEmpty()) {
+            PotionContents potion = stack.get(DataComponents.POTION_CONTENTS);
+            Item item = stack.getItem();
             int i = 0;
-
-            for(int k = POTION_MIXES.size(); i < k; ++i) {
-                Mix mix = POTION_MIXES.get(i);
-                if (mix.from == potion && mix.ingredient.test(p_43530_)) {
-                    return PotionUtils.setPotion(new ItemStack(item), mix.to);
+            if (potion != null && potion.potion().isPresent()) {
+                for (int k = POTION_MIXES.size(); i < k; ++i) {
+                    Mix mix = POTION_MIXES.get(i);
+                    if (mix.from == potion.potion().get() && mix.ingredient.test(p_43530_)) {
+                        return PotionContents.createItemStack(item, mix.to);
+                    }
                 }
             }
         }
 
-        return p_43531_;
+        return stack;
     }
 
-    private static void addMix(Potion in, Item ingredient, Potion out) {
+    private static void addMix(Holder<Potion> in, Item ingredient, Holder<Potion> out) {
         POTION_MIXES.add(new Mix(in, Ingredient.of(ingredient), out));
     }
 
 
     public static class Mix {
-        public final Potion from;
+        public final Holder<Potion> from;
         public final Ingredient ingredient;
-        public final Potion to;
+        public final Holder<Potion> to;
 
-        public Mix(Potion in, Ingredient ingredient, Potion out) {
+        public Mix(Holder<Potion> in, Ingredient ingredient, Holder<Potion> out) {
             this.from = in;
             this.ingredient = ingredient;
             this.to = out;

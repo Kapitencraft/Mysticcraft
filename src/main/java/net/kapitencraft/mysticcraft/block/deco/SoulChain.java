@@ -5,6 +5,6 @@ import net.minecraft.world.level.block.ChainBlock;
 
 public class SoulChain extends ChainBlock {
     public SoulChain() {
-        super(Properties.copy(Blocks.IRON_BLOCK));
+        super(Properties.ofFullCopy(Blocks.IRON_BLOCK));
     }
 }

@@ -1,6 +1,5 @@
 package net.kapitencraft.mysticcraft.spell.spells;
 
-import net.kapitencraft.kap_lib.cooldown.Cooldown;
 import net.kapitencraft.kap_lib.helpers.MathHelper;
 import net.kapitencraft.kap_lib.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.item.combat.weapon.melee.dagger.ShadowDagger;
@@ -16,18 +15,20 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ShadowStepSpell implements Spell {
+public class ShadowStepSpell extends Spell {
+
+    public ShadowStepSpell() {
+        super(80, 100, Type.RELEASE, SpellTarget.SELF, ModCooldowns.SHADOW_STEP);
+    }
 
     private static boolean next(List<LivingEntity> list, LivingEntity user) {
         if (list.isEmpty()) return false;
-        LivingEntity target = list.get(0);
-        list.remove(0);
+        LivingEntity target = list.getFirst();
+        list.removeFirst();
         teleportBehind(target, user);
         return true;
     }
@@ -62,31 +63,6 @@ public class ShadowStepSpell implements Spell {
                     if (next(hit, user)) MiscHelper.schedule(10, ()-> next(hit, user));
                 }
         );
-    }
-
-    @Override
-    public int castDuration() {
-        return 100;
-    }
-
-    @Override
-    public double manaCost() {
-        return 80;
-    }
-
-    @Override
-    public @NotNull Type getType() {
-        return Type.RELEASE;
-    }
-
-    @Override
-    public @Nullable Cooldown getCooldown() {
-        return ModCooldowns.SHADOW_STEP.get();
-    }
-
-    @Override
-    public @NotNull SpellTarget getTarget() {
-        return SpellTarget.SELF;
     }
 
     @Override

@@ -7,7 +7,7 @@ import net.kapitencraft.mysticcraft.worldgen.feature.GemstoneSpawnFeature;
 import net.kapitencraft.mysticcraft.worldgen.tree.ColossalFoliagePlacer;
 import net.kapitencraft.mysticcraft.worldgen.tree.ColossalTrunkPlacer;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
@@ -28,7 +28,7 @@ public interface ModConfiguredFeatures {
     ResourceKey<ConfiguredFeature<?, ?>> PERIDOT_SYCAMORE_TREE = registerKey("peridot_sycamore_tree");
 
 
-    static void bootstrap(BootstapContext<ConfiguredFeature<?, ?>> context) {
+    static void bootstrap(BootstrapContext<ConfiguredFeature<?, ?>> context) {
         RuleTest netherrackReplaceable = new BlockMatchTest(Blocks.NETHERRACK);
 
         List<OreConfiguration.TargetBlockState> crimsoniumOres = List.of(OreConfiguration.target(netherrackReplaceable, ModBlocks.CRIMSONIUM_ORE.get().defaultBlockState()));
@@ -52,7 +52,7 @@ public interface ModConfiguredFeatures {
         return ResourceKey.create(Registries.CONFIGURED_FEATURE, MysticcraftMod.res(name));
     }
 
-    private static <FC extends FeatureConfiguration, F extends Feature<FC>> void register(BootstapContext<ConfiguredFeature<?, ?>> context, ResourceKey<ConfiguredFeature<?, ?>> key, F feature, FC config) {
+    private static <FC extends FeatureConfiguration, F extends Feature<FC>> void register(BootstrapContext<ConfiguredFeature<?, ?>> context, ResourceKey<ConfiguredFeature<?, ?>> key, F feature, FC config) {
         context.register(key, new ConfiguredFeature<>(feature, config));
     }
 }

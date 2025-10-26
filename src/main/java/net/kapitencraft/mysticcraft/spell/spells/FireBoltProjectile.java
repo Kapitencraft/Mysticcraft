@@ -7,8 +7,10 @@ import net.kapitencraft.mysticcraft.registry.ModEntityTypes;
 import net.kapitencraft.mysticcraft.registry.ModParticleTypes;
 import net.kapitencraft.mysticcraft.registry.Spells;
 import net.kapitencraft.mysticcraft.spell.Spell;
+import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
@@ -16,6 +18,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
@@ -24,11 +27,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class FireBoltProjectile extends SpellProjectile {
-    private static final int ParticleAmount = 20;
+    private static final int PARTICLE_AMOUNT = 20;
     private int inGroundTime = 0;
     private final boolean explosive;
     private final double damage;
-    private FireBoltProjectile(Level level, LivingEntity living, boolean explosive, double damage, Spell spell) {
+    private FireBoltProjectile(Level level, LivingEntity living, boolean explosive, double damage, Holder<Spell> spell) {
         super(ModEntityTypes.FIRE_BOLD.get(), living, level, spell);
         this.inGroundTime = 0;
         this.setInvisible(true);
@@ -49,22 +52,27 @@ public class FireBoltProjectile extends SpellProjectile {
         this.inGroundTime = tag.getInt("inGroundTime");
     }
 
+    @Override
+    protected ItemStack getDefaultPickupItem() {
+        return ItemStack.EMPTY;
+    }
+
     public FireBoltProjectile(EntityType<? extends AbstractArrow> type, Level level) {
-        super(type, level, Spells.FIRE_BOLT.get());
+        super(type, level, Spells.FIRE_BOLT);
         this.explosive = false;
         this.damage = 1;
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
     }
 
     @Override
     public void tick() {
         super.tick();
-        ParticleHelper.sendParticles(this.level(), ModParticleTypes.FIRE_NORMAL.get(), true, this.getX() - this.getDeltaMovement().x / 5, this.getY() - this.getDeltaMovement().y / 5, this.getZ() - this.getDeltaMovement().z / 5, ParticleAmount, 0.125, 0.125, 0.125, 0);
-        ParticleHelper.sendParticles(this.level(), ModParticleTypes.FIRE_NORMAL.get(), true, this.getX(), this.getY(), this.getZ(), ParticleAmount, 0.125, 0.125, 0.125, 0);
+        ParticleHelper.sendParticles(this.level(), ModParticleTypes.FIRE_NORMAL.get(), true, this.getX() - this.getDeltaMovement().x / 5, this.getY() - this.getDeltaMovement().y / 5, this.getZ() - this.getDeltaMovement().z / 5, PARTICLE_AMOUNT, 0.125, 0.125, 0.125, 0);
+        ParticleHelper.sendParticles(this.level(), ModParticleTypes.FIRE_NORMAL.get(), true, this.getX(), this.getY(), this.getZ(), PARTICLE_AMOUNT, 0.125, 0.125, 0.125, 0);
     }
 
     @Override
@@ -83,10 +91,10 @@ public class FireBoltProjectile extends SpellProjectile {
             for (LivingEntity living : livingEntities) {
                 damage(living);
             }
-            ParticleHelper.sendParticles(this.level(), ModParticleTypes.FIRE_NORMAL.get(), true, this.getX(), this.getY(), this.getZ(), ParticleAmount * 10, 0.125, 0.125, 0.125, 1.25);
-            ParticleHelper.sendParticles(this.level(), ParticleTypes.EXPLOSION, true, this.getX(), this.getY(), this.getZ(), ParticleAmount / 2, 0.125, 0.125, 0.125, 0);
+            ParticleHelper.sendParticles(this.level(), ModParticleTypes.FIRE_NORMAL.get(), true, this.getX(), this.getY(), this.getZ(), PARTICLE_AMOUNT * 10, 0.125, 0.125, 0.125, 1.25);
+            ParticleHelper.sendParticles(this.level(), ParticleTypes.EXPLOSION, true, this.getX(), this.getY(), this.getZ(), PARTICLE_AMOUNT / 2, 0.125, 0.125, 0.125, 0);
             if (this.getOwner() instanceof Player player) {
-                this.level().playSound(player, hitResult.getBlockPos(), SoundEvents.GENERIC_EXPLODE, SoundSource.PLAYERS, 4.0F, (1.0F + (this.level().random.nextFloat() - this.level().random.nextFloat()) * 0.2F) * 0.7F);
+                this.level().playSound(player, hitResult.getBlockPos(), SoundEvents.GENERIC_EXPLODE.value(), SoundSource.PLAYERS, 4.0F, (1.0F + (this.level().random.nextFloat() - this.level().random.nextFloat()) * 0.2F) * 0.7F);
             }
         }
         super.onHitBlock(hitResult);
@@ -95,12 +103,12 @@ public class FireBoltProjectile extends SpellProjectile {
     private void damage(LivingEntity living) {
         this.addHitEntity(living);
         float health = living.getHealth();
-        living.hurt(SpellDamageSource.createIndirect(this, this.getOwner(), this.spell), (float) this.damage);
+        living.hurt(SpellDamageSource.createIndirect(this, this.getOwner(), this.spell.value()), (float) this.damage);
         this.damageInflicted += (health - living.getHealth());
-        living.setSecondsOnFire((int) Math.floor(this.damage));
+        living.setRemainingFireTicks((int) Math.floor(this.damage) * 20);
     }
 
-    public static FireBoltProjectile createProjectile(Level level, LivingEntity owner, boolean explosive, double damage, Spell spell) {
+    public static FireBoltProjectile createProjectile(Level level, LivingEntity owner, boolean explosive, double damage, Holder<Spell> spell) {
         return new FireBoltProjectile(level, owner, explosive, damage, spell);
     }
 }

@@ -62,7 +62,7 @@ public abstract class SimpleScreen<T extends AbstractContainerMenu> extends Abst
 
     @Override
     public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-        renderBackground(graphics);
+        renderBackground(graphics, mouseX, mouseY, delta);
         super.render(graphics, mouseX, mouseY, delta);
         renderTooltip(graphics, mouseX, mouseY);
         if (this.menu.getCarried().isEmpty() && this.hoveredSlot == null) {

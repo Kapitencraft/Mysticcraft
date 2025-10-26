@@ -1,14 +1,13 @@
 package net.kapitencraft.mysticcraft.mixin.classes;
 
-import net.kapitencraft.mysticcraft.capability.CapabilityHelper;
+import net.kapitencraft.mysticcraft.capability.elytra.ElytraAttachment;
 import net.kapitencraft.mysticcraft.capability.elytra.ElytraData;
-import net.kapitencraft.mysticcraft.capability.elytra.IElytraData;
+import net.kapitencraft.mysticcraft.registry.ModDataComponentTypes;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.FireworkRocketEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.util.LazyOptional;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -29,14 +28,10 @@ public abstract class FireworkRocketEntityMixin {
         double d2 = 1.5;
         double d3 = 0.5;
         ItemStack chest = living.getItemBySlot(EquipmentSlot.CHEST);
-        LazyOptional<IElytraData> dataOptional = chest.getCapability(CapabilityHelper.ELYTRA);
-        if (dataOptional.isPresent()) {
-            IElytraData data = dataOptional.resolve().get();
-            int scale = data.getLevelForData(ElytraData.SPEED_BOOST);
-            if (scale > 0) {
-                d1 *= scale;
-                d3 *= scale / 5.;
-            }
+        ElytraAttachment attachment = chest.get(ModDataComponentTypes.ELYTRA);
+        if (attachment != null && attachment.data() == ElytraData.SPEED_BOOST) {
+            d1 *= attachment.level();
+            d3 *= attachment.level() / 5.;
         }
         return sourceSpeed.add(sourceLookAngle.x * d1 + (sourceLookAngle.x * d2 - sourceSpeed.x) * d3, sourceLookAngle.y * d1 + (sourceLookAngle.y * d2 - sourceSpeed.y) * d3, sourceLookAngle.z * d1 + (sourceLookAngle.z * d2 - sourceSpeed.z) * d3);
     }

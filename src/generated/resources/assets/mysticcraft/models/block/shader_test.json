@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/cube_all",
-  "render_type": "mysticcraft:chromatic_cutout",
+  "render_type": "mysticcraft:chromatic_cutout_noise",
   "textures": {
     "all": "mysticcraft:block/example"
   }

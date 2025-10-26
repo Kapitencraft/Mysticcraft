@@ -1,17 +1,18 @@
 package net.kapitencraft.mysticcraft.item.combat.armor;
 
-import com.google.common.collect.Multimap;
 import net.kapitencraft.kap_lib.client.armor.provider.ArmorModelProvider;
 import net.kapitencraft.kap_lib.client.armor.provider.SimpleModelProvider;
+import net.kapitencraft.kap_lib.helpers.MiscHelper;
 import net.kapitencraft.kap_lib.item.combat.armor.AbstractArmorItem;
 import net.kapitencraft.kap_lib.item.creative_tab.ArmorTabGroup;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.item.combat.armor.client.model.ShadowAssassinArmorModel;
+import net.kapitencraft.mysticcraft.registry.ModArmorMaterials;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import org.jetbrains.annotations.Nullable;
@@ -20,13 +21,7 @@ public class ShadowAssassinArmorItem extends AbstractArmorItem {
     public static final ArmorTabGroup TAB = ArmorTabGroup.create();
 
     public ShadowAssassinArmorItem(ArmorItem.Type type) {
-        super(ModArmorMaterials.SHADOW_ASSASSIN, type, new Properties().rarity(Rarity.EPIC));
-    }
-
-
-    @Override
-    public Multimap<Attribute, AttributeModifier> getAttributeMods(EquipmentSlot slot) {
-        return null;
+        super(ModArmorMaterials.SHADOW_ASSASSIN, type, MiscHelper.rarity(Rarity.EPIC).durability(type.getDurability(17)));
     }
 
     @Override
@@ -40,7 +35,7 @@ public class ShadowAssassinArmorItem extends AbstractArmorItem {
     }
 
     @Override
-    public @Nullable String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
-        return makeCustomTextureLocation(MysticcraftMod.MOD_ID, entity.isInvisible() ? "shadow_assassin_empty" : "shadow_assassin_armor");
+    public @Nullable ResourceLocation getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, ArmorMaterial.Layer layer, boolean innerModel) {
+        return makeCustomTextureLocation(MysticcraftMod.MOD_ID, "shadow_assassin_armor");
     }
 }

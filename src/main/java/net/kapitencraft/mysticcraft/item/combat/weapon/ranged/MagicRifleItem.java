@@ -7,20 +7,23 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ProjectileWeaponItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.event.InputEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.InputEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Predicate;
 
 
-@Mod.EventBusSubscriber
+@EventBusSubscriber
 public class MagicRifleItem extends ProjectileWeaponItem {
     private Vec3 shotPosition = Vec3.ZERO;
     private boolean aiming = false;
@@ -28,7 +31,7 @@ public class MagicRifleItem extends ProjectileWeaponItem {
     private float distance = 1;
 
     public MagicRifleItem(Properties p_43009_) {
-        super(new Properties().defaultDurability(10000).fireResistant());
+        super(new Properties().durability(10000).fireResistant());
     }
 
     @Override
@@ -49,6 +52,11 @@ public class MagicRifleItem extends ProjectileWeaponItem {
     }
 
     @Override
+    protected void shootProjectile(LivingEntity shooter, Projectile projectile, int index, float velocity, float inaccuracy, float angle, @Nullable LivingEntity target) {
+
+    }
+
+    @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level p_41432_, @NotNull Player player, @NotNull InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         if (aiming) {
@@ -64,11 +72,10 @@ public class MagicRifleItem extends ProjectileWeaponItem {
         if (localPlayer != null && clientLevel != null) {
             if (localPlayer.getUseItem() != ItemStack.EMPTY) {
                 if (localPlayer.getUseItem().getItem() instanceof MagicRifleItem magicRifleItem) {
-                    magicRifleItem.distance += event.getScrollDelta() / 2;
+                    magicRifleItem.distance += (float) (event.getScrollDeltaY() / 2);
                     magicRifleItem.updateShotPosition(localPlayer.getViewVector(1).scale(magicRifleItem.distance));
                 }
             }
         }
     }
-
 }

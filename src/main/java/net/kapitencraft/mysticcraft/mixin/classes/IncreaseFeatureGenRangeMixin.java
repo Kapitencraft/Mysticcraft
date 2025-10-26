@@ -1,17 +1,15 @@
 package net.kapitencraft.mysticcraft.mixin.classes;
 
-import net.minecraft.world.level.chunk.ChunkStatus;
+import net.minecraft.world.level.chunk.ChunkGenerator;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
-@Mixin(ChunkStatus.class)
+@Mixin(ChunkGenerator.class)
 public class IncreaseFeatureGenRangeMixin {
 
-    @ModifyConstant(method = "lambda$static$11", remap = false)
+    @ModifyConstant(method = "applyBiomeDecoration", constant = @Constant(intValue = 1))
     private static int modifyChunkRange(int i) {
-        if (i == 1) {
-            return 3;
-        }
-        return i;
+        return 3;
     }
 }

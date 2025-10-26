@@ -17,18 +17,17 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderLevelStageEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import org.joml.Matrix4f;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Mod.EventBusSubscriber(value = Dist.CLIENT)
+@EventBusSubscriber(value = Dist.CLIENT)
 public class LevelRendererExtension {
-
 
     @SuppressWarnings("DataFlowIssue")
     @SubscribeEvent
@@ -49,12 +48,12 @@ public class LevelRendererExtension {
                 List<ManaDistributionNetwork.Node> visited = new ArrayList<>();
                 for (ManaDistributionNetwork.Node node : network.getNodes()) {
                     for (ManaDistributionNetwork.Node node1 : node.getConnected()) {
-                        if (!visited.contains(node1) && frustum.isVisible(new AABB(node.getPosition(), node1.getPosition()))) {
+                        if (!visited.contains(node1) && frustum.isVisible(new AABB(node.getPosition().getCenter(), node1.getPosition().getCenter()))) {
                             Vec3 start = node.getPosition().getCenter();
                             Vec3 end = node1.getPosition().getCenter();
                             Matrix4f posMat = stack.last().pose();
-                            buffer.vertex(posMat, (float) start.x, (float) start.y, (float) start.z).color(0, 150, 240, 255).endVertex();
-                            buffer.vertex(posMat, (float) end.x, (float) end.y, (float) end.z).color(0, 150, 240, 255).endVertex();
+                            buffer.addVertex(posMat, (float) start.x, (float) start.y, (float) start.z).setColor(0, 150, 240, 255);
+                            buffer.addVertex(posMat, (float) end.x, (float) end.y, (float) end.z).setColor(0, 150, 240, 255);
                         }
                     }
                     visited.add(node);
@@ -71,6 +70,7 @@ public class LevelRendererExtension {
                 outlineBufferSource.setColor(0, 127, 204, 255);
                 minecraft.getBlockRenderer().renderSingleBlock(state, stack, outlineBufferSource, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
                 stack.popPose();
+                event.getLevelRenderer().requestOutlineEffect(); //i love you neo
             }
         }
         stack.popPose();

@@ -2,6 +2,7 @@ package net.kapitencraft.mysticcraft.tech.block;
 
 import net.kapitencraft.mysticcraft.tech.IUpgradeable;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Containers;
@@ -9,7 +10,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.items.ItemStackHandler;
+import net.neoforged.neoforge.items.ItemStackHandler;
 
 public abstract class UpgradableBlockEntity extends BlockEntity implements IUpgradeable {
     private final UpgradeContainer upgrades;
@@ -21,17 +22,17 @@ public abstract class UpgradableBlockEntity extends BlockEntity implements IUpgr
     }
 
     @Override
-    protected void saveAdditional(CompoundTag pTag) {
-        super.saveAdditional(pTag);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
 
-        pTag.put("upgrades", upgrades.serializeNBT());
+        tag.put("upgrades", upgrades.serializeNBT(registries));
     }
 
     @Override
-    public void load(CompoundTag pTag) {
-        super.load(pTag);
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
 
-        upgrades.deserializeNBT(pTag.getCompound("upgrades"));
+        upgrades.deserializeNBT(registries, tag.getCompound("upgrades"));
         this.setChanged();
     }
 
@@ -58,6 +59,12 @@ public abstract class UpgradableBlockEntity extends BlockEntity implements IUpgr
 
         public NonNullList<ItemStack> getItems() {
             return stacks;
+        }
+
+        @Override
+        protected void onContentsChanged(int slot) {
+            super.onContentsChanged(slot);
+            UpgradableBlockEntity.this.setChanged();
         }
     }
 }

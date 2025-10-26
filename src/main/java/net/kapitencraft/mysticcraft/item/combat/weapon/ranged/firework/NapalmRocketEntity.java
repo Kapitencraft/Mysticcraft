@@ -24,7 +24,7 @@ public class NapalmRocketEntity extends FireWorkRocketModEntity {
         Level level = hit.level();
         int rangePerDirection = EXPLOSION_SIZE / 2;
         hit.hurt(damageSources().onFire(), 10);
-        hit.setSecondsOnFire(20);
+        hit.setRemainingFireTicks(400);
         for (int x = blockPos.getX() - rangePerDirection; x < blockPos.getX() + rangePerDirection; x++) {
             for (int y = blockPos.getY() - rangePerDirection; y < blockPos.getY() + rangePerDirection; y++) {
                 for (int z = blockPos.getZ() - rangePerDirection; z < blockPos.getZ() + rangePerDirection; z++) {

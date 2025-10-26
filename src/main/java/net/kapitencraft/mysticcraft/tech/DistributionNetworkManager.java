@@ -1,9 +1,12 @@
 package net.kapitencraft.mysticcraft.tech;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
@@ -15,11 +18,12 @@ import java.util.List;
 
 public class DistributionNetworkManager extends SavedData {
     private static final DistributionNetworkManager clientManager = new DistributionNetworkManager();
+    public static final StreamCodec<RegistryFriendlyByteBuf, DistributionNetworkManager> STREAM_CODEC = null;
 
     public static DistributionNetworkManager get(Level level) {
         if (level.isClientSide()) {
             return clientManager;
-        } else return ((ServerLevel) level).getDataStorage().computeIfAbsent(DistributionNetworkManager::load, DistributionNetworkManager::new, "distribution_networks");
+        } else return ((ServerLevel) level).getDataStorage().computeIfAbsent(new Factory<>(DistributionNetworkManager::new, DistributionNetworkManager::load, null), "distribution_networks");
     }
 
     private final List<ManaDistributionNetwork> networks = new ArrayList<>();
@@ -76,7 +80,11 @@ public class DistributionNetworkManager extends SavedData {
     }
 
 
-    public static DistributionNetworkManager load(CompoundTag tag) {
+    public static DistributionNetworkManager load(CompoundTag tag, HolderLookup.Provider registries) {
+        return loadDirectly(tag);
+    }
+
+    public static DistributionNetworkManager loadDirectly(CompoundTag tag) {
         List<ManaDistributionNetwork> networkList = new ArrayList<>();
         ListTag listTag = tag.getList("networks", Tag.TAG_LIST);
         for (int i = 0; i < listTag.size(); i++) {
@@ -87,15 +95,18 @@ public class DistributionNetworkManager extends SavedData {
         return manager;
     }
 
-
     @Override
-    public CompoundTag save(CompoundTag pCompoundTag) {
+    public CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
+        return saveDirectly(tag);
+    }
+
+    public CompoundTag saveDirectly(CompoundTag tag) {
         ListTag listTag = new ListTag();
         for (ManaDistributionNetwork network : networks) {
             listTag.add(network.save());
         }
-        pCompoundTag.put("networks", listTag);
-        return pCompoundTag;
+        tag.put("networks", listTag);
+        return tag;
     }
 
     public List<ManaDistributionNetwork> getNetworks() {

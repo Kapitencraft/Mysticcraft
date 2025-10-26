@@ -6,34 +6,17 @@ import net.kapitencraft.mysticcraft.spell.SpellTarget;
 import net.kapitencraft.mysticcraft.spell.cast.SpellCastContext;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
-public class InstantTransmissionSpell implements Spell {
+public class InstantTransmissionSpell extends Spell {
+
+    public InstantTransmissionSpell() {
+        super(50, 0, Type.RELEASE, SpellTarget.SELF, null);
+    }
 
     @Override
     public void cast(SpellCastContext context) {
         MiscHelper.saveTeleport(context.getCaster(), context.getLevel() * 2);
         context.getCaster().setDeltaMovement(Vec3.ZERO);
-    }
-
-    @Override
-    public double manaCost() {
-        return 50;
-    }
-
-    @Override
-    public int castDuration() {
-        return 0;
-    }
-
-    @Override
-    public @NotNull Type getType() {
-        return Type.RELEASE;
-    }
-
-    @Override
-    public @NotNull SpellTarget getTarget() {
-        return SpellTarget.SELF;
     }
 
     @Override
