@@ -1,0 +1,13 @@
+{
+  "values": {
+    "minecraft:acacia_log": 10,
+    "minecraft:birch_log": 10,
+    "minecraft:cherry_log": 10,
+    "minecraft:dark_oak_log": 10,
+    "minecraft:jungle_log": 5,
+    "minecraft:mangrove_log": 20,
+    "minecraft:oak_log": 7,
+    "minecraft:spruce_log": 5,
+    "mysticcraft:peridot_sycamore_log": 20
+  }
+}

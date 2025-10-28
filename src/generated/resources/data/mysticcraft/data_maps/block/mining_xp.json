@@ -40,6 +40,8 @@
     "minecraft:sculk": 2,
     "minecraft:sculk_catalyst": 15,
     "minecraft:sculk_shrieker": 10,
-    "minecraft:tuff": 7
+    "minecraft:tuff": 7,
+    "mysticcraft:crimsonium_ore": 120,
+    "mysticcraft:gemstone_block": 40
   }
 }

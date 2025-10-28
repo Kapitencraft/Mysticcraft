@@ -20,7 +20,10 @@ public enum Skill implements StringRepresentable {
     COMBAT(Items.DIAMOND_SWORD),
     MINING(Items.DIAMOND_PICKAXE),
     FARMING(Items.DIAMOND_HOE),
-    ENCHANTING(Items.ENCHANTING_TABLE);
+    FORAGING(Items.DIAMOND_AXE),
+    ENCHANTING(Items.ENCHANTING_TABLE),
+    ALCHEMY(Items.POTION)
+    ;
 
     public static final DataMapType<Item, Integer> FISHING_XP_MAP = DataMapType.builder(
             MysticcraftMod.res("fishing_xp"),
@@ -44,6 +47,11 @@ public enum Skill implements StringRepresentable {
     ).build();
     public static final DataMapType<Block, Integer> MINING_XP_MAP = DataMapType.builder(
             MysticcraftMod.res("mining_xp"),
+            Registries.BLOCK,
+            Codec.INT
+    ).build();
+    public static final DataMapType<Block, Integer> FORAGING_XP_MAP = DataMapType.builder(
+            MysticcraftMod.res("foraging_xp"),
             Registries.BLOCK,
             Codec.INT
     ).build();

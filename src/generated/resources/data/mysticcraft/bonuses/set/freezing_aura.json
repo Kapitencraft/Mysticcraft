@@ -4,10 +4,10 @@
     "type": "mysticcraft:frozen_blaze"
   },
   "equipment_slots": [
-    "chest",
     "legs",
+    "feet",
     "head",
-    "feet"
+    "chest"
   ],
   "wearable_slots": []
 }

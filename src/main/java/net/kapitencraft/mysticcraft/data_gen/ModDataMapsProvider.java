@@ -1,5 +1,6 @@
 package net.kapitencraft.mysticcraft.data_gen;
 
+import net.kapitencraft.mysticcraft.registry.ModBlocks;
 import net.kapitencraft.mysticcraft.registry.ModItems;
 import net.kapitencraft.mysticcraft.rpg.skill.Skill;
 import net.minecraft.core.HolderLookup;
@@ -176,6 +177,19 @@ public class ModDataMapsProvider extends DataMapProvider {
                 .add(ResourceLocation.withDefaultNamespace("sculk_shrieker"), 10, false)
                 .add(ResourceLocation.withDefaultNamespace("pointed_dripstone"), 20, false)
                 .add(ResourceLocation.withDefaultNamespace("dripstone_block"), 30, false)
-                .add(ResourceLocation.withDefaultNamespace("mud"), 5, false);
+                .add(ResourceLocation.withDefaultNamespace("mud"), 5, false)
+                .add(ModBlocks.GEMSTONE_BLOCK.getId(), 40, false)
+                .add(ModBlocks.CRIMSONIUM_ORE.getId(), 120, false);
+
+        builder(Skill.FORAGING_XP_MAP)
+                .add(ResourceLocation.withDefaultNamespace("dark_oak_log"), 10, false)
+                .add(ResourceLocation.withDefaultNamespace("oak_log"), 7, false)
+                .add(ResourceLocation.withDefaultNamespace("acacia_log"), 10, false)
+                .add(ResourceLocation.withDefaultNamespace("birch_log"), 10, false)
+                .add(ResourceLocation.withDefaultNamespace("jungle_log"), 5, false)
+                .add(ResourceLocation.withDefaultNamespace("spruce_log"), 5, false)
+                .add(ResourceLocation.withDefaultNamespace("mangrove_log"), 20, false)
+                .add(ResourceLocation.withDefaultNamespace("cherry_log"), 10, false)
+                .add(ModBlocks.PERIDOT_SYCAMORE_LOG.getId(), 20, false);
     }
 }

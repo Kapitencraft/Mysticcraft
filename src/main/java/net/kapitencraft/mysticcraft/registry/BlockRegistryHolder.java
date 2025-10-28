@@ -1,5 +1,6 @@
 package net.kapitencraft.mysticcraft.registry;
 
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.registries.DeferredBlock;
@@ -27,5 +28,9 @@ public class BlockRegistryHolder<T extends Block, K extends BlockItem> implement
     @Override
     public T get() {
         return block.get();
+    }
+
+    public ResourceLocation getId() {
+        return this.block.getId();
     }
 }

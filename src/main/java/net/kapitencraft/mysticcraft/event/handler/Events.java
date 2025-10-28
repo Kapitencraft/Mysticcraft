@@ -18,6 +18,7 @@ import net.kapitencraft.mysticcraft.registry.ModAttachmentTypes;
 import net.kapitencraft.mysticcraft.registry.ModDataComponentTypes;
 import net.kapitencraft.mysticcraft.registry.ModMobEffects;
 import net.kapitencraft.mysticcraft.registry.Spells;
+import net.kapitencraft.mysticcraft.requirement.type.PerkRequirementType;
 import net.kapitencraft.mysticcraft.requirement.type.ReforgeRequirementType;
 import net.kapitencraft.mysticcraft.rpg.skill.PlayerPlacedBlocks;
 import net.kapitencraft.mysticcraft.rpg.skill.PlayerSkills;
@@ -245,6 +246,7 @@ public class Events {
     @SubscribeEvent
     public static void onRegisterRequirementTypes(RegisterRequirementTypesEvent event) {
         event.add(ReforgeRequirementType.INSTANCE);
+        event.add(PerkRequirementType.INSTANCE);
     }
 
     @SubscribeEvent
@@ -254,6 +256,7 @@ public class Events {
         event.register(Skill.FARMING_XP_MAP);
         event.register(Skill.ENCHANTING_XP_MAP);
         event.register(Skill.MINING_XP_MAP);
+        event.register(Skill.FORAGING_XP_MAP);
     }
 
     @SubscribeEvent
@@ -294,7 +297,12 @@ public class Events {
                     if (miningXp != null) {
                         PlayerSkills.reward(serverPlayer, Skill.MINING, miningXp, true);
                     } else {
-                        PlayerSkills.LOGGER.warn("unable to retrieve mining xp for block {}", state);
+                        Integer foragingXp = holder.getData(Skill.FORAGING_XP_MAP);
+                        if (foragingXp != null) {
+                            PlayerSkills.reward(serverPlayer, Skill.FORAGING, foragingXp, true);
+                        } else {
+                            PlayerSkills.LOGGER.warn("unable to retrieve mining / foraging xp for block {}", state);
+                        }
                     }
                 }
             }
@@ -320,8 +328,13 @@ public class Events {
 
     @SubscribeEvent
     public static void onBlockEntityPlace(BlockEvent.EntityPlaceEvent event) {
-        if (event.getEntity() instanceof ServerPlayer) {
-            PlayerPlacedBlocks.get(event.getEntity().level()).addBlock(event.getPos());
+        if (!event.getLevel().isClientSide()) {
+            PlayerPlacedBlocks placedBlocks = PlayerPlacedBlocks.get(event.getLevel());
+            if (event.getEntity() instanceof ServerPlayer) {
+                placedBlocks.addBlock(event.getPos());
+            } else {
+                placedBlocks.removeBlock(event.getPos());
+            }
         }
     }
 }

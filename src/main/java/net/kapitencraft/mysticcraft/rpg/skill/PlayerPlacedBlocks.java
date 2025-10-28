@@ -7,7 +7,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.LongTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.saveddata.SavedData;
 
 import java.util.HashSet;
@@ -16,7 +16,7 @@ import java.util.Set;
 public class PlayerPlacedBlocks extends SavedData {
     private final Set<BlockPos> placedBlocks = new HashSet<>();
 
-    public static PlayerPlacedBlocks get(Level level) {
+    public static PlayerPlacedBlocks get(LevelAccessor level) {
         if (level.isClientSide()) {
             throw new IllegalAccessError("player placed blocks are not synced!");
         } else return ((ServerLevel) level).getDataStorage().computeIfAbsent(new Factory<>(PlayerPlacedBlocks::new, PlayerPlacedBlocks::load, null), "player_placed_blocks");
@@ -44,6 +44,12 @@ public class PlayerPlacedBlocks extends SavedData {
 
     public void addBlock(BlockPos pos) {
         placedBlocks.add(pos);
+        setDirty();
+    }
+
+    public void removeBlock(BlockPos pos) {
+        placedBlocks.remove(pos);
+        setDirty();
     }
 
     public boolean hasBlock(BlockPos pos) {

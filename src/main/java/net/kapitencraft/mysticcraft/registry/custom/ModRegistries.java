@@ -2,6 +2,7 @@ package net.kapitencraft.mysticcraft.registry.custom;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.rpg.classes.RPGClass;
+import net.kapitencraft.mysticcraft.rpg.perks.Perk;
 import net.kapitencraft.mysticcraft.spell.Spell;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
@@ -37,7 +38,7 @@ public interface ModRegistries {
 
     interface Keys {
 
-
+        ResourceKey<Registry<Perk>> PERKS = createRegistry("perks");
         ResourceKey<Registry<Spell>> SPELLS = createRegistry("spells");
         ResourceKey<Registry<RPGClass>> CLASSES = createRegistry("classes");
 
