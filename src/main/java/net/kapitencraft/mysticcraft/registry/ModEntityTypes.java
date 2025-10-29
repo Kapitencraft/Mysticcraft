@@ -34,4 +34,5 @@ public interface ModEntityTypes {
     Supplier<EntityType<SoulBoundAnimator>> SOUL_BOUND_ANIMATOR = register("soul_bound_animator", SoulBoundAnimator::new, MobCategory.MISC, builder -> builder.sized(0.5f, 1.975f).clientTrackingRange(10));
     Supplier<EntityType<ThrownCursedPearl>> CURSED_PEARL = register("cursed_pearl", ThrownCursedPearl::new, MobCategory.MISC, builder -> builder.sized(0.25F, 0.25F).clientTrackingRange(4).updateInterval(10));
     Supplier<EntityType<Dragon>> DRAGON = register("dragon", Dragon::new, MobCategory.CREATURE, builder -> builder.sized(4, 4));
+    Supplier<EntityType<ThrownSplashPotionOfMilk>> SPLASH_POTION_OF_MILK = register("splash_potion_of_milk", ThrownSplashPotionOfMilk::new, MobCategory.MISC, bui -> bui.sized(.25f, .25f));
 }

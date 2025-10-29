@@ -111,6 +111,7 @@ public class ModClientEvents {
         event.registerEntityRenderer(ModEntityTypes.CRIMSON_DEATH_RAY.get(), CrimsonDeathRayRenderer::new);
         event.registerEntityRenderer(ModEntityTypes.LAVA_FISHING_HOOK.get(), FishingHookRenderer::new);
         event.registerEntityRenderer(ModEntityTypes.CURSED_PEARL.get(), ThrownItemRenderer::new);
+        event.registerEntityRenderer(ModEntityTypes.SPLASH_POTION_OF_MILK.get(), ThrownItemRenderer::new);
         event.registerEntityRenderer(ModEntityTypes.DRAGON.get(), DragonRenderer::new);
 
         event.registerBlockEntityRenderer(ModBlockEntities.ALTAR.get(), AltarBlockEntityRenderer::new);

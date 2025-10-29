@@ -10,6 +10,7 @@ import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.registries.datamaps.DataMapType;
@@ -53,6 +54,11 @@ public enum Skill implements StringRepresentable {
     public static final DataMapType<Block, Integer> FORAGING_XP_MAP = DataMapType.builder(
             MysticcraftMod.res("foraging_xp"),
             Registries.BLOCK,
+            Codec.INT
+    ).build();
+    public static final DataMapType<Potion, Integer> ALCHEMY_XP_MAP = DataMapType.builder(
+            MysticcraftMod.res("alchemy_xp"),
+            Registries.POTION,
             Codec.INT
     ).build();
 

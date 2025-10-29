@@ -30,6 +30,7 @@ import net.kapitencraft.mysticcraft.item.material.*;
 import net.kapitencraft.mysticcraft.item.material.containable.WalletItem;
 import net.kapitencraft.mysticcraft.item.misc.CursedPearlItem;
 import net.kapitencraft.mysticcraft.item.misc.MaterialModItem;
+import net.kapitencraft.mysticcraft.item.misc.SplashPotionOfMilkItem;
 import net.kapitencraft.mysticcraft.item.misc.creative_tab.TabGroups;
 import net.kapitencraft.mysticcraft.item.tools.HammerItem;
 import net.kapitencraft.mysticcraft.item.tools.fishing_rods.LavaFishingRod;
@@ -192,6 +193,7 @@ public interface ModItems {
     HashMap<PrecursorRelicItem.BossType, DeferredItem<PrecursorRelicItem>> PRECURSOR_RELICTS = PrecursorRelicItem.makeRegistry();
 
     DeferredItem<CursedPearlItem> CURSED_PEARL = register("cursed_pearl", CursedPearlItem::new, TabGroups.COMBAT);
+    DeferredItem<SplashPotionOfMilkItem> SPLASH_POTION_OF_MILK = register("splash_potion_of_milk", SplashPotionOfMilkItem::new, TabGroups.COMBAT);
 
     //region tech
     DeferredItem<TechWandItem> TECH_WAND = register("tech_wand", TechWandItem::new, TabGroups.TECHNOLOGY);

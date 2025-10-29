@@ -1,5 +1,6 @@
 package net.kapitencraft.mysticcraft.data_gen;
 
+import net.kapitencraft.mysticcraft.potion.ModPotions;
 import net.kapitencraft.mysticcraft.registry.ModBlocks;
 import net.kapitencraft.mysticcraft.registry.ModItems;
 import net.kapitencraft.mysticcraft.rpg.skill.Skill;
@@ -191,5 +192,52 @@ public class ModDataMapsProvider extends DataMapProvider {
                 .add(ResourceLocation.withDefaultNamespace("mangrove_log"), 20, false)
                 .add(ResourceLocation.withDefaultNamespace("cherry_log"), 10, false)
                 .add(ModBlocks.PERIDOT_SYCAMORE_LOG.getId(), 20, false);
+
+        builder(Skill.ALCHEMY_XP_MAP)
+                .add(ResourceLocation.withDefaultNamespace("night_vision"), 20, false)
+                .add(ResourceLocation.withDefaultNamespace("long_night_vision"), 30, false)
+                .add(ResourceLocation.withDefaultNamespace("invisibility"), 50, false)
+                .add(ResourceLocation.withDefaultNamespace("long_invisibility"), 75, false)
+                .add(ResourceLocation.withDefaultNamespace("leaping"), 15, false)
+                .add(ResourceLocation.withDefaultNamespace("long_leaping"), 22, false)
+                .add(ResourceLocation.withDefaultNamespace("strong_leaping"), 30, false)
+                .add(ResourceLocation.withDefaultNamespace("fire_resistance"), 30, false)
+                .add(ResourceLocation.withDefaultNamespace("long_fire_resistance"), 45, false)
+                .add(ResourceLocation.withDefaultNamespace("swiftness"), 10, false)
+                .add(ResourceLocation.withDefaultNamespace("long_swiftness"), 15, false)
+                .add(ResourceLocation.withDefaultNamespace("strong_swiftness"), 20, false)
+                .add(ResourceLocation.withDefaultNamespace("slowness"), 25, false)
+                .add(ResourceLocation.withDefaultNamespace("long_slowness"), 37, false)
+                .add(ResourceLocation.withDefaultNamespace("strong_slowness"), 50, false)
+                .add(ResourceLocation.withDefaultNamespace("turtle_master"), 50, false)
+                .add(ResourceLocation.withDefaultNamespace("long_turtle_master"), 75, false)
+                .add(ResourceLocation.withDefaultNamespace("strong_turtle_master"), 100, false)
+                .add(ResourceLocation.withDefaultNamespace("water_breathing"), 20, false)
+                .add(ResourceLocation.withDefaultNamespace("long_water_breathing"), 30, false)
+                .add(ResourceLocation.withDefaultNamespace("healing"), 20, false)
+                .add(ResourceLocation.withDefaultNamespace("strong_healing"), 40, false)
+                .add(ResourceLocation.withDefaultNamespace("harming"), 50, false)
+                .add(ResourceLocation.withDefaultNamespace("strong_harming"), 100, false)
+                .add(ResourceLocation.withDefaultNamespace("poison"), 20, false)
+                .add(ResourceLocation.withDefaultNamespace("long_poison"), 30, false)
+                .add(ResourceLocation.withDefaultNamespace("strong_poison"), 40, false)
+                .add(ResourceLocation.withDefaultNamespace("regeneration"), 30, false)
+                .add(ResourceLocation.withDefaultNamespace("long_regeneration"), 45, false)
+                .add(ResourceLocation.withDefaultNamespace("strong_regeneration"), 60, false)
+                .add(ResourceLocation.withDefaultNamespace("strength"), 50, false)
+                .add(ResourceLocation.withDefaultNamespace("long_strength"), 75, false)
+                .add(ResourceLocation.withDefaultNamespace("strong_strenght"), 100, false)
+                .add(ResourceLocation.withDefaultNamespace("weakness"), 20, false)
+                .add(ResourceLocation.withDefaultNamespace("long_weakness"), 30, false)
+                .add(ResourceLocation.withDefaultNamespace("luck"), 100, false)
+                .add(ResourceLocation.withDefaultNamespace("slow_falling"), 30, false)
+                .add(ResourceLocation.withDefaultNamespace("long_slow_falling"), 45, false)
+                .add(ResourceLocation.withDefaultNamespace("wind_charged"), 50, false)
+                .add(ResourceLocation.withDefaultNamespace("weaving"), 25, false)
+                .add(ResourceLocation.withDefaultNamespace("oozing"), 10, false)
+                .add(ResourceLocation.withDefaultNamespace("infested"), 20, false)
+                .add(ModPotions.STUN.getKey(), 100, false)
+                .add(ModPotions.LONG_STUN.getKey(), 150, false)
+                .add(ModPotions.DISPLACEMENT.getKey(), 200, false);
     }
 }

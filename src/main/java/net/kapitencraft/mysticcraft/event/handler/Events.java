@@ -32,6 +32,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -49,6 +50,7 @@ import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -61,6 +63,7 @@ import net.minecraft.world.phys.*;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.ItemAttributeModifierEvent;
+import net.neoforged.neoforge.event.brewing.PlayerBrewedPotionEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
@@ -257,6 +260,7 @@ public class Events {
         event.register(Skill.ENCHANTING_XP_MAP);
         event.register(Skill.MINING_XP_MAP);
         event.register(Skill.FORAGING_XP_MAP);
+        event.register(Skill.ALCHEMY_XP_MAP);
     }
 
     @SubscribeEvent
@@ -334,6 +338,19 @@ public class Events {
                 placedBlocks.addBlock(event.getPos());
             } else {
                 placedBlocks.removeBlock(event.getPos());
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onPlayerBrewedPotion(PlayerBrewedPotionEvent event) {
+        PotionContents contents = event.getStack().get(DataComponents.POTION_CONTENTS);
+        if (contents != null && contents.potion().isPresent() && event.getEntity() instanceof ServerPlayer player) {
+            Integer alchemyXp = contents.potion().get().getData(Skill.ALCHEMY_XP_MAP);
+            if (alchemyXp != null) {
+                PlayerSkills.reward(player, Skill.ALCHEMY, alchemyXp, true);
+            } else {
+                PlayerSkills.LOGGER.warn("unable to get alchemy xp for potion {}", contents);
             }
         }
     }
