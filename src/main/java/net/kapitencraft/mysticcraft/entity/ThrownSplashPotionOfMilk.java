@@ -28,7 +28,7 @@ public class ThrownSplashPotionOfMilk extends ThrowableItemProjectile {
         super.onHit(result);
         if (!this.level().isClientSide) {
             this.applySplash();
-
+            this.level().levelEvent(2007, this.blockPosition(), 0xFFFFFF);
             this.discard();
         }
     }
