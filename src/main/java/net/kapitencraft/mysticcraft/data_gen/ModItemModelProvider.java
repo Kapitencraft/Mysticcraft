@@ -98,7 +98,7 @@ public class ModItemModelProvider extends ItemModelProvider {
                 ModItems.VOID_TOTEM_ITEM,
                 ModItems.LAPIS_DUST
          );
-        simples.forEach(item -> generatedItem(item, null));
+        simples.forEach(this::simpleItem);
 
         List<Map<ArmorItem.Type, ? extends DeferredItem<? extends Item>>> armors = List.of(
                 ModItems.CRIMSON_ARMOR,
@@ -108,12 +108,16 @@ public class ModItemModelProvider extends ItemModelProvider {
                 ModItems.SOUL_MAGE_ARMOR
         );
         armors.stream().flatMap(equipmentSlotMap -> equipmentSlotMap.values().stream())
-                        .forEach(registryObject -> generatedItem(registryObject, null));
+                        .forEach(this::simpleItem);
         List<DeferredItem<? extends Item>> spawnEggs = List.of(
                 ModItems.FROZEN_BLAZE_SPAWN_EGG,
                 ModItems.DRAGON_SPAWN_EGG
         );
         spawnEggs.forEach(registryObject -> withExistingParent(registryObject.getId().getPath(), "item/template_spawn_egg"));
+
+        withExistingParent("item/splash_potion_of_milk", "item/generated")
+                .texture("layer0", ResourceLocation.withDefaultNamespace("item/potion_overlay"))
+                .texture("layer1", ResourceLocation.withDefaultNamespace("item/splash_potion"));
     }
 
     private ModelFile makeDagger() {
