@@ -100,7 +100,7 @@ public record GemstoneHandler(GemstoneSlot[] slots) implements EquipmentDisplayE
         }
     }
 
-    public Multimap<Holder<Attribute>, AttributeModifier> getAttributeModifiers() {
+    public Multimap<Holder<Attribute>, AttributeModifier> getAttributeModifiers(ItemStack stack) {
         HashMap<Holder<Attribute>, Double> attributeModifier = new HashMap<>();
         Multimap<Holder<Attribute>, AttributeModifier> modifiers = HashMultimap.create();
         double gemstoneModifier;
@@ -112,7 +112,7 @@ public record GemstoneHandler(GemstoneSlot[] slots) implements EquipmentDisplayE
                     gemstoneType = slot.gemstoneType();
                     if (gemstoneType != null) {
                         attribute = gemstoneType.modifiedAttribute;
-                        gemstoneModifier = gemstoneType.baseValue * slot.rarity().modMul; // * (1 + stack.getEnchantmentLevel(ModEnchantments.EFFICIENT_JEWELLING.get()) * 0.08); TODO
+                        gemstoneModifier = gemstoneType.baseValue * slot.rarity().modMul; // * (1 + stack.getEnchantmentLevel(ModEnchantments.EFFICIENT_JEWELLING) * 0.08);
                         if (attributeModifier.containsKey(attribute))
                             attributeModifier.put(attribute, attributeModifier.get(attribute) + gemstoneModifier);
                         else

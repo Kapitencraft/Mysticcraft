@@ -28,7 +28,6 @@ public class TechWandItem extends Item {
         super(MiscHelper.rarity(Rarity.RARE).stacksTo(1));
     }
 
-    //TODO ensure cache is cleared after game is closed
     @Override
     public InteractionResult useOn(UseOnContext pContext) {
         Level level = pContext.getLevel();

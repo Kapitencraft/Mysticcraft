@@ -19,11 +19,11 @@ public class XpGainedToast implements Toast {
 
     private long lastChanged;
     private boolean changed;
-    private float xp, gainedXp;
-    private int maxXp, level;
+    private float xp, maxXp, gainedXp;
+    private int level;
     private final Skill skill;
 
-    public XpGainedToast(Skill skill, float xp, int maxXp, int level, float gainedXp) {
+    public XpGainedToast(Skill skill, float xp, float maxXp, int level, float gainedXp) {
         this.skill = skill;
         this.xp = xp;
         this.maxXp = maxXp;
@@ -59,7 +59,7 @@ public class XpGainedToast implements Toast {
         return this.skill;
     }
 
-    public static void addOrUpdate(ToastComponent toastComponent, Skill skill, float xp, int maxXp, int level, float gainedXp) {
+    public static void addOrUpdate(ToastComponent toastComponent, Skill skill, float xp, float maxXp, int level, float gainedXp) {
         XpGainedToast toast = toastComponent.getToast(XpGainedToast.class, skill);
         if (toast == null) {
             toastComponent.addToast(new XpGainedToast(skill, xp, maxXp, level, gainedXp));
@@ -68,7 +68,7 @@ public class XpGainedToast implements Toast {
         }
     }
 
-    private void update(float xp, int maxXp, int level, float gainedXp) {
+    private void update(float xp, float maxXp, int level, float gainedXp) {
         this.xp = xp;
         this.maxXp = maxXp;
         this.level += level;

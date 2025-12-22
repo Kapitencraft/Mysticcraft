@@ -1,9 +1,9 @@
-package net.kapitencraft.mysticcraft.misc.content.mana;
+package net.kapitencraft.mysticcraft.util.content.mana;
 
 import net.kapitencraft.kap_lib.util.DamageCounter;
-import net.kapitencraft.mysticcraft.misc.damage_source.SpellDamageSource;
 import net.kapitencraft.mysticcraft.spell.Spell;
 import net.kapitencraft.mysticcraft.spell.spells.SpellProjectile;
+import net.kapitencraft.mysticcraft.util.damage_source.SpellDamageSource;
 import net.minecraft.core.Holder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;

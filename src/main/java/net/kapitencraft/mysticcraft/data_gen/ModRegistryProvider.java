@@ -25,7 +25,7 @@ public class ModRegistryProvider extends DatapackBuiltinEntriesProvider {
             .add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, ModBiomeModifiers::bootstrap)
             .add(Registries.ENCHANTMENT, ModEnchantments::bootstrap)
             .add(ModRegistries.Keys.CLASSES, RPGClasses::bootstrap)
-            ;//.add(ModRegistries.Keys.PERKS, Perks::bootstrap);
+            .add(ModRegistries.Keys.PERKS, Perks::bootstrap);
 
     public ModRegistryProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
         super(output, registries, BUILDER, Set.of(MysticcraftMod.MOD_ID));

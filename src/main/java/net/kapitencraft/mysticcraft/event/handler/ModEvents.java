@@ -12,6 +12,7 @@ import net.kapitencraft.mysticcraft.potion.ModPotionRecipe;
 import net.kapitencraft.mysticcraft.registry.ModEntityTypes;
 import net.kapitencraft.mysticcraft.registry.custom.ModRegistries;
 import net.kapitencraft.mysticcraft.rpg.classes.RPGClass;
+import net.kapitencraft.mysticcraft.rpg.perks.Perk;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.entity.SpawnPlacementTypes;
 import net.minecraft.world.entity.monster.Monster;
@@ -42,7 +43,6 @@ public class ModEvents {
         event.getBuilder().addRecipe(new ModPotionRecipe());
     }
 
-
     @SubscribeEvent
     public static void onSpawnPlacementRegister(RegisterSpawnPlacementsEvent event) {
         event.register(ModEntityTypes.FROZEN_BLAZE.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
@@ -59,8 +59,8 @@ public class ModEvents {
     @SubscribeEvent
     public static void onDataPackRegistryNewRegistry(DataPackRegistryEvent.NewRegistry event) {
         event.dataPackRegistry(ModRegistries.Keys.CLASSES, RPGClass.DIRECT_CODEC);
+        event.dataPackRegistry(ModRegistries.Keys.PERKS, Perk.DIRECT_CODEC);
     }
-
 
     @SubscribeEvent
     public static void registerGemstoneValidations(RegisterGemstoneTypePlacementsEvent event) {

@@ -5,13 +5,13 @@ import net.kapitencraft.kap_lib.helpers.ParticleHelper;
 import net.kapitencraft.kap_lib.util.Color;
 import net.kapitencraft.mysticcraft.client.particle.options.CircleParticleOptions;
 import net.kapitencraft.mysticcraft.item.combat.spells.necron_sword.NecronSword;
-import net.kapitencraft.mysticcraft.misc.content.mana.ManaAOE;
 import net.kapitencraft.mysticcraft.registry.Spells;
 import net.kapitencraft.mysticcraft.registry.custom.ModRegistries;
 import net.kapitencraft.mysticcraft.spell.Spell;
 import net.kapitencraft.mysticcraft.spell.SpellExecutionFailedException;
 import net.kapitencraft.mysticcraft.spell.SpellTarget;
 import net.kapitencraft.mysticcraft.spell.cast.SpellCastContext;
+import net.kapitencraft.mysticcraft.util.content.mana.ManaAOE;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 

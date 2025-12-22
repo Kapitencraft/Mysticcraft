@@ -13,12 +13,12 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.jetbrains.annotations.NotNull;
 
-public record SkillXpChangedPacket(Skill skill, float xp, int maxXp, int level, float gainedXp) implements CustomPacketPayload {
+public record SkillXpChangedPacket(Skill skill, float xp, float maxXp, int level, float gainedXp) implements CustomPacketPayload {
     public static final Type<SkillXpChangedPacket> TYPE = new Type<>(MysticcraftMod.res("skill_xp_changed"));
     public static final StreamCodec<ByteBuf, SkillXpChangedPacket> STREAM_CODEC = StreamCodec.composite(
             Skill.STREAM_CODEC, SkillXpChangedPacket::skill,
             ByteBufCodecs.FLOAT, SkillXpChangedPacket::xp,
-            ByteBufCodecs.INT, SkillXpChangedPacket::maxXp,
+            ByteBufCodecs.FLOAT, SkillXpChangedPacket::maxXp,
             ByteBufCodecs.INT, SkillXpChangedPacket::level,
             ByteBufCodecs.FLOAT, SkillXpChangedPacket::gainedXp,
             SkillXpChangedPacket::new

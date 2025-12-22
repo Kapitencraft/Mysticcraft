@@ -32,7 +32,6 @@ public class ModBlockStateProvider extends BlockStateProvider {
         return BuiltInRegistries.BLOCK.getKey(block);
     }
 
-
     private void blockWithItem(BlockRegistryHolder<?, ?> holder) {
         simpleBlockWithItem(holder.get(), cubeAll(holder.get()));
     }
@@ -87,9 +86,10 @@ public class ModBlockStateProvider extends BlockStateProvider {
                 );
         simpleBlockItem(ModBlocks.ARTIFICER_TABLE.get(), new ModelFile.UncheckedModelFile(MysticcraftMod.res("block/artificer_table")));
 
+        ModelFile chainModel = createSoulChainModel();
         getVariantBuilder(ModBlocks.SOUL_CHAIN.get()).forAllStates(state -> {
             Direction.Axis axis = state.getValue(RotatedPillarBlock.AXIS);
-            return ConfiguredModel.builder().modelFile(createSoulChainModel())
+            return ConfiguredModel.builder().modelFile(chainModel)
                     .rotationY(axis == Direction.Axis.X ? 90 : 0)
                     .rotationX(axis == Direction.Axis.Y ? 0 : 90)
                     .build();

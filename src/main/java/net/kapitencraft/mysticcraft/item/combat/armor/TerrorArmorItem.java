@@ -9,6 +9,7 @@ import net.kapitencraft.mysticcraft.registry.ModDataComponentTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 public class TerrorArmorItem extends NetherArmorItem {
+    //region attributes
     private static final EnumMap<Type, Integer> STRENGHT = new EnumMap<>(Map.of(
             Type.HELMET, 24,
             Type.CHESTPLATE, 48,
@@ -29,6 +31,13 @@ public class TerrorArmorItem extends NetherArmorItem {
             Type.LEGGINGS, 12,
             Type.BOOTS, 8
     ));
+    private static final EnumMap<Type, Double> HEALTH = new EnumMap<>(Map.of(
+            Type.HELMET, 1d,
+            Type.CHESTPLATE, 2d,
+            Type.LEGGINGS, 1.5,
+            Type.BOOTS, 1d
+    ));
+    //endregion
 
     public static final ArmorTabGroup TAB = ArmorTabGroup.create();
 
@@ -41,18 +50,12 @@ public class TerrorArmorItem extends NetherArmorItem {
         EquipmentSlotGroup group = EquipmentSlotGroup.bySlot(this.type.getSlot());
         ResourceLocation location = MysticcraftMod.res("armor." + this.type.getName());
         ItemTier tier = stack.getOrDefault(ModDataComponentTypes.TIER, ItemTier.DEFAULT);
+
         return super.getDefaultAttributeModifiers(stack)
                 .withModifierAdded(ExtraAttributes.STRENGTH, new AttributeModifier(location, STRENGHT.get(this.type) * tier.getValueMul(), AttributeModifier.Operation.ADD_VALUE), group)
-                .withModifierAdded(ExtraAttributes.CRIT_DAMAGE, new AttributeModifier(location, CRIT_DAMAGE.get(this.type) * tier.getValueMul(), AttributeModifier.Operation.ADD_VALUE), group);
+                .withModifierAdded(ExtraAttributes.CRIT_DAMAGE, new AttributeModifier(location, CRIT_DAMAGE.get(this.type) * tier.getValueMul(), AttributeModifier.Operation.ADD_VALUE), group)
+                .withModifierAdded(Attributes.MAX_HEALTH, new AttributeModifier(location, HEALTH.get(this.type) * tier.getValueMul(), AttributeModifier.Operation.ADD_VALUE), group);
     }
-
-    //@Override TODO
-    //public Consumer<Multimap<Attribute, AttributeModifier>> getModifiersForSlot(ItemStack stack, ItemTier tier) {
-    //    return multimap -> {
-    //        multimap.put(Attributes.MAX_HEALTH, AttributeHelper.createModifierForSlot("Terror Armor", AttributeModifier.Operation.ADDITION,
-    //                this.getMaterial().getDefenseForType(this.type) * 0.4 * tier.getValueMul(), getEquipmentSlot()));
-    //    };
-    //}
 
     @Override
     public List<ItemStack> getMatCost(ItemStack stack) {

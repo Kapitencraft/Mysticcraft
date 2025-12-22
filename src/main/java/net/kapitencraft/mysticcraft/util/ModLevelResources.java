@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.misc;
+package net.kapitencraft.mysticcraft.util;
 
 import net.minecraft.world.level.storage.LevelResource;
 

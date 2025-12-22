@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.misc.damage_source;
+package net.kapitencraft.mysticcraft.util.damage_source;
 
 import net.kapitencraft.mysticcraft.spell.Spell;
 

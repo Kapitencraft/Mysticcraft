@@ -237,7 +237,7 @@ public class Events {
         }
         GemstoneHandler handler = stack.get(ModDataComponentTypes.EMBEDDED_GEMSTONES);
         if (handler != null) {
-            Multimap<Holder<Attribute>, AttributeModifier> modifiers = handler.getAttributeModifiers();
+            Multimap<Holder<Attribute>, AttributeModifier> modifiers = handler.getAttributeModifiers(stack);
             modifiers.forEach((attributeHolder, modifier) -> event.addModifier(attributeHolder, modifier, group));
         }
         ElytraAttachment attachment = stack.get(ModDataComponentTypes.ELYTRA);

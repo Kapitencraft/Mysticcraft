@@ -8,6 +8,7 @@ import net.kapitencraft.kap_lib.helpers.ExtraStreamCodecs;
 import net.kapitencraft.mysticcraft.network.packets.S2C.SkillXpChangedPacket;
 import net.kapitencraft.mysticcraft.registry.ModAttachmentTypes;
 import net.kapitencraft.mysticcraft.registry.ModAttributes;
+import net.kapitencraft.mysticcraft.util.Levelable;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
@@ -43,38 +44,28 @@ public class PlayerSkills {
         return skillProgression.computeIfAbsent(skill, s-> Progression.create());
     }
 
-    public void update(Skill skill, float xp, int maxXp, int level) {
+    public void update(Skill skill, float xp, float maxXp, int level) {
         Progression progression = this.get(skill);
         progression.xp = xp;
         progression.requiredXp = maxXp;
         progression.level += level;
     }
 
-    public static class Progression {
-        int level;
-        float xp;
-        int requiredXp;
+    public static class Progression extends Levelable {
 
-        private static final Codec<Progression> CODEC = RecordCodecBuilder.create(i -> i.group(
-                Codec.INT.fieldOf("level").forGetter(Progression::getLevel),
-                Codec.FLOAT.fieldOf("xp").forGetter(Progression::getXp),
-                Codec.INT.fieldOf("requiredXp").forGetter(Progression::getRequiredXp)
-        ).apply(i, Progression::new));
+        private static final Codec<Progression> CODEC = createCodec(Progression::new);
         private static final StreamCodec<ByteBuf, Progression> STREAM_CODEC = StreamCodec.composite(
                 ByteBufCodecs.INT, Progression::getLevel,
                 ByteBufCodecs.FLOAT, Progression::getXp,
-                ByteBufCodecs.INT, Progression::getRequiredXp,
                 Progression::new
         );
 
-        public Progression(int level, float xp, int requiredXp) {
-            this.level = level;
-            this.xp = xp;
-            this.requiredXp = requiredXp;
+        public Progression(int level, float xp) {
+            super(level, xp);
         }
 
         public static Progression create() {
-            return new Progression(0, 0, PlayerSkills.getRequiredXp(1));
+            return new Progression(0, 0);
         }
 
         public int getLevel() {
@@ -85,7 +76,7 @@ public class PlayerSkills {
             return xp;
         }
 
-        public int getRequiredXp() {
+        public float getRequiredXp() {
             return requiredXp;
         }
 
@@ -100,6 +91,11 @@ public class PlayerSkills {
             if (this.level > level) {
                 owner.getData(ModAttachmentTypes.CHARACTER).awardXp((this.level - level) * 10);
             }
+        }
+
+        @Override
+        protected float calculateNextRequiredXp() {
+            return PlayerSkills.getRequiredXp(this.level + 1);
         }
 
         public void set(int amount, Player owner) {
