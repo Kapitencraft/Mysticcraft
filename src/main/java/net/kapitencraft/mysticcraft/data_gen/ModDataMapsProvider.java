@@ -3,7 +3,9 @@ package net.kapitencraft.mysticcraft.data_gen;
 import net.kapitencraft.mysticcraft.potion.ModPotions;
 import net.kapitencraft.mysticcraft.registry.ModBlocks;
 import net.kapitencraft.mysticcraft.registry.ModItems;
-import net.kapitencraft.mysticcraft.rpg.skill.Skill;
+import net.kapitencraft.mysticcraft.rpg.skill.xp.SkillXpMaps;
+import net.kapitencraft.mysticcraft.rpg.skill.xp.combat.SimpleEntityXpProvider;
+import net.kapitencraft.mysticcraft.rpg.skill.xp.combat.SizeBasedXpProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
@@ -26,7 +28,7 @@ public class ModDataMapsProvider extends DataMapProvider {
 
     @Override
     protected void gather(HolderLookup.Provider provider) {
-        builder(Skill.FISHING_XP_MAP)
+        builder(SkillXpMaps.FISHING)
                 //region lava-junk
                 .add(ResourceLocation.withDefaultNamespace("crimson_fungus"), 10, false)
                 .add(ResourceLocation.withDefaultNamespace("golden_axe"), 20, false)
@@ -51,57 +53,57 @@ public class ModDataMapsProvider extends DataMapProvider {
                 //region lava-fish
                 .add(ModItems.BLAZING_SALMON.getKey(), 50, false)
                 .add(ModItems.MAGMA_COD.getKey(), 75, false);
-        //endregion
+                //endregion
 
-        builder(Skill.COMBAT_XP_MAP)
-                .add(ResourceLocation.withDefaultNamespace("blaze"), 45, false)
-                .add(ResourceLocation.withDefaultNamespace("bogged"), 35, false)
-                .add(ResourceLocation.withDefaultNamespace("breeze"), 25, false)
-                .add(ResourceLocation.withDefaultNamespace("cave_spider"), 40, false)
-                .add(ResourceLocation.withDefaultNamespace("creeper"), 20, false)
-                .add(ResourceLocation.withDefaultNamespace("drowned"), 10, false)
-                .add(ResourceLocation.withDefaultNamespace("elder_guardian"), 75, false)
-                .add(ResourceLocation.withDefaultNamespace("ender_dragon"), 2000, false)
-                .add(ResourceLocation.withDefaultNamespace("enderman"), 45, false)
-                .add(ResourceLocation.withDefaultNamespace("endermite"), 15, false)
-                .add(ResourceLocation.withDefaultNamespace("evoker"), 75, false)
-                .add(ResourceLocation.withDefaultNamespace("ghast"), 30, false)
-                .add(ResourceLocation.withDefaultNamespace("giant"), 60, false)
-                .add(ResourceLocation.withDefaultNamespace("guardian"), 40, false)
-                .add(ResourceLocation.withDefaultNamespace("hoglin"), 35, false)
-                .add(ResourceLocation.withDefaultNamespace("husk"), 15, false)
-                .add(ResourceLocation.withDefaultNamespace("illusioner"), 90, false)
-                .add(ResourceLocation.withDefaultNamespace("iron_golem"), 50, false)
-                .add(ResourceLocation.withDefaultNamespace("magma_cube"), 25, false)
-                .add(ResourceLocation.withDefaultNamespace("phantom"), 30, false)
-                .add(ResourceLocation.withDefaultNamespace("piglin"), 40, false)
-                .add(ResourceLocation.withDefaultNamespace("piglin_brute"), 75, false)
-                .add(ResourceLocation.withDefaultNamespace("pillager"), 20, false)
-                .add(ResourceLocation.withDefaultNamespace("ravager"), 65, false)
-                .add(ResourceLocation.withDefaultNamespace("shulker"), 40, false)
-                .add(ResourceLocation.withDefaultNamespace("silverfish"), 10, false)
-                .add(ResourceLocation.withDefaultNamespace("skeleton"), 15, false)
-                .add(ResourceLocation.withDefaultNamespace("slime"), 5, false)
-                .add(ResourceLocation.withDefaultNamespace("spider"), 8, false)
-                .add(ResourceLocation.withDefaultNamespace("stray"), 15, false)
-                .add(ResourceLocation.withDefaultNamespace("vex"), 15, false)
-                .add(ResourceLocation.withDefaultNamespace("vindicator"), 35, false)
-                .add(ResourceLocation.withDefaultNamespace("warden"), 2000, false)
-                .add(ResourceLocation.withDefaultNamespace("witch"), 50, false)
-                .add(ResourceLocation.withDefaultNamespace("wither"), 2000, false)
-                .add(ResourceLocation.withDefaultNamespace("wither_skeleton"), 40, false)
-                .add(ResourceLocation.withDefaultNamespace("zoglin"), 35, false)
-                .add(ResourceLocation.withDefaultNamespace("zombie"), 5, false)
-                .add(ResourceLocation.withDefaultNamespace("zombie_villager"), 5, false)
-                .add(ResourceLocation.withDefaultNamespace("zombified_piglin"), 7, false)
-                .add(ResourceLocation.withDefaultNamespace("player"), 50, false);
+        builder(SkillXpMaps.COMBAT)
+                .add(ResourceLocation.withDefaultNamespace("blaze"), new SimpleEntityXpProvider(45), false)
+                .add(ResourceLocation.withDefaultNamespace("bogged"), new SimpleEntityXpProvider(35), false)
+                .add(ResourceLocation.withDefaultNamespace("breeze"), new SimpleEntityXpProvider(25), false)
+                .add(ResourceLocation.withDefaultNamespace("cave_spider"), new SimpleEntityXpProvider(40), false)
+                .add(ResourceLocation.withDefaultNamespace("creeper"), new SimpleEntityXpProvider(20), false)
+                .add(ResourceLocation.withDefaultNamespace("drowned"), new SimpleEntityXpProvider(10), false)
+                .add(ResourceLocation.withDefaultNamespace("elder_guardian"), new SimpleEntityXpProvider(75), false)
+                .add(ResourceLocation.withDefaultNamespace("ender_dragon"), new SimpleEntityXpProvider(2000), false)
+                .add(ResourceLocation.withDefaultNamespace("enderman"), new SimpleEntityXpProvider(45), false)
+                .add(ResourceLocation.withDefaultNamespace("endermite"), new SimpleEntityXpProvider(15), false)
+                .add(ResourceLocation.withDefaultNamespace("evoker"), new SimpleEntityXpProvider(75), false)
+                .add(ResourceLocation.withDefaultNamespace("ghast"), new SimpleEntityXpProvider(30), false)
+                .add(ResourceLocation.withDefaultNamespace("giant"), new SimpleEntityXpProvider(60), false)
+                .add(ResourceLocation.withDefaultNamespace("guardian"), new SimpleEntityXpProvider(40), false)
+                .add(ResourceLocation.withDefaultNamespace("hoglin"), new SimpleEntityXpProvider(35), false)
+                .add(ResourceLocation.withDefaultNamespace("husk"), new SimpleEntityXpProvider(15), false)
+                .add(ResourceLocation.withDefaultNamespace("illusioner"), new SimpleEntityXpProvider(90), false)
+                .add(ResourceLocation.withDefaultNamespace("iron_golem"), new SimpleEntityXpProvider(50), false)
+                .add(ResourceLocation.withDefaultNamespace("magma_cube"), new SizeBasedXpProvider(15, 5), false)
+                .add(ResourceLocation.withDefaultNamespace("phantom"), new SimpleEntityXpProvider(30), false)
+                .add(ResourceLocation.withDefaultNamespace("piglin"), new SimpleEntityXpProvider(40), false)
+                .add(ResourceLocation.withDefaultNamespace("piglin_brute"), new SimpleEntityXpProvider(75), false)
+                .add(ResourceLocation.withDefaultNamespace("pillager"), new SimpleEntityXpProvider(20), false)
+                .add(ResourceLocation.withDefaultNamespace("ravager"), new SimpleEntityXpProvider(65), false)
+                .add(ResourceLocation.withDefaultNamespace("shulker"), new SimpleEntityXpProvider(40), false)
+                .add(ResourceLocation.withDefaultNamespace("silverfish"), new SimpleEntityXpProvider(10), false)
+                .add(ResourceLocation.withDefaultNamespace("skeleton"), new SimpleEntityXpProvider(15), false)
+                .add(ResourceLocation.withDefaultNamespace("slime"), new SizeBasedXpProvider(2, 2), false)
+                .add(ResourceLocation.withDefaultNamespace("spider"), new SimpleEntityXpProvider(8), false)
+                .add(ResourceLocation.withDefaultNamespace("stray"), new SimpleEntityXpProvider(15), false)
+                .add(ResourceLocation.withDefaultNamespace("vex"), new SimpleEntityXpProvider(15), false)
+                .add(ResourceLocation.withDefaultNamespace("vindicator"), new SimpleEntityXpProvider(35), false)
+                .add(ResourceLocation.withDefaultNamespace("warden"), new SimpleEntityXpProvider(2000), false)
+                .add(ResourceLocation.withDefaultNamespace("witch"), new SimpleEntityXpProvider(50), false)
+                .add(ResourceLocation.withDefaultNamespace("wither"), new SimpleEntityXpProvider(2000), false)
+                .add(ResourceLocation.withDefaultNamespace("wither_skeleton"), new SimpleEntityXpProvider(40), false)
+                .add(ResourceLocation.withDefaultNamespace("zoglin"), new SimpleEntityXpProvider(35), false)
+                .add(ResourceLocation.withDefaultNamespace("zombie"), new SimpleEntityXpProvider(5), false)
+                .add(ResourceLocation.withDefaultNamespace("zombie_villager"), new SimpleEntityXpProvider(5), false)
+                .add(ResourceLocation.withDefaultNamespace("zombified_piglin"), new SimpleEntityXpProvider(7), false)
+                .add(ResourceLocation.withDefaultNamespace("player"), new SimpleEntityXpProvider(50), false);
 
-        builder(Skill.FARMING_XP_MAP)
+        builder(SkillXpMaps.FARMING)
                 .add(ResourceLocation.withDefaultNamespace("wheat"), 2, false)
                 .add(ResourceLocation.withDefaultNamespace("carrots"), 5, false)
                 .add(ResourceLocation.withDefaultNamespace("potatoes"), 5, false)
                 .add(ResourceLocation.withDefaultNamespace("beetroots"), 5, false);
-        builder(Skill.ENCHANTING_XP_MAP)
+        builder(SkillXpMaps.ENCHANTING)
                 .add(Enchantments.PROTECTION, 20, false)
                 .add(Enchantments.FIRE_PROTECTION, 20, false)
                 .add(Enchantments.FEATHER_FALLING, 25, false)
@@ -137,7 +139,7 @@ public class ModDataMapsProvider extends DataMapProvider {
                 .add(Enchantments.PIERCING, 30, false)
                 .add(Enchantments.DENSITY, 30, false)
                 .add(Enchantments.BREACH, 30, false);
-        builder(Skill.MINING_XP_MAP)
+        builder(SkillXpMaps.MINING)
                 .add(BlockTags.STONE_ORE_REPLACEABLES, 5, false)
                 .add(ResourceLocation.withDefaultNamespace("tuff"), 7, false)
                 .add(ResourceLocation.withDefaultNamespace("deepslate"), 8, false)
@@ -182,7 +184,7 @@ public class ModDataMapsProvider extends DataMapProvider {
                 .add(ModBlocks.GEMSTONE_BLOCK.getId(), 40, false)
                 .add(ModBlocks.CRIMSONIUM_ORE.getId(), 120, false);
 
-        builder(Skill.FORAGING_XP_MAP)
+        builder(SkillXpMaps.FORAGING)
                 .add(ResourceLocation.withDefaultNamespace("dark_oak_log"), 10, false)
                 .add(ResourceLocation.withDefaultNamespace("oak_log"), 7, false)
                 .add(ResourceLocation.withDefaultNamespace("acacia_log"), 10, false)
@@ -193,7 +195,7 @@ public class ModDataMapsProvider extends DataMapProvider {
                 .add(ResourceLocation.withDefaultNamespace("cherry_log"), 10, false)
                 .add(ModBlocks.PERIDOT_SYCAMORE_LOG.getId(), 20, false);
 
-        builder(Skill.ALCHEMY_XP_MAP)
+        builder(SkillXpMaps.ALCHEMY)
                 .add(ResourceLocation.withDefaultNamespace("night_vision"), 20, false)
                 .add(ResourceLocation.withDefaultNamespace("long_night_vision"), 30, false)
                 .add(ResourceLocation.withDefaultNamespace("invisibility"), 50, false)

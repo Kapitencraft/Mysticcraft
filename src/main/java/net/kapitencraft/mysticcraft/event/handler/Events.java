@@ -23,6 +23,7 @@ import net.kapitencraft.mysticcraft.requirement.type.ReforgeRequirementType;
 import net.kapitencraft.mysticcraft.rpg.skill.PlayerPlacedBlocks;
 import net.kapitencraft.mysticcraft.rpg.skill.PlayerSkills;
 import net.kapitencraft.mysticcraft.rpg.skill.Skill;
+import net.kapitencraft.mysticcraft.rpg.skill.xp.SkillXpMaps;
 import net.kapitencraft.mysticcraft.spell.Spell;
 import net.kapitencraft.mysticcraft.spell.SpellSlot;
 import net.kapitencraft.mysticcraft.spell.SpellTarget;
@@ -254,13 +255,13 @@ public class Events {
 
     @SubscribeEvent
     public static void onRegisterDataMapTypes(RegisterDataMapTypesEvent event) {
-        event.register(Skill.FISHING_XP_MAP);
-        event.register(Skill.COMBAT_XP_MAP);
-        event.register(Skill.FARMING_XP_MAP);
-        event.register(Skill.ENCHANTING_XP_MAP);
-        event.register(Skill.MINING_XP_MAP);
-        event.register(Skill.FORAGING_XP_MAP);
-        event.register(Skill.ALCHEMY_XP_MAP);
+        event.register(SkillXpMaps.FISHING);
+        event.register(SkillXpMaps.COMBAT);
+        event.register(SkillXpMaps.FARMING);
+        event.register(SkillXpMaps.ENCHANTING);
+        event.register(SkillXpMaps.MINING);
+        event.register(SkillXpMaps.FORAGING);
+        event.register(SkillXpMaps.ALCHEMY);
     }
 
     @SubscribeEvent
@@ -268,7 +269,7 @@ public class Events {
         Player player = event.getEntity();
         int xpToGet = 0;
         for (ItemStack drop : event.getDrops()) {
-            Integer xp = drop.getItemHolder().getData(Skill.FISHING_XP_MAP);
+            Integer xp = drop.getItemHolder().getData(SkillXpMaps.FISHING);
             if (xp == null) {
                 PlayerSkills.LOGGER.warn("unable to retrieve fishing xp for item {}", drop);
                 continue;
@@ -288,7 +289,7 @@ public class Events {
             Holder<Block> holder = state.getBlockHolder();
             if (block instanceof CropBlock || block instanceof NetherWartBlock) {
                 if (block instanceof CropBlock cropBlock ? cropBlock.isMaxAge(state) : state.getValue(BlockStateProperties.AGE_3) == 3) {
-                    Integer xp = holder.getData(Skill.FARMING_XP_MAP);
+                    Integer xp = holder.getData(SkillXpMaps.FARMING);
                     if (xp != null) {
                         PlayerSkills.reward(serverPlayer, Skill.FARMING, xp, true);
                     } else {
@@ -297,11 +298,11 @@ public class Events {
                 }
             } else {
                 if (!PlayerPlacedBlocks.get(serverPlayer.level()).hasBlock(event.getPos())) {
-                    Integer miningXp = holder.getData(Skill.MINING_XP_MAP);
+                    Integer miningXp = holder.getData(SkillXpMaps.MINING);
                     if (miningXp != null) {
                         PlayerSkills.reward(serverPlayer, Skill.MINING, miningXp, true);
                     } else {
-                        Integer foragingXp = holder.getData(Skill.FORAGING_XP_MAP);
+                        Integer foragingXp = holder.getData(SkillXpMaps.FORAGING);
                         if (foragingXp != null) {
                             PlayerSkills.reward(serverPlayer, Skill.FORAGING, foragingXp, true);
                         } else {
@@ -319,7 +320,7 @@ public class Events {
         if (!player.level().isClientSide()) {
             int xpToGain = 0;
             for (EnchantmentInstance enchantment : event.getEnchantments()) {
-                Integer xp = enchantment.enchantment.getData(Skill.ENCHANTING_XP_MAP);
+                Integer xp = enchantment.enchantment.getData(SkillXpMaps.ENCHANTING);
                 if (xp != null) xpToGain += xp * enchantment.level;
                 else
                     PlayerSkills.LOGGER.warn("unable to get xp for enchantment: {}", enchantment.enchantment);
@@ -346,7 +347,7 @@ public class Events {
     public static void onPlayerBrewedPotion(PlayerBrewedPotionEvent event) {
         PotionContents contents = event.getStack().get(DataComponents.POTION_CONTENTS);
         if (contents != null && contents.potion().isPresent() && event.getEntity() instanceof ServerPlayer player) {
-            Integer alchemyXp = contents.potion().get().getData(Skill.ALCHEMY_XP_MAP);
+            Integer alchemyXp = contents.potion().get().getData(SkillXpMaps.ALCHEMY);
             if (alchemyXp != null) {
                 PlayerSkills.reward(player, Skill.ALCHEMY, alchemyXp, true);
             } else {
