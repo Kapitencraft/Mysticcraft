@@ -14,8 +14,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class QuiverItem extends Item {
-    //TODO extract from a static variable
-    public static final ThreadLocal<ItemStack> operationQuiver = new ThreadLocal<>();
     public static TabGroup QUIVER_GROUP = TabGroup.create(ModCreativeModTabs.WEAPONS_AND_TOOLS);
 
     public QuiverItem(Properties p_41383_, int quiverSize) {

@@ -18,7 +18,6 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity implements ILivingEntityExtension {
 
-
     public LivingEntityMixin(EntityType<?> p_19870_, Level p_19871_) {
         super(p_19870_, p_19871_);
     }

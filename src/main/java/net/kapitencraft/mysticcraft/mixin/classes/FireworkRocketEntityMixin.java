@@ -1,5 +1,7 @@
 package net.kapitencraft.mysticcraft.mixin.classes;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.kapitencraft.mysticcraft.capability.elytra.ElytraAttachment;
 import net.kapitencraft.mysticcraft.capability.elytra.ElytraData;
 import net.kapitencraft.mysticcraft.registry.ModDataComponentTypes;
@@ -11,13 +13,12 @@ import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(FireworkRocketEntity.class)
 public abstract class FireworkRocketEntityMixin {
-    @Redirect(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;setDeltaMovement(Lnet/minecraft/world/phys/Vec3;)V", ordinal = 0))
-    public void redirectDeltaMovement(LivingEntity instance, Vec3 vec3) {
-        instance.setDeltaMovement(getFireworkSpeedBoost(instance));
+    @WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;setDeltaMovement(Lnet/minecraft/world/phys/Vec3;)V", ordinal = 0))
+    public void redirectDeltaMovement(LivingEntity instance, Vec3 vec3, Operation<Void> original) {
+        original.call(instance, getFireworkSpeedBoost(instance));
     }
 
     @Unique
