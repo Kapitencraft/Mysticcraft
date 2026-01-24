@@ -41,7 +41,7 @@ public class PlayerSkills {
     }
 
     public Progression get(Skill skill) {
-        return skillProgression.computeIfAbsent(skill, s-> Progression.create());
+        return skillProgression.computeIfAbsent(skill, s -> Progression.create());
     }
 
     public void update(Skill skill, float xp, float maxXp, int level) {

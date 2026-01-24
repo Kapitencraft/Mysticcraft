@@ -4,8 +4,11 @@ import net.kapitencraft.mysticcraft.potion.ModPotions;
 import net.kapitencraft.mysticcraft.registry.ModBlocks;
 import net.kapitencraft.mysticcraft.registry.ModItems;
 import net.kapitencraft.mysticcraft.rpg.skill.xp.SkillXpMaps;
-import net.kapitencraft.mysticcraft.rpg.skill.xp.combat.SimpleEntityXpProvider;
-import net.kapitencraft.mysticcraft.rpg.skill.xp.combat.SizeBasedXpProvider;
+import net.kapitencraft.mysticcraft.rpg.skill.xp.provider.combat.BaseHumanoidXpProvider;
+import net.kapitencraft.mysticcraft.rpg.skill.xp.provider.combat.SimpleEntityXpProvider;
+import net.kapitencraft.mysticcraft.rpg.skill.xp.provider.combat.SimpleItemStackXpProvider;
+import net.kapitencraft.mysticcraft.rpg.skill.xp.provider.combat.SizeBasedXpProvider;
+import net.kapitencraft.mysticcraft.rpg.skill.xp.provider.item.EnchantedItemProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
@@ -30,29 +33,29 @@ public class ModDataMapsProvider extends DataMapProvider {
     protected void gather(HolderLookup.Provider provider) {
         builder(SkillXpMaps.FISHING)
                 //region lava-junk
-                .add(ResourceLocation.withDefaultNamespace("crimson_fungus"), 10, false)
-                .add(ResourceLocation.withDefaultNamespace("golden_axe"), 20, false)
-                .add(ResourceLocation.withDefaultNamespace("soul_sand"), 20, false)
-                .add(ResourceLocation.withDefaultNamespace("bone"), 20, false)
-                .add(ResourceLocation.withDefaultNamespace("potion"), 20, false)
-                .add(ResourceLocation.withDefaultNamespace("string"), 40, false)
-                .add(ResourceLocation.withDefaultNamespace("warped_fungus_on_a_stick"), 20, false)
-                .add(ResourceLocation.withDefaultNamespace("warped_fungus"), 10, false)
-                .add(ResourceLocation.withDefaultNamespace("blackstone"), 40, false)
-                .add(ResourceLocation.withDefaultNamespace("magma_cream"), 40, false)
+                .add(ResourceLocation.withDefaultNamespace("crimson_fungus"), new SimpleItemStackXpProvider(10), false)
+                .add(ResourceLocation.withDefaultNamespace("golden_axe"), new SimpleItemStackXpProvider(20), false)
+                .add(ResourceLocation.withDefaultNamespace("soul_sand"), new SimpleItemStackXpProvider(20), false)
+                .add(ResourceLocation.withDefaultNamespace("bone"), new SimpleItemStackXpProvider(20), false)
+                .add(ResourceLocation.withDefaultNamespace("potion"), new SimpleItemStackXpProvider(20), false)
+                .add(ResourceLocation.withDefaultNamespace("string"), new SimpleItemStackXpProvider(40), false)
+                .add(ResourceLocation.withDefaultNamespace("warped_fungus_on_a_stick"), new SimpleItemStackXpProvider(20), false)
+                .add(ResourceLocation.withDefaultNamespace("warped_fungus"), new SimpleItemStackXpProvider(10), false)
+                .add(ResourceLocation.withDefaultNamespace("blackstone"), new SimpleItemStackXpProvider(40), false)
+                .add(ResourceLocation.withDefaultNamespace("magma_cream"), new SimpleItemStackXpProvider(40), false)
                 //endregion
                 //region lava-treasure
-                .add(ResourceLocation.withDefaultNamespace("blaze_rod"), 50, false)
-                .add(ResourceLocation.withDefaultNamespace("bow"), 200, false)
-                .add(ResourceLocation.withDefaultNamespace("enchanted_book"), 200, false)
-                .add(ResourceLocation.withDefaultNamespace("netherite_scrap"), 400, false)
-                .add(ResourceLocation.withDefaultNamespace("quartz"), 50, false)
-                .add(ResourceLocation.withDefaultNamespace("gold_ingot"), 50, false)
-                .add(ResourceLocation.withDefaultNamespace("glowstone"), 50, false)
+                .add(ResourceLocation.withDefaultNamespace("blaze_rod"), new SimpleItemStackXpProvider(50), false)
+                .add(ResourceLocation.withDefaultNamespace("bow"), new EnchantedItemProvider(50), false)
+                .add(ResourceLocation.withDefaultNamespace("enchanted_book"), new EnchantedItemProvider(100), false)
+                .add(ResourceLocation.withDefaultNamespace("netherite_scrap"), new SimpleItemStackXpProvider(400), false)
+                .add(ResourceLocation.withDefaultNamespace("quartz"), new SimpleItemStackXpProvider(50), false)
+                .add(ResourceLocation.withDefaultNamespace("gold_ingot"), new SimpleItemStackXpProvider(50), false)
+                .add(ResourceLocation.withDefaultNamespace("glowstone"), new SimpleItemStackXpProvider(50), false)
                 //endregion
                 //region lava-fish
-                .add(ModItems.BLAZING_SALMON.getKey(), 50, false)
-                .add(ModItems.MAGMA_COD.getKey(), 75, false);
+                .add(ModItems.BLAZING_SALMON.getKey(), new SimpleItemStackXpProvider(50), false)
+                .add(ModItems.MAGMA_COD.getKey(), new SimpleItemStackXpProvider(75), false);
                 //endregion
 
         builder(SkillXpMaps.COMBAT)
@@ -93,10 +96,10 @@ public class ModDataMapsProvider extends DataMapProvider {
                 .add(ResourceLocation.withDefaultNamespace("wither"), new SimpleEntityXpProvider(2000), false)
                 .add(ResourceLocation.withDefaultNamespace("wither_skeleton"), new SimpleEntityXpProvider(40), false)
                 .add(ResourceLocation.withDefaultNamespace("zoglin"), new SimpleEntityXpProvider(35), false)
-                .add(ResourceLocation.withDefaultNamespace("zombie"), new SimpleEntityXpProvider(5), false)
+                .add(ResourceLocation.withDefaultNamespace("zombie"), new BaseHumanoidXpProvider(5, 20, .2f), false)
                 .add(ResourceLocation.withDefaultNamespace("zombie_villager"), new SimpleEntityXpProvider(5), false)
                 .add(ResourceLocation.withDefaultNamespace("zombified_piglin"), new SimpleEntityXpProvider(7), false)
-                .add(ResourceLocation.withDefaultNamespace("player"), new SimpleEntityXpProvider(50), false);
+                .add(ResourceLocation.withDefaultNamespace("player"), new BaseHumanoidXpProvider(50, 20, 2f), false);
 
         builder(SkillXpMaps.FARMING)
                 .add(ResourceLocation.withDefaultNamespace("wheat"), 2, false)

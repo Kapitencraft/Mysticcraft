@@ -1,45 +1,174 @@
 {
   "values": {
-    "minecraft:blaze": 45,
-    "minecraft:bogged": 35,
-    "minecraft:breeze": 25,
-    "minecraft:cave_spider": 40,
-    "minecraft:creeper": 20,
-    "minecraft:drowned": 10,
-    "minecraft:elder_guardian": 75,
-    "minecraft:ender_dragon": 2000,
-    "minecraft:enderman": 45,
-    "minecraft:endermite": 15,
-    "minecraft:evoker": 75,
-    "minecraft:ghast": 30,
-    "minecraft:giant": 60,
-    "minecraft:guardian": 40,
-    "minecraft:hoglin": 35,
-    "minecraft:husk": 15,
-    "minecraft:illusioner": 90,
-    "minecraft:iron_golem": 50,
-    "minecraft:magma_cube": 25,
-    "minecraft:phantom": 30,
-    "minecraft:piglin": 40,
-    "minecraft:piglin_brute": 75,
-    "minecraft:pillager": 20,
-    "minecraft:player": 50,
-    "minecraft:ravager": 65,
-    "minecraft:shulker": 40,
-    "minecraft:silverfish": 10,
-    "minecraft:skeleton": 15,
-    "minecraft:slime": 5,
-    "minecraft:spider": 8,
-    "minecraft:stray": 15,
-    "minecraft:vex": 15,
-    "minecraft:vindicator": 35,
-    "minecraft:warden": 2000,
-    "minecraft:witch": 50,
-    "minecraft:wither": 2000,
-    "minecraft:wither_skeleton": 40,
-    "minecraft:zoglin": 35,
-    "minecraft:zombie": 5,
-    "minecraft:zombie_villager": 5,
-    "minecraft:zombified_piglin": 7
+    "minecraft:blaze": {
+      "type": "simple",
+      "amount": 45
+    },
+    "minecraft:bogged": {
+      "type": "simple",
+      "amount": 35
+    },
+    "minecraft:breeze": {
+      "type": "simple",
+      "amount": 25
+    },
+    "minecraft:cave_spider": {
+      "type": "simple",
+      "amount": 40
+    },
+    "minecraft:creeper": {
+      "type": "simple",
+      "amount": 20
+    },
+    "minecraft:drowned": {
+      "type": "simple",
+      "amount": 10
+    },
+    "minecraft:elder_guardian": {
+      "type": "simple",
+      "amount": 75
+    },
+    "minecraft:ender_dragon": {
+      "type": "simple",
+      "amount": 2000
+    },
+    "minecraft:enderman": {
+      "type": "simple",
+      "amount": 45
+    },
+    "minecraft:endermite": {
+      "type": "simple",
+      "amount": 15
+    },
+    "minecraft:evoker": {
+      "type": "simple",
+      "amount": 75
+    },
+    "minecraft:ghast": {
+      "type": "simple",
+      "amount": 30
+    },
+    "minecraft:giant": {
+      "type": "simple",
+      "amount": 60
+    },
+    "minecraft:guardian": {
+      "type": "simple",
+      "amount": 40
+    },
+    "minecraft:hoglin": {
+      "type": "simple",
+      "amount": 35
+    },
+    "minecraft:husk": {
+      "type": "simple",
+      "amount": 15
+    },
+    "minecraft:illusioner": {
+      "type": "simple",
+      "amount": 90
+    },
+    "minecraft:iron_golem": {
+      "type": "simple",
+      "amount": 50
+    },
+    "minecraft:magma_cube": {
+      "type": "size_based",
+      "base": 15,
+      "scale": 5
+    },
+    "minecraft:phantom": {
+      "type": "simple",
+      "amount": 30
+    },
+    "minecraft:piglin": {
+      "type": "simple",
+      "amount": 40
+    },
+    "minecraft:piglin_brute": {
+      "type": "simple",
+      "amount": 75
+    },
+    "minecraft:pillager": {
+      "type": "simple",
+      "amount": 20
+    },
+    "minecraft:player": {
+      "type": "humanoid",
+      "base_hp": 20.0,
+      "base_xp": 50,
+      "hp_scale": 2.0
+    },
+    "minecraft:ravager": {
+      "type": "simple",
+      "amount": 65
+    },
+    "minecraft:shulker": {
+      "type": "simple",
+      "amount": 40
+    },
+    "minecraft:silverfish": {
+      "type": "simple",
+      "amount": 10
+    },
+    "minecraft:skeleton": {
+      "type": "simple",
+      "amount": 15
+    },
+    "minecraft:slime": {
+      "type": "size_based",
+      "base": 2,
+      "scale": 2
+    },
+    "minecraft:spider": {
+      "type": "simple",
+      "amount": 8
+    },
+    "minecraft:stray": {
+      "type": "simple",
+      "amount": 15
+    },
+    "minecraft:vex": {
+      "type": "simple",
+      "amount": 15
+    },
+    "minecraft:vindicator": {
+      "type": "simple",
+      "amount": 35
+    },
+    "minecraft:warden": {
+      "type": "simple",
+      "amount": 2000
+    },
+    "minecraft:witch": {
+      "type": "simple",
+      "amount": 50
+    },
+    "minecraft:wither": {
+      "type": "simple",
+      "amount": 2000
+    },
+    "minecraft:wither_skeleton": {
+      "type": "simple",
+      "amount": 40
+    },
+    "minecraft:zoglin": {
+      "type": "simple",
+      "amount": 35
+    },
+    "minecraft:zombie": {
+      "type": "humanoid",
+      "base_hp": 20.0,
+      "base_xp": 5,
+      "hp_scale": 0.2
+    },
+    "minecraft:zombie_villager": {
+      "type": "simple",
+      "amount": 5
+    },
+    "minecraft:zombified_piglin": {
+      "type": "simple",
+      "amount": 7
+    }
   }
 }

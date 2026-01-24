@@ -2,7 +2,8 @@ package net.kapitencraft.mysticcraft.rpg.skill.xp;
 
 import com.mojang.serialization.Codec;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.rpg.skill.xp.combat.EntityXpProvider;
+import net.kapitencraft.mysticcraft.rpg.skill.xp.provider.combat.EntityXpProvider;
+import net.kapitencraft.mysticcraft.rpg.skill.xp.provider.item.ItemStackXpProvider;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
@@ -12,10 +13,10 @@ import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.registries.datamaps.DataMapType;
 
 public class SkillXpMaps {
-    public static final DataMapType<Item, Integer> FISHING = DataMapType.builder(
+    public static final DataMapType<Item, ItemStackXpProvider> FISHING = DataMapType.builder(
             MysticcraftMod.res("fishing_xp"),
             Registries.ITEM,
-            Codec.INT
+            ItemStackXpProvider.CODEC
     ).build();
     public static final DataMapType<EntityType<?>, EntityXpProvider> COMBAT = DataMapType.builder(
             MysticcraftMod.res("combat_xp"),

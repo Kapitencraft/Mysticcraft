@@ -371,10 +371,13 @@
   "set_bonus.mana_syphon": "Regenerate 10 Mana on kill",
   "set_bonus.magic_conversion": "Grants §c+1 Ability Damage§r per §25Intelligence§r you have",
 
+  "skill.alchemy": "Alchemy",
+  "skill.carpentry": "Carpentry",
   "skill.combat": "Combat",
   "skill.enchanting": "Enchanting",
   "skill.farming": "Farming",
   "skill.fishing": "Fishing",
+  "skill.foraging": "Foraging",
   "skill.mining": "Mining",
 
   "skill.toast.gained_xp.title": "%1$s Xp Gained!",

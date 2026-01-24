@@ -24,6 +24,7 @@ import net.kapitencraft.mysticcraft.rpg.skill.PlayerPlacedBlocks;
 import net.kapitencraft.mysticcraft.rpg.skill.PlayerSkills;
 import net.kapitencraft.mysticcraft.rpg.skill.Skill;
 import net.kapitencraft.mysticcraft.rpg.skill.xp.SkillXpMaps;
+import net.kapitencraft.mysticcraft.rpg.skill.xp.provider.item.ItemStackXpProvider;
 import net.kapitencraft.mysticcraft.spell.Spell;
 import net.kapitencraft.mysticcraft.spell.SpellSlot;
 import net.kapitencraft.mysticcraft.spell.SpellTarget;
@@ -269,12 +270,12 @@ public class Events {
         Player player = event.getEntity();
         int xpToGet = 0;
         for (ItemStack drop : event.getDrops()) {
-            Integer xp = drop.getItemHolder().getData(SkillXpMaps.FISHING);
+            ItemStackXpProvider xp = drop.getItemHolder().getData(SkillXpMaps.FISHING);
             if (xp == null) {
                 PlayerSkills.LOGGER.warn("unable to retrieve fishing xp for item {}", drop);
                 continue;
             }
-            xpToGet += xp;
+            xpToGet += xp.get(drop);
         }
         if (xpToGet > 0 && player instanceof ServerPlayer sp) {
             PlayerSkills.reward(sp, Skill.FISHING, xpToGet, true);

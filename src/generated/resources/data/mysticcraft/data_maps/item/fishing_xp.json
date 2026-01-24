@@ -1,23 +1,80 @@
 {
   "values": {
-    "minecraft:blackstone": 40,
-    "minecraft:blaze_rod": 50,
-    "minecraft:bone": 20,
-    "minecraft:bow": 200,
-    "minecraft:crimson_fungus": 10,
-    "minecraft:enchanted_book": 200,
-    "minecraft:glowstone": 50,
-    "minecraft:gold_ingot": 50,
-    "minecraft:golden_axe": 20,
-    "minecraft:magma_cream": 40,
-    "minecraft:netherite_scrap": 400,
-    "minecraft:potion": 20,
-    "minecraft:quartz": 50,
-    "minecraft:soul_sand": 20,
-    "minecraft:string": 40,
-    "minecraft:warped_fungus": 10,
-    "minecraft:warped_fungus_on_a_stick": 20,
-    "mysticcraft:blazing_salmon": 50,
-    "mysticcraft:magma_cod": 75
+    "minecraft:blackstone": {
+      "type": "simple",
+      "amount": 40
+    },
+    "minecraft:blaze_rod": {
+      "type": "simple",
+      "amount": 50
+    },
+    "minecraft:bone": {
+      "type": "simple",
+      "amount": 20
+    },
+    "minecraft:bow": {
+      "type": "enchanted",
+      "base": 50
+    },
+    "minecraft:crimson_fungus": {
+      "type": "simple",
+      "amount": 10
+    },
+    "minecraft:enchanted_book": {
+      "type": "enchanted",
+      "base": 100
+    },
+    "minecraft:glowstone": {
+      "type": "simple",
+      "amount": 50
+    },
+    "minecraft:gold_ingot": {
+      "type": "simple",
+      "amount": 50
+    },
+    "minecraft:golden_axe": {
+      "type": "simple",
+      "amount": 20
+    },
+    "minecraft:magma_cream": {
+      "type": "simple",
+      "amount": 40
+    },
+    "minecraft:netherite_scrap": {
+      "type": "simple",
+      "amount": 400
+    },
+    "minecraft:potion": {
+      "type": "simple",
+      "amount": 20
+    },
+    "minecraft:quartz": {
+      "type": "simple",
+      "amount": 50
+    },
+    "minecraft:soul_sand": {
+      "type": "simple",
+      "amount": 20
+    },
+    "minecraft:string": {
+      "type": "simple",
+      "amount": 40
+    },
+    "minecraft:warped_fungus": {
+      "type": "simple",
+      "amount": 10
+    },
+    "minecraft:warped_fungus_on_a_stick": {
+      "type": "simple",
+      "amount": 20
+    },
+    "mysticcraft:blazing_salmon": {
+      "type": "simple",
+      "amount": 50
+    },
+    "mysticcraft:magma_cod": {
+      "type": "simple",
+      "amount": 75
+    }
   }
 }

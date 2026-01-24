@@ -13,6 +13,8 @@ import net.kapitencraft.mysticcraft.registry.ModAttachmentTypes;
 import net.kapitencraft.mysticcraft.registry.ModMobEffects;
 import net.kapitencraft.mysticcraft.rpg.skill.PlayerSkills;
 import net.kapitencraft.mysticcraft.rpg.skill.Skill;
+import net.kapitencraft.mysticcraft.rpg.skill.xp.SkillXpMaps;
+import net.kapitencraft.mysticcraft.rpg.skill.xp.provider.combat.EntityXpProvider;
 import net.kapitencraft.mysticcraft.spell.spells.WitherShieldSpell;
 import net.kapitencraft.mysticcraft.util.damage_source.ISpellSource;
 import net.minecraft.nbt.CompoundTag;
@@ -115,9 +117,9 @@ public class DamageEvents {
                 player.awardStat(type.getStatLoc());
             }
             EntityType<?> type = toDie.getType();
-            Integer data = type.builtInRegistryHolder().getData(Skill.COMBAT_XP_MAP);
+            EntityXpProvider data = type.builtInRegistryHolder().getData(SkillXpMaps.COMBAT);
             if (data != null) {
-                PlayerSkills.reward(player, Skill.COMBAT, data, true);
+                PlayerSkills.reward(player, Skill.COMBAT, data.get(toDie), true);
             } else {
                 PlayerSkills.LOGGER.warn("unknown combat skill xp for {}", type);
             }
