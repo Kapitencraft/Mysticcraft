@@ -38,8 +38,12 @@ public class PlayerPerks {
     }
 
     public void progress(Holder<Perk> perk, float xp) {
-        if (perk.value().isPassiveProgression()) throw new IllegalArgumentException("can not progress active leveled perk");
         Progression progression = this.perks.computeIfAbsent(perk, h -> new Progression());
         progression.reward(xp);
+    }
+
+    public int getLevel(Holder<Perk> perk) {
+        Progression progression = this.perks.get(perk);
+        return progression != null ? progression.level : 0;
     }
 }

@@ -5,7 +5,7 @@ import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.rpg.classes.RPGCharacter;
 import net.kapitencraft.mysticcraft.rpg.perks.PlayerPerks;
 import net.kapitencraft.mysticcraft.rpg.skill.PlayerSkills;
-import net.kapitencraft.mysticcraft.rpg.traits.Traits;
+import net.kapitencraft.mysticcraft.rpg.traits.PlayerAttributes;
 import net.kapitencraft.mysticcraft.spell.capability.PlayerSpells;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.neoforged.neoforge.attachment.AttachmentType;
@@ -21,7 +21,7 @@ public interface ModAttachmentTypes {
     Supplier<AttachmentType<Integer>> SELECTED_SPELL_SLOT = REGISTRY.register("selected_spell_slot", () -> AttachmentType.builder(() -> 0).serialize(Codec.INT).sync(ByteBufCodecs.INT).build());
     Supplier<AttachmentType<Float>> NUMBNESS_DAMAGE = REGISTRY.register("numbness_damage", () -> AttachmentType.builder(() -> 0f).serialize(Codec.FLOAT).build());
     Supplier<AttachmentType<PlayerSkills>> SKILLS = REGISTRY.register("skills", () -> AttachmentType.builder(PlayerSkills::new).serialize(PlayerSkills.CODEC).sync(PlayerSkills.STREAM_CODEC).build());
-    Supplier<AttachmentType<Traits>> TRAITS = REGISTRY.register("traits", () -> AttachmentType.builder(Traits::new).serialize(Traits.CODEC).sync(Traits.STREAM_CODEC).build());
+    Supplier<AttachmentType<PlayerAttributes>> TRAITS = REGISTRY.register("traits", () -> AttachmentType.builder(PlayerAttributes::new).serialize(PlayerAttributes.CODEC).sync(PlayerAttributes.STREAM_CODEC).build());
     Supplier<AttachmentType<RPGCharacter>> CHARACTER = REGISTRY.register("class", () -> AttachmentType.builder(RPGCharacter::createEmpty).serialize(RPGCharacter.CODEC).build());
     Supplier<AttachmentType<PlayerPerks>> PERKS = REGISTRY.register("perks", () -> AttachmentType.builder(PlayerPerks::new).serialize(PlayerPerks.CODEC).build());
 }

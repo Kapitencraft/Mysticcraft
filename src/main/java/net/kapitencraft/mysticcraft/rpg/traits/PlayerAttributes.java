@@ -20,24 +20,24 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Traits {
+public class PlayerAttributes {
     private static final ResourceLocation ENTRY_ID = MysticcraftMod.res("player_traits");
 
-    public static final Codec<Traits> CODEC  = RecordCodecBuilder.create(i -> i.group(
+    public static final Codec<PlayerAttributes> CODEC  = RecordCodecBuilder.create(i -> i.group(
             Codec.unboundedMap(Type.CODEC, Codec.INT).fieldOf("entries").forGetter(t -> t.entries),
             Codec.INT.fieldOf("available").forGetter(t -> t.availableTokens)
-    ).apply(i, Traits::fromCodec));
-    public static final StreamCodec<ByteBuf, Traits> STREAM_CODEC = StreamCodec.composite(
+    ).apply(i, PlayerAttributes::fromCodec));
+    public static final StreamCodec<ByteBuf, PlayerAttributes> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.INT.apply(ExtraStreamCodecs.map(Type.STREAM_CODEC)), t -> t.entries,
             ByteBufCodecs.INT, t -> t.availableTokens,
-            Traits::fromCodec
+            PlayerAttributes::fromCodec
     );
 
-    private static Traits fromCodec(Map<Type, Integer> typeIntegerMap, int availableTokens) {
-        Traits traits = new Traits();
-        traits.entries.putAll(typeIntegerMap);
-        traits.availableTokens = availableTokens;
-        return traits;
+    private static PlayerAttributes fromCodec(Map<Type, Integer> typeIntegerMap, int availableTokens) {
+        PlayerAttributes playerAttributes = new PlayerAttributes();
+        playerAttributes.entries.putAll(typeIntegerMap);
+        playerAttributes.availableTokens = availableTokens;
+        return playerAttributes;
     }
 
     private final Map<Type, Integer> entries = new HashMap<>();

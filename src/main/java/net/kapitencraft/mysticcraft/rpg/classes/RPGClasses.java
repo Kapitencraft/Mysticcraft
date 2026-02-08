@@ -2,7 +2,7 @@ package net.kapitencraft.mysticcraft.rpg.classes;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.registry.custom.ModRegistries;
-import net.kapitencraft.mysticcraft.rpg.traits.Traits;
+import net.kapitencraft.mysticcraft.rpg.traits.PlayerAttributes;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 
@@ -19,27 +19,27 @@ public interface RPGClasses {
 
     static void bootstrap(BootstrapContext<RPGClass> context) {
         context.register(WIZARD, RPGClass.builder()
-                .addTrait(Traits.Type.INTELLIGENCE, 2)
+                .addTrait(PlayerAttributes.Type.INTELLIGENCE, 2)
                 .build()
         );
         context.register(WARRIOR, RPGClass.builder()
-                .addTrait(Traits.Type.STRENGHT, 1)
-                .addTrait(Traits.Type.CONSTITUTION, 1)
+                .addTrait(PlayerAttributes.Type.STRENGHT, 1)
+                .addTrait(PlayerAttributes.Type.CONSTITUTION, 1)
                 .build()
         );
         context.register(PRIEST, RPGClass.builder()
-                .addTrait(Traits.Type.INTELLIGENCE, 1)
-                .addTrait(Traits.Type.DEXTERITY, 1)
+                .addTrait(PlayerAttributes.Type.INTELLIGENCE, 1)
+                .addTrait(PlayerAttributes.Type.DEXTERITY, 1)
                 .build()
         );
         context.register(ARCHER, RPGClass.builder()
-                .addTrait(Traits.Type.DEXTERITY, 1)
-                .addTrait(Traits.Type.STRENGHT, 1)
+                .addTrait(PlayerAttributes.Type.DEXTERITY, 1)
+                .addTrait(PlayerAttributes.Type.STRENGHT, 1)
                 .build()
         );
         context.register(SHAMAN, RPGClass.builder()
-                .addTrait(Traits.Type.DEXTERITY, 1)
-                .addTrait(Traits.Type.INTELLIGENCE, 1)
+                .addTrait(PlayerAttributes.Type.DEXTERITY, 1)
+                .addTrait(PlayerAttributes.Type.INTELLIGENCE, 1)
                 .build()
         );
     }

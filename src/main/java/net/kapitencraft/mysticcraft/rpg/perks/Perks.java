@@ -9,6 +9,8 @@ public class Perks {
     ResourceKey<Perk> DAGGER_COMBAT = key("combat/dagger");
     ResourceKey<Perk> SWORD_COMBAT = key("combat/sword");
     ResourceKey<Perk> LONGSWORD_COMBAT = key("combat/longsword");
+    ResourceKey<Perk> ARCHERY = key("combat/archery");
+    ResourceKey<Perk> RIDING = key("riding");
 
     private ResourceKey<Perk> key(String name) {
         return ResourceKey.create(ModRegistries.Keys.PERKS, MysticcraftMod.res(name));

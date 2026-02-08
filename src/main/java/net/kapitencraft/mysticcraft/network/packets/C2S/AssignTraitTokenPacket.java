@@ -3,15 +3,15 @@ package net.kapitencraft.mysticcraft.network.packets.C2S;
 import io.netty.buffer.ByteBuf;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.registry.ModAttachmentTypes;
-import net.kapitencraft.mysticcraft.rpg.traits.Traits;
+import net.kapitencraft.mysticcraft.rpg.traits.PlayerAttributes;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.jetbrains.annotations.NotNull;
 
-public record AssignTraitTokenPacket(Traits.Type traitType) implements CustomPacketPayload {
-    public static final StreamCodec<ByteBuf, AssignTraitTokenPacket> STREAM_CODEC = Traits.Type.STREAM_CODEC.map(AssignTraitTokenPacket::new, AssignTraitTokenPacket::traitType);
+public record AssignTraitTokenPacket(PlayerAttributes.Type traitType) implements CustomPacketPayload {
+    public static final StreamCodec<ByteBuf, AssignTraitTokenPacket> STREAM_CODEC = PlayerAttributes.Type.STREAM_CODEC.map(AssignTraitTokenPacket::new, AssignTraitTokenPacket::traitType);
 
     public static final Type<AssignTraitTokenPacket> TYPE = new Type<>(MysticcraftMod.res("assign_trait_token"));
 
@@ -23,7 +23,7 @@ public record AssignTraitTokenPacket(Traits.Type traitType) implements CustomPac
     public void handle(IPayloadContext context) {
         context.enqueueWork(() -> {
             Player player = context.player();
-            Traits data = player.getData(ModAttachmentTypes.TRAITS);
+            PlayerAttributes data = player.getData(ModAttachmentTypes.TRAITS);
             data.tryUpdate(traitType, player);
         });
     }
