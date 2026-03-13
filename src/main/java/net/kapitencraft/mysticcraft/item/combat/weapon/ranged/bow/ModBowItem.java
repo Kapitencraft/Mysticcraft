@@ -1,8 +1,8 @@
 package net.kapitencraft.mysticcraft.item.combat.weapon.ranged.bow;
 
+import net.kapitencraft.kap_lib.attribute.BaseAttributeLocations;
+import net.kapitencraft.kap_lib.attribute.ExtraAttributes;
 import net.kapitencraft.kap_lib.item.creative_tab.TabGroup;
-import net.kapitencraft.kap_lib.registry.ExtraAttributes;
-import net.kapitencraft.kap_lib.util.attribute.BaseAttributeLocations;
 import net.kapitencraft.mysticcraft.registry.ModCreativeModTabs;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;

@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.entity;
 
-import net.kapitencraft.kap_lib.registry.ExtraAttributes;
+import net.kapitencraft.kap_lib.attribute.ExtraAttributes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;

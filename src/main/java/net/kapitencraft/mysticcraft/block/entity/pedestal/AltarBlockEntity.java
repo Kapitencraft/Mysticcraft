@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.block.entity.pedestal;
 
-import net.kapitencraft.kap_lib.util.Vec2i;
+import net.kapitencraft.kap_lib.core.util.Vec2i;
 import net.kapitencraft.mysticcraft.registry.ModBlockEntities;
 import net.kapitencraft.mysticcraft.registry.ModRecipeTypes;
 import net.minecraft.core.BlockPos;

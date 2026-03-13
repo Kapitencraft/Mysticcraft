@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.block.gemstone;
 
-import net.kapitencraft.kap_lib.helpers.MiscHelper;
+import net.kapitencraft.kap_lib.core.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.block.ModBlockStateProperties;
 import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneType;

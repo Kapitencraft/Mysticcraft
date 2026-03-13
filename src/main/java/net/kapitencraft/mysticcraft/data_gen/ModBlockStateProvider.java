@@ -180,29 +180,9 @@ public class ModBlockStateProvider extends BlockStateProvider {
     }
 
     private ModelFile gemstoneCrystal(GemstoneCrystalBlock.Size size) {
-        return this.models().getBuilder("block/gemstone/crystal/" + size.getSerializedName())
+        return this.models().withExistingParent("block/gemstone/crystal/" + size.getSerializedName(), "block/tinted_cross")
                 .texture("cross", MysticcraftMod.res("block/gemstone/crystal/" + size.getSerializedName()))
-                .parent(tintedCross())
                 .renderType("cutout");
-    }
-
-    private ModelFile tintedCross() {
-        return this.models().getBuilder("tinted_cross")
-                .texture("particle", "#cross")
-                .element()
-                .from(.8f, 0, 8).to(15.2f, 16, 8)
-                .rotation().origin(8, 8, 8).axis(Direction.Axis.Y).angle(45).rescale(true).end()
-                .shade(false)
-                .face(Direction.SOUTH).end().face(Direction.NORTH).end()
-                .faces((direction, faceBuilder) -> faceBuilder.texture("#cross").tintindex(0))
-                .end()
-                .element()
-                .from(8, 0, .8f).to(8, 16, 15.2f)
-                .rotation().origin(8, 8, 8).axis(Direction.Axis.Y).angle(45).rescale(true).end()
-                .shade(false)
-                .face(Direction.WEST).end().face(Direction.EAST).end()
-                .faces((direction, faceBuilder) -> faceBuilder.texture("#cross").tintindex(0))
-                .end();
     }
 
     private void makeGemstoneSeedItem() {

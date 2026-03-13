@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.mixin.classes;
 
-import net.kapitencraft.kap_lib.helpers.MiscHelper;
-import net.kapitencraft.kap_lib.util.ManaHandler;
+import net.kapitencraft.kap_lib.core.helpers.MiscHelper;
+import net.kapitencraft.kap_lib.mana.ManaHandler;
 import net.kapitencraft.mysticcraft.capability.elytra.ElytraAttachment;
 import net.kapitencraft.mysticcraft.capability.elytra.ElytraData;
 import net.kapitencraft.mysticcraft.registry.ModDataComponentTypes;

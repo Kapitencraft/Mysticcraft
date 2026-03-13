@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.spell.spells;
 
-import net.kapitencraft.kap_lib.helpers.MathHelper;
+import net.kapitencraft.kap_lib.core.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.network.packets.S2C.BreathParticlesPacket;
 import net.kapitencraft.mysticcraft.spell.Spell;
 import net.kapitencraft.mysticcraft.spell.SpellExecutionFailedException;

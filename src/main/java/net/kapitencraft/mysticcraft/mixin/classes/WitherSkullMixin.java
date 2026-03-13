@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.mixin.classes;
 
-import net.kapitencraft.kap_lib.helpers.MiscHelper;
+import net.kapitencraft.kap_lib.core.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.item.material.PrecursorRelicItem;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.boss.wither.WitherBoss;

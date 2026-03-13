@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.item.combat.weapon.melee.dagger;
 
-import net.kapitencraft.kap_lib.helpers.MiscHelper;
-import net.kapitencraft.kap_lib.util.ExtraRarities;
+import net.kapitencraft.kap_lib.core.helpers.MiscHelper;
+import net.kapitencraft.kap_lib.core.util.ExtraRarities;
 import net.kapitencraft.mysticcraft.capability.spell.ItemSpells;
 import net.kapitencraft.mysticcraft.item.misc.ModTiers;
 import net.kapitencraft.mysticcraft.registry.ModDataComponentTypes;

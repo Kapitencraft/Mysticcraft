@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.item.combat.weapon.ranged.bow;
 
-import net.kapitencraft.kap_lib.helpers.MiscHelper;
+import net.kapitencraft.kap_lib.core.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneHandler;
 import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneSlot;
 import net.kapitencraft.mysticcraft.registry.ModDataComponentTypes;

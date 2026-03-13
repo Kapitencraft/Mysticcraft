@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.client.particle.options;
 
-import net.kapitencraft.kap_lib.util.Color;
+
+import net.kapitencraft.kap_lib.core.util.Color;
 
 public abstract class SimpleColoredParticleOptions<T extends SimpleColoredParticleOptions<T>> extends ColoredParticleOptions<T> {
 

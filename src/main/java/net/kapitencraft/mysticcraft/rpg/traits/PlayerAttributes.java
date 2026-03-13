@@ -3,8 +3,9 @@ package net.kapitencraft.mysticcraft.rpg.traits;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
-import net.kapitencraft.kap_lib.helpers.ExtraStreamCodecs;
-import net.kapitencraft.kap_lib.registry.ExtraAttributes;
+import net.kapitencraft.kap_lib.attribute.ExtraAttributes;
+import net.kapitencraft.kap_lib.core.helpers.ExtraStreamCodecs;
+import net.kapitencraft.kap_lib.mana.ManaAttributes;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.registry.ModAttachmentTypes;
 import net.minecraft.core.Holder;
@@ -59,10 +60,10 @@ public class PlayerAttributes {
     public enum Type implements StringRepresentable {
         CONSTITUTION(
                 new AttributeEntry(ExtraAttributes.VITALITY, 2),
-                new AttributeEntry(ExtraAttributes.MANA_REGEN, .1)
+                new AttributeEntry(ManaAttributes.MANA_REGEN, .1)
         ),
         INTELLIGENCE(
-                new AttributeEntry(ExtraAttributes.MAX_MANA, 4),
+                new AttributeEntry(ManaAttributes.MAX_MANA, 4),
                 new AttributeEntry(ExtraAttributes.WISDOM, 1)
         ),
         STRENGHT(

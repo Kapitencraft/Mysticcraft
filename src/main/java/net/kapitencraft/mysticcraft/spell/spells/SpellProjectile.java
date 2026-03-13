@@ -1,8 +1,8 @@
 package net.kapitencraft.mysticcraft.spell.spells;
 
-import net.kapitencraft.kap_lib.helpers.MathHelper;
-import net.kapitencraft.kap_lib.helpers.TextHelper;
+import net.kapitencraft.kap_lib.core.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.spell.Spell;
+import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
@@ -75,8 +75,8 @@ public abstract class SpellProjectile extends AbstractArrow {
         player.sendSystemMessage(
                 Component.translatable("spell.projectile.damage",
                         Component.translatable(Util.makeDescriptionId("spell", spell.getKey().location())),
-                        TextHelper.wrapInRed(attackedSize),
-                        TextHelper.wrapInRed(MathHelper.round(damageInflicted, 3))
+                        Component.literal(String.valueOf(attackedSize)).withStyle(ChatFormatting.RED),
+                        Component.literal(String.valueOf(MathHelper.round(damageInflicted, 3))).withStyle(ChatFormatting.RED)
                 )
         );
     }

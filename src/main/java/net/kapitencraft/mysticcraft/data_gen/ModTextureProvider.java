@@ -1,13 +1,10 @@
 package net.kapitencraft.mysticcraft.data_gen;
 
-import com.mojang.blaze3d.platform.NativeImage;
 import net.kapitencraft.kap_lib.KapLibMod;
-import net.kapitencraft.kap_lib.data_gen.abst.TextureProvider;
-import net.kapitencraft.kap_lib.util.Color;
+import net.kapitencraft.kap_lib.datagen.TextureProvider;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.FastColor;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 public class ModTextureProvider extends TextureProvider {
@@ -20,19 +17,8 @@ public class ModTextureProvider extends TextureProvider {
         register(ResourceLocation.withDefaultNamespace("item/lapis_lazuli"), MysticcraftMod.res("item/lapis_dust"))
                 .then(Transfer.create(ResourceLocation.withDefaultNamespace("item/redstone")));
         register(ResourceLocation.withDefaultNamespace("particle/flame"), MysticcraftMod.res("particle/pale_flame"))
-                .then(new Pale());
+                .then(Pale.INSTANCE);
         register(MysticcraftMod.res("item/elements/rainbow_shard"), MysticcraftMod.res("item/rainbow_sword"))
                 .then(Transfer.createWithMask(ResourceLocation.withDefaultNamespace("item/diamond_sword"), KapLibMod.res("item/mask/sword")));
-    }
-
-    protected record Pale() implements Converter {
-
-        @Override
-        public NativeImage convert(NativeImage in, ExistingFileHelper helper) {
-            return in.mappedCopy(i -> {
-                double brightness = TextureProvider.brightness(Color.fromARGBPacked(i));
-                return new Color((float) brightness, (float) brightness, (float) brightness, FastColor.ARGB32.alpha(i) / 255f).pack();
-            });
-        }
     }
 }

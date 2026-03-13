@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.data_gen;
 
-import net.kapitencraft.kap_lib.helpers.EnchantmentHelperExtras;
-import net.kapitencraft.kap_lib.registry.ExtraAttributes;
+import net.kapitencraft.kap_lib.core.helpers.EnchantmentHelperExtras;
+import net.kapitencraft.kap_lib.mana.ManaAttributes;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.enchantments.components.ManaSyphon;
 import net.kapitencraft.mysticcraft.tags.ModTags;
@@ -63,7 +63,7 @@ public interface ModEnchantments {
                 4,
                 EquipmentSlotGroup.MAINHAND
         )).withEffect(EnchantmentEffectComponents.ATTRIBUTES, new EnchantmentAttributeEffect(
-                MysticcraftMod.res("ultimate_wise"), ExtraAttributes.MANA_COST, LevelBasedValue.perLevel(-.1f), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
+                MysticcraftMod.res("ultimate_wise"), ManaAttributes.MANA_COST, LevelBasedValue.perLevel(-.1f), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
         )));
         register(context, CAPACITY, Enchantment.enchantment(Enchantment.definition(
                 items.getOrThrow(ModTags.Items.CONTAINER_ENCHANTABLE),

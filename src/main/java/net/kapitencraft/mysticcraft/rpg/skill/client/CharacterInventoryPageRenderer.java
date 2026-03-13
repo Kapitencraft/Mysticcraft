@@ -1,10 +1,10 @@
 package net.kapitencraft.mysticcraft.rpg.skill.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.kapitencraft.kap_lib.client.ExtraComponents;
-import net.kapitencraft.kap_lib.helpers.MathHelper;
-import net.kapitencraft.kap_lib.helpers.TextHelper;
-import net.kapitencraft.kap_lib.inventory.page_renderer.InventoryPageRenderer;
+import net.kapitencraft.kap_lib.component.ExtraComponents;
+import net.kapitencraft.kap_lib.core.helpers.MathHelper;
+import net.kapitencraft.kap_lib.core.helpers.TextHelper;
+import net.kapitencraft.kap_lib.inventory_page.page_renderer.InventoryPageRenderer;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.config.ClientModConfig;
 import net.kapitencraft.mysticcraft.registry.ModAttachmentTypes;
@@ -21,7 +21,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public class SkillsInventoryPageRenderer implements InventoryPageRenderer {
+public class CharacterInventoryPageRenderer implements InventoryPageRenderer {
+    private static final Component TITLE = Component.translatable("inventory.page.character");
+
     private static final ResourceLocation GOAL = ResourceLocation.withDefaultNamespace("advancements/goal_frame_unobtained");
     private static final ResourceLocation CHALLENGE = ResourceLocation.withDefaultNamespace("advancements/challenge_frame_unobtained");
     private static final ResourceLocation TASK = ResourceLocation.withDefaultNamespace("advancements/task_frame_unobtained");
@@ -30,7 +32,7 @@ public class SkillsInventoryPageRenderer implements InventoryPageRenderer {
     private final Player player;
     private final Component head;
 
-    public SkillsInventoryPageRenderer(SkillsInventoryPage page) {
+    public CharacterInventoryPageRenderer(SkillsInventoryPage page) {
         this.player = page.getPlayer();
         this.head = ExtraComponents.playerHead(player.getUUID());
     }
@@ -38,7 +40,7 @@ public class SkillsInventoryPageRenderer implements InventoryPageRenderer {
     //dims: 176 x 166
     @Override
     public void render(GuiGraphics graphics, Minecraft minecraft, int mouseX, int mouseY, float mouseXOld, float mouseYOld, int leftPos, int topPos) {
-        graphics.drawString(minecraft.font, Component.translatable("skills.title"), leftPos + 5, topPos + 5, 0x00208F, false);
+        graphics.drawString(minecraft.font, TITLE, leftPos + 5, topPos + 5, 0x00208F, false);
         Skill[] skills = Skill.values();
         final int elementsPerRow = 5;
         PoseStack pose = graphics.pose();
@@ -116,6 +118,11 @@ public class SkillsInventoryPageRenderer implements InventoryPageRenderer {
     @Override
     public @NotNull ResourceLocation pageBackgroundLocation() {
         return BACKGROUND;
+    }
+
+    @Override
+    public Component getTitle() {
+        return TITLE;
     }
 
     private static void renderSkill(GuiGraphics graphics, Skill skill, int x, int y, int level) {

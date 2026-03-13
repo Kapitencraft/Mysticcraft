@@ -1,9 +1,9 @@
 package net.kapitencraft.mysticcraft.enchantments.components;
 
 import com.mojang.serialization.MapCodec;
-import net.kapitencraft.kap_lib.helpers.AttributeHelper;
-import net.kapitencraft.kap_lib.registry.ExtraAttributes;
-import net.kapitencraft.kap_lib.util.ManaHandler;
+import net.kapitencraft.kap_lib.core.helpers.AttributeHelper;
+import net.kapitencraft.kap_lib.mana.ManaAttributes;
+import net.kapitencraft.kap_lib.mana.ManaHandler;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -17,7 +17,7 @@ public class ManaSyphon implements EnchantmentEntityEffect {
     @Override
     public void apply(ServerLevel level, int enchantmentLevel, EnchantedItemInUse item, Entity entity, Vec3 origin) {
         if (entity instanceof LivingEntity living) {
-            double maxMana = AttributeHelper.getSaveAttributeValue(ExtraAttributes.MAX_MANA, living);
+            double maxMana = AttributeHelper.getSaveAttributeValue(ManaAttributes.MAX_MANA, living);
             if (maxMana > 0) {
                 double newMana = ManaHandler.getMana(living) + maxMana * 0.0025 * enchantmentLevel;
                 ManaHandler.setMana(living, Math.min(maxMana, newMana));

@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.registry;
 
-import net.kapitencraft.kap_lib.util.Color;
+import net.kapitencraft.kap_lib.core.util.Color;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.client.particle.MagicCircleParticleType;
 import net.kapitencraft.mysticcraft.client.particle.options.CircleParticleOptions;

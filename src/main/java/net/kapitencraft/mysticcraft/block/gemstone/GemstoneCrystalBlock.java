@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.block.gemstone;
 
 import io.netty.buffer.ByteBuf;
-import net.kapitencraft.kap_lib.helpers.ExtraStreamCodecs;
+import net.kapitencraft.kap_lib.core.helpers.ExtraStreamCodecs;
 import net.kapitencraft.mysticcraft.capability.gemstone.IGemstoneItem;
 import net.kapitencraft.mysticcraft.registry.ModBlocks;
 import net.kapitencraft.mysticcraft.registry.ModDataComponentTypes;

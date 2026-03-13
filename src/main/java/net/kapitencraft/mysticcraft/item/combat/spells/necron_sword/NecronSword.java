@@ -1,10 +1,11 @@
 package net.kapitencraft.mysticcraft.item.combat.spells.necron_sword;
 
 import com.google.common.collect.Multimap;
+import net.kapitencraft.kap_lib.attribute.BaseAttributeLocations;
+import net.kapitencraft.kap_lib.attribute.ExtraAttributes;
+import net.kapitencraft.kap_lib.core.util.ExtraRarities;
 import net.kapitencraft.kap_lib.item.creative_tab.TabGroup;
-import net.kapitencraft.kap_lib.registry.ExtraAttributes;
-import net.kapitencraft.kap_lib.util.ExtraRarities;
-import net.kapitencraft.kap_lib.util.attribute.BaseAttributeLocations;
+import net.kapitencraft.kap_lib.mana.ManaAttributes;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneHandler;
 import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneSlot;
@@ -55,7 +56,7 @@ public class NecronSword extends SpellItem {
                         ),
                         EquipmentSlotGroup.MAINHAND
                 ).add(
-                        ExtraAttributes.MAX_MANA,
+                        ManaAttributes.MAX_MANA,
                         new AttributeModifier(
                                 MysticcraftMod.res("tool_max_mana_modifier"), maxMana, AttributeModifier.Operation.ADD_VALUE
                         ),

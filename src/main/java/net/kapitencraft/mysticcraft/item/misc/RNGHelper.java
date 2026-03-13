@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.item.misc;
 
-import net.kapitencraft.kap_lib.helpers.AttributeHelper;
+import net.kapitencraft.kap_lib.core.helpers.AttributeHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;

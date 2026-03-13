@@ -1,11 +1,12 @@
 package net.kapitencraft.mysticcraft.item.creative;
 
-import net.kapitencraft.kap_lib.helpers.MathHelper;
-import net.kapitencraft.kap_lib.helpers.MiscHelper;
-import net.kapitencraft.kap_lib.helpers.TextHelper;
+import net.kapitencraft.kap_lib.core.helpers.CollectorHelper;
+import net.kapitencraft.kap_lib.core.helpers.MathHelper;
+import net.kapitencraft.kap_lib.core.helpers.MiscHelper;
+import net.kapitencraft.kap_lib.core.helpers.TextHelper;
+import net.kapitencraft.kap_lib.core.stream.Consumers;
+import net.kapitencraft.kap_lib.core.util.ExtraRarities;
 import net.kapitencraft.kap_lib.item.ExtendedItem;
-import net.kapitencraft.kap_lib.stream.Consumers;
-import net.kapitencraft.kap_lib.util.ExtraRarities;
 import net.kapitencraft.mysticcraft.config.CommonModConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
@@ -29,6 +30,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class BuildersWand extends Item implements ExtendedItem {
     private BuildType type = BuildType.LINE;
@@ -60,8 +62,8 @@ public class BuildersWand extends Item implements ExtendedItem {
 
     @Override
     public void appendHoverTextWithPlayer(@NotNull ItemStack itemStack, @Nullable TooltipContext context, @NotNull List<Component> list, @NotNull TooltipFlag flag, @Nullable Player player) {
-        String s = TextHelper.makeList(posList, TextHelper::fromBlockPos);
-        Component component = TextHelper.makeList(useAbles, Component::empty, Block::getName, MutableComponent::append);
+        String s = posList.stream().map(TextHelper::fromBlockPos).collect(Collectors.joining(" "));
+        Component component = useAbles.stream().map(Block::getName).collect(CollectorHelper.joinComponent(Component.literal(" ")));
         list.add(Component.literal("saved positions: " + s).withStyle(ChatFormatting.GREEN));
         list.add(Component.literal("active blocks: ").append(component).withStyle(ChatFormatting.GREEN));
         if (Screen.hasControlDown()) {
@@ -171,9 +173,12 @@ public class BuildersWand extends Item implements ExtendedItem {
                 }
             }
         }, "builders_wand.cuboid"),
-        SPHERE(3, false, 3, (block, blocks, blockPos, level) -> {}, "builders_wand.sphere"),
-        CONE(4, false, 3, (block, blocks, blockPos, level) -> {}, "builders_wand.cone"),
-        CYLINDER(5,false, 3, (block, blocks, blockPos, level) -> {}, "builders_wand.cylinder"),
+        SPHERE(3, false, 3, (block, blocks, blockPos, level) -> {
+        }, "builders_wand.sphere"),
+        CONE(4, false, 3, (block, blocks, blockPos, level) -> {
+        }, "builders_wand.cone"),
+        CYLINDER(5, false, 3, (block, blocks, blockPos, level) -> {
+        }, "builders_wand.cylinder"),
         REPLACE(6, true, 2, (block, blocks, blockPos, level) -> {
             BlockPos start = blockPos.get(0);
             BlockPos stop = blockPos.get(1);

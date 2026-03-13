@@ -8,6 +8,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -20,6 +23,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -54,7 +58,7 @@ public abstract class AbstractTurretBlockEntity extends UpgradableBlockEntity {
 
     @SuppressWarnings("DataFlowIssue")
     protected void selectTarget() {
-        List<LivingEntity> entities = this.level.getEntitiesOfClass(LivingEntity.class, checkArea, living -> !living.isRemoved() && !living.isDeadOrDying() && !living.fireImmune());
+        List<LivingEntity> entities = this.level.getEntitiesOfClass(LivingEntity.class, checkArea, living -> living.getUUID() != owner && !living.isRemoved() && !living.isDeadOrDying() && !living.fireImmune());
         if (entities.isEmpty()) return;
         entities.sort(this.targetSelector.comparator);
         int i = 0;
@@ -96,6 +100,11 @@ public abstract class AbstractTurretBlockEntity extends UpgradableBlockEntity {
         super.loadAdditional(tag, registries);
         this.owner = UUID.fromString(tag.getString("Owner"));
         this.targetSelector.deserialize(tag.getCompound("Selector"));
+    }
+
+    @Override
+    public @Nullable Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     public void setOwner(UUID uuid) {

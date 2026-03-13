@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.item.combat.weapon.melee.spear;
 
-import net.kapitencraft.kap_lib.registry.ExtraAttributes;
-import net.kapitencraft.kap_lib.util.attribute.BaseAttributeLocations;
+import net.kapitencraft.kap_lib.attribute.BaseAttributeLocations;
+import net.kapitencraft.kap_lib.attribute.ExtraAttributes;
 import net.kapitencraft.mysticcraft.item.misc.ModTiers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;

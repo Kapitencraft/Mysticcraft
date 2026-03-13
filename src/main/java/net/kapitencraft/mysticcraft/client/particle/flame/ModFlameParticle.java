@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.client.particle.flame;
 
-import net.kapitencraft.kap_lib.util.Color;
+import net.kapitencraft.kap_lib.core.util.Color;
 import net.kapitencraft.mysticcraft.client.particle.options.FlameParticleOptions;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;

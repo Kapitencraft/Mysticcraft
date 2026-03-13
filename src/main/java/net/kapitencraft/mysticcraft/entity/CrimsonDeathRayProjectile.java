@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.entity;
 
-import net.kapitencraft.kap_lib.helpers.CollectionHelper;
-import net.kapitencraft.kap_lib.helpers.MathHelper;
+import net.kapitencraft.kap_lib.core.helpers.CollectionHelper;
+import net.kapitencraft.kap_lib.core.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.registry.ModEntityTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EntityType;

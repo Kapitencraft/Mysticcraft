@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.tech.gui.screen;
 
-import net.kapitencraft.kap_lib.client.gui.screen.BlockEntityScreen;
-import net.kapitencraft.kap_lib.helpers.MathHelper;
+import net.kapitencraft.kap_lib.core.client.gui.screen.BlockEntityScreen;
+import net.kapitencraft.kap_lib.core.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.tech.block.entity.ManaBatteryBlockEntity;
 import net.kapitencraft.mysticcraft.tech.gui.menu.ManaBatteryMenu;

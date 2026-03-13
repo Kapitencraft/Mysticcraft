@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.worldgen.gemstone;
 
-import net.kapitencraft.kap_lib.helpers.MathHelper;
+import net.kapitencraft.kap_lib.core.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.block.ModBlockStateProperties;
 import net.kapitencraft.mysticcraft.block.gemstone.GemstoneCrystalBlock;

@@ -1,9 +1,9 @@
 package net.kapitencraft.mysticcraft.spell;
 
 import net.kapitencraft.kap_lib.cooldown.Cooldown;
-import net.kapitencraft.kap_lib.helpers.AttributeHelper;
-import net.kapitencraft.kap_lib.helpers.MathHelper;
-import net.kapitencraft.kap_lib.registry.ExtraAttributes;
+import net.kapitencraft.kap_lib.core.helpers.AttributeHelper;
+import net.kapitencraft.kap_lib.core.helpers.MathHelper;
+import net.kapitencraft.kap_lib.mana.ManaAttributes;
 import net.kapitencraft.mysticcraft.registry.custom.ModRegistries;
 import net.kapitencraft.mysticcraft.spell.cast.SpellCastContext;
 import net.minecraft.core.Holder;
@@ -62,7 +62,7 @@ public abstract class Spell {
     }
 
     public double getManaCostForUser(LivingEntity user) {
-        AttributeInstance instance = user.getAttribute(ExtraAttributes.MANA_COST);
+        AttributeInstance instance = user.getAttribute(ManaAttributes.MANA_COST);
         return MathHelper.defRound(AttributeHelper.getAttributeValue(instance, this.manaCost()));
     }
 

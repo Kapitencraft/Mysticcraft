@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
-import net.kapitencraft.kap_lib.helpers.ClientHelper;
+import net.kapitencraft.kap_lib.core.helpers.CommandHelper;
 import net.kapitencraft.mysticcraft.gui.screen.TestScreen;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -23,7 +23,7 @@ public class ModCommands {
     @SubscribeEvent
     public static void onRegisterClientCommands(RegisterClientCommandsEvent event) {
         CommandDispatcher<CommandSourceStack> dispatcher = event.getDispatcher();
-        dispatcher.register(Commands.literal("myc_test").executes(ClientHelper.createScreenCommand(TestScreen::new)));
+        dispatcher.register(Commands.literal("myc_test").executes(CommandHelper.createScreenCommand(TestScreen::new)));
     }
 
 }

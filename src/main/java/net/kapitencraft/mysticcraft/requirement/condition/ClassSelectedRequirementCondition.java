@@ -1,8 +1,8 @@
 package net.kapitencraft.mysticcraft.requirement.condition;
 
 import com.mojang.serialization.MapCodec;
-import net.kapitencraft.kap_lib.io.serialization.RegistrySerializer;
-import net.kapitencraft.kap_lib.requirements.conditions.abstracts.ReqCondition;
+import net.kapitencraft.kap_lib.core.io.serialization.RegistrySerializer;
+import net.kapitencraft.kap_lib.requirement.conditions.abstracts.ReqCondition;
 import net.kapitencraft.mysticcraft.registry.ModAttachmentTypes;
 import net.kapitencraft.mysticcraft.registry.custom.ModRegistries;
 import net.kapitencraft.mysticcraft.rpg.classes.RPGClass;

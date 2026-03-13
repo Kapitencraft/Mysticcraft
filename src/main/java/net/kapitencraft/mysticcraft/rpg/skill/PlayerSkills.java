@@ -4,7 +4,7 @@ import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
-import net.kapitencraft.kap_lib.helpers.ExtraStreamCodecs;
+import net.kapitencraft.kap_lib.core.helpers.ExtraStreamCodecs;
 import net.kapitencraft.mysticcraft.network.packets.S2C.SkillXpChangedPacket;
 import net.kapitencraft.mysticcraft.registry.ModAttachmentTypes;
 import net.kapitencraft.mysticcraft.registry.ModAttributes;

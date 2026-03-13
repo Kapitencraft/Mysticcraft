@@ -2,9 +2,8 @@ package net.kapitencraft.mysticcraft.item.bonus;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import net.kapitencraft.kap_lib.helpers.MiscHelper;
-import net.kapitencraft.kap_lib.io.serialization.RegistrySerializer;
-import net.kapitencraft.kap_lib.registry.ExtraAttributes;
+import net.kapitencraft.kap_lib.attribute.ExtraAttributes;
+import net.kapitencraft.kap_lib.core.io.serialization.RegistrySerializer;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
@@ -22,7 +21,7 @@ public class HydraBonus extends StackingBonus<HydraBonus> {
     public static final RegistrySerializer<HydraBonus> SERIALIZER = RegistrySerializer.unit(INSTANCE);
 
     public HydraBonus() {
-        super(MiscHelper.DamageType.RANGED, 200, "hydra");
+        super(200, "hydra", s -> !s.isDirect());
     }
 
     @Override

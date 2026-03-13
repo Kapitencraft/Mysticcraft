@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.tech.gui.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.kapitencraft.kap_lib.helpers.MathHelper;
+import net.kapitencraft.kap_lib.core.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.tech.block.entity.MagicFurnaceBlockEntity;
 import net.kapitencraft.mysticcraft.tech.gui.menu.MagicFurnaceMenu;

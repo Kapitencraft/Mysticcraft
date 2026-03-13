@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.client.particle;
 
-import net.kapitencraft.kap_lib.registry.ExtraAttributes;
-import net.kapitencraft.kap_lib.util.ManaHandler;
+import net.kapitencraft.kap_lib.mana.ManaAttributes;
+import net.kapitencraft.kap_lib.mana.ManaHandler;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.world.entity.LivingEntity;
@@ -28,7 +28,7 @@ public class MagicCircleParticle extends TextureSheetParticle {
         super.tick();
         if (living != null) {
             double mana = ManaHandler.getMana(living);
-            double manaPercentage = mana / living.getAttributeValue(ExtraAttributes.MAX_MANA);
+            double manaPercentage = mana / living.getAttributeValue(ManaAttributes.MAX_MANA);
             if (manaPercentage <= 0.1) {
                 setColor(RED);
             } else if (manaPercentage <= 0.3) {

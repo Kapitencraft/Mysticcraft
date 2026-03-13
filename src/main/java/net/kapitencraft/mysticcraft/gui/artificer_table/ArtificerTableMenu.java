@@ -1,6 +1,5 @@
 package net.kapitencraft.mysticcraft.gui.artificer_table;
 
-import net.kapitencraft.kap_lib.client.gui.GUISlotBlockItem;
 import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneHandler;
 import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneItem;
 import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneSlot;
@@ -76,10 +75,7 @@ public class ArtificerTableMenu extends NoBEMenu<ArtificerTableMenu.ItemContaine
 
         @Override
         public boolean mayPickup(@NotNull Player pPlayer) {
-            if (this.getSlotIndex() == 0) {
-                return true;
-            }
-            return !(this.getItem().getItem() instanceof GUISlotBlockItem);
+            return true;
         }
 
         @Override

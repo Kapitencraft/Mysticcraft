@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.registry;
 
 import net.kapitencraft.kap_lib.cooldown.Cooldown;
-import net.kapitencraft.kap_lib.registry.custom.core.ExtraRegistries;
+import net.kapitencraft.kap_lib.cooldown.registry.CooldownRegistries;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.spell.spells.WitherShieldSpell;
 import net.minecraft.core.Holder;
@@ -9,7 +9,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 public interface ModCooldowns {
-    DeferredRegister<Cooldown> REGISTRY = MysticcraftMod.registry(ExtraRegistries.Keys.COOLDOWNS);
+    DeferredRegister<Cooldown> REGISTRY = MysticcraftMod.registry(CooldownRegistries.Keys.COOLDOWNS);
 
     Holder<Cooldown> WITHER_SHIELD = REGISTRY.register("wither_shield", () -> new Cooldown(100, living -> {
         CompoundTag tag = living.getPersistentData();

@@ -3,7 +3,7 @@ package net.kapitencraft.mysticcraft.client.particle.options;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.kapitencraft.kap_lib.util.Color;
+import net.kapitencraft.kap_lib.core.util.Color;
 import net.kapitencraft.mysticcraft.registry.ModParticleTypes;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.network.RegistryFriendlyByteBuf;

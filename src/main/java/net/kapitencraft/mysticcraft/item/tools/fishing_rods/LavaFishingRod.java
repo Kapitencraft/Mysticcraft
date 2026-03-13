@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.item.tools.fishing_rods;
 
-import net.kapitencraft.kap_lib.entity.fishing.AbstractFishingHook;
+import net.kapitencraft.kap_lib.item.entity.fishing.AbstractFishingHook;
 import net.kapitencraft.kap_lib.item.tools.fishing.ModFishingRod;
 import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneHandler;
 import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneSlot;

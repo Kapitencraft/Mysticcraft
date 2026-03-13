@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.data_gen;
 
-import net.kapitencraft.kap_lib.data_gen.abst.EnglishLanguageProvider;
-import net.kapitencraft.kap_lib.helpers.TextHelper;
+import net.kapitencraft.kap_lib.core.helpers.TextHelper;
+import net.kapitencraft.kap_lib.datagen.EnglishLanguageProvider;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.capability.reforging.Reforges;
 import net.kapitencraft.mysticcraft.registry.ModItems;

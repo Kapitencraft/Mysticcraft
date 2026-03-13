@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.potion;
 
-import net.kapitencraft.kap_lib.registry.ExtraMobEffects;
+import net.kapitencraft.kap_lib.mob_effect.registry.ExtraMobEffects;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.registry.ModMobEffects;
 import net.minecraft.core.Holder;

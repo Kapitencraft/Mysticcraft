@@ -3,7 +3,7 @@ package net.kapitencraft.mysticcraft.commands;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
-import net.kapitencraft.kap_lib.helpers.CommandHelper;
+import net.kapitencraft.kap_lib.core.helpers.CommandHelper;
 import net.kapitencraft.mysticcraft.commands.args.SkillArgType;
 import net.kapitencraft.mysticcraft.rpg.skill.PlayerSkills;
 import net.minecraft.commands.CommandSourceStack;

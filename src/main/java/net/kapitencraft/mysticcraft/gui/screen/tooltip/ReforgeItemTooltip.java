@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.gui.screen.tooltip;
 
 import com.google.common.collect.ImmutableList;
-import net.kapitencraft.kap_lib.helpers.MathHelper;
+import net.kapitencraft.kap_lib.core.helpers.MathHelper;
 import net.kapitencraft.mysticcraft.gui.reforging_anvil.ReforgeAnvilMenu;
 import net.kapitencraft.mysticcraft.gui.reforging_anvil.ReforgeAnvilScreen;
 import net.kapitencraft.mysticcraft.gui.screen.HoverScreenUpdatable;

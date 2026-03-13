@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.item.combat.totems;
 
-import net.kapitencraft.kap_lib.helpers.MiscHelper;
+import net.kapitencraft.kap_lib.core.helpers.MiscHelper;
 import net.kapitencraft.kap_lib.item.ExtendedItem;
 import net.kapitencraft.kap_lib.item.combat.totem.AbstractTotemItem;
 import net.minecraft.network.chat.Component;

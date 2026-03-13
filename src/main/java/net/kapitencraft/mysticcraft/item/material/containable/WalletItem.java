@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.item.material.containable;
 
-import net.kapitencraft.kap_lib.helpers.MiscHelper;
+import net.kapitencraft.kap_lib.core.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.data_gen.ModEnchantments;
 import net.kapitencraft.mysticcraft.registry.ModDataComponentTypes;
 import net.minecraft.core.Holder;

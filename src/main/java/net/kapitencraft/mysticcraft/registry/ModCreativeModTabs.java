@@ -1,10 +1,10 @@
 package net.kapitencraft.mysticcraft.registry;
 
-import net.kapitencraft.kap_lib.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneType;
 import net.kapitencraft.mysticcraft.capability.gemstone.IGemstoneItem;
 import net.kapitencraft.mysticcraft.spell.Elements;
+import net.minecraft.Util;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
@@ -37,7 +37,7 @@ public interface ModCreativeModTabs {
     Holder<CreativeModeTab> MATERIALS = REGISTRY.register("materials", () -> CreativeModeTab.builder().title(Component.translatable("itemGroup.mysticcraft.materials"))
             .icon(()-> new ItemStack(ModItems.ELEMENTAL_SHARDS.get(Elements.FIRE).get()))
             .displayItems((displayParameters, output) -> {
-                output.accept(MiscHelper.of(() -> {
+                output.accept(Util.make(() -> {
                     ItemStack stack = new ItemStack(Items.PRISMARINE_SHARD);
                     HolderLookup.RegistryLookup<Enchantment> lookup = displayParameters.holders().lookupOrThrow(Registries.ENCHANTMENT);
                     lookup.listElements().forEach(r -> stack.enchant(r, r.value().getMaxLevel()));

@@ -1,8 +1,8 @@
 package net.kapitencraft.mysticcraft.data_gen;
 
-import net.kapitencraft.kap_lib.data_gen.abst.BonusProvider;
-import net.kapitencraft.kap_lib.item.bonus.type.AttributeModifiersBonus;
-import net.kapitencraft.kap_lib.registry.ExtraAttributes;
+import net.kapitencraft.kap_lib.bonus.datagen.BonusProvider;
+import net.kapitencraft.kap_lib.bonus.type.AttributeModifiersBonus;
+import net.kapitencraft.kap_lib.mana.ManaAttributes;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.item.bonus.*;
 import net.kapitencraft.mysticcraft.registry.ModItems;
@@ -30,7 +30,7 @@ public class ModBonusProvider extends BonusProvider {
         createItemBonus(ModItems.SHADOW_DAGGER, "assassin").setBonus(AssassinBonus.INSTANCE);
         createItemBonus(ModItems.SOUL_MAGE_ARMOR.get(ArmorItem.Type.CHESTPLATE), "mana_reservoir").setBonus(
                 AttributeModifiersBonus.builder()
-                        .addModifier(ExtraAttributes.MAX_MANA, new AttributeModifier(MysticcraftMod.res("mana_reservoir"), .2, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
+                        .addModifier(ManaAttributes.MAX_MANA, new AttributeModifier(MysticcraftMod.res("mana_reservoir"), .2, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
                         .build()
         );
     }

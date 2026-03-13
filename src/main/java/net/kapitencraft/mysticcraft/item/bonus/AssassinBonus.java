@@ -1,10 +1,10 @@
 package net.kapitencraft.mysticcraft.item.bonus;
 
-import net.kapitencraft.kap_lib.helpers.MathHelper;
-import net.kapitencraft.kap_lib.helpers.MiscHelper;
-import net.kapitencraft.kap_lib.io.serialization.RegistrySerializer;
-import net.kapitencraft.kap_lib.item.bonus.Bonus;
+import net.kapitencraft.kap_lib.bonus.Bonus;
+import net.kapitencraft.kap_lib.core.helpers.MathHelper;
+import net.kapitencraft.kap_lib.core.io.serialization.RegistrySerializer;
 import net.minecraft.world.entity.LivingEntity;
+import net.neoforged.neoforge.common.damagesource.DamageContainer;
 
 public class AssassinBonus implements Bonus<AssassinBonus> {
     public static final AssassinBonus INSTANCE = new AssassinBonus();
@@ -17,8 +17,7 @@ public class AssassinBonus implements Bonus<AssassinBonus> {
     }
 
     @Override
-    public float onEntityHurt(LivingEntity attacked, LivingEntity attacker, MiscHelper.DamageType type, float damage) {
-        if (MathHelper.isBehind(attacker, attacked)) damage *= 2;
-        return damage;
+    public void onEntityHurt(LivingEntity attacked, LivingEntity attacker, DamageContainer container) {
+        if (MathHelper.isBehind(attacker, attacked)) container.setNewDamage(container.getNewDamage() * 2);
     }
 }

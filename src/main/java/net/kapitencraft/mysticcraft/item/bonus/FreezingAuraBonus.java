@@ -1,8 +1,8 @@
 package net.kapitencraft.mysticcraft.item.bonus;
 
-import net.kapitencraft.kap_lib.helpers.MathHelper;
-import net.kapitencraft.kap_lib.io.serialization.RegistrySerializer;
-import net.kapitencraft.kap_lib.item.bonus.Bonus;
+import net.kapitencraft.kap_lib.bonus.Bonus;
+import net.kapitencraft.kap_lib.core.helpers.MathHelper;
+import net.kapitencraft.kap_lib.core.io.serialization.RegistrySerializer;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;

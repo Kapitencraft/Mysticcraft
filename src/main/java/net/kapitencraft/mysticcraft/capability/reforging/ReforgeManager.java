@@ -5,7 +5,7 @@ import com.google.gson.*;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
-import net.kapitencraft.kap_lib.item.bonus.Bonus;
+import net.kapitencraft.kap_lib.bonus.Bonus;
 import net.kapitencraft.mysticcraft.logging.Markers;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;

@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.spell.spells;
 
-import net.kapitencraft.kap_lib.helpers.MathHelper;
-import net.kapitencraft.kap_lib.helpers.MiscHelper;
+import net.kapitencraft.kap_lib.core.helpers.MathHelper;
+import net.kapitencraft.kap_lib.core.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.item.combat.weapon.melee.dagger.ShadowDagger;
 import net.kapitencraft.mysticcraft.registry.ModCooldowns;
 import net.kapitencraft.mysticcraft.registry.ModParticleTypes;

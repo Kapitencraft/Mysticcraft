@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.entity;
 
-import net.kapitencraft.kap_lib.entity.fishing.AbstractFishingHook;
+import net.kapitencraft.kap_lib.item.entity.fishing.AbstractFishingHook;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.registry.ModEntityTypes;
 import net.minecraft.core.registries.Registries;

@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.data_gen.advancement;
 
-import net.kapitencraft.kap_lib.advancement.ExtraCriterionTriggers;
+import net.kapitencraft.kap_lib.mana.advancement.ExtraCriterionTriggers;
 import net.kapitencraft.mysticcraft.registry.ModItems;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;

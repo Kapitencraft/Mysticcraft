@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword;
 
-import net.kapitencraft.kap_lib.registry.ExtraAttributes;
-import net.kapitencraft.kap_lib.util.attribute.BaseAttributeLocations;
+import net.kapitencraft.kap_lib.attribute.BaseAttributeLocations;
+import net.kapitencraft.kap_lib.attribute.ExtraAttributes;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -9,6 +9,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
+import net.neoforged.neoforge.common.util.AttributeUtil;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class LongSwordItem extends ModSwordItem {
@@ -47,7 +48,7 @@ public abstract class LongSwordItem extends ModSwordItem {
                 ).add(
                         Attributes.ENTITY_INTERACTION_RANGE,
                         new AttributeModifier(
-                                BaseAttributeLocations.ENTITY_INTERACTION_RANGE, reachMod, AttributeModifier.Operation.ADD_VALUE
+                                AttributeUtil.BASE_ENTITY_REACH_ID, reachMod, AttributeModifier.Operation.ADD_VALUE
                         ),
                         EquipmentSlotGroup.MAINHAND
                 ).build();

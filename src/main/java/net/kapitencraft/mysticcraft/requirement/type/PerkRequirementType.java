@@ -1,8 +1,8 @@
 package net.kapitencraft.mysticcraft.requirement.type;
 
 import com.mojang.serialization.Codec;
-import net.kapitencraft.kap_lib.io.serialization.DataPackSerializer;
-import net.kapitencraft.kap_lib.requirements.type.RequirementType;
+import net.kapitencraft.kap_lib.core.io.serialization.DataPackSerializer;
+import net.kapitencraft.kap_lib.requirement.type.RequirementType;
 import net.kapitencraft.mysticcraft.registry.custom.ModRegistries;
 import net.kapitencraft.mysticcraft.rpg.perks.Perk;
 import net.minecraft.core.Holder;

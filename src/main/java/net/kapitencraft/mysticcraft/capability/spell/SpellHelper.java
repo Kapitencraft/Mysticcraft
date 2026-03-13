@@ -2,12 +2,12 @@ package net.kapitencraft.mysticcraft.capability.spell;
 
 import com.mojang.datafixers.util.Either;
 import net.kapitencraft.kap_lib.cooldown.Cooldown;
-import net.kapitencraft.kap_lib.helpers.MathHelper;
-import net.kapitencraft.kap_lib.helpers.TextHelper;
-import net.kapitencraft.kap_lib.registry.ExtraAttributes;
-import net.kapitencraft.kap_lib.requirements.RequirementManager;
-import net.kapitencraft.kap_lib.requirements.type.RequirementType;
-import net.kapitencraft.kap_lib.util.ManaHandler;
+import net.kapitencraft.kap_lib.core.helpers.MathHelper;
+import net.kapitencraft.kap_lib.core.helpers.TextHelper;
+import net.kapitencraft.kap_lib.mana.ManaAttributes;
+import net.kapitencraft.kap_lib.mana.ManaHandler;
+import net.kapitencraft.kap_lib.requirement.RequirementManager;
+import net.kapitencraft.kap_lib.requirement.type.RequirementType;
 import net.kapitencraft.mysticcraft.item.combat.spells.SpellItem;
 import net.kapitencraft.mysticcraft.item.combat.spells.SpellScrollItem;
 import net.kapitencraft.mysticcraft.registry.ModAttachmentTypes;
@@ -95,7 +95,7 @@ public interface SpellHelper {
     }
 
     static boolean canExecuteSpell(LivingEntity user, Spell spell, ItemStack stack) {
-        if (user.getAttribute(ExtraAttributes.MAX_MANA) == null || user instanceof Player player && !RequirementManager.instance.meetsRequirements(RequirementType.ITEM, stack.getItem(), player)) {
+        if (user.getAttribute(ManaAttributes.MAX_MANA) == null || user instanceof Player player && !RequirementManager.instance.meetsRequirements(RequirementType.ITEM, stack.getItem(), player)) {
             return false;
         }
         double manaToUse = spell.getManaCostForUser(user);
@@ -145,10 +145,10 @@ public interface SpellHelper {
             double manaCost = spell.value().getManaCostForUser(player);
             MutableComponent title = Component.translatable(Util.makeDescriptionId("spell", spell.getKey().location()));
             MutableComponent visible;
-            String wrappedManaUsage = TextHelper.wrapInRed("-" + manaCost + " Mana");
+            Component wrappedManaUsage = Component.literal("-" + manaCost + " Mana").withStyle(ChatFormatting.RED);
             if (spell.value().getType() == Spell.Type.RELEASE) visible = Component.translatable("spell.cast", title, wrappedManaUsage);
             else visible = Component.translatable("spell.use", title, wrappedManaUsage);
-            TextHelper.setHotbarDisplay(player, visible.withStyle(ChatFormatting.AQUA));
+            TextHelper.setActionbar(player, visible.withStyle(ChatFormatting.AQUA));
         }
     }
 
@@ -163,8 +163,8 @@ public interface SpellHelper {
         if (spell.castDuration() > 0) component = Component.translatable("cast_duration.display", MathHelper.shortRound(spell.castDuration() / 20.));
         if (spell.getCooldown() != null && player != null) {
             if (component == null)
-                component = (MutableComponent) spell.getCooldown().createDisplay(player);
-            else component.append(", ").append(spell.getCooldown().createDisplay(player));
+                component = (MutableComponent) spell.getCooldown().createDisplay(player, true);
+            else component.append(", ").append(spell.getCooldown().createDisplay(player, true));
         }
         if (component != null) list.add(component);
     }

@@ -2,8 +2,8 @@ package net.kapitencraft.mysticcraft.event.handler;
 
 import com.google.common.collect.Multimap;
 import com.mojang.datafixers.util.Either;
-import net.kapitencraft.kap_lib.event.custom.RegisterBonusProvidersEvent;
-import net.kapitencraft.kap_lib.event.custom.RegisterRequirementTypesEvent;
+import net.kapitencraft.kap_lib.bonus.event.custom.RegisterBonusProvidersEvent;
+import net.kapitencraft.kap_lib.requirement.event.custom.RegisterRequirementTypesEvent;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.capability.elytra.ElytraAttachment;
 import net.kapitencraft.mysticcraft.capability.elytra.ElytraData;
@@ -90,7 +90,7 @@ public class Events {
     }
 
     @SubscribeEvent
-    public static void onRegisterBonusProviders(RegisterBonusProvidersEvent event) {
+    public static void onRegisterBonusProviders(RegisterBonusProvidersEvent.ItemBound event) {
         event.register(MysticcraftMod.res("reforge"), Reforges::getReforgeBonus);
     }
 

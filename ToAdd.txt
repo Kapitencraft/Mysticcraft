@@ -1,3 +1,10 @@
+Dragon:
+    Multipart Entity;
+    Flying & Walking PathNav;
+    Brain with multiple attack tasks;
+    boss?
+
+
 Skills;
 Elemental Magic;
 Alchemy and Potions;

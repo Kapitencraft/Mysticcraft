@@ -1,8 +1,8 @@
 package net.kapitencraft.mysticcraft.spell.spells;
 
-import net.kapitencraft.kap_lib.helpers.MiscHelper;
-import net.kapitencraft.kap_lib.helpers.ParticleHelper;
-import net.kapitencraft.kap_lib.util.Color;
+import net.kapitencraft.kap_lib.core.helpers.MiscHelper;
+import net.kapitencraft.kap_lib.core.helpers.ParticleHelper;
+import net.kapitencraft.kap_lib.core.util.Color;
 import net.kapitencraft.mysticcraft.client.particle.options.CircleParticleOptions;
 import net.kapitencraft.mysticcraft.item.combat.spells.necron_sword.NecronSword;
 import net.kapitencraft.mysticcraft.registry.Spells;

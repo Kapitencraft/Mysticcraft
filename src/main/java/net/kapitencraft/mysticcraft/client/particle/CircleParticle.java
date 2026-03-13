@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.client.particle;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.kapitencraft.kap_lib.util.Color;
+import net.kapitencraft.kap_lib.core.util.Color;
 import net.kapitencraft.mysticcraft.client.particle.options.CircleParticleOptions;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;

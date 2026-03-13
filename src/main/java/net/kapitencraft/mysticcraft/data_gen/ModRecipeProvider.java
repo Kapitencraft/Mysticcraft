@@ -1,8 +1,8 @@
 package net.kapitencraft.mysticcraft.data_gen;
 
-import net.kapitencraft.kap_lib.crafting.serializers.UpgradeItemRecipe;
-import net.kapitencraft.kap_lib.data_gen.abst.recipe.ArmorRecipeBuilder;
-import net.kapitencraft.kap_lib.data_gen.abst.recipe.UpgradeRecipeBuilder;
+import net.kapitencraft.kap_lib.recipe.datagen.ArmorRecipeBuilder;
+import net.kapitencraft.kap_lib.recipe.datagen.UpgradeRecipeBuilder;
+import net.kapitencraft.kap_lib.recipe.serializers.UpgradeItemRecipe;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.block.entity.pedestal.AltarRecipe;
 import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneType;

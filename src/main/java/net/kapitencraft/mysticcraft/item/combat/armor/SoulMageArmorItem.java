@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.item.combat.armor;
 
+import net.kapitencraft.kap_lib.core.util.ExtraRarities;
 import net.kapitencraft.kap_lib.item.creative_tab.ArmorTabGroup;
-import net.kapitencraft.kap_lib.util.ExtraRarities;
 import net.kapitencraft.mysticcraft.item.combat.armor.client.NetherArmorItem;
 import net.kapitencraft.mysticcraft.registry.ModArmorMaterials;
 import net.minecraft.world.item.ItemStack;
@@ -10,11 +10,6 @@ import java.util.List;
 
 public class SoulMageArmorItem extends NetherArmorItem {
     public static final ArmorTabGroup TAB = ArmorTabGroup.create();
-
-    @Override
-    public boolean withCustomModel() {
-        return false;
-    }
 
     public SoulMageArmorItem(Type type) {
         super(ModArmorMaterials.SOUL_MAGE, type, new Properties().rarity(ExtraRarities.LEGENDARY));

@@ -1,31 +1,33 @@
 package net.kapitencraft.mysticcraft.item.bonus;
 
-import net.kapitencraft.kap_lib.helpers.IOHelper;
-import net.kapitencraft.kap_lib.helpers.MiscHelper;
-import net.kapitencraft.kap_lib.item.bonus.Bonus;
+import net.kapitencraft.kap_lib.bonus.Bonus;
+import net.kapitencraft.kap_lib.core.helpers.IOHelper;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
+import net.neoforged.neoforge.common.damagesource.DamageContainer;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.function.Predicate;
+
 public abstract class StackingBonus<T extends StackingBonus<T>> implements Bonus<T> {
-    private final MiscHelper.DamageType type;
     private final int duration;
     private final String typeName;
+    private final Predicate<DamageSource> filter;
 
-    public StackingBonus(MiscHelper.DamageType type, int duration, String typeName) {
-        this.type = type;
+    public StackingBonus(int duration, String typeName, Predicate<DamageSource> filter) {
         this.duration = duration;
         this.typeName = typeName;
+        this.filter = filter;
     }
 
     @Override
-    public float onEntityHurt(LivingEntity attacked, LivingEntity attacker, MiscHelper.DamageType type, float damage) {
-        if (type == this.type) {
+    public void onEntityHurt(LivingEntity attacked, LivingEntity attacker, DamageContainer container) {
+        if (filter.test(container.getSource())) {
             CompoundTag tag = IOHelper.getOrCreateCompound(attacked.getPersistentData(), typeName);
             IOHelper.increaseIntegerTagValue(tag, "stack", 1);
             tag.putInt("duration", duration);
         }
-        return damage;
     }
 
     @Override

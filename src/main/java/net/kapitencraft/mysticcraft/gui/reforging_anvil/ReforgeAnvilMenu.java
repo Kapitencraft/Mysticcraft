@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.gui.reforging_anvil;
 
-import net.kapitencraft.kap_lib.requirements.RequirementManager;
+import net.kapitencraft.kap_lib.requirement.RequirementManager;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.capability.dungeon.IPrestigeAbleItem;
 import net.kapitencraft.mysticcraft.capability.dungeon.IReAnUpgradeable;
@@ -85,7 +85,7 @@ public class ReforgeAnvilMenu extends NoBEMenu<ReforgeAnvilMenu.ReforgeAnvilCont
     }
 
     private void removeItems(List<ItemStack> toRemove) {
-        toRemove.forEach(stack -> net.kapitencraft.kap_lib.helpers.InventoryHelper.removeFromInventory(stack, player));
+        toRemove.forEach(stack -> net.kapitencraft.kap_lib.core.helpers.InventoryHelper.removeFromInventory(stack, player));
     }
 
     @Override

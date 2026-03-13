@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.item.combat.weapon.melee.dagger;
 
-import net.kapitencraft.kap_lib.helpers.MiscHelper;
+import net.kapitencraft.kap_lib.core.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword.ModSwordItem;
 import net.kapitencraft.mysticcraft.mixin.duck.IAttacker;
 import net.kapitencraft.mysticcraft.network.packets.S2C.SwingPacket;

@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.tech.block.entity;
 
-import net.kapitencraft.kap_lib.helpers.MathHelper;
-import net.kapitencraft.kap_lib.helpers.ParticleHelper;
+import net.kapitencraft.kap_lib.core.helpers.MathHelper;
+import net.kapitencraft.kap_lib.core.helpers.ParticleHelper;
 import net.kapitencraft.mysticcraft.data_gen.ModDamageTypes;
 import net.kapitencraft.mysticcraft.registry.ModBlockEntities;
 import net.kapitencraft.mysticcraft.tech.gui.menu.ObeliskTurretMenu;

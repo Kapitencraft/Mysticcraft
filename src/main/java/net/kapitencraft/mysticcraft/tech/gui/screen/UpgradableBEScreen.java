@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.tech.gui.screen;
 
-import net.kapitencraft.kap_lib.client.gui.screen.BlockEntityScreen;
+import net.kapitencraft.kap_lib.core.client.gui.screen.BlockEntityScreen;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.network.packets.C2S.ToggleUpgradeVisibilityPacket;
 import net.kapitencraft.mysticcraft.tech.block.UpgradableBlockEntity;

@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.item.combat.armor;
 
-import net.kapitencraft.kap_lib.helpers.MiscHelper;
+import net.kapitencraft.kap_lib.core.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneHandler;
 import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneSlot;
@@ -26,7 +26,12 @@ public class TravelersBoots extends ArmorItem {
     @Override
     public @NotNull ItemAttributeModifiers getDefaultAttributeModifiers(ItemStack stack) {
         return super.getDefaultAttributeModifiers(stack).withModifierAdded(
-                Attributes.MOVEMENT_SPEED, new AttributeModifier(MysticcraftMod.res("travelers_boots_speed"), .25, AttributeModifier.Operation.ADD_MULTIPLIED_BASE),
+                Attributes.MOVEMENT_SPEED,
+                new AttributeModifier(MysticcraftMod.res("travelers_boots_speed"), .25, AttributeModifier.Operation.ADD_MULTIPLIED_BASE),
+                EquipmentSlotGroup.FEET
+        ).withModifierAdded(
+                Attributes.STEP_HEIGHT,
+                new AttributeModifier(MysticcraftMod.res("travelers_boots_step_height"), .5, AttributeModifier.Operation.ADD_VALUE),
                 EquipmentSlotGroup.FEET
         );
     }

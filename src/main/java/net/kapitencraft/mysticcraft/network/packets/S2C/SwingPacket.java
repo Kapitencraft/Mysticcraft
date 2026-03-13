@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.network.packets.S2C;
 
-import net.kapitencraft.kap_lib.helpers.ExtraStreamCodecs;
+import net.kapitencraft.kap_lib.core.helpers.ExtraStreamCodecs;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.RegistryFriendlyByteBuf;

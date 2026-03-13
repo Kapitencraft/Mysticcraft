@@ -2,10 +2,10 @@ package net.kapitencraft.mysticcraft.capability.reforging;
 
 import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
-import net.kapitencraft.kap_lib.helpers.MathHelper;
-import net.kapitencraft.kap_lib.item.bonus.AbstractBonusElement;
+import net.kapitencraft.kap_lib.bonus.AbstractBonusElement;
+import net.kapitencraft.kap_lib.core.helpers.MathHelper;
 import net.kapitencraft.kap_lib.item.modifier_display.EquipmentDisplayExtension;
-import net.kapitencraft.kap_lib.requirements.RequirementManager;
+import net.kapitencraft.kap_lib.requirement.RequirementManager;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.event.ModEventFactory;
 import net.kapitencraft.mysticcraft.registry.ModDataComponentTypes;

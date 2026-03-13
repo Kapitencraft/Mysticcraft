@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.item.combat.spells.necron_sword;
 
-import net.kapitencraft.kap_lib.registry.ExtraAttributes;
-import net.kapitencraft.kap_lib.util.attribute.BaseAttributeLocations;
+import net.kapitencraft.kap_lib.attribute.BaseAttributeLocations;
+import net.kapitencraft.kap_lib.attribute.ExtraAttributes;
 import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneHandler;
 import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneSlot;
 import net.kapitencraft.mysticcraft.registry.ModDataComponentTypes;

@@ -1,9 +1,8 @@
 package net.kapitencraft.mysticcraft.event.handler;
 
-import net.kapitencraft.kap_lib.helpers.IOHelper;
-import net.kapitencraft.kap_lib.helpers.MathHelper;
-import net.kapitencraft.kap_lib.helpers.MiscHelper;
-import net.kapitencraft.kap_lib.registry.ExtraAttributes;
+import net.kapitencraft.kap_lib.attribute.ExtraAttributes;
+import net.kapitencraft.kap_lib.core.helpers.IOHelper;
+import net.kapitencraft.kap_lib.core.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.entity.FrozenBlazeEntity;
 import net.kapitencraft.mysticcraft.helpers.InventoryHelper;
 import net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword.ManaSteelSwordItem;
@@ -47,7 +46,7 @@ public class DamageEvents {
         LivingEntity attacker = MiscHelper.getAttacker(event.getSource());
         CompoundTag tag = attacked.getPersistentData();
         if (IOHelper.checkForIntAbove0(tag, WitherShieldSpell.DAMAGE_REDUCTION_TIME)) {
-            MathHelper.mul(event::getNewDamage, event::setNewDamage, 0.9f);
+            event.setNewDamage(event.getNewDamage() * .9f);
         }
         if (attacker != null) {
             ItemStack mainHand = attacker.getMainHandItem();
@@ -63,10 +62,10 @@ public class DamageEvents {
         LivingEntity living = event.getEntity();
         CompoundTag tag = living.getPersistentData();
         if (event.getSource().is(DamageTypeTags.IS_FIRE) && living.hasEffect(ModMobEffects.BLAZING)) {
-            MathHelper.mul(event::getNewDamage, event::setNewDamage, 1 + 0.2f * living.getEffect(ModMobEffects.BLAZING).getAmplifier());
+            event.setNewDamage(event.getNewDamage() * (1 + 0.2f * living.getEffect(ModMobEffects.BLAZING).getAmplifier()));
         }
         if (living.hasEffect(ModMobEffects.VULNERABILITY)) {
-            MathHelper.mul(event::getNewDamage, event::setNewDamage, 1 + 0.05f * living.getEffect(ModMobEffects.VULNERABILITY).getAmplifier());
+            event.setNewDamage(event.getNewDamage() * (1 + 0.05f * living.getEffect(ModMobEffects.VULNERABILITY).getAmplifier()));
         }
         
         if (event.getSource().getDirectEntity() instanceof SmallFireball smallFireball) {
@@ -91,7 +90,7 @@ public class DamageEvents {
         if (attacker == null) { return; }
         if (event.getSource() instanceof ISpellSource) {
             double magicDamage = attacker.getAttributeValue(ExtraAttributes.MAGIC_DAMAGE);
-            MathHelper.mul(event::getNewDamage, event::setNewDamage, (float) ((1 + (magicDamage / 100))));
+            event.setNewDamage(event.getNewDamage() * (float) (1 + (magicDamage / 100)));
         }
     }
 

@@ -1,9 +1,9 @@
 package net.kapitencraft.mysticcraft.item.combat.armor;
 
-import net.kapitencraft.kap_lib.client.armor.provider.ArmorModelProvider;
-import net.kapitencraft.kap_lib.client.armor.provider.SimpleModelProvider;
-import net.kapitencraft.kap_lib.helpers.MiscHelper;
+import net.kapitencraft.kap_lib.core.helpers.MiscHelper;
 import net.kapitencraft.kap_lib.item.combat.armor.AbstractArmorItem;
+import net.kapitencraft.kap_lib.item.combat.armor.client.provider.ArmorModelProvider;
+import net.kapitencraft.kap_lib.item.combat.armor.client.provider.SimpleModelProvider;
 import net.kapitencraft.kap_lib.item.creative_tab.ArmorTabGroup;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.item.combat.armor.client.model.ShadowAssassinArmorModel;
@@ -22,11 +22,6 @@ public class ShadowAssassinArmorItem extends AbstractArmorItem {
 
     public ShadowAssassinArmorItem(ArmorItem.Type type) {
         super(ModArmorMaterials.SHADOW_ASSASSIN, type, MiscHelper.rarity(Rarity.EPIC).durability(type.getDurability(17)));
-    }
-
-    @Override
-    public boolean withCustomModel() {
-        return true;
     }
 
     @Override

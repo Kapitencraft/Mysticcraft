@@ -5,10 +5,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
-import net.kapitencraft.kap_lib.inventory.wearable.IWearable;
-import net.kapitencraft.kap_lib.item.bonus.AbstractBonusElement;
-import net.kapitencraft.kap_lib.item.bonus.Bonus;
-import net.kapitencraft.kap_lib.util.ExtraRarities;
+import net.kapitencraft.kap_lib.bonus.AbstractBonusElement;
+import net.kapitencraft.kap_lib.bonus.Bonus;
+import net.kapitencraft.kap_lib.core.util.ExtraRarities;
+import net.kapitencraft.kap_lib.inventory_page.wearable.IWearable;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.logging.Markers;
 import net.kapitencraft.mysticcraft.registry.ModDataComponentTypes;
@@ -21,7 +21,6 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Rarity;
 import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
@@ -75,7 +74,7 @@ public class Reforge implements AbstractBonusElement {
         if (this.bonus != null) {
             DataResult<JsonElement> result = Bonus.CODEC.encodeStart(JsonOps.INSTANCE, this.bonus);
             result.resultOrPartial(s -> ReforgeManager.LOGGER.warn(Markers.REFORGE_MANAGER, "unable to save bonus: {}", s))
-                            .ifPresent(e -> object.add("bonus", e));
+                    .ifPresent(e -> object.add("bonus", e));
         }
         return object;
     }
@@ -185,7 +184,7 @@ public class Reforge implements AbstractBonusElement {
     public enum Type implements StringRepresentable {
         MELEE_WEAPON("melee", stack -> stack.is(ItemTags.SWORDS)),
         RANGED_WEAPON("ranged", stack -> stack.is(Tags.Items.TOOLS_BOW) || stack.is(Tags.Items.TOOLS_CROSSBOW)),
-        ARMOR("armor", stack -> stack.is(Tags.Items.ARMORS) || stack.is(Items.ELYTRA)), //TODO add custom elytra support
+        ARMOR("armor", stack -> stack.is(ItemTags.EQUIPPABLE_ENCHANTABLE)),
         FISHING_ROD("fishing", stack -> stack.is(Tags.Items.TOOLS_FISHING_ROD)),
         EQUIPMENT("equipment", stack -> stack.getItem() instanceof IWearable);
 

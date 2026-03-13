@@ -1,11 +1,12 @@
 package net.kapitencraft.mysticcraft.item.combat.armor;
 
-import net.kapitencraft.kap_lib.client.armor.provider.ArmorModelProvider;
-import net.kapitencraft.kap_lib.client.armor.provider.SimpleModelProvider;
-import net.kapitencraft.kap_lib.helpers.MiscHelper;
+import net.kapitencraft.kap_lib.attribute.BaseAttributeLocations;
+import net.kapitencraft.kap_lib.attribute.ExtraAttributes;
+import net.kapitencraft.kap_lib.core.helpers.MiscHelper;
 import net.kapitencraft.kap_lib.item.combat.armor.AbstractArmorItem;
-import net.kapitencraft.kap_lib.registry.ExtraAttributes;
-import net.kapitencraft.kap_lib.util.attribute.BaseAttributeLocations;
+import net.kapitencraft.kap_lib.item.combat.armor.client.provider.ArmorModelProvider;
+import net.kapitencraft.kap_lib.item.combat.armor.client.provider.SimpleModelProvider;
+import net.kapitencraft.kap_lib.mana.ManaAttributes;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.item.combat.armor.client.model.WizardHatModel;
 import net.kapitencraft.mysticcraft.registry.ModArmorMaterials;
@@ -31,9 +32,9 @@ public class WizardHatItem extends AbstractArmorItem {
     public ItemAttributeModifiers getDefaultAttributeModifiers(ItemStack stack) {
         return ItemAttributeModifiers.builder()
                 .add(
-                        ExtraAttributes.MANA_COST,
+                        ManaAttributes.MANA_COST,
                         new AttributeModifier(
-                                BaseAttributeLocations.MANA_COST, -.05, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
+                                ManaAttributes.BASE_MANA_COST_LOC, -.05, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
                         ),
                         EquipmentSlotGroup.MAINHAND
                 ).add(
@@ -51,11 +52,6 @@ public class WizardHatItem extends AbstractArmorItem {
                         ),
                         EquipmentSlotGroup.MAINHAND
                 ).build();
-    }
-
-    @Override
-    public boolean withCustomModel() {
-        return true;
     }
 
     @Override

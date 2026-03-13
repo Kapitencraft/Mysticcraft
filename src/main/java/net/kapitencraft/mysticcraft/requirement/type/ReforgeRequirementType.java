@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.requirement.type;
 
-import net.kapitencraft.kap_lib.io.serialization.DataPackSerializer;
-import net.kapitencraft.kap_lib.requirements.type.RequirementType;
+import net.kapitencraft.kap_lib.core.io.serialization.DataPackSerializer;
+import net.kapitencraft.kap_lib.requirement.type.RequirementType;
 import net.kapitencraft.mysticcraft.capability.reforging.Reforge;
 import net.kapitencraft.mysticcraft.capability.reforging.Reforges;
 

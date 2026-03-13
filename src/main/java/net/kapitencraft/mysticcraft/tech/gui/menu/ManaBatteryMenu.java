@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.tech.gui.menu;
 
-import net.kapitencraft.kap_lib.client.gui.BlockEntityMenu;
+import net.kapitencraft.kap_lib.core.client.gui.BlockEntityMenu;
 import net.kapitencraft.mysticcraft.registry.ModMenuTypes;
 import net.kapitencraft.mysticcraft.tech.block.entity.ManaBatteryBlockEntity;
 import net.minecraft.network.FriendlyByteBuf;

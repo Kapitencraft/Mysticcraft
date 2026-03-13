@@ -3,9 +3,13 @@ package net.kapitencraft.mysticcraft.rpg.classes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.kapitencraft.mysticcraft.registry.custom.ModRegistries;
+import net.kapitencraft.mysticcraft.rpg.perks.PerkInstance;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.RegistryFixedCodec;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RPGCharacter {
 
@@ -23,6 +27,7 @@ public class RPGCharacter {
     }
 
     private final Holder<RPGClass> rpgClass;
+    private final List<PerkInstance> perks = new ArrayList<>();
     private int level;
     private float xp;
 

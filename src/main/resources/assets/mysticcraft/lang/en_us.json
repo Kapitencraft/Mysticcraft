@@ -323,6 +323,8 @@
 
   "mana.container.info": "Mana: %1$s / %2$s",
 
+  "merchant.level.6": "Grant Master",
+
   "perks.toast.description": "§e%1$s§r for the §b%2$s§r",
   "perks.toast.title": "New Tokens awarded!",
 
@@ -478,5 +480,7 @@
   "container.turret.obelisk": "Obelisk",
   "container.reforge_anvil": "Reforge Anvil",
   "wallet.balance": "Balance: %1$s / %2$s ",
-  "skills.title": "Skills"
+  "skills.title": "Skills",
+  "inventory.page.traits": "Traits",
+  "inventory.page.character": "Character"
 }

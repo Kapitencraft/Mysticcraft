@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.item.misc;
 
-import net.kapitencraft.kap_lib.helpers.MiscHelper;
+import net.kapitencraft.kap_lib.core.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.entity.ThrownCursedPearl;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;

@@ -3,7 +3,7 @@ package net.kapitencraft.mysticcraft.capability.gemstone;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
-import net.kapitencraft.kap_lib.helpers.ExtraStreamCodecs;
+import net.kapitencraft.kap_lib.core.helpers.ExtraStreamCodecs;
 import net.kapitencraft.mysticcraft.registry.ModItems;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.RegistryFriendlyByteBuf;

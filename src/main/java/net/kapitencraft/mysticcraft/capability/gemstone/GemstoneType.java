@@ -1,11 +1,12 @@
 package net.kapitencraft.mysticcraft.capability.gemstone;
 
 import io.netty.buffer.ByteBuf;
-import net.kapitencraft.kap_lib.collection.DoubleMap;
-import net.kapitencraft.kap_lib.helpers.CollectorHelper;
-import net.kapitencraft.kap_lib.helpers.ExtraStreamCodecs;
-import net.kapitencraft.kap_lib.helpers.MiscHelper;
-import net.kapitencraft.kap_lib.registry.ExtraAttributes;
+import net.kapitencraft.kap_lib.attribute.ExtraAttributes;
+import net.kapitencraft.kap_lib.core.collection.DoubleMap;
+import net.kapitencraft.kap_lib.core.helpers.CollectorHelper;
+import net.kapitencraft.kap_lib.core.helpers.ExtraStreamCodecs;
+import net.kapitencraft.kap_lib.core.helpers.MiscHelper;
+import net.kapitencraft.kap_lib.mana.ManaAttributes;
 import net.kapitencraft.mysticcraft.block.gemstone.GemstoneBlock;
 import net.kapitencraft.mysticcraft.block.gemstone.GemstoneCrystalBlock;
 import net.kapitencraft.mysticcraft.block.gemstone.GemstoneSeedBlock;
@@ -41,7 +42,7 @@ public enum GemstoneType implements StringRepresentable {
     MOONSTONE(0x0A0A0A, ExtraAttributes.DRAW_SPEED, 0.5, "moonstone", GemstoneBlock.HIGH_STRENGHT),
     PERIDOT(ChatFormatting.DARK_GREEN, Attributes.ENTITY_INTERACTION_RANGE, .1, "peridot", 11),
     RUBY(ChatFormatting.RED, Attributes.MAX_HEALTH, 0.5, "ruby", GemstoneBlock.LOW_STRENGHT),
-    SAPPHIRE((ChatFormatting.BLUE), ExtraAttributes.MAX_MANA, 2.75, "sapphire", GemstoneBlock.MEDIUM_STRENGHT),
+    SAPPHIRE((ChatFormatting.BLUE), ManaAttributes.MAX_MANA, 2.75, "sapphire", GemstoneBlock.MEDIUM_STRENGHT),
     TURQUOISE(ChatFormatting.DARK_AQUA, ExtraAttributes.FISHING_SPEED, 3, "turquoise", GemstoneBlock.LOW_MEDIUM_STRENGHT);
 
     public static final EnumCodec<GemstoneType> CODEC = StringRepresentable.fromEnum(GemstoneType::values);

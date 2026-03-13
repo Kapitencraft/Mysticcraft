@@ -1,10 +1,10 @@
 package net.kapitencraft.mysticcraft.item.combat.armor;
 
-import net.kapitencraft.kap_lib.client.armor.provider.ArmorModelProvider;
-import net.kapitencraft.kap_lib.client.armor.provider.SimpleModelProvider;
+import net.kapitencraft.kap_lib.attribute.ExtraAttributes;
+import net.kapitencraft.kap_lib.item.combat.armor.client.provider.ArmorModelProvider;
+import net.kapitencraft.kap_lib.item.combat.armor.client.provider.SimpleModelProvider;
 import net.kapitencraft.kap_lib.item.creative_tab.ArmorTabGroup;
 import net.kapitencraft.kap_lib.item.creative_tab.TabGroup;
-import net.kapitencraft.kap_lib.registry.ExtraAttributes;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.capability.ITieredItem;
 import net.kapitencraft.mysticcraft.capability.dungeon.IStarAbleItem;
@@ -59,11 +59,6 @@ public class CrimsonArmorItem extends NetherArmorItem {
         ItemStack stack = new ItemStack(ModItems.CRIMSON_ARMOR.get(Type.CHESTPLATE).get());
         ItemTier.INFERNAL.saveToStack(stack);
         return stack;
-    }
-
-    @Override
-    public boolean withCustomModel() {
-        return true;
     }
 
     @Override

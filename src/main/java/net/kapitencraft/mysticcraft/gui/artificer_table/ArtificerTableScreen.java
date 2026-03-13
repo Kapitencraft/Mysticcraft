@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.gui.artificer_table;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.kapitencraft.kap_lib.client.UsefulTextures;
+import net.kapitencraft.kap_lib.core.client.UsefulTextures;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneHandler;
 import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneSlot;

@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.helpers;
 
-import net.kapitencraft.kap_lib.helpers.MiscHelper;
+import net.kapitencraft.kap_lib.core.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.capability.ITieredItem;
 import net.kapitencraft.mysticcraft.item.combat.armor.TieredArmorItem;
 import net.minecraft.core.Holder;

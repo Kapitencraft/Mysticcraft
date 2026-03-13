@@ -2,7 +2,7 @@ package net.kapitencraft.mysticcraft.gui.widgets;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import net.kapitencraft.kap_lib.client.widget.PositionedWidget;
+import net.kapitencraft.kap_lib.core.client.widget.PositionedWidget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;

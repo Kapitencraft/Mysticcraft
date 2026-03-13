@@ -1,7 +1,8 @@
 package net.kapitencraft.mysticcraft.item.bonus;
 
-import net.kapitencraft.kap_lib.io.serialization.RegistrySerializer;
-import net.kapitencraft.kap_lib.item.bonus.Bonus;
+
+import net.kapitencraft.kap_lib.bonus.Bonus;
+import net.kapitencraft.kap_lib.core.io.serialization.RegistrySerializer;
 
 public class ManaSyphonBonus implements Bonus<ManaSyphonBonus> {
     public static final ManaSyphonBonus INSTANCE = new ManaSyphonBonus();

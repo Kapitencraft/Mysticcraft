@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.util.damage_source;
 
-import net.kapitencraft.kap_lib.helpers.MiscHelper;
+import net.kapitencraft.kap_lib.core.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.data_gen.ModDamageTypes;
 import net.kapitencraft.mysticcraft.spell.Spell;
 import net.minecraft.core.Holder;

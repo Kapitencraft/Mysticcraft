@@ -2,20 +2,20 @@ package net.kapitencraft.mysticcraft.item.bonus;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import net.kapitencraft.kap_lib.client.particle.animation.core.ParticleAnimation;
-import net.kapitencraft.kap_lib.client.particle.animation.finalizers.EmptyFinalizer;
-import net.kapitencraft.kap_lib.client.particle.animation.spawners.RingSpawner;
-import net.kapitencraft.kap_lib.client.particle.animation.terminators.BonusRemovedTerminator;
-import net.kapitencraft.kap_lib.client.util.pos_target.PositionTarget;
-import net.kapitencraft.kap_lib.helpers.MiscHelper;
-import net.kapitencraft.kap_lib.io.serialization.RegistrySerializer;
-import net.kapitencraft.kap_lib.registry.ExtraAttributes;
+import net.kapitencraft.kap_lib.attribute.ExtraAttributes;
+import net.kapitencraft.kap_lib.core.client.util.pos_target.PositionTarget;
+import net.kapitencraft.kap_lib.core.io.serialization.RegistrySerializer;
+import net.kapitencraft.kap_lib.particle.animation.core.ParticleAnimation;
+import net.kapitencraft.kap_lib.particle.animation.finalizers.EmptyFinalizer;
+import net.kapitencraft.kap_lib.particle.animation.spawners.RingSpawner;
+import net.kapitencraft.kap_lib.particle.animation.terminators.BonusRemovedTerminator;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.client.particle.flame.FlamesForColors;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -29,7 +29,7 @@ public class DominusBonus extends StackingBonus<DominusBonus> {
     public static final RegistrySerializer<DominusBonus> SERIALIZER = RegistrySerializer.unit(INSTANCE);
 
     public DominusBonus() {
-        super(MiscHelper.DamageType.MELEE, 200, "dominus");
+        super(200, "dominus", DamageSource::isDirect);
     }
 
     @Override

@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.client.particle.options;
 
 import com.mojang.serialization.MapCodec;
-import net.kapitencraft.kap_lib.util.Color;
+import net.kapitencraft.kap_lib.core.util.Color;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 

@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.entity.vampire;
 
-import net.kapitencraft.kap_lib.registry.ExtraAttributes;
+import net.kapitencraft.kap_lib.attribute.ExtraAttributes;
 import net.kapitencraft.mysticcraft.registry.ModEntityTypes;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;

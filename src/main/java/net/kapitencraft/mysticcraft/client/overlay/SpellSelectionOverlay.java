@@ -1,7 +1,7 @@
 package net.kapitencraft.mysticcraft.client.overlay;
 
-import net.kapitencraft.kap_lib.client.overlay.OverlayProperties;
-import net.kapitencraft.kap_lib.client.overlay.holder.Overlay;
+import net.kapitencraft.kap_lib.overlay.OverlayProperties;
+import net.kapitencraft.kap_lib.overlay.holder.Overlay;
 import net.kapitencraft.mysticcraft.capability.spell.SpellHelper;
 import net.kapitencraft.mysticcraft.registry.ModAttachmentTypes;
 import net.kapitencraft.mysticcraft.spell.SpellSlot;

@@ -2,10 +2,10 @@ package net.kapitencraft.mysticcraft.event.handler;
 
 import com.mojang.blaze3d.shaders.FogShape;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.kapitencraft.kap_lib.event.custom.client.RegisterChunkBufferLayersEvent;
-import net.kapitencraft.kap_lib.event.custom.client.RegisterConfigurableOverlaysEvent;
-import net.kapitencraft.kap_lib.event.custom.client.RegisterInventoryPageRenderersEvent;
-import net.kapitencraft.kap_lib.event.custom.client.RegisterItemModifiersDisplayExtensionsEvent;
+import net.kapitencraft.kap_lib.inventory_page.event.custom.client.RegisterInventoryPageRenderersEvent;
+import net.kapitencraft.kap_lib.item.event.custom.client.RegisterItemModifiersDisplayExtensionsEvent;
+import net.kapitencraft.kap_lib.overlay.event.custom.client.RegisterConfigurableOverlaysEvent;
+import net.kapitencraft.kap_lib.shader.event.custom.client.RegisterChunkBufferLayersEvent;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.block.entity.render.AltarBlockEntityRenderer;
 import net.kapitencraft.mysticcraft.block.entity.render.BasePedestalBlockEntityRenderer;
@@ -32,7 +32,7 @@ import net.kapitencraft.mysticcraft.gui.artificer_table.ArtificerTableScreen;
 import net.kapitencraft.mysticcraft.gui.reforging_anvil.ReforgeAnvilScreen;
 import net.kapitencraft.mysticcraft.item.ColoredItem;
 import net.kapitencraft.mysticcraft.registry.*;
-import net.kapitencraft.mysticcraft.rpg.skill.client.SkillsInventoryPageRenderer;
+import net.kapitencraft.mysticcraft.rpg.skill.client.CharacterInventoryPageRenderer;
 import net.kapitencraft.mysticcraft.rpg.traits.client.TraitsInventoryPageRenderer;
 import net.kapitencraft.mysticcraft.tech.gui.screen.*;
 import net.kapitencraft.mysticcraft.util.ModItemProperties;
@@ -233,7 +233,7 @@ public class ModClientEvents {
 
     @SubscribeEvent
     public static void onRegisterInventoryPageRenderers(RegisterInventoryPageRenderersEvent event) {
-        event.register(ModInventoryPageTypes.SKILLS, SkillsInventoryPageRenderer::new);
+        event.register(ModInventoryPageTypes.SKILLS, CharacterInventoryPageRenderer::new);
         event.register(ModInventoryPageTypes.ATTRIBUTES, TraitsInventoryPageRenderer::new);
     }
 }

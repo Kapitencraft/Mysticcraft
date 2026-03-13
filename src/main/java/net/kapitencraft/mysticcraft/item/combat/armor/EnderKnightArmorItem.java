@@ -1,12 +1,12 @@
 package net.kapitencraft.mysticcraft.item.combat.armor;
 
 import com.google.common.collect.HashMultimap;
-import net.kapitencraft.kap_lib.helpers.MiscHelper;
+import net.kapitencraft.kap_lib.attribute.ExtraAttributes;
+import net.kapitencraft.kap_lib.core.helpers.MiscHelper;
+import net.kapitencraft.kap_lib.core.util.ExtraRarities;
 import net.kapitencraft.kap_lib.item.combat.armor.AbstractArmorItem;
 import net.kapitencraft.kap_lib.item.creative_tab.ArmorTabGroup;
 import net.kapitencraft.kap_lib.item.creative_tab.TabGroup;
-import net.kapitencraft.kap_lib.registry.ExtraAttributes;
-import net.kapitencraft.kap_lib.util.ExtraRarities;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneHandler;
 import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneSlot;
@@ -33,11 +33,6 @@ public class EnderKnightArmorItem extends AbstractArmorItem {
                 .durability(type.getDurability(25))
                 .component(ModDataComponentTypes.EMBEDDED_GEMSTONES, GemstoneHandler.create(GemstoneSlot.Type.DEFENCE, GemstoneSlot.Type.OFFENCE, GemstoneSlot.Type.COMBAT, GemstoneSlot.Type.COMBAT, GemstoneSlot.Type.STRENGTH))
         );
-    }
-
-    @Override
-    public boolean withCustomModel() {
-        return false;
     }
 
     public static EnderKnightArmorItem create(ArmorItem.Type slot) {

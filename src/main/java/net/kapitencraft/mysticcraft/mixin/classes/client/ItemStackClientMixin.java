@@ -1,9 +1,9 @@
 package net.kapitencraft.mysticcraft.mixin.classes.client;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import net.kapitencraft.kap_lib.helpers.MiscHelper;
-import net.kapitencraft.kap_lib.helpers.TextHelper;
-import net.kapitencraft.kap_lib.mixin.duck.MixinSelfProvider;
+import net.kapitencraft.kap_lib.core.helpers.MiscHelper;
+import net.kapitencraft.kap_lib.core.helpers.TextHelper;
+import net.kapitencraft.kap_lib.core.mixin.duck.MixinSelfProvider;
 import net.kapitencraft.mysticcraft.capability.ITieredItem;
 import net.kapitencraft.mysticcraft.capability.dungeon.IStarAbleItem;
 import net.kapitencraft.mysticcraft.capability.reforging.Reforge;

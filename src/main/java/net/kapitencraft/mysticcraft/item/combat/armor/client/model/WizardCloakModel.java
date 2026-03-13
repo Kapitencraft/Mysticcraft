@@ -1,6 +1,6 @@
 package net.kapitencraft.mysticcraft.item.combat.armor.client.model;// Made with Blockbench 4.8.3
 
-import net.kapitencraft.kap_lib.client.armor.ArmorModel;
+import net.kapitencraft.kap_lib.item.combat.armor.client.ArmorModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
