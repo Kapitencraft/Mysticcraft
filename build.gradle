@@ -16,6 +16,8 @@ neoForge {
 
     version = project.neo_version
 
+    interfaceInjectionData.from 'interfaces.json'
+
     parchment {
         mappingsVersion = project.parchment_version
         minecraftVersion = project.mc_version

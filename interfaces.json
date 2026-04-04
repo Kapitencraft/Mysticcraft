@@ -1,0 +1,6 @@
+{
+  "net/minecraft/world/entity/player/Player": [
+    "net/kapitencraft/mysticcraft/mixin/duck/IBattleRodClawOwner",
+    "net/kapitencraft/mysticcraft/mixin/duck/IAttacker"
+  ]
+}

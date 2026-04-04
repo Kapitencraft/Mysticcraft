@@ -2,7 +2,6 @@ package net.kapitencraft.mysticcraft.item.combat.weapon.melee.dagger;
 
 import net.kapitencraft.kap_lib.core.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword.ModSwordItem;
-import net.kapitencraft.mysticcraft.mixin.duck.IAttacker;
 import net.kapitencraft.mysticcraft.network.packets.S2C.SwingPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -25,14 +24,14 @@ public abstract class ModDaggerItem extends ModSwordItem {
     public boolean hurtEnemy(@NotNull ItemStack pStack, @NotNull LivingEntity pTarget, @NotNull LivingEntity pAttacker) {
         super.hurtEnemy(pStack, pTarget, pAttacker);
         ItemStack offhand = pAttacker.getOffhandItem();
-        if (offhand.getItem() == this && pAttacker instanceof Player player && pTarget.isAlive() && !IAttacker.of(player).isOffhandAttack()) {
+        if (offhand.getItem() == this && pAttacker instanceof Player player && pTarget.isAlive() && !player.isOffhandAttack()) {
             MiscHelper.schedule(10, ()-> {
                 if (player.canAttack(pTarget)) {
                     MiscHelper.swapHands(pAttacker);
-                    IAttacker.of(player).setOffhandAttack();
+                    player.setOffhandAttack();
                     player.attack(pTarget);
                     PacketDistributor.sendToPlayersInDimension((ServerLevel) player.level(), new SwingPacket(InteractionHand.OFF_HAND, player.getId()));
-                    IAttacker.of(player).setMainhandAttack();
+                    player.setMainhandAttack();
                     MiscHelper.swapHands(pAttacker);
                 }
             });
