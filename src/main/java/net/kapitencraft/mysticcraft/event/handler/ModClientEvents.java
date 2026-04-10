@@ -16,6 +16,7 @@ import net.kapitencraft.mysticcraft.capability.reforging.Reforges;
 import net.kapitencraft.mysticcraft.client.ItemCategory;
 import net.kapitencraft.mysticcraft.client.ModKeyMappings;
 import net.kapitencraft.mysticcraft.client.model.ModPoses;
+import net.kapitencraft.mysticcraft.client.overlay.ManaSupplyOverlay;
 import net.kapitencraft.mysticcraft.client.overlay.SpellCastChargeOverlay;
 import net.kapitencraft.mysticcraft.client.overlay.SpellSelectionOverlay;
 import net.kapitencraft.mysticcraft.client.particle.CircleParticle;
@@ -168,6 +169,12 @@ public class ModClientEvents {
     }
 
     @SubscribeEvent
+    public static void onRegisterGuiLayers(RegisterGuiLayersEvent event) {
+        event.registerAboveAll(MysticcraftMod.res("mana_overlay"), new ManaSupplyOverlay()::maybeRenderManaSupplyBar);
+    }
+
+
+    @SubscribeEvent
     public static void onRegisterNamedRenderTypes(RegisterNamedRenderTypesEvent event) {
         event.register(MysticcraftMod.res("chromatic_cutout"), ModRenderTypes.CHROMATIC_CUTOUT, ModRenderTypes.CHROMATIC_CUTOUT_ENTITY);
         event.register(MysticcraftMod.res("chromatic_cutout_noise"), ModRenderTypes.CHROMATIC_CUTOUT_NOISE, ModRenderTypes.CHROMATIC_CUTOUT_ENTITY_NOISE);
@@ -234,6 +241,6 @@ public class ModClientEvents {
     @SubscribeEvent
     public static void onRegisterInventoryPageRenderers(RegisterInventoryPageRenderersEvent event) {
         event.register(ModInventoryPageTypes.SKILLS, CharacterInventoryPageRenderer::new);
-        event.register(ModInventoryPageTypes.ATTRIBUTES, TraitsInventoryPageRenderer::new);
+        event.register(ModInventoryPageTypes.PERKS, TraitsInventoryPageRenderer::new);
     }
 }
