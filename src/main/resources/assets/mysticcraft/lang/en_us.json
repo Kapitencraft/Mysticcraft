@@ -278,6 +278,7 @@
   "item.mysticcraft.soul_steel_nugget": "Soul Steel Nugget",
   "item.mysticcraft.spell_scroll": "Spell Scroll",
   "item.mysticcraft.spell_shard": "Spell Shard",
+  "item.mysticcraft.splash_potion_of_milk": "Splash Potion of Milk",
   "item.mysticcraft.staff_of_destruction": "Staff of Destruction",
   "item.mysticcraft.staff_of_the_wild": "Staff of the Wild",
   "item.mysticcraft.stone_hammer": "Stone Hammer",
@@ -482,5 +483,10 @@
   "wallet.balance": "Balance: %1$s / %2$s ",
   "skills.title": "Skills",
   "inventory.page.traits": "Traits",
-  "inventory.page.character": "Character"
+  "inventory.page.character": "Character",
+  "item.indicator.cleaver": "CLEAVER",
+  "item.indicator.dagger": "DAGGER",
+  "item.indicator.halberd": "HALBERD",
+  "item.indicator.lance": "LANCE",
+  "item.indicator.spear": "SPEAR"
 }

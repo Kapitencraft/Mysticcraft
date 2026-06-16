@@ -9,7 +9,7 @@ import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class UseShortBowPacket implements CustomPacketPayload {
-    private static final UseShortBowPacket INSTANCE = new UseShortBowPacket();
+    public static final UseShortBowPacket INSTANCE = new UseShortBowPacket();
     public static final StreamCodec<RegistryFriendlyByteBuf, UseShortBowPacket> STREAM_CODEC = StreamCodec.unit(INSTANCE);
     public static final Type<UseShortBowPacket> TYPE = new Type<>(MysticcraftMod.res("use_short_bow"));
 

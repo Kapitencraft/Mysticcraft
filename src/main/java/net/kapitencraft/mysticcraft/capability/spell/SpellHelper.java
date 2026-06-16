@@ -79,7 +79,7 @@ public interface SpellHelper {
     }
 
     static void setSpell(ItemStack stack, int i, SpellSlot spell) {
-        stack.update(ModDataComponentTypes.ITEM_SPELLS, new ItemSpells(List.of(new SpellSlot())), s -> s.setSlot(i, spell));
+        stack.update(ModDataComponentTypes.ITEM_SPELLS, new ItemSpells(List.of(SpellSlot.EMPTY)), s -> s.setSlot(i, spell));
     }
 
     static void setSpell(ItemStack stack, int i, Holder<Spell> spell) {

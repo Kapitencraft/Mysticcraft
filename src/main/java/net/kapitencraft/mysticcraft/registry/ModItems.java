@@ -20,6 +20,7 @@ import net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword.DoubleSword;
 import net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword.GhostlySword;
 import net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword.ManaSteelSwordItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword.ModSwordItem;
+import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.BattleRodItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.QuiverItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.bow.LongBowItem;
 import net.kapitencraft.mysticcraft.item.combat.weapon.ranged.bow.ModBowItem;
@@ -108,6 +109,7 @@ public interface ModItems {
     DeferredItem<Astraea> ASTREA = register("astrea", Astraea::new, NecronSword.NECRON_GROUP);
     DeferredItem<NecronSword> VALKYRIE = register("valkyrie", Valkyrie::new, NecronSword.NECRON_GROUP);
     DeferredItem<ShadowDagger> SHADOW_DAGGER = register("shadow_dagger", ShadowDagger::new, TabGroups.COMBAT);
+    DeferredItem<BattleRodItem> BATTLE_ROD = register("battle_rod", BattleRodItem::new, TabGroups.COMBAT);
     //endregion
 
     //region wands

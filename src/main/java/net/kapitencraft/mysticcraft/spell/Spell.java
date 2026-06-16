@@ -15,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class Spell {
+
     private final double manaCost;
     private final int castDuration;
     private final Type type;

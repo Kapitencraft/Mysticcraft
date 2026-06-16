@@ -12,7 +12,7 @@ import java.util.List;
 
 public class SpellScrollItem extends Item {
     public SpellScrollItem() {
-        super(new Properties().rarity(Rarity.RARE).component(ModDataComponentTypes.ITEM_SPELLS, new ItemSpells(List.of(new SpellSlot()))));
+        super(new Properties().rarity(Rarity.RARE).component(ModDataComponentTypes.ITEM_SPELLS, new ItemSpells(List.of(SpellSlot.EMPTY))));
     }
 
     public static SpellSlot getSpell(ItemStack stack) {

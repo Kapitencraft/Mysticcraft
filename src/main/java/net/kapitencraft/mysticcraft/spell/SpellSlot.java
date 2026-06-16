@@ -16,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class SpellSlot {
+    public static final SpellSlot EMPTY = new SpellSlot();
 
     public static final Codec<SpellSlot> CODEC = ModRegistries.SPELLS.holderByNameCodec().xmap(SpellSlot::new, SpellSlot::getSpell);
     public static final Codec<List<SpellSlot>> LIST_CODEC = SpellSlot.CODEC.listOf();

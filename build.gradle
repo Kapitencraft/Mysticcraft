@@ -63,6 +63,12 @@ neoForge {
             programArguments.addAll '--username', 'Kaupenjoe', '--uuid', '665ad10f-5548-4985-986b-b642732ddce0'
         }
 
+        quickClient {
+            client()
+            programArguments.addAll '--username', 'Kapitencraft', '--uuid', '00c930fd-9d29-44ca-b614-e5ce6e8bd457',
+                                    '--quickPlaySingleplayer', 'New World'
+        }
+
         server {
             server()
             programArgument '--nogui'
@@ -88,6 +94,8 @@ neoForge {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
+    mavenLocal()
+
     // Put repositories for dependencies here
     // ForgeGradle automatically adds the Forge maven and Maven Central for you
 
@@ -120,7 +128,9 @@ dependencies {
 
     //runtimeOnly "blank:debug_plus:v1.0.0-mc${mc_version}"
 
-    implementation "maven.modrinth:kap_lib:v${kap_lib_version}-mc${mc_version}"
+    implementation ("io.github.kapitencraft:kap_lib:v${kap_lib_version}-mc${mc_version}") {
+        transitive = true
+    }
 }
 
 tasks.named('processResources', ProcessResources).configure {

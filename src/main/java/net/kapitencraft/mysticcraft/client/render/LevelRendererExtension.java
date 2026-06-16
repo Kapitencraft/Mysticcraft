@@ -44,6 +44,7 @@ public class LevelRendererExtension {
             DistributionNetworkManager manager = DistributionNetworkManager.getClient();
             VertexConsumer buffer = source.getBuffer(RenderType.debugLineStrip(20));
 
+            Matrix4f posMat = stack.last().pose();
             for (ManaDistributionNetwork network : manager.getNetworks()) {
                 List<ManaDistributionNetwork.Node> visited = new ArrayList<>();
                 for (ManaDistributionNetwork.Node node : network.getNodes()) {
@@ -51,7 +52,6 @@ public class LevelRendererExtension {
                         if (!visited.contains(node1) && frustum.isVisible(new AABB(node.getPosition().getCenter(), node1.getPosition().getCenter()))) {
                             Vec3 start = node.getPosition().getCenter();
                             Vec3 end = node1.getPosition().getCenter();
-                            Matrix4f posMat = stack.last().pose();
                             buffer.addVertex(posMat, (float) start.x, (float) start.y, (float) start.z).setColor(0, 150, 240, 255);
                             buffer.addVertex(posMat, (float) end.x, (float) end.y, (float) end.z).setColor(0, 150, 240, 255);
                         }

@@ -8,11 +8,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
 
-public class TraitsInventoryPage extends InventoryPage {
+public class PerksInventoryPage extends InventoryPage {
     private final Player player;
 
-    public TraitsInventoryPage(Player player, SlotAdder adder) {
-        super(ModInventoryPageTypes.ATTRIBUTES.get());
+    public PerksInventoryPage(Player player, SlotAdder adder) {
+        super(ModInventoryPageTypes.PERKS.get());
         this.player = player;
     }
 

@@ -41,6 +41,12 @@ public class ItemCategory {
             categories.add(ItemCategory.tag(ModTags.Items.CATALYST, Component.translatable("item.indicator.spell_catalyst")));
             categories.add(ItemCategory.tag(ItemTags.AXES, Component.translatable("item.indicator.axe")));
             categories.add(ItemCategory.tag(ItemTags.SWORDS, Component.translatable("item.indicator.sword")));
+            categories.add(ItemCategory.tag(ModTags.Items.LONGSWORD, Component.translatable("item.indicator.longsword")));
+            categories.add(ItemCategory.tag(ModTags.Items.CLEAVER, Component.translatable("item.indicator.cleaver")));
+            categories.add(ItemCategory.tag(ModTags.Items.DAGGER, Component.translatable("item.indicator.dagger")));
+            categories.add(ItemCategory.tag(ModTags.Items.HALBERD, Component.translatable("item.indicator.halberd")));
+            categories.add(ItemCategory.tag(ModTags.Items.LANCE, Component.translatable("item.indicator.lance")));
+            categories.add(ItemCategory.tag(ModTags.Items.SPEAR, Component.translatable("item.indicator.spear")));
             categories.add(ItemCategory.tag(ItemTags.PICKAXES, Component.translatable("item.indicator.pickaxe")));
             categories.add(ItemCategory.tag(ItemTags.FOOT_ARMOR, Component.translatable("item.indicator.boots")));
             categories.add(ItemCategory.tag(ItemTags.CHEST_ARMOR, Component.translatable("item.indicator.chestplate")));

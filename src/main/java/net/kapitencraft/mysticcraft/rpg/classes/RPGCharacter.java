@@ -66,4 +66,6 @@ public class RPGCharacter {
     public static RPGCharacter createEmpty() {
         return new RPGCharacter(null);
     }
+
+
 }

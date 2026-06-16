@@ -20,11 +20,15 @@ public class ModTags {
         TagKey<Item> TIER_2_HAMMER = create("tier_2_hammer");
         TagKey<Item> STRIPPED_LOGS = forge("stripped_logs");
         TagKey<Item> ENDER_HITTABLE = create("ender_hittable");
+
+        //weapon
+        TagKey<Item> LONGSWORD = createWeapon("longsword");
         TagKey<Item> CLEAVER = createWeapon("cleaver");
         TagKey<Item> DAGGER = createWeapon("dagger");
         TagKey<Item> HALBERD = createWeapon("halberd");
         TagKey<Item> LANCE = createWeapon("lance");
         TagKey<Item> SPEAR = createWeapon("spear");
+
         TagKey<Item> CATALYST = create("magic_catalyst");
         TagKey<Item> UPGRADE = create("upgrade");
         TagKey<Item> DRAGON_TEMPTING = create("dragon_tempting");

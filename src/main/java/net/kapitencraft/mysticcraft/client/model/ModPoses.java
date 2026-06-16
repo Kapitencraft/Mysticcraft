@@ -8,4 +8,4 @@ import net.neoforged.api.distmarker.OnlyIn;
 public class ModPoses {
 
     public static HumanoidModel.ArmPose CAST_SPELL = HumanoidModel.ArmPose.valueOf("mysticcraft$CAST_SPELL");
-    }
+}

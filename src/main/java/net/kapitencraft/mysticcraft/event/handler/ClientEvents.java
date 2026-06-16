@@ -25,7 +25,7 @@ public class ClientEvents {
         if (event.isAttack() && player != null && player.getMainHandItem().getItem() instanceof ShortBowItem) {
             event.setCanceled(true);
             player.swing(InteractionHand.MAIN_HAND);
-            PacketDistributor.sendToServer(new UseShortBowPacket());
+            PacketDistributor.sendToServer(UseShortBowPacket.INSTANCE);
         }
     }
 
