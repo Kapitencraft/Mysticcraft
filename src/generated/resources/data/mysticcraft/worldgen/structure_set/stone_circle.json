@@ -1,0 +1,22 @@
+{
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 502671038,
+    "separation": 4,
+    "spacing": 7
+  },
+  "structures": [
+    {
+      "structure": "mysticcraft:stone_circle/common",
+      "weight": 1
+    },
+    {
+      "structure": "mysticcraft:stone_circle/deepslate",
+      "weight": 1
+    },
+    {
+      "structure": "mysticcraft:stone_circle/sandstone",
+      "weight": 1
+    }
+  ]
+}

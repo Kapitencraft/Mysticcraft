@@ -1,4 +1,4 @@
-// 1.21.1	2025-10-26T16:39:02.2566221	Registries
+// 1.21.1	2026-07-22T11:27:05.0453784	Registries
 ceac723b3239e37705eac152fb1e58a693f51964 data/mysticcraft/damage_type/ability.json
 3fc7f6e350b074892c8344083340a54faf8c1866 data/mysticcraft/damage_type/chain_lightning.json
 7d759840f1bd6ba77e1c8c1750e739824f77a2a5 data/mysticcraft/damage_type/magic_explosion.json
@@ -22,3 +22,7 @@ a001ed24e18a15acadf6b31d0cd37b5d733c78d0 data/mysticcraft/worldgen/configured_fe
 7e21d4c02148fa4150217f3f23512652d59b115b data/mysticcraft/worldgen/configured_feature/peridot_sycamore_tree.json
 ee05e75585edc394d8a9129cd3799f3ad435e69e data/mysticcraft/worldgen/placed_feature/crimsonium_placed.json
 1ec63b66958a5493431540f3f86e0420ed064c36 data/mysticcraft/worldgen/placed_feature/gemstone_spawn_placed.json
+c9eb936e34c1afbc527d8919a1418d3cf0fe6be2 data/mysticcraft/worldgen/structure/stone_circle/common.json
+6f42ba3e88e162101147c3f2e54989d3cc1f921d data/mysticcraft/worldgen/structure/stone_circle/deepslate.json
+08c46dd9ca527c45cbf326de721e8dfe82f3dbb2 data/mysticcraft/worldgen/structure/stone_circle/sandstone.json
+c3e44372d200a9ea9be80a39760af6234ca6053b data/mysticcraft/worldgen/structure_set/stone_circle.json
