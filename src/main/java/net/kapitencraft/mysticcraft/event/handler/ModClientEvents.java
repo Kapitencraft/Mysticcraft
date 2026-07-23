@@ -4,6 +4,7 @@ import com.mojang.blaze3d.shaders.FogShape;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.kapitencraft.kap_lib.inventory_page.event.custom.client.RegisterInventoryPageRenderersEvent;
 import net.kapitencraft.kap_lib.item.event.custom.client.RegisterItemModifiersDisplayExtensionsEvent;
+import net.kapitencraft.kap_lib.overlay.OverlayProperties;
 import net.kapitencraft.kap_lib.overlay.event.custom.client.RegisterConfigurableOverlaysEvent;
 import net.kapitencraft.kap_lib.shader.event.custom.client.RegisterChunkBufferLayersEvent;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
@@ -164,15 +165,22 @@ public class ModClientEvents {
 
     @SubscribeEvent
     public static void onRegisterConfigurableOverlays(RegisterConfigurableOverlaysEvent event) {
-        event.addOverlay(ModOverlays.CAST_CHARGE, SpellCastChargeOverlay::new);
-        event.addOverlay(ModOverlays.SPELL_SELECTION, SpellSelectionOverlay::new);
+        event.addOverlay(
+                SpellCastChargeOverlay.LOCATION,
+                new OverlayProperties(-50, 50, 1, 1, OverlayProperties.Alignment.MIDDLE, OverlayProperties.Alignment.BOTTOM_RIGHT),
+                SpellCastChargeOverlay::new
+        );
+        event.addOverlay(
+                SpellSelectionOverlay.LOCATION,
+                new OverlayProperties(142, 1, 1, 1, OverlayProperties.Alignment.BOTTOM_RIGHT, OverlayProperties.Alignment.TOP_LEFT),
+                SpellSelectionOverlay::new
+        );
     }
 
     @SubscribeEvent
     public static void onRegisterGuiLayers(RegisterGuiLayersEvent event) {
         event.registerAboveAll(MysticcraftMod.res("mana_overlay"), new ManaSupplyOverlay()::maybeRenderManaSupplyBar);
     }
-
 
     @SubscribeEvent
     public static void onRegisterNamedRenderTypes(RegisterNamedRenderTypesEvent event) {

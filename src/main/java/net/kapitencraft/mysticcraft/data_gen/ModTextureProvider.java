@@ -1,6 +1,5 @@
 package net.kapitencraft.mysticcraft.data_gen;
 
-import net.kapitencraft.kap_lib.KapLibMod;
 import net.kapitencraft.kap_lib.datagen.TextureProvider;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.minecraft.data.PackOutput;
@@ -19,6 +18,6 @@ public class ModTextureProvider extends TextureProvider {
         register(ResourceLocation.withDefaultNamespace("particle/flame"), MysticcraftMod.res("particle/pale_flame"))
                 .then(Pale.INSTANCE);
         register(MysticcraftMod.res("item/elements/rainbow_shard"), MysticcraftMod.res("item/rainbow_sword"))
-                .then(Transfer.createWithMask(ResourceLocation.withDefaultNamespace("item/diamond_sword"), KapLibMod.res("item/mask/sword")));
+                .then(Transfer.createWithMask(ResourceLocation.withDefaultNamespace("item/diamond_sword"), TextureProvider.SWORD_MASK));
     }
 }

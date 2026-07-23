@@ -1,4 +1,4 @@
-// 1.21.1	2025-10-18T23:21:48.6212994	Block States: mysticcraft
+// 1.21.1	2026-07-21T22:57:37.307892	Block States: mysticcraft
 976f82e95ecd585522b1743fb061ae17e2147dbc assets/mysticcraft/blockstates/artificer_table.json
 5637f5f443cb8049d9f40a1f2e13f5d8705df435 assets/mysticcraft/blockstates/crimsonium_ore.json
 f5ab741f65926f72e8efde5b1bec4468a6d01092 assets/mysticcraft/blockstates/gemstone_block.json
@@ -25,10 +25,10 @@ e5bf333f74e3d5744fb7158b6f122d333f7ff8ed assets/mysticcraft/models/block/artific
 d7f3e722c5a7940eb312b7657df80cfba78ced59 assets/mysticcraft/models/block/colored_block.json
 d43c46e8e869782160286bff1551efa19b1d1207 assets/mysticcraft/models/block/crimsonium_ore.json
 9d4f33ae74a0e33822f1fec20869398b730e15e4 assets/mysticcraft/models/block/gemstone/block.json
-2abd15da3fa96e180029db1bdb3d490590442170 assets/mysticcraft/models/block/gemstone/crystal/cluster.json
-1abb9756338e905dd55fd5dc839a7035ab8931f8 assets/mysticcraft/models/block/gemstone/crystal/large.json
-f4a0c0eb39ac7d11af6bb2d700937d51bb107ce8 assets/mysticcraft/models/block/gemstone/crystal/medium.json
-6a732ede565d21a657227ee4f05c3baca57be17f assets/mysticcraft/models/block/gemstone/crystal/small.json
+55707d5609786db35ea0d24a7753d3d0a82dd988 assets/mysticcraft/models/block/gemstone/crystal/cluster.json
+094a189de9aab4aee7710db376d47b8d4c19c28f assets/mysticcraft/models/block/gemstone/crystal/large.json
+9ad0ce0a39e2b2c9066f9d8f7fe2a9eb7975a7f5 assets/mysticcraft/models/block/gemstone/crystal/medium.json
+0d9444e8cf5ce247b036b8769abd6dd9cd96350e assets/mysticcraft/models/block/gemstone/crystal/small.json
 bcf0069c79830016e2ae8f9d5b4a9b02e22b7a67 assets/mysticcraft/models/block/gemstone/seed/base.json
 8b91566703a237a229726b5a8937e1ebbfe04732 assets/mysticcraft/models/block/gemstone/seed/deepslate.json
 41393a9290e4a330bd354547bbb6dc2fdc1912db assets/mysticcraft/models/block/gemstone/seed/end_stone.json
@@ -60,7 +60,6 @@ dac30d3380dda2fc21ea6000bc84c0ff29bd2b6c assets/mysticcraft/models/block/peridot
 2122e53280d592572e19da3d978df28b19b60963 assets/mysticcraft/models/block/stripped_peridot_sycamore_log_horizontal.json
 a55f08b05b08992d98b9620b48de4cb1e4deab0b assets/mysticcraft/models/block/stripped_peridot_sycamore_wood.json
 303a88c7ea3918ea52b3057694c5d46dbfa34ec5 assets/mysticcraft/models/block/thistle.json
-2027a6a1d5a4681275ada6c2373773519c618ed9 assets/mysticcraft/models/block/tinted_cross.json
 af9466d5d9522f1fd9b0574a6c0113e468e4fa8e assets/mysticcraft/models/item/artificer_table.json
 168b0574c5164266d06cc385248852f9ff96f1e7 assets/mysticcraft/models/item/crimsonium_ore.json
 8a580e75a9a4909277be804d3d7844ded80294c3 assets/mysticcraft/models/item/gemstone_block.json

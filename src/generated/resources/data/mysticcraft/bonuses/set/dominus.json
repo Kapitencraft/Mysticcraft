@@ -1,13 +1,11 @@
 {
-  "type": "mysticcraft:dominus",
   "bonus": {
     "type": "mysticcraft:dominus"
   },
   "equipment_slots": [
-    "legs",
     "feet",
+    "legs",
     "chest",
     "head"
-  ],
-  "wearable_slots": []
+  ]
 }

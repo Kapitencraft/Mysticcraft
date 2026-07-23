@@ -64,7 +64,6 @@ public class MysticcraftMod {
         ModInventoryPageTypes.REGISTRY.register(modEventBus);
         ModCommandArgumentTypes.REGISTRY.register(modEventBus);
         ModAttributes.REGISTRY.register(modEventBus);
-        ModOverlays.REGISTRY.register(modEventBus);
         ModCooldowns.REGISTRY.register(modEventBus);
         ModTrunkPlacers.REGISTRY.register(modEventBus);
         ModFoliagePlacers.REGISTRY.register(modEventBus);
@@ -75,12 +74,12 @@ public class MysticcraftMod {
         ModAttachmentTypes.REGISTRY.register(modEventBus);
         ModEntityEffectComponents.REGISTRY.register(modEventBus);
         ModArmorMaterials.REGISTRY.register(modEventBus);
+        ModStructureTypes.REGISTRY.register(modEventBus);
+        ModStructurePieceTypes.REGISTRY.register(modEventBus);
 
         container.registerConfig(ModConfig.Type.CLIENT, ClientModConfig.SPEC);
         container.registerConfig(ModConfig.Type.COMMON, CommonModConfig.SPEC);
         //ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ServerModConfig.SPEC);
-
-        
     }
 
     public static void sendRegisterDisplay(String nameOfRegistered, Marker marker) {

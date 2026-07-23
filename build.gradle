@@ -38,7 +38,7 @@ neoForge {
         // applies to all the run configs below
         configureEach {
 
-            systemProperty 'forge.enabledGameTestNamespaces', mod_id
+            systemProperty 'neoforge.enabledGameTestNamespaces', mod_id
             // Recommended logging data for a userdev environment
             // The markers can be added/remove as needed separated by commas.
             // "SCAN": For mods scan.
@@ -66,7 +66,7 @@ neoForge {
         quickClient {
             client()
             programArguments.addAll '--username', 'Kapitencraft', '--uuid', '00c930fd-9d29-44ca-b614-e5ce6e8bd457',
-                                    '--quickPlaySingleplayer', 'New World'
+                    '--quickPlaySingleplayer', 'New World'
         }
 
         server {
@@ -76,10 +76,12 @@ neoForge {
 
         data {
             data()
-            // example of overriding the workingDirectory set in configureEach above
 
             // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
-            programArguments.addAll '--mod', mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath(), '--existing-mod', 'kap_lib'
+            programArguments.addAll '--mod', mod_id, '--all',
+                    '--output', file('src/generated/resources/').getAbsolutePath(),
+                    '--existing', file('src/main/resources/').getAbsolutePath(),
+                    '--existing-mod', 'kap_lib_datagen'
         }
     }
 
@@ -128,18 +130,20 @@ dependencies {
 
     //runtimeOnly "blank:debug_plus:v1.0.0-mc${mc_version}"
 
-    implementation ("io.github.kapitencraft:kap_lib:v${kap_lib_version}-mc${mc_version}") {
-        transitive = true
-    }
+    jarJar(implementation("io.github.kapitencraft:kap_lib:v${kap_lib_version}-mc${mc_version}"))
+
+    //dataAdditionalRuntimeClasspath ("io.github.kapitencraft:kap_lib-datagen:v${kap_lib_version}-mc${mc_version}") {
+    //    transitive = false
+    //}
 }
 
 tasks.named('processResources', ProcessResources).configure {
     var metaProperties = [
-            minecraft_version: mc_version, mc_version_range: mc_version_range,
-            neo_version    : neo_version, neo_version_range: neo_version_range,
+            minecraft_version   : mc_version, mc_version_range: mc_version_range,
+            neo_version         : neo_version, neo_version_range: neo_version_range,
             loader_version_range: loader_version_range,
-            mod_id           : mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
-            mod_authors      : mod_authors, mod_description: mod_description,
+            mod_id              : mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
+            mod_authors         : mod_authors, mod_description: mod_description,
     ]
     inputs.properties metaProperties
 
@@ -148,7 +152,7 @@ tasks.named('processResources', ProcessResources).configure {
     }
 
     var publishProperties = [
-            mod_id: mod_id, mod_name: mod_name,
+            mod_id     : mod_id, mod_name: mod_name,
             mod_version: mod_version, minecraft_version: mc_version,
             neo_version: neo_version, kap_lib_version: kap_lib_version
     ]

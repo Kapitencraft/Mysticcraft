@@ -14,7 +14,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.biome.Biome;
@@ -25,6 +24,7 @@ import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.CollisionContext;
 
 import java.util.Arrays;
 
@@ -54,7 +54,7 @@ public class GemstoneSpawnFeature extends Feature<GemstoneSpawnFeature.Config> {
             int yRot = Mth.nextInt(source, 0, 359); //create a random rot to spawn gemstone seed in
             Vec3 viewVec = MathHelper.calculateViewVector(90 - xRot, yRot);
             Vec3 max = viewVec.scale(30); //scale rot vec to a max distance of 30 blocks
-            BlockHitResult result = pLevel.clip(new ClipContext(viewVec.add(pPos.getCenter()), max.add(pPos.getCenter()), ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, (Entity) null)); //create hit result
+            BlockHitResult result = pLevel.clip(new ClipContext(viewVec.add(pPos.getCenter()), max.add(pPos.getCenter()), ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, CollisionContext.empty())); //create hit result
             BlockPos current = result.getBlockPos();
             if (!pLevel.hasChunkAt(current)) continue;
             Block block = pLevel.getBlockState(current).getBlock(); //get block from hit result

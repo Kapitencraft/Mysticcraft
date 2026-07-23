@@ -2,6 +2,7 @@ package net.kapitencraft.mysticcraft.client.overlay;
 
 import net.kapitencraft.kap_lib.overlay.OverlayProperties;
 import net.kapitencraft.kap_lib.overlay.holder.Overlay;
+import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.capability.spell.SpellHelper;
 import net.kapitencraft.mysticcraft.item.combat.spells.SpellItem;
 import net.kapitencraft.mysticcraft.spell.Spell;
@@ -10,9 +11,12 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
 public class SpellCastChargeOverlay extends Overlay {
+    public static final ResourceLocation LOCATION = MysticcraftMod.res("cast_charge");
+
     public SpellCastChargeOverlay(OverlayProperties holder) {
         super(holder, Component.translatable("overlay.cast_charge"));
     }

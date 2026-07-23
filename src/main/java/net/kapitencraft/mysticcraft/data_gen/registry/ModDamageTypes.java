@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.data_gen;
+package net.kapitencraft.mysticcraft.data_gen.registry;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.minecraft.core.registries.Registries;

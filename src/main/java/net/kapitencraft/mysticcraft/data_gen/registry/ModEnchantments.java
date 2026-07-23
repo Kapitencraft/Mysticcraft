@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.data_gen;
+package net.kapitencraft.mysticcraft.data_gen.registry;
 
 import net.kapitencraft.kap_lib.core.helpers.EnchantmentHelperExtras;
 import net.kapitencraft.kap_lib.mana.ManaAttributes;

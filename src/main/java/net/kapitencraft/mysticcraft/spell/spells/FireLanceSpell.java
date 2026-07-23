@@ -3,7 +3,7 @@ package net.kapitencraft.mysticcraft.spell.spells;
 import net.kapitencraft.kap_lib.core.helpers.MathHelper;
 import net.kapitencraft.kap_lib.core.helpers.ParticleHelper;
 import net.kapitencraft.mysticcraft.capability.spell.SpellHelper;
-import net.kapitencraft.mysticcraft.data_gen.ModDamageTypes;
+import net.kapitencraft.mysticcraft.data_gen.registry.ModDamageTypes;
 import net.kapitencraft.mysticcraft.item.combat.spells.FireLance;
 import net.kapitencraft.mysticcraft.registry.ModMobEffects;
 import net.kapitencraft.mysticcraft.spell.Spell;

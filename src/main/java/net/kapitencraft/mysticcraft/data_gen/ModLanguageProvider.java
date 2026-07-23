@@ -19,7 +19,7 @@ public class ModLanguageProvider extends EnglishLanguageProvider {
     @Override
     protected void addTranslations() {
 
-        Reforges.all().keySet().forEach(id -> this.add(Util.makeDescriptionId("reforge", id), TextHelper.makeGrammar(id.getPath())));
+        Reforges.all().keySet().forEach(id -> this.add(Util.makeDescriptionId("reforge", id), TextHelper.langify(id.getPath())));
         ModItems.getEntries().stream().sorted(Comparator.comparing(o -> o.getKey().location())).forEach(DeferredHolder::get);
 
         addDeathMessage("mana_overflow", "%1$s stood to close to %2$s as they lost control over their mana");

@@ -2,6 +2,7 @@ package net.kapitencraft.mysticcraft.client.overlay;
 
 import net.kapitencraft.kap_lib.overlay.OverlayProperties;
 import net.kapitencraft.kap_lib.overlay.holder.Overlay;
+import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.capability.spell.SpellHelper;
 import net.kapitencraft.mysticcraft.registry.ModAttachmentTypes;
 import net.kapitencraft.mysticcraft.spell.SpellSlot;
@@ -11,10 +12,12 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.List;
 
 public class SpellSelectionOverlay extends Overlay {
+    public static final ResourceLocation LOCATION = MysticcraftMod.res("spell_selection");
 
     public SpellSelectionOverlay(OverlayProperties holder) {
         super(holder, Component.translatable("spell.available.title"));

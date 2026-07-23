@@ -11,7 +11,7 @@ import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneHandler;
 import net.kapitencraft.mysticcraft.capability.reforging.Reforge;
 import net.kapitencraft.mysticcraft.capability.reforging.Reforges;
 import net.kapitencraft.mysticcraft.capability.spell.SpellHelper;
-import net.kapitencraft.mysticcraft.data_gen.ModDamageTypes;
+import net.kapitencraft.mysticcraft.data_gen.registry.ModDamageTypes;
 import net.kapitencraft.mysticcraft.item.tools.HammerItem;
 import net.kapitencraft.mysticcraft.network.packets.S2C.HammerAbortBreakPacket;
 import net.kapitencraft.mysticcraft.registry.ModAttachmentTypes;
