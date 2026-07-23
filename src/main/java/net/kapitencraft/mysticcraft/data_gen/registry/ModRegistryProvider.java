@@ -1,4 +1,4 @@
-package net.kapitencraft.mysticcraft.data_gen;
+package net.kapitencraft.mysticcraft.data_gen.registry;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.registry.custom.ModRegistries;
@@ -22,6 +22,9 @@ public class ModRegistryProvider extends DatapackBuiltinEntriesProvider {
             .add(Registries.CONFIGURED_FEATURE, ModConfiguredFeatures::bootstrap)
             .add(Registries.PLACED_FEATURE, ModPlacedFeatures::bootstrap)
             .add(Registries.DAMAGE_TYPE, ModDamageTypes::bootstrap)
+            .add(Registries.STRUCTURE, ModStructures::bootstrap)
+            .add(Registries.TEMPLATE_POOL, ModStructurePools::bootstrap)
+            .add(Registries.STRUCTURE_SET, ModStructureSets::bootstrap)
             .add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, ModBiomeModifiers::bootstrap)
             .add(Registries.ENCHANTMENT, ModEnchantments::bootstrap)
             .add(ModRegistries.Keys.CLASSES, RPGClasses::bootstrap)

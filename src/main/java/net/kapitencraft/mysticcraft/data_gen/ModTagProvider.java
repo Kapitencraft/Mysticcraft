@@ -2,6 +2,7 @@ package net.kapitencraft.mysticcraft.data_gen;
 
 import net.kapitencraft.kap_lib.item.combat.armor.AbstractArmorItem;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
+import net.kapitencraft.mysticcraft.data_gen.registry.ModDamageTypes;
 import net.kapitencraft.mysticcraft.registry.ModBlocks;
 import net.kapitencraft.mysticcraft.registry.ModEntityTypes;
 import net.kapitencraft.mysticcraft.registry.ModItems;
@@ -174,6 +175,25 @@ public interface ModTagProvider {
             tag(ModTags.Biomes.GEMSTONE_SPAWN)
                     .addTags(BiomeTags.IS_OVERWORLD, Tags.Biomes.IS_MOUNTAIN)
                     .add(Biomes.END_HIGHLANDS, Biomes.BASALT_DELTAS);
+            tag(ModTags.Biomes.HAS_COMMON_STONE_CIRCLE)
+                    .add(Biomes.BIRCH_FOREST,
+                            Biomes.PLAINS,
+                            Biomes.FOREST,
+                            Biomes.FLOWER_FOREST,
+                            Biomes.JUNGLE,
+                            Biomes.SUNFLOWER_PLAINS
+                    );
+            tag(ModTags.Biomes.HAS_DEEPSLATE_STONE_CIRCLE)
+                    .add(Biomes.CHERRY_GROVE,
+                            Biomes.MEADOW,
+                            Biomes.DARK_FOREST,
+                            Biomes.OLD_GROWTH_BIRCH_FOREST,
+                            Biomes.OLD_GROWTH_PINE_TAIGA,
+                            Biomes.OLD_GROWTH_SPRUCE_TAIGA,
+                            Biomes.WINDSWEPT_FOREST
+                    );
+            tag(ModTags.Biomes.HAS_SANDSTONE_STONE_CIRCLE)
+                    .add(Biomes.DESERT);
         }
     }
 

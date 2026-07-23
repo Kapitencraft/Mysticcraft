@@ -3,6 +3,7 @@ package net.kapitencraft.mysticcraft.data_gen;
 
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.data_gen.advancement.ModAdvancementProvider;
+import net.kapitencraft.mysticcraft.data_gen.registry.ModRegistryProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;

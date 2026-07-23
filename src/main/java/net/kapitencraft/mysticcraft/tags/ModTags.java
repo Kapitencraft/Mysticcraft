@@ -74,7 +74,14 @@ public class ModTags {
     }
 
     public interface Biomes {
-        TagKey<Biome> GEMSTONE_SPAWN = ModTags.makeModKey(Registries.BIOME, "gemstone_spawn");
+        TagKey<Biome> GEMSTONE_SPAWN = makeModKey("gemstone_spawn");
+        TagKey<Biome> HAS_COMMON_STONE_CIRCLE = makeModKey("stone_circle/has_common");
+        TagKey<Biome> HAS_DEEPSLATE_STONE_CIRCLE = makeModKey("stone_circle/has_deepslate");
+        TagKey<Biome> HAS_SANDSTONE_STONE_CIRCLE = makeModKey("stone_circle/has_sandstone");
+
+        private static TagKey<Biome> makeModKey(String path) {
+            return ModTags.makeModKey(Registries.BIOME, path);
+        }
     }
 
     public static <T> TagKey<T> makeKey(ResourceKey<Registry<T>> key, String id) {
