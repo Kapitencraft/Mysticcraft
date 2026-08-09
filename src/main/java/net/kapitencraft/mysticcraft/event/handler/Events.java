@@ -3,6 +3,7 @@ package net.kapitencraft.mysticcraft.event.handler;
 import com.google.common.collect.Multimap;
 import com.mojang.datafixers.util.Either;
 import net.kapitencraft.kap_lib.bonus.event.custom.RegisterBonusProvidersEvent;
+import net.kapitencraft.kap_lib.core.event.custom.client.RegisterOrderedItemComponentTooltipEvent;
 import net.kapitencraft.kap_lib.requirement.event.custom.RegisterRequirementTypesEvent;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.capability.elytra.ElytraAttachment;
@@ -356,4 +357,10 @@ public class Events {
             }
         }
     }
+
+    @SubscribeEvent
+    public static void onRegisterOrderedItemComponentTooltip(RegisterOrderedItemComponentTooltipEvent event) {
+        event.insertAfter(ModDataComponentTypes.ELYTRA, DataComponents.STORED_ENCHANTMENTS);
+    }
+
 }

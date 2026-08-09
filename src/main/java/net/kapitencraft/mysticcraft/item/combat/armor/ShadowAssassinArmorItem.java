@@ -2,11 +2,8 @@ package net.kapitencraft.mysticcraft.item.combat.armor;
 
 import net.kapitencraft.kap_lib.core.helpers.MiscHelper;
 import net.kapitencraft.kap_lib.item.combat.armor.AbstractArmorItem;
-import net.kapitencraft.kap_lib.item.combat.armor.client.provider.ArmorModelProvider;
-import net.kapitencraft.kap_lib.item.combat.armor.client.provider.SimpleModelProvider;
 import net.kapitencraft.kap_lib.item.creative_tab.ArmorTabGroup;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.item.combat.armor.client.model.ShadowAssassinArmorModel;
 import net.kapitencraft.mysticcraft.registry.ModArmorMaterials;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -22,11 +19,6 @@ public class ShadowAssassinArmorItem extends AbstractArmorItem {
 
     public ShadowAssassinArmorItem(ArmorItem.Type type) {
         super(ModArmorMaterials.SHADOW_ASSASSIN, type, MiscHelper.rarity(Rarity.EPIC).durability(type.getDurability(17)));
-    }
-
-    @Override
-    protected ArmorModelProvider createModelProvider() {
-        return new SimpleModelProvider(ShadowAssassinArmorModel::createBodyLayer, ShadowAssassinArmorModel::new);
     }
 
     @Override

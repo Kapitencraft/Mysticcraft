@@ -4,11 +4,8 @@ import net.kapitencraft.kap_lib.attribute.BaseAttributeLocations;
 import net.kapitencraft.kap_lib.attribute.ExtraAttributes;
 import net.kapitencraft.kap_lib.core.helpers.MiscHelper;
 import net.kapitencraft.kap_lib.item.combat.armor.AbstractArmorItem;
-import net.kapitencraft.kap_lib.item.combat.armor.client.provider.ArmorModelProvider;
-import net.kapitencraft.kap_lib.item.combat.armor.client.provider.SimpleModelProvider;
 import net.kapitencraft.kap_lib.mana.ManaAttributes;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.item.combat.armor.client.model.WizardHatModel;
 import net.kapitencraft.mysticcraft.registry.ModArmorMaterials;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -52,11 +49,6 @@ public class WizardHatItem extends AbstractArmorItem {
                         ),
                         EquipmentSlotGroup.MAINHAND
                 ).build();
-    }
-
-    @Override
-    protected ArmorModelProvider createModelProvider() {
-        return new SimpleModelProvider(WizardHatModel::createBodyLayer, WizardHatModel::new);
     }
 
     @Override

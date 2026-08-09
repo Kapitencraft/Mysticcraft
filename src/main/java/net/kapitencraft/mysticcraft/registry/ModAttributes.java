@@ -14,6 +14,7 @@ public interface ModAttributes {
     DeferredRegister<Attribute> REGISTRY = MysticcraftMod.registry(Registries.ATTRIBUTE);
 
     Holder<Attribute> CAST_DURATION = REGISTRY.register("cast_duration", () -> new RangedAttribute("cast_duration", 0, -100, 1000));
+    Holder<Attribute> PRISTINE = REGISTRY.register("pristine", () -> new RangedAttribute("pristine", 0, 0, 400));
     EnumMap<Skill, Holder<Attribute>> XP_BOOSTS = registerXpBoosts();
 
     private static EnumMap<Skill, Holder<Attribute>> registerXpBoosts() {

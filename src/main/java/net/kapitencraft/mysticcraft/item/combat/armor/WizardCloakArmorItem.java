@@ -2,11 +2,8 @@ package net.kapitencraft.mysticcraft.item.combat.armor;
 
 import net.kapitencraft.kap_lib.core.helpers.MiscHelper;
 import net.kapitencraft.kap_lib.item.combat.armor.AbstractArmorItem;
-import net.kapitencraft.kap_lib.item.combat.armor.client.provider.ArmorModelProvider;
-import net.kapitencraft.kap_lib.item.combat.armor.client.provider.SimpleModelProvider;
 import net.kapitencraft.kap_lib.item.creative_tab.ArmorTabGroup;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.item.combat.armor.client.model.WizardCloakModel;
 import net.kapitencraft.mysticcraft.registry.ModArmorMaterials;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -28,10 +25,5 @@ public class WizardCloakArmorItem extends AbstractArmorItem {
     @Override
     public @Nullable ResourceLocation getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, ArmorMaterial.Layer layer, boolean innerModel) {
         return makeCustomTextureLocation(MysticcraftMod.MOD_ID, "wizard_cloak");
-    }
-
-    @Override
-    protected ArmorModelProvider createModelProvider() {
-        return new SimpleModelProvider(WizardCloakModel::createBodyLayer, WizardCloakModel::new);
     }
 }

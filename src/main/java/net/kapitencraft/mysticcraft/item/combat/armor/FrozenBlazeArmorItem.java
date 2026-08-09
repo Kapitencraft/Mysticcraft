@@ -3,11 +3,8 @@ package net.kapitencraft.mysticcraft.item.combat.armor;
 import net.kapitencraft.kap_lib.core.helpers.MiscHelper;
 import net.kapitencraft.kap_lib.core.util.ExtraRarities;
 import net.kapitencraft.kap_lib.item.combat.armor.AbstractArmorItem;
-import net.kapitencraft.kap_lib.item.combat.armor.client.provider.ArmorModelProvider;
-import net.kapitencraft.kap_lib.item.combat.armor.client.provider.SimpleModelProvider;
 import net.kapitencraft.kap_lib.item.creative_tab.ArmorTabGroup;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.item.combat.armor.client.model.FrozenBlazeArmorModel;
 import net.kapitencraft.mysticcraft.registry.ModArmorMaterials;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -22,11 +19,6 @@ public class FrozenBlazeArmorItem extends AbstractArmorItem {
 
     public FrozenBlazeArmorItem(ArmorItem.Type type) {
         super(ModArmorMaterials.FROZEN_BLAZE, type, MiscHelper.rarity(ExtraRarities.LEGENDARY).fireResistant().durability(type.getDurability(8)));
-    }
-
-    @Override
-    protected ArmorModelProvider createModelProvider() {
-        return new SimpleModelProvider(FrozenBlazeArmorModel::createBodyLayer, FrozenBlazeArmorModel::new);
     }
 
     @Override
