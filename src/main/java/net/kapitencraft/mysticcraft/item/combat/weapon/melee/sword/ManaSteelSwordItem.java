@@ -1,6 +1,5 @@
 package net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword;
 
-import net.kapitencraft.kap_lib.core.helpers.MiscHelper;
 import net.kapitencraft.kap_lib.core.util.ExtraRarities;
 import net.kapitencraft.kap_lib.item.ExtendedItem;
 import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneHandler;
@@ -18,9 +17,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class ManaSteelSwordItem extends LongSwordItem implements ExtendedItem {
-    public ManaSteelSwordItem() {
+    public ManaSteelSwordItem(Properties properties) {
         super(ModTiers.MANA_STEEL,
-                MiscHelper.rarity(ExtraRarities.MYTHIC)
+                properties.rarity(ExtraRarities.MYTHIC)
                         .attributes(createLongSwordAttributes(ModTiers.MANA_STEEL, 3, -3.3f, 150, 50, 3))
                         .component(ModDataComponentTypes.EMBEDDED_GEMSTONES, GemstoneHandler.create(GemstoneSlot.Type.COMBAT, GemstoneSlot.Type.COMBAT))
         );

@@ -9,8 +9,9 @@ import org.jetbrains.annotations.NotNull;
 
 public class DyedLeatherItem extends Item {
     public static final int SHADOW_LEATHER_ID = 3355189;
-    public DyedLeatherItem() {
-        super(new Properties().rarity(Rarity.RARE));
+
+    public DyedLeatherItem(Properties properties) {
+        super(properties.rarity(Rarity.RARE));
     }
 
     @Override

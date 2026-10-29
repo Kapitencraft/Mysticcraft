@@ -2,7 +2,6 @@ package net.kapitencraft.mysticcraft.item.combat.armor;
 
 import net.kapitencraft.kap_lib.attribute.BaseAttributeLocations;
 import net.kapitencraft.kap_lib.attribute.ExtraAttributes;
-import net.kapitencraft.kap_lib.core.helpers.MiscHelper;
 import net.kapitencraft.kap_lib.item.combat.armor.AbstractArmorItem;
 import net.kapitencraft.kap_lib.mana.ManaAttributes;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
@@ -21,8 +20,8 @@ import org.jetbrains.annotations.Nullable;
 
 public class WizardHatItem extends AbstractArmorItem {
 
-    public WizardHatItem() {
-        super(ModArmorMaterials.WIZARD_HAT, Type.HELMET, MiscHelper.rarity(Rarity.RARE));
+    public WizardHatItem(Properties properties) {
+        super(ModArmorMaterials.WIZARD_HAT, Type.HELMET, properties.rarity(Rarity.RARE));
     }
 
     @Override

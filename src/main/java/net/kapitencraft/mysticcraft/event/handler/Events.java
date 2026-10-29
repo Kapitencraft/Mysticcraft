@@ -2,6 +2,7 @@ package net.kapitencraft.mysticcraft.event.handler;
 
 import com.google.common.collect.Multimap;
 import com.mojang.datafixers.util.Either;
+import net.kapitencraft.kap_lib.attribute.ExtraAttributes;
 import net.kapitencraft.kap_lib.bonus.event.custom.RegisterBonusProvidersEvent;
 import net.kapitencraft.kap_lib.core.event.custom.client.RegisterOrderedItemComponentTooltipEvent;
 import net.kapitencraft.kap_lib.requirement.event.custom.RegisterRequirementTypesEvent;
@@ -41,10 +42,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.EquipmentSlotGroup;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -67,6 +65,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.ItemAttributeModifierEvent;
 import net.neoforged.neoforge.event.brewing.PlayerBrewedPotionEvent;
+import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
@@ -81,6 +80,11 @@ import java.util.HashMap;
 
 @EventBusSubscriber
 public class Events {
+
+    @SubscribeEvent
+    public static void onEntityAttributeModification(EntityAttributeModificationEvent event) {
+        event.add(EntityType.PLAYER, ExtraAttributes.MAGIC_DAMAGE);
+    }
 
     @SubscribeEvent
     public static void onMobEffect(MobEffectEvent.Remove event) {

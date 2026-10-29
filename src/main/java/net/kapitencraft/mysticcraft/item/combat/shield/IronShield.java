@@ -6,8 +6,8 @@ import net.minecraft.world.item.Rarity;
 import org.jetbrains.annotations.NotNull;
 
 public class IronShield extends ModShieldItem {
-    public IronShield() {
-        super(new Properties().rarity(Rarity.UNCOMMON), 621);
+    public IronShield(Properties properties) {
+        super(properties.rarity(Rarity.UNCOMMON), 621);
     }
 
     @Override

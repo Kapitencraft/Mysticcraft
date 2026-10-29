@@ -1,6 +1,5 @@
 package net.kapitencraft.mysticcraft.item.combat.weapon.melee.dagger;
 
-import net.kapitencraft.kap_lib.core.helpers.MiscHelper;
 import net.kapitencraft.kap_lib.core.util.ExtraRarities;
 import net.kapitencraft.mysticcraft.capability.spell.ItemSpells;
 import net.kapitencraft.mysticcraft.item.misc.ModTiers;
@@ -12,8 +11,8 @@ import java.util.List;
 
 public class ShadowDagger extends DarkDagger {
 
-    public ShadowDagger() {
-        super(MiscHelper.rarity(ExtraRarities.LEGENDARY)
+    public ShadowDagger(Properties properties) {
+        super(properties.rarity(ExtraRarities.LEGENDARY)
                 .component(ModDataComponentTypes.ITEM_SPELLS, new ItemSpells(
                         List.of(
                                 new SpellSlot(Spells.SHADOW_STEP)

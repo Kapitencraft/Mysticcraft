@@ -19,8 +19,8 @@ public class ElementalShard extends Item {
     public static final TabGroup ELEMENTS_GROUP = TabGroup.builder().tab(ModCreativeModTabs.SPELLS).tab(ModCreativeModTabs.MATERIALS).build();
     private final Element element;
 
-    public ElementalShard(Element element) {
-        super(new Properties().rarity(Rarity.EPIC));
+    public ElementalShard(Element element, Properties properties) {
+        super(properties.rarity(Rarity.EPIC));
         this.element = element;
     }
 

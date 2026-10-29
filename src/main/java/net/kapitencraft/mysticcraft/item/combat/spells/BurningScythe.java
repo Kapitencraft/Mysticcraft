@@ -10,8 +10,8 @@ import net.minecraft.world.item.Rarity;
 import java.util.List;
 
 public class BurningScythe extends NormalSpellItem implements IDamageSpellItem, IFireScytheItem {
-    public BurningScythe() {
-        super(MiscHelper.rarity(Rarity.EPIC).fireResistant().component(ModDataComponentTypes.ITEM_SPELLS, new ItemSpells(
+    public BurningScythe(Properties properties) {
+        super(properties.rarity(Rarity.EPIC).fireResistant().component(ModDataComponentTypes.ITEM_SPELLS, new ItemSpells(
                 List.of(
                         new SpellSlot(Spells.FIRE_BOLT, 10)
                 )

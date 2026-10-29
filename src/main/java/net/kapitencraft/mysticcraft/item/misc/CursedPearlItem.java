@@ -1,6 +1,5 @@
 package net.kapitencraft.mysticcraft.item.misc;
 
-import net.kapitencraft.kap_lib.core.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.entity.ThrownCursedPearl;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -15,8 +14,8 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
 
 public class CursedPearlItem extends Item {
-    public CursedPearlItem() {
-        super(MiscHelper.rarity(Rarity.RARE).stacksTo(16));
+    public CursedPearlItem(Properties properties) {
+        super(properties.rarity(Rarity.RARE).stacksTo(16));
     }
 
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pHand) {

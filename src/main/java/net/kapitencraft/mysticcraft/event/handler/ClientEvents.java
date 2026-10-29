@@ -57,6 +57,7 @@ public class ClientEvents {
         registerArmorExtension(ModItems.SHADOW_ASSASSIN_ARMOR, event, new SimpleModelProvider(ShadowAssassinArmorModel::createBodyLayer, ShadowAssassinArmorModel::new));
         registerArmorExtension(ModItems.WIZARD_CLOAK_ARMOR, event, new SimpleModelProvider(WizardCloakModel::createBodyLayer, WizardCloakModel::new));
         event.registerItem(new ArmorClientExtension(new SimpleModelProvider(WizardHatModel::createBodyLayer, WizardHatModel::new)), ModItems.WIZARD_HAT);
+        event.registerItem(new ArmorClientExtension(new SimpleModelProvider(DruidsBagModel::createBodyLayer, DruidsBagModel::new)), ModItems.DRUIDS_BAG);
         registerArmorExtension(ModItems.FROZEN_BLAZE_ARMOR, event, new SimpleModelProvider(FrozenBlazeArmorModel::createBodyLayer, FrozenBlazeArmorModel::new));
     }
 

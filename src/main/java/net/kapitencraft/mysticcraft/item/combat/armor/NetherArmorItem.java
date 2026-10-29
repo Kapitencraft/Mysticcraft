@@ -1,6 +1,5 @@
-package net.kapitencraft.mysticcraft.item.combat.armor.client;
+package net.kapitencraft.mysticcraft.item.combat.armor;
 
-import net.kapitencraft.mysticcraft.item.combat.armor.TieredArmorItem;
 import net.minecraft.core.Holder;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;

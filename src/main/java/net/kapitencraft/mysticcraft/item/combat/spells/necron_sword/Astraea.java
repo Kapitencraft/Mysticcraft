@@ -9,9 +9,9 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 
 public class Astraea extends NecronSword {
-    public Astraea() {
-        super(new Properties().attributes(
-                createNecronAttributes(REFINED_BASE_DAMAGE, BASE_INTEL, BASE_FEROCITY, BASE_STRENGHT)
+    public Astraea(Properties properties) {
+        super(properties.attributes(
+                createNecronAttributes(REFINED_BASE_DAMAGE, BASE_INTEL, BASE_FEROCITY, BASE_STRENGTH)
                         .add(
                                 Attributes.ARMOR,
                                 new AttributeModifier(

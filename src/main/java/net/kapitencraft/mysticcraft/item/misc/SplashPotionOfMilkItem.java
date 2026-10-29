@@ -18,8 +18,8 @@ import net.minecraft.world.level.Level;
 
 public class SplashPotionOfMilkItem extends Item implements ProjectileItem {
 
-    public SplashPotionOfMilkItem() {
-        super(new Properties());
+    public SplashPotionOfMilkItem(Properties properties) {
+        super(properties);
     }
 
     @Override

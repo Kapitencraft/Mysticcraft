@@ -10,8 +10,8 @@ import net.kapitencraft.mysticcraft.spell.SpellSlot;
 import java.util.List;
 
 public class InfernalScythe extends NormalSpellItem implements IDamageSpellItem, IFireScytheItem {
-    public InfernalScythe() {
-        super(MiscHelper.rarity(ExtraRarities.LEGENDARY).component(ModDataComponentTypes.ITEM_SPELLS, new ItemSpells(
+    public InfernalScythe(Properties properties) {
+        super(properties.rarity(ExtraRarities.LEGENDARY).component(ModDataComponentTypes.ITEM_SPELLS, new ItemSpells(
                 List.of(
                         new SpellSlot(Spells.FIRE_BOLT, 15)
                 )

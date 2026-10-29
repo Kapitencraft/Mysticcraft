@@ -1,6 +1,5 @@
 package net.kapitencraft.mysticcraft.tech.item;
 
-import net.kapitencraft.kap_lib.core.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.registry.ModBlocks;
 import net.kapitencraft.mysticcraft.registry.ModDataComponentTypes;
 import net.kapitencraft.mysticcraft.tech.DistributionNetworkManager;
@@ -24,8 +23,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.List;
 
 public class TechWandItem extends Item {
-    public TechWandItem() {
-        super(MiscHelper.rarity(Rarity.RARE).stacksTo(1));
+    public TechWandItem(Properties properties) {
+        super(properties.rarity(Rarity.RARE).stacksTo(1));
     }
 
     @Override

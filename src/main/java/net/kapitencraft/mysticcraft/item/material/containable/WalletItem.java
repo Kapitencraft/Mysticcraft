@@ -1,6 +1,5 @@
 package net.kapitencraft.mysticcraft.item.material.containable;
 
-import net.kapitencraft.kap_lib.core.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.data_gen.registry.ModEnchantments;
 import net.kapitencraft.mysticcraft.registry.ModDataComponentTypes;
 import net.minecraft.core.Holder;
@@ -21,12 +20,12 @@ import java.util.function.Function;
 public class WalletItem extends Item {
     private final int maxBalance;
 
-    public WalletItem() {
-        this(1024);
+    public WalletItem(Properties properties) {
+        this(properties.rarity(Rarity.COMMON), 1024);
     }
 
-    protected WalletItem(int maxBalance) {
-        super(MiscHelper.rarity(Rarity.UNCOMMON).component(ModDataComponentTypes.WALLET_BALANCE, 0));
+    protected WalletItem(Properties properties, int maxBalance) {
+        super(properties.component(ModDataComponentTypes.WALLET_BALANCE, 0));
         this.maxBalance = maxBalance;
     }
 

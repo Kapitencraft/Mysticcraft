@@ -1,6 +1,5 @@
 package net.kapitencraft.mysticcraft.item.combat.spells;
 
-import net.kapitencraft.kap_lib.core.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.capability.spell.ItemSpells;
 import net.kapitencraft.mysticcraft.item.combat.weapon.melee.lance.LanceItem;
 import net.kapitencraft.mysticcraft.item.misc.ModTiers;
@@ -13,8 +12,8 @@ import java.util.List;
 
 public class FireLance extends LanceItem {
 
-    public FireLance() {
-        super(ModTiers.SPELL_TIER, MiscHelper.rarity(Rarity.RARE).component(ModDataComponentTypes.ITEM_SPELLS, new ItemSpells(
+    public FireLance(Properties properties) {
+        super(ModTiers.SPELL_TIER, properties.rarity(Rarity.RARE).component(ModDataComponentTypes.ITEM_SPELLS, new ItemSpells(
                 List.of(
                         new SpellSlot(Spells.FIRE_LANCE, 5)
                 )

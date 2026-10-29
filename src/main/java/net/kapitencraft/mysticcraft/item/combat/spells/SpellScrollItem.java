@@ -11,8 +11,8 @@ import net.minecraft.world.item.Rarity;
 import java.util.List;
 
 public class SpellScrollItem extends Item {
-    public SpellScrollItem() {
-        super(new Properties().rarity(Rarity.RARE).component(ModDataComponentTypes.ITEM_SPELLS, new ItemSpells(List.of(SpellSlot.EMPTY))));
+    public SpellScrollItem(Properties properties) {
+        super(properties.rarity(Rarity.RARE).component(ModDataComponentTypes.ITEM_SPELLS, new ItemSpells(List.of(SpellSlot.EMPTY))));
     }
 
     public static SpellSlot getSpell(ItemStack stack) {

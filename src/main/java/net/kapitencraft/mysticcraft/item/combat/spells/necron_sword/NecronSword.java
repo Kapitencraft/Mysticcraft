@@ -25,20 +25,20 @@ import java.util.function.Consumer;
 public class NecronSword extends SpellItem {
     public static final TabGroup NECRON_GROUP = TabGroup.create(ModCreativeModTabs.WEAPONS_AND_TOOLS);
     public static final int BASE_DAMAGE = 12;
-    public static final int BASE_STRENGHT = 150;
+    public static final int BASE_STRENGTH = 150;
     public static final int REFINED_BASE_DAMAGE = 13;
     public static final int BASE_FEROCITY = 30;
     public static final int BASE_INTEL = 50;
 
-    protected NecronSword(Properties properties) {
-        super(properties.rarity(ExtraRarities.LEGENDARY));
-    }
-
-    public NecronSword() {
-        this(new Properties()
-                .attributes(createNecronAttributes(NecronSword.BASE_DAMAGE, NecronSword.BASE_INTEL, NecronSword.BASE_FEROCITY, NecronSword.BASE_STRENGHT).build())
+    public static NecronSword createPlain(Properties properties) {
+        return new NecronSword(properties
+                .attributes(createNecronAttributes(NecronSword.BASE_DAMAGE, NecronSword.BASE_INTEL, NecronSword.BASE_FEROCITY, NecronSword.BASE_STRENGTH).build())
                 .component(ModDataComponentTypes.EMBEDDED_GEMSTONES, GemstoneHandler.create(GemstoneSlot.Type.COMBAT))
         );
+    }
+
+    protected NecronSword(Properties properties) {
+        super(properties.rarity(ExtraRarities.LEGENDARY));
     }
 
     protected static ItemAttributeModifiers.Builder createNecronAttributes(int damage, int maxMana, int ferocity, int strength) {

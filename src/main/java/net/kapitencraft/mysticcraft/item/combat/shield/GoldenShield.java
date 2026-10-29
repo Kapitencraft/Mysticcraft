@@ -6,8 +6,8 @@ import net.minecraft.world.item.Rarity;
 import org.jetbrains.annotations.NotNull;
 
 public class GoldenShield extends ModShieldItem {
-    public GoldenShield() {
-        super(new Properties().rarity(Rarity.RARE), 678);
+    public GoldenShield(Properties properties) {
+        super(properties.rarity(Rarity.RARE), 678);
     }
 
     @Override

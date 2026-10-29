@@ -9,8 +9,8 @@ import net.minecraft.world.item.TooltipFlag;
 import java.util.List;
 
 public class UnbreakingCore extends Item {
-    public UnbreakingCore() {
-        super(new Properties().rarity(Rarity.EPIC));
+    public UnbreakingCore(Properties properties) {
+        super(properties.rarity(Rarity.EPIC));
     }
 
     @Override
