@@ -5,8 +5,8 @@ import net.kapitencraft.kap_lib.core.helpers.MiscHelper;
 import net.kapitencraft.kap_lib.core.util.ExtraRarities;
 
 public class TallinBow extends ShortBowItem {
-    public TallinBow() {
-        super(MiscHelper.rarity(ExtraRarities.LEGENDARY).durability(1500).attributes(createAttributes(3)));
+    public TallinBow(Properties properties) {
+        super(properties.rarity(ExtraRarities.LEGENDARY).durability(1500).attributes(createAttributes(3)));
     }
 
     @Override

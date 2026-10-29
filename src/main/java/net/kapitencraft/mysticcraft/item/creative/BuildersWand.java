@@ -44,8 +44,8 @@ public class BuildersWand extends Item implements ExtendedItem {
     private int msgTime = 0;
     int test = 0;
 
-    public BuildersWand() {
-        super(MiscHelper.rarity(ExtraRarities.LEGENDARY).stacksTo(1));
+    public BuildersWand(Properties properties) {
+        super(properties.rarity(ExtraRarities.LEGENDARY).stacksTo(1));
     }
 
     @Override
@@ -157,7 +157,7 @@ public class BuildersWand extends Item implements ExtendedItem {
         LINE(1, false, 2, (block, blocks, blockPos, level) -> {
             BlockPos pos1 = blockPos.get(0);
             BlockPos pos2 = blockPos.get(1);
-            List<BlockPos> line = MathHelper.makeLine(pos1, pos2, MathHelper.LineSize.THIN);
+            List<BlockPos> line = MathHelper.makeLine(pos1, pos2, MathHelper.LineThickness.THIN);
             line.forEach(pos3 -> checkAndPlaceBlock(level, block, pos3, blocks));
         }, "builders_wand.line"),
         CUBOID(2, false, 2, (block, blocks, blockPos, level) -> {

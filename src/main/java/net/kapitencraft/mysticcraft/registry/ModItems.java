@@ -51,31 +51,32 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiFunction;
 import java.util.function.Function;
-import java.util.function.Supplier;
+
 @SuppressWarnings("unused")
 public interface ModItems {
 
     //region wrapper
 
-    static <T extends Item> DeferredItem<T> register(String name, final Supplier<T> supplier, TabGroup group) {
-        DeferredItem<T> registryObject = REGISTRY.register(name, supplier);
+    static <T extends Item> DeferredItem<T> register(String name, final Function<Item.Properties, T> supplier, TabGroup group) {
+        DeferredItem<T> registryObject = REGISTRY.registerItem(name, supplier);
         if (group != null) group.add(registryObject);
         return registryObject;
     }
 
     static DeferredItem<MaterialModItem> registerMaterial(String name, Rarity rarity, TabGroup group) {
-        return register(name, ()-> new MaterialModItem(rarity, true), group);
+        return register(name, properties -> new MaterialModItem(properties.rarity(rarity), true), group);
     }
 
     static <T extends Item> DeferredItem<MaterialModItem> registerNonStackableMaterial(String name, Rarity rarity, TabGroup group) {
-        return register(name, ()-> new MaterialModItem(rarity, false), group);
+        return register(name, properties -> new MaterialModItem(properties.rarity(rarity), false), group);
     }
 
-    static <T, V extends Item> HashMap<T, DeferredItem<V>> createRegistry(Function<T, V> provider, Function<T, String> nameProvider, List<T> values, TabGroup group) {
+    static <T, V extends Item> HashMap<T, DeferredItem<V>> createRegistry(BiFunction<T, Item.Properties, V> provider, Function<T, String> nameProvider, List<T> values, TabGroup group) {
         HashMap<T, DeferredItem<V>> map = new HashMap<>();
         for (T t : values) {
-            map.put(t, register(nameProvider.apply(t), ()-> provider.apply(t), group));
+            map.put(t, register(nameProvider.apply(t), p -> provider.apply(t, p), group));
         }
         return map;
     }
@@ -96,14 +97,14 @@ public interface ModItems {
 
     //region Weaponry
     DeferredItem<RainbowSwordItem> RAINBOW_SWORD = register("rainbow_sword", RainbowSwordItem::new, TabGroups.COMBAT);
-    DeferredItem<DarkDagger> DARK_DAGGER = register("dark_dagger", DarkDagger::new, TabGroups.COMBAT);
+    DeferredItem<DarkDagger> DARK_DAGGER = register("dark_dagger", DarkDagger::create, TabGroups.COMBAT);
     DeferredItem<TallinBow> TALLIN_BOW = register("tallin_bow", TallinBow::new, ModBowItem.BOW_GROUP);
-    DeferredItem<DoubleSword> DIAMOND_DOUBLE_SWORD = register("diamond_double_sword", () -> new DoubleSword(Tiers.DIAMOND, MiscHelper.rarity(Rarity.UNCOMMON), 4, 150, 100), DoubleSword.DOUBLE_SWORD_GROUP);
+    DeferredItem<DoubleSword> DIAMOND_DOUBLE_SWORD = register("diamond_double_sword", properties -> new DoubleSword(Tiers.DIAMOND, properties.rarity(Rarity.UNCOMMON), 4, 150, 100), DoubleSword.DOUBLE_SWORD_GROUP);
     DeferredItem<ManaSteelSwordItem> MANA_STEEL_SWORD = register("mana_steel_sword", ManaSteelSwordItem::new, ModSwordItem.SWORD_GROUP);
     DeferredItem<LongBowItem> LONGBOW = register("longbow", LongBowItem::new, ModBowItem.BOW_GROUP);
     DeferredItem<TheStaffOfDestruction> THE_STAFF_DESTRUCTION = register("staff_of_destruction", TheStaffOfDestruction::new, SpellItem.SPELL_GROUP);
     DeferredItem<GhostlySword> GHOSTLY_SWORD = register("ghostly_sword", GhostlySword::new, TabGroups.COMBAT);
-    DeferredItem<NecronSword> NECRON_SWORD = register("necron_sword", NecronSword::new, NecronSword.NECRON_GROUP);
+    DeferredItem<NecronSword> NECRON_SWORD = register("necron_sword", NecronSword::createPlain, NecronSword.NECRON_GROUP);
     DeferredItem<NecronSword> HYPERION = register("hyperion", Hyperion::new, NecronSword.NECRON_GROUP);
     DeferredItem<Scylla> SCYLLA = register("scylla", Scylla::new, NecronSword.NECRON_GROUP);
     DeferredItem<Astraea> ASTREA = register("astrea", Astraea::new, NecronSword.NECRON_GROUP);
@@ -113,8 +114,8 @@ public interface ModItems {
     //endregion
 
     //region wands
-    DeferredItem<AspectOfTheEndItem> AOTE = register("aspect_of_the_end", ()-> new AspectOfTheEndItem(50), SpellItem.SPELL_GROUP);
-    DeferredItem<AspectOfTheEndItem> AOTV = register("aspect_of_the_void", () -> new AspectOfTheEndItem(80), SpellItem.SPELL_GROUP);
+    DeferredItem<AspectOfTheEndItem> AOTE = register("aspect_of_the_end", properties -> new AspectOfTheEndItem(properties, 50), SpellItem.SPELL_GROUP);
+    DeferredItem<AspectOfTheEndItem> AOTV = register("aspect_of_the_void", properties -> new AspectOfTheEndItem(properties, 80), SpellItem.SPELL_GROUP);
     DeferredItem<HeatedScythe> HEATED_SCYTHE = register("heated_scythe", HeatedScythe::new, IFireScytheItem.FIRE_SCYTHE_GROUP);
     DeferredItem<FieryScythe> FIERY_SCYTHE = register("fiery_scythe", FieryScythe::new, IFireScytheItem.FIRE_SCYTHE_GROUP);
     DeferredItem<BurningScythe> BURNING_SCYTHE = register("burning_scythe", BurningScythe::new, IFireScytheItem.FIRE_SCYTHE_GROUP);
@@ -151,28 +152,29 @@ public interface ModItems {
     DeferredItem<MaterialModItem> SOUL_STEEL_ALLOY = registerMaterial("soul_steel_alloy", Rarity.RARE, TabGroups.MATERIAL);
     DeferredItem<MaterialModItem> SOUL_STEEL_NUGGET = registerMaterial("soul_steel_nugget", Rarity.UNCOMMON, TabGroups.MATERIAL);
     DeferredItem<MaterialModItem> SHADOW_CRYSTAL = registerMaterial("shadow_crystal", Rarity.UNCOMMON, TabGroups.MATERIAL);
-    DeferredItem<DyedLeatherItem> DYED_LEATHER = register("dyed_leather",  DyedLeatherItem::new, TabGroups.MATERIAL);
+    DeferredItem<DyedLeatherItem> DYED_LEATHER = register("dyed_leather", DyedLeatherItem::new, TabGroups.MATERIAL);
     //endregion
 
     //region Hammer
-    DeferredItem<HammerItem> STONE_HAMMER = register("stone_hammer", ()-> new HammerItem(MiscHelper.rarity(Rarity.COMMON), Tiers.STONE, 4), HammerItem.HAMMER_GROUP);
-    DeferredItem<HammerItem> IRON_HAMMER = register("iron_hammer", ()-> new HammerItem(MiscHelper.rarity(Rarity.COMMON), Tiers.IRON, 5), HammerItem.HAMMER_GROUP);
-    DeferredItem<HammerItem> DIAMOND_HAMMER = register("diamond_hammer", ()-> new HammerItem(MiscHelper.rarity(Rarity.UNCOMMON), Tiers.DIAMOND, 5), HammerItem.HAMMER_GROUP);
-    DeferredItem<HammerItem> NETHERITE_HAMMER = register("netherite_hammer", ()-> new HammerItem(MiscHelper.rarity(Rarity.UNCOMMON), Tiers.NETHERITE, 6), HammerItem.HAMMER_GROUP);
+    DeferredItem<HammerItem> STONE_HAMMER = register("stone_hammer", properties -> new HammerItem(properties.rarity(Rarity.COMMON), Tiers.STONE, 4), HammerItem.HAMMER_GROUP);
+    DeferredItem<HammerItem> IRON_HAMMER = register("iron_hammer", properties -> new HammerItem(properties.rarity(Rarity.COMMON), Tiers.IRON, 5), HammerItem.HAMMER_GROUP);
+    DeferredItem<HammerItem> DIAMOND_HAMMER = register("diamond_hammer", properties -> new HammerItem(MiscHelper.rarity(Rarity.UNCOMMON), Tiers.DIAMOND, 5), HammerItem.HAMMER_GROUP);
+    DeferredItem<HammerItem> NETHERITE_HAMMER = register("netherite_hammer", properties -> new HammerItem(MiscHelper.rarity(Rarity.UNCOMMON), Tiers.NETHERITE, 6), HammerItem.HAMMER_GROUP);
     //endregion
 
-    DeferredItem<LavaFishingRod> LAVA_FISHING_ROD_TEST = register("lava_fishing_rod", () -> new LavaFishingRod(Rarity.RARE), TabGroups.MATERIAL);
+    DeferredItem<LavaFishingRod> LAVA_FISHING_ROD_TEST = register("lava_fishing_rod", properties -> new LavaFishingRod(Rarity.RARE), TabGroups.MATERIAL);
     DeferredItem<IronShield> IRON_SHIELD = register("iron_shield", IronShield::new, ModShieldItem.SHIELD_GROUP);
     DeferredItem<GoldenShield> GOLDEN_SHIELD = register("golden_shield", GoldenShield::new, ModShieldItem.SHIELD_GROUP);
 
-    DeferredItem<QuiverItem> AMETHYST_QUIVER = register("amethyst_quiver", ()-> new QuiverItem(MiscHelper.rarity(Rarity.RARE), 16), QuiverItem.QUIVER_GROUP);
-    DeferredItem<LavaFishItem> BLAZING_SALMON = register("blazing_salmon", ()-> new LavaFishItem(1, 1.2f, new MobEffectInstance(ModMobEffects.BLAZING, 100, 1)), LavaFishItem.LAVA_FISH_GROUP);
-    DeferredItem<LavaFishItem> MAGMA_COD = register("magma_cod", ()-> new LavaFishItem(2, 1.1f, new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 150, 1)), LavaFishItem.LAVA_FISH_GROUP);
+    DeferredItem<QuiverItem> AMETHYST_QUIVER = register("amethyst_quiver", properties -> new QuiverItem(MiscHelper.rarity(Rarity.RARE), 16), QuiverItem.QUIVER_GROUP);
+    DeferredItem<LavaFishItem> BLAZING_SALMON = register("blazing_salmon", properties -> new LavaFishItem(1, 1.2f, new MobEffectInstance(ModMobEffects.BLAZING, 100, 1)), LavaFishItem.LAVA_FISH_GROUP);
+    DeferredItem<LavaFishItem> MAGMA_COD = register("magma_cod", properties -> new LavaFishItem(2, 1.1f, new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 150, 1)), LavaFishItem.LAVA_FISH_GROUP);
 
     //region armor
 
     DeferredItem<TravelersBoots> TRAVELERS_BOOTS = register("travelers_boots", TravelersBoots::new, TabGroups.COMBAT);
     DeferredItem<WizardHatItem> WIZARD_HAT = register("wizard_hat", WizardHatItem::new, ModBowItem.BOW_GROUP);
+    DeferredItem<DruidsBagItem> DRUIDS_BAG = register("druids_bag", DruidsBagItem::new, TabGroups.UTILITIES);
 
     Map<ArmorItem.Type, DeferredItem<EnderKnightArmorItem>> ENDER_KNIGHT_ARMOR = AbstractArmorItem.createRegistry(REGISTRY, "ender_knight", EnderKnightArmorItem::new, EnderKnightArmorItem.TAB);
     Map<ArmorItem.Type, DeferredItem<FrozenBlazeArmorItem>> FROZEN_BLAZE_ARMOR = AbstractArmorItem.createRegistry(REGISTRY, "frozen_blaze", FrozenBlazeArmorItem::new, FrozenBlazeArmorItem.TAB);
@@ -185,11 +187,11 @@ public interface ModItems {
     //endregion
 
     //region spawn eggs
-    DeferredItem<Item> FROZEN_BLAZE_SPAWN_EGG = register("frozen_blaze_spawn_egg", ()-> new DeferredSpawnEggItem(ModEntityTypes.FROZEN_BLAZE, -16711681, -16763956, new Item.Properties()), TabGroups.SPAWN_EGGS);
-    DeferredItem<Item> DRAGON_SPAWN_EGG = register("dragon_spawn_egg", () -> new DeferredSpawnEggItem(ModEntityTypes.DRAGON, 0xFF4F0000, 0xFFFF0000, new Item.Properties()), TabGroups.SPAWN_EGGS);
+    DeferredItem<Item> FROZEN_BLAZE_SPAWN_EGG = register("frozen_blaze_spawn_egg", properties -> new DeferredSpawnEggItem(ModEntityTypes.FROZEN_BLAZE, -16711681, -16763956, properties), TabGroups.SPAWN_EGGS);
+    DeferredItem<Item> DRAGON_SPAWN_EGG = register("dragon_spawn_egg", properties -> new DeferredSpawnEggItem(ModEntityTypes.DRAGON, 0xFF4F0000, 0xFFFF0000, properties), TabGroups.SPAWN_EGGS);
     //endregion
 
-    DeferredItem<BucketItem> BUCKET_OF_MANA = REGISTRY.register("bucket_of_mana", ()-> new BucketItem(ModFluids.SOURCE_MANA_FLUID.get(), MiscHelper.rarity(Rarity.EPIC).stacksTo(1)));
+    DeferredItem<BucketItem> BUCKET_OF_MANA = REGISTRY.register("bucket_of_mana", () -> new BucketItem(ModFluids.SOURCE_MANA_FLUID.get(), MiscHelper.rarity(Rarity.EPIC).stacksTo(1)));
     DeferredItem<GemstoneItem> GEMSTONE = REGISTRY.register("gemstone", GemstoneItem::new);
 
     HashMap<PrecursorRelicItem.BossType, DeferredItem<PrecursorRelicItem>> PRECURSOR_RELICTS = PrecursorRelicItem.makeRegistry();

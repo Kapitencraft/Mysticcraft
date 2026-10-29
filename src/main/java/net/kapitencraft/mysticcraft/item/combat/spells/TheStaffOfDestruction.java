@@ -7,10 +7,11 @@ import net.kapitencraft.mysticcraft.spell.SpellSlot;
 import net.minecraft.world.item.Rarity;
 
 import java.util.List;
+import java.util.Properties;
 
 public class TheStaffOfDestruction extends NormalSpellItem {
-    public TheStaffOfDestruction() {
-        super(new Properties().rarity(Rarity.RARE).component(ModDataComponentTypes.ITEM_SPELLS, new ItemSpells(List.of(
+    public TheStaffOfDestruction(Properties properties) {
+        super(properties.rarity(Rarity.RARE).component(ModDataComponentTypes.ITEM_SPELLS, new ItemSpells(List.of(
                 new SpellSlot(Spells.EXPLOSIVE_SIGHT, 2)
         ))).attributes(createAttributes(50, 20)));
     }

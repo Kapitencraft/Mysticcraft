@@ -39,7 +39,6 @@ public class EnderKnightArmorItem extends AbstractArmorItem {
         return new EnderKnightArmorItem(slot);
     }
 
-
     public HashMultimap<Holder<Attribute>, AttributeModifier> getAttributeMods(EquipmentSlot slot) {
         HashMultimap<Holder<Attribute>, AttributeModifier> preReturn = HashMultimap.create();
         if (slot == this.getEquipmentSlot()) {

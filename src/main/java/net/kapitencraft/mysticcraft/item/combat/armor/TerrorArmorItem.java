@@ -3,7 +3,6 @@ package net.kapitencraft.mysticcraft.item.combat.armor;
 import net.kapitencraft.kap_lib.attribute.ExtraAttributes;
 import net.kapitencraft.kap_lib.item.creative_tab.ArmorTabGroup;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
-import net.kapitencraft.mysticcraft.item.combat.armor.client.NetherArmorItem;
 import net.kapitencraft.mysticcraft.registry.ModArmorMaterials;
 import net.kapitencraft.mysticcraft.registry.ModDataComponentTypes;
 import net.minecraft.resources.ResourceLocation;

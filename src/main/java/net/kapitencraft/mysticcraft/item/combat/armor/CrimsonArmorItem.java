@@ -6,7 +6,6 @@ import net.kapitencraft.kap_lib.item.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.capability.ITieredItem;
 import net.kapitencraft.mysticcraft.capability.dungeon.IStarAbleItem;
-import net.kapitencraft.mysticcraft.item.combat.armor.client.NetherArmorItem;
 import net.kapitencraft.mysticcraft.registry.ModArmorMaterials;
 import net.kapitencraft.mysticcraft.registry.ModDataComponentTypes;
 import net.kapitencraft.mysticcraft.registry.ModItems;

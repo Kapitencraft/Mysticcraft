@@ -20,8 +20,8 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import java.util.List;
 
 public class BattleRodItem extends Item {
-    public BattleRodItem() {
-        super(new Properties().rarity(Rarity.EPIC));
+    public BattleRodItem(Properties properties) {
+        super(properties.rarity(Rarity.EPIC));
     }
 
     @Override

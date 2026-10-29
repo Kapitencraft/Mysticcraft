@@ -9,8 +9,8 @@ import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 
 public class Scylla extends NecronSword {
-    public Scylla() {
-        super(new Properties().attributes(createNecronAttributes(REFINED_BASE_DAMAGE, BASE_INTEL, BASE_FEROCITY, BASE_STRENGHT)
+    public Scylla(Properties properties) {
+        super(properties.attributes(createNecronAttributes(REFINED_BASE_DAMAGE, BASE_INTEL, BASE_FEROCITY, BASE_STRENGTH)
                 .add(
                         ExtraAttributes.CRIT_DAMAGE,
                         new AttributeModifier(BaseAttributeLocations.CRIT_DAMAGE, 35, AttributeModifier.Operation.ADD_VALUE),

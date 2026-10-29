@@ -19,8 +19,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class VoidTotemItem extends AbstractTotemItem implements ExtendedItem {
-    public VoidTotemItem() {
-        super(MiscHelper.rarity(Rarity.RARE));
+    public VoidTotemItem(Properties properties) {
+        super(properties.rarity(Rarity.RARE));
     }
 
     @Override

@@ -4,7 +4,7 @@ import net.kapitencraft.kap_lib.core.helpers.MiscHelper;
 import net.minecraft.world.item.Rarity;
 
 public class ParallelProcessingUpgradeItem extends UpgradeModuleItem {
-    public ParallelProcessingUpgradeItem() {
-        super(MiscHelper.rarity(Rarity.RARE));
+    public ParallelProcessingUpgradeItem(Properties properties) {
+        super(properties.rarity(Rarity.RARE));
     }
 }

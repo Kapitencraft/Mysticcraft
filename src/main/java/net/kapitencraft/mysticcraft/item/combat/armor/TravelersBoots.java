@@ -1,6 +1,5 @@
 package net.kapitencraft.mysticcraft.item.combat.armor;
 
-import net.kapitencraft.kap_lib.core.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneHandler;
 import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneSlot;
@@ -17,8 +16,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class TravelersBoots extends ArmorItem {
 
-    public TravelersBoots() {
-        super(ArmorMaterials.LEATHER, Type.BOOTS, MiscHelper.rarity(Rarity.RARE)
+    public TravelersBoots(Properties properties) {
+        super(ArmorMaterials.LEATHER, Type.BOOTS, properties.rarity(Rarity.RARE)
                 .component(ModDataComponentTypes.EMBEDDED_GEMSTONES, GemstoneHandler.create(GemstoneSlot.Type.MOBILITY, GemstoneSlot.Type.MOBILITY))
         );
     }

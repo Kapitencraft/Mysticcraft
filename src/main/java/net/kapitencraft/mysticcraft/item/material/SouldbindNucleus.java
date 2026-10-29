@@ -5,7 +5,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 
 public class SouldbindNucleus extends Item {
-    public SouldbindNucleus() {
-        super(MiscHelper.rarity(Rarity.EPIC));
+    public SouldbindNucleus(Properties properties) {
+        super(properties.rarity(Rarity.EPIC));
     }
 }

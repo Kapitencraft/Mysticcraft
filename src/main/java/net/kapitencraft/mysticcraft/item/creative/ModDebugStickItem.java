@@ -7,8 +7,8 @@ import net.minecraft.world.item.Rarity;
 import org.jetbrains.annotations.NotNull;
 
 public class ModDebugStickItem extends Item {
-    public ModDebugStickItem() {
-        super(new Properties().rarity(Rarity.EPIC));
+    public ModDebugStickItem(Properties properties) {
+        super(properties.rarity(Rarity.EPIC));
     }
 
     @Override

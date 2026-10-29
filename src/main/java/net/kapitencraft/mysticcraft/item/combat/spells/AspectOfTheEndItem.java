@@ -10,8 +10,8 @@ import net.minecraft.world.item.Rarity;
 import java.util.List;
 
 public class AspectOfTheEndItem extends NormalSpellItem {
-    public AspectOfTheEndItem(int maxMana) {
-        super(MiscHelper.rarity(Rarity.UNCOMMON).component(ModDataComponentTypes.ITEM_SPELLS, new ItemSpells(
+    public AspectOfTheEndItem(Properties properties, int maxMana) {
+        super(properties.component(ModDataComponentTypes.ITEM_SPELLS, new ItemSpells(
                 List.of(
                         new SpellSlot(Spells.INSTANT_TRANSMISSION, 4)
                 )

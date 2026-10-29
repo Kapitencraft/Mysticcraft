@@ -1,7 +1,6 @@
 package net.kapitencraft.mysticcraft.item.material;
 
 import net.kapitencraft.kap_lib.core.helpers.MathHelper;
-import net.kapitencraft.kap_lib.core.helpers.MiscHelper;
 import net.kapitencraft.kap_lib.item.creative_tab.TabGroup;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.registry.ModCreativeModTabs;
@@ -34,12 +33,12 @@ public class PrecursorRelicItem extends Item {
 
     private final String translationKey;
 
-    public PrecursorRelicItem(BossType type) {
-        this(type.itemName);
+    public PrecursorRelicItem(BossType type, Properties properties) {
+        this(type.itemName, properties);
     }
 
-    public PrecursorRelicItem(String translationKey) {
-        super(MiscHelper.rarity(Rarity.EPIC));
+    public PrecursorRelicItem(String translationKey, Properties properties) {
+        super(properties.rarity(Rarity.EPIC));
         this.translationKey = translationKey;
     }
 

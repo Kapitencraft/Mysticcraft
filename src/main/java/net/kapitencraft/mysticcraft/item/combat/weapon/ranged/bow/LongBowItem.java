@@ -11,8 +11,8 @@ public class LongBowItem extends ModBowItem {
     public static final double ARROW_SPEED_MUL = 5;
 
 
-    public LongBowItem() {
-        super(MiscHelper.rarity(Rarity.RARE)
+    public LongBowItem(Properties properties) {
+        super(properties.rarity(Rarity.RARE)
                 .durability(1320)
                 .attributes(createAttributes(5))
                 .component(ModDataComponentTypes.EMBEDDED_GEMSTONES, GemstoneHandler.create(GemstoneSlot.Type.OFFENCE, GemstoneSlot.Type.DRAW_SPEED))

@@ -1,6 +1,5 @@
 package net.kapitencraft.mysticcraft.item.combat.spells;
 
-import net.kapitencraft.kap_lib.core.helpers.MiscHelper;
 import net.kapitencraft.mysticcraft.capability.spell.ItemSpells;
 import net.kapitencraft.mysticcraft.registry.ModDataComponentTypes;
 import net.kapitencraft.mysticcraft.registry.Spells;
@@ -11,8 +10,8 @@ import java.util.List;
 
 public class HeatedScythe extends NormalSpellItem implements IDamageSpellItem, IFireScytheItem {
 
-    public HeatedScythe() {
-        super(MiscHelper.rarity(Rarity.UNCOMMON).component(ModDataComponentTypes.ITEM_SPELLS, new ItemSpells(
+    public HeatedScythe(Properties properties) {
+        super(properties.rarity(Rarity.UNCOMMON).component(ModDataComponentTypes.ITEM_SPELLS, new ItemSpells(
                 List.of(
                         new SpellSlot(Spells.FIRE_BOLT)
                 )

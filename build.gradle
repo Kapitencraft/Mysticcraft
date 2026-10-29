@@ -1,7 +1,7 @@
 plugins {
     id 'eclipse'
     id 'maven-publish'
-    id 'net.neoforged.moddev' version '2.0.88'
+    id 'net.neoforged.moddev' version '2.0.148'
 }
 
 version = "v${mod_version}-mc${mc_version}"
@@ -49,7 +49,7 @@ neoForge {
             // Recommended logging level for the console
             // You can set various levels here.
             // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
-            logLevel = org.slf4j.event.Level.DEBUG
+            logLevel = org.slf4j.event.Level.INFO
         }
 
         client {
@@ -107,18 +107,6 @@ repositories {
 
     // If you have mod jar dependencies in ./libs, you can declare them as a repository like so:
     maven { url 'https://maven.blamejared.com' }
-
-    exclusiveContent {
-        forRepository {
-            maven {
-                name = "Modrinth"
-                url = "https://api.modrinth.com/maven"
-            }
-        }
-        filter {
-            includeGroup "maven.modrinth"
-        }
-    }
 }
 
 dependencies {
@@ -130,6 +118,7 @@ dependencies {
 
     //runtimeOnly "blank:debug_plus:v1.0.0-mc${mc_version}"
 
+    interfaceInjectionData "io.github.kapitencraft:kap_lib-core:v${kap_lib_version}-mc${mc_version}"
     jarJar(implementation("io.github.kapitencraft:kap_lib:v${kap_lib_version}-mc${mc_version}"))
 
     //dataAdditionalRuntimeClasspath ("io.github.kapitencraft:kap_lib-datagen:v${kap_lib_version}-mc${mc_version}") {

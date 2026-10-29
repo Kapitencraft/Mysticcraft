@@ -5,9 +5,9 @@ import net.kapitencraft.mysticcraft.capability.gemstone.GemstoneSlot;
 import net.kapitencraft.mysticcraft.registry.ModDataComponentTypes;
 
 public class Hyperion extends NecronSword {
-    public Hyperion() {
-        super(new Properties()
-                .attributes(createNecronAttributes(NecronSword.BASE_DAMAGE, 350, NecronSword.BASE_FEROCITY, NecronSword.BASE_STRENGHT).build())
+    public Hyperion(Properties properties) {
+        super(properties
+                .attributes(createNecronAttributes(NecronSword.BASE_DAMAGE, 350, NecronSword.BASE_FEROCITY, NecronSword.BASE_STRENGTH).build())
                 .component(ModDataComponentTypes.EMBEDDED_GEMSTONES, GemstoneHandler.create(GemstoneSlot.Type.COMBAT, GemstoneSlot.Type.INTELLIGENCE))
         );
     }
