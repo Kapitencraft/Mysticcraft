@@ -12,38 +12,38 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.registries.datamaps.DataMapType;
 
-public class SkillXpMaps {
-    public static final DataMapType<Item, ItemStackXpProvider> FISHING = DataMapType.builder(
+public interface SkillXpMaps {
+    DataMapType<Item, ItemStackXpProvider> FISHING = DataMapType.builder(
             MysticcraftMod.res("fishing_xp"),
             Registries.ITEM,
             ItemStackXpProvider.CODEC
     ).build();
-    public static final DataMapType<EntityType<?>, EntityXpProvider> COMBAT = DataMapType.builder(
+    DataMapType<EntityType<?>, EntityXpProvider> COMBAT = DataMapType.builder(
             MysticcraftMod.res("combat_xp"),
             Registries.ENTITY_TYPE,
             EntityXpProvider.CODEC
     ).build();
-    public static final DataMapType<Block, Integer> FARMING = DataMapType.builder(
+    DataMapType<Block, Integer> FARMING = DataMapType.builder(
             MysticcraftMod.res("farming_xp"),
             Registries.BLOCK,
             Codec.INT
     ).build();
-    public static final DataMapType<Enchantment, Integer> ENCHANTING = DataMapType.builder(
+    DataMapType<Enchantment, Integer> ENCHANTING = DataMapType.builder(
             MysticcraftMod.res("enchanting_xp"),
             Registries.ENCHANTMENT,
             Codec.INT
     ).build();
-    public static final DataMapType<Block, Integer> MINING = DataMapType.builder(
+    DataMapType<Block, Integer> MINING = DataMapType.builder(
             MysticcraftMod.res("mining_xp"),
             Registries.BLOCK,
             Codec.INT
     ).build();
-    public static final DataMapType<Block, Integer> FORAGING = DataMapType.builder(
+    DataMapType<Block, Integer> FORAGING = DataMapType.builder(
             MysticcraftMod.res("foraging_xp"),
             Registries.BLOCK,
             Codec.INT
     ).build();
-    public static final DataMapType<Potion, Integer> ALCHEMY = DataMapType.builder(
+    DataMapType<Potion, Integer> ALCHEMY = DataMapType.builder(
             MysticcraftMod.res("alchemy_xp"),
             Registries.POTION,
             Codec.INT

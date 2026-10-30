@@ -1,9 +1,9 @@
 package net.kapitencraft.mysticcraft.event.handler;
 
-import com.mojang.datafixers.util.Pair;
 import net.kapitencraft.kap_lib.attribute.ExtraAttributes;
 import net.kapitencraft.kap_lib.core.helpers.IOHelper;
 import net.kapitencraft.kap_lib.core.helpers.MiscHelper;
+import net.kapitencraft.kap_lib.core.patch.LivingEntityPatch;
 import net.kapitencraft.mysticcraft.entity.FrozenBlazeEntity;
 import net.kapitencraft.mysticcraft.helpers.InventoryHelper;
 import net.kapitencraft.mysticcraft.item.combat.weapon.melee.sword.ManaSteelSwordItem;
@@ -11,9 +11,9 @@ import net.kapitencraft.mysticcraft.item.material.PrecursorRelicItem;
 import net.kapitencraft.mysticcraft.item.misc.SoulbindHelper;
 import net.kapitencraft.mysticcraft.registry.ModAttachmentTypes;
 import net.kapitencraft.mysticcraft.registry.ModMobEffects;
-import net.kapitencraft.mysticcraft.registry.custom.ModRegistries;
 import net.kapitencraft.mysticcraft.rpg.perks.Perk;
 import net.kapitencraft.mysticcraft.rpg.perks.Perks;
+import net.kapitencraft.mysticcraft.rpg.perks.PlayerPerks;
 import net.kapitencraft.mysticcraft.rpg.skill.PlayerSkills;
 import net.kapitencraft.mysticcraft.rpg.skill.Skill;
 import net.kapitencraft.mysticcraft.rpg.skill.xp.SkillXpMaps;
@@ -22,10 +22,8 @@ import net.kapitencraft.mysticcraft.spell.spells.WitherShieldSpell;
 import net.kapitencraft.mysticcraft.util.damage_source.ISpellSource;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
@@ -34,7 +32,6 @@ import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.SmallFireball;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.EventPriority;
@@ -43,13 +40,14 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.Map;
 
 @EventBusSubscriber
 public class DamageEvents {
-    private DamageEvents() {}//dummy constructor (do not call)
+    private DamageEvents() {
+    } //dummy constructor (do not call)
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void miscDamageEvents(LivingDamageEvent.Pre event) {
@@ -98,22 +96,29 @@ public class DamageEvents {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void damageAttributeRegister(LivingDamageEvent.Pre event) {
         @Nullable LivingEntity attacker = MiscHelper.getAttacker(event.getSource());
-        if (attacker == null) { return; }
+        if (attacker == null) {
+            return;
+        }
         if (event.getSource() instanceof ISpellSource) {
             double magicDamage = attacker.getAttributeValue(ExtraAttributes.MAGIC_DAMAGE);
             event.setNewDamage(event.getNewDamage() * (float) (1 + (magicDamage / 100)));
         }
-        if (attacker instanceof Player player) {
-            for (Pair<ResourceKey<Perk>, TagKey<Item>> perk : Perks.COMBAT_PERKS) {
-                ItemStack mainHandItem = attacker.getMainHandItem();
-                if (mainHandItem.is(perk.getSecond())) {
-                    Level level = attacker.level();
-                    Holder<Perk> orThrow = level.registryAccess().registryOrThrow(ModRegistries.Keys.PERKS).getHolderOrThrow(perk.getFirst());
+    }
 
-                }
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void onLivingDamagePost(LivingDamageEvent.Post event) {
+        @Nullable LivingEntity attacker = MiscHelper.getAttacker(event.getSource());
+        if (attacker instanceof Player player) {
+            ItemStack mainHandItem = attacker.getMainHandItem();
+            Holder<Perk> key = mainHandItem.getItemHolder().getData(Perks.COMBAT_PERKS);
+            if (key != null) {
+                Level level = attacker.level();
+                PlayerPerks data = player.getData(ModAttachmentTypes.PERKS);
+                data.progress(key, event.getNewDamage());
             }
         }
     }
+
 
     @SubscribeEvent
     public static void entityDeathEvents(LivingDeathEvent event) {

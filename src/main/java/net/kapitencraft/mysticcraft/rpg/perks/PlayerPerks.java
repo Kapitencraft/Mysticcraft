@@ -1,6 +1,7 @@
 package net.kapitencraft.mysticcraft.rpg.perks;
 
 import com.mojang.serialization.Codec;
+import net.kapitencraft.kap_lib.core.string_converter.param_storage.ParamStorage;
 import net.kapitencraft.mysticcraft.registry.custom.ModRegistries;
 import net.kapitencraft.mysticcraft.util.Levelable;
 import net.minecraft.core.Holder;
@@ -22,23 +23,25 @@ public class PlayerPerks {
 
     private static class Progression extends Levelable {
         private static final Codec<Progression> CODEC = createCodec(Progression::new);
+        private final Holder<Perk> owner;
 
-        private Progression(int level, float xp) {
+        private Progression(int level, float xp, Holder<Perk> owner) {
             super(level, xp);
+            this.owner = owner;
         }
 
-        private Progression() {
-            this(0, 0);
+        private Progression(Holder<Perk> owner) {
+            this(0, 0, owner);
         }
 
         @Override
         protected float calculateNextRequiredXp() {
-            return 0;
+            return this.owner.value().progression().levelCostProvider().transfer(new ParamStorage<>(Map.of("l", level)));
         }
     }
 
     public void progress(Holder<Perk> perk, float xp) {
-        Progression progression = this.perks.computeIfAbsent(perk, h -> new Progression());
+        Progression progression = this.perks.computeIfAbsent(perk, Progression::new);
         progression.reward(xp);
     }
 

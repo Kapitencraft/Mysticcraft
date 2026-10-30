@@ -1,14 +1,15 @@
 package net.kapitencraft.mysticcraft.rpg.perks;
 
-import com.mojang.datafixers.util.Pair;
+import net.kapitencraft.kap_lib.core.string_converter.converter.TextToIntConverter;
 import net.kapitencraft.mysticcraft.MysticcraftMod;
 import net.kapitencraft.mysticcraft.registry.custom.ModRegistries;
-import net.kapitencraft.mysticcraft.tags.ModTags;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
+import net.minecraft.resources.RegistryFixedCodec;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.neoforged.neoforge.registries.datamaps.DataMapType;
 
 import java.util.List;
 
@@ -19,30 +20,80 @@ public interface Perks {
     ResourceKey<Perk> AXE_COMBAT = key("combat/axe");
     ResourceKey<Perk> LONGSWORD_COMBAT = key("combat/longsword");
     ResourceKey<Perk> CLEAVER_COMBAT = key("combat/cleaver");
-    ResourceKey<Perk> HALBERD = key("combat/halberd");
-    ResourceKey<Perk> LANCE = key("combat/lance");
-    ResourceKey<Perk> SPEAR = key("combat/spear");
+    ResourceKey<Perk> HALBERD_COMBAT = key("combat/halberd");
+    ResourceKey<Perk> LANCE_COMBAT = key("combat/lance");
+    ResourceKey<Perk> SPEAR_COMBAT = key("combat/spear");
 
     ResourceKey<Perk> ARCHERY = key("combat/archery");
     ResourceKey<Perk> RIDING = key("riding");
     ResourceKey<Perk> HAGGLING = key("haggling");
 
-    List<Pair<ResourceKey<Perk>, TagKey<Item>>> COMBAT_PERKS = List.of(
-            Pair.of(SWORD_COMBAT, ItemTags.SWORDS),
-            Pair.of(DAGGER_COMBAT, ModTags.Items.DAGGER),
-            Pair.of(AXE_COMBAT, ItemTags.AXES),
-            Pair.of(LONGSWORD_COMBAT, ModTags.Items.LONGSWORD),
-            Pair.of(CLEAVER_COMBAT, ModTags.Items.CLEAVER),
-            Pair.of(HALBERD, ModTags.Items.HALBERD),
-            Pair.of(LANCE, ModTags.Items.LANCE),
-            Pair.of(SPEAR, ModTags.Items.SPEAR)
-    );
+    DataMapType<Item, Holder<Perk>> COMBAT_PERKS = DataMapType.builder(
+            MysticcraftMod.res("combat_perks"),
+            Registries.ITEM,
+            RegistryFixedCodec.create(ModRegistries.Keys.PERKS)
+    ).build();
 
     private static ResourceKey<Perk> key(String name) {
         return ResourceKey.create(ModRegistries.Keys.PERKS, MysticcraftMod.res(name));
     }
 
     static void bootstrap(BootstrapContext<Perk> perkBootstrapContext) {
-        //perkBootstrapContext.register();
+        perkBootstrapContext.register(DAGGER_COMBAT, new Perk(
+                new Perk.Progression(
+                        200,
+                        List.of(50, 100, 150, 200),
+                        new TextToIntConverter("l * l")
+                )
+        ));
+        perkBootstrapContext.register(SWORD_COMBAT, new Perk(
+                new Perk.Progression(
+                        200,
+                        List.of(50, 100, 150, 200),
+                        new TextToIntConverter("l * l")
+                )
+        ));
+        perkBootstrapContext.register(AXE_COMBAT, new Perk(
+                new Perk.Progression(
+                        200,
+                        List.of(50, 100, 150, 200),
+                        new TextToIntConverter("l * l")
+                )
+        ));
+        perkBootstrapContext.register(LONGSWORD_COMBAT, new Perk(
+                new Perk.Progression(
+                        200,
+                        List.of(50, 100, 150, 200),
+                        new TextToIntConverter("l * l")
+                )
+        ));
+        perkBootstrapContext.register(CLEAVER_COMBAT, new Perk(
+                new Perk.Progression(
+                        200,
+                        List.of(50, 100, 150, 200),
+                        new TextToIntConverter("l * l")
+                )
+        ));
+        perkBootstrapContext.register(HALBERD_COMBAT, new Perk(
+                new Perk.Progression(
+                        200,
+                        List.of(50, 100, 150, 200),
+                        new TextToIntConverter("l * l")
+                )
+        ));
+        perkBootstrapContext.register(LANCE_COMBAT, new Perk(
+                new Perk.Progression(
+                        200,
+                        List.of(50, 100, 150, 200),
+                        new TextToIntConverter("l * l")
+                )
+        ));
+        perkBootstrapContext.register(SPEAR_COMBAT, new Perk(
+                new Perk.Progression(
+                        200,
+                        List.of(50, 100, 150, 200),
+                        new TextToIntConverter("l * l")
+                )
+        ));
     }
 }

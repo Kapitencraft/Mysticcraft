@@ -1,4 +1,4 @@
-// 1.21.1	2026-07-22T11:27:05.0453784	Registries
+// 1.21.1	2026-10-30T12:56:12.170036094	Registries
 ceac723b3239e37705eac152fb1e58a693f51964 data/mysticcraft/damage_type/ability.json
 3fc7f6e350b074892c8344083340a54faf8c1866 data/mysticcraft/damage_type/chain_lightning.json
 7d759840f1bd6ba77e1c8c1750e739824f77a2a5 data/mysticcraft/damage_type/magic_explosion.json
@@ -13,6 +13,14 @@ cf7c5c7a143f58910ac45b41bac37e19675589e4 data/mysticcraft/mysticcraft/classes/pr
 cf7c5c7a143f58910ac45b41bac37e19675589e4 data/mysticcraft/mysticcraft/classes/shaman.json
 eeb137843f88e7387f9aa2b8b6c7bdaa3e658831 data/mysticcraft/mysticcraft/classes/warrior.json
 b8e160546f5dc3b6e82d3c3a96b6a6d2c14cef77 data/mysticcraft/mysticcraft/classes/wizard.json
+5fd369e46cc0e1aebe979b921a7e22373e6efc0f data/mysticcraft/mysticcraft/perks/combat/axe.json
+5fd369e46cc0e1aebe979b921a7e22373e6efc0f data/mysticcraft/mysticcraft/perks/combat/cleaver.json
+5fd369e46cc0e1aebe979b921a7e22373e6efc0f data/mysticcraft/mysticcraft/perks/combat/dagger.json
+5fd369e46cc0e1aebe979b921a7e22373e6efc0f data/mysticcraft/mysticcraft/perks/combat/halberd.json
+5fd369e46cc0e1aebe979b921a7e22373e6efc0f data/mysticcraft/mysticcraft/perks/combat/lance.json
+5fd369e46cc0e1aebe979b921a7e22373e6efc0f data/mysticcraft/mysticcraft/perks/combat/longsword.json
+5fd369e46cc0e1aebe979b921a7e22373e6efc0f data/mysticcraft/mysticcraft/perks/combat/spear.json
+5fd369e46cc0e1aebe979b921a7e22373e6efc0f data/mysticcraft/mysticcraft/perks/combat/sword.json
 7599fc401de8e34c45bede9994fdeac3de303a2b data/mysticcraft/neoforge/biome_modifier/add_crimsonite_ore.json
 d8415ae06a275fb6f6bf763237c2ac0481fc5e52 data/mysticcraft/neoforge/biome_modifier/add_gemstone_seeds.json
 64e435a383fcf0d795cf68060ce11679c9bfa81f data/mysticcraft/neoforge/biome_modifier/spawn_frozen_blaze.json

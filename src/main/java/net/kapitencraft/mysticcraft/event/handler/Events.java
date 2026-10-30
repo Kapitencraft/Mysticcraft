@@ -22,6 +22,7 @@ import net.kapitencraft.mysticcraft.registry.ModMobEffects;
 import net.kapitencraft.mysticcraft.registry.Spells;
 import net.kapitencraft.mysticcraft.requirement.type.PerkRequirementType;
 import net.kapitencraft.mysticcraft.requirement.type.ReforgeRequirementType;
+import net.kapitencraft.mysticcraft.rpg.perks.Perks;
 import net.kapitencraft.mysticcraft.rpg.skill.PlayerPlacedBlocks;
 import net.kapitencraft.mysticcraft.rpg.skill.PlayerSkills;
 import net.kapitencraft.mysticcraft.rpg.skill.Skill;
@@ -261,6 +262,8 @@ public class Events {
 
     @SubscribeEvent
     public static void onRegisterDataMapTypes(RegisterDataMapTypesEvent event) {
+        event.register(Perks.COMBAT_PERKS);
+
         event.register(SkillXpMaps.FISHING);
         event.register(SkillXpMaps.COMBAT);
         event.register(SkillXpMaps.FARMING);
@@ -366,5 +369,6 @@ public class Events {
     public static void onRegisterOrderedItemComponentTooltip(RegisterOrderedItemComponentTooltipEvent event) {
         event.insertAfter(ModDataComponentTypes.ELYTRA, DataComponents.STORED_ENCHANTMENTS);
     }
+
 
 }

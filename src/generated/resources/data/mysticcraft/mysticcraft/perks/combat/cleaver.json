@@ -1,0 +1,10 @@
+{
+  "cost_provider": "l * l",
+  "mastery_levels": [
+    50,
+    100,
+    150,
+    200
+  ],
+  "max_level": 200
+}

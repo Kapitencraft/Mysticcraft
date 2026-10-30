@@ -1,0 +1,12 @@
+{
+  "values": {
+    "#minecraft:axes": "mysticcraft:combat/axe",
+    "#minecraft:swords": "mysticcraft:combat/sword",
+    "#mysticcraft:weapon/cleaver": "mysticcraft:combat/cleaver",
+    "#mysticcraft:weapon/dagger": "mysticcraft:combat/dagger",
+    "#mysticcraft:weapon/halberd": "mysticcraft:combat/halberd",
+    "#mysticcraft:weapon/lance": "mysticcraft:combat/lance",
+    "#mysticcraft:weapon/longsword": "mysticcraft:combat/longsword",
+    "#mysticcraft:weapon/spear": "mysticcraft:combat/spear"
+  }
+}

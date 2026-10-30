@@ -25,4 +25,3 @@ run
 forge*changelog.txt
 src/generated/resources/.cache
 /gradle/
-/src/generated/resources/.cache/

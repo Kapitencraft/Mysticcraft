@@ -1,21 +1,31 @@
 package net.kapitencraft.mysticcraft.data_gen;
 
+import com.mojang.datafixers.util.Pair;
 import net.kapitencraft.mysticcraft.potion.ModPotions;
 import net.kapitencraft.mysticcraft.registry.ModBlocks;
 import net.kapitencraft.mysticcraft.registry.ModItems;
+import net.kapitencraft.mysticcraft.registry.custom.ModRegistries;
+import net.kapitencraft.mysticcraft.rpg.perks.Perk;
+import net.kapitencraft.mysticcraft.rpg.perks.Perks;
 import net.kapitencraft.mysticcraft.rpg.skill.xp.SkillXpMaps;
 import net.kapitencraft.mysticcraft.rpg.skill.xp.provider.combat.BaseHumanoidXpProvider;
 import net.kapitencraft.mysticcraft.rpg.skill.xp.provider.combat.SimpleEntityXpProvider;
 import net.kapitencraft.mysticcraft.rpg.skill.xp.provider.combat.SimpleItemStackXpProvider;
 import net.kapitencraft.mysticcraft.rpg.skill.xp.provider.combat.SizeBasedXpProvider;
 import net.kapitencraft.mysticcraft.rpg.skill.xp.provider.item.EnchantedItemProvider;
+import net.kapitencraft.mysticcraft.tags.ModTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.neoforged.neoforge.common.data.DataMapProvider;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class ModDataMapsProvider extends DataMapProvider {
@@ -244,5 +254,17 @@ public class ModDataMapsProvider extends DataMapProvider {
                 .add(ModPotions.STUN.getKey(), 100, false)
                 .add(ModPotions.LONG_STUN.getKey(), 150, false)
                 .add(ModPotions.DISPLACEMENT.getKey(), 200, false);
+
+        HolderLookup.RegistryLookup<Perk> perks = provider.lookupOrThrow(ModRegistries.Keys.PERKS);
+
+        builder(Perks.COMBAT_PERKS)
+                .add(ModTags.Items.DAGGER, perks.getOrThrow(Perks.DAGGER_COMBAT), false)
+                .add(ItemTags.AXES, perks.getOrThrow(Perks.AXE_COMBAT), false)
+                .add(ModTags.Items.LONGSWORD, perks.getOrThrow(Perks.LONGSWORD_COMBAT), false)
+                .add(ModTags.Items.CLEAVER, perks.getOrThrow(Perks.CLEAVER_COMBAT), false)
+                .add(ModTags.Items.HALBERD, perks.getOrThrow(Perks.HALBERD_COMBAT), false)
+                .add(ModTags.Items.LANCE, perks.getOrThrow(Perks.LANCE_COMBAT), false)
+                .add(ModTags.Items.SPEAR, perks.getOrThrow(Perks.SPEAR_COMBAT), false)
+                .add(ItemTags.SWORDS, perks.getOrThrow(Perks.SWORD_COMBAT), false);
     }
 }

@@ -6,19 +6,9 @@ import net.kapitencraft.kap_lib.core.string_converter.converter.TextToIntConvert
 
 import java.util.List;
 
-public class Perk {
+public record Perk(Progression progression) {
     //TODO figure out what tf to put here
-    public static final Codec<Perk> DIRECT_CODEC = Progression.CODEC.xmap(Perk::new, Perk::getProgression);
-
-    private final Progression progression;
-
-    public Perk(Progression progression) {
-        this.progression = progression;
-    }
-
-    public Progression getProgression() {
-        return progression;
-    }
+    public static final Codec<Perk> DIRECT_CODEC = Progression.CODEC.xmap(Perk::new, Perk::progression);
 
     /**
      * @param maxLevel      the max level this perk can achieve
